@@ -2,18 +2,6 @@
 title: Migrating to TanStack Table V9 (Svelte)
 ---
 
-> [!NOTE]
-> `v9.0.0-beta.59` removes Svelte's table-creation selectors. `createTable` and `createAppTable` now accept only their options object; the selected `table.state` property, `subscribeTable`, and `SubscribeSource` are also removed. Read one slice with `table.atoms.<slice>.get()` and the complete state with `table.store.get()`. These reads update naturally in Svelte templates, `$derived`, `$derived.by`, and `$effect`. This is an intentional beta-breaking change with no compatibility overload or runtime shim. See [State Management Changes](#state-management-changes) for examples.
-
-> [!NOTE]
-> `v9.0.0-beta.48`/`beta.49` split aggregation out of `columnGroupingFeature` into a new `rowAggregationFeature` (`stockFeatures` includes both). If you declare features explicitly, add `rowAggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. Aggregation function definitions, row-depth selection, and the `getAggregationValue` signature also changed. See [Grouping and Aggregation](#grouping-and-aggregation) below.
-
-> [!NOTE]
-> `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology (in LTR layouts `start` usually means left; in RTL it usually means right). Update `columnPinning.left`/`right` to `columnPinning.start`/`end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*`/`getRight*` APIs to `getStart*`/`getEnd*`. See [Column Pinning](#column-pinning) for the full mapping.
-
-> [!NOTE]
-> `v9.0.0-beta.10` moves row model factories and the `filterFns`/`sortFns`/`aggregationFns` registries onto the `features` object (the separate `rowModels` option is gone, and the factories no longer take arguments). See the row models section below for the new shape.
-
 ## What's New in TanStack Table V9
 
 TanStack Table V9 is a major release with significant internal architectural improvements while maintaining the core table logic you're familiar with. Here are the key changes:
@@ -359,40 +347,7 @@ The same reads become reactive dependencies when they run in a Svelte template, 
 
 `$derived` now owns projection and equality behavior. A full-store read is appropriate for debug output, persistence, or computations that intentionally depend on every slice; use an atom when only one slice matters.
 
-#### Migrating a `createTable` Selector
-
-```ts
-// Before beta.59
-const table = createTable(options, (state) => ({
-  pagination: state.pagination,
-}))
-
-table.state.pagination
-```
-
-```ts
-// beta.59+
-const table = createTable(options)
-const pagination = $derived(table.atoms.pagination.get())
-```
-
-Identity selectors and selectors returning `null` should simply be deleted. Atom and table API reads already register the relevant Svelte dependencies.
-
-#### Migrating a `createAppTable` Selector
-
-```ts
-// Before beta.59
-const table = createAppTable(options, (state) => ({
-  sorting: state.sorting,
-}))
-table.state.sorting
-
-// beta.59+
-const table = createAppTable(options)
-const sorting = $derived(table.atoms.sorting.get())
-```
-
-The selected-state generic was removed with the selector. `SvelteTable` now has two generic parameters, `AppSvelteTable` has five, and `useTableContext` only accepts its optional row-data generic.
+`SvelteTable` has two generic parameters, `AppSvelteTable` has five, and `useTableContext` only accepts its optional row-data generic.
 
 ### Controlled State
 
@@ -499,9 +454,9 @@ Do not provide both `atoms.pagination` and `state.pagination`; the atom owns tha
 
 ### Column Pinning
 
-`v9.0.0-beta.38` changes column pinning to use logical `start`/`end` terminology instead of physical `left`/`right` terminology. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases in beta.38.
+V9 changes column pinning to use logical `start`/`end` terminology instead of the physical `left`/`right` terminology used in V8. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases.
 
-| Before beta.38                       | beta.38+                             |
+| V8                                   | V9                                   |
 | ------------------------------------ | ------------------------------------ |
 | `columnPinning.left`                 | `columnPinning.start`                |
 | `columnPinning.right`                | `columnPinning.end`                  |

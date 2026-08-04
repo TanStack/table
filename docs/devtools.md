@@ -14,21 +14,18 @@ The table devtools let you inspect registered table instances, switch between mu
 
 Install the TanStack Devtools host package and the Table adapter for your framework.
 
-> [!IMPORTANT]
-> While TanStack Table v9 is in beta, the table devtools adapters must be installed with the `@beta` tag. Installing without the tag resolves to the old v8 devtools, which have a completely different API.
-
 <!-- ::start:framework -->
 
 # React
 
 ```sh
-npm install @tanstack/react-devtools @tanstack/react-table-devtools@beta
+npm install @tanstack/react-devtools @tanstack/react-table-devtools
 ```
 
 # Preact
 
 ```sh
-npm install @tanstack/preact-devtools @tanstack/preact-table-devtools@beta
+npm install @tanstack/preact-devtools @tanstack/preact-table-devtools
 ```
 
 # Octane
@@ -38,19 +35,19 @@ There is not currently a dedicated Octane Table Devtools adapter.
 # Vue
 
 ```sh
-npm install @tanstack/vue-devtools @tanstack/vue-table-devtools@beta
+npm install @tanstack/vue-devtools @tanstack/vue-table-devtools
 ```
 
 # Solid
 
 ```sh
-npm install @tanstack/solid-devtools @tanstack/solid-table-devtools@beta
+npm install @tanstack/solid-devtools @tanstack/solid-table-devtools
 ```
 
 # Angular
 
 ```sh
-npm install @tanstack/angular-devtools @tanstack/angular-table-devtools@beta
+npm install @tanstack/angular-devtools @tanstack/angular-table-devtools
 ```
 
 <!-- ::end:framework -->

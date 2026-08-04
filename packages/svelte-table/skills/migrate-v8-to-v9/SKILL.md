@@ -1,7 +1,7 @@
 ---
 name: migrate-v8-to-v9
 description: >
-  Complete Svelte v8-to-v9 migration reference: Svelte 5, createTable, beta.59 selector removal, explicit features and row-model slots, atom/rune state, rendering helpers, prototype methods, type generics, sorting, sizing, selection, and logical pinning.
+  Complete Svelte v8-to-v9 migration reference: Svelte 5, createTable, selector-API removal, explicit features and row-model slots, atom/rune state, rendering helpers, prototype methods, type generics, sorting, sizing, selection, and logical pinning.
 metadata:
   type: lifecycle
   library: '@tanstack/svelte-table'
@@ -80,7 +80,7 @@ Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFn
 - Reactive option inputs must remain live: use getters for rune values such as `data` and controlled state slices.
 - `table.getState().sorting` becomes the narrow `table.atoms.sorting.get()` read. Use `table.store.get()` when code intentionally needs the complete state.
 - Table atom, store, and API reads become reactive inside templates, `$derived`, `$derived.by`, and `$effect`; use native `$derived` values for projections.
-- Starting in beta.59, remove second-argument selectors from `createTable` and `createAppTable`, replace `table.state`, and remove `subscribeTable` / `SubscribeSource` imports.
+- Remove second-argument selectors from `createTable` and `createAppTable` (if present from an earlier v9 version), replace `table.state`, and remove `subscribeTable` / `SubscribeSource` imports.
 - `SvelteTable` now has two generic parameters, `AppSvelteTable` has five, and `useTableContext` no longer accepts a selected-state generic.
 - For Svelte-owned controlled slices, use `createTableState` and matching `onSortingChange`, `onPaginationChange`, and other per-slice callbacks.
 - For shared ownership, provide atoms created by `@tanstack/svelte-store` through `atoms`. Never provide both `atoms.pagination` and `state.pagination`.
@@ -107,7 +107,7 @@ Row, cell, column, header, and related object methods now live on shared prototy
 
 ### Logical column pinning
 
-There are no `left`/`right` aliases in beta.38.
+V9 has no `left`/`right` aliases.
 
 | old                                                            | new                                                           |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -174,9 +174,9 @@ Register both the feature and its `create*RowModel()` slot. Leaving `get*RowMode
 
 Use `get data() { return data }`; a one-time `data` snapshot does not remain reactive.
 
-### HIGH: Keeping beta.58 Svelte selectors
+### HIGH: Keeping removed Svelte selectors
 
-Remove second arguments from `createTable` and `createAppTable`, replace selected `table.state` reads with `table.atoms.<slice>.get()` or `table.store.get()`, and remove `subscribeTable`, `SubscribeSource`, and selected-state generic parameters. Beta.59 intentionally has no compatibility layer for these APIs.
+Remove second arguments from `createTable` and `createAppTable`, replace selected `table.state` reads with `table.atoms.<slice>.get()` or `table.store.get()`, and remove `subscribeTable`, `SubscribeSource`, and selected-state generic parameters. V9 intentionally has no compatibility layer for these APIs.
 
 ### HIGH: Destructuring instance methods
 
@@ -198,4 +198,4 @@ Keep calls bound to row/cell/column/header instances; shallow copies do not cont
 
 ## API Discovery
 
-Verify the installed target in `node_modules/@tanstack/svelte-table/dist/index.d.ts` and its adapter sources. Verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/dist/`; do not reconstruct v9 APIs from v8 memory.
+Verify the installed target in `node_modules/@tanstack/svelte-table/dist/index.d.ts` and its adapter sources. Verify feature slots and the exact installed v9 APIs in `node_modules/@tanstack/table-core/dist/`; do not reconstruct v9 APIs from v8 memory.

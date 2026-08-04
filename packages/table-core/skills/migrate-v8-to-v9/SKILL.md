@@ -97,7 +97,7 @@ Honor feature prerequisites in the same `tableFeatures` call:
 
 ### 2. Move row models into feature slots and rename factories
 
-V8 `get*RowModel()` table options and the earlier-v9-beta `rowModels` object are gone. V9 `create*RowModel()` factories take no registry arguments and are registered as named feature slots.
+V8 `get*RowModel()` table options and the removed `rowModels` object are gone. V9 `create*RowModel()` factories take no registry arguments and are registered as named feature slots.
 
 | V8 table option                                    | V9 `tableFeatures` slot                | V9 factory                                     |
 | -------------------------------------------------- | -------------------------------------- | ---------------------------------------------- |
@@ -175,7 +175,7 @@ Audit all methods extracted from rows, cells, columns, headers, and header group
 
 ### 5. Replace physical column pinning with logical pinning
 
-V9 beta.38 has no `left`/`right` aliases. Replace all state keys, return-value comparisons, arguments, and API families:
+V9 has no `left`/`right` aliases. Replace all state keys, return-value comparisons, arguments, and API families:
 
 | V8                                                                                         | V9                                                            |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
@@ -298,7 +298,7 @@ Do not confuse new capabilities with required breakages. After the table works, 
 - [ ] Inventory every feature API used by table, row, column, cell, and header code; register all 16 required stock features.
 - [ ] Use `stockFeatures` only as a temporary parity aid and record an explicit-feature follow-up.
 - [ ] Remove `getCoreRowModel()` unless supplying a deliberate custom `coreRowModel` slot.
-- [ ] Move all remaining `get*RowModel()` options or earlier-beta `rowModels` entries to `create*RowModel()` feature slots.
+- [ ] Move all remaining `get*RowModel()` options (or a removed `rowModels: {...}` object, if present) to `create*RowModel()` feature slots.
 - [ ] Register each dependent feature before its row-model slot.
 - [ ] Move `filterFns`, `sortingFns`/`sortFns`, and `aggregationFns` into feature slots, registering individually imported built-ins; pass no registries to factories.
 - [ ] Register `rowAggregationFeature` independently and migrate custom aggregation callables to context-based `AggregationFnDef` definitions.
@@ -329,9 +329,9 @@ Do not confuse new capabilities with required breakages. After the table works, 
 
 If `table.nextPage`, `column.toggleSorting`, or a state slice disappears, add the associated feature. Do not cast the table to a broader type.
 
-### [CRITICAL] Mixing v8, early-v9-beta, and beta.38 configuration
+### [CRITICAL] Mixing v8 and v9 configuration styles
 
-Do not combine v8 `get*RowModel` options, an earlier beta's `rowModels` object, or physical pinning names with the current `tableFeatures` slots.
+Do not combine v8 `get*RowModel` options, a removed `rowModels` object, or physical pinning names with the current `tableFeatures` slots.
 
 ### [HIGH] Treating `stockFeatures` or `useLegacyTable` as the finished migration
 
@@ -351,4 +351,4 @@ Use the installed version, not main-branch memory:
 4. Inspect the installed adapter's `dist/index.d.ts` and its migration skill for entrypoints and rendering.
 5. Inspect `dist/legacy.d.ts` only to remove an existing bridge, never to design new v9 code.
 
-If package-manager layout prevents that exact path, resolve the installed package root first. Do not substitute APIs from a different v9 beta.
+If package-manager layout prevents that exact path, resolve the installed package root first. Do not substitute APIs from a different v9 version.

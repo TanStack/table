@@ -126,19 +126,19 @@ This might be a bit confusing, so let's break down what each of these methods do
 
 ##### getDefaultTableOptions
 
-The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Resizing](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-resizing/columnResizingFeature.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
+The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Resizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
 
 <br />
 
 ##### getDefaultColumnDef
 
-The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
+The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
 
 <br />
 
 ##### getInitialState
 
-The `getInitialState` method in a table feature is responsible for setting the default state for that feature. For example, in the [Pagination](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-pagination/rowPaginationFeature.ts) feature, the `getInitialState` method sets the default `pageSize` state with a value of `10` and the default `pageIndex` state with a value of `0`.
+The `getInitialState` method in a table feature is responsible for setting the default state for that feature. For example, in the [Pagination](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.ts) feature, the `getInitialState` method sets the default `pageSize` state with a value of `10` and the default `pageIndex` state with a value of `0`.
 
 #### API Creators
 
@@ -156,13 +156,13 @@ Keep API assignment in `constructTableAPIs`; initialization and reset hooks are 
 
 ##### constructTableAPIs
 
-The `constructTableAPIs` method in a table feature is exclusively responsible for adding methods to the `table` instance. It runs after all feature-owned table instance data has been initialized. For example, in the [Row Selection](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature, the `constructTableAPIs` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
+The `constructTableAPIs` method in a table feature is exclusively responsible for adding methods to the `table` instance. It runs after all feature-owned table instance data has been initialized. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature, the `constructTableAPIs` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
 
 <br />
 
 ##### assignHeaderPrototype and initHeaderInstanceData
 
-The `assignHeaderPrototype` method in a table feature is responsible for adding methods to the shared `header` prototype. For example, the [Column Sizing](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-sizing/columnSizingFeature.ts) feature adds header instance API methods such as `getStart`. So then, when you call `header.getStart()`, you are calling a method that was added by the column sizing feature. The `initHeaderInstanceData` method is available for per-header instance data or caches that cannot live on the shared prototype. It runs during header construction, before sub-headers are populated and before the header is linked to its header group. Headers are reconstructed whenever header groups recompute, so it reruns on every rebuild.
+The `assignHeaderPrototype` method in a table feature is responsible for adding methods to the shared `header` prototype. For example, the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts) feature adds header instance API methods such as `getStart`. So then, when you call `header.getStart()`, you are calling a method that was added by the column sizing feature. The `initHeaderInstanceData` method is available for per-header instance data or caches that cannot live on the shared prototype. It runs during header construction, before sub-headers are populated and before the header is linked to its header group. Headers are reconstructed whenever header groups recompute, so it reruns on every rebuild.
 
 <br />
 
@@ -174,13 +174,13 @@ The `initHeaderGroupInstanceData` method is available for per-header-group insta
 
 ##### assignColumnPrototype and initColumnInstanceData
 
-The `assignColumnPrototype` method in a table feature is responsible for adding methods to the shared `column` prototype. For example, the [Sorting](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature adds column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added by the row sorting feature. The `initColumnInstanceData` method is available for per-column instance data or caches that cannot live on the shared prototype. For example, the [Aggregation](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-aggregation/rowAggregationFeature.ts) feature uses it to set up a per-column aggregation cache.
+The `assignColumnPrototype` method in a table feature is responsible for adding methods to the shared `column` prototype. For example, the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature adds column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added by the row sorting feature. The `initColumnInstanceData` method is available for per-column instance data or caches that cannot live on the shared prototype. For example, the [Aggregation](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.ts) feature uses it to set up a per-column aggregation cache.
 
 <br />
 
 ##### assignRowPrototype and initRowInstanceData
 
-The `assignRowPrototype` method in a table feature is responsible for adding methods to the shared `row` prototype. The `initRowInstanceData` method is available for per-row instance data or caches that cannot live on the shared prototype. For example, the [Row Selection](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature adds row instance API methods such as `toggleSelected` and `getIsSelected`.
+The `assignRowPrototype` method in a table feature is responsible for adding methods to the shared `row` prototype. The `initRowInstanceData` method is available for per-row instance data or caches that cannot live on the shared prototype. For example, the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature adds row instance API methods such as `toggleSelected` and `getIsSelected`.
 
 <br />
 

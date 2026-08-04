@@ -2,7 +2,7 @@ name: GitHub Actions Security Analysis
 
 on:
   push:
-    branches: [alpha]
+    branches: [main]
   pull_request:
     branches: ['**']
 

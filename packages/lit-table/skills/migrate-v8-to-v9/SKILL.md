@@ -107,7 +107,7 @@ Row, cell, column, header, and related methods now live on shared prototypes and
 
 ### Logical column pinning
 
-Beta.38 has no `left`/`right` aliases.
+V9 has no `left`/`right` aliases.
 
 | old                                                            | new                                                           |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -195,4 +195,4 @@ Use `row.getValue('name')`; prototype methods require the original instance and 
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/lit-table/dist/index.d.ts` and `TableController.d.ts`. Verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/dist/`; do not reconstruct v9 from v8 memory.
+Inspect `node_modules/@tanstack/lit-table/dist/index.d.ts` and `TableController.d.ts`. Verify feature slots and the exact installed v9 APIs in `node_modules/@tanstack/table-core/dist/`; do not reconstruct v9 from v8 memory.

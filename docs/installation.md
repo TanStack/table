@@ -8,21 +8,18 @@ Install your table adapter as a dependency using your preferred package manager:
 
 <!-- ::start:tabs variant="package-managers" -->
 
-react: @tanstack/react-table@beta
-preact: @tanstack/preact-table@beta
-octane: @tanstack/octane-table@beta
-vue: @tanstack/vue-table@beta
-solid: @tanstack/solid-table@beta
-svelte: @tanstack/svelte-table@beta
-angular: @tanstack/angular-table@beta
-ember: @tanstack/ember-table@beta
-lit: @tanstack/lit-table@beta
-alpine: @tanstack/alpine-table@beta
+react: @tanstack/react-table
+preact: @tanstack/preact-table
+octane: @tanstack/octane-table
+vue: @tanstack/vue-table
+solid: @tanstack/solid-table
+svelte: @tanstack/svelte-table
+angular: @tanstack/angular-table
+ember: @tanstack/ember-table
+lit: @tanstack/lit-table
+alpine: @tanstack/alpine-table
 
 <!-- ::end:tabs -->
-
-> [!IMPORTANT]
-> TanStack Table v9 is currently in beta, so the `@beta` dist-tag is required. If you omit it, your package manager will install the `latest` tag, which is still v8, and none of the v9 APIs documented here will exist.
 
 <!-- ::start:framework -->
 
@@ -68,4 +65,4 @@ The `@tanstack/alpine-table` package works with Alpine 3.
 
 <!-- ::end:framework -->
 
-Don't see your favorite framework (or favorite version of your framework) listed? You can always just use the `@tanstack/table-core` package and build your own adapter in your own codebase. Usually, only a thin wrapper is needed to manage state and rendering for your specific framework. Browse the [source code](https://github.com/TanStack/table/tree/beta/packages) of all of the other adapters to see how they work.
+Don't see your favorite framework (or favorite version of your framework) listed? You can always just use the `@tanstack/table-core` package and build your own adapter in your own codebase. Usually, only a thin wrapper is needed to manage state and rendering for your specific framework. Browse the [source code](https://github.com/TanStack/table/tree/main/packages) of all of the other adapters to see how they work.

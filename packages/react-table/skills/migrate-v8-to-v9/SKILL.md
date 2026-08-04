@@ -18,7 +18,7 @@ sources:
   - 'TanStack/table:examples/react/basic-use-table'
 ---
 
-Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this skill as the exhaustive migration checklist, not as general API documentation. Inspect the installed `src` files before writing APIs for a different v9 beta.
+Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this skill as the exhaustive migration checklist, not as general API documentation. Inspect the installed `src` files before writing APIs for a different v9 version.
 
 Framework prerequisite: React 18 or newer (`react >=18`).
 
@@ -70,7 +70,7 @@ Prefer explicit features as the end state. `stockFeatures` is a useful kitchen-s
 | `sortingFns` table option                      | `sortFns` slot in `tableFeatures()`                             |
 | `filterFns` table option/factory argument      | `filterFns` slot in `tableFeatures()`                           |
 | `aggregationFns` table option/factory argument | `aggregationFns` slot in `tableFeatures()`                      |
-| Early-v9-beta `rowModels: { ... }`             | Named row-model slots directly in `tableFeatures()`             |
+| Removed `rowModels: { ... }` object            | Named row-model slots directly in `tableFeatures()`             |
 
 In the registry slots, register individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) under their conventional keys alongside custom functions; the full `filterFns`/`sortFns`/`aggregationFns` registry objects still work but bundle every built-in.
 
@@ -137,7 +137,7 @@ Infer `TFeatures` with `typeof features`. If deliberately using `stockFeatures`,
 
 Column pinning now uses logical regions, with no deprecated aliases:
 
-| v8 / pre-beta.38                                               | v9 beta.38+                                                   |
+| v8                                                             | v9                                                            |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
 | `columnPinning.left` / `.right`                                | `.start` / `.end`                                             |
 | `column.pin('left' \| 'right')`                                | `column.pin('start' \| 'end')`                                |
