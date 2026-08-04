@@ -3008,6 +3008,9 @@ importers:
       '@glimmer/component':
         specifier: 2.1.1
         version: 2.1.1(supports-color@8.1.1)
+      '@tanstack/ember-table':
+        specifier: workspace:*
+        version: link:../../../packages/ember-table
       decorator-transforms:
         specifier: 2.4.0
         version: 2.4.0(@babel/core@7.29.7(supports-color@8.1.1))
@@ -3051,9 +3054,6 @@ importers:
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.62.3)(supports-color@8.1.1)
-      '@tanstack/ember-table':
-        specifier: workspace:*
-        version: link:../../../packages/ember-table
       babel-plugin-ember-template-compilation:
         specifier: 4.0.0
         version: 4.0.0
@@ -3215,6 +3215,9 @@ importers:
       '@glimmer/component':
         specifier: 2.1.1
         version: 2.1.1(supports-color@8.1.1)
+      '@tanstack/ember-table':
+        specifier: workspace:*
+        version: link:../../../packages/ember-table
       decorator-transforms:
         specifier: 2.4.0
         version: 2.4.0(@babel/core@7.29.7(supports-color@8.1.1))
@@ -3258,9 +3261,6 @@ importers:
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.62.3)(supports-color@8.1.1)
-      '@tanstack/ember-table':
-        specifier: workspace:*
-        version: link:../../../packages/ember-table
       babel-plugin-ember-template-compilation:
         specifier: 4.0.0
         version: 4.0.0

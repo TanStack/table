@@ -20,12 +20,16 @@ for (const pkg of packages) {
 
   for (const skillPath of skillPaths) {
     const source = await readFile(skillPath, 'utf8')
-    const library = source.match(
-      /^\s*library:\s*['"]?([^'",\n]+)['"]?,?\s*$/m,
-    )?.[1]
-    const version = source.match(
-      /^\s*library_version:\s*['"]?([^'",\n]+)['"]?,?\s*$/m,
-    )?.[1]
+    // Prettier may render the frontmatter metadata mapping in block style
+    // (one key per line) or collapse it into a single-line flow mapping, so
+    // match keys anywhere within the frontmatter rather than line-anchored.
+    const frontmatter = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? ''
+    const library = frontmatter
+      .match(/\blibrary:\s*['"]?([^'",}\n]+)['"]?/)?.[1]
+      ?.trim()
+    const version = frontmatter
+      .match(/\blibrary_version:\s*['"]?([^'",}\n]+)['"]?/)?.[1]
+      ?.trim()
 
     if (library !== pkg.name) {
       errors.push(
@@ -47,7 +51,7 @@ for (const pkg of packages) {
     }
 
     const updated = source.replace(
-      /^(\s*library_version:\s*)['"]?[^'",\n]+['"]?(,?)\s*$/m,
+      /(\blibrary_version:\s*)['"]?[^'",}\n]+?['"]?(\s*[,}\n])/,
       `$1'${packageJson.version}'$2`,
     )
     await writeFile(skillPath, updated)

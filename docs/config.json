@@ -11,7 +11,8 @@
       "children": [
         { "label": "Overview", "to": "overview" },
         { "label": "Installation", "to": "installation" },
-        { "label": "Devtools", "to": "devtools" }
+        { "label": "Devtools", "to": "devtools" },
+        { "label": "Agent Skills (TanStack Intent)", "to": "agent-skills" }
       ],
       "frameworks": [
         {

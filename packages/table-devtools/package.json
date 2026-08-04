@@ -54,7 +54,7 @@
     "solid-js": "^1.9.14"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "^9.0.0-beta.5"
+    "@tanstack/table-core": "^9.0.0"
   },
   "devDependencies": {
     "@tanstack/table-core": "workspace:*",

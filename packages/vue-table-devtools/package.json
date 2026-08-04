@@ -57,7 +57,7 @@
     "vue": "^3.5.40"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "^9.0.0-beta.5",
+    "@tanstack/table-core": "^9.0.0",
     "vue": ">=3.2"
   }
 }
