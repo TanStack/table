@@ -5,7 +5,7 @@ description: >
 metadata:
   type: core
   library: '@tanstack/match-sorter-utils'
-  library_version: '9.0.0-beta.80'
+  library_version: '9.0.0'
 sources:
   - 'TanStack/table:packages/match-sorter-utils/src/index.ts'
   - 'TanStack/table:docs/framework/react/guide/fuzzy-filtering.md'

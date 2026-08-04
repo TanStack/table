@@ -3,11 +3,7 @@ name: row-pinning
 description: >
   Pin stable row IDs into top, center, and bottom collections with rowPinningFeature and keepPinnedRows. Load for filtering/pagination visibility, explicit region rendering, or renderer-owned sticky CSS.
 metadata:
-  {
-    type: sub-skill,
-    library: '@tanstack/table-core',
-    library_version: '9.0.0-beta.80',
-  }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/framework/react/guide/row-pinning.md'
