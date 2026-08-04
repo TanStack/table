@@ -1,5 +1,6 @@
 {
   "name": "tanstack-solid-table-example-with-tanstack-query",
+  "private": true,
   "description": "",
   "scripts": {
     "start": "vite",

@@ -1,5 +1,6 @@
 {
   "name": "tanstack-solid-table-example-virtualized-infinite-scrolling",
+  "private": true,
   "description": "",
   "scripts": {
     "start": "vite",

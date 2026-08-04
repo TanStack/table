@@ -1,5 +1,6 @@
 {
   "name": "tanstack-solid-table-example-column-visibility",
+  "private": true,
   "description": "",
   "scripts": {
     "start": "vite",

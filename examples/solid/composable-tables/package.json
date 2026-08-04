@@ -1,5 +1,6 @@
 {
   "name": "tanstack-solid-table-example-composable-tables",
+  "private": true,
   "description": "",
   "scripts": {
     "start": "vite",

@@ -1,5 +1,6 @@
 {
   "name": "tanstack-solid-table-example-basic-app-table",
+  "private": true,
   "description": "",
   "scripts": {
     "start": "vite",

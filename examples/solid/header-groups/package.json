@@ -1,5 +1,6 @@
 {
   "name": "tanstack-solid-table-example-header-groups",
+  "private": true,
   "description": "",
   "scripts": {
     "start": "vite",
