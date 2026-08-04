@@ -6,10 +6,8 @@ TanStack Table is a headless table library. It manages your table's state and lo
 
 ## Installation
 
-TanStack Table v9 is currently published under the `beta` tag:
-
 ```bash
-npm install @tanstack/alpine-table@beta alpinejs
+npm install @tanstack/alpine-table alpinejs
 ```
 
 The `@tanstack/alpine-table` package works with Alpine 3.

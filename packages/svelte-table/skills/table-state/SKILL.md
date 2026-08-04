@@ -167,7 +167,7 @@ const table = createTable(options)
 const pagination = $derived(table.atoms.pagination.get())
 ```
 
-Starting in beta.59, `createTable` and `createAppTable` take only options, `table.state` is absent, and `subscribeTable` and `SubscribeSource` are no longer exported. Use native tracked Svelte reads and `$derived` projections.
+In v9, `createTable` and `createAppTable` take only options, `table.state` is absent, and `subscribeTable` and `SubscribeSource` are no longer exported. Use native tracked Svelte reads and `$derived` projections.
 
 Source: `docs/framework/svelte/guide/migrating.md`
 

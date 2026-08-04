@@ -17,7 +17,7 @@ sources:
   - 'TanStack/table:examples/solid/basic-use-table'
 ---
 
-Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Solid migration checklist. Check the installed declarations before emitting APIs for another beta.
+Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Solid migration checklist. Check the installed declarations before emitting APIs for a different v9 version.
 
 Framework prerequisite: Solid 1.3 or newer (`solid-js >=1.3`).
 
@@ -65,7 +65,7 @@ Keep static features and columns outside reactive component work. Prefer explici
 | `getFacetedMinMaxValues()`                                | `facetedMinMaxValues: createFacetedMinMaxValues()`      |
 | `getFacetedUniqueValues()`                                | `facetedUniqueValues: createFacetedUniqueValues()`      |
 | Table/factory `sortingFns`, `filterFns`, `aggregationFns` | `sortFns`, `filterFns`, `aggregationFns` feature slots  |
-| Early-beta `rowModels: { ... }`                           | Direct named slots in `tableFeatures()`                 |
+| Removed `rowModels: { ... }`                              | Direct named slots in `tableFeatures()`                 |
 
 In the registry slots, register individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) under their conventional keys alongside custom functions; the full `filterFns`/`sortFns`/`aggregationFns` registry objects still work but bundle every built-in.
 
@@ -131,7 +131,7 @@ Infer with `typeof features`; use `StockFeatures` only when deliberately typing 
 
 ### Shared API and semantic changes
 
-| v8 / pre-beta.38 pinning                                       | v9 beta.38+                                                   |
+| v8 pinning                                                     | v9                                                            |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
 | `columnPinning.left` / `.right`                                | `.start` / `.end`                                             |
 | `column.pin('left' \| 'right')`                                | `column.pin('start' \| 'end')`                                |
@@ -170,7 +170,7 @@ All other underscore-prefixed internals are removed. `getIsSomeRowsSelected()` a
 ## Migration procedure
 
 1. Replace `createSolidTable` with `createTable` and inventory used features, processing, state, and APIs.
-2. Build `tableFeatures()` in prerequisite order; remove `getCoreRowModel` and old/early-beta row-model placement.
+2. Build `tableFeatures()` in prerequisite order; remove `getCoreRowModel` and old row-model placement.
 3. Apply all pinning, sizing, sorting, row, and selection mappings above.
 4. Update helpers/types with `typeof features`; migrate meta and function augmentation to per-feature slots where appropriate.
 5. Preserve Solid tracking with getters for `data` and controlled state; replace `getState()` and `onStateChange`.

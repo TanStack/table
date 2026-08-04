@@ -6,10 +6,8 @@ TanStack Table is a headless table library. It manages your table's state and lo
 
 ## Installation
 
-TanStack Table v9 is currently published under the `beta` tag:
-
 ```bash
-npm install @tanstack/ember-table@beta
+npm install @tanstack/ember-table
 ```
 
 `@tanstack/ember-table` is a v2 addon that requires Ember 5.8+ with Embroider (or ember-auto-import v2). It works with `.gts`/`.gjs` template tag components and Glint.

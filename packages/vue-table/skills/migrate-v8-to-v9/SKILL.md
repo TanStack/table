@@ -98,7 +98,7 @@ Row, cell, column, header, and related methods now live on shared prototypes and
 
 ### Logical column pinning
 
-There are no `left`/`right` aliases in beta.38.
+V9 has no `left`/`right` aliases.
 
 | old                                                            | new                                                           |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -182,4 +182,4 @@ For `table.Subscribe`, use `children={(atoms) => ...}` explicitly.
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/vue-table/dist/index.d.ts` and `useTable.d.ts`; verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/dist/`. Do not reconstruct v9 from v8 memory.
+Inspect `node_modules/@tanstack/vue-table/dist/index.d.ts` and `useTable.d.ts`; verify feature slots and the exact installed v9 APIs in `node_modules/@tanstack/table-core/dist/`. Do not reconstruct v9 from v8 memory.

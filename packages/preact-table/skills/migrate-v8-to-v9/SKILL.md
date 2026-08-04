@@ -17,7 +17,7 @@ sources:
   - 'TanStack/table:examples/preact/basic-use-table'
 ---
 
-Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Preact migration checklist. Verify exact APIs in the installed declarations before assuming another v9 beta has the same surface.
+Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Preact migration checklist. Verify the exact v9 APIs in the installed declarations before assuming a different v9 version has the same surface.
 
 Framework prerequisite: Preact 10 or newer (`preact >=10`).
 
@@ -59,7 +59,7 @@ V8 did not have a first-party Preact adapter; many Preact apps used `@tanstack/r
 | `getFacetedMinMaxValues()`                                | `facetedMinMaxValues: createFacetedMinMaxValues()`                  |
 | `getFacetedUniqueValues()`                                | `facetedUniqueValues: createFacetedUniqueValues()`                  |
 | Table/factory `sortingFns`, `filterFns`, `aggregationFns` | `sortFns`, `filterFns`, `aggregationFns` slots in `tableFeatures()` |
-| Early-beta `rowModels: { ... }`                           | Direct named slots in `tableFeatures()`                             |
+| Removed `rowModels: { ... }` object                           | Direct named slots in `tableFeatures()`                             |
 
 In the registry slots, register individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) under their conventional keys alongside custom functions; the full `filterFns`/`sortFns`/`aggregationFns` registry objects still work but bundle every built-in.
 
@@ -110,7 +110,7 @@ Infer with `typeof features`; use `StockFeatures` only for deliberate `stockFeat
 
 ### Shared API and semantic changes
 
-| v8 / pre-beta.38 pinning                                       | v9 beta.38+                                                   |
+| v8 pinning                                       | v9                                                   |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
 | `columnPinning.left` / `.right`                                | `.start` / `.end`                                             |
 | `column.pin('left' \| 'right')`                                | `column.pin('start' \| 'end')`                                |
@@ -150,7 +150,7 @@ All other underscore-prefixed internals are removed. `getIsSomeRowsSelected()` a
 
 1. Replace React adapter imports and `useReactTable`; remove Table-only `preact/compat` configuration.
 2. Inventory used features, row models, registries, state slices, methods, and `_` internals.
-3. Build `tableFeatures()` in prerequisite order; remove `getCoreRowModel` and old/early-beta row-model placement.
+3. Build `tableFeatures()` in prerequisite order; remove `getCoreRowModel` and old row-model placement.
 4. Apply all pinning, sizing, sorting, row, and selection mappings above.
 5. Update helpers/types with `typeof features`, retarget augmentation, and prefer feature registry/meta slots.
 6. Replace `getState()`/`onStateChange`; explicitly choose internal, per-slice controlled, or external-atom ownership.

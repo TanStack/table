@@ -2,20 +2,9 @@
 title: Migrating to TanStack Table V9 (Lit)
 ---
 
-> [!NOTE]
-> `v9.0.0-beta.48`/`beta.49` split aggregation out of `columnGroupingFeature` into a new `rowAggregationFeature` (`stockFeatures` includes both). If you declare features explicitly, add `rowAggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. Aggregation function definitions, row-depth selection, and the `getAggregationValue` signature also changed. See [Grouping and Aggregation](#grouping-and-aggregation) below.
-
-> [!NOTE]
-> `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology (in LTR layouts `start` usually means left; in RTL it usually means right). Update `columnPinning.left`/`right` to `columnPinning.start`/`end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*`/`getRight*` APIs to `getStart*`/`getEnd*`. See [Column Pinning](#column-pinning) for the full mapping.
-
-> [!NOTE]
-> `v9.0.0-beta.10` moves row model factories and the `filterFns`/`sortFns`/`aggregationFns` registries onto the `features` object (the separate `rowModels` option is gone, and the factories no longer take arguments). See the row models section below for the new shape.
-
 ## What's New in TanStack Table V9
 
 TanStack Table V9 is a major release with significant internal architectural improvements while maintaining the core table logic you're familiar with. Here are the key changes:
-
-> The Lit adapter may change during the v9 beta cycle. This guide documents the current local v9 API and avoids speculating about future beta changes.
 
 ### 1. Better Performance
 
@@ -483,9 +472,9 @@ Do not provide both `atoms.pagination` and `state.pagination`; the atom owns tha
 
 ### Column Pinning
 
-`v9.0.0-beta.38` changes column pinning to use logical `start`/`end` terminology instead of physical `left`/`right` terminology. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases in beta.38.
+V9 changes column pinning to use logical `start`/`end` terminology instead of the physical `left`/`right` terminology used in V8. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases.
 
-| Before beta.38                       | beta.38+                             |
+| V8                                   | V9                                   |
 | ------------------------------------ | ------------------------------------ |
 | `columnPinning.left`                 | `columnPinning.start`                |
 | `columnPinning.right`                | `columnPinning.end`                  |

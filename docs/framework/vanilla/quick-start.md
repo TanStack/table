@@ -6,10 +6,8 @@ TanStack Table is a headless table library. It manages your table's state and lo
 
 ## Installation
 
-TanStack Table v9 is currently published under the `beta` tag:
-
 ```bash
-npm install @tanstack/table-core@beta
+npm install @tanstack/table-core
 ```
 
 ## Your First Table

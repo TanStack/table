@@ -105,7 +105,7 @@ Row, cell, column, header, and related methods now live on shared prototypes and
 
 ### Logical column pinning
 
-Beta.38 has no physical aliases.
+V9 has no physical aliases.
 
 | old                                                            | new                                                           |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
