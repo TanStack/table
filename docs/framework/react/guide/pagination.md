@@ -84,7 +84,7 @@ No pagination row model is needed for server-side pagination, but if you have pr
 
 #### Page Count and Row Count
 
-The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, you can just pass in `-1` for the `pageCount`, but the `getCanNextPage` and `getCanPreviousPage` row model functions will always return `true` in this case.
+The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, you can just pass in `-1` for the `pageCount`, but the `getCanNextPage` and `getCanPreviousPage` row model functions will always return `true` in this case. When you do know whether more pages are available (for example, a server response that says "has more"), you can override this by setting the optional `canNextPage`/`canPreviousPage` values on the [pagination state](#pagination-state) directly.
 
 ```tsx
 import {
@@ -115,6 +115,10 @@ The `pagination` state is an object that contains the following properties:
 
 - `pageIndex`: The current page index (zero-based).
 - `pageSize`: The current page size.
+- `canNextPage` _(optional)_: Explicitly overrides the value returned by `getCanNextPage()`. Useful for manual/server-side pagination (e.g. news feeds) where the total `pageCount`/`rowCount` is unknown.
+- `canPreviousPage` _(optional)_: Explicitly overrides the value returned by `getCanPreviousPage()`. Useful for manual/server-side pagination where the total `pageCount`/`rowCount` is unknown.
+
+> **Note**: The pagination navigation APIs (`setPageIndex`, `setPageSize`, `nextPage`, etc.) preserve `canNextPage`/`canPreviousPage` when they update the state. However, if you replace the whole `pagination` object yourself (for example inside `onPaginationChange`), you must re-supply these flags to keep the overrides in effect.
 
 For reactive reads that should re-render your UI, use `table.state.pagination`. In event handlers, you can read the current snapshot with `table.atoms.pagination.get()`, but this read does not subscribe the component to future changes.
 
