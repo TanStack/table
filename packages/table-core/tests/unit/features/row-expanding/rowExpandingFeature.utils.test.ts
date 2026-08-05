@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   constructTable,
   createExpandedRowModel,
+  functionalUpdate,
   rowExpandingFeature,
 } from '../../../../src'
 import {
@@ -25,7 +26,12 @@ import { testFeatures } from '../../../fixtures/features'
 import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
 import { getUpdaterResult } from '../../../helpers/testUtils'
-import type { ExpandedState, Table, TableOptions } from '../../../../src'
+import type {
+  ExpandedState,
+  Table,
+  TableOptions,
+  Updater,
+} from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
 const features = testFeatures({
@@ -88,6 +94,7 @@ describe('table_resetExpanded', () => {
       onExpandedChange,
       initialState: { expanded: { '0': true } },
     })
+    table.baseAtoms.expanded.set({ '0': true, '1': true })
 
     table_resetExpanded(table)
 
@@ -100,10 +107,66 @@ describe('table_resetExpanded', () => {
       onExpandedChange,
       initialState: { expanded: true },
     })
+    table.baseAtoms.expanded.set({ '0': true })
 
     table_resetExpanded(table)
 
     expect(onExpandedChange).toHaveBeenCalledWith(true)
+  })
+
+  it('should reset when the expanded ids differ at the same count', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({
+      onExpandedChange,
+      initialState: { expanded: { '0': true } },
+    })
+    table.baseAtoms.expanded.set({ '1': true })
+
+    table_resetExpanded(table)
+
+    expect(onExpandedChange).toHaveBeenCalledWith({ '0': true })
+  })
+
+  it('should be a no-op when nothing is expanded', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange })
+
+    table_resetExpanded(table)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when the expanded map is already at the target', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({
+      onExpandedChange,
+      initialState: { expanded: { '0': true } },
+    })
+
+    table_resetExpanded(table)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when already in the expanded-all initial state', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({
+      onExpandedChange,
+      initialState: { expanded: true },
+    })
+
+    table_resetExpanded(table)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when defaultState is true and nothing is expanded', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange })
+
+    table_resetExpanded(table, true)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
   })
 })
 
@@ -534,6 +597,34 @@ describe('table_autoResetExpanded', () => {
     const table = makeTable({ onExpandedChange, manualExpanding: true })
 
     table_autoResetExpanded(table)
+    await flushMicrotasks()
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should not loop when a data identity change resets controlled state that already matches', async () => {
+    // Stands in for a framework render loop: the auto-reset publishes expanded
+    // state, the consumer re-renders with a fresh `data` reference, and the core
+    // row model recomputes and auto-resets again
+    let expanded: ExpandedState = {}
+    let table: Table<typeof features, Person>
+    const onExpandedChange = vi.fn((updater: Updater<ExpandedState>) => {
+      expanded = functionalUpdate(updater, expanded)
+      // stop feeding the loop so a regression fails the assertion below
+      // instead of hanging the suite
+      if (onExpandedChange.mock.calls.length > 5) return
+      table.setOptions((prev) => ({
+        ...prev,
+        data: [...prev.data],
+        state: { ...prev.state, expanded },
+      }))
+      table.getCoreRowModel()
+    })
+    table = makeTable({ state: { expanded }, onExpandedChange })
+    table.getCoreRowModel()
+
+    table.setOptions((prev) => ({ ...prev, data: [...prev.data] }))
+    table.getCoreRowModel()
     await flushMicrotasks()
 
     expect(onExpandedChange).not.toHaveBeenCalled()

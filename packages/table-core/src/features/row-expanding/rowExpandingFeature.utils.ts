@@ -107,6 +107,10 @@ export function table_toggleAllRowsExpanded<
  * With no argument, the reset clones `table.initialState.expanded` when it
  * exists. Passing `true` ignores initial state and resets to `{}`.
  *
+ * The call is a no-op (no `onExpandedChange`) when the target state already
+ * matches the current state, so an auto-reset on a table with nothing expanded
+ * does not publish a new-but-equal map.
+ *
  * @example
  * ```ts
  * table_resetExpanded(table)
@@ -117,18 +121,35 @@ export function table_resetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+  const currentExpanded = table.atoms.expanded?.get() ?? {}
   const initialExpanded = table.initialState.expanded
-  table_setExpanded(
-    table,
-    defaultState
-      ? makeObjectMap()
-      : initialExpanded === true
-        ? true
-        : Object.assign(
-            makeObjectMap<boolean | undefined>(),
-            cloneState(initialExpanded ?? {}),
-          ),
-  )
+  const newExpanded: ExpandedState = defaultState
+    ? makeObjectMap()
+    : initialExpanded === true
+      ? true
+      : Object.assign(
+          makeObjectMap<boolean | undefined>(),
+          cloneState(initialExpanded ?? {}),
+        )
+
+  if (isSameExpandedState(currentExpanded, newExpanded)) return
+
+  table_setExpanded(table, newExpanded)
+}
+
+function isSameExpandedState(a: ExpandedState, b: ExpandedState): boolean {
+  if (a === true || b === true) return a === b
+
+  const aKeys = Object.keys(a)
+
+  if (aKeys.length !== Object.keys(b).length) return false
+
+  for (let i = 0; i < aKeys.length; i++) {
+    const key = aKeys[i]!
+    if (!hasOwn(b, key) || a[key] !== b[key]) return false
+  }
+
+  return true
 }
 
 /**

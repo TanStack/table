@@ -9,7 +9,7 @@ title: table_getExpandedDepth
 function table_getExpandedDepth<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:245](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L245)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:266](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L266)
 
 Computes the deepest expanded row id depth.
 
