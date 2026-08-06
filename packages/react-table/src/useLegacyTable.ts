@@ -425,9 +425,14 @@ export function useLegacyTable<TData extends RowData>(
     // marker options to match the table instance lifecycle.
     const legacyFeatures: LegacyFeatures & Partial<TableFeatures> = {
       ...stockFeatures,
-      filterFns: { ...filterFns, ...options.filterFns },
-      sortFns: { ...sortFns, ...options.sortFns },
-      aggregationFns: { ...aggregationFns, ...options.aggregationFns },
+      // Declaration-merged names are required members of the registries, so the
+      // optional options are asserted; spreading `undefined` yields no keys.
+      filterFns: { ...filterFns, ...(options.filterFns as FilterFns) },
+      sortFns: { ...sortFns, ...(options.sortFns as SortFns) },
+      aggregationFns: {
+        ...aggregationFns,
+        ...(options.aggregationFns as AggregationFns),
+      },
     }
 
     if (getFilteredRowModel) {
