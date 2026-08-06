@@ -26,6 +26,7 @@ import type {
   FilterFns,
   Header,
   HeaderGroup,
+  Prettify,
   Row,
   RowData,
   RowModel,
@@ -158,25 +159,38 @@ export function getCoreRowModel<
 // =============================================================================
 
 /**
+ * Feature set registered by `useLegacyTable`.
+ *
+ * Extends the stock features with the built-in filter, sort, and aggregation
+ * registries so column definitions accept the v8 string identifiers such as
+ * `'mean'` and `'includesString'`.
+ */
+export interface LegacyFeatures extends StockFeatures {
+  aggregationFns: Prettify<AggregationFns & typeof aggregationFns>
+  filterFns: Prettify<FilterFns & typeof filterFns>
+  sortFns: Prettify<SortFns & typeof sortFns>
+}
+
+/**
  * Row model factory function type from v8 API
  */
 export type RowModelFactory<TData extends RowData> = (
-  table: Table<StockFeatures, TData>,
-) => () => RowModel<StockFeatures, TData>
+  table: Table<LegacyFeatures, TData>,
+) => () => RowModel<LegacyFeatures, TData>
 
 /**
  * Faceted row model factory function type from v8 API
  */
 export type FacetedRowModelFactory<TData extends RowData> = (
-  table: Table<StockFeatures, TData>,
+  table: Table<LegacyFeatures, TData>,
   columnId: string,
-) => () => RowModel<StockFeatures, TData>
+) => () => RowModel<LegacyFeatures, TData>
 
 /**
  * Faceted min/max values factory function type from v8 API
  */
 export type FacetedMinMaxValuesFactory<TData extends RowData> = (
-  table: Table<StockFeatures, TData>,
+  table: Table<LegacyFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number]
 
@@ -184,7 +198,7 @@ export type FacetedMinMaxValuesFactory<TData extends RowData> = (
  * Faceted unique values factory function type from v8 API
  */
 export type FacetedUniqueValuesFactory<TData extends RowData> = (
-  table: Table<StockFeatures, TData>,
+  table: Table<LegacyFeatures, TData>,
   columnId: string,
 ) => () => Map<any, number>
 
@@ -263,7 +277,7 @@ export interface LegacyRowModelOptions<TData extends RowData> {
  * @deprecated This is a compatibility layer for migrating from v8. Use `useTable` with an explicit `features` option instead.
  */
 export type LegacyTableOptions<TData extends RowData> = Omit<
-  TableOptions<StockFeatures, TData>,
+  TableOptions<LegacyFeatures, TData>,
   'features'
 > &
   LegacyRowModelOptions<TData>
@@ -274,53 +288,53 @@ export type LegacyTableOptions<TData extends RowData> = Omit<
  * @deprecated Use `useTable` with explicit state selection instead.
  */
 export type LegacyReactTable<TData extends RowData> = ReactTable<
-  StockFeatures,
+  LegacyFeatures,
   TData,
-  TableState<StockFeatures>
+  TableState<LegacyFeatures>
 > & {
   /**
    * Returns the current table state.
    * @deprecated In v9, access state directly via `table.state` or use `table.state` for the full state.
    */
-  getState: () => TableState<StockFeatures>
+  getState: () => TableState<LegacyFeatures>
   /**
    * Sets the current table state.
    * @deprecated In v9, access state directly via `table.baseAtoms`
    */
-  setState: (state: TableState<StockFeatures>) => void
+  setState: (state: TableState<LegacyFeatures>) => void
 }
 
 // =============================================================================
-// Legacy type aliases - StockFeatures hardcoded for simpler prop typing with useLegacyTable
+// Legacy type aliases - LegacyFeatures hardcoded for simpler prop typing with useLegacyTable
 // =============================================================================
 
 /** @deprecated Use Column<TFeatures, TData, TValue> with useTable instead. */
 export type LegacyColumn<TData extends RowData, TValue = unknown> = Column<
-  StockFeatures,
+  LegacyFeatures,
   TData,
   TValue
 >
 
 /** @deprecated Use Row<TFeatures, TData> with useTable instead. */
-export type LegacyRow<TData extends RowData> = Row<StockFeatures, TData>
+export type LegacyRow<TData extends RowData> = Row<LegacyFeatures, TData>
 
 /** @deprecated Use Cell<TFeatures, TData, TValue> with useTable instead. */
 export type LegacyCell<TData extends RowData, TValue = unknown> = Cell<
-  StockFeatures,
+  LegacyFeatures,
   TData,
   TValue
 >
 
 /** @deprecated Use Header<TFeatures, TData, TValue> with useTable instead. */
 export type LegacyHeader<TData extends RowData, TValue = unknown> = Header<
-  StockFeatures,
+  LegacyFeatures,
   TData,
   TValue
 >
 
 /** @deprecated Use HeaderGroup<TFeatures, TData> with useTable instead. */
 export type LegacyHeaderGroup<TData extends RowData> = HeaderGroup<
-  StockFeatures,
+  LegacyFeatures,
   TData
 >
 
@@ -328,26 +342,26 @@ export type LegacyHeaderGroup<TData extends RowData> = HeaderGroup<
 export type LegacyColumnDef<
   TData extends RowData,
   TValue = unknown,
-> = ColumnDef<StockFeatures, TData, TValue>
+> = ColumnDef<LegacyFeatures, TData, TValue>
 
 /** @deprecated Use Table<TFeatures, TData> with useTable instead. */
-export type LegacyTable<TData extends RowData> = Table<StockFeatures, TData>
+export type LegacyTable<TData extends RowData> = Table<LegacyFeatures, TData>
 
 // =============================================================================
-// Legacy column helper - StockFeatures hardcoded
+// Legacy column helper - LegacyFeatures hardcoded
 // =============================================================================
 
 /**
  * @deprecated Use `createColumnHelper<TFeatures, TData>()` with useTable instead.
  *
- * A column helper with StockFeatures pre-bound for use with useLegacyTable.
+ * A column helper with LegacyFeatures pre-bound for use with useLegacyTable.
  * Only requires TData—no need to specify TFeatures.
  */
 export function legacyCreateColumnHelper<TData extends RowData>(): ColumnHelper<
-  StockFeatures,
+  LegacyFeatures,
   TData
 > {
-  return createColumnHelper<StockFeatures, TData>()
+  return createColumnHelper<LegacyFeatures, TData>()
 }
 
 // =============================================================================
@@ -409,7 +423,7 @@ export function useLegacyTable<TData extends RowData>(
   const [features] = useState(() => {
     // Legacy row model options are setup-only. Capture the first render's
     // marker options to match the table instance lifecycle.
-    const legacyFeatures: StockFeatures & Partial<TableFeatures> = {
+    const legacyFeatures: LegacyFeatures & Partial<TableFeatures> = {
       ...stockFeatures,
       filterFns: { ...filterFns, ...options.filterFns },
       sortFns: { ...sortFns, ...options.sortFns },
@@ -452,7 +466,7 @@ export function useLegacyTable<TData extends RowData>(
   })
 
   // Call useTable with the v9 API, subscribing to all state changes
-  const table = useTable<StockFeatures, TData, TableState<StockFeatures>>(
+  const table = useTable<LegacyFeatures, TData, TableState<LegacyFeatures>>(
     {
       ...restOptions,
       features,
@@ -465,7 +479,7 @@ export function useLegacyTable<TData extends RowData>(
   }, [table])
 
   const setState = useCallback(
-    (state: TableState<StockFeatures>) => {
+    (state: TableState<LegacyFeatures>) => {
       Object.entries(state).forEach(([key, value]) => {
         // @ts-expect-error - baseAtoms is indexed by dynamic string keys
         table.baseAtoms[key].set(value)
