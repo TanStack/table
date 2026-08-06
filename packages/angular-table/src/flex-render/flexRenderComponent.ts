@@ -13,14 +13,49 @@ type CreateComponentOptions = Parameters<typeof createComponent>[1]
 type CreateComponentBindings = CreateComponentOptions['bindings']
 type CreateComponentDirectives = CreateComponentOptions['directives']
 
+interface FlexRenderComponentMetadata<TComponent> {
+  mirror: ComponentMirror<TComponent>
+  allowedInputNames: Array<string>
+  allowedOutputNames: Array<string>
+}
+
+const componentMetadataCache = new WeakMap<
+  Type<unknown>,
+  FlexRenderComponentMetadata<unknown>
+>()
+
 interface FlexRenderOptions<
   TInputs extends Record<string, any>,
   TOutputs extends Record<string, any>,
 > {
   /**
+   * Optional identity used to control component instance reuse.
+   *
+   * A rendered component is reused while both its component type and key are
+   * unchanged. Change the key to explicitly destroy and recreate the component,
+   * for example when new creation-time bindings, directives, or an injector
+   * need to be applied.
+   *
+   * Inputs and outputs do not affect component identity and are synchronized
+   * onto a reused component instance.
+   *
+   * @example
+   * ```ts
+   * flexRenderComponent(EditorComponent, {
+   *   key: row.original.editorVersion,
+   *   inputs: { value: row.original.value },
+   * })
+   * ```
+   */
+  readonly key?: string | number
+  /**
    * Native Angular bindings applied at component creation time via `createComponent`.
    * Use this option to set inputs, outputs, or two-way bindings at creation time.
    * Shouldn't be used together with {@link FlexRenderOptions#inputs} or {@link FlexRenderOptions#outputs} option.
+   *
+   * Bindings are creation-time configuration. Changing this array after the
+   * component has mounted does not update the existing component. Change
+   * {@link FlexRenderOptions#key} to recreate the component with new bindings.
    *
    * Binding input/outputs at creation time: {@link https://angular.dev/guide/components/programmatic-rendering#binding-inputs-outputs-and-setting-host-directives-at-creation}
    *
@@ -53,6 +88,10 @@ interface FlexRenderOptions<
   readonly bindings?: Array<Binding>
   /**
    * Directives to apply to the component at creation time.
+   *
+   * Directives are creation-time configuration. Changing this array after the
+   * component has mounted does not update the existing component. Change
+   * {@link FlexRenderOptions#key} to recreate the component with new directives.
    *
    * Binding directives at creation time: {@link https://angular.dev/guide/components/programmatic-rendering#binding-inputs-outputs-and-setting-host-directives-at-creation}
    *
@@ -101,7 +140,11 @@ interface FlexRenderOptions<
    */
   readonly outputs?: TOutputs
   /**
-   * Optional {@link Injector} that will be used when rendering the component
+   * Optional {@link Injector} that will be used when rendering the component.
+   *
+   * The injector is applied when the component is created. Change
+   * {@link FlexRenderOptions#key} to recreate a mounted component with a
+   * different injector.
    */
   readonly injector?: Injector
 }
@@ -151,7 +194,7 @@ export function flexRenderComponent<TComponent = any>(
   component: Type<TComponent>,
   options?: FlexRenderOptions<Inputs<TComponent>, Outputs<TComponent>>,
 ): FlexRenderComponent<TComponent> {
-  const { inputs, injector, outputs, directives, bindings } = options ?? {}
+  const { key, inputs, injector, outputs, directives, bindings } = options ?? {}
   return new FlexRenderComponentInstance(
     component,
     inputs,
@@ -159,6 +202,7 @@ export function flexRenderComponent<TComponent = any>(
     outputs,
     directives,
     bindings,
+    key,
   )
 }
 
@@ -207,6 +251,13 @@ export interface FlexRenderComponent<TComponent = any> {
    * The component type
    */
   readonly component: Type<TComponent>
+  /**
+   * Optional identity used together with the component type to decide whether
+   * an existing component instance can be reused.
+   *
+   * @see {@link FlexRenderOptions#key}
+   */
+  readonly key?: string | number
   /**
    * Reflected metadata about the component.
    */
@@ -260,8 +311,8 @@ export class FlexRenderComponentInstance<
   TComponent = any,
 > implements FlexRenderComponent<TComponent> {
   readonly mirror: ComponentMirror<TComponent>
-  readonly allowedInputNames: Array<string> = []
-  readonly allowedOutputNames: Array<string> = []
+  readonly allowedInputNames: Array<string>
+  readonly allowedOutputNames: Array<string>
 
   constructor(
     readonly component: Type<TComponent>,
@@ -270,19 +321,26 @@ export class FlexRenderComponentInstance<
     readonly outputs?: Outputs<TComponent>,
     readonly directives?: CreateComponentDirectives,
     readonly bindings?: CreateComponentBindings,
+    readonly key?: string | number,
   ) {
-    const mirror = reflectComponentType(component)
-    if (!mirror) {
-      throw new Error(
-        `[@tanstack-table/angular] The provided symbol is not a component`,
-      )
+    let metadata = componentMetadataCache.get(component) as
+      FlexRenderComponentMetadata<TComponent> | undefined
+    if (!metadata) {
+      const mirror = reflectComponentType(component)
+      if (!mirror) {
+        throw new Error(
+          `[@tanstack-table/angular] The provided symbol is not a component`,
+        )
+      }
+      metadata = {
+        mirror,
+        allowedInputNames: mirror.inputs.map((input) => input.propName),
+        allowedOutputNames: mirror.outputs.map((output) => output.propName),
+      }
+      componentMetadataCache.set(component, metadata)
     }
-    this.mirror = mirror
-    for (const input of this.mirror.inputs) {
-      this.allowedInputNames.push(input.propName)
-    }
-    for (const output of this.mirror.outputs) {
-      this.allowedOutputNames.push(output.propName)
-    }
+    this.mirror = metadata.mirror
+    this.allowedInputNames = metadata.allowedInputNames
+    this.allowedOutputNames = metadata.allowedOutputNames
   }
 }

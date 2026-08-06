@@ -99,14 +99,15 @@ export function injectTable<
 
   return ngZone.runOutsideAngular(() =>
     lazyInit(() => {
+      const initialOptions = options()
       // Explicit type arguments skip generic inference from the spread object
       // (a type-check hot spot); the spread only adds the angular reactivity
       // binding to `features`.
       const table = constructTable<TFeatures, TData>({
-        ...options(),
+        ...initialOptions,
         features: {
           coreReactivityFeature: angularReactivity(injector),
-          ...options().features,
+          ...initialOptions.features,
         },
       })
 

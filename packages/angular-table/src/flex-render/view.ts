@@ -78,8 +78,6 @@ export abstract class FlexRenderView<
 
   abstract dirtyCheck(): void
 
-  abstract onDestroy(callback: Function): void
-
   abstract eq(view: TContent): boolean
 
   abstract unmount(): void
@@ -106,24 +104,28 @@ export class FlexRenderTemplateView extends FlexRenderView<
   }
 
   override updateProps(_props: Record<string, any>) {
-    this.view.markForCheck()
+    if (this.content.kind === 'templateRef') {
+      const context = this.view.context as { $implicit: unknown }
+      context.$implicit = _props
+      this.view.markForCheck()
+    }
   }
 
   override dirtyCheck() {
-    // Basically a no-op. When the view is created via EmbeddedViewRef, we don't need to do any manual update
-    // since this type of content has a proxy as a context, then every time the root component is checked for changes,
-    // the property getter will be re-evaluated.
-    //
-    // If in a future we need to manually mark the view as dirty, just uncomment next line
-    // this.view.markForCheck()
+    if (this.content.kind !== 'primitive') return
+
+    const context = this.view.context as { $implicit: unknown }
+    context.$implicit = this.content.content
+    if (
+      this.previousContent.kind !== 'primitive' ||
+      !Object.is(this.previousContent.content, this.content.content)
+    ) {
+      this.view.markForCheck()
+    }
   }
 
   override unmount() {
     this.view.destroy()
-  }
-
-  override onDestroy(callback: Function) {
-    this.view.onDestroy(callback)
   }
 
   override eq(
@@ -133,9 +135,7 @@ export class FlexRenderTemplateView extends FlexRenderView<
     >,
   ): boolean {
     return (
-      (this.content.kind === 'primitive' &&
-        compare.kind === 'primitive' &&
-        this.content.content === compare.content) ||
+      (this.content.kind === 'primitive' && compare.kind === 'primitive') ||
       (this.content.kind === 'templateRef' &&
         compare.kind === 'templateRef' &&
         this.content.content === compare.content)
@@ -166,12 +166,12 @@ export class FlexRenderComponentView extends FlexRenderView<
   override updateProps(props: Record<string, any>) {
     switch (this.content.kind) {
       case 'component': {
-        this.view.setInputs(props)
+        this.view.updateInputs(props)
         break
       }
       case 'flexRenderComponent': {
-        // No-op. When FlexRenderFlags.PropsReferenceChanged is set,
-        // FlexRenderComponent will be updated into `dirtyCheck`.
+        // Wrapper inputs and outputs come from the newly resolved content and
+        // are synchronized in `dirtyCheck`.
         break
       }
     }
@@ -187,8 +187,7 @@ export class FlexRenderComponentView extends FlexRenderView<
         break
       }
       case 'flexRenderComponent': {
-        // Given context instance will always have a different reference than the previous one,
-        // so instead of recreating the entire view, we will only update the current view
+        // Reuse the component and synchronize only changed inputs and outputs.
         if (this.view.eqType(this.content.content)) {
           this.view.update(this.content.content)
         }
@@ -200,10 +199,6 @@ export class FlexRenderComponentView extends FlexRenderView<
 
   override unmount() {
     this.view.componentRef.destroy()
-  }
-
-  override onDestroy(callback: Function) {
-    this.view.componentRef.onDestroy(callback)
   }
 
   override eq(
@@ -218,7 +213,7 @@ export class FlexRenderComponentView extends FlexRenderView<
         this.content.content === compare.content) ||
       (this.content.kind === 'flexRenderComponent' &&
         compare.kind === 'flexRenderComponent' &&
-        this.content.content.component === compare.content.component)
+        this.view.canReuse(compare.content))
     )
   }
 }

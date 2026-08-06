@@ -1,19 +1,15 @@
-import {
-  Component,
-  input,
-  signal,
-  ViewChild,
-  type TemplateRef,
-} from '@angular/core'
-import { TestBed, type ComponentFixture } from '@angular/core/testing'
-import { describe, expect, test } from 'vitest'
+import { Component, ViewChild, input, output, signal } from '@angular/core'
+import { TestBed } from '@angular/core/testing'
+import { describe, expect, test, vi } from 'vitest'
 import {
   FlexRender,
-  flexRenderComponent,
   FlexRenderDirective,
+  flexRenderComponent,
   injectFlexRenderContext,
 } from '../../src'
 import { setFixtureSignalInput, setFixtureSignalInputs } from '../test-utils'
+import type { ComponentFixture } from '@angular/core/testing'
+import type { TemplateRef } from '@angular/core'
 
 describe('FlexRenderDirective', () => {
   test('should render primitives', () => {
@@ -60,6 +56,34 @@ describe('FlexRenderDirective', () => {
       context: {},
     })
     expect((fixture.nativeElement as HTMLElement).matches(':empty')).toBe(true)
+  })
+
+  test('should evaluate and update primitive content only when its dependencies change', () => {
+    const value = signal('Initial value')
+    const render = vi.fn(() => value())
+    const fixture = TestBed.createComponent(TestRenderComponent)
+
+    setFixtureSignalInputs(fixture, {
+      content: render,
+      context: {},
+    })
+
+    const initialSpan = fixture.nativeElement.querySelector('span')
+    expect(render).toHaveBeenCalledTimes(1)
+    expect(initialSpan.textContent).toEqual('Initial value')
+
+    fixture.detectChanges()
+    fixture.detectChanges()
+
+    expect(render).toHaveBeenCalledTimes(1)
+    expect(fixture.nativeElement.querySelector('span')).toBe(initialSpan)
+
+    value.set('Updated value')
+    fixture.detectChanges()
+
+    expect(render).toHaveBeenCalledTimes(2)
+    expect(fixture.nativeElement.querySelector('span')).toBe(initialSpan)
+    expect(initialSpan.textContent).toEqual('Updated value')
   })
 
   test('should render TemplateRef', () => {
@@ -119,6 +143,115 @@ describe('FlexRenderDirective', () => {
     setFixtureSignalInput(fixture, 'context', { property: 'Updated value' })
     fixture.detectChanges()
 
+    expect(fixture.nativeElement.textContent).toEqual('Updated value')
+  })
+
+  test('should release and restore component output subscriptions', () => {
+    @Component({
+      template: `<button (click)="changed.emit()">Emit</button>`,
+      standalone: true,
+    })
+    class FakeComponent {
+      readonly changed = output<void>()
+    }
+
+    const enabled = signal(true)
+    const listener = vi.fn()
+    const fixture = TestBed.createComponent(TestRenderComponent)
+
+    setFixtureSignalInputs(fixture, {
+      content: () =>
+        flexRenderComponent(FakeComponent, {
+          outputs: enabled() ? { changed: listener } : {},
+        }),
+      context: {},
+    })
+
+    const button = fixture.nativeElement.querySelector(
+      'button',
+    ) as HTMLButtonElement
+    button.click()
+    expect(listener).toHaveBeenCalledTimes(1)
+
+    enabled.set(false)
+    fixture.detectChanges()
+    button.click()
+    expect(listener).toHaveBeenCalledTimes(1)
+
+    enabled.set(true)
+    fixture.detectChanges()
+    button.click()
+    expect(listener).toHaveBeenCalledTimes(2)
+    expect(fixture.nativeElement.querySelector('button')).toBe(button)
+  })
+
+  test('should set component inputs by property name when they have an alias', () => {
+    @Component({
+      template: `{{ value() }}`,
+      standalone: true,
+    })
+    class FakeComponent {
+      readonly value = input('', { alias: 'aliasedValue' })
+    }
+
+    const fixture = TestBed.createComponent(TestRenderComponent)
+    setFixtureSignalInputs(fixture, {
+      content: () =>
+        flexRenderComponent(FakeComponent, {
+          inputs: { value: 'Aliased input value' },
+        }),
+      context: {},
+    })
+
+    expect(fixture.nativeElement.textContent).toEqual('Aliased input value')
+  })
+
+  test('should reuse a component by type and key and recreate it when the key changes', () => {
+    @Component({
+      selector: 'app-keyed-component',
+      template: `{{ value() }}`,
+      standalone: true,
+    })
+    class KeyedComponent {
+      readonly value = input.required<string>()
+    }
+
+    const key = signal<string | number>('first')
+    const value = signal('Initial value')
+    const fixture = TestBed.createComponent(TestRenderComponent)
+
+    setFixtureSignalInputs(fixture, {
+      content: () =>
+        flexRenderComponent(KeyedComponent, {
+          key: key(),
+          inputs: { value: value() },
+          // These creation-time arrays are intentionally recreated whenever
+          // the render function runs. They do not affect reuse without a new key.
+          bindings: [],
+          directives: [],
+        }),
+      context: {},
+    })
+
+    const initialHost = fixture.nativeElement.querySelector(
+      'app-keyed-component',
+    )
+    expect(initialHost.textContent).toEqual('Initial value')
+
+    value.set('Updated value')
+    fixture.detectChanges()
+
+    expect(fixture.nativeElement.querySelector('app-keyed-component')).toBe(
+      initialHost,
+    )
+    expect(initialHost.textContent).toEqual('Updated value')
+
+    key.set(2)
+    fixture.detectChanges()
+
+    expect(fixture.nativeElement.querySelector('app-keyed-component')).not.toBe(
+      initialHost,
+    )
     expect(fixture.nativeElement.textContent).toEqual('Updated value')
   })
 

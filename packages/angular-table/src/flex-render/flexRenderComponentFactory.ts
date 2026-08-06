@@ -3,13 +3,33 @@ import {
   ComponentRef,
   Injectable,
   Injector,
-  KeyValueDiffer,
-  KeyValueDiffers,
   OutputEmitterRef,
   OutputRefSubscription,
   ViewContainerRef,
 } from '@angular/core'
 import { FlexRenderComponent } from './flexRenderComponent'
+import type { Type } from '@angular/core'
+
+const inputNameCache = new WeakMap<Type<unknown>, Map<string, string>>()
+const hasOwn = (value: object, key: PropertyKey): boolean =>
+  Object.prototype.hasOwnProperty.call(value, key)
+
+function getInputName<T>(
+  componentData: FlexRenderComponent<T>,
+  propName: string,
+): string | undefined {
+  let names = inputNameCache.get(componentData.component)
+  if (!names) {
+    names = new Map(
+      componentData.mirror.inputs.map((input) => [
+        input.propName,
+        input.templateName,
+      ]),
+    )
+    inputNameCache.set(componentData.component, names)
+  }
+  return names.get(propName)
+}
 
 /**
  * Creates and manages Angular component instances used by flex-rendered table
@@ -32,7 +52,7 @@ export class FlexRenderComponentFactory {
       {
         injector: componentInjector,
         directives: flexRenderComponent.directives,
-        bindings: flexRenderComponent.bindings ?? [],
+        bindings: flexRenderComponent.bindings,
       },
     )
     const view = new FlexRenderComponentRef(
@@ -57,10 +77,9 @@ export class FlexRenderComponentFactory {
  * be reused instead of recreated on every cell/header render.
  */
 export class FlexRenderComponentRef<T> {
-  readonly #keyValueDiffersFactory: KeyValueDiffers
   #componentData: FlexRenderComponent<T>
-  #inputValueDiffer: KeyValueDiffer<string, unknown>
-
+  readonly #inputValues: Record<string, unknown> = {}
+  readonly #creationKey: FlexRenderComponent<T>['key']
   readonly #outputRegistry: FlexRenderComponentOutputManager
 
   constructor(
@@ -69,17 +88,8 @@ export class FlexRenderComponentRef<T> {
     readonly componentInjector: Injector,
   ) {
     this.#componentData = componentData
-    this.#keyValueDiffersFactory = componentInjector.get(KeyValueDiffers)
-
-    this.#outputRegistry = new FlexRenderComponentOutputManager(
-      this.#keyValueDiffersFactory,
-      this.outputs,
-    )
-
-    this.#inputValueDiffer = this.#keyValueDiffersFactory
-      .find(this.inputs)
-      .create()
-    this.#inputValueDiffer.diff(this.inputs)
+    this.#creationKey = componentData.key
+    this.#outputRegistry = new FlexRenderComponentOutputManager()
 
     this.componentRef.onDestroy(() => this.#outputRegistry.unsubscribeAll())
   }
@@ -97,15 +107,6 @@ export class FlexRenderComponentRef<T> {
   }
 
   /**
-   * Get component input and output diff by the given item
-   */
-  diff(item: FlexRenderComponent<T>) {
-    return {
-      inputDiff: this.#inputValueDiffer.diff(item.inputs ?? {}),
-      outputDiff: this.#outputRegistry.diff(item.outputs ?? {}),
-    }
-  }
-  /**
    *
    * @param compare Whether the current ref component instance is the same as the given one
    */
@@ -113,37 +114,18 @@ export class FlexRenderComponentRef<T> {
     return compare.component === this.component
   }
 
+  canReuse(compare: FlexRenderComponent<T>): boolean {
+    return this.eqType(compare) && Object.is(compare.key, this.#creationKey)
+  }
+
   /**
    * Tries to update current component refs input by the new given content component.
    */
-  update(content: FlexRenderComponent<T>) {
-    const eq = this.eqType(content)
-    if (!eq) return
-    const { inputDiff, outputDiff } = this.diff(content)
-    if (inputDiff) {
-      inputDiff.forEachAddedItem((item) =>
-        this.setInput(item.key, item.currentValue),
-      )
-      inputDiff.forEachChangedItem((item) =>
-        this.setInput(item.key, item.currentValue),
-      )
-      inputDiff.forEachRemovedItem((item) => this.setInput(item.key, undefined))
-    }
-    if (outputDiff) {
-      outputDiff.forEachAddedItem((item) => {
-        this.setOutput(item.key, item.currentValue)
-      })
-      outputDiff.forEachChangedItem((item) => {
-        if (item.currentValue) {
-          this.#outputRegistry.setListener(item.key, item.currentValue)
-        } else {
-          this.#outputRegistry.unsubscribe(item.key)
-        }
-      })
-      outputDiff.forEachRemovedItem((item) => {
-        this.#outputRegistry.unsubscribe(item.key)
-      })
-    }
+  update(content: FlexRenderComponent<T>): void {
+    if (!this.canReuse(content)) return
+
+    this.#syncInputs(content.inputs ?? {})
+    this.#syncOutputs(content.outputs ?? {})
 
     this.#componentData = content
   }
@@ -154,13 +136,21 @@ export class FlexRenderComponentRef<T> {
 
   setInputs(inputs: Record<string, unknown>) {
     for (const prop in inputs) {
-      this.setInput(prop, inputs[prop])
+      if (hasOwn(inputs, prop)) {
+        this.setInput(prop, inputs[prop])
+      }
     }
   }
 
+  updateInputs(inputs: Record<string, unknown>): void {
+    this.#syncInputs(inputs)
+  }
+
   setInput(key: string, value: unknown) {
-    if (this.#componentData.allowedInputNames.includes(key)) {
-      this.componentRef.setInput(key, value)
+    const inputName = getInputName(this.#componentData, key)
+    if (inputName) {
+      this.componentRef.setInput(inputName, value)
+      this.#inputValues[key] = value
     }
   }
 
@@ -172,7 +162,9 @@ export class FlexRenderComponentRef<T> {
   ) {
     this.#outputRegistry.unsubscribeAll()
     for (const prop in outputs) {
-      this.setOutput(prop, outputs[prop])
+      if (hasOwn(outputs, prop)) {
+        this.setOutput(prop, outputs[prop])
+      }
     }
   }
 
@@ -186,20 +178,61 @@ export class FlexRenderComponentRef<T> {
       return
     }
 
-    const hasListener = this.#outputRegistry.hasListener(outputName)
+    const hasSubscription = this.#outputRegistry.hasSubscription(outputName)
     this.#outputRegistry.setListener(outputName, emit)
 
-    if (hasListener) {
+    if (hasSubscription) {
       return
     }
 
     const instance = this.componentRef.instance
     const output = instance[outputName as keyof typeof instance]
     if (output && output instanceof OutputEmitterRef) {
-      output.subscribe((value) => {
-        this.#outputRegistry.getListener(outputName)?.(value)
-      })
+      this.#outputRegistry.setSubscription(
+        outputName,
+        output.subscribe((value) => {
+          this.#outputRegistry.getListener(outputName)?.(value)
+        }),
+      )
     }
+  }
+
+  #syncInputs(inputs: Record<string, unknown>): void {
+    for (const prop in inputs) {
+      if (
+        hasOwn(inputs, prop) &&
+        (!hasOwn(this.#inputValues, prop) ||
+          !Object.is(this.#inputValues[prop], inputs[prop]))
+      ) {
+        this.setInput(prop, inputs[prop])
+      }
+    }
+    for (const prop in this.#inputValues) {
+      if (!hasOwn(inputs, prop)) {
+        const inputName = getInputName(this.#componentData, prop)
+        if (inputName) {
+          this.componentRef.setInput(inputName, undefined)
+        }
+        delete this.#inputValues[prop]
+      }
+    }
+  }
+
+  #syncOutputs(
+    outputs: Record<
+      string,
+      OutputEmitterRef<unknown>['emit'] | null | undefined
+    >,
+  ): void {
+    for (const prop in outputs) {
+      if (
+        hasOwn(outputs, prop) &&
+        !Object.is(this.#outputRegistry.getListener(prop), outputs[prop])
+      ) {
+        this.setOutput(prop, outputs[prop])
+      }
+    }
+    this.#outputRegistry.unsubscribeMissing(outputs)
   }
 }
 
@@ -207,20 +240,8 @@ class FlexRenderComponentOutputManager {
   readonly #outputSubscribers: Record<string, OutputRefSubscription> = {}
   readonly #outputListeners: Record<string, (...args: Array<any>) => void> = {}
 
-  readonly #valueDiffer: KeyValueDiffer<
-    string,
-    undefined | null | OutputEmitterRef<unknown>['emit']
-  >
-
-  constructor(keyValueDiffers: KeyValueDiffers, initialOutputs: any) {
-    this.#valueDiffer = keyValueDiffers.find(initialOutputs).create()
-    if (initialOutputs) {
-      this.#valueDiffer.diff(initialOutputs)
-    }
-  }
-
-  hasListener(outputName: string) {
-    return outputName in this.#outputListeners
+  hasSubscription(outputName: string) {
+    return outputName in this.#outputSubscribers
   }
 
   setListener(outputName: string, callback: (...args: Array<any>) => void) {
@@ -231,21 +252,30 @@ class FlexRenderComponentOutputManager {
     return this.#outputListeners[outputName]
   }
 
+  setSubscription(
+    outputName: string,
+    subscription: OutputRefSubscription,
+  ): void {
+    this.#outputSubscribers[outputName] = subscription
+  }
+
   unsubscribeAll(): void {
-    for (const prop in this.#outputSubscribers) {
+    for (const prop in this.#outputListeners) {
       this.unsubscribe(prop)
     }
   }
 
-  unsubscribe(outputName: string) {
-    if (outputName in this.#outputSubscribers) {
-      this.#outputSubscribers[outputName]?.unsubscribe()
-      delete this.#outputSubscribers[outputName]
-      delete this.#outputListeners[outputName]
+  unsubscribeMissing(outputs: Record<string, unknown>): void {
+    for (const prop in this.#outputListeners) {
+      if (!hasOwn(outputs, prop)) {
+        this.unsubscribe(prop)
+      }
     }
   }
 
-  diff(outputs: Record<string, OutputEmitterRef<unknown>['emit'] | undefined>) {
-    return this.#valueDiffer.diff(outputs)
+  unsubscribe(outputName: string) {
+    this.#outputSubscribers[outputName]?.unsubscribe()
+    delete this.#outputSubscribers[outputName]
+    delete this.#outputListeners[outputName]
   }
 }
