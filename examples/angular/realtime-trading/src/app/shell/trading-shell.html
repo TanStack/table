@@ -1,0 +1,20 @@
+<main class="trading-terminal">
+  <app-shell-header />
+
+  @if (devMode) {
+    <aside class="development-warning">
+      DEV BUILD — use the production configuration before recording results.
+    </aside>
+  }
+
+  <div class="workspace">
+    <section class="market-panel" aria-label="Live synthetic quotes">
+      <app-market-toolbar />
+      <app-metrics-strip />
+      <ng-content />
+      <app-market-statusbar />
+    </section>
+
+    <app-configurator />
+  </div>
+</main>
