@@ -3,13 +3,12 @@ import {
   ComponentRef,
   Injectable,
   Injector,
-  KeyValueDiffer,
-  KeyValueDiffers,
   OutputEmitterRef,
   OutputRefSubscription,
   ViewContainerRef,
 } from '@angular/core'
-import { FlexRenderComponent } from './flexRenderComponent'
+import { hasOwn } from '@tanstack/table-core'
+import type { FlexRenderComponent } from './flexRenderComponent'
 
 /**
  * Creates and manages Angular component instances used by flex-rendered table
@@ -32,7 +31,7 @@ export class FlexRenderComponentFactory {
       {
         injector: componentInjector,
         directives: flexRenderComponent.directives,
-        bindings: flexRenderComponent.bindings ?? [],
+        bindings: flexRenderComponent.bindings,
       },
     )
     const view = new FlexRenderComponentRef(
@@ -57,10 +56,8 @@ export class FlexRenderComponentFactory {
  * be reused instead of recreated on every cell/header render.
  */
 export class FlexRenderComponentRef<T> {
-  readonly #keyValueDiffersFactory: KeyValueDiffers
   #componentData: FlexRenderComponent<T>
-  #inputValueDiffer: KeyValueDiffer<string, unknown>
-
+  readonly #creationKey: FlexRenderComponent<T>['key']
   readonly #outputRegistry: FlexRenderComponentOutputManager
 
   constructor(
@@ -69,18 +66,8 @@ export class FlexRenderComponentRef<T> {
     readonly componentInjector: Injector,
   ) {
     this.#componentData = componentData
-    this.#keyValueDiffersFactory = componentInjector.get(KeyValueDiffers)
-
-    this.#outputRegistry = new FlexRenderComponentOutputManager(
-      this.#keyValueDiffersFactory,
-      this.outputs,
-    )
-
-    this.#inputValueDiffer = this.#keyValueDiffersFactory
-      .find(this.inputs)
-      .create()
-    this.#inputValueDiffer.diff(this.inputs)
-
+    this.#creationKey = componentData.key
+    this.#outputRegistry = new FlexRenderComponentOutputManager()
     this.componentRef.onDestroy(() => this.#outputRegistry.unsubscribeAll())
   }
 
@@ -97,15 +84,6 @@ export class FlexRenderComponentRef<T> {
   }
 
   /**
-   * Get component input and output diff by the given item
-   */
-  diff(item: FlexRenderComponent<T>) {
-    return {
-      inputDiff: this.#inputValueDiffer.diff(item.inputs ?? {}),
-      outputDiff: this.#outputRegistry.diff(item.outputs ?? {}),
-    }
-  }
-  /**
    *
    * @param compare Whether the current ref component instance is the same as the given one
    */
@@ -113,37 +91,18 @@ export class FlexRenderComponentRef<T> {
     return compare.component === this.component
   }
 
+  canReuse(compare: FlexRenderComponent<T>): boolean {
+    return this.eqType(compare) && Object.is(compare.key, this.#creationKey)
+  }
+
   /**
    * Tries to update current component refs input by the new given content component.
    */
-  update(content: FlexRenderComponent<T>) {
-    const eq = this.eqType(content)
-    if (!eq) return
-    const { inputDiff, outputDiff } = this.diff(content)
-    if (inputDiff) {
-      inputDiff.forEachAddedItem((item) =>
-        this.setInput(item.key, item.currentValue),
-      )
-      inputDiff.forEachChangedItem((item) =>
-        this.setInput(item.key, item.currentValue),
-      )
-      inputDiff.forEachRemovedItem((item) => this.setInput(item.key, undefined))
-    }
-    if (outputDiff) {
-      outputDiff.forEachAddedItem((item) => {
-        this.setOutput(item.key, item.currentValue)
-      })
-      outputDiff.forEachChangedItem((item) => {
-        if (item.currentValue) {
-          this.#outputRegistry.setListener(item.key, item.currentValue)
-        } else {
-          this.#outputRegistry.unsubscribe(item.key)
-        }
-      })
-      outputDiff.forEachRemovedItem((item) => {
-        this.#outputRegistry.unsubscribe(item.key)
-      })
-    }
+  update(content: FlexRenderComponent<T>): void {
+    if (!this.canReuse(content)) return
+
+    this.#syncInputs(content.inputs ?? {})
+    this.#syncOutputs(content.outputs ?? {})
 
     this.#componentData = content
   }
@@ -159,9 +118,9 @@ export class FlexRenderComponentRef<T> {
   }
 
   setInput(key: string, value: unknown) {
-    if (this.#componentData.allowedInputNames.includes(key)) {
-      this.componentRef.setInput(key, value)
-    }
+    const inputName = this.#componentData.metadata.inputNames.get(key)
+    if (inputName === undefined) return
+    this.componentRef.setInput(inputName, value)
   }
 
   setOutputs(
@@ -177,75 +136,102 @@ export class FlexRenderComponentRef<T> {
   }
 
   setOutput(
-    outputName: string,
+    key: string,
     emit: OutputEmitterRef<unknown>['emit'] | undefined | null,
   ): void {
-    if (!this.#componentData.allowedOutputNames.includes(outputName)) return
+    if (!this.#componentData.metadata.outputNames.has(key)) return
+    const outputName = key
     if (!emit) {
       this.#outputRegistry.unsubscribe(outputName)
       return
     }
 
-    const hasListener = this.#outputRegistry.hasListener(outputName)
+    // If the output was already subscribed, just swap the listener callback.
+    const hasSubscription = this.#outputRegistry.hasSubscription(outputName)
     this.#outputRegistry.setListener(outputName, emit)
 
-    if (hasListener) {
+    if (hasSubscription) {
       return
     }
 
     const instance = this.componentRef.instance
     const output = instance[outputName as keyof typeof instance]
     if (output && output instanceof OutputEmitterRef) {
-      output.subscribe((value) => {
-        this.#outputRegistry.getListener(outputName)?.(value)
-      })
+      this.#outputRegistry.setSubscription(
+        outputName,
+        output.subscribe((value) => {
+          this.#outputRegistry.getListener(outputName)?.(value)
+        }),
+      )
+    }
+  }
+
+  #syncInputs(newInputs: Record<string, unknown>): void {
+    // Inputs use patch semantics: omitted keys keep their current value, while
+    // an explicitly provided `undefined` is forwarded to Angular.
+    for (const prop in newInputs) {
+      if (hasOwn(newInputs, prop)) {
+        this.setInput(prop, newInputs[prop])
+      }
+    }
+  }
+
+  #syncOutputs(
+    outputs: Record<
+      string,
+      OutputEmitterRef<unknown>['emit'] | null | undefined
+    >,
+  ): void {
+    const outputKeys = Object.keys(outputs)
+    const currentSubscribedKeys = this.#outputRegistry.getSubscribedKeys()
+    // When outputs updates, unsubscribe missing keys
+    for (const key of currentSubscribedKeys) {
+      if (!outputKeys.includes(key)) {
+        this.#outputRegistry.unsubscribe(key)
+      }
+    }
+    for (const prop in outputs) {
+      this.setOutput(prop, outputs[prop])
     }
   }
 }
 
 class FlexRenderComponentOutputManager {
-  readonly #outputSubscribers: Record<string, OutputRefSubscription> = {}
-  readonly #outputListeners: Record<string, (...args: Array<any>) => void> = {}
+  readonly #outputSubscribers = new Map<string, OutputRefSubscription>()
+  readonly #outputListeners = new Map<string, (...args: Array<any>) => void>()
 
-  readonly #valueDiffer: KeyValueDiffer<
-    string,
-    undefined | null | OutputEmitterRef<unknown>['emit']
-  >
-
-  constructor(keyValueDiffers: KeyValueDiffers, initialOutputs: any) {
-    this.#valueDiffer = keyValueDiffers.find(initialOutputs).create()
-    if (initialOutputs) {
-      this.#valueDiffer.diff(initialOutputs)
-    }
+  getSubscribedKeys() {
+    return Array.from(this.#outputListeners.keys())
   }
 
-  hasListener(outputName: string) {
-    return outputName in this.#outputListeners
+  hasSubscription(outputName: string) {
+    return this.#outputSubscribers.has(outputName)
   }
 
   setListener(outputName: string, callback: (...args: Array<any>) => void) {
-    this.#outputListeners[outputName] = callback
+    this.#outputListeners.set(outputName, callback)
   }
 
   getListener(outputName: string) {
-    return this.#outputListeners[outputName]
+    return this.#outputListeners.get(outputName)
+  }
+
+  setSubscription(
+    outputName: string,
+    subscription: OutputRefSubscription,
+  ): void {
+    this.#outputSubscribers.set(outputName, subscription)
   }
 
   unsubscribeAll(): void {
-    for (const prop in this.#outputSubscribers) {
-      this.unsubscribe(prop)
+    for (const outputName of this.#outputListeners.keys()) {
+      this.unsubscribe(outputName)
     }
   }
 
   unsubscribe(outputName: string) {
-    if (outputName in this.#outputSubscribers) {
-      this.#outputSubscribers[outputName]?.unsubscribe()
-      delete this.#outputSubscribers[outputName]
-      delete this.#outputListeners[outputName]
-    }
-  }
-
-  diff(outputs: Record<string, OutputEmitterRef<unknown>['emit'] | undefined>) {
-    return this.#valueDiffer.diff(outputs)
+    this.#outputSubscribers.get(outputName)?.unsubscribe()
+    this.#outputSubscribers.delete(outputName)
+    this.#outputListeners.delete(outputName)
   }
 }
