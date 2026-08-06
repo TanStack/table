@@ -12,4 +12,10 @@ test('Infer component inputs', () => {
 
   // Input is optional so we can skip passing the property
   flexRenderComponent(Test, { inputs: {} })
+
+  flexRenderComponent(Test, { key: 'stable-key' })
+  flexRenderComponent(Test, { key: 1 })
+
+  // @ts-expect-error Keys must have stable primitive identity
+  flexRenderComponent(Test, { key: {} })
 })

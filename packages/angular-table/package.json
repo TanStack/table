@@ -56,6 +56,7 @@
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json && find dist -name '*.map' -delete",
     "build:types": "tsc --emitDeclarationOnly",
+    "bench:flex-render": "vitest bench --run tests/flex-render/flex-render.bench.ts",
     "clean": "rimraf ./build && rimraf ./dist",
     "test:build": "publint --strict",
     "test:eslint": "eslint ./src",
