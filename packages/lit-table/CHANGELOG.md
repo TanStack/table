@@ -1,5 +1,12 @@
 # @tanstack/lit-table
 
+## 9.0.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tanstack/table-core@9.0.1
+
 ## 9.0.0
 
 ### Major Changes

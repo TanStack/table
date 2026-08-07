@@ -15,7 +15,7 @@
     "@faker-js/faker": "^10.5.0",
     "@tanstack/preact-query": "^5.101.4",
     "@tanstack/preact-store": "^0.13.1",
-    "@tanstack/preact-table": "^9.0.0",
+    "@tanstack/preact-table": "^9.0.1",
     "preact": "^10.29.7"
   },
   "devDependencies": {

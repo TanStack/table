@@ -1,5 +1,7 @@
 # @tanstack/match-sorter-utils
 
+## 9.0.1
+
 ## 9.0.0
 
 ### Major Changes

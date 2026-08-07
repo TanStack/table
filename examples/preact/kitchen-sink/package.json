@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
-    "@tanstack/match-sorter-utils": "^9.0.0",
+    "@tanstack/match-sorter-utils": "^9.0.1",
     "@tanstack/preact-devtools": "^0.10.9",
-    "@tanstack/preact-table": "^9.0.0",
-    "@tanstack/preact-table-devtools": "^9.0.0",
+    "@tanstack/preact-table": "^9.0.1",
+    "@tanstack/preact-table-devtools": "^9.0.1",
     "preact": "^10.29.7"
   },
   "devDependencies": {
