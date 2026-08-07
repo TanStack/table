@@ -3,6 +3,7 @@ import {
   getDefaultPaginationState,
   table_autoResetPageIndex,
   table_firstPage,
+  table_getCanLastPage,
   table_getCanNextPage,
   table_getCanPreviousPage,
   table_getPageCount,
@@ -74,6 +75,9 @@ export const rowPaginationFeature: TableFeature = {
       },
       table_getCanNextPage: {
         fn: () => table_getCanNextPage(table),
+      },
+      table_getCanLastPage: {
+        fn: () => table_getCanLastPage(table),
       },
       table_previousPage: {
         fn: () => table_previousPage(table),

@@ -23,6 +23,7 @@ import {
 const features = tableFeatures({
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(), // if using client-side pagination
+  // manualPagination: true, // if using manual server-side pagination
 })
 
 const table = useTable({
@@ -84,7 +85,7 @@ No pagination row model is needed for server-side pagination, but if you have pr
 
 #### Page Count and Row Count
 
-The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, you can just pass in `-1` for the `pageCount`, but the `getCanNextPage` and `getCanPreviousPage` row model functions will always return `true` in this case.
+The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, pass `-1` for `pageCount`. In that case, `getCanNextPage()` returns `true` because the table cannot detect the end, `getCanPreviousPage()` depends on the current `pageIndex`, and `getCanLastPage()` returns `false` because no finite last page is known.
 
 ```tsx
 import {
@@ -198,6 +199,9 @@ Besides the `manualPagination`, `pageCount`, and `rowCount` options which are us
 
 By default, `pageIndex` is reset to `0` whenever the client-side row models recompute, such as when the `data` is updated, filters change, sorting changes, or grouping changes. This behavior is automatically disabled when `manualPagination` is `true`, but it can be overridden by explicitly assigning a boolean value to the `autoResetPageIndex` table option. There is also a global `autoResetAll` table option that disables (or enables) every auto-reset behavior at once.
 
+> [!NOTE]
+> Automatic resets run only when an included client-side row model that triggers them recomputes. If a manual server-side table omits the filtered, sorted, grouped, or other relevant row model, changing that controlled state does not trigger a page-index reset—even when `autoResetPageIndex` or `autoResetAll` is `true`. Reset `pageIndex` yourself in the corresponding change handler.
+
 ```tsx
 const table = useTable({
   features,
@@ -220,6 +224,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 
 - `getCanPreviousPage`: Useful for disabling the "previous page" button when on the first page.
 - `getCanNextPage`: Useful for disabling the "next page" button when there are no more pages.
+- `getCanLastPage`: Useful for disabling the "last page" button when no finite last page is known.
 - `previousPage`: Useful for going to the previous page. (Button click handler)
 - `nextPage`: Useful for going to the next page. (Button click handler)
 - `firstPage`: Useful for going to the first page. (Button click handler)
@@ -254,7 +259,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 </Button>
 <Button
   onClick={() => table.lastPage()}
-  disabled={!table.getCanNextPage()}
+  disabled={!table.getCanLastPage()}
 >
   {'>>'}
 </Button>

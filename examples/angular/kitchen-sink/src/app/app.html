@@ -293,8 +293,8 @@
     </button>
     <button
       class="demo-button demo-button-sm"
-      (click)="table.setPageIndex(table.getPageCount() - 1)"
-      [disabled]="!table.getCanNextPage()"
+      (click)="table.lastPage()"
+      [disabled]="!table.getCanLastPage()"
     >
       &gt;&gt;
     </button>
@@ -316,8 +316,10 @@
     </span>
 
     <select [value]="pageSize()" (change)="onPageSizeChange($event)">
-      @for (size of [10, 20, 30, 50, 100]; track size) {
-        <option [value]="size" [selected]="pageSize() === size">Show {{ size }}</option>
+      @for (size of pageSizes; track size) {
+        <option [value]="size" [selected]="pageSize() === size">
+          Show {{ size === allPageSize ? 'All' : size }}
+        </option>
       }
     </select>
   </div>

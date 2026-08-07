@@ -602,7 +602,7 @@
     <button class="demo-button demo-button-sm" onclick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>{'<<'}</button>
     <button class="demo-button demo-button-sm" onclick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>{'<'}</button>
     <button class="demo-button demo-button-sm" onclick={() => table.nextPage()} disabled={!table.getCanNextPage()}>{'>'}</button>
-    <button class="demo-button demo-button-sm" onclick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>{'>>'}</button>
+    <button class="demo-button demo-button-sm" onclick={() => table.lastPage()} disabled={!table.getCanLastPage()}>{'>>'}</button>
     <span class="inline-controls">
       <div>Page</div>
       <strong>
@@ -634,6 +634,7 @@
       {#each [10, 20, 30, 50, 100] as pageSize}
         <option value={pageSize}>Show {pageSize}</option>
       {/each}
+      <option value={Infinity}>Show All</option>
     </select>
   </div>
   <div class="spacer-sm"></div>

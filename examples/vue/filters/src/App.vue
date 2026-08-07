@@ -197,7 +197,7 @@ function handlePageSizeChange(e: any) {
       <button
         class="demo-button demo-button-sm"
         @click="() => table.lastPage()"
-        :disabled="!table.getCanNextPage()"
+        :disabled="!table.getCanLastPage()"
       >
         >>
       </button>

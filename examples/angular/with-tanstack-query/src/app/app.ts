@@ -1,79 +1,239 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import { JsonPipe } from '@angular/common'
 import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core'
+import {
+  injectInfiniteQuery,
   injectQuery,
   keepPreviousData,
 } from '@tanstack/angular-query-experimental'
 import {
   FlexRender,
+  columnFilteringFeature,
   createColumnHelper,
+  globalFilteringFeature,
   injectTable,
   isFunction,
   rowPaginationFeature,
+  rowSortingFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { fetchData } from './fetchData'
-import type { PaginationState, Updater } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
+import { fetchData, fetchInfiniteData } from './fetchData'
+import type {
+  PaginationState,
+  SortingState,
+  Updater,
+} from '@tanstack/angular-table'
 import type { Person } from './fetchData'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  // Server-side filtering, sorting, and pagination do not need client row models.
+})
+
 const columnHelper = createColumnHelper<typeof features, Person>()
+
 const columns = columnHelper.columns([
-  columnHelper.accessor('firstName', {
-    header: 'First Name',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('lastName', {
-    header: 'Last Name',
-    cell: (info) => info.getValue(),
-  }),
+  columnHelper.accessor('id', { header: 'ID' }),
+  columnHelper.accessor('firstName', { header: 'First Name' }),
+  columnHelper.accessor('lastName', { header: 'Last Name' }),
   columnHelper.accessor('age', { header: 'Age' }),
   columnHelper.accessor('visits', { header: 'Visits' }),
   columnHelper.accessor('status', { header: 'Status' }),
   columnHelper.accessor('progress', { header: 'Profile Progress' }),
 ])
+
 const defaultData: Array<Person> = []
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRender],
+  imports: [FlexRender, JsonPipe],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  // Create a stable external signal for the pagination slice.
-  readonly pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  readonly allRows = Infinity
 
-  readonly dataQuery = injectQuery(() => ({
-    queryKey: ['data', this.pagination()],
-    queryFn: () => fetchData(this.pagination()),
-    placeholderData: keepPreviousData, // don't have 0 rows flash while changing pages/loading next page
+  readonly offsetSorting = signal<SortingState>([])
+  readonly offsetGlobalFilter = signal('')
+  readonly offsetPagination = signal<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+  readonly offsetDataQuery = injectQuery(() => ({
+    queryKey: [
+      'people',
+      'offset',
+      this.offsetPagination().pageIndex,
+      this.offsetPagination().pageSize === Infinity
+        ? 'all'
+        : this.offsetPagination().pageSize,
+      this.offsetSorting(),
+      this.offsetGlobalFilter(),
+    ],
+    queryFn: () =>
+      fetchData({
+        pagination: this.offsetPagination(),
+        sorting: this.offsetSorting(),
+        globalFilter: this.offsetGlobalFilter(),
+      }),
+    placeholderData: keepPreviousData,
   }))
-
-  readonly table = injectTable<typeof features, Person>(() => ({
+  readonly offsetTable = injectTable<typeof features, Person>(() => ({
+    key: 'with-tanstack-query-offset',
     features,
     columns,
-    data: this.dataQuery.data()?.rows ?? defaultData,
-    rowCount: this.dataQuery.data()?.rowCount,
-    state: { pagination: this.pagination() },
+    data: this.offsetDataQuery.data()?.rows ?? defaultData,
+    rowCount: this.offsetDataQuery.data()?.rowCount,
+    getRowId: (row) => String(row.id),
+    state: {
+      sorting: this.offsetSorting(),
+      globalFilter: this.offsetGlobalFilter(),
+      pagination: this.offsetPagination(),
+    },
+    onSortingChange: (updater: Updater<SortingState>) => {
+      isFunction(updater)
+        ? this.offsetSorting.update(updater)
+        : this.offsetSorting.set(updater)
+      this.offsetPagination.update((value) => ({
+        ...value,
+        pageIndex: 0,
+      }))
+    },
+    onGlobalFilterChange: (updater: Updater<string>) => {
+      isFunction(updater)
+        ? this.offsetGlobalFilter.update(updater)
+        : this.offsetGlobalFilter.set(updater)
+      this.offsetPagination.update((value) => ({
+        ...value,
+        pageIndex: 0,
+      }))
+    },
     onPaginationChange: (updater: Updater<PaginationState>) =>
       isFunction(updater)
-        ? this.pagination.update(updater)
-        : this.pagination.set(updater),
-    manualPagination: true, // we're doing manual "server-side" pagination
-    debugTable: true,
+        ? this.offsetPagination.update(updater)
+        : this.offsetPagination.set(updater),
+    manualFiltering: true,
+    manualPagination: true,
+    manualSorting: true,
   }))
 
-  stringifiedState() {
-    return JSON.stringify(this.table.store.get(), null, 2)
+  readonly cursorSorting = signal<SortingState>([])
+  readonly cursorGlobalFilter = signal('')
+  readonly cursorPagination = signal<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+  readonly cursorDataQuery = injectInfiniteQuery(() => ({
+    queryKey: [
+      'people',
+      'cursor',
+      this.cursorPagination().pageSize === Infinity
+        ? 'all'
+        : this.cursorPagination().pageSize,
+      this.cursorSorting(),
+      this.cursorGlobalFilter(),
+    ],
+    queryFn: ({ pageParam }) =>
+      fetchInfiniteData({
+        cursor: pageParam,
+        pageSize: this.cursorPagination().pageSize,
+        sorting: this.cursorSorting(),
+        globalFilter: this.cursorGlobalFilter(),
+      }),
+    initialPageParam: null as number | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  }))
+  readonly currentCursorPage = computed(
+    () => this.cursorDataQuery.data()?.pages[this.cursorPagination().pageIndex],
+  )
+  readonly canNextCursorPage = computed(
+    () =>
+      Boolean(
+        this.cursorDataQuery.data()?.pages[
+          this.cursorPagination().pageIndex + 1
+        ],
+      ) || Boolean(this.currentCursorPage()?.hasNextPage),
+  )
+  readonly cursorTable = injectTable<typeof features, Person>(() => ({
+    key: 'with-tanstack-query-cursor',
+    features,
+    columns,
+    data: this.currentCursorPage()?.rows ?? defaultData,
+    pageCount: -1,
+    getRowId: (row) => String(row.id),
+    state: {
+      sorting: this.cursorSorting(),
+      globalFilter: this.cursorGlobalFilter(),
+      pagination: this.cursorPagination(),
+    },
+    onSortingChange: (updater: Updater<SortingState>) => {
+      isFunction(updater)
+        ? this.cursorSorting.update(updater)
+        : this.cursorSorting.set(updater)
+      this.cursorPagination.update((value) => ({
+        ...value,
+        pageIndex: 0,
+      }))
+    },
+    onGlobalFilterChange: (updater: Updater<string>) => {
+      isFunction(updater)
+        ? this.cursorGlobalFilter.update(updater)
+        : this.cursorGlobalFilter.set(updater)
+      this.cursorPagination.update((value) => ({
+        ...value,
+        pageIndex: 0,
+      }))
+    },
+    onPaginationChange: (updater: Updater<PaginationState>) =>
+      isFunction(updater)
+        ? this.cursorPagination.update(updater)
+        : this.cursorPagination.set(updater),
+    manualFiltering: true,
+    manualPagination: true,
+    manualSorting: true,
+  }))
+
+  constructor() {
+    injectTanStackTableDevtools(() => ({ table: this.offsetTable }))
+    injectTanStackTableDevtools(() => ({ table: this.cursorTable }))
   }
 
-  onPageInputChange(event: Event): void {
-    const page = (event.target as HTMLInputElement).value
-      ? Number((event.target as HTMLInputElement).value) - 1
-      : 0
-    this.table.setPageIndex(page)
+  onOffsetPageInputChange(event: Event) {
+    const value = (event.currentTarget as HTMLInputElement).value
+    this.offsetTable.setPageIndex(value ? Number(value) - 1 : 0)
   }
-  onPageSizeChange(event: Event): void {
-    this.table.setPageSize(Number((event.target as HTMLSelectElement).value))
+
+  onOffsetPageSizeChange(event: Event) {
+    this.offsetTable.setPageSize(
+      Number((event.currentTarget as HTMLSelectElement).value),
+    )
+  }
+
+  async goToNextCursorPage() {
+    const nextPageIndex = this.cursorPagination().pageIndex + 1
+    if (this.cursorDataQuery.data()?.pages[nextPageIndex])
+      return this.cursorTable.nextPage()
+    if (
+      !this.currentCursorPage()?.hasNextPage ||
+      this.cursorDataQuery.isFetchingNextPage()
+    )
+      return
+    const result = await this.cursorDataQuery.fetchNextPage()
+    if (result.data?.pages[nextPageIndex]) this.cursorTable.nextPage()
+  }
+
+  onCursorPageSizeChange(event: Event) {
+    this.cursorPagination.set({
+      pageIndex: 0,
+      pageSize: Number((event.currentTarget as HTMLSelectElement).value),
+    })
   }
 }

@@ -32,6 +32,12 @@ tfoot th {
   padding: 0.5rem;
 }
 
+.query-example + .query-example {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid lightgray;
+}
+
 .spacer-xs {
   height: 0.25rem;
 }
@@ -60,6 +66,7 @@ tfoot th {
 }
 
 .controls {
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 

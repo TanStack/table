@@ -2950,12 +2950,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.8
+        version: 0.0.8(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(csstype@3.2.3)(solid-js@1.9.14)
       '@tanstack/angular-query-experimental':
         specifier: ^5.101.4
         version: 5.101.4(@angular/common@22.1.0(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -7687,6 +7693,9 @@ importers:
       '@tanstack/preact-pacer':
         specifier: ^0.22.1
         version: 0.22.1(preact@10.29.7)
+      '@tanstack/preact-pacer-devtools':
+        specifier: 0.6.3
+        version: 0.6.3(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
@@ -7718,15 +7727,21 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.9
+        version: 0.10.9(csstype@3.2.3)(preact@10.29.7)(solid-js@1.9.14)
       '@tanstack/preact-query':
         specifier: ^5.101.4
         version: 5.101.4(preact@10.29.7)
-      '@tanstack/preact-store':
-        specifier: ^0.13.1
-        version: 0.13.1(preact@10.29.7)
+      '@tanstack/preact-query-devtools':
+        specifier: ^5.101.4
+        version: 5.101.4(@tanstack/preact-query@5.101.4(preact@10.29.7))(preact@10.29.7)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.7
         version: 10.29.7(preact-render-to-string@6.7.0)
@@ -10872,6 +10887,9 @@ importers:
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tanstack/react-pacer-devtools':
+        specifier: 0.7.1
+        version: 0.7.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react-dom@19.2.4(@types/react@19.2.16))(@types/react@19.2.16)(preact@10.29.7)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
@@ -10918,15 +10936,21 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.9
+        version: 0.10.9(@types/react-dom@19.2.4(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(solid-js@1.9.14)
       '@tanstack/react-query':
         specifier: ^5.101.4
         version: 5.101.4(react@19.2.8)
-      '@tanstack/react-store':
-        specifier: ^0.11.0
-        version: 0.11.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.101.4
+        version: 5.101.4(@tanstack/react-query@5.101.4(react@19.2.8))(react@19.2.8)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -10961,18 +10985,33 @@ importers:
 
   examples/react/with-tanstack-router:
     dependencies:
+      '@tanstack/react-devtools':
+        specifier: ^0.10.9
+        version: 0.10.9(@types/react-dom@19.2.4(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(solid-js@1.9.14)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tanstack/react-pacer-devtools':
+        specifier: 0.7.1
+        version: 0.7.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react-dom@19.2.4(@types/react@19.2.16))(@types/react@19.2.16)(preact@10.29.7)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
       '@tanstack/react-query':
         specifier: ^5.101.4
         version: 5.101.4(react@19.2.8)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.101.4
+        version: 5.101.4(@tanstack/react-query@5.101.4(react@19.2.8))(react@19.2.8)
       '@tanstack/react-router':
         specifier: ^1.170.18
         version: 1.170.18(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tanstack/react-router-devtools':
+        specifier: ^1.167.1
+        version: 1.167.1(@tanstack/react-router@1.170.18(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tanstack/router-core@1.171.18)(csstype@3.2.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -11929,15 +11968,21 @@ importers:
 
   examples/solid/with-tanstack-query:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.9
+        version: 0.8.9(csstype@3.2.3)(solid-js@1.9.14)
       '@tanstack/solid-query':
         specifier: ^5.101.4
         version: 5.101.4(solid-js@1.9.14)
-      '@tanstack/solid-store':
-        specifier: ^0.11.0
-        version: 0.11.0(solid-js@1.9.14)
+      '@tanstack/solid-query-devtools':
+        specifier: ^5.101.4
+        version: 5.101.4(@tanstack/solid-query@5.101.4(solid-js@1.9.14))(solid-js@1.9.14)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.14
         version: 1.9.14
@@ -11957,18 +12002,33 @@ importers:
 
   examples/solid/with-tanstack-router:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.9
+        version: 0.8.9(csstype@3.2.3)(solid-js@1.9.14)
       '@tanstack/solid-pacer':
         specifier: ^0.21.1
         version: 0.21.1(solid-js@1.9.14)
+      '@tanstack/solid-pacer-devtools':
+        specifier: 0.6.3
+        version: 0.6.3(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
       '@tanstack/solid-query':
         specifier: ^5.101.4
         version: 5.101.4(solid-js@1.9.14)
+      '@tanstack/solid-query-devtools':
+        specifier: ^5.101.4
+        version: 5.101.4(@tanstack/solid-query@5.101.4(solid-js@1.9.14))(solid-js@1.9.14)
       '@tanstack/solid-router':
         specifier: ^1.170.18
         version: 1.170.18(solid-js@1.9.14)
+      '@tanstack/solid-router-devtools':
+        specifier: ^1.167.1
+        version: 1.167.1(@tanstack/router-core@1.171.18)(@tanstack/solid-router@1.170.18(solid-js@1.9.14))(csstype@3.2.3)(solid-js@1.9.14)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.14
         version: 1.9.14
@@ -12812,6 +12872,141 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
 
+  examples/svelte/kitchen-sink-shadcn:
+    devDependencies:
+      '@dnd-kit-svelte/svelte':
+        specifier: ^0.1.6
+        version: 0.1.6(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      '@dnd-kit/abstract':
+        specifier: ^0.2.3
+        version: 0.2.4
+      '@dnd-kit/helpers':
+        specifier: ^0.2.3
+        version: 0.2.4
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@internationalized/date':
+        specifier: ^3.12.0
+        version: 3.12.2
+      '@lucide/svelte':
+        specifier: ^1.28.0
+        version: 1.28.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.62.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.2.0
+        version: 7.2.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@tailwindcss/vite':
+        specifier: ^4.3.3
+        version: 4.3.3(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@tanstack/match-sorter-utils':
+        specifier: workspace:*
+        version: link:../../../packages/match-sorter-utils
+      '@tanstack/pacer':
+        specifier: ^0.21.1
+        version: 0.21.1
+      '@tanstack/svelte-table':
+        specifier: workspace:*
+        version: link:../../../packages/svelte-table
+      '@tsconfig/svelte':
+        specifier: ^5.0.8
+        version: 5.0.8
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
+      bits-ui:
+        specifier: ^2.16.3
+        version: 2.18.1(@internationalized/date@3.12.2)(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      svelte:
+        specifier: ^5.56.8
+        version: 5.56.8(@typescript-eslint/types@8.65.0)
+      svelte-check:
+        specifier: ^4.7.4
+        version: 4.7.4(picomatch@4.0.5)(svelte@5.56.8(@typescript-eslint/types@8.65.0))(typescript@6.0.3)
+      tailwind-merge:
+        specifier: ^3.6.0
+        version: 3.6.0
+      tailwind-variants:
+        specifier: ^3.3.0
+        version: 3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.3)
+      tailwindcss:
+        specifier: ^4.3.3
+        version: 4.3.3
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.2.0
+        version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
+
+  examples/svelte/lib-shadcn:
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@lucide/svelte':
+        specifier: ^1.28.0
+        version: 1.28.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.62.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.2.0
+        version: 7.2.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@tailwindcss/vite':
+        specifier: ^4.3.3
+        version: 4.3.3(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@tanstack/pacer':
+        specifier: ^0.21.1
+        version: 0.21.1
+      '@tanstack/svelte-table':
+        specifier: workspace:*
+        version: link:../../../packages/svelte-table
+      '@tsconfig/svelte':
+        specifier: ^5.0.8
+        version: 5.0.8
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
+      bits-ui:
+        specifier: ^2.16.3
+        version: 2.18.1(@internationalized/date@3.12.2)(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      svelte:
+        specifier: ^5.56.8
+        version: 5.56.8(@typescript-eslint/types@8.65.0)
+      svelte-check:
+        specifier: ^4.7.4
+        version: 4.7.4(picomatch@4.0.5)(svelte@5.56.8(@typescript-eslint/types@8.65.0))(typescript@6.0.3)
+      tailwind-merge:
+        specifier: ^3.6.0
+        version: 3.6.0
+      tailwind-variants:
+        specifier: ^3.3.0
+        version: 3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.3)
+      tailwindcss:
+        specifier: ^4.3.3
+        version: 4.3.3
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.2.0
+        version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
+
   examples/svelte/pagination:
     devDependencies:
       '@faker-js/faker':
@@ -13105,12 +13300,18 @@ importers:
       '@tanstack/form-core':
         specifier: ^1.33.2
         version: 1.33.2
+      '@tanstack/svelte-devtools':
+        specifier: ^0.1.2
+        version: 0.1.2(csstype@3.2.3)(solid-js@1.9.14)(svelte@5.56.8(@typescript-eslint/types@8.65.0))
       '@tanstack/svelte-form':
         specifier: ^1.33.2
         version: 1.33.2(svelte@5.56.8(@typescript-eslint/types@8.65.0))
       '@tanstack/svelte-table':
         specifier: workspace:*
         version: link:../../../packages/svelte-table
+      '@tanstack/table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/table-devtools
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -13142,12 +13343,24 @@ importers:
 
   examples/svelte/with-tanstack-query:
     dependencies:
+      '@tanstack/query-devtools':
+        specifier: ^5.101.4
+        version: 5.101.4
+      '@tanstack/svelte-devtools':
+        specifier: ^0.1.2
+        version: 0.1.2(csstype@3.2.3)(solid-js@1.9.14)(svelte@5.56.8(@typescript-eslint/types@8.65.0))
       '@tanstack/svelte-query':
         specifier: ^6.1.38
         version: 6.1.38(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      '@tanstack/svelte-query-devtools':
+        specifier: ^6.1.38
+        version: 6.1.38(@tanstack/svelte-query@6.1.38(svelte@5.56.8(@typescript-eslint/types@8.65.0)))(svelte@5.56.8(@typescript-eslint/types@8.65.0))
       '@tanstack/svelte-table':
         specifier: workspace:*
         version: link:../../../packages/svelte-table
+      '@tanstack/table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/table-devtools
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.5.0
@@ -14122,6 +14335,143 @@ importers:
         specifier: ^3.3.5
         version: 3.3.5(typescript@6.0.3)
 
+  examples/vue/kitchen-sink-shadcn:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@internationalized/date':
+        specifier: ^3.12.0
+        version: 3.12.2
+      '@lucide/vue':
+        specifier: ^1.28.0
+        version: 1.28.0(vue@3.5.40(typescript@6.0.3))
+      '@tailwindcss/vite':
+        specifier: ^4.3.3
+        version: 4.3.3(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@tanstack/match-sorter-utils':
+        specifier: workspace:*
+        version: link:../../../packages/match-sorter-utils
+      '@tanstack/pacer':
+        specifier: ^0.21.1
+        version: 0.21.1
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.23
+        version: 0.2.23(csstype@3.2.3)(solid-js@1.9.14)
+      '@tanstack/vue-table':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
+      '@vueuse/core':
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.40(typescript@6.0.3))
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      dnd-kit-vue:
+        specifier: ^0.0.2
+        version: 0.0.2(vue@3.5.40(typescript@6.0.3))
+      reka-ui:
+        specifier: ^2.10.1
+        version: 2.10.1(vue@3.5.40(typescript@6.0.3))
+      tailwind-merge:
+        specifier: ^3.6.0
+        version: 3.6.0
+      tailwindcss:
+        specifier: ^4.3.3
+        version: 4.3.3
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
+      vue:
+        specifier: ^3.5.40
+        version: 3.5.40(typescript@6.0.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.8
+        version: 6.0.8(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^5.1.6
+        version: 5.1.6(supports-color@8.1.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.2.0
+        version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
+      vue-tsc:
+        specifier: ^3.3.5
+        version: 3.3.5(typescript@6.0.3)
+
+  examples/vue/lib-shadcn:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@lucide/vue':
+        specifier: ^1.28.0
+        version: 1.28.0(vue@3.5.40(typescript@6.0.3))
+      '@tailwindcss/vite':
+        specifier: ^4.3.3
+        version: 4.3.3(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@tanstack/pacer':
+        specifier: ^0.21.1
+        version: 0.21.1
+      '@tanstack/vue-table':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table
+      '@vueuse/core':
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.40(typescript@6.0.3))
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      reka-ui:
+        specifier: ^2.10.1
+        version: 2.10.1(vue@3.5.40(typescript@6.0.3))
+      tailwind-merge:
+        specifier: ^3.6.0
+        version: 3.6.0
+      tailwindcss:
+        specifier: ^4.3.3
+        version: 4.3.3
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
+      vue:
+        specifier: ^3.5.40
+        version: 3.5.40(typescript@6.0.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.8
+        version: 6.0.8(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^5.1.6
+        version: 5.1.6(supports-color@8.1.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.2.0
+        version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
+      vue-tsc:
+        specifier: ^3.3.5
+        version: 3.3.5(typescript@6.0.3)
+
   examples/vue/pagination:
     dependencies:
       '@faker-js/faker':
@@ -14445,15 +14795,21 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.23
+        version: 0.2.23(csstype@3.2.3)(solid-js@1.9.14)
       '@tanstack/vue-query':
         specifier: ^5.101.4
         version: 5.101.4(vue@3.5.40(typescript@6.0.3))
-      '@tanstack/vue-store':
-        specifier: ^0.11.0
-        version: 0.11.0(vue@3.5.40(typescript@6.0.3))
+      '@tanstack/vue-query-devtools':
+        specifier: ^6.1.38
+        version: 6.1.38(@tanstack/vue-query@5.101.4(vue@3.5.40(typescript@6.0.3)))(vue@3.5.40(typescript@6.0.3))
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.40
         version: 3.5.40(typescript@6.0.3)
@@ -16509,16 +16865,48 @@ packages:
     resolution: {integrity: sha512-Xc3VhU02wqZ1HvHRJUwL09HkZSTvidqY5Ya0NXBSYOxAp+Ln9dcJr9fySI+CkONzP3PekQo9WdzCv0PGER/mOA==}
     engines: {node: '>=14.17.0'}
 
+  '@dnd-kit-svelte/svelte@0.1.6':
+    resolution: {integrity: sha512-kpmNWeQoPFrJ4SNB0thRkdWtN3kiYMQI/SvEj6MTKTQ8W5VyHBrbXDRm+mdiTj9tzmG8jgCPg+Fgp3aYIU+Hug==}
+    peerDependencies:
+      svelte: ^5.0.0
+
+  '@dnd-kit/abstract@0.1.21':
+    resolution: {integrity: sha512-6sJut6/D21xPIK8EFMu+JJeF+fBCOmQKN1BRpeUYFi5m9P1CJpTYbBwfI107h7PHObI6a5bsckiKkRpF2orHpw==}
+
+  '@dnd-kit/abstract@0.2.4':
+    resolution: {integrity: sha512-1F3JQaD8upvTNpfDrhvec57cldTEaUggmVrVJZIpRTIdZR7trKqS7vBYZR1mW3qNjWsxC91eEQAXYWv0vxXXuw==}
+
   '@dnd-kit/accessibility@3.1.1':
     resolution: {integrity: sha512-2P+YgaXF+gRsIihwwY1gCsQSYnu9Zyj2py8kY5fFvUM1qm2WA2u639R6YNVfU4GWr+ZM5mqEsfHZZLoRONbemw==}
     peerDependencies:
       react: '>=16.8.0'
+
+  '@dnd-kit/collision@0.1.21':
+    resolution: {integrity: sha512-9AJ4NbuwGDexxMCZXZyKdNQhbAe93p6C6IezQaDaWmdCqZHMHmC3+ul7pGefBQfOooSarGwIf8Bn182o9SMa1A==}
+
+  '@dnd-kit/collision@0.2.4':
+    resolution: {integrity: sha512-w8Vzq8MKu8MYvrwtasqQhw2l27v9eRMzL+jOdj8Qp0jnPQ1FICGgUwjAStZ87wO1Pc2WIt0rQWDDPIEyRd6S8A==}
 
   '@dnd-kit/core@6.3.1':
     resolution: {integrity: sha512-xkGBRQQab4RLwgXxoqETICr6S5JlogafbhNsidmrkVv2YRs5MLwpjoF2qpiGjQt8S9AoxtIV603s0GIUpY5eYQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
+
+  '@dnd-kit/dom@0.1.21':
+    resolution: {integrity: sha512-6UDc1y2Y3oLQKArGlgCrZxz5pdEjRSiQujXOn5JdbuWvKqTdUR5RTYDeicr+y2sVm3liXjTqs3WlUoV+eqhqUQ==}
+
+  '@dnd-kit/dom@0.2.4':
+    resolution: {integrity: sha512-ZYIJgx/uyZvmGOHPBDbIeJfqa2xlEUHnkHEHcKlR/VMQz9NoSkPGcjPdcAjpwB+T4dleRQ4tZ8h9X5I3UdTQPw==}
+
+  '@dnd-kit/geometry@0.1.21':
+    resolution: {integrity: sha512-Tir97wNJbopN2HgkD7AjAcoB3vvrVuUHvwdPALmNDUH0fWR637c4MKQ66YjjZAbUEAR8KL6mlDiHH4MzTLd7CQ==}
+
+  '@dnd-kit/geometry@0.2.4':
+    resolution: {integrity: sha512-S8wVj4rQIErimDQoRT0n1+lgxPvlO/gvzT9/1vzyyw1U4bB/S8avtrI+REVw/jH84c/dii+GwrrzVkDDoIluNw==}
+
+  '@dnd-kit/helpers@0.2.4':
+    resolution: {integrity: sha512-xKnkVPVH5YOeyerJGsqgzivTZq1lGSqnBiP5T+3G2jnM/KY5FCZBJSVcwNzFXcaIrMlj35N/sxlFHCX8kKgXEA==}
 
   '@dnd-kit/modifiers@9.0.0':
     resolution: {integrity: sha512-ybiLc66qRGuZoC20wdSSG6pDXFikui/dCNGthxv4Ndy8ylErY0N3KVxY2bgo7AWwIbxDmXDg3ylAFmnrjcbVvw==}
@@ -16531,6 +16919,12 @@ packages:
     peerDependencies:
       '@dnd-kit/core': ^6.3.0
       react: '>=16.8.0'
+
+  '@dnd-kit/state@0.1.21':
+    resolution: {integrity: sha512-pdhntEPvn/QttcF295bOJpWiLsRqA/Iczh1ODOJUxGiR+E4GkYVz9VapNNm9gDq6ST0tr/e1Q2xBztUHlJqQgA==}
+
+  '@dnd-kit/state@0.2.4':
+    resolution: {integrity: sha512-mPtQfmqBZBcVKa+Fi8AV2ocQWa+phvZa9Muq3PxFM3WIyjrFiEosGGPiPcx5hC3K+i2gkmr6Msc7iPrrpYkB5g==}
 
   '@dnd-kit/utilities@3.2.2':
     resolution: {integrity: sha512-+MKAJEOfaBe5SmV6t34p80MMKhjvUz0vRrvVJbPT0WElzaOJ/1xs+D+KDv+tD/NE5ujfrChEcshd4fLn0wpiqg==}
@@ -16974,6 +17368,9 @@ packages:
 
   '@floating-ui/utils@0.2.11':
     resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
+
+  '@floating-ui/vue@1.1.11':
+    resolution: {integrity: sha512-HzHKCNVxnGS35r9fCHBc3+uCnjw9IWIlCPL683cGgM9Kgj2BiAl8x1mS7vtvP6F9S/e/q4O6MApwSHj8hNLGfw==}
 
   '@formatjs/ecma402-abstract@2.3.6':
     resolution: {integrity: sha512-HJnTFeRM2kVFVr5gr5kH1XP6K0JcJtE7Lzvtr3FS/so5f1kpsqqqxy5JF+FRaO6H2qmcMfAUIox7AJteieRtVw==}
@@ -17435,6 +17832,16 @@ packages:
     resolution: {integrity: sha512-1g7G0knRX2iV/voDu54yxrGqw5Dk0w2oIYb7dgJq8IkOi+m7wbD8Q3QpPFjh0C01G58S88dqGn03len6UPCXsg==}
     cpu: [x64]
     os: [win32]
+
+  '@lucide/svelte@1.28.0':
+    resolution: {integrity: sha512-C1Ge84KW2z4q44/WDIEo/2KC2jby5u6mSlta7q+p6g7u0ld8sC/w1fMBiSswF+4bxAl9jlzzaVTpp79qqkiy5g==}
+    peerDependencies:
+      svelte: ^5
+
+  '@lucide/vue@1.28.0':
+    resolution: {integrity: sha512-cO89UyNM/0i2Srdi04nFWeEOQkqzDZlM2ehtWyBhcMpRTJDKpMZPCGAVlmVBgBgr5HaeL5L6FsU8RHsOdwXtKw==}
+    peerDependencies:
+      vue: '>=3.0.1'
 
   '@mantine/core@9.5.0':
     resolution: {integrity: sha512-lUZtPfW+ZIXthofPyw+SVgWNiV/OkJ498r3OZeuekPgM23p2AspqHzHjEGhe5DMSTyhma6BhIHF2H10dAp0ibw==}
@@ -18666,6 +19073,9 @@ packages:
     peerDependencies:
       '@babel/core': 7.x
       vite: 2.x || 3.x || 4.x || 5.x || 6.x || 7.x || 8.x
+
+  '@preact/signals-core@1.14.4':
+    resolution: {integrity: sha512-HNB6HYeYKhQbJ1aKl+YRjrS4+QWHLKX6qKoUsfS/m0vqzsVaEBiZiaKbG/e+NKk2ch5ALQr/ihWaMHxiCuuWHA==}
 
   '@prefresh/babel-plugin@0.5.3':
     resolution: {integrity: sha512-57LX2SHs4BX2s1IwCjNzTE2OJeEepRCNf1VTEpbNcUyHfMO68eeOWGDIt4ob9aYlW6PEWZ1SuwNikuoIXANDtQ==}
@@ -20558,6 +20968,31 @@ packages:
       vue:
         optional: true
 
+  '@tanstack/devtools-utils@0.5.1':
+    resolution: {integrity: sha512-yXw2PNY7cOjvx5sU03vNQoH4LG0TSTT7d/TpUpJTpjQQHoehTTjBHQyki8RGIAW6iHJ7K4/DVZgrRiP7hicInQ==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      '@angular/core': '>=19.0.0'
+      '@types/react': 19.2.16
+      preact: '>=10.0.0'
+      react: '>=17.0.0'
+      solid-js: '>=1.9.7'
+      vue: '>=3.2.0'
+    peerDependenciesMeta:
+      '@angular/core':
+        optional: true
+      '@types/react':
+        optional: true
+      preact:
+        optional: true
+      react:
+        optional: true
+      solid-js:
+        optional: true
+      vue:
+        optional: true
+
   '@tanstack/devtools-utils@0.6.0':
     resolution: {integrity: sha512-ebYkWwe/OqzkgQzqGlJ5fyjaNX/CSBKluGOAW9KvhKeAM6+/kQ7+BQGqWQUnXE5CQ6pjtjyyLkYBEQ2vmctaug==}
     engines: {node: '>=18'}
@@ -20618,6 +21053,10 @@ packages:
     resolution: {integrity: sha512-79pf/RkhteYZTRgcR4F9kbk84P2N8rugQJswxfIqovlbRiT3yI7eBE+5QorIrZaOKktsgzRlXh1l/du/xpl4iA==}
     engines: {node: '>=20.19'}
 
+  '@tanstack/history@1.162.1':
+    resolution: {integrity: sha512-DR9t6lfLVdrjgCwpglrR9DR7Ok8/HlXjcOE+goWXF3zyuLUO/ug7vMbSFxTqrQTtbRghJfyhmIZ0S6LhPIy44w==}
+    engines: {node: '>=20.19'}
+
   '@tanstack/hotkeys@0.8.0':
     resolution: {integrity: sha512-vqH7X9nb0MTJ/O08++dB5bP9jgj4+BIPOUu/U+6myG86lDsirZSVSobpq5UQpE7nBuk62i8eIYeOhd+OMl/UrA==}
     engines: {node: '>=18'}
@@ -20648,6 +21087,12 @@ packages:
     peerDependencies:
       octane: 0.1.21
 
+  '@tanstack/pacer-devtools@1.3.1':
+    resolution: {integrity: sha512-Gx9xCv2QGZo0xIjFhv74Ass5iS21aTnCIHvAtgQEaK95s9HfcNB8GJlDwYt3lHbAFxpmiH8BN04Bd6TosDMUIQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@tanstack/pacer': '>=0.16.4'
+
   '@tanstack/pacer-lite@0.1.1':
     resolution: {integrity: sha512-y/xtNPNt/YeyoVxE/JCx+T7yjEzpezmbb+toK8DDD1P4m7Kzs5YR956+7OKexG3f8aXgC3rLZl7b1V+yNUSy5w==}
     engines: {node: '>=18'}
@@ -20673,11 +21118,23 @@ packages:
     peerDependencies:
       preact: '>=10.0.0'
 
+  '@tanstack/preact-pacer-devtools@0.6.3':
+    resolution: {integrity: sha512-4ZjfSnvxur8FZykVyZRQLAMRtNPXzT7ZEYDCA07g3VyRd1JTEFlsfAOUOQ5UuJGYnOviYEFtWzsE/euFVLQX1A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      preact: '>=10.0.0'
+
   '@tanstack/preact-pacer@0.22.1':
     resolution: {integrity: sha512-nuwU1WSGloLzlzpQMvPpppeyutVjVrSAn9NMM66YJWXmVtfQE7E0z2VQPIZF4n2+jDSi7238QClbiptwn7At/w==}
     engines: {node: '>=18'}
     peerDependencies:
       preact: '>=10.0.0'
+
+  '@tanstack/preact-query-devtools@5.101.4':
+    resolution: {integrity: sha512-2Jl36OR1TgJuAObOg5XFNpad0Aa/+qwJKvwdBZUjoeioDIR6OCj4//YIG84dtI1H8EY7gM6dxJqPFalgu8Hw6w==}
+    peerDependencies:
+      '@tanstack/preact-query': ^5.101.4
+      preact: ^10.0.0
 
   '@tanstack/preact-query@5.101.4':
     resolution: {integrity: sha512-+nUoHsHQHd2yKoGfYTYj7gDgnU2csUQ+aljP1ThMjKFVwmbQo3BjsbxAFGgV9DrO4P0hjynGKth2WtxhPzuVHQ==}
@@ -20734,6 +21191,15 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
+  '@tanstack/react-pacer-devtools@0.7.1':
+    resolution: {integrity: sha512-y1mjaZWvNVBZyWp+/rhf8LzmPqRTiKxszzTc2woFTNTNhl6CDjxZYtTxKQfYUKzeH4Qd136VjV05da/PdmLQVg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/react': 19.2.16
+      '@types/react-dom': '>=16.8'
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
   '@tanstack/react-pacer@0.22.1':
     resolution: {integrity: sha512-CenQqK0GluSPIrnsG1yuD7w5uMSQ/4lI9AcGEFxBrRd66r260boWcYRIsS5+eHtXb238FoZYhKmJPGlhRzmHRw==}
     engines: {node: '>=18'}
@@ -20741,10 +21207,28 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
+  '@tanstack/react-query-devtools@5.101.4':
+    resolution: {integrity: sha512-VeK2gtmfj7kvRBjtxS7TKxt/6qKhn8VzabY4UiYMr7NV9CddjSRYRgeYyld+NpjAkgMV9dd+2Qdr8ah5I03NeA==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.101.4
+      react: ^18 || ^19
+
   '@tanstack/react-query@5.101.4':
     resolution: {integrity: sha512-yRg2pfOCxIs4ZJW3XYYHU/WgtD04FHSnfHlpRT7h7pR77hwkdRG4wxbKe4aq6P0RvXUTBSQpQeadS1SUYUe+KA==}
     peerDependencies:
       react: ^18 || ^19
+
+  '@tanstack/react-router-devtools@1.167.1':
+    resolution: {integrity: sha512-pjfGrmjj4d7naEPM7oshqFfwBoxDPNo/UxltlHH5ePbHsJ+plBhd+JaAewm1ueYOjZ0js9hckjWWDYXpCrSfKw==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      '@tanstack/react-router': ^1.170.19
+      '@tanstack/router-core': ^1.171.16
+      react: '>=18.0.0 || >=19.0.0'
+      react-dom: '>=18.0.0 || >=19.0.0'
+    peerDependenciesMeta:
+      '@tanstack/router-core':
+        optional: true
 
   '@tanstack/react-router@1.170.17':
     resolution: {integrity: sha512-ppLkjCfSMaeug9rmFRYzOd4TIqWV+yTE7tzIny7alJsSnM7w4lzEZm6eqCehG0SPetpZ0R3K+UnanSmBgOAVcQ==}
@@ -20841,6 +21325,20 @@ packages:
     resolution: {integrity: sha512-IILCDcLaItMZQ2jEmCABHY1Nhjjn5XUvwpQp3e4Nmu+vfg0BgYFuu/QASz2SwE2ZNbVMrvt8X/wxa+Gg5aErxA==}
     engines: {node: '>=20.19'}
 
+  '@tanstack/router-core@1.171.18':
+    resolution: {integrity: sha512-F91BWGqxOhDRubSaoAA3FDkzbr/WPrW6v3NcmTrI2T0AwtAL8qvY9FEDhTYwFoFiicBsRtt1NaNWKNTFNGQrqA==}
+    engines: {node: '>=20.19'}
+
+  '@tanstack/router-devtools-core@1.168.1':
+    resolution: {integrity: sha512-qr4voa4cpSMwQvS3867xkU3AB3MtJbTuovKIy+btjJ/Faju6er9w0nDylmD+005Mk/3YKw9/iueZJl2JAB7JOA==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      '@tanstack/router-core': ^1.171.16
+      csstype: ^3.0.10
+    peerDependenciesMeta:
+      csstype:
+        optional: true
+
   '@tanstack/router-generator@1.167.18':
     resolution: {integrity: sha512-kFvM4caRds9Q3EXg64bZubJ6rbDxyV0YDSBSGvOGzmKspQPdz5Xrh0uj5T1Ov8avUUg+c761u04VQAaEzSBXRw==}
     engines: {node: '>=20.19'}
@@ -20922,16 +21420,39 @@ packages:
     peerDependencies:
       solid-js: '>=1.7.0'
 
+  '@tanstack/solid-pacer-devtools@0.6.3':
+    resolution: {integrity: sha512-p6ALgAbwMOcc5484SQLavv06MZeVOoIcQ+K+FfZfEd99Yz9coaRaCPw69azH+XZWnBp+BBdTYj3kIPbqja45bQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: '>=1.9.7'
+
   '@tanstack/solid-pacer@0.21.1':
     resolution: {integrity: sha512-0a0Fv35Ht3P6iQYDZKXInI1DkKzb4WYi3bxh+4lx9FDfvL4GDik7EKTkP8P5N/vJ8fF8by9oqls1BMIlaEywoQ==}
     engines: {node: '>=18'}
     peerDependencies:
       solid-js: '>=1.9.5'
 
+  '@tanstack/solid-query-devtools@5.101.4':
+    resolution: {integrity: sha512-nJZMq9EG+Bcd+qvZUk99escVuhXNGBpi9Jl9UZBvUI8GfbBZPV4SIAhl2PHSGnYSzm1WggEuIhTq3mZk3CpKHg==}
+    peerDependencies:
+      '@tanstack/solid-query': ^5.101.4
+      solid-js: ^1.6.0
+
   '@tanstack/solid-query@5.101.4':
     resolution: {integrity: sha512-w+QNX4al4zkfOfO6FYILouPX3yAxLANvBNz0cZqaBrSRKfBP3qNC179wu/eS2w1asH+QqEeI0rR2/s7gRGxnFA==}
     peerDependencies:
       solid-js: ^1.6.0
+
+  '@tanstack/solid-router-devtools@1.167.1':
+    resolution: {integrity: sha512-GZiRbHx7E1vbuv1zGjPl1EmCKbwKZKoCU0TjycBjU6SW0rMt/24SON0MbtMbPlLs3XE28jFi7C5odwE2hryh/Q==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      '@tanstack/router-core': ^1.171.16
+      '@tanstack/solid-router': ^1.170.19
+      solid-js: ^1.9.10
+    peerDependenciesMeta:
+      '@tanstack/router-core':
+        optional: true
 
   '@tanstack/solid-router@1.170.18':
     resolution: {integrity: sha512-Og4LS3bfBMa8qzRrWMsxBq1qc982wG8l5XEWMReossEphUnTua4ffMnC6Eq6HTCrZ1QlsBQCWQRaAX3lwAxaHw==}
@@ -20989,6 +21510,12 @@ packages:
   '@tanstack/store@0.9.3':
     resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
 
+  '@tanstack/svelte-devtools@0.1.2':
+    resolution: {integrity: sha512-XMZhHfYWEqelDsUIS2ilu+dyWc/muz+j95G3s90KkgV2g/YFnTi0b/jL3hXaJdW2CjLFxiBgPkzBHTlq0Em+2w==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      svelte: '>=5.0.0'
+
   '@tanstack/svelte-form@1.33.2':
     resolution: {integrity: sha512-RGVo35UrqyqH+G1zeCGeoZ8i9f+rY0iCWbMdD30J4B52nEvBhd+VoIzTRr47TX58Yheb5BYqdf0s91SQYoIIWg==}
     peerDependencies:
@@ -20997,6 +21524,12 @@ packages:
   '@tanstack/svelte-hotkeys@0.10.0':
     resolution: {integrity: sha512-B7H+l4J++dHqeOStVqkHLFA/Fn+Y1qOdUZ5sStoLmYH1yZssXRdoeqRPmYluLKcD0W6KuE0D5LCRtvoD1wFnsA==}
     peerDependencies:
+      svelte: ^5.25.0
+
+  '@tanstack/svelte-query-devtools@6.1.38':
+    resolution: {integrity: sha512-Z4z1Pg7jzMa7A54ITo01boYfHnelZKCMZxFjjjx0eMyzoMamxBZHInvODjw018ZVTFqHKIzyc/t4hjJGpPFo2A==}
+    peerDependencies:
+      '@tanstack/svelte-query': ^6.1.38
       svelte: ^5.25.0
 
   '@tanstack/svelte-query@6.1.38':
@@ -21047,6 +21580,12 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       vue: '>=3.0.0'
+
+  '@tanstack/vue-query-devtools@6.1.38':
+    resolution: {integrity: sha512-JrZR8p+0v+eRXANudvTzfj5robfr6xh2rjZEqIiHbbxFgtdoTnQAJpoB7sQBw4xfvO8VCoG/xFaSnpPX1AjihA==}
+    peerDependencies:
+      '@tanstack/vue-query': ^5.101.4
+      vue: ^3.3.0
 
   '@tanstack/vue-query@5.101.4':
     resolution: {integrity: sha512-UYjkUZhnWQIFGNb7SdgjCitAftNyYQfOIVUh6vBUQAG4SQKNMSBKeQERFDubpxLAMpIBJTaOrE8fM4c1kZcIGQ==}
@@ -21337,6 +21876,9 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
+
+  '@types/web-bluetooth@0.0.21':
+    resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
@@ -21765,6 +22307,32 @@ packages:
     peerDependenciesMeta:
       '@vue/server-renderer':
         optional: true
+
+  '@vueuse/core@13.9.0':
+    resolution: {integrity: sha512-ts3regBQyURfCE2BcytLqzm8+MmLlo5Ln/KLoxDVcsZ2gzIwVNnQpQOL/UKV8alUqjSZOlpFZcRNsLRqj+OzyA==}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@vueuse/core@14.4.0':
+    resolution: {integrity: sha512-X4WHz1HlCzCBoYXesUkifzzWBAcZgXG8Fi5iNPQg/epdzOB3gu8Fawj3hvuwYR1nGcXGnvxwYYcUC/71++svtQ==}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@vueuse/metadata@13.9.0':
+    resolution: {integrity: sha512-1AFRvuiGphfF7yWixZa0KwjYH8ulyjDCC0aFgrGRz8+P4kvDFSdXLVfTk5xAN9wEuD1J6z4/myMoYbnHoX07zg==}
+
+  '@vueuse/metadata@14.4.0':
+    resolution: {integrity: sha512-swx/255R6JyHZFJhx845iz5CRWDZdCfvkZOpACWc5+c5WHcG24mv8gUT1WIdFQaHt6dq79rvILd9QnCWiyVm9g==}
+
+  '@vueuse/shared@13.9.0':
+    resolution: {integrity: sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@vueuse/shared@14.4.0':
+    resolution: {integrity: sha512-JRgY90Sz8DDtPMsaDflvPMp9xYk69JZAmbuDvAquUVXKr2gEjqtzGNTTthLfckH0BzBqvnu31gb4a8TGLRe79g==}
+    peerDependencies:
+      vue: ^3.5.0
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -22565,6 +23133,13 @@ packages:
   birecord@0.1.2:
     resolution: {integrity: sha512-5PAPTTmMpMEb+GuMb5DebfBkipRGyIW9+gtwEBSoDA9xkhHILm04+hZQ702pMksu3d8YAuGkmgTzQWcKqTPScA==}
 
+  bits-ui@2.18.1:
+    resolution: {integrity: sha512-KkemzKFH4T3gt3H+P86JcnAWExjByv/6vlwjm/BoCwTPHu03yiCdxbghdJLvFReQTe0acCAiRcKfmixxD6XvlA==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@internationalized/date': ^3.8.1
+      svelte: ^5.33.0
+
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
 
@@ -23319,6 +23894,11 @@ packages:
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
+
+  dnd-kit-vue@0.0.2:
+    resolution: {integrity: sha512-2ZQfqTulZI7vqFiYscV7VMQRXSEryjanlaCY5BvkDf5i+whEAvOKSckyBa6SK8LCPaF5f/IIcUhfh6TnbaWq3A==}
+    peerDependencies:
+      vue: ^3.3.0
 
   dns-packet@5.6.1:
     resolution: {integrity: sha512-l4gcSouhcgIKRvyy99RNVOgxXiicE+2jZoNmaNmZ6JXiGajBOJAesk1OBlJuM5k2c+eudGdLxDqXuPCKIj6kpw==}
@@ -25718,6 +26298,9 @@ packages:
       vite:
         optional: true
 
+  ohash@2.0.11:
+    resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
+
   on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
     engines: {node: '>= 0.8'}
@@ -26492,6 +27075,11 @@ packages:
     resolution: {integrity: sha512-dLsljMd9sqwRkby8zhO1gSg3PnJIBFid8f4CQj/sXx+7cKx+E7u0PKhZ+U4wmhx7EfmtvnA318oVaIkAB1lRJw==}
     hasBin: true
 
+  reka-ui@2.10.1:
+    resolution: {integrity: sha512-drcOQ4rQtDYAcGCsyQBqQg8QQ+H3B+zDaMJU0h8KPEPMa7g9BHu3zcOi4OB39XJSWizceFoNO0Z9tctSGLOXqg==}
+    peerDependencies:
+      vue: '>= 3.4.0'
+
   remove-accents@0.5.0:
     resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
 
@@ -26685,6 +27273,15 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
+  runed@0.35.1:
+    resolution: {integrity: sha512-2F4Q/FZzbeJTFdIS/PuOoPRSm92sA2LhzTnv6FXhCoENb3huf5+fDuNOg1LNvGOouy3u/225qxmuJvcV3IZK5Q==}
+    peerDependencies:
+      '@sveltejs/kit': ^2.21.0
+      svelte: ^5.7.0
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+
   rxjs@7.8.2:
     resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
 
@@ -26802,8 +27399,18 @@ packages:
     peerDependencies:
       seroval: ^1.0
 
+  seroval-plugins@1.6.2:
+    resolution: {integrity: sha512-TfxuUjlbBESzUOWdTkTKqvSmav0ABym+itetDXLK6mDz8SmrpdI30aF8RTXE8Bvq+tH/1yIDkvy3W0lfQb1ipQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      seroval: ^1.0
+
   seroval@1.5.4:
     resolution: {integrity: sha512-46uFvgrXTVxZcUorgSSRZ4y+ieqLLQRMlG4bnCZKW3qI6BZm7Rg4ntMW4p1mILEEBZWrFlcpp0AyIIlM6jD9iw==}
+    engines: {node: '>=10'}
+
+  seroval@1.6.2:
+    resolution: {integrity: sha512-mPT+SD2TrlB6wvte1KkYOYUkubaTbd6pZ/6Kk3C9nxzrHmCZyhxOO7XGAeL7f+yLKZglzGtM9odUVvg/EhO+vQ==}
     engines: {node: '>=10'}
 
   serve-index@1.9.2:
@@ -27192,6 +27799,12 @@ packages:
       svelte:
         optional: true
 
+  svelte-toolbelt@0.10.6:
+    resolution: {integrity: sha512-YWuX+RE+CnWYx09yseAe4ZVMM7e7GRFZM6OYWpBKOb++s+SQ8RBIMMe+Bs/CznBMc0QPLjr+vDBxTAkozXsFXQ==}
+    engines: {node: '>=18', pnpm: '>=8.7.0'}
+    peerDependencies:
+      svelte: ^5.30.2
+
   svelte2tsx@0.7.56:
     resolution: {integrity: sha512-NTvqqL+goYlW8gWNajk81L07+uu7jw5V2m1Az5MZbYm3GEydcHXh+uTrLHM9SuGuaqCtF90vlMXkOVBotfH94g==}
     peerDependencies:
@@ -27236,6 +27849,18 @@ packages:
       tailwindcss: '*'
     peerDependenciesMeta:
       tailwind-merge:
+        optional: true
+
+  tailwind-variants@3.3.1:
+    resolution: {integrity: sha512-4pAvwUtM4HKBiRZftncAbpn6V9Hhwoa5Fl7O2u5zbp7Z5Cvu+/o/6+176WY3WCEES209543quG8zFIcXCsc5Jw==}
+    engines: {node: '>=16.9.x', pnpm: '>=7.x'}
+    peerDependencies:
+      tailwind-merge: '>=3.0.0'
+      tailwindcss: '*'
+    peerDependenciesMeta:
+      tailwind-merge:
+        optional: true
+      tailwindcss:
         optional: true
 
   tailwindcss@4.3.3:
@@ -30586,9 +31211,42 @@ snapshots:
 
   '@discoveryjs/json-ext@1.1.0': {}
 
+  '@dnd-kit-svelte/svelte@0.1.6(svelte@5.56.8(@typescript-eslint/types@8.65.0))':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.4
+      '@dnd-kit/collision': 0.2.4
+      '@dnd-kit/dom': 0.2.4
+      '@dnd-kit/geometry': 0.1.21
+      '@dnd-kit/state': 0.2.4
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
+
+  '@dnd-kit/abstract@0.1.21':
+    dependencies:
+      '@dnd-kit/geometry': 0.1.21
+      '@dnd-kit/state': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/abstract@0.2.4':
+    dependencies:
+      '@dnd-kit/geometry': 0.2.4
+      '@dnd-kit/state': 0.2.4
+      tslib: 2.8.1
+
   '@dnd-kit/accessibility@3.1.1(react@19.2.8)':
     dependencies:
       react: 19.2.8
+      tslib: 2.8.1
+
+  '@dnd-kit/collision@0.1.21':
+    dependencies:
+      '@dnd-kit/abstract': 0.1.21
+      '@dnd-kit/geometry': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/collision@0.2.4':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.4
+      '@dnd-kit/geometry': 0.2.4
       tslib: 2.8.1
 
   '@dnd-kit/core@6.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
@@ -30597,6 +31255,37 @@ snapshots:
       '@dnd-kit/utilities': 3.2.2(react@19.2.8)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
+      tslib: 2.8.1
+
+  '@dnd-kit/dom@0.1.21':
+    dependencies:
+      '@dnd-kit/abstract': 0.1.21
+      '@dnd-kit/collision': 0.1.21
+      '@dnd-kit/geometry': 0.1.21
+      '@dnd-kit/state': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/dom@0.2.4':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.4
+      '@dnd-kit/collision': 0.2.4
+      '@dnd-kit/geometry': 0.2.4
+      '@dnd-kit/state': 0.2.4
+      tslib: 2.8.1
+
+  '@dnd-kit/geometry@0.1.21':
+    dependencies:
+      '@dnd-kit/state': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/geometry@0.2.4':
+    dependencies:
+      '@dnd-kit/state': 0.2.4
+      tslib: 2.8.1
+
+  '@dnd-kit/helpers@0.2.4':
+    dependencies:
+      '@dnd-kit/abstract': 0.2.4
       tslib: 2.8.1
 
   '@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
@@ -30611,6 +31300,16 @@ snapshots:
       '@dnd-kit/core': 6.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@dnd-kit/utilities': 3.2.2(react@19.2.8)
       react: 19.2.8
+      tslib: 2.8.1
+
+  '@dnd-kit/state@0.1.21':
+    dependencies:
+      '@preact/signals-core': 1.14.4
+      tslib: 2.8.1
+
+  '@dnd-kit/state@0.2.4':
+    dependencies:
+      '@preact/signals-core': 1.14.4
       tslib: 2.8.1
 
   '@dnd-kit/utilities@3.2.2(react@19.2.8)':
@@ -31165,6 +31864,15 @@ snapshots:
 
   '@floating-ui/utils@0.2.11': {}
 
+  '@floating-ui/vue@1.1.11(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@floating-ui/dom': 1.7.6
+      '@floating-ui/utils': 0.2.11
+      vue-demi: 0.14.10(vue@3.5.40(typescript@6.0.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
   '@formatjs/ecma402-abstract@2.3.6':
     dependencies:
       '@formatjs/fast-memoize': 2.2.7
@@ -31705,6 +32413,14 @@ snapshots:
 
   '@lmdb/lmdb-win32-x64@3.5.6':
     optional: true
+
+  '@lucide/svelte@1.28.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))':
+    dependencies:
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
+
+  '@lucide/vue@1.28.0(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.40(typescript@6.0.3)
 
   '@mantine/core@9.5.0(@mantine/hooks@9.5.0(react@19.2.8))(@types/react@19.2.16)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -32649,6 +33365,8 @@ snapshots:
       - preact
       - rollup
       - supports-color
+
+  '@preact/signals-core@1.14.4': {}
 
   '@prefresh/babel-plugin@0.5.3': {}
 
@@ -34383,6 +35101,15 @@ snapshots:
       solid-js: 1.9.14
       vue: 3.5.40(typescript@6.0.3)
 
+  '@tanstack/devtools-utils@0.5.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))':
+    optionalDependencies:
+      '@angular/core': 22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2)
+      '@types/react': 19.2.16
+      preact: 10.29.7(preact-render-to-string@6.7.0)
+      react: 19.2.8
+      solid-js: 1.9.14
+      vue: 3.5.40(typescript@6.0.3)
+
   '@tanstack/devtools-utils@0.6.0(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(svelte@5.56.8(@typescript-eslint/types@8.65.0))(vue@3.5.40(typescript@6.0.3))':
     optionalDependencies:
       '@angular/core': 22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2)
@@ -34465,6 +35192,8 @@ snapshots:
 
   '@tanstack/history@1.162.0': {}
 
+  '@tanstack/history@1.162.1': {}
+
   '@tanstack/hotkeys@0.8.0':
     dependencies:
       '@tanstack/store': 0.11.0
@@ -34502,6 +35231,24 @@ snapshots:
       '@tanstack/store': 0.11.0
       octane: 0.1.21(@typescript-eslint/types@8.65.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
 
+  '@tanstack/pacer-devtools@1.3.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/devtools-ui': 0.5.2(csstype@3.2.3)(solid-js@1.9.14)
+      '@tanstack/devtools-utils': 0.5.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
+      '@tanstack/pacer': 0.21.1
+      '@tanstack/solid-store': 0.11.0(solid-js@1.9.14)
+      clsx: 2.1.1
+      csstype: 3.2.3
+      dayjs: 1.11.21
+      goober: 2.1.19(csstype@3.2.3)
+      solid-js: 1.9.14
+    transitivePeerDependencies:
+      - '@angular/core'
+      - '@types/react'
+      - preact
+      - react
+      - vue
+
   '@tanstack/pacer-lite@0.1.1': {}
 
   '@tanstack/pacer@0.21.1':
@@ -34531,10 +35278,29 @@ snapshots:
       '@tanstack/preact-store': 0.13.1(preact@10.29.7)
       preact: 10.29.7(preact-render-to-string@6.7.0)
 
+  '@tanstack/preact-pacer-devtools@0.6.3(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/devtools-utils': 0.5.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
+      '@tanstack/pacer-devtools': 1.3.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(vue@3.5.40(typescript@6.0.3))
+      preact: 10.29.7(preact-render-to-string@6.7.0)
+    transitivePeerDependencies:
+      - '@angular/core'
+      - '@tanstack/pacer'
+      - '@types/react'
+      - react
+      - solid-js
+      - vue
+
   '@tanstack/preact-pacer@0.22.1(preact@10.29.7)':
     dependencies:
       '@tanstack/pacer': 0.21.1
       '@tanstack/preact-store': 0.13.1(preact@10.29.7)
+      preact: 10.29.7(preact-render-to-string@6.7.0)
+
+  '@tanstack/preact-query-devtools@5.101.4(@tanstack/preact-query@5.101.4(preact@10.29.7))(preact@10.29.7)':
+    dependencies:
+      '@tanstack/preact-query': 5.101.4(preact@10.29.7)
+      '@tanstack/query-devtools': 5.101.4
       preact: 10.29.7(preact-render-to-string@6.7.0)
 
   '@tanstack/preact-query@5.101.4(preact@10.29.7)':
@@ -34549,8 +35315,7 @@ snapshots:
 
   '@tanstack/query-core@5.101.4': {}
 
-  '@tanstack/query-devtools@5.101.4':
-    optional: true
+  '@tanstack/query-devtools@5.101.4': {}
 
   '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.6(react@19.2.8))(react@19.2.8)(solid-js@1.9.14)':
     dependencies:
@@ -34607,6 +35372,21 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
+  '@tanstack/react-pacer-devtools@0.7.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react-dom@19.2.4(@types/react@19.2.16))(@types/react@19.2.16)(preact@10.29.7)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/devtools-utils': 0.5.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
+      '@tanstack/pacer-devtools': 1.3.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(vue@3.5.40(typescript@6.0.3))
+      '@types/react': 19.2.16
+      '@types/react-dom': 19.2.4(@types/react@19.2.16)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+    transitivePeerDependencies:
+      - '@angular/core'
+      - '@tanstack/pacer'
+      - preact
+      - solid-js
+      - vue
+
   '@tanstack/react-pacer@0.22.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@tanstack/pacer': 0.21.1
@@ -34614,10 +35394,27 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
+  '@tanstack/react-query-devtools@5.101.4(@tanstack/react-query@5.101.4(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@tanstack/query-devtools': 5.101.4
+      '@tanstack/react-query': 5.101.4(react@19.2.8)
+      react: 19.2.8
+
   '@tanstack/react-query@5.101.4(react@19.2.8)':
     dependencies:
       '@tanstack/query-core': 5.101.4
       react: 19.2.8
+
+  '@tanstack/react-router-devtools@1.167.1(@tanstack/react-router@1.170.18(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tanstack/router-core@1.171.18)(csstype@3.2.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@tanstack/react-router': 1.170.18(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tanstack/router-devtools-core': 1.168.1(@tanstack/router-core@1.171.18)(csstype@3.2.3)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+    optionalDependencies:
+      '@tanstack/router-core': 1.171.18
+    transitivePeerDependencies:
+      - csstype
 
   '@tanstack/react-router@1.170.17(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -34738,6 +35535,21 @@ snapshots:
       cookie-es: 3.1.1
       seroval: 1.5.4
       seroval-plugins: 1.5.4(seroval@1.5.4)
+
+  '@tanstack/router-core@1.171.18':
+    dependencies:
+      '@tanstack/history': 1.162.1
+      cookie-es: 3.1.1
+      seroval: 1.6.2
+      seroval-plugins: 1.6.2(seroval@1.6.2)
+
+  '@tanstack/router-devtools-core@1.168.1(@tanstack/router-core@1.171.18)(csstype@3.2.3)':
+    dependencies:
+      '@tanstack/router-core': 1.171.18
+      clsx: 2.1.1
+      goober: 2.1.19(csstype@3.2.3)
+    optionalDependencies:
+      csstype: 3.2.3
 
   '@tanstack/router-generator@1.167.18(supports-color@8.1.1)':
     dependencies:
@@ -34860,16 +35672,45 @@ snapshots:
       '@tanstack/solid-store': 0.11.0(solid-js@1.9.14)
       solid-js: 1.9.14
 
+  '@tanstack/solid-pacer-devtools@0.6.3(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/devtools-utils': 0.5.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(solid-js@1.9.14)(vue@3.5.40(typescript@6.0.3))
+      '@tanstack/pacer-devtools': 1.3.1(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(@tanstack/pacer@0.21.1)(@types/react@19.2.16)(preact@10.29.7)(react@19.2.8)(vue@3.5.40(typescript@6.0.3))
+      solid-js: 1.9.14
+    transitivePeerDependencies:
+      - '@angular/core'
+      - '@tanstack/pacer'
+      - '@types/react'
+      - preact
+      - react
+      - vue
+
   '@tanstack/solid-pacer@0.21.1(solid-js@1.9.14)':
     dependencies:
       '@tanstack/pacer': 0.21.1
       '@tanstack/solid-store': 0.11.0(solid-js@1.9.14)
       solid-js: 1.9.14
 
+  '@tanstack/solid-query-devtools@5.101.4(@tanstack/solid-query@5.101.4(solid-js@1.9.14))(solid-js@1.9.14)':
+    dependencies:
+      '@tanstack/query-devtools': 5.101.4
+      '@tanstack/solid-query': 5.101.4(solid-js@1.9.14)
+      solid-js: 1.9.14
+
   '@tanstack/solid-query@5.101.4(solid-js@1.9.14)':
     dependencies:
       '@tanstack/query-core': 5.101.4
       solid-js: 1.9.14
+
+  '@tanstack/solid-router-devtools@1.167.1(@tanstack/router-core@1.171.18)(@tanstack/solid-router@1.170.18(solid-js@1.9.14))(csstype@3.2.3)(solid-js@1.9.14)':
+    dependencies:
+      '@tanstack/router-devtools-core': 1.168.1(@tanstack/router-core@1.171.18)(csstype@3.2.3)
+      '@tanstack/solid-router': 1.170.18(solid-js@1.9.14)
+      solid-js: 1.9.14
+    optionalDependencies:
+      '@tanstack/router-core': 1.171.18
+    transitivePeerDependencies:
+      - csstype
 
   '@tanstack/solid-router@1.170.18(solid-js@1.9.14)':
     dependencies:
@@ -34955,6 +35796,16 @@ snapshots:
 
   '@tanstack/store@0.9.3': {}
 
+  '@tanstack/svelte-devtools@0.1.2(csstype@3.2.3)(solid-js@1.9.14)(svelte@5.56.8(@typescript-eslint/types@8.65.0))':
+    dependencies:
+      '@tanstack/devtools': 0.13.0(csstype@3.2.3)(solid-js@1.9.14)
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - solid-js
+      - utf-8-validate
+
   '@tanstack/svelte-form@1.33.2(svelte@5.56.8(@typescript-eslint/types@8.65.0))':
     dependencies:
       '@tanstack/form-core': 1.33.2
@@ -34964,6 +35815,13 @@ snapshots:
   '@tanstack/svelte-hotkeys@0.10.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))':
     dependencies:
       '@tanstack/hotkeys': 0.8.0
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
+
+  '@tanstack/svelte-query-devtools@6.1.38(@tanstack/svelte-query@6.1.38(svelte@5.56.8(@typescript-eslint/types@8.65.0)))(svelte@5.56.8(@typescript-eslint/types@8.65.0))':
+    dependencies:
+      '@tanstack/query-devtools': 5.101.4
+      '@tanstack/svelte-query': 6.1.38(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      esm-env: 1.2.2
       svelte: 5.56.8(@typescript-eslint/types@8.65.0)
 
   '@tanstack/svelte-query@6.1.38(svelte@5.56.8(@typescript-eslint/types@8.65.0))':
@@ -35023,6 +35881,12 @@ snapshots:
       vue: 3.5.40(typescript@6.0.3)
     transitivePeerDependencies:
       - '@vue/composition-api'
+
+  '@tanstack/vue-query-devtools@6.1.38(@tanstack/vue-query@5.101.4(vue@3.5.40(typescript@6.0.3)))(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/query-devtools': 5.101.4
+      '@tanstack/vue-query': 5.101.4(vue@3.5.40(typescript@6.0.3))
+      vue: 3.5.40(typescript@6.0.3)
 
   '@tanstack/vue-query@5.101.4(vue@3.5.40(typescript@6.0.3))':
     dependencies:
@@ -35373,6 +36237,8 @@ snapshots:
   '@types/trusted-types@2.0.7': {}
 
   '@types/unist@3.0.3': {}
+
+  '@types/web-bluetooth@0.0.21': {}
 
   '@types/ws@8.18.1':
     dependencies:
@@ -35963,6 +36829,32 @@ snapshots:
       vue-component-type-helpers: 3.3.8
     optionalDependencies:
       '@vue/server-renderer': 3.5.40
+
+  '@vueuse/core@13.9.0(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 13.9.0
+      '@vueuse/shared': 13.9.0(vue@3.5.40(typescript@6.0.3))
+      vue: 3.5.40(typescript@6.0.3)
+
+  '@vueuse/core@14.4.0(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 14.4.0
+      '@vueuse/shared': 14.4.0(vue@3.5.40(typescript@6.0.3))
+      vue: 3.5.40(typescript@6.0.3)
+
+  '@vueuse/metadata@13.9.0': {}
+
+  '@vueuse/metadata@14.4.0': {}
+
+  '@vueuse/shared@13.9.0(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.40(typescript@6.0.3)
+
+  '@vueuse/shared@14.4.0(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.40(typescript@6.0.3)
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -37075,6 +37967,19 @@ snapshots:
 
   birecord@0.1.2: {}
 
+  bits-ui@2.18.1(@internationalized/date@3.12.2)(svelte@5.56.8(@typescript-eslint/types@8.65.0)):
+    dependencies:
+      '@floating-ui/core': 1.7.5
+      '@floating-ui/dom': 1.7.6
+      '@internationalized/date': 3.12.2
+      esm-env: 1.2.2
+      runed: 0.35.1(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
+      svelte-toolbelt: 0.10.6(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      tabbable: 6.4.0
+    transitivePeerDependencies:
+      - '@sveltejs/kit'
+
   bl@4.1.0:
     dependencies:
       buffer: 5.7.1
@@ -37768,6 +38673,17 @@ snapshots:
   dir-glob@3.0.1:
     dependencies:
       path-type: 4.0.0
+
+  dnd-kit-vue@0.0.2(vue@3.5.40(typescript@6.0.3)):
+    dependencies:
+      '@dnd-kit/abstract': 0.1.21
+      '@dnd-kit/dom': 0.1.21
+      '@dnd-kit/state': 0.1.21
+      '@vueuse/core': 13.9.0(vue@3.5.40(typescript@6.0.3))
+      reka-ui: 2.10.1(vue@3.5.40(typescript@6.0.3))
+      vue: 3.5.40(typescript@6.0.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
 
   dns-packet@5.6.1:
     dependencies:
@@ -40640,6 +41556,8 @@ snapshots:
     transitivePeerDependencies:
       - '@typescript-eslint/types'
 
+  ohash@2.0.11: {}
+
   on-finished@2.4.1:
     dependencies:
       ee-first: 1.1.1
@@ -41609,6 +42527,22 @@ snapshots:
     dependencies:
       jsesc: 3.1.0
 
+  reka-ui@2.10.1(vue@3.5.40(typescript@6.0.3)):
+    dependencies:
+      '@floating-ui/dom': 1.7.6
+      '@floating-ui/vue': 1.1.11(vue@3.5.40(typescript@6.0.3))
+      '@internationalized/date': 3.12.2
+      '@internationalized/number': 3.6.7
+      '@tanstack/vue-virtual': 3.13.35(vue@3.5.40(typescript@6.0.3))
+      '@vueuse/core': 14.4.0(vue@3.5.40(typescript@6.0.3))
+      '@vueuse/shared': 14.4.0(vue@3.5.40(typescript@6.0.3))
+      aria-hidden: 1.2.6
+      defu: 6.1.7
+      ohash: 2.0.11
+      vue: 3.5.40(typescript@6.0.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
   remove-accents@0.5.0: {}
 
   remove-types@1.0.0(supports-color@8.1.1):
@@ -41870,6 +42804,13 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
+  runed@0.35.1(svelte@5.56.8(@typescript-eslint/types@8.65.0)):
+    dependencies:
+      dequal: 2.0.3
+      esm-env: 1.2.2
+      lz-string: 1.5.0
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
+
   rxjs@7.8.2:
     dependencies:
       tslib: 2.8.1
@@ -41993,7 +42934,13 @@ snapshots:
     dependencies:
       seroval: 1.5.4
 
+  seroval-plugins@1.6.2(seroval@1.6.2):
+    dependencies:
+      seroval: 1.6.2
+
   seroval@1.5.4: {}
+
+  seroval@1.6.2: {}
 
   serve-index@1.9.2(supports-color@8.1.1):
     dependencies:
@@ -42452,6 +43399,15 @@ snapshots:
     optionalDependencies:
       svelte: 5.56.8(@typescript-eslint/types@8.65.0)
 
+  svelte-toolbelt@0.10.6(svelte@5.56.8(@typescript-eslint/types@8.65.0)):
+    dependencies:
+      clsx: 2.1.1
+      runed: 0.35.1(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      style-to-object: 1.0.14
+      svelte: 5.56.8(@typescript-eslint/types@8.65.0)
+    transitivePeerDependencies:
+      - '@sveltejs/kit'
+
   svelte2tsx@0.7.56(svelte@5.56.8(@typescript-eslint/types@8.65.0))(typescript@6.0.3):
     dependencies:
       dedent-js: 1.0.1
@@ -42515,6 +43471,11 @@ snapshots:
       tailwindcss: 4.3.3
     optionalDependencies:
       tailwind-merge: 3.6.0
+
+  tailwind-variants@3.3.1(tailwind-merge@3.6.0)(tailwindcss@4.3.3):
+    optionalDependencies:
+      tailwind-merge: 3.6.0
+      tailwindcss: 4.3.3
 
   tailwindcss@4.3.3: {}
 

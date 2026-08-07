@@ -6,11 +6,13 @@ export function DebouncedInput({
   value: initialValue,
   onChange,
   debounce = 200,
+  devtoolsKey,
   ...props
 }: {
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
+  devtoolsKey: string
 } & Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = useState<string | number>(initialValue)
 
@@ -18,7 +20,10 @@ export function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
+  const debouncedOnChange = useDebouncedCallback(onChange, {
+    key: devtoolsKey,
+    wait: debounce,
+  })
 
   return (
     <input

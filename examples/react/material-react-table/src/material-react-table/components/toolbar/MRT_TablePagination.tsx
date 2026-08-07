@@ -76,6 +76,7 @@ export const MRT_TablePagination = ({
 
   const disableBack = pageIndex <= 0 || disabled
   const disableNext = lastRowIndex >= totalRowCount || disabled
+  const disableLast = !table.getCanLastPage() || disabled
 
   if (isMobile && SelectProps?.native !== false) {
     SelectProps.native = true
@@ -224,7 +225,7 @@ export const MRT_TablePagination = ({
                 <span>
                   <IconButton
                     aria-label={localization.goToLastPage}
-                    disabled={disableNext}
+                    disabled={disableLast}
                     onClick={() => table.lastPage()}
                     size="small"
                   >

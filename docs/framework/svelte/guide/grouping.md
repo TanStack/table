@@ -27,6 +27,7 @@ import {
 const features = tableFeatures({
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(), // if using client-side grouping
+  // manualGrouping: true, // if using manual server-side grouping
 })
 
 const table = createTable({
@@ -47,6 +48,16 @@ Grouping can also affect column order. There are 3 table features that can reord
 1. [Column Pinning](./column-pinning) - If pinning, columns are split into start, center (unpinned), and end pinned columns.
 2. Manual [Column Ordering](./column-ordering) - A manually specified column order is applied.
 3. **Grouping** - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
+
+### Client-Side vs Server-Side Grouping
+
+Grouping should operate over the complete dataset when its groups are meant to describe all rows. Use client-side grouping when the browser has the complete dataset. Use manual server-side grouping when the server returns only a page or another subset, or when the server needs to perform grouping and aggregation.
+
+See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework, performance factors, and guidance for combining data operations.
+
+The client-side grouped row model invokes the page-index and expanded-state auto-reset hooks when its inputs change. Whether those states reset depends on the `autoResetPageIndex`, `autoResetExpanded`, `autoResetAll`, `manualPagination`, and `manualExpanding` options. If grouping is manual and this row model is omitted or bypassed, a grouping state change does not invoke those hooks, so reset dependent server-side state in the grouping change handler when needed.
+
+### Client-Side Grouping
 
 To use the grouping feature, add the `columnGroupingFeature` to your features and the `groupedRowModel` to your row models. The grouped row model is responsible for grouping the rows based on the grouping state.
 

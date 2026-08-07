@@ -1,5 +1,21 @@
 # @tanstack/react-table
 
+## 9.1.0
+
+### Patch Changes
+
+- Updated dependencies [[`09598d2`](https://github.com/TanStack/table/commit/09598d2e413fe63396d183a8a4fc145c31c6d2ea)]:
+  - @tanstack/table-core@9.1.0
+
+## 9.0.1
+
+### Patch Changes
+
+- [#6521](https://github.com/TanStack/table/pull/6521) [`10accb2`](https://github.com/TanStack/table/commit/10accb27cef872d84118580dba03b541c887378e) - Column defs built with `legacyCreateColumnHelper` now accept the built-in `filterFn`, `sortFn`, and `aggregationFn` names, matching the registries `useLegacyTable` registers at runtime.
+
+- Updated dependencies []:
+  - @tanstack/table-core@9.0.1
+
 ## 9.0.0
 
 ### Major Changes

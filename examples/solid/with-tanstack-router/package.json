@@ -20,10 +20,15 @@
     "vite-plugin-solid": "^2.11.14"
   },
   "dependencies": {
+    "@tanstack/solid-devtools": "^0.8.9",
     "@tanstack/solid-pacer": "^0.21.1",
+    "@tanstack/solid-pacer-devtools": "0.6.3",
     "@tanstack/solid-query": "^5.101.4",
+    "@tanstack/solid-query-devtools": "^5.101.4",
     "@tanstack/solid-router": "^1.170.18",
-    "@tanstack/solid-table": "^9.0.0",
+    "@tanstack/solid-router-devtools": "^1.167.1",
+    "@tanstack/solid-table": "^9.1.0",
+    "@tanstack/solid-table-devtools": "^9.1.0",
     "solid-js": "^1.9.14"
   }
 }

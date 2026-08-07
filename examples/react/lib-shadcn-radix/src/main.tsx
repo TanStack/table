@@ -99,7 +99,7 @@ function App() {
   // 5. Store data with a stable reference
   const [data, setData] = React.useState(() => makeData(200))
   const refreshData = () => setData(makeData(200))
-  const stressTest = () => setData(makeData(10_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   // 6. Create the table instance with required features, columns, and data.
   // No `state` / `onSortingChange` / `onPaginationChange` props needed.
@@ -132,7 +132,7 @@ function App() {
             Regenerate Data
           </Button>
           <Button variant="outline" onClick={stressTest}>
-            Stress Test (10k rows)
+            Stress Test (1M rows)
           </Button>
         </div>
       </div>
@@ -223,6 +223,7 @@ function App() {
                     {pageSize}
                   </SelectItem>
                 ))}
+                <SelectItem value="Infinity">All</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -266,7 +267,7 @@ function App() {
               size="icon"
               className="hidden size-8 lg:flex"
               onClick={() => table.lastPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={!table.getCanLastPage()}
             >
               <span className="sr-only">Go to last page</span>
               <ChevronsRight />

@@ -39,6 +39,21 @@ afterEach(() => {
 })
 
 describe('TableDevtools panel lifecycle', () => {
+  it('treats a standalone panel without devtools props as open', async () => {
+    const { subscribe, table } = createDevtoolsTable()
+    const cleanupTarget = upsertTableDevtoolsTarget({
+      table: table as never,
+    })
+    const element = document.createElement('div')
+    const dispose = render(() => <TableDevtools theme="dark" />, element)
+
+    await Promise.resolve()
+    expect(subscribe).toHaveBeenCalledTimes(1)
+
+    dispose()
+    cleanupTarget?.()
+  })
+
   it('subscribes only while the devtools panel is open', async () => {
     const { subscribe, table, unsubscribe } = createDevtoolsTable()
     const cleanupTarget = upsertTableDevtoolsTarget({

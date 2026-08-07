@@ -2,6 +2,7 @@ import { render } from 'preact'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
+import { pacerDevtoolsPlugin } from '@tanstack/preact-pacer-devtools'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
@@ -537,7 +538,13 @@ if (!rootElement) throw new Error('Failed to find the root element')
 render(
   <>
     <App />
-    <TanStackDevtools plugins={[tableDevtoolsPlugin(), formDevtoolsPlugin()]} />
+    <TanStackDevtools
+      plugins={[
+        tableDevtoolsPlugin(),
+        formDevtoolsPlugin(),
+        pacerDevtoolsPlugin(),
+      ]}
+    />
   </>,
   rootElement,
 )

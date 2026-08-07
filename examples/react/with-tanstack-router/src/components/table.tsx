@@ -7,6 +7,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import { useTanStackTableDevtools } from '@tanstack/react-table-devtools'
 import { useEffect } from 'react'
 import { DebouncedInput } from './debouncedInput'
 import type {
@@ -61,6 +62,7 @@ export default function Table<T extends Record<string, string | number>>({
 }: Props<T>) {
   const table = useTable(
     {
+      key: 'with-tanstack-router-users',
       debugTable: true,
       features,
       columns,
@@ -73,6 +75,8 @@ export default function Table<T extends Record<string, string | number>>({
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   // Sync controlled state with per-slice base atoms
   useEffect(() => {
@@ -108,6 +112,7 @@ export default function Table<T extends Record<string, string | number>>({
                         {header.column.getCanFilter() &&
                         fieldMeta?.filterKey !== undefined ? (
                           <DebouncedInput
+                            devtoolsKey={`with-tanstack-router-${fieldMeta.filterKey}`}
                             className="filter-select"
                             onChange={(value) => {
                               onFilterChange({
@@ -171,8 +176,8 @@ export default function Table<T extends Record<string, string | number>>({
         </button>
         <button
           className="demo-button demo-button-sm disabled-button"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>

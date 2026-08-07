@@ -5,6 +5,7 @@ type DebouncedInputProps = {
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
+  devtoolsKey: string
   class?: string
   type?: string
   placeholder?: string
@@ -19,7 +20,10 @@ export function DebouncedInput(props: DebouncedInputProps) {
 
   const onChangeDebouncer = createDebouncer(
     (nextValue: string | number) => props.onChange(nextValue),
-    { wait: () => props.debounce ?? 200 },
+    {
+      key: props.devtoolsKey,
+      wait: () => props.debounce ?? 200,
+    },
   )
 
   createEffect(() => {
