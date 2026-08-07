@@ -24,7 +24,9 @@ export default defineConfig({
       // suffix as source makes the Svelte plugin compile it a second time.
       experimental: {
         compileModule: {
-          exclude: [/@tanstack\/svelte-devtools\/dist\/esm\/devtools\.svelte\.js/],
+          exclude: [
+            /@tanstack\/svelte-devtools\/dist\/esm\/devtools\.svelte\.js/,
+          ],
         },
       },
     }),
