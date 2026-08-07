@@ -3,7 +3,7 @@ name: cell-selection
 description: >
   Select, add, and subtract rectangular cell ranges with cellSelectionFeature: ordered include/exclude operations keyed by row and column id, modifier dragging, final positive bounds, selection edges, render-order resolution under pinning, and autoResetCellSelection. Load for spreadsheet-style selection, “select all except” behavior, unexpected range changes after sorting or reordering, drag performance, or copy-to-clipboard.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.1' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/framework/react/guide/cell-selection.md'
