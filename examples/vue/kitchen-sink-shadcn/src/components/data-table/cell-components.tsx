@@ -56,8 +56,11 @@ export const SelectCell: Component = defineComponent({
 export const TextCell: Component = defineComponent({
   name: 'TextCell',
   setup() {
-    const cell = useCellContext<string>()
-    return () => <>{String(cell.getValue())}</>
+    const cell = useCellContext<string | undefined>()
+    return () => {
+      const value = cell.getValue()
+      return value == null ? null : <>{String(value)}</>
+    }
   },
 })
 

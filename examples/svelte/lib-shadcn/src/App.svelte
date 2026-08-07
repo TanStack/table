@@ -91,7 +91,7 @@
   // 5. Store data in `$state` so regenerating it stays reactive
   let data = $state(makeData(200))
   const refreshData = () => (data = makeData(200))
-  const stressTest = () => (data = makeData(10_000))
+  const stressTest = () => (data = makeData(1_000_000))
 
   // 6. Create the table instance with required features, columns, and data.
   // No `state` / `onSortingChange` / `onPaginationChange` options needed.
@@ -133,7 +133,7 @@
     <div class="flex gap-2">
       <Button variant="outline" onclick={refreshData}>Regenerate Data</Button>
       <Button variant="outline" onclick={stressTest}>
-        Stress Test (10k rows)
+        Stress Test (1M rows)
       </Button>
     </div>
   </div>

@@ -131,7 +131,7 @@ function getPageItems(pageIndex: number, pageCount: number) {
 function App() {
   const [data, setData] = React.useState(() => makeData(200))
   const refreshData = () => setData(makeData(200))
-  const stressTest = () => setData(makeData(10_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
@@ -166,7 +166,7 @@ function App() {
           </TextField>
           <div className="flex flex-wrap gap-2">
             <Button onPress={refreshData}>Regenerate Data</Button>
-            <Button onPress={stressTest}>Stress Test (10k rows)</Button>
+            <Button onPress={stressTest}>Stress Test (1M rows)</Button>
           </div>
         </div>
 
