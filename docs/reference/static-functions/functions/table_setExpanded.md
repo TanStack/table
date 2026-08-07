@@ -9,7 +9,7 @@ title: table_setExpanded
 function table_setExpanded<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L66)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L67)
 
 Routes an expanded-state updater through the table's expanded change handler.
 

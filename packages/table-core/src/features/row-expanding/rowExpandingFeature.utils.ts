@@ -1,3 +1,4 @@
+import { shallow } from '@tanstack/store'
 import { cloneState, hasOwn, makeObjectMap } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -132,24 +133,9 @@ export function table_resetExpanded<
           cloneState(initialExpanded ?? {}),
         )
 
-  if (isSameExpandedState(currentExpanded, newExpanded)) return
+  if (shallow(currentExpanded, newExpanded)) return
 
   table_setExpanded(table, newExpanded)
-}
-
-function isSameExpandedState(a: ExpandedState, b: ExpandedState): boolean {
-  if (a === true || b === true) return a === b
-
-  const aKeys = Object.keys(a)
-
-  if (aKeys.length !== Object.keys(b).length) return false
-
-  for (let i = 0; i < aKeys.length; i++) {
-    const key = aKeys[i]!
-    if (!hasOwn(b, key) || a[key] !== b[key]) return false
-  }
-
-  return true
 }
 
 /**

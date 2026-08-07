@@ -9,7 +9,7 @@ title: getDefaultExpandedState
 function getDefaultExpandedState(): ExpandedState;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L22)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L23)
 
 Creates the default expanded state.
 

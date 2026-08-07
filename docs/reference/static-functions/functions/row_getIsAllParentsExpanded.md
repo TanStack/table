@@ -9,7 +9,7 @@ title: row_getIsAllParentsExpanded
 function row_getIsAllParentsExpanded<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:419](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L419)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:405](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L405)
 
 Checks whether every ancestor of this row is expanded.
 
