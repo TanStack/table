@@ -157,6 +157,8 @@ Sorting should operate over the same dataset as filtering and pagination. If the
 
 See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework and the cases where mixing client-side and server-side operations is intentional.
 
+The client-side sorted row model also invokes the page-index auto-reset hook when sorting inputs change. Whether the page index resets depends on the `autoResetPageIndex`, `autoResetAll`, and `manualPagination` options. If sorting is manual and this row model is omitted or bypassed, a sorting state change does not invoke that hook, so reset server-side pagination in the sorting change handler when needed.
+
 ### Manual Server-Side Sorting
 
 If you plan to just use your own server-side sorting in your back-end logic, you do not need to provide a sorted row model. But if you have provided a sorted row model, but you want to disable it, you can use the `manualSorting` table option.

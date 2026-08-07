@@ -6,22 +6,31 @@ import {
   keepPreviousData,
   useQuery,
 } from '@tanstack/react-query'
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
 import './index.css'
 import {
+  columnFilteringFeature,
   createColumnHelper,
+  globalFilteringFeature,
   rowPaginationFeature,
+  rowSortingFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { fetchData } from './fetchData'
-import type { PaginationState } from '@tanstack/react-table'
+import type { PaginationState, SortingState } from '@tanstack/react-table'
 import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
 
 const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
   rowPaginationFeature,
+  rowSortingFeature,
+  // Client-side filtering, sorting, and pagination row models are not
+  // required because those operations are handled manually on the server.
+  // Omitting the filtered and sorted row models also omits their page-reset
+  // hooks, so pagination is reset in the change handlers below.
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -50,18 +59,16 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  // Create a stable external atom for the pagination slice.
-  const paginationAtom = useCreateAtom<PaginationState>({
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = React.useState('')
+  const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
 
-  // Subscribe to the atom for reactive updates.
-  const pagination = useSelector(paginationAtom, (s) => s)
-
   const dataQuery = useQuery({
-    queryKey: ['data', pagination],
-    queryFn: () => fetchData(pagination),
+    queryKey: ['data', pagination, sorting, globalFilter],
+    queryFn: () => fetchData({ pagination, sorting, globalFilter }),
     placeholderData: keepPreviousData, // don't have 0 rows flash while changing pages/loading next page
   })
 
@@ -73,10 +80,19 @@ function App() {
       columns,
       data: dataQuery.data?.rows ?? defaultData,
       rowCount: dataQuery.data?.rowCount,
-      atoms: {
-        pagination: paginationAtom,
+      state: { sorting, globalFilter, pagination },
+      onSortingChange: (updater) => {
+        setSorting(updater)
+        setPagination((previous) => ({ ...previous, pageIndex: 0 }))
       },
+      onGlobalFilterChange: (updater) => {
+        setGlobalFilter(updater)
+        setPagination((previous) => ({ ...previous, pageIndex: 0 }))
+      },
+      onPaginationChange: setPagination,
+      manualFiltering: true, // we're doing manual "server-side" filtering
       manualPagination: true, // we're doing manual "server-side" pagination
+      manualSorting: true, // we're doing manual "server-side" sorting
       debugTable: true,
     },
     (state) => state, // default selector
@@ -84,6 +100,12 @@ function App() {
 
   return (
     <div className="demo-root">
+      <input
+        value={globalFilter}
+        onChange={(event) => table.setGlobalFilter(event.target.value)}
+        className="summary-panel"
+        placeholder="Search all columns..."
+      />
       <div className="spacer-sm" />
       <table>
         <thead>
@@ -92,7 +114,18 @@ function App() {
               {headerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : (
-                    <table.FlexRender header={header} />
+                    <div
+                      className={
+                        header.column.getCanSort() ? 'sortable-header' : ''
+                      }
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      <table.FlexRender header={header} />
+                      {{
+                        asc: ' 🔼',
+                        desc: ' 🔽',
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
                   )}
                 </th>
               ))}

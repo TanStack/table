@@ -1,19 +1,32 @@
 <script lang="ts">
   import { createQuery, keepPreviousData } from '@tanstack/svelte-query'
   import {
+    columnFilteringFeature,
     createColumnHelper,
     createTable,
     FlexRender,
+    globalFilteringFeature,
     rowPaginationFeature,
+    rowSortingFeature,
     tableFeatures,
   } from '@tanstack/svelte-table'
-  import type { PaginationState } from '@tanstack/svelte-table'
+  import type {
+    PaginationState,
+    SortingState,
+  } from '@tanstack/svelte-table'
   import { fetchData } from './fetchData'
   import type { Person } from './fetchData'
   import './index.css'
 
   const features = tableFeatures({
+    columnFilteringFeature,
+    globalFilteringFeature,
     rowPaginationFeature,
+    rowSortingFeature,
+    // Client-side filtering, sorting, and pagination row models are not
+    // required because those operations are handled manually on the server.
+    // Omitting the filtered and sorted row models also omits their page-reset
+    // hooks, so pagination is reset in the change handlers below.
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()
@@ -41,6 +54,8 @@
     }),
   ])
 
+  let sorting: SortingState = $state([])
+  let globalFilter = $state('')
   let pagination: PaginationState = $state({ pageIndex: 0, pageSize: 10 })
 
   const defaultData: Array<Person> = []
@@ -50,8 +65,8 @@
     pageCount: number
     rowCount: number
   }>(() => ({
-    queryKey: ['data', pagination],
-    queryFn: () => fetchData(pagination),
+    queryKey: ['data', pagination, sorting, globalFilter],
+    queryFn: () => fetchData({ pagination, sorting, globalFilter }),
     placeholderData: keepPreviousData,
   }))
 
@@ -66,21 +81,46 @@
         return dataQuery.data?.rowCount
       },
       state: {
+        get sorting() {
+          return sorting
+        },
+        get globalFilter() {
+          return globalFilter
+        },
         get pagination() {
           return pagination
         },
+      },
+      onSortingChange: (updater) => {
+        sorting = typeof updater === 'function' ? updater(sorting) : updater
+        pagination = { ...pagination, pageIndex: 0 }
+      },
+      onGlobalFilterChange: (updater) => {
+        globalFilter =
+          typeof updater === 'function' ? updater(globalFilter) : updater
+        pagination = { ...pagination, pageIndex: 0 }
       },
       onPaginationChange: (updater) => {
         pagination =
           typeof updater === 'function' ? updater(pagination) : updater
       },
+      manualFiltering: true,
       manualPagination: true,
+      manualSorting: true,
       debugTable: true,
     },
   )
 </script>
 
 <div class="demo-root">
+  <input
+    value={globalFilter}
+    oninput={(event: Event) => {
+      table.setGlobalFilter((event.currentTarget as HTMLInputElement).value)
+    }}
+    class="summary-panel"
+    placeholder="Search all columns..."
+  />
   <div class="spacer-sm"></div>
   <table>
     <thead>
@@ -90,7 +130,24 @@
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <FlexRender header={header} />
+                <div
+                  class={header.column.getCanSort() ? 'sortable-header' : ''}
+                  role="button"
+                  tabindex="0"
+                  onclick={header.column.getToggleSortingHandler()}
+                  onkeydown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      header.column.getToggleSortingHandler()?.(event)
+                    }
+                  }}
+                >
+                  <FlexRender header={header} />
+                  {#if header.column.getIsSorted() === 'asc'}
+                    {' '}🔼
+                  {:else if header.column.getIsSorted() === 'desc'}
+                    {' '}🔽
+                  {/if}
+                </div>
               {/if}
             </th>
           {/each}

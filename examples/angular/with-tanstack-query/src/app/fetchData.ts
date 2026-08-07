@@ -49,19 +49,65 @@ export function makeData(...lens: Array<number>) {
 
 const data = makeData(10000)
 
-export async function fetchData(options: {
-  pageIndex: number
-  pageSize: number
-}) {
+const searchableFields = [
+  'firstName',
+  'lastName',
+  'age',
+  'visits',
+  'progress',
+  'status',
+] as const
+
+type SearchableField = (typeof searchableFields)[number]
+
+export type DataQuery = {
+  pagination: {
+    pageIndex: number
+    pageSize: number
+  }
+  sorting: Array<{ id: string; desc: boolean }>
+  globalFilter: string
+}
+
+function isSearchableField(value: string): value is SearchableField {
+  return searchableFields.some((field) => field === value)
+}
+
+export async function fetchData(options: DataQuery) {
   // Simulate some network latency
   await new Promise((r) => setTimeout(r, 500))
 
+  const search = options.globalFilter.trim().toLowerCase()
+  const filteredData = search
+    ? data.filter((person) =>
+        searchableFields.some((field) =>
+          String(person[field]).toLowerCase().includes(search),
+        ),
+      )
+    : data
+
+  const sortedData = [...filteredData].sort((rowA, rowB) => {
+    for (const sort of options.sorting) {
+      if (!isSearchableField(sort.id)) continue
+
+      const valueA = rowA[sort.id]
+      const valueB = rowB[sort.id]
+      const comparison =
+        typeof valueA === 'number' && typeof valueB === 'number'
+          ? valueA - valueB
+          : String(valueA).localeCompare(String(valueB))
+
+      if (comparison !== 0) return sort.desc ? -comparison : comparison
+    }
+
+    return 0
+  })
+
+  const { pageIndex, pageSize } = options.pagination
+
   return {
-    rows: data.slice(
-      options.pageIndex * options.pageSize,
-      (options.pageIndex + 1) * options.pageSize,
-    ),
-    pageCount: Math.ceil(data.length / options.pageSize),
-    rowCount: data.length,
+    rows: sortedData.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+    pageCount: Math.ceil(sortedData.length / pageSize),
+    rowCount: sortedData.length,
   }
 }

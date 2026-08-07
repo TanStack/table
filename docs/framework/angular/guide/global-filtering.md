@@ -56,6 +56,8 @@ Filtering should operate over the same dataset as sorting and pagination. Use cl
 
 See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework, performance factors, and guidance for combining data operations.
 
+The client-side filtered row model also invokes the page-index auto-reset hook when global filtering inputs change. Whether the page index resets depends on the `autoResetPageIndex`, `autoResetAll`, and `manualPagination` options. If filtering is manual and this row model is omitted or bypassed, a global filter state change does not invoke that hook, so reset server-side pagination in the filter change handler when needed.
+
 ### Manual Server-Side Global Filtering
 
 If you have decided that you need to implement server-side global filtering instead of using the built-in client-side global filtering, here's how you do that.

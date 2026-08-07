@@ -1,19 +1,36 @@
 import { computed, defineComponent, ref, watchEffect } from 'vue'
-import { createAtom, useSelector } from '@tanstack/vue-store'
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 import {
   FlexRender,
+  columnFilteringFeature,
   createColumnHelper,
+  globalFilteringFeature,
   rowPaginationFeature,
+  rowSortingFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
 import { fetchData } from './fetchData'
 import type { Person } from './fetchData'
-import type { Cell, Header, HeaderGroup, Row } from '@tanstack/vue-table'
+import type {
+  Cell,
+  Header,
+  HeaderGroup,
+  PaginationState,
+  Row,
+  SortingState,
+  Updater,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
   rowPaginationFeature,
+  rowSortingFeature,
+  // Client-side filtering, sorting, and pagination row models are not
+  // required because those operations are handled manually on the server.
+  // Omitting the filtered and sorted row models also omits their page-reset
+  // hooks, so pagination is reset in the change handlers below.
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -41,20 +58,31 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const paginationAtom = createAtom({
-  pageIndex: 0,
-  pageSize: 10,
-})
+function resolveUpdater<T>(updater: Updater<T>, previous: T): T {
+  return typeof updater === 'function'
+    ? (updater as (old: T) => T)(previous)
+    : updater
+}
 
 export default defineComponent({
   name: 'WithTanStackQueryExample',
   setup() {
-    const pagination = useSelector(paginationAtom)
+    const sorting = ref<SortingState>([])
+    const globalFilter = ref('')
+    const pagination = ref<PaginationState>({
+      pageIndex: 0,
+      pageSize: 10,
+    })
     const defaultData: Array<Person> = []
 
     const dataQuery = useQuery(() => ({
-      queryKey: ['data', pagination.value],
-      queryFn: () => fetchData(pagination.value),
+      queryKey: ['data', pagination.value, sorting.value, globalFilter.value],
+      queryFn: () =>
+        fetchData({
+          pagination: pagination.value,
+          sorting: sorting.value,
+          globalFilter: globalFilter.value,
+        }),
       placeholderData: keepPreviousData,
     }))
 
@@ -76,15 +104,45 @@ export default defineComponent({
       columns,
       data: tableData,
       rowCount,
-      atoms: {
-        pagination: paginationAtom,
+      state: {
+        get sorting() {
+          return sorting.value
+        },
+        get globalFilter() {
+          return globalFilter.value
+        },
+        get pagination() {
+          return pagination.value
+        },
       },
+      onSortingChange: (updater) => {
+        sorting.value = resolveUpdater(updater, sorting.value)
+        pagination.value = { ...pagination.value, pageIndex: 0 }
+      },
+      onGlobalFilterChange: (updater) => {
+        globalFilter.value = resolveUpdater(updater, globalFilter.value)
+        pagination.value = { ...pagination.value, pageIndex: 0 }
+      },
+      onPaginationChange: (updater) => {
+        pagination.value = resolveUpdater(updater, pagination.value)
+      },
+      manualFiltering: true,
       manualPagination: true,
+      manualSorting: true,
       debugTable: true,
     })
 
     return () => (
       <div class="demo-root">
+        <input
+          value={globalFilter.value}
+          onInput={(event: Event) => {
+            const target = event.currentTarget as HTMLInputElement
+            table.setGlobalFilter(target.value)
+          }}
+          class="summary-panel"
+          placeholder="Search all columns..."
+        />
         <div class="spacer-sm" />
         <table>
           <thead>
@@ -96,7 +154,20 @@ export default defineComponent({
                     (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
-                          <FlexRender header={header} />
+                          <div
+                            class={
+                              header.column.getCanSort()
+                                ? 'sortable-header'
+                                : ''
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            <FlexRender header={header} />
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽',
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
                         )}
                       </th>
                     ),

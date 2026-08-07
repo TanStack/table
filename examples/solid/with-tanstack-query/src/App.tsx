@@ -1,19 +1,28 @@
 import { keepPreviousData, useQuery } from '@tanstack/solid-query'
-import { createAtom, useSelector } from '@tanstack/solid-store'
 import {
   FlexRender,
+  columnFilteringFeature,
   createColumnHelper,
   createTable,
+  globalFilteringFeature,
   rowPaginationFeature,
+  rowSortingFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { For } from 'solid-js'
+import { For, createSignal } from 'solid-js'
 import { fetchData } from './fetchData'
-import type { PaginationState } from '@tanstack/solid-table'
+import type { PaginationState, SortingState } from '@tanstack/solid-table'
 import type { Person } from './fetchData'
 
 const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
   rowPaginationFeature,
+  rowSortingFeature,
+  // Client-side filtering, sorting, and pagination row models are not
+  // required because those operations are handled manually on the server.
+  // Omitting the filtered and sorted row models also omits their page-reset
+  // hooks, so pagination is reset in the change handlers below.
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -42,15 +51,21 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const paginationAtom = createAtom<PaginationState>({
+  const [sorting, setSorting] = createSignal<SortingState>([])
+  const [globalFilter, setGlobalFilter] = createSignal('')
+  const [pagination, setPagination] = createSignal<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
-  const pagination = useSelector(paginationAtom)
 
   const dataQuery = useQuery(() => ({
-    queryKey: ['data', pagination()],
-    queryFn: () => fetchData(pagination()),
+    queryKey: ['data', pagination(), sorting(), globalFilter()],
+    queryFn: () =>
+      fetchData({
+        pagination: pagination(),
+        sorting: sorting(),
+        globalFilter: globalFilter(),
+      }),
     placeholderData: keepPreviousData,
   }))
 
@@ -65,15 +80,40 @@ function App() {
     get rowCount() {
       return dataQuery.data?.rowCount
     },
-    atoms: {
-      pagination: paginationAtom,
+    state: {
+      get sorting() {
+        return sorting()
+      },
+      get globalFilter() {
+        return globalFilter()
+      },
+      get pagination() {
+        return pagination()
+      },
     },
+    onSortingChange: (updater) => {
+      setSorting(updater)
+      setPagination((previous) => ({ ...previous, pageIndex: 0 }))
+    },
+    onGlobalFilterChange: (updater) => {
+      setGlobalFilter(updater)
+      setPagination((previous) => ({ ...previous, pageIndex: 0 }))
+    },
+    onPaginationChange: setPagination,
+    manualFiltering: true,
     manualPagination: true,
+    manualSorting: true,
     debugTable: true,
   })
 
   return (
     <div class="demo-root">
+      <input
+        value={globalFilter()}
+        onInput={(event) => table.setGlobalFilter(event.currentTarget.value)}
+        class="summary-panel"
+        placeholder="Search all columns..."
+      />
       <div class="spacer-sm" />
       <table>
         <thead>
@@ -84,7 +124,18 @@ function App() {
                   {(header) => (
                     <th colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
-                        <FlexRender header={header} />
+                        <div
+                          class={
+                            header.column.getCanSort() ? 'sortable-header' : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          <FlexRender header={header} />
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
                       )}
                     </th>
                   )}

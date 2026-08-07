@@ -7672,9 +7672,6 @@ importers:
       '@tanstack/preact-query':
         specifier: ^5.101.4
         version: 5.101.4(preact@10.29.7)
-      '@tanstack/preact-store':
-        specifier: ^0.13.1
-        version: 0.13.1(preact@10.29.7)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
@@ -10829,9 +10826,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.101.4
         version: 5.101.4(react@19.2.8)
-      '@tanstack/react-store':
-        specifier: ^0.11.0
-        version: 0.11.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
@@ -11818,9 +11812,6 @@ importers:
       '@tanstack/solid-query':
         specifier: ^5.101.4
         version: 5.101.4(solid-js@1.9.14)
-      '@tanstack/solid-store':
-        specifier: ^0.11.0
-        version: 0.11.0(solid-js@1.9.14)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
@@ -14606,9 +14597,6 @@ importers:
       '@tanstack/vue-query':
         specifier: ^5.101.4
         version: 5.101.4(vue@3.5.40(typescript@6.0.3))
-      '@tanstack/vue-store':
-        specifier: ^0.11.0
-        version: 0.11.0(vue@3.5.40(typescript@6.0.3))
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table

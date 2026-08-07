@@ -94,7 +94,7 @@ You can omit an unused client-side row model. If a shared table configuration in
 
 ## A Typical Server-Side Data Flow
 
-TanStack Table does not include server-side row models. You write the filtering, grouping, sorting, aggregation, and pagination logic in the backend language, SQL query layer, database API, or service architecture that fits your application. This is intentional. TanStack Table does not prescribe how your backend stores, queries, or processes data.
+With server-side processing, you write the filtering, grouping, sorting, aggregation, and pagination logic in the backend language, SQL query layer, database API, or service architecture that fits your application.
 
 TanStack Table also does not fetch data. Your application is responsible for sending the table state to the backend and providing the returned rows to the table. You can use any data-fetching solution you prefer. [TanStack Query](https://tanstack.com/query/latest) is an excellent companion when you want declarative fetching, caching, loading states, and request lifecycle management, and it composes naturally with controlled TanStack Table state.
 
@@ -107,6 +107,10 @@ For server-side processing:
 5. For manual pagination, also provide `rowCount` or `pageCount` when known.
 6. Reset or validate the page index when filters, grouping, sorting, or page size change.
 7. Keep previous results or show loading state deliberately, and prevent slower stale responses from replacing newer results.
+
+`manualPagination` disables `autoResetPageIndex` by default.
+
+More generally, auto-reset side effects run when a row model that invokes them recomputes. Client-side filtering, grouping, and sorting row models normally invoke page-index resets after their related state changes. In a fully manual server-side configuration that omits those row models, controlled state changes do not run their reset hooks. Reset dependent state in the corresponding change callbacks instead, as shown below. Core data changes can still trigger some auto-reset behaviors when returned data is processed.
 
 The table continues to manage state and expose event handlers; your application connects that state to its data-fetching layer. See the framework-specific Table State guide and the With TanStack Query example for complete patterns:
 
@@ -165,6 +169,65 @@ The table continues to manage state and expose event handlers; your application 
 <!-- ::end:framework -->
 
 Use a stable backend identifier with `getRowId` when selection, expansion, or other row state must survive requests. Page-relative row indexes do not identify the same record reliably across server responses.
+
+### Why No Built-In Server Row Models
+
+TanStack Table is a synchronous table state manager. Its client-side row models synchronously transform data that is already in memory, while its state and APIs describe the filtering, sorting, and pagination the user wants. Fetching data and running backend queries happen outside of the table.
+
+There are countless valid ways to design a backend and the contract between a frontend and backend: REST query parameters, GraphQL inputs, RPC calls, SQL builders, database SDKs, streaming responses, and more. A built-in server row model would have to impose opinions about those choices. TanStack Table deliberately leaves that boundary to your application so it can work with any backend stack or API design.
+
+In practice, [TanStack Query](https://tanstack.com/query/latest) serves as the client-side coordinator for server-side row processing. Your own fetching layer can fill the same role. It observes the controlled table state, sends that state through your API contract, caches the result, and gives the returned rows back to the table. For example, a React integration can pass every server-owned state value to both the query key and query function:
+
+```tsx
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  // Client-side filtering, sorting, and pagination row models are not
+  // required because those operations are handled manually on the server.
+  // Omitting the filtered and sorted row models also omits their page-reset
+  // hooks, so pagination is reset in the change handlers below.
+})
+
+const [sorting, setSorting] = useState<SortingState>([])
+const [globalFilter, setGlobalFilter] = useState('')
+const [pagination, setPagination] = useState<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const dataQuery = useQuery({
+  queryKey: ['people', { sorting, globalFilter, pagination }],
+  queryFn: () => fetchPeople({ sorting, globalFilter, pagination }),
+  placeholderData: keepPreviousData,
+})
+
+const table = useTable(
+  {
+    features,
+    columns,
+    data: dataQuery.data?.rows ?? [],
+    rowCount: dataQuery.data?.rowCount,
+    state: { sorting, globalFilter, pagination },
+    onSortingChange: (updater) => {
+      setSorting(updater)
+      setPagination((previous) => ({ ...previous, pageIndex: 0 })) // reset page index when sorting changes
+    },
+    onGlobalFilterChange: (updater) => {
+      setGlobalFilter(updater)
+      setPagination((previous) => ({ ...previous, pageIndex: 0 })) // reset page index when global filter changes
+    },
+    onPaginationChange: setPagination,
+    manualFiltering: true,
+    manualSorting: true,
+    manualPagination: true,
+  },
+  (state) => state,
+)
+```
+
+Here, `fetchPeople` defines your application's frontend-backend contract. The backend remains responsible for applying the operations in the correct order and returning the requested rows plus the total filtered `rowCount`.
 
 ## Rendering Is a Separate Decision
 
