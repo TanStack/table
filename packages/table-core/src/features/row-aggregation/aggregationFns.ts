@@ -256,8 +256,9 @@ export const aggregationFn_mean = constructAggregationFn<
 })
 
 /**
- * Computes the median when every row value is a number. Returns `undefined`
- * for empty inputs or when any value is non-numeric.
+ * Computes the median of the numeric row values. Non-numeric values are
+ * ignored, matching the `sum`/`min`/`max`/`mean` aggregations. Returns
+ * `undefined` when no numeric values remain.
  */
 export const aggregationFn_median = constructAggregationFn<
   any,
@@ -267,13 +268,12 @@ export const aggregationFn_median = constructAggregationFn<
 >({
   aggregate: (context) => {
     const rows = context.rows
-    if (!rows.length) return undefined
-    const values = new Array<number>(rows.length)
+    const values: Array<number> = []
     for (let i = 0; i < rows.length; i++) {
       const value = context.getValue(rows[i]!)
-      if (typeof value !== 'number') return undefined
-      values[i] = value
+      if (typeof value === 'number') values.push(value)
     }
+    if (!values.length) return undefined
     values.sort((a, b) => a - b)
     const mid = Math.floor(values.length / 2)
     return values.length % 2
