@@ -3,7 +3,7 @@ name: row-selection
 description: >
   Maintain rowSelection ID state with stable getRowId, single, multi, subrow, and Shift-range rules, selected row models, handler anchors, and manual-pagination semantics. Load when implementing getToggleSelectedHandler, enableRowRangeSelection, selectChildren, deselectParents, or selected IDs that outlive loaded Row objects.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.1' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.0' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/framework/react/guide/row-selection.md'
