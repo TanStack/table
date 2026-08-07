@@ -1615,6 +1615,20 @@
             { "label": "Material React Table", "to": "framework/react/examples/material-react-table" },
             { "label": "Mantine React Table", "to": "framework/react/examples/mantine-react-table" }
           ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            { "label": "Basic - Shadcn", "to": "framework/svelte/examples/lib-shadcn" },
+            { "label": "Kitchen Sink - Shadcn", "to": "framework/svelte/examples/kitchen-sink-shadcn" }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            { "label": "Basic - Shadcn", "to": "framework/vue/examples/lib-shadcn" },
+            { "label": "Kitchen Sink - Shadcn", "to": "framework/vue/examples/kitchen-sink-shadcn" }
+          ]
         }
       ]
     }
