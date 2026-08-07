@@ -3,7 +3,7 @@ name: aggregation
 description: >
   Aggregate TanStack Table columns independently of grouping, including grand totals, caller-selected row totals, multiple keyed aggregations, custom context-based definitions, grouped merges, manual values, and worker constraints.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.0' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/guide/aggregation.md'

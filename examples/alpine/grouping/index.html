@@ -92,10 +92,7 @@
         <button @click="table.nextPage()" :disabled="!table.getCanNextPage()">
           &gt;
         </button>
-        <button
-          @click="table.setPageIndex(table.getPageCount() - 1)"
-          :disabled="!table.getCanNextPage()"
-        >
+        <button @click="table.lastPage()" :disabled="!table.getCanLastPage()">
           &gt;&gt;
         </button>
         <span class="inline-controls">

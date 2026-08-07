@@ -101,7 +101,7 @@ const theme = createTheme({
 function App() {
   const [data, setData] = React.useState(() => makeData(200))
   const refreshData = () => setData(makeData(200))
-  const stressTest = () => setData(makeData(10_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
@@ -145,7 +145,7 @@ function App() {
               Regenerate Data
             </Button>
             <Button variant="outlined" onClick={stressTest}>
-              Stress Test (10k rows)
+              Stress Test (1M rows)
             </Button>
           </Stack>
         </Stack>
@@ -212,11 +212,23 @@ function App() {
             component="div"
             count={table.getPrePaginatedRowModel().rows.length}
             page={table.state.pagination.pageIndex}
-            rowsPerPage={table.state.pagination.pageSize}
-            rowsPerPageOptions={[10, 20, 30, 40, 50]}
+            rowsPerPage={
+              table.state.pagination.pageSize === Infinity
+                ? -1
+                : table.state.pagination.pageSize
+            }
+            rowsPerPageOptions={[
+              10,
+              20,
+              30,
+              40,
+              50,
+              { label: 'All', value: -1 },
+            ]}
             onPageChange={(_, page) => table.setPageIndex(page)}
             onRowsPerPageChange={(event) => {
-              table.setPageSize(Number(event.target.value))
+              const pageSize = Number(event.target.value)
+              table.setPageSize(pageSize === -1 ? Infinity : pageSize)
               table.setPageIndex(0)
             }}
           />

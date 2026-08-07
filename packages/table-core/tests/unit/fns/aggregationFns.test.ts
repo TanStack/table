@@ -69,18 +69,34 @@ describe('aggregation function definitions', () => {
     ])
   })
 
-  it('preserves mean coercion and all-number median validation', () => {
+  it('preserves mean coercion and median numeric-only behavior', () => {
     expect(
       aggregationFn_mean.aggregate(context([null, undefined, '', '2', 4, 'x'])),
     ).toBe(2)
-    expect(
-      aggregationFn_median.aggregate(context([3, '2', 1, 2])),
-    ).toBeUndefined()
+    // Non-numeric values are skipped, not treated as a reason to bail out,
+    // so the median is computed from the remaining numeric values (1, 2, 3).
+    expect(aggregationFn_median.aggregate(context([3, '2', 1, 2]))).toBe(2)
     expect(aggregationFn_median.aggregate(context([3, 1, 2]))).toBe(2)
     expect(aggregationFn_mean.aggregate(context([]))).toBeUndefined()
     expect(aggregationFn_median.aggregate(context([]))).toBeUndefined()
     expect(aggregationFn_mean.merge).toBeUndefined()
     expect(aggregationFn_median.merge).toBeUndefined()
+  })
+
+  it('skips null/non-numeric values in median, like sum/min/max/mean', () => {
+    // A null in the group should not discard the whole aggregation.
+    expect(aggregationFn_median.aggregate(context([1, null, 2, 3]))).toBe(2)
+    expect(
+      aggregationFn_median.aggregate(context([null, undefined, 4, '5', 6])),
+    ).toBe(5)
+    // Even-length numeric result still averages the two middle values.
+    expect(aggregationFn_median.aggregate(context([1, null, 2, 3, 4]))).toBe(
+      2.5,
+    )
+    // Only when there are no numeric values left does it fall back to undefined.
+    expect(
+      aggregationFn_median.aggregate(context([null, undefined, 'x', 'y'])),
+    ).toBeUndefined()
   })
 
   it('uses Set semantics for unique values', () => {

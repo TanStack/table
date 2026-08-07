@@ -6,10 +6,10 @@ title: LegacyRow
 # ~~Type Alias: LegacyRow\<TData\>~~
 
 ```ts
-type LegacyRow<TData> = Row<StockFeatures, TData>;
+type LegacyRow<TData> = Row<LegacyFeatures, TData>;
 ```
 
-Defined in: [useLegacyTable.ts:305](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L305)
+Defined in: [react-table/src/useLegacyTable.ts:319](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L319)
 
 ## Type Parameters
 

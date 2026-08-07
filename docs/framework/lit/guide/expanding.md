@@ -25,6 +25,7 @@ import {
 const features = tableFeatures({
   rowExpandingFeature,
   expandedRowModel: createExpandedRowModel(), // if using client-side expanding
+  // manualExpanding: true, // if using manual server-side expanding
 })
 
 @customElement('my-table')

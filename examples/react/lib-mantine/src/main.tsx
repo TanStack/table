@@ -98,7 +98,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = React.useState(() => makeData(200))
   const refreshData = () => setData(makeData(200))
-  const stressTest = () => setData(makeData(10_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
@@ -128,7 +128,7 @@ function App() {
               Regenerate Data
             </Button>
             <Button variant="outline" onClick={stressTest}>
-              Stress Test (10k rows)
+              Stress Test (1M rows)
             </Button>
           </Group>
         </Group>
@@ -216,7 +216,14 @@ function App() {
               <Select
                 aria-label="Rows per page"
                 value={String(table.state.pagination.pageSize)}
-                data={['10', '20', '30', '40', '50']}
+                data={[
+                  '10',
+                  '20',
+                  '30',
+                  '40',
+                  '50',
+                  { value: 'Infinity', label: 'All' },
+                ]}
                 w={90}
                 onChange={(value) => {
                   table.setPageSize(Number(value))

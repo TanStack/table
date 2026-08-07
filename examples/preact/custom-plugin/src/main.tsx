@@ -309,7 +309,7 @@ function App() {
         <button
           className="demo-button demo-button-sm"
           onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>

@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/ember-table",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "description": "Headless UI for building powerful tables & datagrids for Ember.",
   "author": "Tanner Linsley",
   "license": "MIT",

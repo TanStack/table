@@ -33,7 +33,7 @@ import { injectTableContext } from './table'
         type="button"
         class="demo-button demo-button-sm"
         (click)="table().lastPage()"
-        [disabled]="!canNextPage()"
+        [disabled]="!canLastPage()"
       >
         &gt;&gt;
       </button>
@@ -74,6 +74,7 @@ export class PaginationControls {
 
   readonly canPreviousPage = computed(() => this.table().getCanPreviousPage())
   readonly canNextPage = computed(() => this.table().getCanNextPage())
+  readonly canLastPage = computed(() => this.table().getCanLastPage())
   readonly pageCount = computed(() =>
     this.table().getPageCount().toLocaleString(),
   )

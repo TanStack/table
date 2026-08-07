@@ -5,7 +5,7 @@ description: >
 metadata:
   type: sub-skill
   library: '@tanstack/table-core'
-  library_version: '9.0.0'
+  library_version: '9.1.0'
 requires: ['core', 'table-features', 'typescript']
 sources:
   - 'TanStack/table:docs/framework/react/guide/custom-features.md'

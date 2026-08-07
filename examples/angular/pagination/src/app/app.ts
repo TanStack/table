@@ -80,6 +80,8 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 })
 export class App {
   readonly data = signal<Array<Person>>(makeData(100_000))
+  readonly allPageSize = Infinity
+  readonly pageSizes = [10, 20, 30, 40, 50, Infinity]
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,

@@ -3,7 +3,7 @@ name: pagination
 description: >
   Paginate with rowPaginationFeature and paginatedRowModel or manualPagination. Load for pageIndex/pageSize state, rowCount/pageCount, unknown next-page limits, already-paginated server data, or autoResetPageIndex surprises.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.0' }
 requires: ['core', 'table-features', 'client-vs-server']
 sources:
   - 'TanStack/table:docs/framework/react/guide/pagination.md'

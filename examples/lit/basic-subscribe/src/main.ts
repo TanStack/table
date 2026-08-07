@@ -363,9 +363,8 @@ class LitTableExample extends LitElement {
               </button>
               <button
                 class="demo-button demo-button-sm"
-                @click=${() =>
-                  this.table.setPageIndex(this.table.getPageCount() - 1)}
-                ?disabled=${!this.table.getCanNextPage()}
+                @click=${() => this.table.lastPage()}
+                ?disabled=${!this.table.getCanLastPage()}
               >
                 &gt;&gt;
               </button>

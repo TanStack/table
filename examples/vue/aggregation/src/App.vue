@@ -212,7 +212,7 @@ function setPage(event: Event) {
       ><button
         class="demo-button demo-button-sm"
         @click="table.lastPage()"
-        :disabled="!table.getCanNextPage()"
+        :disabled="!table.getCanLastPage()"
       >
         &gt;&gt;
       </button>

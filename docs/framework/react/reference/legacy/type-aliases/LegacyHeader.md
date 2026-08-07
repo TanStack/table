@@ -6,10 +6,10 @@ title: LegacyHeader
 # ~~Type Alias: LegacyHeader\<TData, TValue\>~~
 
 ```ts
-type LegacyHeader<TData, TValue> = Header<StockFeatures, TData, TValue>;
+type LegacyHeader<TData, TValue> = Header<LegacyFeatures, TData, TValue>;
 ```
 
-Defined in: [useLegacyTable.ts:315](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L315)
+Defined in: [react-table/src/useLegacyTable.ts:329](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L329)
 
 ## Type Parameters
 

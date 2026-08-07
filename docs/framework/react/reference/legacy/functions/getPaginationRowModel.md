@@ -9,7 +9,7 @@ title: getPaginationRowModel
 function getPaginationRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:78](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L78)
+Defined in: [react-table/src/useLegacyTable.ts:79](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L79)
 
 ## Type Parameters
 

@@ -35,7 +35,7 @@
     type="button"
     class="demo-button demo-button-sm"
     onclick={() => table.lastPage()}
-    disabled={!table.getCanNextPage()}
+    disabled={!table.getCanLastPage()}
   >
     {'>>'}
   </button>

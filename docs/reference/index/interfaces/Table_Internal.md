@@ -802,7 +802,7 @@ Root rows are depth `0`, direct sub-rows are depth `1`, and so on.
 getPaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L125)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L134)
 
 Resolves the row model after pagination has sliced the current page.
 
@@ -890,7 +890,7 @@ Table_RowModels.getPreGroupedRowModel
 getPrePaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L129)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L138)
 
 Reads the row model immediately before pagination.
 

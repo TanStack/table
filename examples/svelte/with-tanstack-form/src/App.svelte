@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { onDestroy, untrack } from 'svelte'
   import { FlexRender, renderComponent } from '@tanstack/svelte-table'
-  import { untrack } from 'svelte'
+  import { TanStackDevtools } from '@tanstack/svelte-devtools'
+  import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
   import { createAppColumnHelper, createAppTable } from './table'
   import { createAppForm } from './form'
   import { formSchema, personSchema } from './schema'
@@ -9,6 +11,8 @@
   import RowSubmitTableRow from './RowSubmitTableRow.svelte'
   import SelectFieldCell from './SelectFieldCell.svelte'
   import TextFieldCell from './TextFieldCell.svelte'
+  import TableDevtoolsPanel from './TableDevtoolsPanel.svelte'
+  import type { TanStackDevtoolsSveltePlugin } from '@tanstack/svelte-devtools'
   import type { FormData, FormRow } from './schema'
   import './index.css'
 
@@ -98,6 +102,7 @@
   ])
 
   const fullTable = createAppTable({
+    key: 'with-tanstack-form-full-table',
     columns: fullColumns,
     get data() {
       return fullData
@@ -166,6 +171,7 @@
   ])
 
   const rowTable = createAppTable({
+    key: 'with-tanstack-form-row-submit',
     columns: rowColumns,
     get data() {
       return rowData
@@ -175,6 +181,22 @@
 
   const rowHeaderGroups = $derived(rowTable.getHeaderGroups())
   const rowRows = $derived(rowTable.getRowModel().rows)
+
+  const fullTableDevtools = createTableDevtoolsRegistrationManager()
+  const rowTableDevtools = createTableDevtoolsRegistrationManager()
+  fullTableDevtools.update(fullTable)
+  rowTableDevtools.update(rowTable)
+  onDestroy(() => {
+    fullTableDevtools.dispose()
+    rowTableDevtools.dispose()
+  })
+
+  const plugins: Array<TanStackDevtoolsSveltePlugin> = [
+    {
+      name: 'TanStack Table',
+      component: TableDevtoolsPanel,
+    },
+  ]
 
   function refreshRowData() {
     rowData = makeData(100)
@@ -349,3 +371,5 @@
     </rowTable.AppTable>
   </section>
 </div>
+
+<TanStackDevtools {plugins} />

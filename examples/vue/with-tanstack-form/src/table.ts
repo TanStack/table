@@ -161,7 +161,7 @@ const PaginationControls = defineComponent({
           {
             type: 'button',
             class: 'demo-button demo-button-sm',
-            disabled: !table.getCanNextPage(),
+            disabled: !table.getCanLastPage(),
             onClick: () => table.lastPage(),
           },
           '>>',

@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
+import { pacerDevtoolsPlugin } from '@tanstack/react-pacer-devtools'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
@@ -537,6 +538,12 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-    <TanStackDevtools plugins={[tableDevtoolsPlugin(), formDevtoolsPlugin()]} />
+    <TanStackDevtools
+      plugins={[
+        tableDevtoolsPlugin(),
+        formDevtoolsPlugin(),
+        pacerDevtoolsPlugin(),
+      ]}
+    />
   </React.StrictMode>,
 )

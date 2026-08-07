@@ -36,7 +36,9 @@ const features = tableFeatures({
   globalFilteringFeature,
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
+  // manualFiltering: true, // if using manual server-side filtering
   sortedRowModel: createSortedRowModel(), // if using client-side sorting
+  // manualSorting: true, // if using manual server-side sorting
   filterFns: { fuzzy: fuzzyFilter },
   sortFns: { fuzzy: fuzzySort },
   filterMeta: metaHelper<FuzzyFilterMeta>(),

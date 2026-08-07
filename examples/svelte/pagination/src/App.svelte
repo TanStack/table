@@ -141,7 +141,7 @@
     <button
       class="demo-button demo-button-sm"
       onclick={() => table.lastPage()}
-      disabled={!table.getCanNextPage()}
+      disabled={!table.getCanLastPage()}
     >
       {'>>'}
     </button>
@@ -177,6 +177,7 @@
       {#each [10, 20, 30, 40, 50] as pageSize}
         <option value={pageSize}>Show {pageSize}</option>
       {/each}
+      <option value={Infinity}>Show All</option>
     </select>
   </div>
   <div>
