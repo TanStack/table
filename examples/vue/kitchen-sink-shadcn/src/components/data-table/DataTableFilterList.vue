@@ -244,7 +244,10 @@ function onTriggerPointerDown(event: PointerEvent) {
         :id="listId"
         class="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5"
       >
-        <template v-for="(filter, index) in columnFilters" :key="filter.filterId">
+        <template
+          v-for="(filter, index) in columnFilters"
+          :key="filter.filterId"
+        >
           <div
             v-if="getFilterColumn(filter) && filter.filterId"
             role="listitem"
@@ -319,7 +322,9 @@ function onTriggerPointerDown(event: PointerEvent) {
                         v-for="col in filterableColumns"
                         :key="col.id"
                         :value="col.id"
-                        @select="onFilterUpdate(filter.filterId!, { id: col.id })"
+                        @select="
+                          onFilterUpdate(filter.filterId!, { id: col.id })
+                        "
                       >
                         <span class="truncate">
                           {{ col.columnDef.meta?.label ?? col.id }}

@@ -48,7 +48,10 @@ function onSortAdd() {
   }
 }
 
-function onSortUpdate(sortId: string, updates: Partial<Omit<ColumnSort, 'id'>>) {
+function onSortUpdate(
+  sortId: string,
+  updates: Partial<Omit<ColumnSort, 'id'>>,
+) {
   table.setSorting(
     sorting.value.map((s) => (s.id === sortId ? { ...s, ...updates } : s)),
   )

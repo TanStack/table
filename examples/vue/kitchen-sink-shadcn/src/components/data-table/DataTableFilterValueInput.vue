@@ -88,7 +88,9 @@ const selectedDateRange = computed(() => {
 })
 
 const selectedValues = computed(() =>
-  Array.isArray(props.filter.value) ? (props.filter.value as Array<string>) : [],
+  Array.isArray(props.filter.value)
+    ? (props.filter.value as Array<string>)
+    : [],
 )
 
 function update(updates: Partial<Omit<ExtendedColumnFilter, 'filterId'>>) {
@@ -116,7 +118,10 @@ function onDatePointerDown(event: PointerEvent) {
 
 <template>
   <!-- date range -->
-  <div v-if="variant === 'date' && operator === 'inRange'" class="flex items-center gap-2">
+  <div
+    v-if="variant === 'date' && operator === 'inRange'"
+    class="flex items-center gap-2"
+  >
     <Popover>
       <PopoverTrigger as-child>
         <Button
@@ -146,7 +151,11 @@ function onDatePointerDown(event: PointerEvent) {
           <span v-else>Select date range</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent :id="`${inputId}-calendar`" class="w-auto p-0" align="start">
+      <PopoverContent
+        :id="`${inputId}-calendar`"
+        class="w-auto p-0"
+        align="start"
+      >
         <RangeCalendar
           :aria-label="`Select ${columnLabel} date range`"
           :model-value="{
@@ -188,17 +197,24 @@ function onDatePointerDown(event: PointerEvent) {
         @pointerdown="onDatePointerDown"
       >
         <CalendarIcon />
-        <template v-if="selectedDate">{{ formatDateValue(selectedDate) }}</template>
+        <template v-if="selectedDate">{{
+          formatDateValue(selectedDate)
+        }}</template>
         <span v-else class="text-muted-foreground">Pick a date</span>
       </Button>
     </PopoverTrigger>
-    <PopoverContent :id="`${inputId}-calendar`" class="w-auto p-0" align="start">
+    <PopoverContent
+      :id="`${inputId}-calendar`"
+      class="w-auto p-0"
+      align="start"
+    >
       <Calendar
         :aria-label="`Select ${columnLabel} date`"
         :model-value="selectedDate"
         :placeholder="selectedDate"
         @update:model-value="
-          (date) => update({ value: date ? date.toString() : undefined, operator })
+          (date) =>
+            update({ value: date ? date.toString() : undefined, operator })
         "
       />
     </PopoverContent>

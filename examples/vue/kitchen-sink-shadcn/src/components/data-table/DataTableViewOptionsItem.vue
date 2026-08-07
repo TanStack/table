@@ -40,12 +40,7 @@ const { elementRef, handleRef, isDragging } = useSortable(() => ({
     <span class="truncate">
       {{ props.column.columnDef.meta?.label ?? props.column.id }}
     </span>
-    <Button
-      :ref="handleRef"
-      variant="ghost"
-      size="icon"
-      class="ml-auto size-6"
-    >
+    <Button :ref="handleRef" variant="ghost" size="icon" class="ml-auto size-6">
       <GripVertical />
     </Button>
   </CommandItem>

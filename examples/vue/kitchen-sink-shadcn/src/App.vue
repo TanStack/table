@@ -90,8 +90,15 @@ const table = useAppTable({
 
 useTanStackTableDevtools(table)
 
-const { AppTable, AppHeader, AppCell, FilterList, SortList, ViewOptions, Pagination } =
-  table
+const {
+  AppTable,
+  AppHeader,
+  AppCell,
+  FilterList,
+  SortList,
+  ViewOptions,
+  Pagination,
+} = table
 
 // Debounced global filter setter — mirrors the react example's DebouncedInput.
 const globalFilterInput = ref('')

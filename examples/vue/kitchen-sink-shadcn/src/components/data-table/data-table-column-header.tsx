@@ -34,7 +34,8 @@ export const ColumnHeader: Component = defineComponent({
     const column = header.column
 
     return () => {
-      const displayTitle = column.columnDef.meta?.label ?? props.title ?? column.id
+      const displayTitle =
+        column.columnDef.meta?.label ?? props.title ?? column.id
 
       const canSort = column.getCanSort()
       const canHide = column.getCanHide()
@@ -76,11 +77,15 @@ export const ColumnHeader: Component = defineComponent({
             <DropdownMenuContent align="start">
               {canSort && (
                 <>
-                  <DropdownMenuItem {...{ onClick: () => column.toggleSorting(false) }}>
+                  <DropdownMenuItem
+                    {...{ onClick: () => column.toggleSorting(false) }}
+                  >
                     <ArrowUp class="mr-2 size-3.5 text-muted-foreground/70" />
                     Asc
                   </DropdownMenuItem>
-                  <DropdownMenuItem {...{ onClick: () => column.toggleSorting(true) }}>
+                  <DropdownMenuItem
+                    {...{ onClick: () => column.toggleSorting(true) }}
+                  >
                     <ArrowDown class="mr-2 size-3.5 text-muted-foreground/70" />
                     Desc
                   </DropdownMenuItem>
@@ -89,7 +94,9 @@ export const ColumnHeader: Component = defineComponent({
               {canGroup && (
                 <>
                   {canSort ? <DropdownMenuSeparator /> : null}
-                  <DropdownMenuItem {...{ onClick: column.getToggleGroupingHandler() }}>
+                  <DropdownMenuItem
+                    {...{ onClick: column.getToggleGroupingHandler() }}
+                  >
                     {grouped ? (
                       <>
                         <Ungroup class="mr-2 size-3.5 text-muted-foreground/70" />

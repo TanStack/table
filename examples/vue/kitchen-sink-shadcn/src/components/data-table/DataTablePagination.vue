@@ -16,10 +16,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-const props = withDefaults(
-  defineProps<{ pageSizeOptions?: Array<number> }>(),
-  { pageSizeOptions: () => [10, 20, 30, 40, 50] },
-)
+const props = withDefaults(defineProps<{ pageSizeOptions?: Array<number> }>(), {
+  pageSizeOptions: () => [10, 20, 30, 40, 50],
+})
 
 const table = useTableContext()
 </script>

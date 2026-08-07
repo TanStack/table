@@ -122,7 +122,11 @@ const setGlobalFilterDebounced = debounce(
 
 function sortIcon(column: Column<typeof features, Person>) {
   const sorted = column.getIsSorted()
-  return sorted === 'asc' ? ArrowUp : sorted === 'desc' ? ArrowDown : ArrowUpDown
+  return sorted === 'asc'
+    ? ArrowUp
+    : sorted === 'desc'
+      ? ArrowDown
+      : ArrowUpDown
 }
 </script>
 
@@ -187,7 +191,11 @@ function sortIcon(column: Column<typeof features, Person>) {
               No results.
             </TableCell>
           </TableRow>
-          <TableRow v-for="row in table.getRowModel().rows" v-else :key="row.id">
+          <TableRow
+            v-for="row in table.getRowModel().rows"
+            v-else
+            :key="row.id"
+          >
             <TableCell v-for="cell in row.getAllCells()" :key="cell.id">
               <FlexRender :cell="cell" />
             </TableCell>

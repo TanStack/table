@@ -105,7 +105,11 @@ const filterFn_enhancedGreaterThan: FilterFn<any, any> = (
 
 filterFn_enhancedGreaterThan.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<any, any> = (row, columnId: string, filterValue: unknown) => {
+const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<any, any> = (
+  row,
+  columnId: string,
+  filterValue: unknown,
+) => {
   const rowValue = row.getValue(columnId)
 
   if (isValidDate(rowValue) && isValidDate(filterValue)) {
@@ -188,10 +192,7 @@ const filterFn_endsWith: FilterFn<any, any> = (
 
 filterFn_endsWith.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_isEmpty: FilterFn<any, any> = (
-  row,
-  columnId: string,
-) => {
+const filterFn_isEmpty: FilterFn<any, any> = (row, columnId: string) => {
   const value = row.getValue(columnId)
   return (
     value === undefined ||

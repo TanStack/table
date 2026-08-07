@@ -2,7 +2,12 @@
 import { computed } from 'vue'
 import { Check, ChevronsUpDown, GripVertical, Trash2 } from '@lucide/vue'
 import { useSortable } from 'dnd-kit-vue'
-import type { Column, ColumnSort, RowData, SortDirection } from '@tanstack/vue-table'
+import type {
+  Column,
+  ColumnSort,
+  RowData,
+  SortDirection,
+} from '@tanstack/vue-table'
 import type { features } from '@/hooks/features'
 
 import { Button } from '@/components/ui/button'
@@ -35,7 +40,10 @@ const props = defineProps<{
   sorting: Array<ColumnSort>
   sortableColumns: Array<Column<typeof features, RowData>>
   onColumnSelect: (currentSortId: string, newColumnId: string) => void
-  onSortUpdate: (sortId: string, updates: Partial<Omit<ColumnSort, 'id'>>) => void
+  onSortUpdate: (
+    sortId: string,
+    updates: Partial<Omit<ColumnSort, 'id'>>,
+  ) => void
   onSortRemove: (sortId: string) => void
 }>()
 
@@ -129,9 +137,7 @@ function onTriggerPointerDown(event: PointerEvent) {
                   :class="
                     cn(
                       'ml-auto size-4',
-                      column.id === props.sort.id
-                        ? 'opacity-100'
-                        : 'opacity-0',
+                      column.id === props.sort.id ? 'opacity-100' : 'opacity-0',
                     )
                   "
                   aria-hidden="true"

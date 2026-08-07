@@ -108,7 +108,11 @@ const filterFn_enhancedGreaterThan: FilterFn<typeof features, any> = (
 
 filterFn_enhancedGreaterThan.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<typeof features, any> = (row, columnId: string, filterValue: unknown) => {
+const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<typeof features, any> = (
+  row,
+  columnId: string,
+  filterValue: unknown,
+) => {
   const rowValue = row.getValue(columnId)
 
   if (isValidDate(rowValue) && isValidDate(filterValue)) {
