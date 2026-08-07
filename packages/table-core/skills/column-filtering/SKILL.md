@@ -3,7 +3,7 @@ name: column-filtering
 description: >
   Filter columns with columnFilteringFeature, filteredRowModel, filterFns, filterMeta, nested-row direction, and manualFiltering. Load for accessor compatibility, controlled filter updaters, fuzzy metadata, or client/server ownership.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.1' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.0' }
 requires: ['core', 'table-features', 'client-vs-server']
 sources:
   - 'TanStack/table:docs/framework/react/guide/column-filtering.md'

@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@tanstack/vue-devtools": "^0.2.23",
-    "@tanstack/vue-table": "^9.0.1",
-    "@tanstack/vue-table-devtools": "^9.0.1",
+    "@tanstack/vue-table": "^9.1.0",
+    "@tanstack/vue-table-devtools": "^9.1.0",
     "vue": "^3.5.40"
   },
   "devDependencies": {

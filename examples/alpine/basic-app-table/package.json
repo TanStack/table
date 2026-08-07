@@ -12,7 +12,7 @@
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@tanstack/alpine-table": "^9.0.1",
+    "@tanstack/alpine-table": "^9.1.0",
     "alpinejs": "^3.15.12"
   },
   "devDependencies": {

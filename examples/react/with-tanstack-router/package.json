@@ -19,8 +19,8 @@
     "@tanstack/react-query-devtools": "^5.101.4",
     "@tanstack/react-router": "^1.170.18",
     "@tanstack/react-router-devtools": "^1.167.1",
-    "@tanstack/react-table": "^9.0.1",
-    "@tanstack/react-table-devtools": "^9.0.1",
+    "@tanstack/react-table": "^9.1.0",
+    "@tanstack/react-table-devtools": "^9.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

@@ -1,5 +1,7 @@
 # @tanstack/table-devtools
 
+## 9.1.0
+
 ## 9.0.1
 
 ### Patch Changes
