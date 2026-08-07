@@ -93,7 +93,7 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const pageSizeOptions = ['10', '20', '30', '40', '50']
+const pageSizeOptions = ['10', '20', '30', '40', '50', 'Infinity']
 
 function getPageItems(pageIndex: number, pageCount: number) {
   const currentPage = pageIndex + 1
@@ -139,7 +139,8 @@ function App() {
   const pageCount = table.getPageCount()
   const pageItems = getPageItems(pageIndex, pageCount)
   const rowCount = table.getPrePaginatedRowModel().rows.length
-  const start = rowCount === 0 ? 0 : pageIndex * pageSize + 1
+  const start =
+    rowCount === 0 ? 0 : pageSize === Infinity ? 1 : pageIndex * pageSize + 1
   const end = Math.min((pageIndex + 1) * pageSize, rowCount)
 
   return (
@@ -244,8 +245,12 @@ function App() {
                 <Select.Popover>
                   <ListBox>
                     {pageSizeOptions.map((option) => (
-                      <ListBoxItem key={option} id={option} textValue={option}>
-                        {option}
+                      <ListBoxItem
+                        key={option}
+                        id={option}
+                        textValue={option === 'Infinity' ? 'All' : option}
+                      >
+                        {option === 'Infinity' ? 'All' : option}
                       </ListBoxItem>
                     ))}
                   </ListBox>

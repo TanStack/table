@@ -31,6 +31,7 @@ const features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
+  // manualFiltering: true, // if using manual server-side filtering
   facetedRowModel: createFacetedRowModel(), // if using client-side faceting
   facetedUniqueValues: createFacetedUniqueValues(),
   facetedMinMaxValues: createFacetedMinMaxValues(),

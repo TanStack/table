@@ -187,7 +187,7 @@ function App() @{
         <button className="demo-button demo-button-sm" onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>{'<<'}</button>
         <button className="demo-button demo-button-sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>{'<'}</button>
         <button className="demo-button demo-button-sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>{'>'}</button>
-        <button className="demo-button demo-button-sm" onClick={() => table.lastPage()} disabled={!table.getCanNextPage()}>{'>>'}</button>
+        <button className="demo-button demo-button-sm" onClick={() => table.lastPage()} disabled={!table.getCanLastPage()}>{'>>'}</button>
         <span className="inline-controls">
           <div>Page</div>
           <strong>{String(pagination.pageIndex + 1)} of {String(table.getPageCount())}</strong>

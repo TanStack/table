@@ -5,7 +5,7 @@ title: AppHeaderPropsWithoutSelector
 
 # Interface: AppHeaderPropsWithoutSelector\<TFeatures, TData, TValue, THeaderComponents\>
 
-Defined in: [createTableHook.tsx:434](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L434)
+Defined in: [react-table/src/createTableHook.tsx:434](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L434)
 
 Props for AppHeader/AppFooter component - without selector
 
@@ -35,7 +35,7 @@ Props for AppHeader/AppFooter component - without selector
 children: (header) => ReactNode;
 ```
 
-Defined in: [createTableHook.tsx:441](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L441)
+Defined in: [react-table/src/createTableHook.tsx:441](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L441)
 
 #### Parameters
 
@@ -55,7 +55,7 @@ Defined in: [createTableHook.tsx:441](https://github.com/TanStack/table/blob/mai
 header: Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:440](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L440)
+Defined in: [react-table/src/createTableHook.tsx:440](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L440)
 
 ***
 
@@ -65,4 +65,4 @@ Defined in: [createTableHook.tsx:440](https://github.com/TanStack/table/blob/mai
 optional selector: undefined;
 ```
 
-Defined in: [createTableHook.tsx:445](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L445)
+Defined in: [react-table/src/createTableHook.tsx:445](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L445)

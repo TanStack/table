@@ -26,6 +26,7 @@ import {
 const features = tableFeatures({
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(), // if using client-side grouping
+  // manualGrouping: true, // if using manual server-side grouping
 })
 
 export class App {

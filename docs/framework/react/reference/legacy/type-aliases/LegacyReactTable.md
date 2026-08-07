@@ -6,10 +6,10 @@ title: LegacyReactTable
 # ~~Type Alias: LegacyReactTable\<TData\>~~
 
 ```ts
-type LegacyReactTable<TData> = ReactTable<StockFeatures, TData, TableState<StockFeatures>> & object;
+type LegacyReactTable<TData> = ReactTable<LegacyFeatures, TData, TableState<LegacyFeatures>> & object;
 ```
 
-Defined in: [useLegacyTable.ts:276](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L276)
+Defined in: [react-table/src/useLegacyTable.ts:290](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L290)
 
 Legacy table instance type that includes the v8-style `getState()` method.
 
@@ -18,14 +18,14 @@ Legacy table instance type that includes the v8-style `getState()` method.
 ### ~~getState()~~
 
 ```ts
-getState: () => TableState<StockFeatures>;
+getState: () => TableState<LegacyFeatures>;
 ```
 
 Returns the current table state.
 
 #### Returns
 
-`TableState`\<`StockFeatures`\>
+`TableState`\<[`LegacyFeatures`](../interfaces/LegacyFeatures.md)\>
 
 #### Deprecated
 
@@ -43,7 +43,7 @@ Sets the current table state.
 
 ##### state
 
-`TableState`\<`StockFeatures`\>
+`TableState`\<[`LegacyFeatures`](../interfaces/LegacyFeatures.md)\>
 
 #### Returns
 

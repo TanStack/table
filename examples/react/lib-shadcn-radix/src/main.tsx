@@ -223,6 +223,7 @@ function App() {
                     {pageSize}
                   </SelectItem>
                 ))}
+                <SelectItem value="Infinity">All</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -266,7 +267,7 @@ function App() {
               size="icon"
               className="hidden size-8 lg:flex"
               onClick={() => table.lastPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={!table.getCanLastPage()}
             >
               <span className="sr-only">Go to last page</span>
               <ChevronsRight />

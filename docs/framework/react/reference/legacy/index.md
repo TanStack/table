@@ -7,6 +7,7 @@ title: legacy
 
 ## Interfaces
 
+- [LegacyFeatures](interfaces/LegacyFeatures.md)
 - [LegacyRowModelOptions](interfaces/LegacyRowModelOptions.md)
 
 ## Type Aliases

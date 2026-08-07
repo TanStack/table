@@ -4,6 +4,10 @@ import type { TableFeatures } from '../../types/TableFeatures'
 
 export interface PaginationState {
   pageIndex: number
+  /**
+   * The number of rows per page. Set to `Infinity` to place all rows on a
+   * single page.
+   */
   pageSize: number
 }
 
@@ -50,6 +54,10 @@ export interface Table_RowPagination<
    */
   getCanNextPage: () => boolean
   /**
+   * Checks whether a known, finite last page exists after the current page.
+   */
+  getCanLastPage: () => boolean
+  /**
    * Checks whether the current page index can move backward.
    */
   getCanPreviousPage: () => boolean
@@ -81,7 +89,8 @@ export interface Table_RowPagination<
    */
   firstPage: () => void
   /**
-   * Sets the page index to the last page.
+   * Sets the page index to the last known page. Does nothing when the page
+   * count is unknown, empty, or non-finite.
    */
   lastPage: () => void
   /**

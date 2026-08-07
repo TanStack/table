@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select'
 
 const props = withDefaults(defineProps<{ pageSizeOptions?: Array<number> }>(), {
-  pageSizeOptions: () => [10, 20, 30, 40, 50],
+  pageSizeOptions: () => [10, 20, 30, 40, 50, Infinity],
 })
 
 const table = useTableContext()
@@ -52,7 +52,7 @@ const table = useTableContext()
               :key="pageSize"
               :value="`${pageSize}`"
             >
-              {{ pageSize }}
+              {{ pageSize === Infinity ? 'All' : pageSize }}
             </SelectItem>
           </SelectContent>
         </Select>
@@ -97,8 +97,8 @@ const table = useTableContext()
           variant="outline"
           size="icon"
           class="hidden size-8 lg:flex"
-          :disabled="!table.getCanNextPage()"
-          @click="table.setPageIndex(table.getPageCount() - 1)"
+          :disabled="!table.getCanLastPage()"
+          @click="table.lastPage()"
         >
           <ChevronsRight class="size-4" aria-hidden="true" />
         </Button>

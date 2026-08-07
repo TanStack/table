@@ -212,11 +212,23 @@ function App() {
             component="div"
             count={table.getPrePaginatedRowModel().rows.length}
             page={table.state.pagination.pageIndex}
-            rowsPerPage={table.state.pagination.pageSize}
-            rowsPerPageOptions={[10, 20, 30, 40, 50]}
+            rowsPerPage={
+              table.state.pagination.pageSize === Infinity
+                ? -1
+                : table.state.pagination.pageSize
+            }
+            rowsPerPageOptions={[
+              10,
+              20,
+              30,
+              40,
+              50,
+              { label: 'All', value: -1 },
+            ]}
             onPageChange={(_, page) => table.setPageIndex(page)}
             onRowsPerPageChange={(event) => {
-              table.setPageSize(Number(event.target.value))
+              const pageSize = Number(event.target.value)
+              table.setPageSize(pageSize === -1 ? Infinity : pageSize)
               table.setPageIndex(0)
             }}
           />

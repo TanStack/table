@@ -28,6 +28,7 @@ import {
 const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
+  // manualFiltering: true, // if using manual server-side filtering
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,

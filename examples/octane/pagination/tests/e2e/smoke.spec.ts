@@ -224,9 +224,10 @@ test('recomputes the page index when the page size changes', async ({
   const errors = await openExample(page)
   const select = pageSizeSelect(page)
 
-  await expect(select.locator('option')).toHaveText(
-    PAGE_SIZES.map((size) => `Show ${size}`),
-  )
+  await expect(select.locator('option')).toHaveText([
+    ...PAGE_SIZES.map((size) => `Show ${size}`),
+    'Show All',
+  ])
   await expect(select).toHaveValue('10')
 
   await select.selectOption('20')
@@ -255,6 +256,29 @@ test('recomputes the page index when the page size changes', async ({
   await select.selectOption('50')
   await expect(pageStatus(page)).toHaveText('1 of 20')
   await expectPagination(page, { pageIndex: 0, pageSize: 50 })
+
+  expect(errors).toEqual([])
+})
+
+test('shows all rows when the All page size is selected', async ({ page }) => {
+  const errors = await openExample(page)
+  const select = pageSizeSelect(page)
+
+  await pageButton(page, '>').click()
+  await expect(pageStatus(page)).toHaveText('2 of 100')
+
+  await select.selectOption('Infinity')
+
+  await expect(select).toHaveValue('Infinity')
+  await expect(bodyRows(page)).toHaveCount(TOTAL_ROWS)
+  await expect(pageStatus(page)).toHaveText('1 of 1')
+  await expect(rowCountLine(page)).toHaveText(
+    `Showing ${TOTAL_ROWS.toLocaleString('en-US')} of ${TOTAL_ROWS.toLocaleString('en-US')} Rows`,
+  )
+  await expect(pageButton(page, '<<')).toBeDisabled()
+  await expect(pageButton(page, '<')).toBeDisabled()
+  await expect(pageButton(page, '>')).toBeDisabled()
+  await expect(pageButton(page, '>>')).toBeDisabled()
 
   expect(errors).toEqual([])
 })

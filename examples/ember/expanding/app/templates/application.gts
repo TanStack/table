@@ -278,6 +278,10 @@ export default class ExpandingTable extends Component {
     return this.table.getCanNextPage()
   }
 
+  get canLastPage() {
+    return this.table.getCanLastPage()
+  }
+
   get pagination() {
     return this.table.store.state.pagination
   }
@@ -335,7 +339,7 @@ export default class ExpandingTable extends Component {
   }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1)
+    this.table.lastPage()
   }
 
   handlePageSizeChange = (event: Event) => {
@@ -438,7 +442,7 @@ export default class ExpandingTable extends Component {
       </button>
       <button
         class='demo-button demo-button-sm'
-        disabled={{not this.canNextPage}}
+        disabled={{not this.canLastPage}}
         {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;

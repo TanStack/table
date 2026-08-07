@@ -65,7 +65,7 @@
         <button
           class="demo-button demo-button-sm"
           @click="table.lastPage()"
-          :disabled="!table.getCanNextPage()"
+          :disabled="!table.getCanLastPage()"
         >
           &gt;&gt;
         </button>
@@ -97,7 +97,7 @@
           <template x-for="pageSize in pageSizes" :key="pageSize">
             <option
               :value="pageSize"
-              x-text="'Show ' + pageSize"
+              x-text="pageSize === Infinity ? 'Show All' : 'Show ' + pageSize"
               :selected="pageSize === table.atoms.pagination.get().pageSize"
             ></option>
           </template>

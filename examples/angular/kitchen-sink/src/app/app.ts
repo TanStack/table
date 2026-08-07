@@ -247,6 +247,9 @@ export class App {
     return this.table.atoms.pagination.get().pageSize
   }
 
+  readonly allPageSize = Infinity
+  readonly pageSizes = [10, 20, 30, 50, 100, Infinity]
+
   refreshData = () => this.data.set(makeData(1_000))
   nestedData = () => this.data.set(makeData(100, 5, 3))
   stress10k = () => this.data.set(makeData(10_000))

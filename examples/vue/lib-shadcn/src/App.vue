@@ -224,11 +224,11 @@ function sortIcon(column: Column<typeof features, Person>) {
             </SelectTrigger>
             <SelectContent side="top">
               <SelectItem
-                v-for="pageSize in [10, 20, 30, 40, 50]"
+                v-for="pageSize in [10, 20, 30, 40, 50, Infinity]"
                 :key="pageSize"
                 :value="`${pageSize}`"
               >
-                {{ pageSize }}
+                {{ pageSize === Infinity ? 'All' : pageSize }}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -274,7 +274,7 @@ function sortIcon(column: Column<typeof features, Person>) {
             variant="outline"
             size="icon"
             class="hidden size-8 lg:flex"
-            :disabled="!table.getCanNextPage()"
+            :disabled="!table.getCanLastPage()"
             @click="table.lastPage()"
           >
             <span class="sr-only">Go to last page</span>

@@ -42,7 +42,7 @@ export const PaginationControls = defineComponent({
           'button',
           {
             onClick: () => table.lastPage(),
-            disabled: !table.getCanNextPage(),
+            disabled: !table.getCanLastPage(),
           },
           '>>',
         ),

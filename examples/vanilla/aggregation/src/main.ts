@@ -214,7 +214,7 @@ function renderTable(table: Table<typeof features, Sale>) {
     button('<<', () => table.firstPage(), !table.getCanPreviousPage()),
     button('<', () => table.previousPage(), !table.getCanPreviousPage()),
     button('>', () => table.nextPage(), !table.getCanNextPage()),
-    button('>>', () => table.lastPage(), !table.getCanNextPage()),
+    button('>>', () => table.lastPage(), !table.getCanLastPage()),
   )
   const info = el('span')
   info.className = 'inline-controls'

@@ -76,7 +76,7 @@
     <button
       class="demo-button demo-button-sm"
       (click)="table.lastPage()"
-      [disabled]="!table.getCanNextPage()"
+      [disabled]="!table.getCanLastPage()"
     >
       &gt;&gt;
     </button>
@@ -98,8 +98,8 @@
         class="page-size-input"
     /></span>
     <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
-      @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
-        <option [value]="pageSize">Show {{ pageSize }}</option>
+      @for (pageSize of pageSizes; track pageSize) {
+        <option [value]="pageSize">Show {{ pageSize === allPageSize ? 'All' : pageSize }}</option>
       }
     </select>
   </div>

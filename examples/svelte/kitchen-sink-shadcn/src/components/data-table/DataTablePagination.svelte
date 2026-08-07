@@ -7,7 +7,7 @@
   import { Button } from '@/lib/components/ui/button'
   import * as Select from '@/lib/components/ui/select'
 
-  let { pageSizeOptions = [10, 20, 30, 40, 50] }: {
+  let { pageSizeOptions = [10, 20, 30, 40, 50, Infinity] }: {
     pageSizeOptions?: Array<number>
   } = $props()
 
@@ -33,11 +33,14 @@
         onValueChange={(value) => table.setPageSize(Number(value))}
       >
         <Select.Trigger class="h-8 w-[4.5rem]">
-          {pagination.pageSize}
+          {pagination.pageSize === Infinity ? 'All' : pagination.pageSize}
         </Select.Trigger>
         <Select.Content side="top">
           {#each pageSizeOptions as pageSize (pageSize)}
-            <Select.Item value={`${pageSize}`} label={`${pageSize}`} />
+            <Select.Item
+              value={`${pageSize}`}
+              label={pageSize === Infinity ? 'All' : `${pageSize}`}
+            />
           {/each}
         </Select.Content>
       </Select.Root>
@@ -81,8 +84,8 @@
         variant="outline"
         size="icon"
         class="hidden size-8 lg:flex"
-        onclick={() => table.setPageIndex(table.getPageCount() - 1)}
-        disabled={!table.getCanNextPage()}
+        onclick={() => table.lastPage()}
+        disabled={!table.getCanLastPage()}
       >
         <ChevronsRight class="size-4" aria-hidden="true" />
       </Button>

@@ -21,7 +21,11 @@
     "vite": "^8.2.0"
   },
   "dependencies": {
+    "@tanstack/query-devtools": "^5.101.4",
+    "@tanstack/svelte-devtools": "^0.1.2",
     "@tanstack/svelte-query": "^6.1.38",
-    "@tanstack/svelte-table": "^9.0.1"
+    "@tanstack/svelte-query-devtools": "^6.1.38",
+    "@tanstack/svelte-table": "^9.0.1",
+    "@tanstack/table-devtools": "^9.0.1"
   }
 }

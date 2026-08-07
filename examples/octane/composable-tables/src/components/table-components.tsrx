@@ -34,7 +34,7 @@ export function PaginationControls() @{
       </button>
       <button
         onClick={() => table.lastPage()}
-        disabled={!table.getCanNextPage()}
+        disabled={!table.getCanLastPage()}
       >
         {'>>'}
       </button>

@@ -738,8 +738,8 @@ function shuffleColumns() {
       </button>
       <button
         class="demo-button demo-button-sm"
-        @click="table.setPageIndex(table.getPageCount() - 1)"
-        :disabled="!table.getCanNextPage()"
+        @click="table.lastPage()"
+        :disabled="!table.getCanLastPage()"
       >
         &gt;&gt;
       </button>
@@ -780,6 +780,7 @@ function shuffleColumns() {
         >
           Show {{ pageSize }}
         </option>
+        <option :value="Infinity">Show All</option>
       </select>
     </div>
     <div class="spacer-sm" />

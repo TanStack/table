@@ -76,7 +76,7 @@ Alpine.data('table', () => {
   return {
     table,
     FlexRender,
-    pageSizes: [10, 20, 30, 40, 50],
+    pageSizes: [10, 20, 30, 40, 50, Infinity],
     goToPage(value: string) {
       table.setPageIndex(value ? Number(value) - 1 : 0)
     },

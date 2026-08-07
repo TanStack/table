@@ -130,6 +130,10 @@ export default class BasicExternalStateTable extends Component {
     return this.table.getCanNextPage()
   }
 
+  get canLastPage() {
+    return this.table.getCanLastPage()
+  }
+
   get pageCount() {
     return this.table.getPageCount()
   }
@@ -171,7 +175,7 @@ export default class BasicExternalStateTable extends Component {
   }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1)
+    this.table.lastPage()
   }
 
   handleGoToPage = (event: Event) => {
@@ -251,7 +255,7 @@ export default class BasicExternalStateTable extends Component {
       </button>
       <button
         class='demo-button demo-button-sm'
-        disabled={{not this.canNextPage}}
+        disabled={{not this.canLastPage}}
         {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;

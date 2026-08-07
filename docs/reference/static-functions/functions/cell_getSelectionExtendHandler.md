@@ -9,7 +9,7 @@ title: cell_getSelectionExtendHandler
 function cell_getSelectionExtendHandler<TFeatures, TData, TValue>(cell): (_e) => void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1467](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1467)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1482](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1482)
 
 Creates a handler that extends the active range to this cell during a drag.
 

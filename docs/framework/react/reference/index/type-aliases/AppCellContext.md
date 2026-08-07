@@ -9,7 +9,7 @@ title: AppCellContext
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
 
-Defined in: [createTableHook.tsx:48](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L48)
+Defined in: [react-table/src/createTableHook.tsx:48](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L48)
 
 Enhanced CellContext with pre-bound cell components.
 The `cell` property includes the registered cellComponents.
@@ -40,7 +40,7 @@ The `cell` property includes the registered cellComponents.
 cell: Cell<TFeatures, TData, TValue> & TCellComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:54](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L54)
+Defined in: [react-table/src/createTableHook.tsx:54](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L54)
 
 #### Type Declaration
 
@@ -62,7 +62,7 @@ FlexRender: () => ReactNode;
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:56](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L56)
+Defined in: [react-table/src/createTableHook.tsx:56](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L56)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [createTableHook.tsx:56](https://github.com/TanStack/table/blob/main
 getValue: CellContext<TFeatures, TData, TValue>["getValue"];
 ```
 
-Defined in: [createTableHook.tsx:57](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L57)
+Defined in: [react-table/src/createTableHook.tsx:57](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L57)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [createTableHook.tsx:57](https://github.com/TanStack/table/blob/main
 renderValue: CellContext<TFeatures, TData, TValue>["renderValue"];
 ```
 
-Defined in: [createTableHook.tsx:58](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L58)
+Defined in: [react-table/src/createTableHook.tsx:58](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L58)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [createTableHook.tsx:58](https://github.com/TanStack/table/blob/main
 row: Row<TFeatures, TData>;
 ```
 
-Defined in: [createTableHook.tsx:59](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L59)
+Defined in: [react-table/src/createTableHook.tsx:59](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L59)
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: [createTableHook.tsx:59](https://github.com/TanStack/table/blob/main
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [createTableHook.tsx:60](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L60)
+Defined in: [react-table/src/createTableHook.tsx:60](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L60)

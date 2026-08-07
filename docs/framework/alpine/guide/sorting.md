@@ -28,6 +28,7 @@ import {
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(), // if using client-side sorting
+  // manualSorting: true, // if using manual server-side sorting
   sortFns: {
     alphanumeric: sortFn_alphanumeric,
     datetime: sortFn_datetime,
