@@ -92,3 +92,19 @@ test('regenerates table data', async ({ page }) => {
     await server.close()
   }
 })
+
+test('does not render undefined values in grouped rows', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    await page.getByRole('button', { name: /Status/ }).click()
+    await page.getByRole('menuitem', { name: /Group by/ }).click()
+
+    const firstGroupRow = page.locator('table tbody tr').first()
+    await expect(firstGroupRow).toBeVisible()
+    await expect(firstGroupRow).not.toContainText('undefined')
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

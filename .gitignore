@@ -10,6 +10,7 @@ yarn.lock
 build
 dist
 lib
+!examples/**/src/lib/
 es
 artifacts
 .rpt2_cache

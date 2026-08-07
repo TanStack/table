@@ -49,8 +49,9 @@ export function SelectCell(): React.ReactNode {
 }
 
 export function TextCell(): React.ReactNode {
-  const cell = useCellContext<string>()
-  return <>{String(cell.getValue())}</>
+  const cell = useCellContext<string | undefined>()
+  const value = cell.getValue()
+  return value == null ? null : <>{String(value)}</>
 }
 
 export function AgeCell(): React.ReactNode {

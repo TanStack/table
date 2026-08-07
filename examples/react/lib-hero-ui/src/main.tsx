@@ -121,7 +121,7 @@ function getPageItems(pageIndex: number, pageCount: number) {
 function App() {
   const [data, setData] = React.useState(() => makeData(200))
   const refreshData = () => setData(makeData(200))
-  const stressTest = () => setData(makeData(10_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
@@ -160,7 +160,7 @@ function App() {
               Regenerate Data
             </Button>
             <Button variant="secondary" onPress={stressTest}>
-              Stress Test (10k rows)
+              Stress Test (1M rows)
             </Button>
           </div>
         </div>
