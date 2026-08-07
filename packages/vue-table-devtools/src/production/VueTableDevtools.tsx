@@ -13,7 +13,7 @@ class TableDevtoolsVueCore {
   mount(el: HTMLElement, props?: DevtoolsPanelProps) {
     void this.core.mount(el, {
       theme: props?.theme ?? 'dark',
-      devtoolsOpen: props?.devtoolsOpen ?? false,
+      devtoolsOpen: props?.devtoolsOpen ?? true,
     })
   }
 
@@ -34,7 +34,7 @@ export const TableDevtoolsPanel = defineComponent({
     return () => {
       const devtoolsProps = {
         theme: props.theme ?? 'dark',
-        devtoolsOpen: props.devtoolsOpen ?? false,
+        devtoolsOpen: props.devtoolsOpen ?? true,
       }
       return h(TableDevtoolsPanelBase, {
         key: `${devtoolsProps.theme}:${devtoolsProps.devtoolsOpen}`,

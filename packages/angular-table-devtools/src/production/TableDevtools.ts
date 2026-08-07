@@ -8,7 +8,7 @@ function resolvePanelProps(
 ): DevtoolsPanelProps {
   return {
     theme: props?.theme ?? 'dark',
-    devtoolsOpen: props?.devtoolsOpen ?? false,
+    devtoolsOpen: props?.devtoolsOpen ?? true,
   }
 }
 

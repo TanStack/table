@@ -16,7 +16,7 @@ const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOpBase] =
 function resolvePanelProps(props?: TableDevtoolsReactInit): DevtoolsPanelProps {
   return {
     theme: props?.theme ?? 'dark',
-    devtoolsOpen: props?.devtoolsOpen ?? false,
+    devtoolsOpen: props?.devtoolsOpen ?? true,
   }
 }
 
