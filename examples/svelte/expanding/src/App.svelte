@@ -242,8 +242,8 @@
     </button>
     <button
       class="demo-button demo-button-sm"
-      onclick={() => table.setPageIndex(table.getPageCount() - 1)}
-      disabled={!table.getCanNextPage()}
+      onclick={() => table.lastPage()}
+      disabled={!table.getCanLastPage()}
     >
       {'>>'}
     </button>

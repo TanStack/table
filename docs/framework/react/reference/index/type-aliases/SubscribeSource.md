@@ -13,7 +13,7 @@ type SubscribeSource<TValue> =
 | ReadonlyStore<TValue>;
 ```
 
-Defined in: [Subscribe.ts:13](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L13)
+Defined in: [react-table/src/Subscribe.ts:13](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L13)
 
 ## Type Parameters
 

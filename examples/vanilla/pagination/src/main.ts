@@ -150,7 +150,7 @@ const renderTable = (table: Table<typeof features, Person>) => {
   // Render pagination last page button
   const lastPageButton = document.createElement('button')
   lastPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
-  lastPageButton.disabled = !table.getCanNextPage()
+  lastPageButton.disabled = !table.getCanLastPage()
   lastPageButton.innerHTML = '>>'
   lastPageButton.onclick = () => table.lastPage()
   paginationElement.appendChild(lastPageButton)
@@ -203,11 +203,11 @@ const renderTable = (table: Table<typeof features, Person>) => {
     const target = e.target as HTMLSelectElement
     table.setPageSize(Number(target.value))
   }
-  ;[10, 20, 30, 40, 50].map((pageSize) => {
+  ;[10, 20, 30, 40, 50, Infinity].map((pageSize) => {
     const option = document.createElement('option')
     option.value = String(pageSize)
     option.selected = table.store.state.pagination.pageSize === pageSize
-    option.textContent = `Show ${pageSize}`
+    option.textContent = `Show ${pageSize === Infinity ? 'All' : pageSize}`
     paginationPageSizeSelect.appendChild(option)
   })
   paginationElement.appendChild(paginationPageSizeSelect)

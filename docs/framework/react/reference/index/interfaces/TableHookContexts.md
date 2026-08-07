@@ -5,7 +5,7 @@ title: TableHookContexts
 
 # Interface: TableHookContexts\<TFeatures, TData\>
 
-Defined in: [createTableHookContexts.tsx:17](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L17)
+Defined in: [react-table/src/createTableHookContexts.tsx:17](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L17)
 
 The object returned by [createTableHookContexts](../functions/createTableHookContexts.md): three scoped React
 contexts plus matching context hooks.
@@ -28,7 +28,7 @@ contexts plus matching context hooks.
 cellContext: Context<Cell<any, any, any>>;
 ```
 
-Defined in: [createTableHookContexts.tsx:22](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L22)
+Defined in: [react-table/src/createTableHookContexts.tsx:22](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L22)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [createTableHookContexts.tsx:22](https://github.com/TanStack/table/b
 headerContext: Context<Header<any, any, any>>;
 ```
 
-Defined in: [createTableHookContexts.tsx:23](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L23)
+Defined in: [react-table/src/createTableHookContexts.tsx:23](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L23)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [createTableHookContexts.tsx:23](https://github.com/TanStack/table/b
 tableContext: Context<ReactTable<any, any>>;
 ```
 
-Defined in: [createTableHookContexts.tsx:21](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L21)
+Defined in: [react-table/src/createTableHookContexts.tsx:21](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L21)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [createTableHookContexts.tsx:21](https://github.com/TanStack/table/b
 useCellContext: <TValue>() => Cell<TFeatures, any, TValue>;
 ```
 
-Defined in: [createTableHookContexts.tsx:28](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L28)
+Defined in: [react-table/src/createTableHookContexts.tsx:28](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L28)
 
 #### Type Parameters
 
@@ -78,7 +78,7 @@ Defined in: [createTableHookContexts.tsx:28](https://github.com/TanStack/table/b
 useHeaderContext: <TValue>() => Header<TFeatures, any, TValue>;
 ```
 
-Defined in: [createTableHookContexts.tsx:33](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L33)
+Defined in: [react-table/src/createTableHookContexts.tsx:33](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L33)
 
 #### Type Parameters
 
@@ -98,7 +98,7 @@ Defined in: [createTableHookContexts.tsx:33](https://github.com/TanStack/table/b
 useTableContext: <TTableData>() => ReactTable<TFeatures, TTableData>;
 ```
 
-Defined in: [createTableHookContexts.tsx:24](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L24)
+Defined in: [react-table/src/createTableHookContexts.tsx:24](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L24)
 
 #### Type Parameters
 

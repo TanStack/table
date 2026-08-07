@@ -149,6 +149,7 @@ title: static-functions
 - [table\_getAllLeafColumns](functions/table_getAllLeafColumns.md)
 - [table\_getAllLeafColumnsById](functions/table_getAllLeafColumnsById.md)
 - [table\_getBottomRows](functions/table_getBottomRows.md)
+- [table\_getCanLastPage](functions/table_getCanLastPage.md)
 - [table\_getCanNextPage](functions/table_getCanNextPage.md)
 - [table\_getCanPreviousPage](functions/table_getCanPreviousPage.md)
 - [table\_getCanSomeRowsExpand](functions/table_getCanSomeRowsExpand.md)

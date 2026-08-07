@@ -28,6 +28,7 @@ const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
+  // manualFiltering: true, // if using manual server-side filtering
   filterFns: { includesString: filterFn_includesString },
 })
 

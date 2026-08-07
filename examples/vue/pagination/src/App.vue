@@ -18,7 +18,7 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
-const pageSizes = [10, 20, 30, 40, 50]
+const pageSizes = [10, 20, 30, 40, 50, Infinity]
 const data = ref(makeData(1_000))
 
 const columns = ref(
@@ -182,7 +182,7 @@ function handlePageSizeChange(e: any) {
         <button
           class="demo-button demo-button-sm"
           @click="() => table.lastPage()"
-          :disabled="!table.getCanNextPage()"
+          :disabled="!table.getCanLastPage()"
         >
           >>
         </button>
@@ -214,7 +214,7 @@ function handlePageSizeChange(e: any) {
             :value="pageSize"
             v-for="pageSize in pageSizes"
           >
-            Show {{ pageSize }}
+            Show {{ pageSize === Infinity ? 'All' : pageSize }}
           </option>
         </select>
       </div>

@@ -45,10 +45,13 @@ export function DataTablePagination(): React.ReactNode {
           className="w-24"
           showLabel={false}
           value={String(pageSize)}
-          options={['10', '20', '30', '40', '50'].map((value) => ({
-            value,
-            label: value,
-          }))}
+          options={[
+            ...['10', '20', '30', '40', '50'].map((value) => ({
+              value,
+              label: value,
+            })),
+            { value: 'Infinity', label: 'All' },
+          ]}
           onChange={(value) => {
             table.setPageSize(Number(value))
             table.setPageIndex(0)
@@ -93,8 +96,8 @@ export function DataTablePagination(): React.ReactNode {
           </Button>
         </nav>
         <Button
-          onPress={() => table.setPageIndex(table.getPageCount() - 1)}
-          isDisabled={!table.getCanNextPage()}
+          onPress={() => table.lastPage()}
+          isDisabled={!table.getCanLastPage()}
         >
           {'»'}
         </Button>

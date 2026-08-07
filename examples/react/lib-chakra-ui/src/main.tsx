@@ -240,6 +240,7 @@ function App() {
                       {value}
                     </option>
                   ))}
+                  <option value="Infinity">All</option>
                 </NativeSelect.Field>
                 <NativeSelect.Indicator />
               </NativeSelect.Root>

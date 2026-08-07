@@ -178,6 +178,8 @@ There are countless valid ways to design a backend and the contract between a fr
 
 In practice, [TanStack Query](https://tanstack.com/query/latest) serves as the client-side coordinator for server-side row processing. Your own fetching layer can fill the same role. It observes the controlled table state, sends that state through your API contract, caches the result, and gives the returned rows back to the table. For example, a React integration can pass every server-owned state value to both the query key and query function:
 
+#### Page-Index Pagination with `useQuery`
+
 ```tsx
 const features = tableFeatures({
   columnFilteringFeature,
@@ -228,6 +230,69 @@ const table = useTable(
 ```
 
 Here, `fetchPeople` defines your application's frontend-backend contract. The backend remains responsible for applying the operations in the correct order and returning the requested rows plus the total filtered `rowCount`.
+
+#### Cursor-Based Pagination with `useInfiniteQuery`
+
+Cursor pagination is a useful alternative when calculating a total row count or supporting arbitrary page jumps would be expensive. Instead of accepting a page index, the backend accepts a cursor and returns the current rows, a `nextCursor`, and whether another page exists. A production cursor is often opaque; a stable last-row ID can also work when IDs are unique and the backend ordering is deterministic.
+
+TanStack Query's `useInfiniteQuery` caches the cursor chain. TanStack Table can use `pagination.pageIndex` to select one of those cached pages while the application fetches a new page only when the user advances beyond the cache:
+
+```tsx
+const dataQuery = useInfiniteQuery({
+  queryKey: ['people', 'cursor', pagination.pageSize, sorting, globalFilter],
+  queryFn: ({ pageParam }) =>
+    fetchPeople({
+      cursor: pageParam,
+      pageSize: pagination.pageSize,
+      sorting,
+      globalFilter,
+    }),
+  initialPageParam: null,
+  getNextPageParam: (lastPage) => lastPage.nextCursor,
+})
+
+const currentPage = dataQuery.data?.pages[pagination.pageIndex]
+const hasCachedNextPage = Boolean(
+  dataQuery.data?.pages[pagination.pageIndex + 1],
+)
+const canNextPage = hasCachedNextPage || Boolean(currentPage?.hasNextPage)
+
+const table = useTable(
+  {
+    features,
+    columns,
+    data: currentPage?.rows ?? [],
+    pageCount: -1, // the cursor API does not expose a total page count
+    state: { sorting, globalFilter, pagination },
+    onSortingChange: (updater) => {
+      setSorting(updater)
+      setPagination((previous) => ({ ...previous, pageIndex: 0 }))
+    },
+    onGlobalFilterChange: (updater) => {
+      setGlobalFilter(updater)
+      setPagination((previous) => ({ ...previous, pageIndex: 0 }))
+    },
+    onPaginationChange: setPagination,
+    manualFiltering: true,
+    manualSorting: true,
+    manualPagination: true,
+  },
+  (state) => state,
+)
+
+async function goToNextPage() {
+  const nextPageIndex = pagination.pageIndex + 1
+
+  if (!dataQuery.data?.pages[nextPageIndex]) {
+    const result = await dataQuery.fetchNextPage()
+    if (!result.data?.pages[nextPageIndex]) return
+  }
+
+  table.nextPage()
+}
+```
+
+Use `canNextPage` for the Next button. With `pageCount: -1`, the table's `getCanNextPage()` cannot know when the server has reached the end. Previously fetched pages can still be revisited without another request. Because the total is unknown, there is no finite page for `lastPage()` to target, so `getCanLastPage()` returns `false`. Reset `pageIndex` to `0` when sorting, filtering, or page size changes so the new query starts from its initial cursor.
 
 ## Rendering Is a Separate Decision
 

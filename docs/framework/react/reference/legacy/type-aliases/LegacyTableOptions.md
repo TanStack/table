@@ -6,10 +6,10 @@ title: LegacyTableOptions
 # ~~Type Alias: LegacyTableOptions\<TData\>~~
 
 ```ts
-type LegacyTableOptions<TData> = Omit<TableOptions<StockFeatures, TData>, "features"> & LegacyRowModelOptions<TData>;
+type LegacyTableOptions<TData> = Omit<TableOptions<LegacyFeatures, TData>, "features"> & LegacyRowModelOptions<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:265](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L265)
+Defined in: [react-table/src/useLegacyTable.ts:279](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L279)
 
 Legacy v8-style table options that work with useLegacyTable.
 

@@ -76,7 +76,7 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50]
+const PAGE_SIZES = [10, 20, 30, 40, 50, Infinity]
 
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
 // Ember templates extract function references without binding, so we provide
@@ -133,6 +133,10 @@ export default class PaginationTable extends Component {
     return this.table.getCanNextPage()
   }
 
+  get canLastPage() {
+    return this.table.getCanLastPage()
+  }
+
   get pageCount() {
     return this.table.getPageCount()
   }
@@ -157,6 +161,10 @@ export default class PaginationTable extends Component {
     return PAGE_SIZES
   }
 
+  get allPageSize() {
+    return Infinity
+  }
+
   refreshData = () => {
     this.data = makeData(100_000)
   }
@@ -178,7 +186,7 @@ export default class PaginationTable extends Component {
   }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1)
+    this.table.lastPage()
   }
 
   handleGoToPage = (event: Event) => {
@@ -264,7 +272,7 @@ export default class PaginationTable extends Component {
       </button>
       <button
         class='demo-button demo-button-sm'
-        disabled={{not this.canNextPage}}
+        disabled={{not this.canLastPage}}
         {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
@@ -292,7 +300,7 @@ export default class PaginationTable extends Component {
         {{#each this.pageSizes as |pageSize|}}
           <option value={{pageSize}} selected={{eq pageSize this.pageSize}}>
             Show
-            {{pageSize}}
+            {{if (eq pageSize this.allPageSize) 'All' pageSize}}
           </option>
         {{/each}}
       </select>

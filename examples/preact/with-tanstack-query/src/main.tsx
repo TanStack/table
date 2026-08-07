@@ -1,12 +1,12 @@
-import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
+import { useState } from 'preact/hooks'
 import {
   QueryClient,
   QueryClientProvider,
   keepPreviousData,
+  useInfiniteQuery,
   useQuery,
 } from '@tanstack/preact-query'
-import './index.css'
 import {
   columnFilteringFeature,
   createColumnHelper,
@@ -16,11 +16,17 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
-import { fetchData } from './fetchData'
-import type { PaginationState, SortingState } from '@tanstack/preact-table'
+import { fetchData, fetchInfiniteData } from './fetchData'
+import './index.css'
+import type {
+  PaginationState,
+  PreactTable,
+  SortingState,
+} from '@tanstack/preact-table'
 import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
+const defaultData: Array<Person> = []
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -34,52 +40,114 @@ const features = tableFeatures({
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
-
 const columns = columnHelper.columns([
-  columnHelper.accessor('firstName', {
-    header: 'First Name',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('lastName', {
-    header: 'Last Name',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('age', {
-    header: 'Age',
-  }),
-  columnHelper.accessor('visits', {
-    header: 'Visits',
-  }),
-  columnHelper.accessor('status', {
-    header: 'Status',
-  }),
-  columnHelper.accessor('progress', {
-    header: 'Profile Progress',
-  }),
+  columnHelper.accessor('id', { header: 'ID' }),
+  columnHelper.accessor('firstName', { header: 'First Name' }),
+  columnHelper.accessor('lastName', { header: 'Last Name' }),
+  columnHelper.accessor('age', { header: 'Age' }),
+  columnHelper.accessor('visits', { header: 'Visits' }),
+  columnHelper.accessor('status', { header: 'Status' }),
+  columnHelper.accessor('progress', { header: 'Profile Progress' }),
 ])
 
-function App() {
+function PersonTable({
+  table,
+}: {
+  table: PreactTable<typeof features, Person>
+}) {
+  return (
+    <table>
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th key={header.id} colSpan={header.colSpan}>
+                {header.isPlaceholder ? null : (
+                  <div
+                    className={
+                      header.column.getCanSort() ? 'sortable-header' : ''
+                    }
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    <table.FlexRender header={header} />
+                    {{ asc: ' 🔼', desc: ' 🔽' }[
+                      header.column.getIsSorted() as string
+                    ] ?? null}
+                  </div>
+                )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>
+            {row.getAllCells().map((cell) => (
+              <td key={cell.id}>
+                <table.FlexRender cell={cell} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+function PageSizeSelect({
+  pageSize,
+  onChange,
+}: {
+  pageSize: number
+  onChange: (pageSize: number) => void
+}) {
+  return (
+    <select
+      aria-label="Rows per page"
+      value={pageSize}
+      onChange={(event) =>
+        onChange(Number((event.target as HTMLSelectElement).value))
+      }
+    >
+      {[10, 20, 30, 40, 50].map((size) => (
+        <option key={size} value={size}>
+          Show {size}
+        </option>
+      ))}
+      <option value={Infinity}>Show All</option>
+    </select>
+  )
+}
+
+function UseQueryApp() {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
-
+  const pageSizeQueryKey =
+    pagination.pageSize === Infinity ? 'all' : pagination.pageSize
   const dataQuery = useQuery({
-    queryKey: ['data', pagination, sorting, globalFilter],
+    queryKey: [
+      'people',
+      'offset',
+      pagination.pageIndex,
+      pageSizeQueryKey,
+      sorting,
+      globalFilter,
+    ],
     queryFn: () => fetchData({ pagination, sorting, globalFilter }),
-    placeholderData: keepPreviousData, // don't have 0 rows flash while changing pages/loading next page
+    placeholderData: keepPreviousData,
   })
-
-  const defaultData = useMemo(() => [], [])
-
   const table = useTable(
     {
       features,
       columns,
       data: dataQuery.data?.rows ?? defaultData,
       rowCount: dataQuery.data?.rowCount,
+      getRowId: (row) => String(row.id),
       state: { sorting, globalFilter, pagination },
       onSortingChange: (updater) => {
         setSorting(updater)
@@ -90,17 +158,17 @@ function App() {
         setPagination((previous) => ({ ...previous, pageIndex: 0 }))
       },
       onPaginationChange: setPagination,
-      manualFiltering: true, // we're doing manual "server-side" filtering
-      manualPagination: true, // we're doing manual "server-side" pagination
-      manualSorting: true, // we're doing manual "server-side" sorting
-      debugTable: true,
+      manualFiltering: true,
+      manualPagination: true,
+      manualSorting: true,
     },
-    (state) => state, // default selector
+    (state) => state,
   )
 
   return (
-    <div className="demo-root">
+    <div>
       <input
+        aria-label="Search useQuery data"
         value={globalFilter}
         onChange={(event) =>
           table.setGlobalFilter((event.target as HTMLInputElement).value)
@@ -109,43 +177,7 @@ function App() {
         placeholder="Search all columns..."
       />
       <div className="spacer-sm" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : (
-                    <div
-                      className={
-                        header.column.getCanSort() ? 'sortable-header' : ''
-                      }
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      <table.FlexRender header={header} />
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getAllCells().map((cell) => (
-                <td key={cell.id}>
-                  <table.FlexRender cell={cell} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PersonTable table={table} />
       <div className="spacer-sm" />
       <div className="controls">
         <button
@@ -172,13 +204,13 @@ function App() {
         <button
           className="demo-button demo-button-sm"
           onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>
         <span className="inline-controls">
-          <div>Page</div>
-          <strong>
+          <span>Page</span>
+          <strong data-testid="offset-page-number">
             {(pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
@@ -186,42 +218,181 @@ function App() {
         <span className="inline-controls">
           | Go to page:
           <input
+            aria-label="Go to useQuery page"
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = (e.target as HTMLInputElement).value
-                ? Number((e.target as HTMLInputElement).value) - 1
-                : 0
-              table.setPageIndex(page)
+            value={pagination.pageIndex + 1}
+            onChange={(event) => {
+              const value = (event.target as HTMLInputElement).value
+              table.setPageIndex(value ? Number(value) - 1 : 0)
             }}
             className="page-size-input"
           />
         </span>
-        <select
-          value={pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number((e.target as HTMLSelectElement).value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+        <PageSizeSelect
+          pageSize={pagination.pageSize}
+          onChange={(pageSize) => table.setPageSize(pageSize)}
+        />
         {dataQuery.isFetching ? 'Loading...' : null}
       </div>
-      <div>
+      <div data-testid="offset-status">
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-        {dataQuery.data?.rowCount.toLocaleString()} Rows
+        {dataQuery.data?.rowCount.toLocaleString() ?? 0} rows
       </div>
-      <div></div>
-      <pre data-testid="table-state">
+      <pre data-testid="use-query-table-state">
         {JSON.stringify(table.state, null, 2)}
       </pre>
     </div>
+  )
+}
+
+function UseInfiniteQueryApp() {
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+  const pageSizeQueryKey =
+    pagination.pageSize === Infinity ? 'all' : pagination.pageSize
+  const dataQuery = useInfiniteQuery({
+    queryKey: ['people', 'cursor', pageSizeQueryKey, sorting, globalFilter],
+    queryFn: ({ pageParam }) =>
+      fetchInfiniteData({
+        cursor: pageParam,
+        pageSize: pagination.pageSize,
+        sorting,
+        globalFilter,
+      }),
+    initialPageParam: null as number | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  })
+  const currentPage = dataQuery.data?.pages[pagination.pageIndex]
+  const canNextPage =
+    Boolean(dataQuery.data?.pages[pagination.pageIndex + 1]) ||
+    Boolean(currentPage?.hasNextPage)
+  const table = useTable(
+    {
+      features,
+      columns,
+      data: currentPage?.rows ?? defaultData,
+      pageCount: -1,
+      getRowId: (row) => String(row.id),
+      state: { sorting, globalFilter, pagination },
+      onSortingChange: (updater) => {
+        setSorting(updater)
+        setPagination((previous) => ({ ...previous, pageIndex: 0 }))
+      },
+      onGlobalFilterChange: (updater) => {
+        setGlobalFilter(updater)
+        setPagination((previous) => ({ ...previous, pageIndex: 0 }))
+      },
+      onPaginationChange: setPagination,
+      manualFiltering: true,
+      manualPagination: true,
+      manualSorting: true,
+    },
+    (state) => state,
+  )
+
+  const goToNextPage = async () => {
+    const nextPageIndex = pagination.pageIndex + 1
+    if (dataQuery.data?.pages[nextPageIndex]) return table.nextPage()
+    if (!currentPage?.hasNextPage || dataQuery.isFetchingNextPage) return
+    const result = await dataQuery.fetchNextPage()
+    if (result.data?.pages[nextPageIndex]) table.nextPage()
+  }
+
+  return (
+    <div>
+      <input
+        aria-label="Search useInfiniteQuery data"
+        value={globalFilter}
+        onChange={(event) =>
+          table.setGlobalFilter((event.target as HTMLInputElement).value)
+        }
+        className="summary-panel"
+        placeholder="Search all columns..."
+      />
+      <div className="spacer-sm" />
+      <PersonTable table={table} />
+      <div className="spacer-sm" />
+      <div className="controls">
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.firstPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={goToNextPage}
+          disabled={!canNextPage || dataQuery.isFetchingNextPage}
+        >
+          {'>'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+          title="The last page is unavailable when the page count is unknown"
+        >
+          {'>>'}
+        </button>
+        <span className="inline-controls">
+          <span>Page</span>
+          <strong data-testid="cursor-page-number">
+            {(pagination.pageIndex + 1).toLocaleString()}
+          </strong>
+        </span>
+        <PageSizeSelect
+          pageSize={pagination.pageSize}
+          onChange={(pageSize) => setPagination({ pageIndex: 0, pageSize })}
+        />
+        {dataQuery.isFetching ? 'Loading...' : null}
+      </div>
+      <div data-testid="cursor-status">
+        Showing {table.getRowModel().rows.length.toLocaleString()} rows.{' '}
+        {currentPage?.nextCursor === undefined
+          ? 'No next cursor'
+          : `Next cursor: ${currentPage.nextCursor}`}
+      </div>
+      <pre data-testid="use-infinite-query-table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <main className="demo-root">
+      <section className="query-example" data-testid="use-query-example">
+        <h1>useQuery</h1>
+        <p>Page-index pagination with a known total row count.</p>
+        <UseQueryApp />
+      </section>
+      <section
+        className="query-example"
+        data-testid="use-infinite-query-example"
+      >
+        <h1>useInfiniteQuery</h1>
+        <p>
+          Cursor pagination with an unknown total. Each next cursor is the last
+          row ID from the current page.
+        </p>
+        <UseInfiniteQueryApp />
+      </section>
+    </main>
   )
 }
 

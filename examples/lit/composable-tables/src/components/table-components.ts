@@ -41,7 +41,7 @@ export class PaginationControls extends LitElement {
         </button>
         <button
           @click=${() => table.lastPage()}
-          ?disabled=${!table.getCanNextPage()}
+          ?disabled=${!table.getCanLastPage()}
         >
           &gt;&gt;
         </button>

@@ -31,7 +31,14 @@ export function DataTablePagination(): React.ReactNode {
         <Text size="sm">Rows per page:</Text>
         <Select
           aria-label="Rows per page"
-          data={['10', '20', '30', '40', '50']}
+          data={[
+            '10',
+            '20',
+            '30',
+            '40',
+            '50',
+            { value: 'Infinity', label: 'All' },
+          ]}
           value={String(pageSize)}
           onChange={(value) => {
             table.setPageSize(Number(value))
@@ -74,8 +81,8 @@ export function DataTablePagination(): React.ReactNode {
         <ActionIcon
           variant="subtle"
           aria-label="Last page"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
         >
           <IconChevronsRight size={18} />
         </ActionIcon>

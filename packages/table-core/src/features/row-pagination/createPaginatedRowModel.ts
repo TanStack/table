@@ -47,10 +47,14 @@ function _createPaginatedRowModel<
 
   const { pageSize, pageIndex } = pagination ?? getDefaultPaginationState()
   const { rows, flatRows, rowsById } = prePaginatedRowModel
-  const pageStart = pageSize * pageIndex
-  const pageEnd = pageStart + pageSize
+  let paginatedRows = rows
 
-  const paginatedRows = rows.slice(pageStart, pageEnd)
+  if (pageSize !== Infinity || pageIndex !== 0) {
+    const pageStart = pageSize * pageIndex
+    const pageEnd = pageStart + pageSize
+
+    paginatedRows = rows.slice(pageStart, pageEnd)
+  }
 
   let paginatedRowModel: RowModel<TFeatures, TData>
 

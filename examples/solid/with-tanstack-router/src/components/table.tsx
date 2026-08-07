@@ -187,8 +187,8 @@ export default function Table<T extends Record<string, string | number>>(
         </button>
         <button
           class="demo-button demo-button-sm disabled-button"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>

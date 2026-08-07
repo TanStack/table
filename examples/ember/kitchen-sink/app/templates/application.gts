@@ -178,7 +178,7 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const PAGE_SIZES = [10, 20, 30, 50, 100]
+const PAGE_SIZES = [10, 20, 30, 50, 100, Infinity]
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
@@ -471,6 +471,10 @@ export default class KitchenSinkTable extends Component {
     return this.table.getCanNextPage()
   }
 
+  get canLastPage() {
+    return this.table.getCanLastPage()
+  }
+
   get pageCount() {
     return this.table.getPageCount()
   }
@@ -489,6 +493,10 @@ export default class KitchenSinkTable extends Component {
 
   get pageSizes() {
     return PAGE_SIZES
+  }
+
+  get allPageSize() {
+    return Infinity
   }
 
   regenerateData = () => {
@@ -583,7 +591,7 @@ export default class KitchenSinkTable extends Component {
   }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1)
+    this.table.lastPage()
   }
 
   handlePageSizeChange = (event: Event) => {
@@ -806,7 +814,7 @@ export default class KitchenSinkTable extends Component {
       >&gt;</button>
       <button
         class='demo-button demo-button-sm'
-        disabled={{not this.canNextPage}}
+        disabled={{not this.canLastPage}}
         {{on 'click' this.goToLastPage}}
       >&gt;&gt;</button>
       <span class='inline-controls'>
@@ -817,7 +825,7 @@ export default class KitchenSinkTable extends Component {
         {{#each this.pageSizes as |size|}}
           <option value={{size}} selected={{eq size this.pageSize}}>
             Show
-            {{size}}
+            {{if (eq size this.allPageSize) 'All' size}}
           </option>
         {{/each}}
       </select>

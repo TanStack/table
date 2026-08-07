@@ -216,7 +216,14 @@ function App() {
               <Select
                 aria-label="Rows per page"
                 value={String(table.state.pagination.pageSize)}
-                data={['10', '20', '30', '40', '50']}
+                data={[
+                  '10',
+                  '20',
+                  '30',
+                  '40',
+                  '50',
+                  { value: 'Infinity', label: 'All' },
+                ]}
                 w={90}
                 onChange={(value) => {
                   table.setPageSize(Number(value))

@@ -164,7 +164,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:9](https://
 optional pagination: PaginationState;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L11)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L15)
 
 #### Inherited from
 

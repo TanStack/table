@@ -122,6 +122,18 @@ describe('createPaginatedRowModel', () => {
         '4',
       ])
     })
+
+    it('should return all rows when pageSize is Infinity', () => {
+      const table = createTable({ pageSize: Infinity, pageIndex: 0 })
+
+      expect(table.getPaginatedRowModel().rows.map((row) => row.id)).toEqual([
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+      ])
+    })
   })
 
   describe('empty pre-paginated model', () => {
@@ -182,6 +194,24 @@ describe('createPaginatedRowModel', () => {
 
       // Page 1 slice from unexpanded rows is ['2'], which is collapsed
       expect(table.getPaginatedRowModel().rows.map((row) => row.id)).toEqual([
+        '2',
+      ])
+    })
+
+    it('should append expanded children when pageSize is Infinity', () => {
+      const table = createTable({
+        data: makeNestedData(),
+        pageSize: Infinity,
+        paginateExpandedRows: false,
+      })
+
+      table.getRow('0').toggleExpanded()
+
+      expect(table.getPaginatedRowModel().rows.map((row) => row.id)).toEqual([
+        '0',
+        '0.0',
+        '0.1',
+        '1',
         '2',
       ])
     })

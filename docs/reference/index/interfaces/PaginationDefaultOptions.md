@@ -5,7 +5,7 @@ title: PaginationDefaultOptions
 
 # Interface: PaginationDefaultOptions
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L39)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L43)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:39](https://g
 onPaginationChange: OnChangeFn<PaginationState>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L40)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L44)

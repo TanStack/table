@@ -211,11 +211,14 @@
           onValueChange={(value) => table.setPageSize(Number(value))}
         >
           <Select.Trigger size="sm" class="w-[70px]">
-            {pagination.pageSize}
+            {pagination.pageSize === Infinity ? 'All' : pagination.pageSize}
           </Select.Trigger>
           <Select.Content side="top">
-            {#each [10, 20, 30, 40, 50] as pageSize (pageSize)}
-              <Select.Item value={`${pageSize}`} label={`${pageSize}`} />
+            {#each [10, 20, 30, 40, 50, Infinity] as pageSize (pageSize)}
+              <Select.Item
+                value={`${pageSize}`}
+                label={pageSize === Infinity ? 'All' : `${pageSize}`}
+              />
             {/each}
           </Select.Content>
         </Select.Root>
@@ -259,7 +262,7 @@
           variant="outline"
           size="icon"
           class="hidden size-8 lg:flex"
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanLastPage()}
           onclick={() => table.lastPage()}
         >
           <span class="sr-only">Go to last page</span>
