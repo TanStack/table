@@ -21,6 +21,7 @@ import {
   rowSortingFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { fetchData, fetchInfiniteData } from './fetchData'
 import type {
   PaginationState,
@@ -86,6 +87,7 @@ export class App {
     placeholderData: keepPreviousData,
   }))
   readonly offsetTable = injectTable<typeof features, Person>(() => ({
+    key: 'with-tanstack-query-offset',
     features,
     columns,
     data: this.offsetDataQuery.data()?.rows ?? defaultData,
@@ -161,6 +163,7 @@ export class App {
       ) || Boolean(this.currentCursorPage()?.hasNextPage),
   )
   readonly cursorTable = injectTable<typeof features, Person>(() => ({
+    key: 'with-tanstack-query-cursor',
     features,
     columns,
     data: this.currentCursorPage()?.rows ?? defaultData,
@@ -197,6 +200,11 @@ export class App {
     manualPagination: true,
     manualSorting: true,
   }))
+
+  constructor() {
+    injectTanStackTableDevtools(() => ({ table: this.offsetTable }))
+    injectTanStackTableDevtools(() => ({ table: this.cursorTable }))
+  }
 
   onOffsetPageInputChange(event: Event) {
     const value = (event.currentTarget as HTMLInputElement).value

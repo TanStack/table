@@ -14,6 +14,7 @@ import {
   rowSortingFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { fetchData, fetchInfiniteData } from './fetchData'
 import type {
   PaginationState,
@@ -139,6 +140,7 @@ function UseQueryApp() {
   }))
 
   const table = createTable({
+    key: 'with-tanstack-query-offset',
     features,
     columns,
     get data() {
@@ -172,6 +174,8 @@ function UseQueryApp() {
     manualPagination: true,
     manualSorting: true,
   })
+
+  useTanStackTableDevtools(table)
 
   return (
     <div>
@@ -287,6 +291,7 @@ function UseInfiniteQueryApp() {
     Boolean(currentPage()?.hasNextPage)
 
   const table = createTable({
+    key: 'with-tanstack-query-cursor',
     features,
     columns,
     get data() {
@@ -318,6 +323,8 @@ function UseInfiniteQueryApp() {
     manualPagination: true,
     manualSorting: true,
   })
+
+  useTanStackTableDevtools(table)
 
   const goToNextPage = async () => {
     const nextPageIndex = pagination().pageIndex + 1

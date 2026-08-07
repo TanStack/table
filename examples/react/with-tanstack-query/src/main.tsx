@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import {
   QueryClient,
   QueryClientProvider,
@@ -7,6 +8,7 @@ import {
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query'
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import {
   columnFilteringFeature,
   createColumnHelper,
@@ -16,6 +18,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { fetchData, fetchInfiniteData } from './fetchData'
 import './index.css'
 import type {
@@ -141,6 +147,7 @@ function UseQueryApp() {
   })
   const table = useTable(
     {
+      key: 'with-tanstack-query-offset',
       features,
       columns,
       data: dataQuery.data?.rows ?? defaultData,
@@ -162,6 +169,8 @@ function UseQueryApp() {
     },
     (state) => state,
   )
+
+  useTanStackTableDevtools(table)
 
   return (
     <div>
@@ -271,6 +280,7 @@ function UseInfiniteQueryApp() {
     Boolean(currentPage?.hasNextPage)
   const table = useTable(
     {
+      key: 'with-tanstack-query-cursor',
       features,
       columns,
       data: currentPage?.rows ?? defaultData,
@@ -292,6 +302,8 @@ function UseInfiniteQueryApp() {
     },
     (state) => state,
   )
+
+  useTanStackTableDevtools(table)
 
   const goToNextPage = async () => {
     const nextPageIndex = pagination.pageIndex + 1
@@ -398,6 +410,15 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
+      <TanStackDevtools
+        plugins={[
+          tableDevtoolsPlugin(),
+          {
+            name: 'TanStack Query',
+            render: <ReactQueryDevtoolsPanel />,
+          },
+        ]}
+      />
     </QueryClientProvider>
   </React.StrictMode>,
 )

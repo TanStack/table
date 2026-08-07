@@ -1,5 +1,6 @@
 import { render } from 'preact'
 import { useState } from 'preact/hooks'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import {
   QueryClient,
   QueryClientProvider,
@@ -7,6 +8,7 @@ import {
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/preact-query'
+import { PreactQueryDevtoolsPanel } from '@tanstack/preact-query-devtools'
 import {
   columnFilteringFeature,
   createColumnHelper,
@@ -16,6 +18,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
 import { fetchData, fetchInfiniteData } from './fetchData'
 import './index.css'
 import type {
@@ -143,6 +149,7 @@ function UseQueryApp() {
   })
   const table = useTable(
     {
+      key: 'with-tanstack-query-offset',
       features,
       columns,
       data: dataQuery.data?.rows ?? defaultData,
@@ -164,6 +171,8 @@ function UseQueryApp() {
     },
     (state) => state,
   )
+
+  useTanStackTableDevtools(table)
 
   return (
     <div>
@@ -274,6 +283,7 @@ function UseInfiniteQueryApp() {
     Boolean(currentPage?.hasNextPage)
   const table = useTable(
     {
+      key: 'with-tanstack-query-cursor',
       features,
       columns,
       data: currentPage?.rows ?? defaultData,
@@ -295,6 +305,8 @@ function UseInfiniteQueryApp() {
     },
     (state) => state,
   )
+
+  useTanStackTableDevtools(table)
 
   const goToNextPage = async () => {
     const nextPageIndex = pagination.pageIndex + 1
@@ -402,6 +414,15 @@ if (!rootElement) throw new Error('Failed to find the root element')
 render(
   <QueryClientProvider client={queryClient}>
     <App />
+    <TanStackDevtools
+      plugins={[
+        tableDevtoolsPlugin(),
+        {
+          name: 'TanStack Query',
+          render: <PreactQueryDevtoolsPanel />,
+        },
+      ]}
+    />
   </QueryClientProvider>,
   rootElement,
 )

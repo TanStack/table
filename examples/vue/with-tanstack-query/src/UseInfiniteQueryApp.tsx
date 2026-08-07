@@ -1,6 +1,7 @@
 import { computed, defineComponent, ref } from 'vue'
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import { useTable } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { fetchInfiniteData } from './fetchData'
 import { PageSizeSelect, PersonTable, columns, features } from './table'
 import type {
@@ -54,6 +55,7 @@ export const UseInfiniteQueryApp = defineComponent({
         Boolean(currentPage.value?.hasNextPage),
     )
     const table = useTable({
+      key: 'with-tanstack-query-cursor',
       features,
       columns,
       data: tableData,
@@ -85,6 +87,8 @@ export const UseInfiniteQueryApp = defineComponent({
       manualPagination: true,
       manualSorting: true,
     })
+
+    useTanStackTableDevtools(table)
 
     const goToNextPage = async () => {
       const nextPageIndex = pagination.value.pageIndex + 1

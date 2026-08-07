@@ -1,6 +1,7 @@
 import { computed, defineComponent, ref } from 'vue'
 import { keepPreviousData, useQuery } from '@tanstack/vue-query'
 import { useTable } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { fetchData } from './fetchData'
 import { PageSizeSelect, PersonTable, columns, features } from './table'
 import type {
@@ -46,6 +47,7 @@ export const UseQueryApp = defineComponent({
     const tableData = computed(() => dataQuery.data.value?.rows ?? defaultData)
     const rowCount = computed(() => dataQuery.data.value?.rowCount)
     const table = useTable({
+      key: 'with-tanstack-query-offset',
       features,
       columns,
       data: tableData,
@@ -77,6 +79,8 @@ export const UseQueryApp = defineComponent({
       manualPagination: true,
       manualSorting: true,
     })
+
+    useTanStackTableDevtools(table)
 
     return () => (
       <div>

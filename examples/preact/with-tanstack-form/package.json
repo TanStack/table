@@ -16,6 +16,7 @@
     "@tanstack/preact-devtools": "^0.10.9",
     "@tanstack/preact-form": "^1.30.2",
     "@tanstack/preact-pacer": "^0.22.1",
+    "@tanstack/preact-pacer-devtools": "0.6.3",
     "@tanstack/preact-table": "^9.0.1",
     "@tanstack/preact-table-devtools": "^9.0.1",
     "@tanstack/react-form-devtools": "^0.2.31",

@@ -7,6 +7,7 @@ import {
   rowSortingFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { For, Show, createEffect } from 'solid-js'
 import { DebouncedInput } from './debouncedInput'
 import type {
@@ -52,6 +53,7 @@ export default function Table<T extends Record<string, string | number>>(
   props: Props<T>,
 ) {
   const table = createTable({
+    key: 'with-tanstack-router-users',
     debugTable: true,
     features,
     get columns() {
@@ -73,6 +75,8 @@ export default function Table<T extends Record<string, string | number>>(
       return props.paginationOptions.rowCount
     },
   })
+
+  useTanStackTableDevtools(table)
 
   // Sync controlled state with table store
   createEffect(() => {
@@ -118,6 +122,7 @@ export default function Table<T extends Record<string, string | number>>(
                               }
                             >
                               <DebouncedInput
+                                devtoolsKey={`with-tanstack-router-${fieldMeta!.filterKey}`}
                                 class="filter-select"
                                 onChange={(value) => {
                                   props.onFilterChange({

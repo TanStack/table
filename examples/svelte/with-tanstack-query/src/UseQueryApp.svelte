@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte'
   import { createQuery, keepPreviousData } from '@tanstack/svelte-query'
   import { createTable } from '@tanstack/svelte-table'
+  import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
   import PageSizeSelect from './PageSizeSelect.svelte'
   import PersonTable from './PersonTable.svelte'
   import { fetchData } from './fetchData'
@@ -27,6 +29,7 @@
   }))
 
   const table = createTable({
+    key: 'with-tanstack-query-offset',
     features,
     columns,
     get data() {
@@ -63,6 +66,10 @@
     manualPagination: true,
     manualSorting: true,
   })
+
+  const tableDevtools = createTableDevtoolsRegistrationManager()
+  tableDevtools.update(table)
+  onDestroy(() => tableDevtools.dispose())
 </script>
 
 <div>

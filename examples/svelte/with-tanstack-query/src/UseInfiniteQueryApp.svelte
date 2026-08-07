@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte'
   import { createInfiniteQuery } from '@tanstack/svelte-query'
   import { createTable } from '@tanstack/svelte-table'
+  import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
   import PageSizeSelect from './PageSizeSelect.svelte'
   import PersonTable from './PersonTable.svelte'
   import { fetchInfiniteData } from './fetchData'
@@ -38,6 +40,7 @@
   )
 
   const table = createTable({
+    key: 'with-tanstack-query-cursor',
     features,
     columns,
     get data() {
@@ -72,6 +75,10 @@
     manualPagination: true,
     manualSorting: true,
   })
+
+  const tableDevtools = createTableDevtoolsRegistrationManager()
+  tableDevtools.update(table)
+  onDestroy(() => tableDevtools.dispose())
 
   async function goToNextPage() {
     const nextPageIndex = pagination.pageIndex + 1
