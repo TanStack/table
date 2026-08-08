@@ -91,6 +91,7 @@ const columns = columnHelper.columns([
 Alpine.data('table', () => {
   const local = Alpine.reactive({
     data: makeData(10_000),
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     rowSource: 'filtered' as RowSource,
   })
   const table = createTable({
