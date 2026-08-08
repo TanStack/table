@@ -210,6 +210,60 @@ describe('createSortedRowModel', () => {
     ).toEqual(['child-a', 'child-b'])
   })
 
+  it('flattens each parent ahead of its own sub-rows', () => {
+    const table = makeTable(
+      [{ id: 'age', desc: false }],
+      [
+        {
+          firstName: 'older-parent',
+          age: 20,
+          subRows: [
+            { firstName: 'child-b', age: 15 },
+            { firstName: 'child-a', age: 10 },
+          ],
+        },
+        {
+          firstName: 'younger-parent',
+          age: 5,
+          subRows: [{ firstName: 'child-c', age: 1 }],
+        },
+      ],
+    )
+
+    expect(
+      table.getSortedRowModel().flatRows.map((row) => row.original.firstName),
+    ).toEqual([
+      'younger-parent',
+      'child-c',
+      'older-parent',
+      'child-a',
+      'child-b',
+    ])
+  })
+
+  it('flattens a branch clone rather than the row it replaced', () => {
+    const table = makeTable(
+      [{ id: 'age', desc: false }],
+      [
+        {
+          firstName: 'parent',
+          age: 20,
+          subRows: [
+            { firstName: 'child-b', age: 15 },
+            { firstName: 'child-a', age: 10 },
+          ],
+        },
+      ],
+    )
+
+    const sortedRowModel = table.getSortedRowModel()
+
+    expect(sortedRowModel.flatRows[0]).toBe(sortedRowModel.rows[0])
+    expect(sortedRowModel.flatRows[0]).not.toBe(
+      table.getPreSortedRowModel().rows[0],
+    )
+  })
+
   describe('sortUndefined', () => {
     type MaybePerson = {
       firstName: string
