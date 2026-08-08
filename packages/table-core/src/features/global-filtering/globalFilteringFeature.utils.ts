@@ -1,5 +1,5 @@
 import { filterFn_includesString } from '../column-filtering/filterFns'
-import { cloneState, isFunction } from '../../utils'
+import { cloneState, isFunction, setStateSlice } from '../../utils'
 import type { Column_Internal } from '../../types/Column'
 import type { FilterFn } from '../column-filtering/columnFilteringFeature.types'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -100,7 +100,7 @@ export function table_setGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: any) {
-  table.options.onGlobalFilterChange?.(updater)
+  setStateSlice(table, 'globalFilter', updater)
 }
 
 /**

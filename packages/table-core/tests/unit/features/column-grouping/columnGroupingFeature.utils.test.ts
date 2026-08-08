@@ -230,6 +230,7 @@ describe('table_setGrouping / table_resetGrouping', () => {
     const table = makeTable({
       onGroupingChange,
       initialState: { grouping: ['status'] },
+      state: { grouping: [] },
     })
 
     table_resetGrouping(table)

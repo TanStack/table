@@ -90,6 +90,13 @@ export function hasOwn(obj: object, key: PropertyKey): boolean {
 }
 
 /**
+ * Marks the state updaters created by `makeStateUpdater` so `setStateSlice`
+ * can recognize the table's own default `on<State>Change` handlers and pass
+ * them a pre-resolved value instead of re-running the original updater.
+ */
+const DEFAULT_STATE_UPDATER = Symbol('defaultStateUpdater')
+
+/**
  * Creates a table state updater for a single state slice.
  *
  * The updater writes through the table base atom for the slice and supports both value and functional updater forms.
@@ -107,10 +114,163 @@ export function makeStateUpdater<
     readonly baseAtoms: object
   },
 ) {
-  return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
+  const updateState = (
+    updater: Updater<TableState<any>[K & keyof TableState<any>]>,
+  ) => {
     const externalAtom = (instance.options as any).atoms?.[key]
     const targetAtom = externalAtom ?? (instance.baseAtoms as any)[key]
     targetAtom.set((old: any) => functionalUpdate(updater, old))
+  }
+  ;(updateState as any)[DEFAULT_STATE_UPDATER] = true
+  return updateState
+}
+
+/**
+ * Nested state slices stay small (a handful of sort descriptors, filter
+ * entries, or pinned ids), so a bounded structural walk is cheaper than a
+ * wasted state write. The cap only exists to bail out of pathological values
+ * such as a deeply nested `globalFilter`; hitting it reports "not equal",
+ * which safely falls back to firing the update.
+ */
+const MAX_STATE_COMPARE_DEPTH = 4
+
+/**
+ * Structurally compares two state slice values.
+ *
+ * Arrays and plain objects are walked recursively up to
+ * `MAX_STATE_COMPARE_DEPTH` levels; dates compare by timestamp; everything
+ * else (including class instances, mirroring the `cloneState` plain-object
+ * policy) compares by `Object.is`. A `false` result is always safe: it just
+ * means the state update goes through.
+ */
+export function stateSlicesEqual(
+  a: unknown,
+  b: unknown,
+  depth: number = MAX_STATE_COMPARE_DEPTH,
+): boolean {
+  if (Object.is(a, b)) {
+    return true
+  }
+  if (
+    depth <= 0 ||
+    typeof a !== 'object' ||
+    a === null ||
+    typeof b !== 'object' ||
+    b === null
+  ) {
+    return false
+  }
+  if (Array.isArray(a) || Array.isArray(b)) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+      return false
+    }
+    for (let i = 0; i < a.length; i++) {
+      if (!stateSlicesEqual(a[i], b[i], depth - 1)) {
+        return false
+      }
+    }
+    return true
+  }
+  if (a instanceof Date || b instanceof Date) {
+    return a instanceof Date && b instanceof Date && a.getTime() === b.getTime()
+  }
+  const protoA = Object.getPrototypeOf(a)
+  const protoB = Object.getPrototypeOf(b)
+  if (
+    (protoA !== Object.prototype && protoA !== null) ||
+    (protoB !== Object.prototype && protoB !== null)
+  ) {
+    return false
+  }
+  const keysA = Object.keys(a)
+  const keysB = Object.keys(b)
+  if (keysA.length !== keysB.length) {
+    return false
+  }
+  for (let i = 0; i < keysA.length; i++) {
+    const key = keysA[i]!
+    if (!hasOwn(b, key)) {
+      return false
+    }
+    if (
+      !stateSlicesEqual(
+        (a as Record<string, unknown>)[key],
+        (b as Record<string, unknown>)[key],
+        depth - 1,
+      )
+    ) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Routes a state slice update through the slice's `on<State>Change` handler,
+ * skipping updates that would not change the state.
+ *
+ * The updater is resolved once against the slice's current value (untracked,
+ * so setters never register reactive dependencies). When the resolved value is
+ * structurally equal to the current value, nothing fires: no change handler,
+ * no atom write, no re-render. This makes every setter, toggle, reset, and
+ * auto-reset a natural no-op when state is already in the target shape, for
+ * both internally owned and externally controlled state.
+ *
+ * For uncontrolled slices, default handlers created by `makeStateUpdater`
+ * receive the pre-resolved value so the original updater runs exactly once;
+ * the slice atom and the default handler's target are the same source, so the
+ * resolved value is exactly what the handler would compute. Everything else
+ * receives the original updater untouched: user handlers because a host state
+ * container (such as a React `setState`) must resolve functional updaters
+ * against its own latest queued state to keep same-tick updates composable,
+ * and controlled slices routed to the default handler because the base atom
+ * is an independent fallback that must keep resolving against its own value
+ * while ownership is external.
+ */
+export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
+  // Minimal structural shape so any table view (public `Table`,
+  // `Table_Internal`, or a custom plugin table) can be passed without forcing
+  // the compiler to relate the full table types.
+  instance: {
+    readonly options: object
+    readonly atoms: object
+    readonly _reactivity: { untrack: <T>(fn: () => T) => T }
+  },
+  key: K,
+  updater: Updater<TableState<any>[K & keyof TableState<any>]>,
+): void {
+  const onChangeKey = `on${key.charAt(0).toUpperCase()}${key.slice(1)}Change`
+  const onChange = (instance.options as Record<string, unknown>)[
+    onChangeKey
+  ] as ((updater: Updater<any>) => void) | undefined
+  if (!onChange) {
+    return
+  }
+  const atom = (instance.atoms as Record<string, any>)[key]
+  if (!atom) {
+    onChange(updater)
+    return
+  }
+  const current = instance._reactivity.untrack(() => atom.get())
+  const next = functionalUpdate(updater, current)
+  if (stateSlicesEqual(current, next)) {
+    return
+  }
+  const options = instance.options as {
+    atoms?: Record<string, unknown>
+    state?: Record<string, unknown>
+  }
+  const isExternallyOwned =
+    Boolean(options.atoms?.[key]) ||
+    Boolean(options.state && hasOwn(options.state, key))
+  if (!isExternallyOwned && (onChange as any)[DEFAULT_STATE_UPDATER]) {
+    // The updater already ran against the same base atom the default handler
+    // targets; hand it the resolved value. The closure form keeps
+    // `functionalUpdate` semantics correct even when the resolved value is
+    // itself a function (`globalFilter` is untyped).
+    onChange(() => next)
+  } else {
+    onChange(updater)
   }
 }
 

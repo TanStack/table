@@ -191,6 +191,7 @@ describe('table_resetColumnOrder', () => {
     const onColumnOrderChange = vi.fn()
     const table = makeTable(3, {
       onColumnOrderChange,
+      state: { columnOrder: ['col1'] },
     })
 
     table_resetColumnOrder(table, true)
@@ -204,6 +205,7 @@ describe('table_resetColumnOrder', () => {
     const table = makeTable(3, {
       onColumnOrderChange,
       initialState: { columnOrder: initialColumnOrder },
+      state: { columnOrder: [] },
     })
 
     table_resetColumnOrder(table, false)

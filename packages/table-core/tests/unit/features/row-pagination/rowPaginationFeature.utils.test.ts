@@ -71,9 +71,10 @@ describe('table_setPagination', () => {
     table_setPagination(table, { pageIndex: 2, pageSize: 5 })
 
     expect(onPaginationChange).toHaveBeenCalledTimes(1)
-    expect(
-      getUpdaterResult(onPaginationChange, getDefaultPaginationState()),
-    ).toEqual({ pageIndex: 2, pageSize: 5 })
+    expect(onPaginationChange).toHaveBeenCalledWith({
+      pageIndex: 2,
+      pageSize: 5,
+    })
   })
 
   it('should resolve functional updaters against the previous state', () => {
@@ -101,9 +102,7 @@ describe('table_resetPagination', () => {
 
     table_resetPagination(table, true)
 
-    expect(
-      getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 5 }),
-    ).toEqual(getDefaultPaginationState())
+    expect(onPaginationChange).toHaveBeenCalledWith(getDefaultPaginationState())
   })
 
   it('should reset to the initial state by default', () => {
@@ -111,13 +110,15 @@ describe('table_resetPagination', () => {
     const table = makeTable(DEFAULT_ROW_COUNT, {
       onPaginationChange,
       initialState: { pagination: { pageIndex: 2, pageSize: 5 } },
+      state: { pagination: getDefaultPaginationState() },
     })
 
     table_resetPagination(table)
 
-    expect(
-      getUpdaterResult(onPaginationChange, getDefaultPaginationState()),
-    ).toEqual({ pageIndex: 2, pageSize: 5 })
+    expect(onPaginationChange).toHaveBeenCalledWith({
+      pageIndex: 2,
+      pageSize: 5,
+    })
   })
 })
 
@@ -135,7 +136,10 @@ describe('table_setPageIndex', () => {
 
   it('should clamp negative page indexes to 0', () => {
     const onPaginationChange = vi.fn()
-    const table = makeTable(DEFAULT_ROW_COUNT, { onPaginationChange })
+    const table = makeTable(DEFAULT_ROW_COUNT, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
 
     table_setPageIndex(table, -5)
 
@@ -298,7 +302,10 @@ describe('table_setPageSize', () => {
 
   it('should reset to page 0 when changing from an infinite page size', () => {
     const onPaginationChange = vi.fn()
-    const table = makeTable(DEFAULT_ROW_COUNT, { onPaginationChange })
+    const table = makeTable(DEFAULT_ROW_COUNT, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 0, pageSize: Infinity } },
+    })
 
     table_setPageSize(table, 10)
 
@@ -428,7 +435,10 @@ describe('page navigation', () => {
 
   it('table_previousPage should decrement the page index and clamp at 0', () => {
     const onPaginationChange = vi.fn()
-    const table = makeTable(25, { onPaginationChange })
+    const table = makeTable(25, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
 
     table_previousPage(table)
 
@@ -442,7 +452,10 @@ describe('page navigation', () => {
 
   it('table_firstPage should go to page 0', () => {
     const onPaginationChange = vi.fn()
-    const table = makeTable(25, { onPaginationChange })
+    const table = makeTable(25, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
 
     table_firstPage(table)
 

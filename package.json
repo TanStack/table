@@ -60,7 +60,7 @@
   "size-limit": [
     {
       "path": "packages/table-core/dist/index.js",
-      "limit": "25 KB"
+      "limit": "30 KB"
     }
   ],
   "devDependencies": {

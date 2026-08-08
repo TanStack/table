@@ -305,6 +305,7 @@ describe('table_resetColumnPinning', () => {
     const onColumnPinningChange = vi.fn()
     const table = makeTable(1, {
       onColumnPinningChange,
+      state: { columnPinning: { start: ['firstName'], end: [] } },
     })
 
     table_resetColumnPinning(table, true)
@@ -326,6 +327,7 @@ describe('table_resetColumnPinning', () => {
     const table = makeTable(1, {
       onColumnPinningChange,
       initialState,
+      state: { columnPinning: { start: [], end: [] } },
     })
 
     table_resetColumnPinning(table, false)

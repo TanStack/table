@@ -1,5 +1,10 @@
 import { table_getPinnedVisibleLeafColumns } from '../column-pinning/columnPinningFeature.utils'
-import { callMemoOrStaticFn, cloneState, makeObjectMap } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  makeObjectMap,
+  setStateSlice,
+} from '../../utils'
 import type { GroupingState } from '../column-grouping/columnGroupingFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -156,7 +161,7 @@ export function table_setColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
-  table.options.onColumnOrderChange?.(updater)
+  setStateSlice(table, 'columnOrder', updater)
 }
 
 /**

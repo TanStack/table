@@ -197,6 +197,7 @@ describe('table_resetSorting', () => {
     const initialSorting: SortingState = [{ id: 'age', desc: true }]
     const { table, onSortingChange } = makeTableWithMockOnSortingChange({
       initialState: { sorting: initialSorting },
+      state: { sorting: [] },
     })
 
     table_resetSorting(table)

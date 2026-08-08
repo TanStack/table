@@ -196,6 +196,7 @@ describe('table_resetGlobalFilter', () => {
     const table = makeTable({
       onGlobalFilterChange,
       initialState: { globalFilter: 'initial' },
+      state: { globalFilter: 'other' },
     })
 
     table_resetGlobalFilter(table)

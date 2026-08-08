@@ -369,7 +369,9 @@ describe('TableController lifecycle and option ownership', () => {
       '{"canSelect":false,"columnIds":["title"],"values":["Final"]}',
     )
 
-    element.table!.toggleAllRowsSelected(false)
+    // The mock handlers never write state back, so selection is still empty
+    // and a deselect-all would be a no-op; route a real change instead.
+    element.table!.setRowSelection({ '3': true })
 
     expect(firstSelectionHandler).toHaveBeenCalledOnce()
     expect(secondSelectionHandler).toHaveBeenCalledOnce()

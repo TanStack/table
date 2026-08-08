@@ -293,7 +293,9 @@ describe('Solid adapter lifecycle and option ownership', () => {
       expect(secondHandler).not.toHaveBeenCalled()
 
       setOnRowSelectionChange(() => secondHandler)
-      table.toggleAllRowsSelected(false)
+      // The mock handlers never write state back, so selection is still empty;
+      // select-all stays a real change while deselect-all would be a no-op.
+      table.toggleAllRowsSelected(true)
 
       expect(firstHandler).toHaveBeenCalledTimes(1)
       expect(secondHandler).toHaveBeenCalledTimes(1)

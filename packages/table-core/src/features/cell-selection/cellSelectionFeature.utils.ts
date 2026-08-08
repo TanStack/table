@@ -1,4 +1,9 @@
-import { callMemoOrStaticFn, cloneState, makeObjectMap } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  makeObjectMap,
+  setStateSlice,
+} from '../../utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
 import {
   applyCellSelectionBoundsOperations,
@@ -53,7 +58,7 @@ export function table_setCellSelection<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<CellSelectionState>,
 ) {
-  table.options.onCellSelectionChange?.(updater)
+  setStateSlice(table, 'cellSelection', updater)
 }
 
 /**
@@ -1501,9 +1506,6 @@ export function cell_getSelectionExtendHandler<
 
     const rowId = cell.row.id
     const columnId = cell.column.id
-
-    // re-entering the cell the range already focuses would be a no-op write
-    if (active.focusRowId === rowId && active.focusColumnId === columnId) return
 
     table_setCellSelection(table, (old) => {
       if (!old.length) return old

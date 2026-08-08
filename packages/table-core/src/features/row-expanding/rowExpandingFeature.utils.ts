@@ -1,4 +1,4 @@
-import { cloneState, hasOwn, makeObjectMap } from '../../utils'
+import { cloneState, hasOwn, makeObjectMap, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -67,7 +67,7 @@ export function table_setExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<ExpandedState>) {
-  table.options.onExpandedChange?.(updater)
+  setStateSlice(table, 'expanded', updater)
 }
 
 /**
@@ -89,14 +89,10 @@ export function table_toggleAllRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, expanded?: boolean) {
-  const currentExpanded = table.atoms.expanded?.get() ?? {}
-
   if (expanded ?? !table_getIsAllRowsExpanded(table)) {
-    if (currentExpanded === true) return
     if (!table_getCanSomeRowsExpand(table)) return
     table_setExpanded(table, true)
   } else {
-    if (currentExpanded !== true && !Object.keys(currentExpanded).length) return
     table_setExpanded(table, makeObjectMap())
   }
 }

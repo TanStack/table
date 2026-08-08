@@ -87,6 +87,7 @@ describe('table_resetExpanded', () => {
     const table = makeTable({
       onExpandedChange,
       initialState: { expanded: { '0': true } },
+      state: { expanded: { '1': true } },
     })
 
     table_resetExpanded(table)
@@ -99,6 +100,7 @@ describe('table_resetExpanded', () => {
     const table = makeTable({
       onExpandedChange,
       initialState: { expanded: true },
+      state: { expanded: { '0': true } },
     })
 
     table_resetExpanded(table)

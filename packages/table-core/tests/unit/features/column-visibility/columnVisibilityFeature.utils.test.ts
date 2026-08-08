@@ -330,6 +330,7 @@ describe('columnVisibilityFeature.utils', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = makeTable(1, {
         onColumnVisibilityChange,
+        state: { columnVisibility: { firstName: false } },
       })
 
       table_resetColumnVisibility(table, true)
@@ -343,6 +344,7 @@ describe('columnVisibilityFeature.utils', () => {
       const table = makeTable(1, {
         initialState,
         onColumnVisibilityChange,
+        state: { columnVisibility: {} },
       })
 
       table_resetColumnVisibility(table, false)

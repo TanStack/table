@@ -9,6 +9,7 @@ import {
   cloneState,
   hasOwn,
   makeObjectMap,
+  setStateSlice,
 } from '../../utils'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -339,7 +340,7 @@ export function table_setColumnSizing<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnSizingState>,
 ) {
-  table.options.onColumnSizingChange?.(updater)
+  setStateSlice(table, 'columnSizing', updater)
 }
 
 /**

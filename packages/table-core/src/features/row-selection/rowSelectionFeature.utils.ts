@@ -4,6 +4,7 @@ import {
   copyInstancePropertiesWithoutMemos,
   hasOwn,
   makeObjectMap,
+  setStateSlice,
 } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -50,7 +51,7 @@ export function table_setRowSelection<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<RowSelectionState>,
 ) {
-  table.options.onRowSelectionChange?.(updater)
+  setStateSlice(table, 'rowSelection', updater)
 }
 
 /**

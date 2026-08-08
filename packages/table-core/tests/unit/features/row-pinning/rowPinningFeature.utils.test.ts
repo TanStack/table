@@ -135,7 +135,10 @@ describe('table_setRowPinning', () => {
 
 describe('table_resetRowPinning', () => {
   it('should reset to default state when defaultState is true', () => {
-    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange(
+      DEFAULT_ROW_COUNT,
+      { state: { rowPinning: { top: [ROW[1]], bottom: [] } } },
+    )
 
     table_resetRowPinning(table, true)
 
@@ -152,7 +155,10 @@ describe('table_resetRowPinning', () => {
     }
     const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange(
       DEFAULT_ROW_COUNT,
-      { initialState: { rowPinning: initialState } },
+      {
+        initialState: { rowPinning: initialState },
+        state: { rowPinning: getDefaultRowPinningState() },
+      },
     )
 
     table_resetRowPinning(table, false)
@@ -162,7 +168,10 @@ describe('table_resetRowPinning', () => {
   })
 
   it('should reset to default state when no initial state exists', () => {
-    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange(
+      DEFAULT_ROW_COUNT,
+      { state: { rowPinning: { top: [ROW[1]], bottom: [] } } },
+    )
 
     table_resetRowPinning(table, false)
 

@@ -3,7 +3,7 @@ import {
   header_getSize,
   table_setColumnSizing,
 } from '../column-sizing/columnSizingFeature.utils'
-import { cloneState, makeObjectMap } from '../../utils'
+import { cloneState, makeObjectMap, setStateSlice } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -349,7 +349,7 @@ export function table_setColumnResizing<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<columnResizingState>,
 ) {
-  table.options.onColumnResizingChange?.(updater)
+  setStateSlice(table, 'columnResizing', updater)
 }
 
 /**

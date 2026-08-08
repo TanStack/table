@@ -118,6 +118,7 @@ describe('table_resetRowSelection', () => {
     const table = makeTable({
       onRowSelectionChange,
       initialState: { rowSelection: { '0': true, '2': true } },
+      state: { rowSelection: { '1': true } },
     })
 
     table_resetRowSelection(table)
@@ -431,7 +432,13 @@ describe('row_toggleSelected', () => {
 
   it('should prune ancestor ids when deselecting with deselectParents', () => {
     const onRowSelectionChange = vi.fn()
-    const table = makeTable({ onRowSelectionChange }, [3, 2])
+    const table = makeTable(
+      {
+        onRowSelectionChange,
+        initialState: { rowSelection: { '0': true, '0.0': true, '0.1': true } },
+      },
+      [3, 2],
+    )
 
     row_toggleSelected(table.getRow('0.0'), false, { deselectParents: true })
 
@@ -446,7 +453,13 @@ describe('row_toggleSelected', () => {
 
   it('should leave ancestor ids by default when deselecting a child', () => {
     const onRowSelectionChange = vi.fn()
-    const table = makeTable({ onRowSelectionChange }, [3, 2])
+    const table = makeTable(
+      {
+        onRowSelectionChange,
+        initialState: { rowSelection: { '0': true, '0.0': true, '0.1': true } },
+      },
+      [3, 2],
+    )
 
     row_toggleSelected(table.getRow('0.0'), false)
 
@@ -461,7 +474,23 @@ describe('row_toggleSelected', () => {
 
   it('should prune every ancestor on a deep deselect with deselectParents', () => {
     const onRowSelectionChange = vi.fn()
-    const table = makeTable({ onRowSelectionChange }, [2, 2, 2])
+    const table = makeTable(
+      {
+        onRowSelectionChange,
+        initialState: {
+          rowSelection: {
+            '0': true,
+            '0.0': true,
+            '0.0.0': true,
+            '0.0.1': true,
+            '0.1': true,
+            '0.1.0': true,
+            '0.1.1': true,
+          },
+        },
+      },
+      [2, 2, 2],
+    )
 
     row_toggleSelected(table.getRow('0.0.0'), false, { deselectParents: true })
 
@@ -490,7 +519,11 @@ describe('row_toggleSelected', () => {
     // select-all paths preserve non-selectable rows.
     const onRowSelectionChange = vi.fn()
     const table = makeTable(
-      { onRowSelectionChange, enableRowSelection: (row) => row.id !== '0' },
+      {
+        onRowSelectionChange,
+        enableRowSelection: (row) => row.id !== '0',
+        initialState: { rowSelection: { '0': true, '0.0': true, '0.1': true } },
+      },
       [3, 2],
     )
 
@@ -781,10 +814,10 @@ describe('table_toggleAllRowsSelected', () => {
 
     table_toggleAllRowsSelected(table, true)
 
+    expect(enableSubRowSelection).toHaveBeenCalledTimes(6)
     expect(
       Object.keys(getUpdaterResult(onRowSelectionChange, {})),
     ).toHaveLength(14)
-    expect(enableSubRowSelection).toHaveBeenCalledTimes(6)
   })
 
   it('should keep rows that cannot be selected when deselecting all', () => {
