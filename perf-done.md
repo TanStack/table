@@ -1297,6 +1297,8 @@ table_getIsSomeRowsSelected: {
 **Status:** `[x]` done
 **Implementation note:** Investigated why the clone existed: the post-sort loop assigns `row.subRows = sortData(row.subRows)`, which would corrupt the source row model if `row` were the original. So the clone is genuinely necessary for **rows with subRows**, but pointless for leaf rows. Refactored: `rows.slice()` produces a sortable array copy (one allocation), the sort runs as before, and the post-sort loop clones only rows where `row.subRows.length > 0`. Leaf rows pass through as their original references. For a flat table (the common case) this drops from N heavy clones to **zero per-row clones** plus one `slice()`. For nested tables, only parent rows are cloned (typically a small fraction of total rows). The native `Array.prototype.sort` is stable since ES2019; the explicit `row.index` tiebreaker was preserved in the comparator for any caller that relied on it.
 
+**2026-08-08 follow-up (#6529):** The branch-only clone rewrite moved the branch's `flatRows` insertion below recursive sorting, unintentionally changing sorted hierarchical models from parent-first to post-order. Restored the v8 parent-first contract by reserving the parent's flat-array slot before recursion and replacing that slot when a clone is required; worker-backed sorted tree reconstruction now mirrors it. The original optimization remains intact: leaf rows are still reused rather than cloned, and the flattening pass remains O(R).
+
 **Location:** `src/features/row-sorting/createSortedRowModel.ts:81–89`
 **Category:** `big-o`, `micro`
 
@@ -1312,39 +1314,49 @@ This allocates N row clones every time the sorted row model rebuilds. `Array.pro
 **After**
 
 ```ts
+const sortedData = rows.slice()
+sortedData.sort(compareRows)
+let changed = false
+
 // If there are sub-rows, sort them. Clone only rows that need mutation
 // (i.e. have subRows) so we don't corrupt the source row model.
 for (let i = 0; i < sortedData.length; i++) {
   const row = sortedData[i]!
+  if (row !== rows[i]) changed = true
+
+  const flatIndex = sortedFlatRows.length
+  sortedFlatRows.push(row)
+
   if (row.subRows.length) {
-    // Preserve prototype chain so methods like getValue() remain accessible
-    const cloned = Object.create(Object.getPrototypeOf(row))
-    Object.assign(cloned, row)
-    cloned.subRows = sortData(row.subRows)
-    sortedData[i] = cloned
-    sortedFlatRows.push(cloned)
-  } else {
-    sortedFlatRows.push(row)
+    const sortedSubRows = sortData(row.subRows)
+    if (sortedSubRows.changed) {
+      const cloned = Object.create(Object.getPrototypeOf(row))
+      copyInstancePropertiesWithoutMemos(cloned, row)
+      cloned.subRows = sortedSubRows.rows
+      sortedData[i] = cloned
+      sortedFlatRows[flatIndex] = cloned
+      changed = true
+    }
   }
 }
 
-return sortedData
+return { rows: sortedData, changed }
 ```
 
 **Big-O:** Drops O(n) heavy object allocations per sort.
 
-**Scale impact** (heavy row clones replaced with lightweight `{row, index}` wrappers — dimension: rows sorted per sort pass):
+**Scale impact** (flat-table case — dimension: rows sorted per sort pass):
 
-| Rows sorted | Before (full row clones via `Object.create` + `Object.assign`) | After (`{row, index}` wrappers) | Saved                         |
-| ----------- | -------------------------------------------------------------- | ------------------------------- | ----------------------------- |
-| 10          | 10 heavy clones                                                | 10 small wrappers               | ~10 wide → narrow allocations |
-| 100         | 100                                                            | 100                             | ~100                          |
-| 1,000       | 1,000                                                          | 1,000                           | ~1,000                        |
-| 10,000      | 10,000                                                         | 10,000                          | ~10,000                       |
+| Rows sorted | Before (full row clones via `Object.create` + `Object.assign`) | After (`rows.slice()`) | Saved heavy clones |
+| ----------- | -------------------------------------------------------------- | ---------------------- | ------------------ |
+| 10          | 10                                                             | 0                      | 10                 |
+| 100         | 100                                                            | 0                      | 100                |
+| 1,000       | 1,000                                                          | 0                      | 1,000              |
+| 10,000      | 10,000                                                         | 0                      | 10,000             |
 
-(Memory is the bigger win than count: each "heavy clone" copies _all_ enumerable fields on a constructed Row, vs `{row, index}` which is 2 fields.)
+(Nested tables still clone only branches whose sorted descendants changed.)
 
-**Risk:** Behavior depends on whether downstream code mutates the returned rows. The current clone is defensive against mutation. Verify nothing post-sort writes to row instances (the project uses prototype methods, so mutations should not occur).
+**Risk:** Behavior depends on whether downstream code mutates the returned rows. The current clone is defensive against mutation. Verify nothing post-sort writes to row instances (the project uses prototype methods, so mutations should not occur). Recursive rewrites must also preserve parent-first `flatRows` order and replace reserved entries with any branch clones; #6529 adds direct and worker-backed nested-tree coverage for both invariants.
 
 ---
 
@@ -2647,7 +2659,7 @@ if (Array.isArray(value)) {
 ## 116. B10: createSortedRowModel: no availableSorting.length guard; branch rows cloned even when subRows unchanged — Score: 4
 
 **Status:** `[x]` done
-**Implementation note:** Added the `availableSorting.length` guard after missing/unsortable sorting entries are filtered, so a sorting state containing only unavailable ids returns `preSortedRowModel` directly. Also changed recursive sorting to return a `changed` flag computed during the existing post-sort `flatRows` walk; branch rows are cloned only when their sorted `subRows` changed order or contain a cloned descendant. Added focused row-sorting tests for unknown-only sorting returning the pre-sorted model, unchanged branch-row identity preservation, and clone-on-changed-subRows behavior.
+**Implementation note:** Added the `availableSorting.length` guard after missing/unsortable sorting entries are filtered, so a sorting state containing only unavailable ids returns `preSortedRowModel` directly. Also changed recursive sorting to return a `changed` flag computed during the existing post-sort `flatRows` walk; branch rows are cloned only when their sorted `subRows` changed order or contain a cloned descendant. Added focused row-sorting tests for unknown-only sorting returning the pre-sorted model, unchanged branch-row identity preservation, and clone-on-changed-subRows behavior. Follow-up #6529 found that this inherited #49's post-order flat-row regression and restored parent-first insertion without changing the clone-skipping logic.
 
 **Location:** `createSortedRowModel.ts:47–58, 130–147`
 **Category:** `micro`

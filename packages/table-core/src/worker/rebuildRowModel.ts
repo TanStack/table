@@ -6,6 +6,7 @@ import type { TableFeatures } from '../types/TableFeatures'
 import type { RowData } from '../types/type-utils'
 import type {
   TableWorkerRowNode,
+  TableWorkerStage,
   TableWorkerStagePayload,
 } from './tableWorkerProtocol'
 
@@ -38,15 +39,14 @@ export function rebuildRowModel<
 >(
   table: Table_Internal<TFeatures, TData>,
   payload: TableWorkerDataPayload,
-  /**
-   * Whether a flat payload should rewrite row depth/parentId. Mirrors core:
-   * the grouped model's passthrough resets them, the filtered model never
-   * touches them. Without this distinction a filtered rebuild could zero the
-   * depths a grouped/sorted tree rebuild just assigned to shared row objects.
-   */
-  resetDepths: boolean,
+  stage: TableWorkerStage,
 ): RowModel<TFeatures, TData> {
   const core = table.getCoreRowModel()
+  // The grouped model's flat passthrough resets row relationships, while the
+  // filtered model never touches them. Without this distinction a filtered
+  // rebuild could zero depths assigned by a grouped/sorted tree rebuild.
+  const resetDepths = stage !== 'filtered'
+  const flattenParentsFirst = stage === 'sorted'
 
   if (payload.kind === 'flat') {
     const { indices } = payload
@@ -84,6 +84,14 @@ export function rebuildRowModel<
         continue
       }
 
+      // Sorted flatRows preserve the recursive rows order. Reserve the
+      // synthetic parent's position before rebuilding its descendants, then
+      // fill it once the row can be constructed from those descendants.
+      const flatIndex = flattenParentsFirst ? flatRows.length : -1
+      if (flattenParentsFirst) {
+        flatRows.push(undefined)
+      }
+
       const subRows = rebuildRows(node.children, depth + 1, node.id)
       const leafRows: Array<any> = []
       collectLeafRows(subRows, leafRows)
@@ -107,7 +115,11 @@ export function rebuildRowModel<
           hasOwn(aggregates, columnId) ? aggregates[columnId] : undefined,
       })
 
-      flatRows.push(row)
+      if (flattenParentsFirst) {
+        flatRows[flatIndex] = row
+      } else {
+        flatRows.push(row)
+      }
       rowsById[node.id] = row
       rows[i] = row
     }

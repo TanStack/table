@@ -5,7 +5,7 @@ import {
   rowSortingFeature,
 } from '../../../../src'
 import { testFeatures } from '../../../fixtures/features'
-import type { ColumnDef } from '../../../../src'
+import type { ColumnDef, Row } from '../../../../src'
 
 type Person = {
   firstName: string
@@ -40,6 +40,22 @@ function makeTable(
     initialState: { sorting },
     getSubRows: (row) => row.subRows,
   })
+}
+
+function flattenRows(rows: Array<Row<typeof features, Person>>) {
+  const flatRows: Array<Row<typeof features, Person>> = []
+
+  const visit = (nestedRows: Array<Row<typeof features, Person>>) => {
+    for (const row of nestedRows) {
+      flatRows.push(row)
+      if (row.subRows.length) {
+        visit(row.subRows)
+      }
+    }
+  }
+
+  visit(rows)
+  return flatRows
 }
 
 describe('createSortedRowModel', () => {
@@ -218,7 +234,14 @@ describe('createSortedRowModel', () => {
           firstName: 'older-parent',
           age: 20,
           subRows: [
-            { firstName: 'child-b', age: 15 },
+            {
+              firstName: 'child-b',
+              age: 15,
+              subRows: [
+                { firstName: 'grandchild-b', age: 4 },
+                { firstName: 'grandchild-a', age: 2 },
+              ],
+            },
             { firstName: 'child-a', age: 10 },
           ],
         },
@@ -238,10 +261,12 @@ describe('createSortedRowModel', () => {
       'older-parent',
       'child-a',
       'child-b',
+      'grandchild-a',
+      'grandchild-b',
     ])
   })
 
-  it('flattens a branch clone rather than the row it replaced', () => {
+  it('flattens nested branch clones rather than the rows they replaced', () => {
     const table = makeTable(
       [{ id: 'age', desc: false }],
       [
@@ -249,18 +274,33 @@ describe('createSortedRowModel', () => {
           firstName: 'parent',
           age: 20,
           subRows: [
-            { firstName: 'child-b', age: 15 },
+            {
+              firstName: 'child-b',
+              age: 15,
+              subRows: [
+                { firstName: 'grandchild-b', age: 4 },
+                { firstName: 'grandchild-a', age: 2 },
+              ],
+            },
             { firstName: 'child-a', age: 10 },
           ],
         },
       ],
     )
 
+    const preSortedRowModel = table.getPreSortedRowModel()
     const sortedRowModel = table.getSortedRowModel()
+    const recursivelyFlattenedRows = flattenRows(sortedRowModel.rows)
 
-    expect(sortedRowModel.flatRows[0]).toBe(sortedRowModel.rows[0])
-    expect(sortedRowModel.flatRows[0]).not.toBe(
-      table.getPreSortedRowModel().rows[0],
+    expect(sortedRowModel.flatRows).toHaveLength(
+      recursivelyFlattenedRows.length,
+    )
+    for (let i = 0; i < recursivelyFlattenedRows.length; i++) {
+      expect(sortedRowModel.flatRows[i]).toBe(recursivelyFlattenedRows[i])
+    }
+    expect(sortedRowModel.rows[0]).not.toBe(preSortedRowModel.rows[0])
+    expect(sortedRowModel.rows[0]!.subRows[1]).not.toBe(
+      preSortedRowModel.rows[0]!.subRows[0],
     )
   })
 
