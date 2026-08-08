@@ -86,9 +86,10 @@ describe('stateSlicesEqual', () => {
     expect(stateSlicesEqual(map, { '0': true })).toBe(true)
   })
 
-  it('should compare dates by timestamp', () => {
-    expect(stateSlicesEqual(new Date(1000), new Date(1000))).toBe(true)
-    expect(stateSlicesEqual(new Date(1000), new Date(2000))).toBe(false)
+  it('should compare non-plain values like dates by reference only', () => {
+    const date = new Date(1000)
+    expect(stateSlicesEqual(date, date)).toBe(true)
+    expect(stateSlicesEqual(new Date(1000), new Date(1000))).toBe(false)
     expect(stateSlicesEqual(new Date(1000), 1000)).toBe(false)
   })
 
@@ -101,8 +102,24 @@ describe('stateSlicesEqual', () => {
     expect(stateSlicesEqual(instance, new FilterValue('a'))).toBe(false)
   })
 
-  it('should report not-equal past the depth cap instead of recursing forever', () => {
-    const make = () => ({ a: { b: { c: { d: { e: 1 } } } } })
+  it('should compare values below the second container level by reference', () => {
+    // Stock state never nests deeper than a container of flat containers;
+    // deeper values (like an array-valued filter value) match by identity
+    // only, so a fresh but equivalent value safely fires the update.
+    const range = [0, 10]
+    expect(
+      stateSlicesEqual(
+        [{ id: 'age', value: range }],
+        [{ id: 'age', value: range }],
+      ),
+    ).toBe(true)
+    expect(
+      stateSlicesEqual(
+        [{ id: 'age', value: [0, 10] }],
+        [{ id: 'age', value: [0, 10] }],
+      ),
+    ).toBe(false)
+    const make = () => ({ a: { b: { c: 1 } } })
     expect(stateSlicesEqual(make(), make())).toBe(false)
   })
 })

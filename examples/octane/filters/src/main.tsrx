@@ -7,6 +7,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFn_equalsString,
+  filterFn_inDateRange,
   filterFn_inNumberRange,
   filterFn_includesString,
   metaHelper,
@@ -20,7 +21,7 @@ import type { Person } from './makeData'
 
 // allows us to define custom properties for our columns
 interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select'
+  filterVariant?: 'text' | 'range' | 'select' | 'dateRange'
 }
 
 const features = tableFeatures({
@@ -31,6 +32,7 @@ const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    inDateRange: filterFn_inDateRange,
     equalsString: filterFn_equalsString,
   },
   columnMeta: metaHelper<MyColumnMeta>(),
@@ -86,6 +88,15 @@ function App() @{
           },
           filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
           // you could also write your own custom filter function here
+        }),
+        columnHelper.accessor('birthDate', {
+          header: 'Birth Date',
+          // A locale-independent date format keeps the demo (and its tests) stable
+          cell: (info) => info.getValue().toISOString().slice(0, 10),
+          filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
+          meta: {
+            filterVariant: 'dateRange',
+          },
         }),
       ]),
     [],
@@ -245,7 +256,37 @@ function Filter({
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
 
-  return filterVariant === 'range' ? (
+  return filterVariant === 'dateRange' ? (
+    <div>
+      <div className="filter-row">
+        <DebouncedInput
+          type="date"
+          aria-label={`${column.id} min`}
+          value={(columnFilterValue as [string, string] | undefined)?.[0] ?? ''}
+          onChange={(value) =>
+            column.setFilterValue((old: [string, string] | undefined) => [
+              value,
+              old?.[1],
+            ])
+          }
+          className="filter-input"
+        />
+        <DebouncedInput
+          type="date"
+          aria-label={`${column.id} max`}
+          value={(columnFilterValue as [string, string] | undefined)?.[1] ?? ''}
+          onChange={(value) =>
+            column.setFilterValue((old: [string, string] | undefined) => [
+              old?.[0],
+              value,
+            ])
+          }
+          className="filter-input"
+        />
+      </div>
+      <div className="spacer-xs" />
+    </div>
+  ) : filterVariant === 'range' ? (
     <div>
       <div className="filter-row">
         {/* See faceted column filters example for min max values functionality */}

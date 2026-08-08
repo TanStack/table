@@ -8,6 +8,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTable,
+  filterFn_inDateRange,
   filterFn_inNumberRange,
   filterFn_includesString,
   globalFilteringFeature,
@@ -34,6 +35,7 @@ export const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    inDateRange: filterFn_inDateRange,
   },
 })
 
@@ -90,6 +92,15 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
             header: 'Profile Progress',
             footer: (props) => props.column.id,
             filterFn: 'inNumberRange',
+          },
+          {
+            accessorKey: 'birthDate',
+            header: 'Birth Date',
+            // A locale-independent date format keeps the demo (and its tests) stable
+            cell: (info) =>
+              (info.getValue() as Date).toISOString().slice(0, 10),
+            footer: (props) => props.column.id,
+            filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
           },
         ],
       },

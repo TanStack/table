@@ -9,6 +9,7 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   filterFn_equalsString,
+  filterFn_inDateRange,
   filterFn_includesString,
   filterFn_inNumberRange,
   rowPaginationFeature,
@@ -25,7 +26,7 @@ import { makeData, type Person } from '../utils/make-data'
 
 // Custom column meta so columns can declare a `filterVariant`.
 interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select'
+  filterVariant?: 'text' | 'range' | 'select' | 'dateRange'
 }
 
 // --- Table setup ---
@@ -39,6 +40,7 @@ const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    inDateRange: filterFn_inDateRange,
     equalsString: filterFn_equalsString,
   },
 })
@@ -79,6 +81,13 @@ const columns = columnHelper.columns([
     filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
     // you could also write your own custom filter function here
   }),
+  columnHelper.accessor('birthDate', {
+    header: 'Birth Date',
+    // A locale-independent date format keeps the demo (and its tests) stable
+    cell: (info) => info.getValue().toISOString().slice(0, 10),
+    filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
+    meta: { filterVariant: 'dateRange' },
+  }),
 ])
 
 const PAGE_SIZES = [10, 20, 30, 40, 50]
@@ -96,7 +105,7 @@ const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 // Filter helpers that receive the column so `this` is bound correctly.
 const filterVariant = (
   column: Column<typeof features, Person>,
-): 'text' | 'range' | 'select' | undefined =>
+): 'text' | 'range' | 'select' | 'dateRange' | undefined =>
   column.columnDef.meta?.filterVariant
 
 const rangeMin = (column: Column<typeof features, Person>): string => {
@@ -149,7 +158,7 @@ interface ColumnFilterSignature {
 }
 
 class ColumnFilter extends Component<ColumnFilterSignature> {
-  get variant(): 'text' | 'range' | 'select' | undefined {
+  get variant(): 'text' | 'range' | 'select' | 'dateRange' | undefined {
     return filterVariant(this.args.column)
   }
 
@@ -199,7 +208,24 @@ class ColumnFilter extends Component<ColumnFilterSignature> {
   }
 
   <template>
-    {{#if (eq this.variant 'range')}}
+    {{#if (eq this.variant 'dateRange')}}
+      <div class='filter-row'>
+        <input
+          type='date'
+          class='filter-input'
+          aria-label='{{@column.id}} min'
+          value={{this.minValue}}
+          {{on 'input' this.changeMin}}
+        />
+        <input
+          type='date'
+          class='filter-input'
+          aria-label='{{@column.id}} max'
+          value={{this.maxValue}}
+          {{on 'input' this.changeMax}}
+        />
+      </div>
+    {{else if (eq this.variant 'range')}}
       <div class='filter-row'>
         <input
           type='number'

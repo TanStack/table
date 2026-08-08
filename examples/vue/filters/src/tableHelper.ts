@@ -7,6 +7,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
+  filterFn_inDateRange,
   filterFn_inNumberRange,
   filterFn_includesString,
   globalFilteringFeature,
@@ -20,6 +21,7 @@ export type Person = {
   visits: number
   status: string
   progress: number
+  birthDate: Date
 }
 
 export const { appFeatures, createAppColumnHelper, useAppTable } =
@@ -37,6 +39,7 @@ export const { appFeatures, createAppColumnHelper, useAppTable } =
       filterFns: {
         includesString: filterFn_includesString,
         inNumberRange: filterFn_inNumberRange,
+        inDateRange: filterFn_inDateRange,
       },
     },
   })

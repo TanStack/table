@@ -55,6 +55,40 @@ function getBodyRows(table: Locator) {
   return table.locator('tbody tr, .tbody .tr')
 }
 
+function dateRangeFilter(page: Page, bound: 'min' | 'max') {
+  return page.locator(`thead input[aria-label="birthDate ${bound}"]`)
+}
+
+/**
+ * The birth date column is the ninth column in `src/main.ts`. Alpine keeps the
+ * `x-for` template element in each row, so count cells with `nth-of-type`.
+ */
+async function readBirthDates(page: Page) {
+  const cells = await page
+    .locator('tbody tr td:nth-of-type(9)')
+    .allTextContents()
+
+  return cells.map((cell) => cell.trim())
+}
+
+/** Row data is random faker output, so the table state dump is the oracle. */
+async function readColumnFilters(page: Page) {
+  const text = await page.getByTestId('table-state').textContent()
+
+  const state = JSON.parse(text ?? '{}') as {
+    columnFilters?: Array<{ id: string; value: unknown }>
+  }
+
+  return state.columnFilters ?? []
+}
+
+async function expectColumnFilters(
+  page: Page,
+  expected: Array<{ id: string; value: unknown }>,
+) {
+  await expect.poll(() => readColumnFilters(page)).toEqual(expected)
+}
+
 async function getFirstBodyRowData(table: Locator) {
   const row = getBodyRows(table).first()
   const firstInput = row
@@ -96,6 +130,60 @@ test('renders the table without crashing', async ({ page }) => {
         .not.toBe(firstRowBefore)
       await expect(bodyRows.first()).toBeVisible()
     }
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('filters a date column by range', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = getTable(page)
+
+    await expect(getBodyRows(table).first()).toBeVisible()
+
+    // One date input per bound renders for the birth date column.
+    await expect(page.locator('thead input[type="date"]')).toHaveCount(2)
+
+    // Cells render ISO dates (YYYY-MM-DD), so string order is date order. Use
+    // a bound from the visible data so a match is guaranteed despite random rows.
+    const dates = (await readBirthDates(page)).sort()
+    const minDate = dates[Math.floor(dates.length / 2)]!
+    expect(minDate).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+
+    await dateRangeFilter(page, 'min').fill(minDate)
+
+    // An unset bound serialises as null, leaving the range open ended.
+    await expectColumnFilters(page, [
+      { id: 'birthDate', value: [minDate, null] },
+    ])
+
+    for (const date of await readBirthDates(page)) {
+      expect(date >= minDate).toBe(true)
+    }
+
+    // The largest visible date keeps the range ordered and non-empty.
+    const maxDate = dates[dates.length - 1]!
+    await dateRangeFilter(page, 'max').fill(maxDate)
+
+    await expectColumnFilters(page, [
+      { id: 'birthDate', value: [minDate, maxDate] },
+    ])
+
+    for (const date of await readBirthDates(page)) {
+      expect(date >= minDate).toBe(true)
+      expect(date <= maxDate).toBe(true)
+    }
+
+    // Clearing both bounds auto-removes the filter entirely.
+    await dateRangeFilter(page, 'min').fill('')
+    await dateRangeFilter(page, 'max').fill('')
+
+    await expectColumnFilters(page, [])
+    await expect(getBodyRows(table)).toHaveCount(10)
 
     expect(errors).toEqual([])
   } finally {

@@ -6,6 +6,7 @@ import {
   createPaginatedRowModel,
   createTableHook,
   filterFn_equalsString,
+  filterFn_inDateRange,
   filterFn_inNumberRange,
   filterFn_includesString,
   isFunction,
@@ -20,7 +21,7 @@ import type { Person } from './makeData'
 
 // allows us to define custom properties for our columns
 interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select'
+  filterVariant?: 'text' | 'range' | 'select' | 'dateRange'
 }
 
 export const features = tableFeatures({
@@ -32,6 +33,7 @@ export const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    inDateRange: filterFn_inDateRange,
     equalsString: filterFn_equalsString,
   },
 })
@@ -85,6 +87,15 @@ const columns = columnHelper.columns([
     },
     filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
     // you could also write your own custom filter function here
+  }),
+  columnHelper.accessor('birthDate', {
+    header: 'Birth Date',
+    // A locale-independent date format keeps the demo (and its tests) stable
+    cell: (info) => info.getValue().toISOString().slice(0, 10),
+    filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
+    meta: {
+      filterVariant: 'dateRange',
+    },
   }),
 ])
 

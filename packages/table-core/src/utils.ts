@@ -126,38 +126,72 @@ export function makeStateUpdater<
 }
 
 /**
- * Nested state slices stay small (a handful of sort descriptors, filter
- * entries, or pinned ids), so a bounded structural walk is cheaper than a
- * wasted state write. The cap only exists to bail out of pathological values
- * such as a deeply nested `globalFilter`; hitting it reports "not equal",
- * which safely falls back to firing the update.
+ * Checks whether a value is an array or a plain (or null-prototype) object.
+ * Class instances, dates, and other exotic values compare by reference only,
+ * mirroring the `cloneState` plain-object policy.
  */
-const MAX_STATE_COMPARE_DEPTH = 4
+function isPlainContainer(value: unknown): value is object {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+  if (Array.isArray(value)) {
+    return true
+  }
+  const proto = Object.getPrototypeOf(value)
+  return proto === Object.prototype || proto === null
+}
 
 /**
- * Structurally compares two state slice values.
- *
- * Arrays and plain objects are walked recursively up to
- * `MAX_STATE_COMPARE_DEPTH` levels; dates compare by timestamp; everything
- * else (including class instances, mirroring the `cloneState` plain-object
- * policy) compares by `Object.is`. A `false` result is always safe: it just
- * means the state update goes through.
+ * Shallowly compares two containers, matching entries with `Object.is`.
  */
-export function stateSlicesEqual(
-  a: unknown,
-  b: unknown,
-  depth: number = MAX_STATE_COMPARE_DEPTH,
-): boolean {
+function shallowEntriesEqual(a: object, b: object): boolean {
+  if (Array.isArray(a) || Array.isArray(b)) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+      return false
+    }
+    for (let i = 0; i < a.length; i++) {
+      if (!Object.is(a[i], b[i])) {
+        return false
+      }
+    }
+    return true
+  }
+  const keysA = Object.keys(a)
+  const keysB = Object.keys(b)
+  if (keysA.length !== keysB.length) {
+    return false
+  }
+  for (let i = 0; i < keysA.length; i++) {
+    const key = keysA[i]!
+    if (
+      !hasOwn(b, key) ||
+      !Object.is(
+        (a as Record<string, unknown>)[key],
+        (b as Record<string, unknown>)[key],
+      )
+    ) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Structurally compares two state slice values, exactly as deep as stock
+ * feature state can nest and no deeper.
+ *
+ * The top-level container's entries may themselves be one more shallow
+ * container: an array of flat objects (`sorting`, `columnFilters`,
+ * `cellSelection`) or an object of flat arrays (`columnPinning`,
+ * `rowPinning`). Anything below that (such as an array-valued filter value)
+ * compares by `Object.is`. A `false` result is always safe: it just means the
+ * state update goes through, which is today's behavior for every write.
+ */
+export function stateSlicesEqual(a: unknown, b: unknown): boolean {
   if (Object.is(a, b)) {
     return true
   }
-  if (
-    depth <= 0 ||
-    typeof a !== 'object' ||
-    a === null ||
-    typeof b !== 'object' ||
-    b === null
-  ) {
+  if (!isPlainContainer(a) || !isPlainContainer(b)) {
     return false
   }
   if (Array.isArray(a) || Array.isArray(b)) {
@@ -165,22 +199,20 @@ export function stateSlicesEqual(
       return false
     }
     for (let i = 0; i < a.length; i++) {
-      if (!stateSlicesEqual(a[i], b[i], depth - 1)) {
+      const entryA = a[i]
+      const entryB = b[i]
+      if (
+        !Object.is(entryA, entryB) &&
+        !(
+          isPlainContainer(entryA) &&
+          isPlainContainer(entryB) &&
+          shallowEntriesEqual(entryA, entryB)
+        )
+      ) {
         return false
       }
     }
     return true
-  }
-  if (a instanceof Date || b instanceof Date) {
-    return a instanceof Date && b instanceof Date && a.getTime() === b.getTime()
-  }
-  const protoA = Object.getPrototypeOf(a)
-  const protoB = Object.getPrototypeOf(b)
-  if (
-    (protoA !== Object.prototype && protoA !== null) ||
-    (protoB !== Object.prototype && protoB !== null)
-  ) {
-    return false
   }
   const keysA = Object.keys(a)
   const keysB = Object.keys(b)
@@ -192,11 +224,14 @@ export function stateSlicesEqual(
     if (!hasOwn(b, key)) {
       return false
     }
+    const entryA = (a as Record<string, unknown>)[key]
+    const entryB = (b as Record<string, unknown>)[key]
     if (
-      !stateSlicesEqual(
-        (a as Record<string, unknown>)[key],
-        (b as Record<string, unknown>)[key],
-        depth - 1,
+      !Object.is(entryA, entryB) &&
+      !(
+        isPlainContainer(entryA) &&
+        isPlainContainer(entryB) &&
+        shallowEntriesEqual(entryA, entryB)
       )
     ) {
       return false
@@ -261,14 +296,17 @@ export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
     return
   }
   const options = instance.options as {
-    atoms?: Record<string, unknown>
     state?: Record<string, unknown>
   }
-  const isExternallyOwned =
-    Boolean(options.atoms?.[key]) ||
-    Boolean(options.state && hasOwn(options.state, key))
-  if (!isExternallyOwned && (onChange as any)[DEFAULT_STATE_UPDATER]) {
-    // The updater already ran against the same base atom the default handler
+  // Only `options.state`-controlled slices keep the original updater on the
+  // default path: their base atom is an independent fallback that must keep
+  // resolving against its own value. External atoms are the same source the
+  // default handler writes (`externalAtom ?? baseAtom`), so they take the
+  // pre-resolved fast path; re-running the updater there would double the
+  // cost of large updaters (cloning a big row-selection map, for example).
+  const isControlledSlice = Boolean(options.state && hasOwn(options.state, key))
+  if (!isControlledSlice && (onChange as any)[DEFAULT_STATE_UPDATER]) {
+    // The updater already ran against the same atom the default handler
     // targets; hand it the resolved value. The closure form keeps
     // `functionalUpdate` semantics correct even when the resolved value is
     // itself a function (`globalFilter` is untyped).
