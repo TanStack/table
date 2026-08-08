@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
   aggregationFns,
-  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   constructTable,
@@ -10,6 +9,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  rowAggregationFeature,
   rowSortingFeature,
   sortFns,
 } from '../../../src'
@@ -18,6 +18,7 @@ import { serializeRowModel } from '../../../src/worker/serializeRowModel'
 import { rebuildRowModel } from '../../../src/worker/rebuildRowModel'
 import { makeObjectMap } from '../../../src/utils'
 import type { ColumnDef, RowModel, Table } from '../../../src'
+import type { TableWorkerStage } from '../../../src/worker/tableWorkerProtocol'
 
 type Person = {
   firstName: string
@@ -83,7 +84,7 @@ function roundTrip(
   workerTable: Table<typeof features, Person>,
   mainTable: Table<typeof features, Person>,
   model: RowModel<typeof features, Person>,
-  resetDepths = true,
+  stage: TableWorkerStage,
 ) {
   const transfer: Array<Transferable> = []
   const payload = serializeRowModel(
@@ -97,7 +98,7 @@ function roundTrip(
   }
   return {
     payload,
-    rebuilt: rebuildRowModel(mainTable, payload, resetDepths),
+    rebuilt: rebuildRowModel(mainTable, payload, stage),
   }
 }
 
@@ -111,10 +112,16 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     workerTable.baseAtoms.sorting.set([{ id: 'age', desc: true }])
 
     const model = workerTable.getSortedRowModel()
-    const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
+    const { payload, rebuilt } = roundTrip(
+      workerTable,
+      mainTable,
+      model,
+      'sorted',
+    )
 
     expect(payload.kind).toBe('flat')
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
     // rows are the main table's own core rows, not clones
     expect(rebuilt.rows[0]!).toBe(
       mainTable.getCoreRowModel().flatRows[Number(model.rows[0]!.id)],
@@ -129,12 +136,18 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     workerTable.baseAtoms.columnFilters.set([{ id: 'status', value: 'single' }])
 
     const model = workerTable.getFilteredRowModel()
-    const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
+    const { payload, rebuilt } = roundTrip(
+      workerTable,
+      mainTable,
+      model,
+      'filtered',
+    )
 
     expect(payload.kind).toBe('flat')
     expect(model.rows.length).toBeGreaterThan(0)
     expect(model.rows.length).toBeLessThan(data.length)
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
   })
 
   it('round-trips a grouped model as a tree with aggregates', () => {
@@ -144,7 +157,12 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     workerTable.baseAtoms.grouping.set(['status'])
 
     const model = workerTable.getGroupedRowModel()
-    const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
+    const { payload, rebuilt } = roundTrip(
+      workerTable,
+      mainTable,
+      model,
+      'grouped',
+    )
 
     expect(payload.kind).toBe('tree')
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
@@ -190,10 +208,16 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     workerTable.baseAtoms.sorting.set([{ id: 'visits', desc: false }])
 
     const model = workerTable.getSortedRowModel()
-    const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
+    const { payload, rebuilt } = roundTrip(
+      workerTable,
+      mainTable,
+      model,
+      'sorted',
+    )
 
     expect(payload.kind).toBe('tree')
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
     // leaves within each group are in the worker's sorted order
     for (let i = 0; i < model.rows.length; i++) {
       expect(ids(rebuilt.rows[i]!.subRows)).toEqual(ids(model.rows[i]!.subRows))
@@ -207,7 +231,7 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     workerTable.baseAtoms.grouping.set(['status', 'age'])
 
     const model = workerTable.getGroupedRowModel()
-    const { rebuilt } = roundTrip(workerTable, mainTable, model)
+    const { rebuilt } = roundTrip(workerTable, mainTable, model, 'grouped')
 
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
     const firstGroup = rebuilt.rows[0]!
@@ -219,6 +243,20 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     expect(firstLeaf.parentId).toBe(firstSubGroup.id)
   })
 
+  it('round-trips parent-first sorted flatRows through nested groups', () => {
+    const data = makeData(18)
+    const workerTable = makeTable(data)
+    const mainTable = makeTable(data)
+    workerTable.baseAtoms.grouping.set(['status', 'age'])
+    workerTable.baseAtoms.sorting.set([{ id: 'visits', desc: false }])
+
+    const model = workerTable.getSortedRowModel()
+    const { rebuilt } = roundTrip(workerTable, mainTable, model, 'sorted')
+
+    expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+  })
+
   it('does not reset depths when rebuilding a filtered payload (regression)', () => {
     const data = makeData(12)
     const workerTable = makeTable(data)
@@ -227,17 +265,22 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
 
     // Tree rebuild assigns leaf depths on the main table's shared row objects
     const grouped = workerTable.getGroupedRowModel()
-    const { rebuilt: rebuiltTree } = roundTrip(workerTable, mainTable, grouped)
+    const { rebuilt: rebuiltTree } = roundTrip(
+      workerTable,
+      mainTable,
+      grouped,
+      'grouped',
+    )
     const someLeaf = rebuiltTree.rows[0]!.subRows[0]!
     expect(someLeaf.depth).toBe(1)
 
     // A filtered (flat) rebuild afterward must not zero those depths
     const filtered = workerTable.getFilteredRowModel()
-    roundTrip(workerTable, mainTable, filtered, false)
+    roundTrip(workerTable, mainTable, filtered, 'filtered')
     expect(someLeaf.depth).toBe(1)
 
     // ...while a grouped-or-later flat passthrough does reset them
-    roundTrip(workerTable, mainTable, filtered, true)
+    roundTrip(workerTable, mainTable, filtered, 'grouped')
     expect(someLeaf.depth).toBe(0)
   })
 })
