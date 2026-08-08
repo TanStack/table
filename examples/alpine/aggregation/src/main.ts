@@ -91,7 +91,7 @@ const columns = columnHelper.columns([
 Alpine.data('table', () => {
   const local = Alpine.reactive({
     data: makeData(10_000),
-    rowSource: 'filtered',
+    rowSource: 'filtered' as RowSource,
   })
   const table = createTable({
     features,
