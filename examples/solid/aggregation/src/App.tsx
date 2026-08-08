@@ -1,5 +1,4 @@
 import {
-  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -11,6 +10,7 @@ import {
   createTable,
   filterFn_includesString,
   metaHelper,
+  rowAggregationFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,

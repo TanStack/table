@@ -119,7 +119,7 @@ class FacetedFilter extends LitElement {
     return html`
       <input
         type="text"
-        .value=${(columnFilterValue ?? '') as string}
+        .value=${(columnFilterValue ?? '')}
         @input=${(event: InputEvent) =>
           this.column.setFilterValue((event.target as HTMLInputElement).value)}
         placeholder="Search…"

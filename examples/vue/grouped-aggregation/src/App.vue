@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -13,6 +12,7 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,

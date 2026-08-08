@@ -1,5 +1,4 @@
 import { defineComponent } from 'vue'
-import type { Component } from 'vue'
 import {
   ArrowDown,
   ArrowUp,
@@ -10,6 +9,7 @@ import {
   PinOff,
   Ungroup,
 } from '@lucide/vue'
+import type { Component } from 'vue'
 import { useHeaderContext, useTableContext } from '@/hooks/table'
 
 import { Button } from '@/components/ui/button'

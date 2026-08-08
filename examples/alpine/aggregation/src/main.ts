@@ -1,7 +1,6 @@
 import Alpine from 'alpinejs'
 import {
   FlexRender,
-  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -13,6 +12,7 @@ import {
   createTable,
   filterFn_includesString,
   metaHelper,
+  rowAggregationFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
@@ -91,7 +91,7 @@ const columns = columnHelper.columns([
 Alpine.data('table', () => {
   const local = Alpine.reactive({
     data: makeData(10_000),
-    rowSource: 'filtered' as RowSource,
+    rowSource: 'filtered',
   })
   const table = createTable({
     features,
