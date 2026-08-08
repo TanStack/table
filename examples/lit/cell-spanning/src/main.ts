@@ -390,9 +390,7 @@ export class LitCellSpanningExample extends LitElement {
           })}
           <select
             data-testid="status-filter"
-            .value=${
-              (table.getColumn('status')!.getFilterValue()) ?? ''
-            }
+            .value=${table.getColumn('status')!.getFilterValue() ?? ''}
             @change=${(event: Event) =>
               table
                 .getColumn('status')!
@@ -409,9 +407,7 @@ export class LitCellSpanningExample extends LitElement {
             data-testid="employee-filter"
             class="filter-input"
             placeholder="Filter employees..."
-            .value=${
-              (table.getColumn('employee')!.getFilterValue()) ?? ''
-            }
+            .value=${table.getColumn('employee')!.getFilterValue() ?? ''}
             @input=${(event: Event) =>
               table
                 .getColumn('employee')!
