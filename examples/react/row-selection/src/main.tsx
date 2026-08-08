@@ -304,9 +304,9 @@ function App() {
         </div>
         <div>
           <label>State:</label>
-          {/* <pre data-testid="table-state">
+          <pre data-testid="table-state">
             {JSON.stringify(table.state, null, 2)}
-          </pre> */}
+          </pre>
         </div>
       </div>
     </>
