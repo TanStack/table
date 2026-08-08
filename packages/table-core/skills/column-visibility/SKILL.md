@@ -3,7 +3,7 @@ name: column-visibility
 description: >
   Hide columns with columnVisibilityFeature while rendering visibility-aware header, column, and cell collections. Load when hidden columns remain in the DOM, false-versus-absent state is confused, or enableHiding is misunderstood.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.1' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/framework/react/guide/column-visibility.md'

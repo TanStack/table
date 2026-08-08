@@ -1,5 +1,11 @@
 # @tanstack/table-core
 
+## 9.1.1
+
+### Patch Changes
+
+- [#6529](https://github.com/TanStack/table/pull/6529) [`269e0d8`](https://github.com/TanStack/table/commit/269e0d81c8b5c128de01cbab4ddb40240a4b8b38) - Fix `getSortedRowModel().flatRows` listing sub-rows before their parent. This restores the parent-first order used by the v8 sorted model and aligns the flattened result with the sorted `rows` tree, core row model, and paginated row model.
+
 ## 9.1.0
 
 ### Minor Changes
