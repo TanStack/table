@@ -1,5 +1,12 @@
 # @tanstack/react-table-devtools
 
+## 9.1.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @tanstack/table-devtools@9.1.1
+
 ## 9.1.0
 
 ### Patch Changes

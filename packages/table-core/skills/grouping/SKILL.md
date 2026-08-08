@@ -3,7 +3,7 @@ name: grouping
 description: >
   Group rows with columnGroupingFeature, groupedRowModel, groupedColumnMode, and manualGrouping. Load for grouped or placeholder cells and grouping interactions with expansion or pagination.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.1' }
 requires: ['core', 'table-features', 'client-vs-server']
 sources:
   - 'TanStack/table:docs/framework/react/guide/grouping.md'

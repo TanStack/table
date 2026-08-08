@@ -1,5 +1,12 @@
 # @tanstack/preact-table
 
+## 9.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`269e0d8`](https://github.com/TanStack/table/commit/269e0d81c8b5c128de01cbab4ddb40240a4b8b38)]:
+  - @tanstack/table-core@9.1.1
+
 ## 9.1.0
 
 ### Patch Changes
