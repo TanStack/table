@@ -15,7 +15,7 @@
     "@lucide/vue": "^1.28.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/pacer": "^0.21.1",
-    "@tanstack/vue-table": "^9.1.0",
+    "@tanstack/vue-table": "^9.1.1",
     "@vueuse/core": "^14.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

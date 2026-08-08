@@ -3,7 +3,7 @@ name: column-pinning
 description: >
   Pin columns into logical start, center, and end regions with columnPinningFeature and renderer-owned sticky CSS. Load for RTL offsets, z-index, backgrounds, overflow, widths, gaps, or overlaps.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.1' }
 requires: ['core', 'table-features', 'column-sizing']
 sources:
   - 'TanStack/table:docs/framework/react/guide/column-pinning.md'
