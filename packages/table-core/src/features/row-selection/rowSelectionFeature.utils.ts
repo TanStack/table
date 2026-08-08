@@ -4,7 +4,6 @@ import {
   copyInstancePropertiesWithoutMemos,
   hasOwn,
   makeObjectMap,
-  setStateSlice,
 } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -51,7 +50,12 @@ export function table_setRowSelection<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<RowSelectionState>,
 ) {
-  setStateSlice(table, 'rowSelection', updater)
+  // Row selection deliberately skips the central no-op guard (setStateSlice).
+  // It has no auto reset, so every write is a user gesture or an explicit
+  // reset where a redundant update is harmless, and selection maps are the
+  // one state slice that scales with row count, where the structural compare
+  // is not free (tens of ms at millions of selected rows).
+  table.options.onRowSelectionChange?.(updater)
 }
 
 /**

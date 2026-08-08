@@ -98,6 +98,22 @@ describe('table_setRowSelection', () => {
 
     expect(onRowSelectionChange).toHaveBeenCalledWith({ '0': true })
   })
+
+  it('should fire even for structural no-ops (row selection skips the no-op guard)', () => {
+    // Row selection has no auto reset, so every write is a user gesture, and
+    // selection maps scale with row count, making the structural compare the
+    // only guard cost that grows with data size. The slice therefore opts out
+    // of the central setStateSlice guard on purpose.
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionChange,
+      state: { rowSelection: { '0': true } },
+    })
+
+    table_setRowSelection(table, { '0': true })
+
+    expect(onRowSelectionChange).toHaveBeenCalledTimes(1)
+  })
 })
 
 describe('table_resetRowSelection', () => {
@@ -814,10 +830,10 @@ describe('table_toggleAllRowsSelected', () => {
 
     table_toggleAllRowsSelected(table, true)
 
-    expect(enableSubRowSelection).toHaveBeenCalledTimes(6)
     expect(
       Object.keys(getUpdaterResult(onRowSelectionChange, {})),
     ).toHaveLength(14)
+    expect(enableSubRowSelection).toHaveBeenCalledTimes(6)
   })
 
   it('should keep rows that cannot be selected when deselecting all', () => {

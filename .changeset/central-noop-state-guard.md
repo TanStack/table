@@ -13,3 +13,4 @@ Behavior notes:
 - State updaters must be pure. For uncontrolled state the original updater runs exactly once; user-provided handlers still receive the original updater so host state containers can resolve it against their own latest state.
 - Sequential same-tick updates to a controlled slice compare against the last committed value, matching the semantics of the previous ad-hoc guards.
 - The previous ad-hoc guards in `resetPageIndex`, `resetPageSize`, `toggleAllRowsExpanded`, and the cell-selection drag handler were removed in favor of the central compare.
+- `rowSelection` is deliberately exempt from the guard: it has no auto reset (so no render-loop risk), every write comes from a user gesture or an explicit reset, and selection maps are the one slice that scales with row count, where the structural compare would be the only guard cost that grows with data size.

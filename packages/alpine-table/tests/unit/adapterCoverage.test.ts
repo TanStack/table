@@ -230,9 +230,7 @@ describe('Alpine adapter reactivity', () => {
 
     options.onRowSelectionChange = secondHandler
     await flushEffects()
-    // The mock handlers never write state back, so selection is still empty;
-    // select-all stays a real change while deselect-all would be a no-op.
-    table.toggleAllRowsSelected(true)
+    table.toggleAllRowsSelected(false)
 
     expect(firstHandler).toHaveBeenCalledTimes(1)
     expect(secondHandler).toHaveBeenCalledTimes(1)
