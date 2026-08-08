@@ -9,7 +9,7 @@ title: skipFirstRun
 function skipFirstRun(fn): () => void;
 ```
 
-Defined in: [utils.ts:217](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L217)
+Defined in: [utils.ts:381](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L381)
 
 Wraps a callback so that its first invocation is skipped.
 

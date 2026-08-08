@@ -237,7 +237,11 @@ export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
     readonly _reactivity: { untrack: <T>(fn: () => T) => T }
   },
   key: K,
-  updater: Updater<TableState<any>[K & keyof TableState<any>]>,
+  // Unknown keys (custom feature slices) accept any updater shape instead of
+  // collapsing to `never`.
+  updater: Updater<
+    K extends keyof TableState<any> ? TableState<any>[K] : unknown
+  >,
 ): void {
   const onChangeKey = `on${key.charAt(0).toUpperCase()}${key.slice(1)}Change`
   const onChange = (instance.options as Record<string, unknown>)[

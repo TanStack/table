@@ -9,7 +9,7 @@ title: row_getCanMultiSelect
 function row_getCanMultiSelect<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:667](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L667)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:668](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L668)
 
 Checks whether this row can be selected alongside other rows.
 

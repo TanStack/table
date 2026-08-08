@@ -9,7 +9,7 @@ title: column_getSize
 function column_getSize<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L71)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L72)
 
 Resolves a column's current pixel size.
 

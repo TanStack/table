@@ -9,7 +9,7 @@ title: table_getColumnOffsets
 function table_getColumnOffsets<TFeatures, TData>(table): ColumnOffsetsByPosition;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L131)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:132](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L132)
 
 Builds start and after offset maps for every visible leaf column, computed
 once per pinning region plus the full visible list.

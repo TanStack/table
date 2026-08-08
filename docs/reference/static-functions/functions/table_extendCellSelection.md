@@ -9,7 +9,7 @@ title: table_extendCellSelection
 function table_extendCellSelection<TFeatures, TData>(table, direction): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1068](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1068)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1073](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1073)
 
 Extends the active range one step in a direction, keeping its anchor fixed.
 

@@ -9,7 +9,7 @@ title: table_getCellSelectionRowIds
 function table_getCellSelectionRowIds<TFeatures, TData>(table): string[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1316](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1316)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1321](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1321)
 
 Returns the ids of all rows intersected by the selection.
 

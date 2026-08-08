@@ -9,7 +9,7 @@ title: header_getStart
 function header_getStart<TFeatures, TData, TValue>(header): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:304](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L304)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:305](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L305)
 
 Computes a header's offset from the start of its header group.
 

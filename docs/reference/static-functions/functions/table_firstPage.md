@@ -9,7 +9,7 @@ title: table_firstPage
 function table_firstPage<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:360](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L360)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:352](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L352)
 
 Moves the table to the first page.
 

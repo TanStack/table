@@ -9,7 +9,7 @@ title: table_getToggleAllRowsSelectedHandler
 function table_getToggleAllRowsSelectedHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:477](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L477)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:478](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L478)
 
 Creates a checkbox-style handler that selects or deselects all rows.
 

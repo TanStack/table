@@ -6,7 +6,7 @@ title: table_setPagination
 # Function: table\_setPagination()
 
 ```ts
-function table_setPagination<TFeatures, TData>(table, updater): void | undefined;
+function table_setPagination<TFeatures, TData>(table, updater): void;
 ```
 
 Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L65)
@@ -39,7 +39,7 @@ updater path as the instance API.
 
 ## Returns
 
-`void` \| `undefined`
+`void`
 
 ## Example
 

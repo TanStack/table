@@ -9,7 +9,7 @@ title: table_autoResetCellSelection
 function table_autoResetCellSelection<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L99)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L104)
 
 Schedules a cell selection reset after `data` changes.
 
