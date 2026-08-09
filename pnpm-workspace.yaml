@@ -3,7 +3,6 @@ packages:
   - packages/*
 
 overrides:
-  '@types/react': 19.2.16
   '@tanstack/alpine-table': 'workspace:*'
   '@tanstack/angular-table-devtools': 'workspace:*'
   '@tanstack/angular-table': 'workspace:*'
@@ -48,8 +47,6 @@ allowBuilds:
 
 cleanupUnusedCatalogs: true
 minimumReleaseAge: 1440
-minimumReleaseAgeExclude:
-  - '@tanstack/octane-store@0.12.1'
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true

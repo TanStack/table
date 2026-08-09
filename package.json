@@ -93,25 +93,5 @@
     "typescript": "6.0.3",
     "vite": "^8.2.0",
     "vitest": "^4.1.10"
-  },
-  "overrides": {
-    "@tanstack/alpine-table": "workspace:*",
-    "@tanstack/angular-table": "workspace:*",
-    "@tanstack/angular-table-devtools": "workspace:*",
-    "@tanstack/ember-table": "workspace:*",
-    "@tanstack/lit-table": "workspace:*",
-    "@tanstack/match-sorter-utils": "workspace:*",
-    "@tanstack/octane-table": "workspace:*",
-    "@tanstack/preact-table": "workspace:*",
-    "@tanstack/preact-table-devtools": "workspace:*",
-    "@tanstack/react-table": "workspace:*",
-    "@tanstack/react-table-devtools": "workspace:*",
-    "@tanstack/solid-table": "workspace:*",
-    "@tanstack/solid-table-devtools": "workspace:*",
-    "@tanstack/svelte-table": "workspace:*",
-    "@tanstack/table-core": "workspace:*",
-    "@tanstack/table-devtools": "workspace:*",
-    "@tanstack/vue-table": "workspace:*",
-    "@tanstack/vue-table-devtools": "workspace:*"
   }
 }
