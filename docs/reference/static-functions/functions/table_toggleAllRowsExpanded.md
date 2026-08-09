@@ -9,7 +9,7 @@ title: table_toggleAllRowsExpanded
 function table_toggleAllRowsExpanded<TFeatures, TData>(table, expanded?): void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L88)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L94)
 
 Expands or collapses every row.
 

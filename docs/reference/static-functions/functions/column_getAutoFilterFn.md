@@ -11,7 +11,7 @@ function column_getAutoFilterFn<TFeatures, TData, TValue>(column):
   | undefined;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L47)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L48)
 
 Chooses a built-in filter function from the column's first core row value.
 

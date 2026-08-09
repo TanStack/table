@@ -9,7 +9,7 @@ title: table_getEndLeafColumns
 function table_getEndLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:732](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L732)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:737](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L737)
 
 Resolves leaf columns pinned to the end region.
 

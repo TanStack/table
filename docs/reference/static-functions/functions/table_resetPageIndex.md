@@ -9,7 +9,7 @@ title: table_resetPageIndex
 function table_resetPageIndex<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L144)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L156)
 
 Resets only `pagination.pageIndex`.
 

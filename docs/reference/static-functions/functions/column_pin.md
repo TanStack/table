@@ -9,7 +9,7 @@ title: column_pin
 function column_pin<TFeatures, TData, TValue>(column, position): void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L60)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L65)
 
 Moves this column's leaf column ids into a pinning region.
 

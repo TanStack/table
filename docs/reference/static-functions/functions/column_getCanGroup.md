@@ -9,7 +9,7 @@ title: column_getCanGroup
 function column_getCanGroup<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L65)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L70)
 
 Checks whether this column can be used for grouping.
 

@@ -9,7 +9,7 @@ title: table_getCanPreviousPage
 function table_getCanPreviousPage<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:244](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L244)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:256](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L256)
 
 Checks whether the current page index can move backward.
 

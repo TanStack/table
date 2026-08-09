@@ -292,6 +292,7 @@ title: index
 - [SortDirection](type-aliases/SortDirection.md)
 - [SortFnOption](type-aliases/SortFnOption.md)
 - [SortingState](type-aliases/SortingState.md)
+- [StateSliceEqualityFn](type-aliases/StateSliceEqualityFn.md)
 - [StringOrTemplateHeader](type-aliases/StringOrTemplateHeader.md)
 - [Table](type-aliases/Table.md)
 - [Table\_RowModels](type-aliases/Table_RowModels.md)

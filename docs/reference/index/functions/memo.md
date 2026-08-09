@@ -9,7 +9,7 @@ title: memo
 function memo<TDeps, TDepArgs, TResult>(__namedParameters): (depArgs?) => TResult;
 ```
 
-Defined in: [utils.ts:330](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L330)
+Defined in: [utils.ts:298](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L298)
 
 Creates a dependency-tracked memoized function for table internals.
 

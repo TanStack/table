@@ -9,7 +9,7 @@ title: table_getPageOptions
 function table_getPageOptions<TFeatures, TData>(table): number[];
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L221)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L233)
 
 Builds the zero-based page indexes available for the current page count.
 

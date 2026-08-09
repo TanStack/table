@@ -9,7 +9,7 @@ title: table_getPreSelectedRowModel
 function table_getPreSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:218](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L218)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L221)
 
 Reads the row model before row selection is projected into selected rows.
 

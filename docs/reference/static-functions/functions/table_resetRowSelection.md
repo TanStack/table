@@ -9,7 +9,7 @@ title: table_resetRowSelection
 function table_resetRowSelection<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L69)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L72)
 
 Resets `rowSelection` to the configured initial state or feature default.
 

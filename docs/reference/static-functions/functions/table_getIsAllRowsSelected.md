@@ -9,7 +9,7 @@ title: table_getIsAllRowsSelected
 function table_getIsAllRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:356](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L356)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:359](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L359)
 
 Checks whether every selectable filtered row is selected.
 

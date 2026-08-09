@@ -9,7 +9,7 @@ title: row_getVisibleCellsByColumnId
 function row_getVisibleCellsByColumnId<TFeatures, TData>(row): Record<string, Cell<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:216](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L216)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:217](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L217)
 
 Builds a lookup map of this row's visible cells keyed by column id.
 

@@ -9,7 +9,7 @@ title: cell_getSelectionEdges
 function cell_getSelectionEdges<TFeatures, TData, TValue>(cell): CellSelectionEdges;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:654](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L654)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:659](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L659)
 
 Returns which sides of this cell sit on the outer boundary of the selection.
 

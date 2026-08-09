@@ -9,7 +9,7 @@ title: column_getFirstSortDir
 function column_getFirstSortDir<TFeatures, TData, TValue>(column): "asc" | "desc";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:368](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L368)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:373](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L373)
 
 Resolves the first direction used when this column begins sorting.
 

@@ -9,7 +9,7 @@ title: cell_getTabIndex
 function cell_getTabIndex<TFeatures, TData, TValue>(cell): number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:634](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L634)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:639](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L639)
 
 Returns `0` for the focused cell and `-1` otherwise, for roving tabindex.
 

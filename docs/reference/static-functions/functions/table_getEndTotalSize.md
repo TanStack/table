@@ -9,7 +9,7 @@ title: table_getEndTotalSize
 function table_getEndTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:454](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L454)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:456](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L456)
 
 Sums the rendered size of the logical end pinned header region.
 

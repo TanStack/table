@@ -9,7 +9,7 @@ title: column_getGroupedIndex
 function column_getGroupedIndex<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L106)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L111)
 
 Finds this column's position in the ordered grouping state.
 

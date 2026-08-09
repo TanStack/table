@@ -9,7 +9,7 @@ title: table_setCellSelection
 function table_setCellSelection<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L54)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L55)
 
 Routes a cell selection updater through the table's selection change handler.
 

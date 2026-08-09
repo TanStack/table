@@ -9,7 +9,7 @@ title: cell_getIsFocused
 function cell_getIsFocused<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:610](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L610)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:615](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L615)
 
 Checks whether this cell is the active cell.
 

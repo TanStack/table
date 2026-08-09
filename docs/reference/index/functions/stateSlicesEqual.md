@@ -6,21 +6,18 @@ title: stateSlicesEqual
 # Function: stateSlicesEqual()
 
 ```ts
-function stateSlicesEqual(
-   a,
-   b,
-   depth): boolean;
+function stateSlicesEqual(a, b): boolean;
 ```
 
-Defined in: [utils.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L146)
+Defined in: [utils.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L155)
 
-Structurally compares two state slice values.
+Structurally compares two state slice values as deeply as stock feature
+state can nest and no deeper.
 
-Arrays and plain objects are walked recursively up to
-`MAX_STATE_COMPARE_DEPTH` levels; dates compare by timestamp; everything
-else (including class instances, mirroring the `cloneState` plain-object
-policy) compares by `Object.is`. A `false` result is always safe: it just
-means the state update goes through.
+Three container levels cover flat maps and arrays, arrays of state objects,
+array-valued filter values, and `columnResizing.columnSizingStart` tuples.
+Deeper containers and non-plain values compare by reference. A `false`
+result is always safe: the state update simply proceeds.
 
 ## Parameters
 
@@ -31,10 +28,6 @@ means the state update goes through.
 ### b
 
 `unknown`
-
-### depth
-
-`number` = `MAX_STATE_COMPARE_DEPTH`
 
 ## Returns
 

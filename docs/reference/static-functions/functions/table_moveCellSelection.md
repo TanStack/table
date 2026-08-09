@@ -9,7 +9,7 @@ title: table_moveCellSelection
 function table_moveCellSelection<TFeatures, TData>(table, direction): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1036](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1036)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1041](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1041)
 
 Moves the selection one step in a direction, collapsing it to a single cell.
 

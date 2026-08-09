@@ -9,7 +9,7 @@ title: table_getIsAllPageRowsSelected
 function table_getIsAllPageRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L396)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:399](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L399)
 
 Checks whether every selectable row on the current page is selected.
 

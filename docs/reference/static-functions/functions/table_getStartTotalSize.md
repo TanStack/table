@@ -9,7 +9,7 @@ title: table_getStartTotalSize
 function table_getStartTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:404](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L404)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:406](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L406)
 
 Sums the rendered size of the logical start pinned header region.
 

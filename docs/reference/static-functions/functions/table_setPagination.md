@@ -9,7 +9,7 @@ title: table_setPagination
 function table_setPagination<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L65)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L77)
 
 Routes a pagination updater through the table's pagination change handler.
 

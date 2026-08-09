@@ -9,7 +9,7 @@ title: column_getIndex
 function column_getIndex<TFeatures, TData, TValue>(column, position?): number;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L81)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L82)
 
 Finds this column's index within a visible pinning region.
 

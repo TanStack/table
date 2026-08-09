@@ -9,7 +9,7 @@ title: table_setPageIndex
 function table_setPageIndex<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:110](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L110)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L122)
 
 Updates `pagination.pageIndex` and clamps it to the known page range.
 
