@@ -3,6 +3,7 @@ import {
   Injector,
   NgZone,
   assertInInjectionContext,
+  computed,
   effect,
   inject,
   untracked,
@@ -91,11 +92,12 @@ export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => TableOptions<TFeatures, TData>,
+  _options: () => TableOptions<TFeatures, TData>,
 ): AngularTable<TFeatures, TData> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
   const ngZone = inject(NgZone)
+  const options = computed(() => _options())
 
   return ngZone.runOutsideAngular(() =>
     lazyInit(() => {
@@ -114,20 +116,20 @@ export function injectTable<
         table._reactivity.unmount?.()
       })
 
-      let isMount = true
+      let previousOptions = options()
       effect(
         () => {
-          const newOptions = options()
-          if (isMount) {
-            isMount = false
+          const currentOptions = options()
+          if (previousOptions === currentOptions) {
             return
           }
           untracked(() =>
             table.setOptions((previous) => ({
               ...previous,
-              ...newOptions,
+              ...currentOptions,
             })),
           )
+          previousOptions = currentOptions
         },
         { injector, debugName: 'tableOptionsUpdate' },
       )
