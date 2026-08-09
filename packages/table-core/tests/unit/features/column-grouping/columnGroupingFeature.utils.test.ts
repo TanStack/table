@@ -210,7 +210,7 @@ describe('table_setGrouping / table_resetGrouping', () => {
 
     table_setGrouping(table, ['status'])
 
-    expect(onGroupingChange).toHaveBeenCalledWith(['status'])
+    expect(getUpdaterResult(onGroupingChange, [])).toEqual(['status'])
   })
 
   it('should reset to an empty array when defaultState is true', () => {
@@ -222,7 +222,7 @@ describe('table_setGrouping / table_resetGrouping', () => {
 
     table_resetGrouping(table, true)
 
-    expect(onGroupingChange).toHaveBeenCalledWith([])
+    expect(getUpdaterResult(onGroupingChange, ['status'])).toEqual([])
   })
 
   it('should reset to the initial grouping by default', () => {
@@ -235,7 +235,7 @@ describe('table_setGrouping / table_resetGrouping', () => {
 
     table_resetGrouping(table)
 
-    expect(onGroupingChange).toHaveBeenCalledWith(['status'])
+    expect(getUpdaterResult(onGroupingChange, [])).toEqual(['status'])
   })
 })
 

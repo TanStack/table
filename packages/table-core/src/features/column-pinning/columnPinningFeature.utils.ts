@@ -5,7 +5,12 @@ import {
   table_getVisibleLeafColumns,
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
-import { callMemoOrStaticFn, cloneState, setStateSlice } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  setStateSlice,
+  stateSlicesEqual,
+} from '../../utils'
 import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Cell } from '../../types/Cell'
@@ -311,7 +316,7 @@ export function table_setColumnPinning<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnPinningState>,
 ) {
-  setStateSlice(table, 'columnPinning', updater)
+  setStateSlice(table, 'columnPinning', updater, stateSlicesEqual)
 }
 
 /**

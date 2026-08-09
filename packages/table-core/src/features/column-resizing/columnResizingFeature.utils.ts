@@ -349,6 +349,8 @@ export function table_setColumnResizing<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<columnResizingState>,
 ) {
+  // Pointer moves intentionally produce high-frequency transient state. The
+  // local resize calculations already decide whether a write is necessary.
   setStateSlice(table, 'columnResizing', updater)
 }
 

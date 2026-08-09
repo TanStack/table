@@ -4,6 +4,7 @@ import {
   hasOwn,
   makeObjectMap,
   setStateSlice,
+  stateSlicesEqual,
 } from '../../utils'
 import { getDefaultColumnPinningState } from '../column-pinning/columnPinningFeature.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -290,7 +291,7 @@ export function table_setColumnVisibility<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnVisibilityState>,
 ) {
-  setStateSlice(table, 'columnVisibility', updater)
+  setStateSlice(table, 'columnVisibility', updater, stateSlicesEqual)
 }
 
 /**

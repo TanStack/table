@@ -71,10 +71,9 @@ describe('table_setPagination', () => {
     table_setPagination(table, { pageIndex: 2, pageSize: 5 })
 
     expect(onPaginationChange).toHaveBeenCalledTimes(1)
-    expect(onPaginationChange).toHaveBeenCalledWith({
-      pageIndex: 2,
-      pageSize: 5,
-    })
+    expect(
+      getUpdaterResult(onPaginationChange, getDefaultPaginationState()),
+    ).toEqual({ pageIndex: 2, pageSize: 5 })
   })
 
   it('should resolve functional updaters against the previous state', () => {
@@ -102,7 +101,9 @@ describe('table_resetPagination', () => {
 
     table_resetPagination(table, true)
 
-    expect(onPaginationChange).toHaveBeenCalledWith(getDefaultPaginationState())
+    expect(
+      getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 5 }),
+    ).toEqual(getDefaultPaginationState())
   })
 
   it('should reset to the initial state by default', () => {
@@ -115,10 +116,9 @@ describe('table_resetPagination', () => {
 
     table_resetPagination(table)
 
-    expect(onPaginationChange).toHaveBeenCalledWith({
-      pageIndex: 2,
-      pageSize: 5,
-    })
+    expect(
+      getUpdaterResult(onPaginationChange, getDefaultPaginationState()),
+    ).toEqual({ pageIndex: 2, pageSize: 5 })
   })
 })
 
@@ -210,7 +210,8 @@ describe('table_resetPageIndex', () => {
 
     table_resetPageIndex(table, true)
 
-    expect(onPaginationChange).not.toHaveBeenCalled()
+    const pagination = getDefaultPaginationState()
+    expect(getUpdaterResult(onPaginationChange, pagination)).toBe(pagination)
   })
 
   it('should reset to the initial page index by default', () => {
@@ -248,7 +249,8 @@ describe('table_resetPageSize', () => {
 
     table_resetPageSize(table, true)
 
-    expect(onPaginationChange).not.toHaveBeenCalled()
+    const pagination = getDefaultPaginationState()
+    expect(getUpdaterResult(onPaginationChange, pagination)).toBe(pagination)
   })
 
   it('should reset to the initial page size by default', () => {

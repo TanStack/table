@@ -3,6 +3,7 @@ import {
   cloneState,
   makeObjectMap,
   setStateSlice,
+  stateSlicesEqual,
 } from '../../utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
 import {
@@ -58,6 +59,8 @@ export function table_setCellSelection<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<CellSelectionState>,
 ) {
+  // Selection updates are pointer-driven and ranges can be large. Keep the
+  // hot path direct; auto-reset protection is applied specifically in reset.
   setStateSlice(table, 'cellSelection', updater)
 }
 
@@ -76,12 +79,14 @@ export function table_resetCellSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
-  table_setCellSelection(
+  setStateSlice(
     table,
+    'cellSelection',
     defaultState
       ? getDefaultCellSelectionState()
       : (cloneState(table.initialState.cellSelection) ??
           getDefaultCellSelectionState()),
+    stateSlicesEqual,
   )
 }
 
@@ -1506,6 +1511,10 @@ export function cell_getSelectionExtendHandler<
 
     const rowId = cell.row.id
     const columnId = cell.column.id
+
+    // Avoid allocating and comparing a replacement range when pointer events
+    // re-enter the cell the active range already focuses.
+    if (active.focusRowId === rowId && active.focusColumnId === columnId) return
 
     table_setCellSelection(table, (old) => {
       if (!old.length) return old

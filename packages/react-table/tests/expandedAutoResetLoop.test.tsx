@@ -18,8 +18,9 @@ import type { ColumnDef, ExpandedState } from '@tanstack/table-core'
 // data identity change fired `table_autoResetExpanded` ->
 // `onExpandedChange(new empty map)`, the controlled consumer re-rendered
 // with yet another fresh `data` reference, and the app looped: 50 renders
-// (capped) with 48 onExpandedChange calls. With the guard the reset resolves
-// to a state structurally equal to `{}` and never fires.
+// (capped) with 48 onExpandedChange calls. With the owner-side guard the reset
+// updater resolves to the host's existing `{}` reference, so it does not cause
+// the next render that previously sustained the loop.
 
 type Data = { id: string; title: string }
 
@@ -84,7 +85,7 @@ afterEach(() => {
 })
 
 describe('expanded auto reset with an unstable data reference (#6519)', () => {
-  test('items ?? [] does not loop and never fires onExpandedChange', async () => {
+  test('items ?? [] does not loop when the reset reaches controlled state', async () => {
     const { App, renderCount, onExpandedChangeCalls } = makeApp()
 
     // The loop needs a second render to produce a fresh `data` identity;
@@ -95,7 +96,7 @@ describe('expanded auto reset with an unstable data reference (#6519)', () => {
     })
     await act(() => Promise.resolve())
 
-    expect(onExpandedChangeCalls.current).toBe(0)
+    expect(onExpandedChangeCalls.current).toBe(1)
     expect(renderCount.current).toBeLessThanOrEqual(4)
   })
 
@@ -174,5 +175,38 @@ describe('expanded auto reset with an unstable data reference (#6519)', () => {
     expect(onExpandedChangeCalls.current).toBe(1)
     expect(tableRef.atoms.expanded.get()).toEqual({})
     expect(renderCount.current).toBeLessThanOrEqual(6)
+  })
+
+  test('same-tick controlled updates compose against the host queue', async () => {
+    const onExpandedChangeCalls = { current: 0 }
+    let tableRef: any
+
+    function App() {
+      const [expanded, setExpanded] = React.useState<ExpandedState>({})
+      const table = useTable({
+        features,
+        columns,
+        data: [],
+        state: { expanded },
+        onExpandedChange: (updater) => {
+          onExpandedChangeCalls.current++
+          setExpanded(updater)
+        },
+      })
+      tableRef = table
+
+      return <output data-testid="expanded">{JSON.stringify(expanded)}</output>
+    }
+
+    const view = render(<App />)
+
+    await act(async () => {
+      tableRef.setExpanded({ '1': true })
+      tableRef.resetExpanded(true)
+    })
+
+    expect(onExpandedChangeCalls.current).toBe(2)
+    expect(view.getByTestId('expanded').textContent).toBe('{}')
+    expect(tableRef.atoms.expanded.get()).toEqual({})
   })
 })

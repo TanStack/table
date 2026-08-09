@@ -79,7 +79,7 @@ describe('table_resetExpanded', () => {
 
     table_resetExpanded(table, true)
 
-    expect(onExpandedChange).toHaveBeenCalledWith({})
+    expect(getUpdaterResult(onExpandedChange, { '0': true })).toEqual({})
   })
 
   it('should reset to the initial expanded map by default', () => {
@@ -92,7 +92,9 @@ describe('table_resetExpanded', () => {
 
     table_resetExpanded(table)
 
-    expect(onExpandedChange).toHaveBeenCalledWith({ '0': true })
+    expect(getUpdaterResult(onExpandedChange, { '1': true })).toEqual({
+      '0': true,
+    })
   })
 
   it('should preserve an expanded-all initial state', () => {
@@ -105,7 +107,7 @@ describe('table_resetExpanded', () => {
 
     table_resetExpanded(table)
 
-    expect(onExpandedChange).toHaveBeenCalledWith(true)
+    expect(getUpdaterResult(onExpandedChange, { '0': true })).toBe(true)
   })
 })
 

@@ -293,7 +293,9 @@ describe('table_setColumnPinning', () => {
       end: [],
     })
 
-    expect(onColumnPinningChange).toHaveBeenCalledWith({
+    expect(
+      getUpdaterResult(onColumnPinningChange, { start: [], end: [] }),
+    ).toEqual({
       start: ['firstName'],
       end: [],
     })
@@ -310,10 +312,12 @@ describe('table_resetColumnPinning', () => {
 
     table_resetColumnPinning(table, true)
 
-    expect(onColumnPinningChange).toHaveBeenCalledWith({
-      start: [],
-      end: [],
-    })
+    expect(
+      getUpdaterResult(onColumnPinningChange, {
+        start: ['firstName'],
+        end: [],
+      }),
+    ).toEqual({ start: [], end: [] })
   })
 
   it('should reset to initial state when defaultState is false', () => {
@@ -332,10 +336,9 @@ describe('table_resetColumnPinning', () => {
 
     table_resetColumnPinning(table, false)
 
-    expect(onColumnPinningChange).toHaveBeenCalledWith({
-      start: ['firstName'],
-      end: [],
-    })
+    expect(
+      getUpdaterResult(onColumnPinningChange, { start: [], end: [] }),
+    ).toEqual({ start: ['firstName'], end: [] })
   })
 })
 

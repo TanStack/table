@@ -2,15 +2,14 @@
 '@tanstack/table-core': patch
 ---
 
-Centralize state updates behind a `setStateSlice` util that skips no-op writes. Every `table.setX` router now resolves the updater once against the slice's current value and compares the result with `stateSlicesEqual`; when nothing changed, the `onXChange` handler is not called, no atom is written, and no re-render is triggered. This applies uniformly to setters, toggles, resets, and auto resets across all state slices, for both internally owned and externally controlled state.
+Centralize state updates behind a `setStateSlice` util with an optional structural no-op policy. Equality-guarded slices give their state owner a functional updater that resolves against the owner's latest value and returns the existing reference when nothing changed. Atom and framework state owners can then skip the write and re-render without comparing against a potentially stale controlled table snapshot.
 
 This removes an entire class of render loops where an auto reset (for example `autoResetExpanded` after a `data` reference change) fired a change handler with a freshly allocated but semantically identical value, causing controlled-state consumers to re-render, produce a new `data` reference, and loop.
 
 Behavior notes:
 
-- `onXChange` handlers are now state-change events, not intent events: they no longer fire when the update resolves to a structurally equal value, including a newly allocated but equivalent object.
-- `stateSlicesEqual` compares exactly as deep as stock feature state nests: a container whose entries may be one more flat container (array of flat objects like `sorting`/`columnFilters`/`cellSelection`, object of flat arrays like `columnPinning`). Deeper values, such as an array-valued filter value, compare by reference and simply let the update fire.
-- State updaters must be pure. For uncontrolled state the original updater runs exactly once; user-provided handlers still receive the original updater so host state containers can resolve it against their own latest state.
-- Sequential same-tick updates to a controlled slice compare against the last committed value, matching the semantics of the previous ad-hoc guards.
-- The previous ad-hoc guards in `resetPageIndex`, `resetPageSize`, `toggleAllRowsExpanded`, and the cell-selection drag handler were removed in favor of the central compare.
-- `rowSelection` is deliberately exempt from the guard: it has no auto reset (so no render-loop risk), every write comes from a user gesture or an explicit reset, and selection maps are the one slice that scales with row count, where the structural compare would be the only guard cost that grows with data size.
+- A custom `onXChange` handler is still invoked for an apparent no-op. Only its state container knows the latest queued value, so it performs the equality check when it applies the guarded updater. This preserves same-tick update composition in frameworks such as React.
+- State updaters are evaluated once, by the state owner. Controlled fallback atoms therefore remain correct if control is later released, and external atom owners do not run functional updaters twice.
+- `stateSlicesEqual` compares enumerable string and symbol keys through the three container levels used by stock state. Sparse arrays remain distinct from explicit `undefined` entries; deeper or non-plain values compare by reference and safely allow the update.
+- Structural equality is opt-in per slice. Opaque `globalFilter` values and row-scaled `rowSelection`/`rowPinning` maps stay direct. The high-frequency `columnSizing`, `columnResizing`, and ordinary cell-selection write paths also avoid a comparison on every pointer update.
+- Auto-reset-prone cell selection applies equality specifically to resets, while its drag handler keeps an O(1) active-focus guard. Expanded state similarly guards reset/auto-reset while ordinary writes stay direct, and toggle-all keeps its explicit O(1) no-op checks.

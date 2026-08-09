@@ -21,6 +21,7 @@ import {
 import { testFeatures } from '../../../fixtures/features'
 import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
+import { getUpdaterResult } from '../../../helpers/testUtils'
 import type { Table, TableOptions } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
@@ -182,7 +183,7 @@ describe('table_setColumnOrder', () => {
 
     table_setColumnOrder(table, newOrder)
 
-    expect(onColumnOrderChange).toHaveBeenCalledWith(newOrder)
+    expect(getUpdaterResult(onColumnOrderChange, [])).toEqual(newOrder)
   })
 })
 
@@ -196,7 +197,7 @@ describe('table_resetColumnOrder', () => {
 
     table_resetColumnOrder(table, true)
 
-    expect(onColumnOrderChange).toHaveBeenCalledWith([])
+    expect(getUpdaterResult(onColumnOrderChange, ['col1'])).toEqual([])
   })
 
   it('should reset to initialState when defaultState is false', () => {
@@ -210,7 +211,9 @@ describe('table_resetColumnOrder', () => {
 
     table_resetColumnOrder(table, false)
 
-    expect(onColumnOrderChange).toHaveBeenCalledWith(initialColumnOrder)
+    expect(getUpdaterResult(onColumnOrderChange, [])).toEqual(
+      initialColumnOrder,
+    )
   })
 })
 

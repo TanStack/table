@@ -1,11 +1,16 @@
 import { describe, expect, it, vi } from 'vitest'
+import { createAtom } from '@tanstack/store'
 import {
   constructTable,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
 } from '../../src'
-import { setStateSlice, stateSlicesEqual } from '../../src/utils'
+import {
+  functionalUpdate,
+  setStateSlice,
+  stateSlicesEqual,
+} from '../../src/utils'
 import {
   table_firstPage,
   table_resetExpanded,
@@ -16,7 +21,7 @@ import {
 import { testFeatures } from '../fixtures/features'
 import { generateTestColumnDefs } from '../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../fixtures/data/generateTestData'
-import type { Table, TableOptions } from '../../src'
+import type { SortingState, Table, TableOptions, Updater } from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 const features = testFeatures({
@@ -74,10 +79,44 @@ describe('stateSlicesEqual', () => {
     ).toBe(false)
   })
 
+  it('should compare three container levels used by stock state', () => {
+    expect(
+      stateSlicesEqual(
+        [{ id: 'age', value: [0, 10] }],
+        [{ id: 'age', value: [0, 10] }],
+      ),
+    ).toBe(true)
+    expect(
+      stateSlicesEqual(
+        { columnSizingStart: [['age', 100]] },
+        { columnSizingStart: [['age', 100]] },
+      ),
+    ).toBe(true)
+
+    const makeTooDeep = () => ({ a: { b: { c: { d: 1 } } } })
+    expect(stateSlicesEqual(makeTooDeep(), makeTooDeep())).toBe(false)
+  })
+
   it('should treat missing and extra keys as different', () => {
     expect(stateSlicesEqual({ a: 1 }, { a: 1, b: 2 })).toBe(false)
     expect(stateSlicesEqual({ a: 1, b: 2 }, { a: 1 })).toBe(false)
     expect(stateSlicesEqual({ a: undefined }, { b: undefined })).toBe(false)
+  })
+
+  it('should distinguish sparse entries and extra array properties', () => {
+    expect(stateSlicesEqual(new Array(1), [undefined])).toBe(false)
+
+    const a: Array<unknown> & { mode?: string } = []
+    const b: Array<unknown> & { mode?: string } = []
+    a.mode = 'include'
+    b.mode = 'exclude'
+    expect(stateSlicesEqual(a, b)).toBe(false)
+  })
+
+  it('should include enumerable symbol keys', () => {
+    const key = Symbol('filter')
+    expect(stateSlicesEqual({ [key]: 'a' }, { [key]: 'b' })).toBe(false)
+    expect(stateSlicesEqual({ [key]: 'a' }, { [key]: 'a' })).toBe(true)
   })
 
   it('should compare null-prototype maps against plain objects', () => {
@@ -100,27 +139,6 @@ describe('stateSlicesEqual', () => {
     const instance = new FilterValue('a')
     expect(stateSlicesEqual(instance, instance)).toBe(true)
     expect(stateSlicesEqual(instance, new FilterValue('a'))).toBe(false)
-  })
-
-  it('should compare values below the second container level by reference', () => {
-    // Stock state never nests deeper than a container of flat containers;
-    // deeper values (like an array-valued filter value) match by identity
-    // only, so a fresh but equivalent value safely fires the update.
-    const range = [0, 10]
-    expect(
-      stateSlicesEqual(
-        [{ id: 'age', value: range }],
-        [{ id: 'age', value: range }],
-      ),
-    ).toBe(true)
-    expect(
-      stateSlicesEqual(
-        [{ id: 'age', value: [0, 10] }],
-        [{ id: 'age', value: [0, 10] }],
-      ),
-    ).toBe(false)
-    const make = () => ({ a: { b: { c: 1 } } })
-    expect(stateSlicesEqual(make(), make())).toBe(false)
   })
 })
 
@@ -161,63 +179,135 @@ describe('setStateSlice', () => {
   })
 
   describe('with a user-provided change handler (controlled state)', () => {
-    it('should pass the original updater through untouched', () => {
+    it('should resolve an updater only when the state owner applies it', () => {
       const onSortingChange = vi.fn()
       const table = makeTable({ onSortingChange })
-      const updater = () => [{ id: 'firstName', desc: false }]
+      const updater = vi.fn((): SortingState => [
+        { id: 'firstName', desc: false },
+      ])
 
       table_setSorting(table, updater)
 
       expect(onSortingChange).toHaveBeenCalledTimes(1)
-      expect(onSortingChange.mock.calls[0]?.[0]).toBe(updater)
+      expect(updater).not.toHaveBeenCalled()
+
+      const ownerUpdater = onSortingChange.mock.calls[0]![0]
+      expect(functionalUpdate(ownerUpdater, [])).toEqual([
+        { id: 'firstName', desc: false },
+      ])
+      expect(updater).toHaveBeenCalledTimes(1)
     })
 
-    it('should not call the handler for a structural no-op', () => {
+    it('should invoke the handler but preserve the owner reference for a structural no-op', () => {
       const onSortingChange = vi.fn()
+      const sorting: SortingState = [{ id: 'firstName', desc: false }]
       const table = makeTable({
         onSortingChange,
-        state: { sorting: [{ id: 'firstName', desc: false }] },
+        state: { sorting },
       })
 
       table_setSorting(table, [{ id: 'firstName', desc: false }])
 
-      expect(onSortingChange).not.toHaveBeenCalled()
+      expect(onSortingChange).toHaveBeenCalledTimes(1)
+      expect(functionalUpdate(onSortingChange.mock.calls[0]![0], sorting)).toBe(
+        sorting,
+      )
     })
 
-    it('should not fire resetSorting when state already matches initial state', () => {
+    it('should preserve the owner reference when resetSorting already matches', () => {
       const onSortingChange = vi.fn()
+      const sorting: SortingState = [{ id: 'firstName', desc: true }]
       const table = makeTable({
         onSortingChange,
-        initialState: { sorting: [{ id: 'firstName', desc: true }] },
+        initialState: { sorting },
       })
 
       table_resetSorting(table)
 
-      expect(onSortingChange).not.toHaveBeenCalled()
+      expect(onSortingChange).toHaveBeenCalledTimes(1)
+      expect(functionalUpdate(onSortingChange.mock.calls[0]![0], sorting)).toBe(
+        sorting,
+      )
     })
 
-    it('should not fire resetExpanded when controlled expanded already matches', () => {
-      // Regression coverage for the #6499 render loop: an auto reset firing
-      // onExpandedChange with a fresh empty map on every data reference change
+    it('should preserve controlled expanded identity when resetExpanded already matches', () => {
       const onExpandedChange = vi.fn()
+      const expanded = {}
       const table = makeTable({
         onExpandedChange,
-        state: { expanded: {} },
+        state: { expanded },
       })
 
       table_resetExpanded(table)
 
-      expect(onExpandedChange).not.toHaveBeenCalled()
+      expect(onExpandedChange).toHaveBeenCalledTimes(1)
+      expect(
+        functionalUpdate(onExpandedChange.mock.calls[0]![0], expanded),
+      ).toBe(expanded)
     })
 
-    it('should not fire when a clamped page navigation lands on the current page', () => {
+    it('should preserve pagination identity for clamped navigation no-ops', () => {
       const onPaginationChange = vi.fn()
       const table = makeTable({ onPaginationChange })
+      const pagination = table.atoms.pagination.get()
 
       table_firstPage(table)
       table_setPageIndex(table, -1)
 
-      expect(onPaginationChange).not.toHaveBeenCalled()
+      expect(onPaginationChange).toHaveBeenCalledTimes(2)
+      const result = onPaginationChange.mock.calls.reduce(
+        (state, [updater]) => functionalUpdate(updater, state),
+        pagination,
+      )
+      expect(result).toBe(pagination)
+    })
+
+    it('should compose a real update followed by a locally apparent no-op', () => {
+      const queued: Array<Updater<SortingState>> = []
+      const table = makeTable({
+        state: { sorting: [] },
+        onSortingChange: (updater) => queued.push(updater),
+      })
+
+      table_setSorting(table, [{ id: 'firstName', desc: false }])
+      table_resetSorting(table, true)
+
+      expect(queued).toHaveLength(2)
+      const result = queued.reduce<SortingState>(
+        (state, updater) => functionalUpdate(updater, state),
+        [],
+      )
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('with atom-backed state owners', () => {
+    it('should keep the controlled fallback composable before ownership release', () => {
+      const table = makeTable({ state: { sorting: [] } })
+
+      table_setSorting(table, [{ id: 'firstName', desc: false }])
+      table_resetSorting(table, true)
+
+      expect(table.baseAtoms.sorting.get()).toEqual([])
+
+      table.setOptions((old) => ({ ...old, state: undefined }))
+      expect(table.atoms.sorting.get()).toEqual([])
+    })
+
+    it('should resolve external-atom updaters once and preserve no-op identity', () => {
+      const sortingAtom = createAtom<SortingState>([
+        { id: 'firstName', desc: false },
+      ])
+      const table = makeTable({ atoms: { sorting: sortingAtom } })
+      const before = sortingAtom.get()
+      const updater = vi.fn((): SortingState => [
+        { id: 'firstName', desc: false },
+      ])
+
+      table_setSorting(table, updater)
+
+      expect(updater).toHaveBeenCalledTimes(1)
+      expect(sortingAtom.get()).toBe(before)
     })
   })
 
@@ -228,6 +318,15 @@ describe('setStateSlice', () => {
       expect(() =>
         setStateSlice(table as any, 'nonexistentSlice', 'value'),
       ).not.toThrow()
+    })
+
+    it('should pass the original updater through when no equality policy is supplied', () => {
+      const onCustomChange = vi.fn()
+      const updater = (old: number) => old + 1
+
+      setStateSlice({ options: { onCustomChange } }, 'custom' as any, updater)
+
+      expect(onCustomChange).toHaveBeenCalledWith(updater)
     })
   })
 })

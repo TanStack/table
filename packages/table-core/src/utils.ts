@@ -90,13 +90,6 @@ export function hasOwn(obj: object, key: PropertyKey): boolean {
 }
 
 /**
- * Marks the state updaters created by `makeStateUpdater` so `setStateSlice`
- * can recognize the table's own default `on<State>Change` handlers and pass
- * them a pre-resolved value instead of re-running the original updater.
- */
-const DEFAULT_STATE_UPDATER = Symbol('defaultStateUpdater')
-
-/**
  * Creates a table state updater for a single state slice.
  *
  * The updater writes through the table base atom for the slice and supports both value and functional updater forms.
@@ -114,15 +107,11 @@ export function makeStateUpdater<
     readonly baseAtoms: object
   },
 ) {
-  const updateState = (
-    updater: Updater<TableState<any>[K & keyof TableState<any>]>,
-  ) => {
+  return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
     const externalAtom = (instance.options as any).atoms?.[key]
     const targetAtom = externalAtom ?? (instance.baseAtoms as any)[key]
     targetAtom.set((old: any) => functionalUpdate(updater, old))
   }
-  ;(updateState as any)[DEFAULT_STATE_UPDATER] = true
-  return updateState
 }
 
 /**
@@ -142,125 +131,88 @@ function isPlainContainer(value: unknown): value is object {
 }
 
 /**
- * Shallowly compares two containers, matching entries with `Object.is`.
+ * Returns every enumerable own key, including symbols and non-index array
+ * properties. Keeping key presence explicit distinguishes sparse array holes
+ * from entries whose value is `undefined`.
  */
-function shallowEntriesEqual(a: object, b: object): boolean {
-  if (Array.isArray(a) || Array.isArray(b)) {
-    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
-      return false
-    }
-    for (let i = 0; i < a.length; i++) {
-      if (!Object.is(a[i], b[i])) {
-        return false
-      }
-    }
-    return true
-  }
-  const keysA = Object.keys(a)
-  const keysB = Object.keys(b)
-  if (keysA.length !== keysB.length) {
-    return false
-  }
-  for (let i = 0; i < keysA.length; i++) {
-    const key = keysA[i]!
-    if (
-      !hasOwn(b, key) ||
-      !Object.is(
-        (a as Record<string, unknown>)[key],
-        (b as Record<string, unknown>)[key],
-      )
-    ) {
-      return false
-    }
-  }
-  return true
+function getEnumerableOwnKeys(value: object): Array<PropertyKey> {
+  return Reflect.ownKeys(value).filter((key) =>
+    Object.prototype.propertyIsEnumerable.call(value, key),
+  )
 }
 
+const MAX_STATE_COMPARE_DEPTH = 3
+
 /**
- * Structurally compares two state slice values, exactly as deep as stock
- * feature state can nest and no deeper.
+ * Structurally compares two state slice values as deeply as stock feature
+ * state can nest and no deeper.
  *
- * The top-level container's entries may themselves be one more shallow
- * container: an array of flat objects (`sorting`, `columnFilters`,
- * `cellSelection`) or an object of flat arrays (`columnPinning`,
- * `rowPinning`). Anything below that (such as an array-valued filter value)
- * compares by `Object.is`. A `false` result is always safe: it just means the
- * state update goes through, which is today's behavior for every write.
+ * Three container levels cover flat maps and arrays, arrays of state objects,
+ * array-valued filter values, and `columnResizing.columnSizingStart` tuples.
+ * Deeper containers and non-plain values compare by reference. A `false`
+ * result is always safe: the state update simply proceeds.
  */
 export function stateSlicesEqual(a: unknown, b: unknown): boolean {
+  return stateSlicesEqualAtDepth(a, b, MAX_STATE_COMPARE_DEPTH)
+}
+
+function stateSlicesEqualAtDepth(
+  a: unknown,
+  b: unknown,
+  depth: number,
+): boolean {
   if (Object.is(a, b)) {
     return true
   }
-  if (!isPlainContainer(a) || !isPlainContainer(b)) {
+  if (depth <= 0 || !isPlainContainer(a) || !isPlainContainer(b)) {
     return false
   }
   if (Array.isArray(a) || Array.isArray(b)) {
     if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
       return false
     }
-    for (let i = 0; i < a.length; i++) {
-      const entryA = a[i]
-      const entryB = b[i]
-      if (
-        !Object.is(entryA, entryB) &&
-        !(
-          isPlainContainer(entryA) &&
-          isPlainContainer(entryB) &&
-          shallowEntriesEqual(entryA, entryB)
-        )
-      ) {
-        return false
-      }
-    }
-    return true
   }
-  const keysA = Object.keys(a)
-  const keysB = Object.keys(b)
+
+  const keysA = getEnumerableOwnKeys(a)
+  const keysB = getEnumerableOwnKeys(b)
   if (keysA.length !== keysB.length) {
     return false
   }
+
+  const recordA = a as Record<PropertyKey, unknown>
+  const recordB = b as Record<PropertyKey, unknown>
   for (let i = 0; i < keysA.length; i++) {
     const key = keysA[i]!
-    if (!hasOwn(b, key)) {
+    if (!Object.prototype.propertyIsEnumerable.call(b, key)) {
       return false
     }
-    const entryA = (a as Record<string, unknown>)[key]
-    const entryB = (b as Record<string, unknown>)[key]
-    if (
-      !Object.is(entryA, entryB) &&
-      !(
-        isPlainContainer(entryA) &&
-        isPlainContainer(entryB) &&
-        shallowEntriesEqual(entryA, entryB)
-      )
-    ) {
+    if (!stateSlicesEqualAtDepth(recordA[key], recordB[key], depth - 1)) {
       return false
     }
   }
   return true
 }
 
+type StateSliceForKey<K extends string> = K extends keyof TableState<any>
+  ? TableState<any>[K]
+  : unknown
+
+export type StateSliceEqualityFn<T> = (current: T, next: T) => boolean
+
 /**
  * Routes a state slice update through the slice's `on<State>Change` handler,
- * skipping updates that would not change the state.
+ * optionally preserving the owner's current reference for structural no-ops.
  *
- * The updater is resolved once against the slice's current value (untracked,
- * so setters never register reactive dependencies). When the resolved value is
- * structurally equal to the current value, nothing fires: no change handler,
- * no atom write, no re-render. This makes every setter, toggle, reset, and
- * auto-reset a natural no-op when state is already in the target shape, for
- * both internally owned and externally controlled state.
+ * Equality is evaluated inside the updater received by the state owner, never
+ * against the table's potentially stale controlled snapshot. This keeps
+ * same-tick updates composable in queued host containers such as React state,
+ * evaluates the original updater only when the owner applies it, and lets atom
+ * owners suppress notifications by returning their existing reference.
  *
- * For uncontrolled slices, default handlers created by `makeStateUpdater`
- * receive the pre-resolved value so the original updater runs exactly once;
- * the slice atom and the default handler's target are the same source, so the
- * resolved value is exactly what the handler would compute. Everything else
- * receives the original updater untouched: user handlers because a host state
- * container (such as a React `setState`) must resolve functional updaters
- * against its own latest queued state to keep same-tick updates composable,
- * and controlled slices routed to the default handler because the base atom
- * is an independent fallback that must keep resolving against its own value
- * while ownership is external.
+ * A user-provided change handler is still invoked for a no-op because only that
+ * handler's state container can know its latest queued value. The guarded
+ * updater returns that container's previous reference, preventing a state write
+ * or render in state containers with identity bailout semantics.
  */
 export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
   // Minimal structural shape so any table view (public `Table`,
@@ -268,15 +220,12 @@ export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
   // the compiler to relate the full table types.
   instance: {
     readonly options: object
-    readonly atoms: object
-    readonly _reactivity: { untrack: <T>(fn: () => T) => T }
   },
   key: K,
   // Unknown keys (custom feature slices) accept any updater shape instead of
   // collapsing to `never`.
-  updater: Updater<
-    K extends keyof TableState<any> ? TableState<any>[K] : unknown
-  >,
+  updater: Updater<StateSliceForKey<K>>,
+  isEqual?: StateSliceEqualityFn<StateSliceForKey<K>>,
 ): void {
   const onChangeKey = `on${key.charAt(0).toUpperCase()}${key.slice(1)}Change`
   const onChange = (instance.options as Record<string, unknown>)[
@@ -285,35 +234,16 @@ export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
   if (!onChange) {
     return
   }
-  const atom = (instance.atoms as Record<string, any>)[key]
-  if (!atom) {
+
+  if (!isEqual) {
     onChange(updater)
     return
   }
-  const current = instance._reactivity.untrack(() => atom.get())
-  const next = functionalUpdate(updater, current)
-  if (stateSlicesEqual(current, next)) {
-    return
-  }
-  const options = instance.options as {
-    state?: Record<string, unknown>
-  }
-  // Only `options.state`-controlled slices keep the original updater on the
-  // default path: their base atom is an independent fallback that must keep
-  // resolving against its own value. External atoms are the same source the
-  // default handler writes (`externalAtom ?? baseAtom`), so they take the
-  // pre-resolved fast path; re-running the updater there would double the
-  // cost of large updaters (cloning a big row-selection map, for example).
-  const isControlledSlice = Boolean(options.state && hasOwn(options.state, key))
-  if (!isControlledSlice && (onChange as any)[DEFAULT_STATE_UPDATER]) {
-    // The updater already ran against the same atom the default handler
-    // targets; hand it the resolved value. The closure form keeps
-    // `functionalUpdate` semantics correct even when the resolved value is
-    // itself a function (`globalFilter` is untyped).
-    onChange(() => next)
-  } else {
-    onChange(updater)
-  }
+
+  onChange((current: StateSliceForKey<K>) => {
+    const next = functionalUpdate(updater, current)
+    return isEqual(current, next) ? current : next
+  })
 }
 
 type AnyFunction = (...args: any) => any

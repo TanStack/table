@@ -178,7 +178,7 @@ describe('table_setSorting', () => {
 
     table_setSorting(table, newSorting)
 
-    expect(onSortingChange).toHaveBeenCalledWith(newSorting)
+    expect(getUpdaterResult(onSortingChange, [])).toEqual(newSorting)
   })
 })
 
@@ -190,7 +190,9 @@ describe('table_resetSorting', () => {
 
     table_resetSorting(table, true)
 
-    expect(onSortingChange).toHaveBeenCalledWith([])
+    expect(
+      getUpdaterResult(onSortingChange, [{ id: 'age', desc: true }]),
+    ).toEqual([])
   })
 
   it('should reset to the initial state by default', () => {
@@ -202,7 +204,7 @@ describe('table_resetSorting', () => {
 
     table_resetSorting(table)
 
-    expect(onSortingChange).toHaveBeenCalledWith(initialSorting)
+    expect(getUpdaterResult(onSortingChange, [])).toEqual(initialSorting)
   })
 })
 

@@ -1,4 +1,9 @@
-import { cloneState, hasOwn, setStateSlice } from '../../utils'
+import {
+  cloneState,
+  hasOwn,
+  setStateSlice,
+  stateSlicesEqual,
+} from '../../utils'
 import type { Column_Internal } from '../../types/Column'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -149,7 +154,7 @@ export function table_setGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<GroupingState>) {
-  setStateSlice(table, 'grouping', updater)
+  setStateSlice(table, 'grouping', updater, stateSlicesEqual)
 }
 
 /**

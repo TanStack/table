@@ -1,4 +1,9 @@
-import { cloneState, isFunction, setStateSlice } from '../../utils'
+import {
+  cloneState,
+  isFunction,
+  setStateSlice,
+  stateSlicesEqual,
+} from '../../utils'
 import { reSplitAlphaNumeric, sortFn_basic } from './sortFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -31,9 +36,9 @@ export function getDefaultSortingState(): SortingState {
  * Routes a sorting updater through the table's sorting change handler.
  *
  * The updater may be a next `SortingState` array or a function of the previous
- * sorting state, matching the instance `table.setSorting` behavior. Updates
- * that resolve to a state structurally equal to the current sorting state are
- * no-ops: `onSortingChange` is not called.
+ * sorting state, matching the instance `table.setSorting` behavior. State
+ * owners receive an equality-guarded updater so structurally equal sorting
+ * values preserve the owner's existing reference.
  *
  * @example
  * ```ts
@@ -44,7 +49,7 @@ export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<SortingState>) {
-  setStateSlice(table, 'sorting', updater)
+  setStateSlice(table, 'sorting', updater, stateSlicesEqual)
 }
 
 /**
