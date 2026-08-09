@@ -51,6 +51,13 @@ export function table_autoResetPageIndex<
     table.options.autoResetPageIndex ??
     !table.options.manualPagination
   ) {
+    // Auto resets are fire-and-forget, so skip the reset entirely when
+    // already on the default page. Routing a no-op through the pagination
+    // handler would still run user `onPaginationChange` side effects (such
+    // as refetching) on every data, filter, sort, or grouping change.
+    const currentPageIndex =
+      table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+    if (currentPageIndex === defaultPageIndex) return
     table_resetPageIndex(table, true)
   }
 }

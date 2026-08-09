@@ -576,6 +576,29 @@ describe('table_autoResetPageIndex', () => {
     expect(table.atoms.pagination.get().pageIndex).toBe(0)
   })
 
+  it('should not invoke onPaginationChange when already on the default page', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(25, { onPaginationChange })
+
+    table_autoResetPageIndex(table)
+
+    expect(onPaginationChange).not.toHaveBeenCalled()
+  })
+
+  it('should invoke onPaginationChange when off the default page', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(25, {
+      onPaginationChange,
+      state: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
+
+    table_autoResetPageIndex(table)
+
+    expect(
+      getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 10 }),
+    ).toEqual({ pageIndex: 0, pageSize: 10 })
+  })
+
   it('should not reset when manualPagination is set', () => {
     const onPaginationChange = vi.fn()
     const table = makeTable(25, {
