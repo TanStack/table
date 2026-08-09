@@ -1,5 +1,5 @@
 import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
-import { Show } from 'solid-js'
+import { Match, Switch } from 'solid-js'
 import type { Person } from './makeData'
 import type { features } from './App'
 import type { Column, Table } from '@tanstack/solid-table'
@@ -19,8 +19,7 @@ function ColumnFilter(props: {
   )
 
   return (
-    <Show
-      when={typeof firstValue === 'number'}
+    <Switch
       fallback={
         <div>
           <input
@@ -36,47 +35,89 @@ function ColumnFilter(props: {
         </div>
       }
     >
-      <div>
-        <div class="filter-row">
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={
-              (columnFilterValue() as [number, number] | undefined)?.[0] ?? ''
-            }
-            onInput={(e) =>
-              columnFilterDebouncer.maybeExecute(
-                (old: [number, number] | undefined) => [
-                  e.currentTarget.value,
-                  old?.[1] ?? '',
-                ],
-              )
-            }
-            placeholder={`Min`}
-            class="filter-input"
-          />
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={
-              (columnFilterValue() as [number, number] | undefined)?.[1] ?? ''
-            }
-            onInput={(e) =>
-              columnFilterDebouncer.maybeExecute(
-                (old: [number, number] | undefined) => [
-                  old?.[0] ?? '',
-                  e.currentTarget.value,
-                ],
-              )
-            }
-            placeholder={`Max`}
-            class="filter-input"
-          />
+      <Match when={firstValue instanceof Date}>
+        <div>
+          <div class="filter-row">
+            <input
+              type="date"
+              aria-label={`${props.column.id} min`}
+              value={
+                (columnFilterValue() as [string, string] | undefined)?.[0] ?? ''
+              }
+              onInput={(e) => {
+                // Read the value now; `e.currentTarget` is gone after the debounce
+                const value = e.currentTarget.value
+                columnFilterDebouncer.maybeExecute(
+                  (old: [string, string] | undefined) => [value, old?.[1]],
+                )
+              }}
+              class="filter-input"
+            />
+            <input
+              type="date"
+              aria-label={`${props.column.id} max`}
+              value={
+                (columnFilterValue() as [string, string] | undefined)?.[1] ?? ''
+              }
+              onInput={(e) => {
+                // Read the value now; `e.currentTarget` is gone after the debounce
+                const value = e.currentTarget.value
+                columnFilterDebouncer.maybeExecute(
+                  (old: [string, string] | undefined) => [old?.[0], value],
+                )
+              }}
+              class="filter-input"
+            />
+          </div>
         </div>
-      </div>
-    </Show>
+      </Match>
+      <Match when={typeof firstValue === 'number'}>
+        <div>
+          <div class="filter-row">
+            <input
+              type="number"
+              min={0}
+              max={100}
+              value={
+                (columnFilterValue() as [number, number] | undefined)?.[0] ?? ''
+              }
+              onInput={(e) => {
+                // Read the value now; `e.currentTarget` is gone after the debounce
+                const value = e.currentTarget.value
+                columnFilterDebouncer.maybeExecute(
+                  (old: [number, number] | undefined) => [
+                    value,
+                    old?.[1] ?? '',
+                  ],
+                )
+              }}
+              placeholder={`Min`}
+              class="filter-input"
+            />
+            <input
+              type="number"
+              min={0}
+              max={100}
+              value={
+                (columnFilterValue() as [number, number] | undefined)?.[1] ?? ''
+              }
+              onInput={(e) => {
+                // Read the value now; `e.currentTarget` is gone after the debounce
+                const value = e.currentTarget.value
+                columnFilterDebouncer.maybeExecute(
+                  (old: [number, number] | undefined) => [
+                    old?.[0] ?? '',
+                    value,
+                  ],
+                )
+              }}
+              placeholder={`Max`}
+              class="filter-input"
+            />
+          </div>
+        </div>
+      </Match>
+    </Switch>
   )
 }
 

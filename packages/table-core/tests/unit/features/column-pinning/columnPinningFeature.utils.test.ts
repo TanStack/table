@@ -293,7 +293,9 @@ describe('table_setColumnPinning', () => {
       end: [],
     })
 
-    expect(onColumnPinningChange).toHaveBeenCalledWith({
+    expect(
+      getUpdaterResult(onColumnPinningChange, { start: [], end: [] }),
+    ).toEqual({
       start: ['firstName'],
       end: [],
     })
@@ -305,14 +307,17 @@ describe('table_resetColumnPinning', () => {
     const onColumnPinningChange = vi.fn()
     const table = makeTable(1, {
       onColumnPinningChange,
+      state: { columnPinning: { start: ['firstName'], end: [] } },
     })
 
     table_resetColumnPinning(table, true)
 
-    expect(onColumnPinningChange).toHaveBeenCalledWith({
-      start: [],
-      end: [],
-    })
+    expect(
+      getUpdaterResult(onColumnPinningChange, {
+        start: ['firstName'],
+        end: [],
+      }),
+    ).toEqual({ start: [], end: [] })
   })
 
   it('should reset to initial state when defaultState is false', () => {
@@ -326,14 +331,14 @@ describe('table_resetColumnPinning', () => {
     const table = makeTable(1, {
       onColumnPinningChange,
       initialState,
+      state: { columnPinning: { start: [], end: [] } },
     })
 
     table_resetColumnPinning(table, false)
 
-    expect(onColumnPinningChange).toHaveBeenCalledWith({
-      start: ['firstName'],
-      end: [],
-    })
+    expect(
+      getUpdaterResult(onColumnPinningChange, { start: [], end: [] }),
+    ).toEqual({ start: ['firstName'], end: [] })
   })
 })
 

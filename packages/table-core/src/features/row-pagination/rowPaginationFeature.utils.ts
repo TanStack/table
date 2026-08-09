@@ -1,4 +1,4 @@
-import { cloneState, functionalUpdate } from '../../utils'
+import { cloneState, functionalUpdate, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -46,6 +46,13 @@ export function table_autoResetPageIndex<
     table.options.autoResetPageIndex ??
     !table.options.manualPagination
   ) {
+    // Auto resets are fire-and-forget, so skip the reset entirely when
+    // already on the default page. Routing a no-op through the pagination
+    // handler would still run user `onPaginationChange` side effects (such
+    // as refetching) on every data, filter, sort, or grouping change.
+    const currentPageIndex =
+      table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+    if (currentPageIndex === defaultPageIndex) return
     table_resetPageIndex(table, true)
   }
 }
@@ -66,13 +73,7 @@ export function table_setPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<PaginationState>) {
-  const safeUpdater: Updater<PaginationState> = (old) => {
-    const newState = functionalUpdate(updater, old)
-
-    return newState
-  }
-
-  return table.options.onPaginationChange?.(safeUpdater)
+  setStateSlice(table, 'pagination', updater)
 }
 
 /**
@@ -151,13 +152,12 @@ export function table_resetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
-  const currentPageIndex =
-    table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
-  const newPageIndex = defaultState
-    ? defaultPageIndex
-    : (table.initialState.pagination?.pageIndex ?? defaultPageIndex)
-  if (newPageIndex === currentPageIndex) return
-  table_setPageIndex(table, newPageIndex)
+  table_setPageIndex(
+    table,
+    defaultState
+      ? defaultPageIndex
+      : (table.initialState.pagination?.pageIndex ?? defaultPageIndex),
+  )
 }
 
 /**
@@ -176,13 +176,12 @@ export function table_resetPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
-  const currentPageSize =
-    table.atoms.pagination?.get()?.pageSize ?? defaultPageSize
-  const newPageSize = defaultState
-    ? defaultPageSize
-    : (table.initialState.pagination?.pageSize ?? defaultPageSize)
-  if (newPageSize === currentPageSize) return
-  table_setPageSize(table, newPageSize)
+  table_setPageSize(
+    table,
+    defaultState
+      ? defaultPageSize
+      : (table.initialState.pagination?.pageSize ?? defaultPageSize),
+  )
 }
 
 /**

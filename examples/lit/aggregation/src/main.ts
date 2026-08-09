@@ -4,7 +4,6 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   FlexRender,
   TableController,
-  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -15,6 +14,7 @@ import {
   createPaginatedRowModel,
   filterFn_includesString,
   metaHelper,
+  rowAggregationFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,

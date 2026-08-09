@@ -29,7 +29,32 @@ const sortedUniqueValues = computed(() =>
 </script>
 
 <template>
-  <div v-if="typeof firstValue === 'number'">
+  <div v-if="firstValue instanceof Date">
+    <div class="filter-row">
+      <DebouncedInput
+        type="date"
+        :aria-label="`${column.id} min`"
+        :modelValue="(columnFilterValue as [string, string])?.[0] ?? ''"
+        @update:modelValue="
+          (value) =>
+            column.setFilterValue((old: [string, string]) => [value, old?.[1]])
+        "
+        class="filter-input"
+      />
+      <DebouncedInput
+        type="date"
+        :aria-label="`${column.id} max`"
+        :modelValue="(columnFilterValue as [string, string])?.[1] ?? ''"
+        @update:modelValue="
+          (value) =>
+            column.setFilterValue((old: [string, string]) => [old?.[0], value])
+        "
+        class="filter-input"
+      />
+    </div>
+    <div class="spacer-xs" />
+  </div>
+  <div v-else-if="typeof firstValue === 'number'">
     <div class="filter-row">
       <DebouncedInput
         type="number"

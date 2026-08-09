@@ -1,5 +1,5 @@
 import { row_getIsAllParentsExpanded } from '../row-expanding/rowExpandingFeature.utils'
-import { callMemoOrStaticFn, cloneState } from '../../utils'
+import { callMemoOrStaticFn, cloneState, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -47,7 +47,7 @@ export function table_setRowPinning<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<RowPinningState>,
 ): void {
-  table.options.onRowPinningChange?.(updater)
+  setStateSlice(table, 'rowPinning', updater)
 }
 
 /**

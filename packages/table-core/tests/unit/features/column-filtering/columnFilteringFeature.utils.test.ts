@@ -276,7 +276,15 @@ describe('column_setFilterValue', () => {
 
   it('should remove the filter when the new value should auto-remove', () => {
     const onColumnFiltersChange = vi.fn()
-    const table = makeTable({ onColumnFiltersChange })
+    const table = makeTable({
+      onColumnFiltersChange,
+      state: {
+        columnFilters: [
+          { id: 'firstName', value: 'a' },
+          { id: 'lastName', value: 'b' },
+        ],
+      },
+    })
 
     column_setFilterValue(table.getColumn('firstName')!, '')
 
@@ -360,6 +368,7 @@ describe('table_resetColumnFilters', () => {
     const table = makeTable({
       onColumnFiltersChange,
       initialState: { columnFilters: [{ id: 'firstName', value: 'a' }] },
+      state: { columnFilters: [] },
     })
 
     table_resetColumnFilters(table)

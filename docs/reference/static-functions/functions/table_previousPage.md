@@ -9,7 +9,7 @@ title: table_previousPage
 function table_previousPage<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:323](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L323)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:322](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L322)
 
 Moves the table to the previous page.
 

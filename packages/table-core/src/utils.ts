@@ -114,6 +114,139 @@ export function makeStateUpdater<
   }
 }
 
+/**
+ * Checks whether a value is an array or a plain (or null-prototype) object.
+ * Class instances, dates, and other exotic values compare by reference only,
+ * mirroring the `cloneState` plain-object policy.
+ */
+function isPlainContainer(value: unknown): value is object {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+  if (Array.isArray(value)) {
+    return true
+  }
+  const proto = Object.getPrototypeOf(value)
+  return proto === Object.prototype || proto === null
+}
+
+/**
+ * Returns every enumerable own key, including symbols and non-index array
+ * properties. Keeping key presence explicit distinguishes sparse array holes
+ * from entries whose value is `undefined`.
+ */
+function getEnumerableOwnKeys(value: object): Array<PropertyKey> {
+  return Reflect.ownKeys(value).filter((key) =>
+    Object.prototype.propertyIsEnumerable.call(value, key),
+  )
+}
+
+const MAX_STATE_COMPARE_DEPTH = 3
+
+/**
+ * Structurally compares two state slice values as deeply as stock feature
+ * state can nest and no deeper.
+ *
+ * Three container levels cover flat maps and arrays, arrays of state objects,
+ * array-valued filter values, and `columnResizing.columnSizingStart` tuples.
+ * Deeper containers and non-plain values compare by reference. A `false`
+ * result is always safe: the state update simply proceeds.
+ */
+export function stateSlicesEqual(a: unknown, b: unknown): boolean {
+  return stateSlicesEqualAtDepth(a, b, MAX_STATE_COMPARE_DEPTH)
+}
+
+function stateSlicesEqualAtDepth(
+  a: unknown,
+  b: unknown,
+  depth: number,
+): boolean {
+  if (Object.is(a, b)) {
+    return true
+  }
+  if (depth <= 0 || !isPlainContainer(a) || !isPlainContainer(b)) {
+    return false
+  }
+  if (Array.isArray(a) || Array.isArray(b)) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+      return false
+    }
+  }
+
+  const keysA = getEnumerableOwnKeys(a)
+  const keysB = getEnumerableOwnKeys(b)
+  if (keysA.length !== keysB.length) {
+    return false
+  }
+
+  const recordA = a as Record<PropertyKey, unknown>
+  const recordB = b as Record<PropertyKey, unknown>
+  for (let i = 0; i < keysA.length; i++) {
+    const key = keysA[i]!
+    if (!Object.prototype.propertyIsEnumerable.call(b, key)) {
+      return false
+    }
+    if (!stateSlicesEqualAtDepth(recordA[key], recordB[key], depth - 1)) {
+      return false
+    }
+  }
+  return true
+}
+
+type StateSliceForKey<K extends string> = K extends keyof TableState<any>
+  ? TableState<any>[K]
+  : unknown
+
+export type StateSliceEqualityFn<T> = (current: T, next: T) => boolean
+
+/**
+ * Routes a state slice update through the slice's `on<State>Change` handler,
+ * preserving the owner's current reference for structural no-ops.
+ *
+ * Equality is evaluated inside the updater received by the state owner, never
+ * against the table's potentially stale controlled snapshot. This keeps
+ * same-tick updates composable in queued host containers such as React state,
+ * evaluates the original updater only when the owner applies it, and lets atom
+ * owners suppress notifications by returning their existing reference.
+ *
+ * A user-provided change handler is still invoked for a no-op because only that
+ * handler's state container can know its latest queued value. The guarded
+ * updater returns that container's previous reference, preventing a state write
+ * or render in state containers with identity bailout semantics.
+ *
+ * Hot-path slices that skip guarding entirely (selection maps that scale with
+ * row count, pointer-frequency resize state) call their change handler
+ * directly instead of routing through this util. Custom feature slices with a
+ * cheaper or semantic-aware comparison can pass `isEqual` to override the
+ * structural default.
+ */
+export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
+  // Minimal structural shape so any table view (public `Table`,
+  // `Table_Internal`, or a custom plugin table) can be passed without forcing
+  // the compiler to relate the full table types.
+  instance: {
+    readonly options: object
+  },
+  key: K,
+  // Unknown keys (custom feature slices) accept any updater shape instead of
+  // collapsing to `never`.
+  updater: Updater<StateSliceForKey<K>>,
+  isEqual: StateSliceEqualityFn<StateSliceForKey<K>> = stateSlicesEqual,
+): void {
+  const onChangeKey = `on${key.charAt(0).toUpperCase()}${key.slice(1)}Change`
+  const onChange = (instance.options as Record<string, unknown>)[
+    onChangeKey
+  ] as ((updater: Updater<any>) => void) | undefined
+  if (!onChange) {
+    return
+  }
+
+  onChange((current: StateSliceForKey<K>) => {
+    const next = functionalUpdate(updater, current)
+    return isEqual(current, next) ? current : next
+  })
+}
+
 type AnyFunction = (...args: any) => any
 
 /**

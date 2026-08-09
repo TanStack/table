@@ -1,4 +1,9 @@
-import { cloneState, functionalUpdate, isFunction } from '../../utils'
+import {
+  cloneState,
+  functionalUpdate,
+  isFunction,
+  setStateSlice,
+} from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -300,7 +305,7 @@ export function table_setColumnFilters<
     })
   }
 
-  table.options.onColumnFiltersChange?.(updateFn)
+  setStateSlice(table, 'columnFilters', updateFn)
 }
 
 /**

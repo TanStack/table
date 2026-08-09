@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -16,6 +15,7 @@ import {
   createTableHook,
   filterFn_inNumberRange,
   filterFn_includesString,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,

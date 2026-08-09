@@ -6,6 +6,7 @@ import {
   createPaginatedRowModel,
   createTable,
   filterFn_equalsString,
+  filterFn_inDateRange,
   filterFn_inNumberRange,
   filterFn_includesString,
   metaHelper,
@@ -19,7 +20,7 @@ import type { Person } from './makeData'
 
 // allows us to define custom properties for our columns
 interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select'
+  filterVariant?: 'text' | 'range' | 'select' | 'dateRange'
 }
 
 const features = tableFeatures({
@@ -30,6 +31,7 @@ const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    inDateRange: filterFn_inDateRange,
     equalsString: filterFn_equalsString,
   },
   columnMeta: metaHelper<MyColumnMeta>(),
@@ -88,6 +90,16 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
     // you could also write your own custom filter function here
   },
+  {
+    accessorKey: 'birthDate',
+    header: 'Birth Date',
+    // A locale-independent date format keeps the demo (and its tests) stable
+    cell: (info) => (info.getValue() as Date).toISOString().slice(0, 10),
+    filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
+    meta: {
+      filterVariant: 'dateRange',
+    },
+  },
 ]
 
 type PersonColumn = Column<typeof features, Person>
@@ -141,6 +153,19 @@ Alpine.data('table', () => {
       column.setFilterValue((old: [number, number] | undefined) => [
         old?.[0],
         value === '' ? undefined : Number(value),
+      ])
+    },
+    // date range filter (one date input per bound)
+    setDateMin(column: PersonColumn, value: string) {
+      column.setFilterValue((old: [string, string] | undefined) => [
+        value,
+        old?.[1],
+      ])
+    },
+    setDateMax(column: PersonColumn, value: string) {
+      column.setFilterValue((old: [string, string] | undefined) => [
+        old?.[0],
+        value,
       ])
     },
     refreshData() {

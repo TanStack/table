@@ -50,6 +50,9 @@ export function table_setRowSelection<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<RowSelectionState>,
 ) {
+  // Unguarded: there is no auto reset and selection maps can scale to the
+  // full row count, where an O(n) comparison on every gesture would be pure
+  // overhead for real changes.
   table.options.onRowSelectionChange?.(updater)
 }
 

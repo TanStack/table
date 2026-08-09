@@ -339,6 +339,8 @@ export function table_setColumnSizing<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnSizingState>,
 ) {
+  // Unguarded: this is updated continuously during `onChange` resize mode.
+  // Avoid a full map comparison on every animation-frame-scale write.
   table.options.onColumnSizingChange?.(updater)
 }
 

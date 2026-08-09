@@ -16,6 +16,7 @@ const COLUMN = {
   visits: 4,
   status: 5,
   progress: 6,
+  birthDate: 7,
 } as const
 
 let server: Awaited<ReturnType<typeof startExampleServer>> | undefined
@@ -82,6 +83,12 @@ function rangeFilter(
   return headerCell(page, column).getByPlaceholder(bound)
 }
 
+function dateRangeFilter(page: Page, bound: 'min' | 'max') {
+  return headerCell(page, 'birthDate').locator(
+    `input[aria-label="birthDate ${bound}"]`,
+  )
+}
+
 function globalFilterInput(page: Page) {
   return page.getByPlaceholder('Search all columns...')
 }
@@ -136,7 +143,7 @@ test('renders the table without crashing', async ({ page }) => {
   const table = page.locator('table').first()
 
   await expect(table).toBeVisible()
-  await expect(page.locator('thead tr').last().locator('th')).toHaveCount(7)
+  await expect(page.locator('thead tr').last().locator('th')).toHaveCount(8)
   await expect(page.locator('tbody tr')).toHaveCount(10)
   await expect(rowCountLine(page)).toHaveText('1,000 Rows')
   await expectColumnFilters(page, [])
@@ -167,9 +174,11 @@ test('renders a filter control for every filterable column', async ({
 }) => {
   const errors = await openExample(page)
 
-  // Three text columns, three range columns with a Min and a Max, one select.
+  // Three text columns, three range columns with a Min and a Max, one date
+  // column with a min and a max date input.
   await expect(page.locator('thead input[type="text"]')).toHaveCount(3)
   await expect(page.locator('thead input[type="number"]')).toHaveCount(6)
+  await expect(page.locator('thead input[type="date"]')).toHaveCount(2)
   // Status filters as free text here rather than through a select.
   await expect(page.locator('thead select')).toHaveCount(0)
 
@@ -269,6 +278,51 @@ test('filters a numeric column by range', async ({ page }) => {
   await rangeFilter(page, 'age', 'Max').fill('')
 
   await expect.poll(() => readFilteredRowCount(page)).toBe(TOTAL_ROWS)
+
+  expect(errors).toEqual([])
+})
+
+test('filters a date column by range', async ({ page }) => {
+  const errors = await openExample(page)
+
+  // Cells render ISO dates (YYYY-MM-DD), so string order is date order. Use
+  // a bound from the visible data so a match is guaranteed despite random rows.
+  const dates = (await readBodyColumn(page, 'birthDate')).sort()
+  const minDate = dates[Math.floor(dates.length / 2)]!
+  expect(minDate).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+
+  await dateRangeFilter(page, 'min').fill(minDate)
+
+  // An unset bound serialises as null, leaving the range open ended.
+  await expectColumnFilters(page, [{ id: 'birthDate', value: [minDate, null] }])
+
+  const minOnly = await readFilteredRowCount(page)
+  expect(minOnly).toBeGreaterThan(0)
+  expect(minOnly).toBeLessThan(TOTAL_ROWS)
+
+  for (const date of await readBodyColumn(page, 'birthDate')) {
+    expect(date >= minDate).toBe(true)
+  }
+
+  // The largest visible date keeps the range ordered and non-empty.
+  const maxDate = dates[dates.length - 1]!
+  await dateRangeFilter(page, 'max').fill(maxDate)
+
+  await expectColumnFilters(page, [
+    { id: 'birthDate', value: [minDate, maxDate] },
+  ])
+
+  for (const date of await readBodyColumn(page, 'birthDate')) {
+    expect(date >= minDate).toBe(true)
+    expect(date <= maxDate).toBe(true)
+  }
+
+  // Clearing both bounds auto-removes the filter entirely.
+  await dateRangeFilter(page, 'min').fill('')
+  await dateRangeFilter(page, 'max').fill('')
+
+  await expectColumnFilters(page, [])
+  await expect(rowCountLine(page)).toHaveText('1,000 Rows')
 
   expect(errors).toEqual([])
 })

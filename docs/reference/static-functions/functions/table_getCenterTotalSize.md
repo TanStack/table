@@ -9,7 +9,7 @@ title: table_getCenterTotalSize
 function table_getCenterTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:428](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L428)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L430)
 
 Sums the rendered size of the center, unpinned header region.
 
