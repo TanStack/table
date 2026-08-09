@@ -6,7 +6,7 @@ metadata:
   type: composition
   library: '@tanstack/lit-table'
   framework: lit
-  library_version: '9.1.1'
+  library_version: '9.1.2'
 requires:
   - '@tanstack/table-core#core'
   - getting-started

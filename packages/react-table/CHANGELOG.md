@@ -1,5 +1,12 @@
 # @tanstack/react-table
 
+## 9.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`ff43666`](https://github.com/TanStack/table/commit/ff436663f808e22091e8a4d2ee7ca81b37ea99c2)]:
+  - @tanstack/table-core@9.1.2
+
 ## 9.1.1
 
 ### Patch Changes

@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/react-table-devtools'
   framework: react
-  library_version: '9.1.1'
+  library_version: '9.1.2'
 requires:
   - '@tanstack/table-core#core'
   - '@tanstack/table-devtools#devtools'

@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/vue-table-devtools",
-  "version": "9.1.1",
+  "version": "9.1.2",
   "description": "Vue devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
