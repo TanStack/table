@@ -9,7 +9,7 @@ title: table_getCellSelectionMergeBounds
 function table_getCellSelectionMergeBounds<TFeatures, TData>(table): CellSelectionBounds[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:265](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L265)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L263)
 
 Resolves the merged-cell rectangles of the rendered rows into selection's
 own index space.

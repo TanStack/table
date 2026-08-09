@@ -1,9 +1,4 @@
-import {
-  cloneState,
-  isFunction,
-  setStateSlice,
-  stateSlicesEqual,
-} from '../../utils'
+import { cloneState, isFunction, setStateSlice } from '../../utils'
 import { reSplitAlphaNumeric, sortFn_basic } from './sortFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -49,7 +44,7 @@ export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<SortingState>) {
-  setStateSlice(table, 'sorting', updater, stateSlicesEqual)
+  setStateSlice(table, 'sorting', updater)
 }
 
 /**

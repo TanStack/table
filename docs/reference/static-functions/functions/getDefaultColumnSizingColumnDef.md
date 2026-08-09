@@ -9,7 +9,7 @@ title: getDefaultColumnSizingColumnDef
 function getDefaultColumnSizingColumnDef(): object;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L53)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L52)
 
 Creates the built-in sizing defaults for column definitions.
 

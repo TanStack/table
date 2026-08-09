@@ -9,7 +9,7 @@ title: table_getEndLeafHeaders
 function table_getEndLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:666](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L666)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:661](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L661)
 
 Collects leaf headers for the end pinned region.
 

@@ -1,10 +1,4 @@
-import {
-  cloneState,
-  hasOwn,
-  makeObjectMap,
-  setStateSlice,
-  stateSlicesEqual,
-} from '../../utils'
+import { cloneState, hasOwn, makeObjectMap, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -73,7 +67,11 @@ export function table_setExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<ExpandedState>) {
-  setStateSlice(table, 'expanded', updater)
+  // Unguarded: expanded maps scale with row count, the toggle paths already
+  // no-op via O(1) membership/sentinel checks, and a structural compare
+  // cannot know that the `true` sentinel and a materialized row-id map are
+  // semantically interchangeable. The auto-reset path guards in reset below.
+  table.options.onExpandedChange?.(updater)
 }
 
 /**
@@ -135,7 +133,6 @@ export function table_resetExpanded<
             makeObjectMap<boolean | undefined>(),
             cloneState(initialExpanded ?? {}),
           ),
-    stateSlicesEqual,
   )
 }
 

@@ -9,7 +9,7 @@ title: column_getIsGrouped
 function column_getIsGrouped<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L93)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L88)
 
 Checks whether this column id is present in `state.grouping`.
 

@@ -9,7 +9,7 @@ title: table_getColumnIndexes
 function table_getColumnIndexes<TFeatures, TData>(table): ColumnIndexes;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L46)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L45)
 
 Builds column-id to index records for each visible pinning region.
 

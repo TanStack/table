@@ -9,7 +9,7 @@ title: table_getEndHeaderGroups
 function table_getEndHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:419](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L419)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:414](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L414)
 
 Builds header groups for visible columns pinned to the end region.
 

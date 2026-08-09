@@ -9,7 +9,7 @@ title: getDefaultGroupingState
 function getDefaultGroupingState(): GroupingState;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L29)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L24)
 
 Creates the default grouping state.
 

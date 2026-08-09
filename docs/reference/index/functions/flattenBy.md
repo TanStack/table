@@ -9,7 +9,7 @@ title: flattenBy
 function flattenBy<TNode>(arr, getChildren): TNode[];
 ```
 
-Defined in: [utils.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L263)
+Defined in: [utils.ts:264](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L264)
 
 Flattens a tree of nodes by recursively reading child nodes.
 

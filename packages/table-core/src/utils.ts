@@ -201,7 +201,7 @@ export type StateSliceEqualityFn<T> = (current: T, next: T) => boolean
 
 /**
  * Routes a state slice update through the slice's `on<State>Change` handler,
- * optionally preserving the owner's current reference for structural no-ops.
+ * preserving the owner's current reference for structural no-ops.
  *
  * Equality is evaluated inside the updater received by the state owner, never
  * against the table's potentially stale controlled snapshot. This keeps
@@ -213,6 +213,12 @@ export type StateSliceEqualityFn<T> = (current: T, next: T) => boolean
  * handler's state container can know its latest queued value. The guarded
  * updater returns that container's previous reference, preventing a state write
  * or render in state containers with identity bailout semantics.
+ *
+ * Hot-path slices that skip guarding entirely (selection maps that scale with
+ * row count, pointer-frequency resize state) call their change handler
+ * directly instead of routing through this util. Custom feature slices with a
+ * cheaper or semantic-aware comparison can pass `isEqual` to override the
+ * structural default.
  */
 export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
   // Minimal structural shape so any table view (public `Table`,
@@ -225,18 +231,13 @@ export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
   // Unknown keys (custom feature slices) accept any updater shape instead of
   // collapsing to `never`.
   updater: Updater<StateSliceForKey<K>>,
-  isEqual?: StateSliceEqualityFn<StateSliceForKey<K>>,
+  isEqual: StateSliceEqualityFn<StateSliceForKey<K>> = stateSlicesEqual,
 ): void {
   const onChangeKey = `on${key.charAt(0).toUpperCase()}${key.slice(1)}Change`
   const onChange = (instance.options as Record<string, unknown>)[
     onChangeKey
   ] as ((updater: Updater<any>) => void) | undefined
   if (!onChange) {
-    return
-  }
-
-  if (!isEqual) {
-    onChange(updater)
     return
   }
 

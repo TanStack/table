@@ -9,7 +9,7 @@ title: cell_getSelectionStartHandler
 function cell_getSelectionStartHandler<TFeatures, TData, TValue>(cell, _contextDocument?): (e) => void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1413](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1413)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1411](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1411)
 
 Creates a handler that begins a selection at this cell.
 

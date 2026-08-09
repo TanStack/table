@@ -121,7 +121,9 @@ describe('table_setRowPinning', () => {
     table_setRowPinning(table, newState)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(newState)
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, getDefaultRowPinningState()),
+    ).toEqual(newState)
   })
 
   it('should handle undefined onRowPinningChange without error', () => {
@@ -143,9 +145,12 @@ describe('table_resetRowPinning', () => {
     table_resetRowPinning(table, true)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(
-      getDefaultRowPinningState(),
-    )
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, {
+        top: [ROW[1]],
+        bottom: [],
+      }),
+    ).toEqual(getDefaultRowPinningState())
   })
 
   it('should reset to initial state when defaultState is false', () => {
@@ -164,7 +169,9 @@ describe('table_resetRowPinning', () => {
     table_resetRowPinning(table, false)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(initialState)
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, getDefaultRowPinningState()),
+    ).toEqual(initialState)
   })
 
   it('should reset to default state when no initial state exists', () => {
@@ -176,9 +183,12 @@ describe('table_resetRowPinning', () => {
     table_resetRowPinning(table, false)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(
-      getDefaultRowPinningState(),
-    )
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, {
+        top: [ROW[1]],
+        bottom: [],
+      }),
+    ).toEqual(getDefaultRowPinningState())
   })
 })
 

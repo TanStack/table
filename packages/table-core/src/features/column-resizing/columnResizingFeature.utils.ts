@@ -3,7 +3,7 @@ import {
   header_getSize,
   table_setColumnSizing,
 } from '../column-sizing/columnSizingFeature.utils'
-import { cloneState, makeObjectMap, setStateSlice } from '../../utils'
+import { cloneState, makeObjectMap } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -349,9 +349,10 @@ export function table_setColumnResizing<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<columnResizingState>,
 ) {
-  // Pointer moves intentionally produce high-frequency transient state. The
-  // local resize calculations already decide whether a write is necessary.
-  setStateSlice(table, 'columnResizing', updater)
+  // Unguarded: pointer moves intentionally produce high-frequency transient
+  // state. The local resize calculations already decide whether a write is
+  // necessary.
+  table.options.onColumnResizingChange?.(updater)
 }
 
 /**

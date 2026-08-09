@@ -9,7 +9,7 @@ title: column_getIsPinned
 function column_getIsPinned<TFeatures, TData, TValue>(column): ColumnPinningPosition;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:148](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L148)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L143)
 
 Reads this column's current pinning region.
 

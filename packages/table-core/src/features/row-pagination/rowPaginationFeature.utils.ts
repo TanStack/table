@@ -1,9 +1,4 @@
-import {
-  cloneState,
-  functionalUpdate,
-  setStateSlice,
-  stateSlicesEqual,
-} from '../../utils'
+import { cloneState, functionalUpdate, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -78,7 +73,7 @@ export function table_setPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<PaginationState>) {
-  setStateSlice(table, 'pagination', updater, stateSlicesEqual)
+  setStateSlice(table, 'pagination', updater)
 }
 
 /**

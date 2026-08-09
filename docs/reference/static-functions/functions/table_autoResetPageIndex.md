@@ -9,7 +9,7 @@ title: table_autoResetPageIndex
 function table_autoResetPageIndex<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L45)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L40)
 
 Resets the page index when a page-altering change should return to page 0.
 

@@ -5,7 +5,7 @@ title: PrototypeAPI
 
 # Interface: PrototypeAPI\<_TDeps, _TDepArgs\>
 
-Defined in: [utils.ts:568](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L568)
+Defined in: [utils.ts:569](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L569)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [utils.ts:568](https://github.com/TanStack/table/blob/main/packages/
 fn: (self, ...args) => any;
 ```
 
-Defined in: [utils.ts:569](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L569)
+Defined in: [utils.ts:570](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L570)
 
 #### Parameters
 
@@ -49,7 +49,7 @@ Defined in: [utils.ts:569](https://github.com/TanStack/table/blob/main/packages/
 optional memoDeps: (self, depArgs?) => any[] | undefined;
 ```
 
-Defined in: [utils.ts:570](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L570)
+Defined in: [utils.ts:571](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L571)
 
 #### Parameters
 

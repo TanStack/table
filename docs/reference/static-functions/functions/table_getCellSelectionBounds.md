@@ -9,7 +9,7 @@ title: table_getCellSelectionBounds
 function table_getCellSelectionBounds<TFeatures, TData>(table): CellSelectionBounds[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:416](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L416)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:414](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L414)
 
 Resolves ordered range operations into disjoint, positive display-order
 index rectangles.

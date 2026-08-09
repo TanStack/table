@@ -9,7 +9,7 @@ title: row_getIsAllSubRowsSelected
 function row_getIsAllSubRowsSelected<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:607](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L607)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:606](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L606)
 
 Checks whether all selectable descendants are selected.
 

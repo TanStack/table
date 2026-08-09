@@ -9,7 +9,7 @@ title: getDefaultColumnOrderState
 function getDefaultColumnOrderState(): ColumnOrderState;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L31)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L30)
 
 Creates the default column order state.
 

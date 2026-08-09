@@ -12,7 +12,7 @@ function table_toggleAllRowsSelected<TFeatures, TData>(
    opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L105)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L104)
 
 Selects or deselects every selectable row before grouping.
 

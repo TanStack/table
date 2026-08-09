@@ -3,7 +3,6 @@ import {
   cloneState,
   makeObjectMap,
   setStateSlice,
-  stateSlicesEqual,
 } from '../../utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
 import {
@@ -59,9 +58,9 @@ export function table_setCellSelection<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<CellSelectionState>,
 ) {
-  // Selection updates are pointer-driven and ranges can be large. Keep the
-  // hot path direct; auto-reset protection is applied specifically in reset.
-  setStateSlice(table, 'cellSelection', updater)
+  // Unguarded: selection updates are pointer-driven and ranges can be large.
+  // Keep the hot path direct; the auto-reset path guards in reset below.
+  table.options.onCellSelectionChange?.(updater)
 }
 
 /**
@@ -86,7 +85,6 @@ export function table_resetCellSelection<
       ? getDefaultCellSelectionState()
       : (cloneState(table.initialState.cellSelection) ??
           getDefaultCellSelectionState()),
-    stateSlicesEqual,
   )
 }
 

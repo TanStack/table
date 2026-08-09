@@ -9,7 +9,6 @@ import {
   cloneState,
   hasOwn,
   makeObjectMap,
-  setStateSlice,
 } from '../../utils'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -340,9 +339,9 @@ export function table_setColumnSizing<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnSizingState>,
 ) {
-  // This is updated continuously during `onChange` resize mode. Avoid a full
-  // map comparison on every animation-frame-scale write.
-  setStateSlice(table, 'columnSizing', updater)
+  // Unguarded: this is updated continuously during `onChange` resize mode.
+  // Avoid a full map comparison on every animation-frame-scale write.
+  table.options.onColumnSizingChange?.(updater)
 }
 
 /**

@@ -320,13 +320,38 @@ describe('setStateSlice', () => {
       ).not.toThrow()
     })
 
-    it('should pass the original updater through when no equality policy is supplied', () => {
-      const onCustomChange = vi.fn()
-      const updater = (old: number) => old + 1
+    it('should guard with the structural default when no equality policy is supplied', () => {
+      const before = { ids: ['a'] }
+      let owned = before
+      const onCustomChange = vi.fn((updater: (old: unknown) => unknown) => {
+        owned = updater(owned) as typeof owned
+      })
 
-      setStateSlice({ options: { onCustomChange } }, 'custom' as any, updater)
+      setStateSlice({ options: { onCustomChange } }, 'custom' as any, {
+        ids: ['a'],
+      })
 
-      expect(onCustomChange).toHaveBeenCalledWith(updater)
+      expect(onCustomChange).toHaveBeenCalledTimes(1)
+      expect(owned).toBe(before)
+    })
+
+    it('should use a supplied equality policy instead of the structural default', () => {
+      const before = { ids: ['a'] }
+      let owned = before
+      const onCustomChange = vi.fn((updater: (old: unknown) => unknown) => {
+        owned = updater(owned) as typeof owned
+      })
+      const isEqual = vi.fn(() => true)
+
+      setStateSlice(
+        { options: { onCustomChange } },
+        'custom' as any,
+        { ids: ['b'] },
+        isEqual,
+      )
+
+      expect(isEqual).toHaveBeenCalledTimes(1)
+      expect(owned).toBe(before)
     })
   })
 })

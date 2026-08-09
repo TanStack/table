@@ -4,7 +4,6 @@ import {
   cloneState,
   makeObjectMap,
   setStateSlice,
-  stateSlicesEqual,
 } from '../../utils'
 import type { GroupingState } from '../column-grouping/columnGroupingFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -162,7 +161,7 @@ export function table_setColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
-  setStateSlice(table, 'columnOrder', updater, stateSlicesEqual)
+  setStateSlice(table, 'columnOrder', updater)
 }
 
 /**

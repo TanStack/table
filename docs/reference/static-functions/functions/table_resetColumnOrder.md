@@ -9,7 +9,7 @@ title: table_resetColumnOrder
 function table_resetColumnOrder<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L180)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L179)
 
 Resets `columnOrder` to the configured initial state or feature default.
 

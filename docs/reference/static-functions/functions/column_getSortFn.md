@@ -9,7 +9,7 @@ title: column_getSortFn
 function column_getSortFn<TFeatures, TData, TValue>(column): SortFn<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:220](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L220)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L215)
 
 Resolves the sorting function configured for a column.
 

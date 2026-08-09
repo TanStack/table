@@ -9,7 +9,7 @@ title: table_getOrderColumnsFn
 function table_getOrderColumnsFn<TFeatures, TData>(table): (columns) => Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L201)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L200)
 
 Creates the ordering function used to arrange leaf columns.
 

@@ -3,7 +3,6 @@ import {
   functionalUpdate,
   isFunction,
   setStateSlice,
-  stateSlicesEqual,
 } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -306,7 +305,7 @@ export function table_setColumnFilters<
     })
   }
 
-  setStateSlice(table, 'columnFilters', updateFn, stateSlicesEqual)
+  setStateSlice(table, 'columnFilters', updateFn)
 }
 
 /**

@@ -9,7 +9,7 @@ title: table_getCanLastPage
 function table_getCanLastPage<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:304](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L304)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:299](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L299)
 
 Checks whether a known, finite last page exists after the current page.
 

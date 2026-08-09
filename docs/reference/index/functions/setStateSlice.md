@@ -10,13 +10,13 @@ function setStateSlice<K>(
    instance,
    key,
    updater,
-   isEqual?): void;
+   isEqual): void;
 ```
 
-Defined in: [utils.ts:217](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L217)
+Defined in: [utils.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L223)
 
 Routes a state slice update through the slice's `on<State>Change` handler,
-optionally preserving the owner's current reference for structural no-ops.
+preserving the owner's current reference for structural no-ops.
 
 Equality is evaluated inside the updater received by the state owner, never
 against the table's potentially stale controlled snapshot. This keeps
@@ -28,6 +28,12 @@ A user-provided change handler is still invoked for a no-op because only that
 handler's state container can know its latest queued value. The guarded
 updater returns that container's previous reference, preventing a state write
 or render in state containers with identity bailout semantics.
+
+Hot-path slices that skip guarding entirely (selection maps that scale with
+row count, pointer-frequency resize state) call their change handler
+directly instead of routing through this util. Custom feature slices with a
+cheaper or semantic-aware comparison can pass `isEqual` to override the
+structural default.
 
 ## Type Parameters
 
@@ -51,9 +57,9 @@ or render in state containers with identity bailout semantics.
 
 [`Updater`](../type-aliases/Updater.md)\<`StateSliceForKey`\<`K`\>\>
 
-### isEqual?
+### isEqual
 
-[`StateSliceEqualityFn`](../type-aliases/StateSliceEqualityFn.md)\<`StateSliceForKey`\<`K`\>\>
+[`StateSliceEqualityFn`](../type-aliases/StateSliceEqualityFn.md)\<`StateSliceForKey`\<`K`\>\> = `stateSlicesEqual`
 
 ## Returns
 

@@ -9,7 +9,7 @@ title: table_resetExpanded
 function table_resetExpanded<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L122)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L120)
 
 Resets `expanded` to the configured initial state or feature default.
 

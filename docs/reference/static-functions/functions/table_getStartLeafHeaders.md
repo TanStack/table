@@ -9,7 +9,7 @@ title: table_getStartLeafHeaders
 function table_getStartLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:645](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L645)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:640](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L640)
 
 Collects leaf headers for the start pinned region.
 

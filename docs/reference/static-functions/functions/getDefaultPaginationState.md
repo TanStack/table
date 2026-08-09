@@ -9,7 +9,7 @@ title: getDefaultPaginationState
 function getDefaultPaginationState(): PaginationState;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L26)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L21)
 
 Creates the default pagination state used by the pagination feature.
 

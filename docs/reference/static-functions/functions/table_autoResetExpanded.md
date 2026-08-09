@@ -9,7 +9,7 @@ title: table_autoResetExpanded
 function table_autoResetExpanded<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L44)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L38)
 
 Schedules an expanded-state reset after row-structure changes.
 
