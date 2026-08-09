@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/ember-table'
   framework: ember
-  library_version: '9.1.1'
+  library_version: '9.1.2'
 requires:
   - '@tanstack/table-core#core'
   - getting-started

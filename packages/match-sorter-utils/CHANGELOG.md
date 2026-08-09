@@ -1,5 +1,7 @@
 # @tanstack/match-sorter-utils
 
+## 9.1.2
+
 ## 9.1.1
 
 ## 9.1.0

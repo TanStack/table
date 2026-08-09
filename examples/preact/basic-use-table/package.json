@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@tanstack/preact-devtools": "^0.10.9",
-    "@tanstack/preact-table": "^9.1.1",
-    "@tanstack/preact-table-devtools": "^9.1.1",
+    "@tanstack/preact-table": "^9.1.2",
+    "@tanstack/preact-table-devtools": "^9.1.2",
     "preact": "^10.29.7"
   },
   "devDependencies": {
