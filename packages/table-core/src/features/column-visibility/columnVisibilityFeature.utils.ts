@@ -325,6 +325,9 @@ export function table_resetColumnVisibility<
  *
  * Columns that cannot hide stay visible when toggling all columns off.
  *
+ * The call is a no-op (no `onColumnVisibilityChange`) when every leaf column is
+ * already in the requested visibility state.
+ *
  * @example
  * ```ts
  * table_toggleAllColumnsVisible(table)
@@ -341,6 +344,16 @@ export function table_toggleAllColumnsVisible<
   for (let i = 0; i < leafColumns.length; i++) {
     const column = leafColumns[i]!
     visibility[column.id] = !value ? !column_getCanHide(column) : value
+  }
+
+  if (
+    leafColumns.every(
+      (column) =>
+        visibility[column.id] ===
+        callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
+    )
+  ) {
+    return
   }
 
   table_setColumnVisibility(table, visibility)

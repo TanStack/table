@@ -362,6 +362,11 @@ describe('columnVisibilityFeature.utils', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = makeTable(1, {
         onColumnVisibilityChange,
+        initialState: {
+          columnVisibility: {
+            firstName: false,
+          },
+        },
       })
 
       table_toggleAllColumnsVisible(table, true)
@@ -388,6 +393,36 @@ describe('columnVisibilityFeature.utils', () => {
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id) => [id, false]),
       )
+    })
+
+    it('should be a no-op when all columns are already visible', () => {
+      const onColumnVisibilityChange = vi.fn()
+      const table = makeTable(1, {
+        onColumnVisibilityChange,
+      })
+
+      table_toggleAllColumnsVisible(table, true)
+
+      expect(onColumnVisibilityChange).not.toHaveBeenCalled()
+    })
+
+    it('should be a no-op when all hideable columns are already hidden', () => {
+      const onColumnVisibilityChange = vi.fn()
+      const allColumnIds = makeTable(1)
+        .getAllLeafColumns()
+        .map((col) => col.id)
+      const table = makeTable(1, {
+        onColumnVisibilityChange,
+        initialState: {
+          columnVisibility: Object.fromEntries(
+            allColumnIds.map((id) => [id, false]),
+          ),
+        },
+      })
+
+      table_toggleAllColumnsVisible(table, false)
+
+      expect(onColumnVisibilityChange).not.toHaveBeenCalled()
     })
   })
 
@@ -454,6 +489,11 @@ describe('columnVisibilityFeature.utils', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = makeTable(1, {
         onColumnVisibilityChange,
+        initialState: {
+          columnVisibility: {
+            firstName: false,
+          },
+        },
       })
       const handler = table_getToggleAllColumnsVisibilityHandler(table)
 
