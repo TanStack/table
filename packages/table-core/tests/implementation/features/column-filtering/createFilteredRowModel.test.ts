@@ -319,6 +319,55 @@ describe('createFilteredRowModel', () => {
       expect(model.rowsById[keepA1.id]).toBe(keepA1)
     })
 
+    it('should include unfiltered descendants of kept rows in flatRows and rowsById (from leaf, depth 0)', () => {
+      const table = makeNestedTable({
+        filterFromLeafRows: true,
+        maxLeafRowFilterDepth: 0,
+      })
+      const model = table.getFilteredRowModel()
+
+      // The subtrees of the kept rows are never filtered at depth 0, so they
+      // stay visible through subRows and belong in the flat arrays too, the
+      // same way the root-down path keeps them
+      const keepA = model.rows[0]!
+      expect(rowNames(keepA.subRows)).toEqual(['keep-a1', 'drop-a2'])
+      expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
+        'keep-a1',
+        'drop-a1a',
+        'drop-a2',
+        'keep-c',
+        'keep-d',
+        'drop-d1',
+      ])
+
+      const keepA1 = keepA.subRows[0]!
+      expect(model.rowsById[keepA1.id]).toBe(keepA1)
+    })
+
+    it('should include kept-as-is grandchildren in flatRows when maxLeafRowFilterDepth is 1 (from leaf)', () => {
+      const table = makeNestedTable({
+        filterFromLeafRows: true,
+        maxLeafRowFilterDepth: 1,
+      })
+      const model = table.getFilteredRowModel()
+
+      // Depth-1 children are still filtered (drop-a2 removed), while the
+      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows
+      const keepA = model.rows[0]!
+      expect(rowNames(keepA.subRows)).toEqual(['keep-a1'])
+      expect(rowNames(keepA.subRows[0]!.subRows)).toEqual(['drop-a1a'])
+      expect(rowNames(model.flatRows)).toEqual([
+        'keep-a1',
+        'drop-a1a',
+        'keep-a',
+        'keep-b1',
+        'drop-b',
+        'keep-c',
+        'keep-d',
+      ])
+    })
+
     it('should include kept-as-is grandchildren in flatRows when maxLeafRowFilterDepth is 1 (from root)', () => {
       const table = makeNestedTable({ maxLeafRowFilterDepth: 1 })
       const model = table.getFilteredRowModel()

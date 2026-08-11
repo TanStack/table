@@ -82,11 +82,20 @@ function filterRowModelFromLeafs<
           continue
         }
       } else {
+        // Past maxLeafRowFilterDepth the subtree is never filtered, so it stays
+        // visible through row.subRows and its rows must enter flatRows and
+        // rowsById as well, like the root-down path already does
+        newRow.subRows = row.subRows
         row = newRow
         if (filterRow(row)) {
           filteredRows.push(row)
           newFilteredRowsById[row.id] = row
           newFilteredFlatRows.push(row)
+          addSubRowsToFlatArrays(
+            row.subRows,
+            newFilteredFlatRows,
+            newFilteredRowsById,
+          )
         }
       }
     }
