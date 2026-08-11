@@ -44,6 +44,12 @@ TanStack Table V9 delivers major performance improvements, hundreds of bug fixes
   - **More capable features**: Aggregation, Row Selection, Column Pinning, and Column Resizing have all been made more feature rich (multiple aggregation definitions per column, Shift range selection, logical `start`/`end` pinning, and more).
   - **New core APIs**: New table and row APIs (like `table.getMaxSubRowDepth()`, `row.getDisplayIndex()`) round out the core feature set.
 
+### 7. Modern Builds
+
+- **ESM-only**: UMD and CJS builds have been dropped. Packages ship as modern ESM.
+- **TypeScript target `ES2022`**: Compiled output now targets ES2022.
+- **Smaller install size**: Published packages no longer ship `src` or source maps, which reduces install footprint.
+
 ### The Good News: Most Upgrades Are Opt-in
 
 - You can begin with `stockFeatures`, then audit down to explicit features.
