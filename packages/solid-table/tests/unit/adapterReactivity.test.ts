@@ -293,7 +293,7 @@ describe('Solid adapter lifecycle and option ownership', () => {
       expect(secondHandler).not.toHaveBeenCalled()
 
       setOnRowSelectionChange(() => secondHandler)
-      table.toggleAllRowsSelected(false)
+      table.toggleAllRowsSelected(true)
 
       expect(firstHandler).toHaveBeenCalledTimes(1)
       expect(secondHandler).toHaveBeenCalledTimes(1)

@@ -369,7 +369,7 @@ describe('TableController lifecycle and option ownership', () => {
       '{"canSelect":false,"columnIds":["title"],"values":["Final"]}',
     )
 
-    element.table!.toggleAllRowsSelected(false)
+    element.table!.toggleAllRowsSelected(true)
 
     expect(firstSelectionHandler).toHaveBeenCalledOnce()
     expect(secondSelectionHandler).toHaveBeenCalledOnce()

@@ -230,7 +230,7 @@ describe('Alpine adapter reactivity', () => {
 
     options.onRowSelectionChange = secondHandler
     await flushEffects()
-    table.toggleAllRowsSelected(false)
+    table.toggleAllRowsSelected(true)
 
     expect(firstHandler).toHaveBeenCalledTimes(1)
     expect(secondHandler).toHaveBeenCalledTimes(1)

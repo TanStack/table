@@ -865,4 +865,52 @@ describe('table_toggleAllRowsSelected', () => {
       getUpdaterResult(onRowSelectionChange, { '0': true, '1': true }),
     ).toEqual({})
   })
+
+  it('should be a no-op for a redundant select all', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionChange,
+      state: {
+        rowSelection: {
+          '0': true,
+          '1': true,
+          '2': true,
+          '3': true,
+          '4': true,
+        },
+      },
+    })
+
+    table_toggleAllRowsSelected(table, true)
+
+    expect(onRowSelectionChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op for a redundant deselect all', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({ onRowSelectionChange })
+
+    table_toggleAllRowsSelected(table, false)
+    table_toggleAllRowsSelected(table, false, { deselectAll: true })
+
+    expect(onRowSelectionChange).not.toHaveBeenCalled()
+  })
+
+  it('should still select when only some selectable rows are selected', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionChange,
+      state: { rowSelection: { '0': true } },
+    })
+
+    table_toggleAllRowsSelected(table, true)
+
+    expect(getUpdaterResult(onRowSelectionChange, { '0': true })).toEqual({
+      '0': true,
+      '1': true,
+      '2': true,
+      '3': true,
+      '4': true,
+    })
+  })
 })

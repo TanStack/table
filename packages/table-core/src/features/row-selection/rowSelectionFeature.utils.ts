@@ -96,6 +96,10 @@ export function table_resetRowSelection<
  * existing selection map; rows that cannot be selected keep their selection
  * unless `opts.deselectAll` is `true`.
  *
+ * The call is a no-op (no `onRowSelectionChange`) when every selectable row is
+ * already selected and selection is requested, or when nothing is selected and
+ * deselection is requested.
+ *
  * @example
  * ```ts
  * table_toggleAllRowsSelected(table)
@@ -111,6 +115,25 @@ export function table_toggleAllRowsSelected<
 ) {
   // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
   table._lastSelectedRowId = null
+
+  const isAllRowsSelected = callMemoOrStaticFn(
+    table,
+    'getIsAllRowsSelected',
+    table_getIsAllRowsSelected,
+  )
+
+  if (value ?? !isAllRowsSelected) {
+    if (isAllRowsSelected) return
+  } else if (
+    !callMemoOrStaticFn(
+      table,
+      'getIsSomeRowsSelected',
+      table_getIsSomeRowsSelected,
+    )
+  ) {
+    return
+  }
+
   table_setRowSelection(table, (old) => {
     value =
       typeof value !== 'undefined'
