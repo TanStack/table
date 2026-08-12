@@ -209,6 +209,20 @@ describe('createFilteredRowModel', () => {
       expect(model.rowsById[keepA.id]).toBe(keepA)
       expect(model.rowsById[keepA.subRows[0]!.id]).toBe(keepA.subRows[0])
     })
+
+    it('flattens each parent ahead of its own sub-rows (from root)', () => {
+      const table = makeNestedTable()
+      const model = table.getFilteredRowModel()
+
+      // Pre-order: a parent precedes its own surviving sub-rows in flatRows,
+      // matching the readable `rows` tree.
+      expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
+        'keep-a1',
+        'keep-c',
+        'keep-d',
+      ])
+    })
   })
 
   describe('filterFromLeafRows', () => {
@@ -270,6 +284,23 @@ describe('createFilteredRowModel', () => {
       expect(rowNames(keepA.subRows)).toEqual(['keep-a1'])
       expect(keepA.subRows[0]!.subRows).toEqual([])
     })
+
+    it('flattens each parent ahead of its own sub-rows (from leaf)', () => {
+      const table = makeNestedTable({ filterFromLeafRows: true })
+      const { rows, flatRows } = table.getFilteredRowModel()
+
+      // drop-b is retained because keep-b1 matches, and its ancestor chain
+      // must appear before its descendants in flatRows (pre-order).
+      expect(rowNames(rows)).toEqual(['keep-a', 'drop-b', 'keep-c', 'keep-d'])
+      expect(rowNames(flatRows)).toEqual([
+        'keep-a',
+        'keep-a1',
+        'drop-b',
+        'keep-b1',
+        'keep-c',
+        'keep-d',
+      ])
+    })
   })
 
   describe('maxLeafRowFilterDepth', () => {
@@ -324,13 +355,12 @@ describe('createFilteredRowModel', () => {
       const model = table.getFilteredRowModel()
 
       // Depth-1 children are still filtered (drop-a2 removed), while the
-      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows. The
-      // pre-existing flatRows order pushes recursed children before their
-      // parent.
+      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows. Each
+      // parent flattens ahead of its own sub-rows (pre-order).
       expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
         'keep-a1',
         'drop-a1a',
-        'keep-a',
         'keep-c',
         'keep-d',
       ])
