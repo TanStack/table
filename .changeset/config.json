@@ -8,8 +8,8 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "fixed": [["@tanstack/*"]],
-  "linked": [],
+  "fixed": [],
+  "linked": [["@tanstack/*"]],
   "ignore": [],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
