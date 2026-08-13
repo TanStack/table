@@ -92,13 +92,13 @@ export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  _options: () => TableOptions<TFeatures, TData>,
+  optionsFactory: () => TableOptions<TFeatures, TData>,
 ): AngularTable<TFeatures, TData> {
-  assertInInjectionContext(injectTable)
-  const injector = inject(Injector)
-  const ngZone = inject(NgZone)
+assertInInjectionContext(injectTable)
+const injector = inject(Injector)
+const ngZone = inject(NgZone)
   const destroyRef = inject(DestroyRef)
-  const options = computed(() => _options())
+  const options = computed(() => optionsFactory())
   const coreReactivityFeature = angularReactivity(injector)
 
   const lazyTable = ngZone.runOutsideAngular(() =>
