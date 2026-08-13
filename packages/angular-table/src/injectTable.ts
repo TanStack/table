@@ -94,9 +94,9 @@ export function injectTable<
 >(
   optionsFactory: () => TableOptions<TFeatures, TData>,
 ): AngularTable<TFeatures, TData> {
-assertInInjectionContext(injectTable)
-const injector = inject(Injector)
-const ngZone = inject(NgZone)
+  assertInInjectionContext(injectTable)
+  const injector = inject(Injector)
+  const ngZone = inject(NgZone)
   const destroyRef = inject(DestroyRef)
   const options = computed(() => optionsFactory())
   const coreReactivityFeature = angularReactivity(injector)
@@ -126,7 +126,7 @@ const ngZone = inject(NgZone)
     () => {
       const currentOptions = options()
       // rawValue will be always valued here due to internal lazyInit effect
-      const tableInstance = lazyTable.rawValue
+      const tableInstance = lazyTable.rawValue
       if (previousOptions === currentOptions) return
       untracked(() =>
         tableInstance.setOptions((previous) => ({
