@@ -92,7 +92,8 @@ const table = useTable({
 
 Alternatively, if you don't need to manage the column visibility state outside of the table, you can still set the initial default column visibility state using the `initialState` option.
 
-> **Note**: If `columnVisibility` is provided to both `initialState` and `state`, the `state` initialization will take precedence and `initialState` will be ignored. Do not provide `columnVisibility` to both `initialState` and `state`, only one or the other.
+> [!NOTE]
+> If `columnVisibility` is provided to both `initialState` and `state`, the `state` initialization will take precedence and `initialState` will be ignored. Do not provide `columnVisibility` to both `initialState` and `state`, only one or the other.
 
 ```tsx
 const features = tableFeatures({ columnVisibilityFeature })
@@ -159,7 +160,8 @@ const columnLabels: Record<string, string> = {
 }
 ```
 
-> **Note**: `column.columnDef.header` is a header render template. It can be a
+> [!NOTE]
+> `column.columnDef.header` is a header render template. It can be a
 > string, JSX, or a function that needs a header context and should be rendered
 > with `flexRender` when you are rendering actual table headers. A column
 > visibility menu is usually rendering columns rather than header objects, and a

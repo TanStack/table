@@ -2,7 +2,8 @@
 title: Columns Guide
 ---
 
-> Note: This guide is about the actual `column` objects that are generated within the table instance and NOT about setting up the [column definitions](./column-defs) for your table.
+> [!NOTE]
+> This guide is about the actual `column` objects that are generated within the table instance and NOT about setting up the [column definitions](./column-defs) for your table.
 
 This quick guide will discuss the different ways you can retrieve and interact with `column` objects in TanStack Table.
 

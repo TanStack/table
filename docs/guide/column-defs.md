@@ -2,7 +2,8 @@
 title: Column Definitions Guide
 ---
 
-> Note: This guide is about setting up column definitions for your table and NOT about the actual [`column`](./columns) objects that are generated within the table instance.
+> [!NOTE]
+> This guide is about setting up column definitions for your table and NOT about the actual [`column`](./columns) objects that are generated within the table instance.
 
 Column defs are the single most important part of building a table. They are responsible for:
 
@@ -28,7 +29,8 @@ While column defs are just plain objects at the end of the day, a `createColumnH
 
 In v9, `createColumnHelper` requires two type parameters: `TFeatures` (from your `features` object) and `TData` (your row type). Use `typeof features` to get the features type.
 
-> Note: If you use the `createTableHook` factory, it returns a `createAppColumnHelper` that is already bound to your features type, so you only pass `TData`. See the [Composable Tables Guide](../framework/react/guide/composable-tables).
+> [!NOTE]
+> If you use the `createTableHook` factory, it returns a `createAppColumnHelper` that is already bound to your features type, so you only pass `TData`. See the [Composable Tables Guide](../framework/react/guide/composable-tables).
 
 Here's an example of creating and using a column helper:
 
@@ -200,7 +202,8 @@ columnHelper.accessor(row => row[1], {
 }
 ```
 
-> Note: When using `accessorKey` with array data, the key must be a string (e.g. `'1'`, not the number `1`).
+> [!NOTE]
+> When using `accessorKey` with array data, the key must be a string (e.g. `'1'`, not the number `1`).
 
 ### Accessor Functions
 

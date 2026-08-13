@@ -402,6 +402,7 @@ Alpine.data('table', () => {
 </table>
 ```
 
-> Note: with the `() => ({})` selector, the `:class` binding on the resizer above will not update during a drag (the table is opted out of state-driven re-evaluation). The example instead toggles the `isResizing` class imperatively from a `table.atoms.columnResizing` subscription. Keeping the `:class` binding is fine if you accept the highlight only reflecting resize state on the next data-driven re-render.
+> [!NOTE]
+> with the `() => ({})` selector, the `:class` binding on the resizer above will not update during a drag (the table is opted out of state-driven re-evaluation). The example instead toggles the `isResizing` class imperatively from a `table.atoms.columnResizing` subscription. Keeping the `:class` binding is fine if you accept the highlight only reflecting resize state on the next data-driven re-render.
 
 If you follow these steps, you should see significant performance improvements while resizing columns.

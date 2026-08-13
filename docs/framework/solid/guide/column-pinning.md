@@ -127,7 +127,8 @@ const table = createTable({
 
 ### Useful Column Pinning APIs
 
-> Note: These APIs are available when using `columnPinningFeature`.
+> [!NOTE]
+> These APIs are available when using `columnPinningFeature`.
 
 There are a handful of useful Column API methods to help you implement column pinning features:
 

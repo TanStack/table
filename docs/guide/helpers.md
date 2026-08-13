@@ -48,7 +48,8 @@ const features = tableFeatures({
 })
 ```
 
-> Note: the full built-in registries (`filterFns`, `sortFns`, `aggregationFns`) can still be spread into these slots, but they are deprecated because they put every built-in function in your bundle. Register only the functions you use under their conventional string keys, or pass functions directly to the `filterFn`, `sortFn`, and `aggregationFn` column options with no registration at all. String keys, including the default `'auto'`, only resolve functions that are registered.
+> [!NOTE]
+> the full built-in registries (`filterFns`, `sortFns`, `aggregationFns`) can still be spread into these slots, but they are deprecated because they put every built-in function in your bundle. Register only the functions you use under their conventional string keys, or pass functions directly to the `filterFn`, `sortFn`, and `aggregationFn` column options with no registration at all. String keys, including the default `'auto'`, only resolve functions that are registered.
 
 Keep `features` stable. In most apps, define it outside your component or in shared table setup code. Since `typeof features` is used throughout the table's types, stable features also make it easier to reuse column helpers, column definitions, and shared options.
 

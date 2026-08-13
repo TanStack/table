@@ -32,7 +32,8 @@ title: Client-Side vs Server-Side Guide
 
 <!-- ::end:framework -->
 
-> [!IMPORTANT] TanStack Table supports both client-side and server-side row processing!
+> [!IMPORTANT]
+> TanStack Table supports both client-side and server-side row processing!
 
 More accurately, TanStack Table lets you bring your own backend or other manual approach to processing data for features such as filtering, grouping, sorting, expanding, aggregating, faceting, and pagination.
 
