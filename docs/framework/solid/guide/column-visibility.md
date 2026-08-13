@@ -97,7 +97,8 @@ const table = createTable({
 
 Alternatively, if you don't need to manage the column visibility state outside of the table, you can still set the initial default column visibility state using the `initialState` option.
 
-> **Note**: If `columnVisibility` is provided to both `initialState` and a controlled option (`atoms` or `state`), the controlled value will take precedence and `initialState` will be ignored. Only provide `columnVisibility` in one place.
+> [!NOTE]
+> If `columnVisibility` is provided to both `initialState` and a controlled option (`atoms` or `state`), the controlled value will take precedence and `initialState` will be ignored. Only provide `columnVisibility` in one place.
 
 ```tsx
 const features = tableFeatures({ columnVisibilityFeature })

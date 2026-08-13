@@ -44,7 +44,8 @@ const table = useTable({
 })
 ```
 
-> **Note:** The `filterFns` registry above lists only the built-in filter functions this table uses. Spreading the entire built-in `filterFns` registry (`filterFns: { ...filterFns }`) still works, but it puts every built-in filter function in your bundle. Register just the functions you use, or pass a function directly to the `filterFn` column option with no registration at all.
+> [!NOTE]
+> The `filterFns` registry above lists only the built-in filter functions this table uses. Spreading the entire built-in `filterFns` registry (`filterFns: { ...filterFns }`) still works, but it puts every built-in filter function in your bundle. Register just the functions you use, or pass a function directly to the `filterFn` column option with no registration at all.
 
 ## Column Filtering (Vue) Guide
 
@@ -79,7 +80,8 @@ const table = useTable({
 })
 ```
 
-> **Note:** When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
+> [!NOTE]
+> When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
 
 ### Client-Side Filtering
 
@@ -214,7 +216,8 @@ const table = useTable({
 })
 ```
 
-> **NOTE**: Do not use both `initialState.columnFilters` and `state.columnFilters` at the same time, as the controlled `state.columnFilters` value will override the `initialState.columnFilters`.
+> [!NOTE]
+> Do not use both `initialState.columnFilters` and `state.columnFilters` at the same time, as the controlled `state.columnFilters` value will override the `initialState.columnFilters`.
 
 ### FilterFns
 
@@ -245,7 +248,8 @@ You can also define your own custom filter functions, either inline as the `filt
 
 #### Custom Filter Functions
 
-> **Note:** These filter functions only run during client-side filtering.
+> [!NOTE]
+> These filter functions only run during client-side filtering.
 
 Whether you register a custom filter function in the `filterFns` slot on `tableFeatures` or pass it directly as a `filterFn` column option, it should have the following signature:
 
@@ -359,7 +363,8 @@ const includesStringIgnoreDiacritics = constructFilterFn({
 
 Register the variant by name in the `filterFns` registry or pass it directly to the `filterFn` column option, just like any other custom filter function.
 
-> **Note:** The table applies `resolveFilterValue` once per filter before any rows are tested. If you ever call a filter function directly (outside of a table), resolve the filter value yourself: `myFilterFn(row, columnId, myFilterFn.resolveFilterValue?.(rawValue) ?? rawValue)`.
+> [!NOTE]
+> The table applies `resolveFilterValue` once per filter before any rows are tested. If you ever call a filter function directly (outside of a table), resolve the filter value yourself: `myFilterFn(row, columnId, myFilterFn.resolveFilterValue?.(rawValue) ?? rawValue)`.
 
 ### Customize Column Filtering
 

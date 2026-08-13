@@ -53,7 +53,8 @@ const table = useTable({
 })
 ```
 
-> Note: In some features like grouping and expanding, the `row.id` will have an additional string appended to it.
+> [!NOTE]
+> In some features like grouping and expanding, the `row.id` will have an additional string appended to it.
 
 ### Row Numbers and Display Indexes
 
@@ -84,7 +85,8 @@ const firstName = row.getValue('firstName') // read the row value from the first
 const renderedLastName = row.renderValue('lastName') // render the value from the lastName column
 ```
 
-> Note: `cell.getValue` and `cell.renderValue` are shortcuts for the `row.getValue` and `row.renderValue` APIs, respectively.
+> [!NOTE]
+> `cell.getValue` and `cell.renderValue` are shortcuts for the `row.getValue` and `row.renderValue` APIs, respectively.
 
 ### Access Original Row Data
 

@@ -2,7 +2,8 @@
 title: Overview
 ---
 
-> NOTE: If you are upgrading from TanStack Table v8, start with the migration guide for your framework:
+> [!NOTE]
+> If you are upgrading from TanStack Table v8, start with the migration guide for your framework:
 
 <!-- ::start:framework -->
 

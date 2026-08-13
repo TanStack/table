@@ -542,7 +542,8 @@ const features = tableFeatures({
 })
 ```
 
-> Note: the `filterFns` and `sortFns` slots above register only the functions this table uses. The full built-in registries (`filterFns`, `sortFns`, `aggregationFns` exported from the package) can still be spread into these slots, but they are deprecated because they put every built-in function in your bundle. Import individual functions such as `sortFn_alphanumeric` instead, or pass functions directly in your column definitions.
+> [!NOTE]
+> the `filterFns` and `sortFns` slots above register only the functions this table uses. The full built-in registries (`filterFns`, `sortFns`, `aggregationFns` exported from the package) can still be spread into these slots, but they are deprecated because they put every built-in function in your bundle. Import individual functions such as `sortFn_alphanumeric` instead, or pass functions directly in your column definitions.
 
 Now `columnFiltersMeta` on every row is typed as `FuzzyFilterMeta` for tables built from this `features` object. The `filterMeta` slot is, like `tableMeta` and `columnMeta`, a phantom type-only entry: `metaHelper<FuzzyFilterMeta>()` returns `{}` at runtime and is stripped from the registered features.
 

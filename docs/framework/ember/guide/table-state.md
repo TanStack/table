@@ -124,7 +124,8 @@ export default class PersonTable extends Component {
 }
 ```
 
-> **Note:** TanStack Table v9 uses prototype-based methods that require `this` binding. Ember templates extract function references without binding them, so wrap table, column, and row method calls in small module-level helper functions (or getters) instead of calling them directly in a template. For example, `const getCanSort = (column) => column.getCanSort()`, then call `(getCanSort header.column)` from the template.
+> [!NOTE]
+> TanStack Table v9 uses prototype-based methods that require `this` binding. Ember templates extract function references without binding them, so wrap table, column, and row method calls in small module-level helper functions (or getters) instead of calling them directly in a template. For example, `const getCanSort = (column) => column.getCanSort()`, then call `(getCanSort header.column)` from the template.
 
 ### Setting Table State
 
@@ -178,7 +179,8 @@ table = useTable(() => ({
 }))
 ```
 
-> **Note:** Do not provide the same state slice in multiple ownership places unless you intentionally want one to win. For a slice like `pagination`, prefer exactly one of `initialState.pagination`, `atoms.pagination`, or `state.pagination` as the source of truth. The precedence is `atoms[key]` > `state[key]` > internal `baseAtoms[key]`: external atoms take precedence over external `state`, and external `state` syncs into the table's internal base atom.
+> [!NOTE]
+> Do not provide the same state slice in multiple ownership places unless you intentionally want one to win. For a slice like `pagination`, prefer exactly one of `initialState.pagination`, `atoms.pagination`, or `state.pagination` as the source of truth. The precedence is `atoms[key]` > `state[key]` > internal `baseAtoms[key]`: external atoms take precedence over external `state`, and external `state` syncs into the table's internal base atom.
 
 #### Resetting to Initial State
 

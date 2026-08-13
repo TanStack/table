@@ -81,7 +81,8 @@ const v9Table = injectTable(() => ({
 }))
 ```
 
-> Note: `injectTable` evaluates your initializer whenever any Angular signal read inside of it changes.
+> [!NOTE]
+> `injectTable` evaluates your initializer whenever any Angular signal read inside of it changes.
 > Keep expensive/static values (like `columns` and `features`) as stable references outside the initializer.
 
 ### New Required `features` Table Option
