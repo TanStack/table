@@ -52,7 +52,8 @@ class MyTable extends LitElement {
 }
 ```
 
-> **Note:** The `filterFns` registry above lists only the built-in filter function this table uses. Spreading the entire built-in `filterFns` registry (`filterFns: { ...filterFns }`) still works, but it puts every built-in filter function in your bundle. Register just the functions you use, or pass a function directly to the `globalFilterFn` option with no registration at all.
+> [!NOTE]
+> The `filterFns` registry above lists only the built-in filter function this table uses. Spreading the entire built-in `filterFns` registry (`filterFns: { ...filterFns }`) still works, but it puts every built-in filter function in your bundle. Register just the functions you use, or pass a function directly to the `globalFilterFn` option with no registration at all.
 
 ## Global Filtering (Lit) Guide
 
@@ -216,7 +217,8 @@ html`
 
 If you want to use a custom global filter function, you can define the function and pass it to the `globalFilterFn` option.
 
-> **Note:** It is often a popular idea to use fuzzy filtering functions for global filtering. This is discussed in the [Fuzzy Filtering Guide](./fuzzy-filtering).
+> [!NOTE]
+> It is often a popular idea to use fuzzy filtering functions for global filtering. This is discussed in the [Fuzzy Filtering Guide](./fuzzy-filtering).
 
 ```ts
 const customFilterFn = (row, columnId, filterValue) => {
@@ -244,7 +246,8 @@ const table = this.tableController.table({
 })
 ```
 
-> NOTE: Do not use both `initialState.globalFilter` and a controlled `globalFilter` (via `atoms` or `state`) at the same time, as the controlled value will override `initialState.globalFilter`.
+> [!NOTE]
+> Do not use both `initialState.globalFilter` and a controlled `globalFilter` (via `atoms` or `state`) at the same time, as the controlled value will override `initialState.globalFilter`.
 
 ### Disable Global Filtering
 

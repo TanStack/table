@@ -1,10 +1,13 @@
-import { untracked } from '@angular/core'
+import { assertInInjectionContext, effect, untracked } from '@angular/core'
 
-/**
- * Implementation from @tanstack/angular-query
- * {https://github.com/TanStack/query/blob/main/packages/angular-query-experimental/src/util/lazy-init/lazy-init.ts}
- */
-export function lazyInit<T extends object>(initializer: () => T): T {
+export function lazyInit<T extends object>(
+  initializer: () => T,
+): {
+  readonly rawValue: T
+  readonly value: T
+  readonly initialized: boolean
+} {
+  assertInInjectionContext(lazyInit)
   let object: T | null = null
 
   const initializeObject = () => {
@@ -13,11 +16,13 @@ export function lazyInit<T extends object>(initializer: () => T): T {
     }
   }
 
-  queueMicrotask(() => initializeObject())
+  effect(() => initializeObject(), {
+    debugName: 'tableLazyInitEffect',
+  })
 
   const table = () => {}
 
-  return new Proxy<T>(table as T, {
+  const proxy = new Proxy<T>(table as T, {
     apply(target: T, thisArg: any, argArray: Array<any>): any {
       initializeObject()
       if (typeof object === 'function') {
@@ -44,4 +49,14 @@ export function lazyInit<T extends object>(initializer: () => T): T {
       }
     },
   })
+
+  return {
+    value: proxy,
+    get rawValue() {
+      return object as T
+    },
+    get initialized() {
+      return !!object
+    },
+  }
 }

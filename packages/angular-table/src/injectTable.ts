@@ -3,6 +3,7 @@ import {
   Injector,
   NgZone,
   assertInInjectionContext,
+  computed,
   effect,
   inject,
   untracked,
@@ -91,49 +92,51 @@ export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => TableOptions<TFeatures, TData>,
+  optionsFactory: () => TableOptions<TFeatures, TData>,
 ): AngularTable<TFeatures, TData> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
   const ngZone = inject(NgZone)
+  const destroyRef = inject(DestroyRef)
+  const options = computed(() => optionsFactory())
+  const coreReactivityFeature = angularReactivity(injector)
 
-  return ngZone.runOutsideAngular(() =>
+  const lazyTable = ngZone.runOutsideAngular(() =>
     lazyInit(() => {
-      const initialOptions = options()
       // Explicit type arguments skip generic inference from the spread object
       // (a type-check hot spot); the spread only adds the angular reactivity
       // binding to `features`.
       const table = constructTable<TFeatures, TData>({
-        ...initialOptions,
+        ...options(),
         features: {
           coreReactivityFeature: angularReactivity(injector),
-          ...initialOptions.features,
+          ...options().features,
         },
       })
 
-      injector.get(DestroyRef).onDestroy(() => {
-        table._reactivity.unmount?.()
-      })
+  destroyRef.onDestroy(() => {
+    if (lazyTable.initialized) {
+      lazyTable.value._reactivity.unmount?.()
+    }
+  })
 
-      let isMount = true
-      effect(
-        () => {
-          const newOptions = options()
-          if (isMount) {
-            isMount = false
-            return
-          }
-          untracked(() =>
-            table.setOptions((previous) => ({
-              ...previous,
-              ...newOptions,
-            })),
-          )
-        },
-        { injector, debugName: 'tableOptionsUpdate' },
+  let previousOptions: TableOptions<TFeatures, TData> | undefined = undefined
+  effect(
+    () => {
+      const currentOptions = options()
+      // rawValue will be always valued here due to internal lazyInit effect
+      const tableInstance = lazyTable.rawValue
+      if (previousOptions === currentOptions) return
+      untracked(() =>
+        tableInstance.setOptions((previous) => ({
+          ...previous,
+          ...currentOptions,
+        })),
       )
-
-      return table
-    }),
+      previousOptions = currentOptions
+    },
+    { injector, debugName: 'tableOptionsUpdate' },
   )
+
+  return lazyTable.value
 }

@@ -54,7 +54,8 @@ console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side s
 
 In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.rowSelection.get()` is a reactive read when called inside a tracked scope (JSX, `createMemo`, `createEffect`, or `table.Subscribe`). In event handlers or other untracked code, the same call simply returns the current value.
 
-> Note: If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
+> [!NOTE]
+> If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
 
 ### Manage Row Selection State
 
@@ -255,7 +256,8 @@ const columns = [
 ]
 ```
 
-> **Note:** The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
+> [!NOTE]
+> The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
 
 #### Connect Row Selection APIs to UI
 

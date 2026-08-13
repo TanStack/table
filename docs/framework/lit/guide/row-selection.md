@@ -64,7 +64,8 @@ console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side s
 
 In event handlers or other non-render code, you can also read the current snapshot with `table.atoms.rowSelection.get()`. In your `render` method, prefer `table.state.rowSelection` (or the `table.subscribe` directive), since the `TableController` keeps the host updated through the table store subscription.
 
-> Note: If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
+> [!NOTE]
+> If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
 
 ### Manage Row Selection State
 
@@ -261,7 +262,8 @@ html`
 `
 ```
 
-> **Note:** The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
+> [!NOTE]
+> The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
 
 #### Connect Row Selection APIs to UI
 

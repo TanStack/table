@@ -54,7 +54,8 @@ console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side s
 
 In Alpine, the table's state atoms are reactive. `table.atoms.rowSelection.get()` is a reactive read when called inside an Alpine binding (`x-text`, `x-html`, `:value`, `x-if`, `x-for`, `x-effect`, or a getter/method on your `Alpine.data` object); in event handlers and other untracked code, the same call simply returns the current value.
 
-> Note: If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
+> [!NOTE]
+> If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
 
 ### Manage Row Selection State
 
@@ -282,7 +283,8 @@ const columns = [
 </template>
 ```
 
-> **Note:** The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
+> [!NOTE]
+> The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
 
 #### Connect Row Selection APIs to UI
 

@@ -162,4 +162,29 @@ describe('injectTable', () => {
       })
     })
   })
+
+  // Fixes https://github.com/TanStack/table/issues/6530
+  test('does not drop an options update before the effect first runs', () => {
+    type Data = { id: string }
+
+    const initialData: Array<Data> = []
+    const updatedData: Array<Data> = [{ id: '1' }]
+    const data = signal(initialData)
+
+    const table = TestBed.runInInjectionContext(() =>
+      injectTable(() => ({
+        data: data(),
+        columns: [],
+        features: stockFeatures,
+        getRowId: (row) => row.id,
+      })),
+    )
+
+    expect(table.options.data).toBe(initialData)
+
+    data.set(updatedData)
+    TestBed.tick()
+
+    expect(table.options.data).toBe(updatedData)
+  })
 })

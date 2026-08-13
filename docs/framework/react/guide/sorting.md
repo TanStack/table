@@ -41,7 +41,8 @@ const table = useTable({
 })
 ```
 
-> **NOTE**: Spreading the entire built-in registry (`sortFns: { ...sortFns }`) still works, but it puts every built-in sorting function in your bundle. Registering just the functions you use, or passing a function directly to the `sortFn` column option, is recommended. The default `sortFn: 'auto'` resolves to `alphanumeric`, `text`, or `datetime` from the registry based on the column's data type, so register the ones your columns rely on.
+> [!NOTE]
+> Spreading the entire built-in registry (`sortFns: { ...sortFns }`) still works, but it puts every built-in sorting function in your bundle. Registering just the functions you use, or passing a function directly to the `sortFn` column option, is recommended. The default `sortFn: 'auto'` resolves to `alphanumeric`, `text`, or `datetime` from the registry based on the column's data type, so register the ones your columns rely on.
 
 ## Sorting (React) Guide
 
@@ -140,7 +141,8 @@ const table = useTable({
 })
 ```
 
-> **NOTE**: Do not use both `initialState.sorting` and `state.sorting` at the same time, as the controlled `state.sorting` value will override the `initialState.sorting`.
+> [!NOTE]
+> Do not use both `initialState.sorting` and `state.sorting` at the same time, as the controlled `state.sorting` value will override the `initialState.sorting`.
 
 ### Client-Side vs Server-Side Sorting
 
@@ -177,7 +179,8 @@ const table = useTable({
 
 Hoisting the sorting state into your own scope (with an external atom or the `state.sorting` plus `onSortingChange` pattern) is covered in the [Controlled Sorting State](#controlled-sorting-state) section above.
 
-> **NOTE**: When `manualSorting` is set to `true`, the table will assume that the data that you provide is already sorted, and will not apply any sorting to it.
+> [!NOTE]
+> When `manualSorting` is set to `true`, the table will assume that the data that you provide is already sorted, and will not apply any sorting to it.
 
 ### Client-Side Sorting
 
@@ -243,7 +246,8 @@ const myCustomSortFn: SortFn<TFeatures, TData> = (
 }
 ```
 
-> Note: The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take care of that logic. `sortFn` functions only need to provide a consistent comparison.
+> [!NOTE]
+> The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take care of that logic. `sortFn` functions only need to provide a consistent comparison.
 
 Every sorting function receives 2 rows and a column ID and is expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
 
@@ -407,7 +411,8 @@ const table = useTable({
 })
 ```
 
-> **NOTE**: You may want to explicitly set the `sortDescFirst` column option on any columns that have nullable values. The table may not be able to properly determine if a column is a number or a string if it contains nullable values.
+> [!NOTE]
+> You may want to explicitly set the `sortDescFirst` column option on any columns that have nullable values. The table may not be able to properly determine if a column is a number or a string if it contains nullable values.
 
 #### Invert Sorting
 
@@ -436,7 +441,8 @@ If not specified, the default value for `sortUndefined` is `1`, and undefined va
 - `-1` - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1` - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
 
-> NOTE: `'first'` and `'last'` options are available in v9.
+> [!NOTE]
+> `'first'` and `'last'` options are available in v9.
 
 ```tsx
 const columns = [

@@ -133,7 +133,8 @@ const columns = [
 
 This is discussed in more detail in the [Column Def Guide](./column-defs).
 
-> NOTE: The "keys" in your JSON data can usually be anything, but any periods in an `accessorKey` will be interpreted as a deep key path. If a key in your data contains a literal period, use an `accessorFn` to read it instead.
+> [!NOTE]
+> The "keys" in your JSON data can usually be anything, but any periods in an `accessorKey` will be interpreted as a deep key path. If a key in your data contains a literal period, use an `accessorFn` to read it instead.
 
 ### Nested Sub-Row Data
 

@@ -77,7 +77,8 @@ const table = useTable({
 })
 ```
 
-> Note: the full built-in registries (`filterFns`, `sortFns`, `aggregationFns`) can still be spread into these slots, but they are deprecated because they pull every built-in function into your bundle. Register only the functions you use under their conventional string keys, or pass functions directly to the `filterFn`, `sortFn`, and `aggregationFn` column options with no registration at all. String keys, including the default `'auto'`, only resolve functions that are registered.
+> [!NOTE]
+> the full built-in registries (`filterFns`, `sortFns`, `aggregationFns`) can still be spread into these slots, but they are deprecated because they pull every built-in function into your bundle. Register only the functions you use under their conventional string keys, or pass functions directly to the `filterFn`, `sortFn`, and `aggregationFn` column options with no registration at all. String keys, including the default `'auto'`, only resolve functions that are registered.
 
 ## Function Registries
 
