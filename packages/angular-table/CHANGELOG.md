@@ -1,5 +1,11 @@
 # @tanstack/angular-table
 
+## 9.1.3
+
+### Patch Changes
+
+- [#6534](https://github.com/TanStack/table/pull/6534) [`a498a81`](https://github.com/TanStack/table/commit/a498a8124924912343266c0d763149c98009e389) - Ensure options updates are not missed during first mount
+
 ## 9.1.2
 
 ### Patch Changes
