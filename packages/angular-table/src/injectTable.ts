@@ -125,7 +125,8 @@ const ngZone = inject(NgZone)
   effect(
     () => {
       const currentOptions = options()
-      const tableInstance = lazyTable.rawValue
+      // rawValue will be always valued here due to internal lazyInit effect
+      const tableInstance = lazyTable.rawValue
       if (previousOptions === currentOptions) return
       untracked(() =>
         tableInstance.setOptions((previous) => ({
