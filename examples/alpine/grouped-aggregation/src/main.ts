@@ -1,7 +1,6 @@
 import Alpine from 'alpinejs'
 import {
   FlexRender,
-  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -16,6 +15,7 @@ import {
   createTable,
   filterFn_inNumberRange,
   filterFn_includesString,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,

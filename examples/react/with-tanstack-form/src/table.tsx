@@ -73,7 +73,7 @@ function PaginationControls() {
           type="button"
           className="demo-button demo-button-sm"
           onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>
@@ -142,6 +142,7 @@ function Filter({
   return typeof firstValue === 'number' ? (
     <div className="filter-row">
       <DebouncedInput
+        devtoolsKey={`with-tanstack-form-${column.id}-min`}
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
         onChange={(value) =>
@@ -154,6 +155,7 @@ function Filter({
         className="filter-input"
       />
       <DebouncedInput
+        devtoolsKey={`with-tanstack-form-${column.id}-max`}
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
         onChange={(value) =>
@@ -168,6 +170,7 @@ function Filter({
     </div>
   ) : (
     <DebouncedInput
+      devtoolsKey={`with-tanstack-form-${column.id}`}
       type="text"
       value={(columnFilterValue ?? '') as string}
       onChange={(value) => column.setFilterValue(value)}
@@ -181,11 +184,13 @@ function DebouncedInput({
   value: initialValue,
   onChange,
   debounce = 500,
+  devtoolsKey,
   ...props
 }: {
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
+  devtoolsKey: string
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = React.useState(initialValue)
 
@@ -193,7 +198,10 @@ function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
+  const debouncedOnChange = useDebouncedCallback(onChange, {
+    key: devtoolsKey,
+    wait: debounce,
+  })
 
   return (
     <input

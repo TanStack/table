@@ -9,7 +9,7 @@ title: column_setFilterValue
 function column_setFilterValue<TFeatures, TData, TValue>(column, value): void;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:229](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L229)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L234)
 
 Adds, updates, or removes this column's filter value.
 

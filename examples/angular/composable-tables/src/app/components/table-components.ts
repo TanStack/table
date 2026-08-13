@@ -72,7 +72,7 @@ export class RowCount {
       <button (click)="table().nextPage()" [disabled]="!canNextPage()">
         &gt;
       </button>
-      <button (click)="table().lastPage()" [disabled]="!canNextPage()">
+      <button (click)="table().lastPage()" [disabled]="!canLastPage()">
         &gt;&gt;
       </button>
       <span>
@@ -112,6 +112,7 @@ export class PaginationControls {
 
   readonly canPreviousPage = computed(() => this.table().getCanPreviousPage())
   readonly canNextPage = computed(() => this.table().getCanNextPage())
+  readonly canLastPage = computed(() => this.table().getCanLastPage())
   readonly pageCount = computed(() =>
     this.table().getPageCount().toLocaleString(),
   )

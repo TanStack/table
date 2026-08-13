@@ -121,7 +121,9 @@ describe('table_setRowPinning', () => {
     table_setRowPinning(table, newState)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(newState)
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, getDefaultRowPinningState()),
+    ).toEqual(newState)
   })
 
   it('should handle undefined onRowPinningChange without error', () => {
@@ -135,14 +137,20 @@ describe('table_setRowPinning', () => {
 
 describe('table_resetRowPinning', () => {
   it('should reset to default state when defaultState is true', () => {
-    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange(
+      DEFAULT_ROW_COUNT,
+      { state: { rowPinning: { top: [ROW[1]], bottom: [] } } },
+    )
 
     table_resetRowPinning(table, true)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(
-      getDefaultRowPinningState(),
-    )
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, {
+        top: [ROW[1]],
+        bottom: [],
+      }),
+    ).toEqual(getDefaultRowPinningState())
   })
 
   it('should reset to initial state when defaultState is false', () => {
@@ -152,24 +160,35 @@ describe('table_resetRowPinning', () => {
     }
     const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange(
       DEFAULT_ROW_COUNT,
-      { initialState: { rowPinning: initialState } },
+      {
+        initialState: { rowPinning: initialState },
+        state: { rowPinning: getDefaultRowPinningState() },
+      },
     )
 
     table_resetRowPinning(table, false)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(initialState)
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, getDefaultRowPinningState()),
+    ).toEqual(initialState)
   })
 
   it('should reset to default state when no initial state exists', () => {
-    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange(
+      DEFAULT_ROW_COUNT,
+      { state: { rowPinning: { top: [ROW[1]], bottom: [] } } },
+    )
 
     table_resetRowPinning(table, false)
 
     expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
-    expect(onRowPinningChangeMock).toHaveBeenCalledWith(
-      getDefaultRowPinningState(),
-    )
+    expect(
+      getUpdaterResult(onRowPinningChangeMock, {
+        top: [ROW[1]],
+        bottom: [],
+      }),
+    ).toEqual(getDefaultRowPinningState())
   })
 })
 

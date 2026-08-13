@@ -13,17 +13,6 @@ type CreateComponentOptions = Parameters<typeof createComponent>[1]
 type CreateComponentBindings = CreateComponentOptions['bindings']
 type CreateComponentDirectives = CreateComponentOptions['directives']
 
-interface FlexRenderComponentMetadata<TComponent> {
-  mirror: ComponentMirror<TComponent>
-  allowedInputNames: Array<string>
-  allowedOutputNames: Array<string>
-}
-
-const componentMetadataCache = new WeakMap<
-  Type<unknown>,
-  FlexRenderComponentMetadata<unknown>
->()
-
 interface FlexRenderOptions<
   TInputs extends Record<string, any>,
   TOutputs extends Record<string, any>,
@@ -127,6 +116,8 @@ interface FlexRenderOptions<
    *
    * These values are assigned after the component has been created using
    * [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput).
+   * On a reused component, omitted keys keep their current value. Pass
+   * `undefined` explicitly when an input needs to be cleared.
    *
    * Shouldn't be used together with {@link FlexRenderOptions#bindings} option
    */
@@ -263,13 +254,9 @@ export interface FlexRenderComponent<TComponent = any> {
    */
   readonly mirror: ComponentMirror<TComponent>
   /**
-   * List of allowed input names.
+   * Cached component metadata used by the flex renderer.
    */
-  readonly allowedInputNames: Array<string>
-  /**
-   * List of allowed output names.
-   */
-  readonly allowedOutputNames: Array<string>
+  readonly metadata: ResolvedComponentMetadata<TComponent>
   /**
    * Component instance outputs. Subscribed via {@link OutputEmitterRef#subscribe}
    *
@@ -305,14 +292,13 @@ export interface FlexRenderComponent<TComponent = any> {
 /**
  * Wrapper class for a component that will be used as content for {@link FlexRenderDirective}
  *
- * Prefer {@link flexRenderComponent} helper for better type-safety
+ * Prefer {@link flexRenderComponent} for better type-safety.
  */
 export class FlexRenderComponentInstance<
   TComponent = any,
 > implements FlexRenderComponent<TComponent> {
   readonly mirror: ComponentMirror<TComponent>
-  readonly allowedInputNames: Array<string>
-  readonly allowedOutputNames: Array<string>
+  readonly metadata: ResolvedComponentMetadata<TComponent>
 
   constructor(
     readonly component: Type<TComponent>,
@@ -323,24 +309,44 @@ export class FlexRenderComponentInstance<
     readonly bindings?: CreateComponentBindings,
     readonly key?: string | number,
   ) {
-    let metadata = componentMetadataCache.get(component) as
-      FlexRenderComponentMetadata<TComponent> | undefined
-    if (!metadata) {
-      const mirror = reflectComponentType(component)
-      if (!mirror) {
-        throw new Error(
-          `[@tanstack-table/angular] The provided symbol is not a component`,
-        )
-      }
-      metadata = {
-        mirror,
-        allowedInputNames: mirror.inputs.map((input) => input.propName),
-        allowedOutputNames: mirror.outputs.map((output) => output.propName),
-      }
-      componentMetadataCache.set(component, metadata)
-    }
-    this.mirror = metadata.mirror
-    this.allowedInputNames = metadata.allowedInputNames
-    this.allowedOutputNames = metadata.allowedOutputNames
+    this.metadata = resolveComponentTypeMetadata(component)
+    this.mirror = this.metadata.mirror
   }
+}
+
+interface ResolvedComponentMetadata<TComponent = unknown> {
+  readonly mirror: ComponentMirror<TComponent>
+  readonly inputNames: ReadonlyMap<string, string>
+  readonly outputNames: ReadonlySet<string>
+}
+
+const typeCache = new WeakMap<Type<unknown>, ResolvedComponentMetadata>()
+
+function resolveComponentTypeMetadata<T>(
+  type: Type<T>,
+): ResolvedComponentMetadata<T> {
+  let metadata = typeCache.get(type) as ResolvedComponentMetadata<T> | undefined
+  if (metadata) return metadata
+  const mirror = reflectComponentType(type)
+  if (!mirror) {
+    throw new Error(
+      `[@tanstack-table/angular] The provided symbol is not a component`,
+    )
+  }
+  const inputNames = new Map<string, string>()
+  const outputNames = new Set<string>()
+  for (const input of mirror.inputs) {
+    inputNames.set(input.propName, input.templateName)
+    if (input.templateName !== input.propName) {
+      inputNames.set(input.templateName, input.templateName)
+    }
+  }
+  for (const output of mirror.outputs) {
+    // Outputs are read from the component instance, so only their class
+    // property names are valid here. Template aliases are not instance keys.
+    outputNames.add(output.propName)
+  }
+  metadata = { mirror, inputNames, outputNames }
+  typeCache.set(type, metadata)
+  return metadata
 }

@@ -1,5 +1,6 @@
 import {
   Injector,
+  computed,
   effect,
   runInInjectionContext,
   untracked,
@@ -8,6 +9,7 @@ import { TanStackTableCellToken } from '../helpers/cell'
 import { TanStackTableHeaderToken } from '../helpers/header'
 import { TanStackTableToken } from '../helpers/table'
 import { FlexRenderComponentProps } from './context'
+import { FlexRenderFlags } from './flags'
 import { flexRenderComponent } from './flexRenderComponent'
 import { FlexRenderComponentFactory } from './flexRenderComponentFactory'
 import {
@@ -107,18 +109,33 @@ export class FlexViewRenderer<
     | CellContext<TFeatures, TRowData, TValue>
     | HeaderContext<TFeatures, TRowData, TValue>,
 > {
+  #renderFlags = FlexRenderFlags.ViewFirstRender
   #renderView: FlexRenderView<
     FlexRenderViewAllowedType,
     FlexRenderTypedContent
   > | null = null
-  #renderEffectRef: EffectRef | null = null
-  #previousProps: TProps | undefined
+  #outerRenderEffectRef: EffectRef | null = null
+  #currentRenderEffectRef: EffectRef | null = null
   #content: () => FlexRenderInputContent<TProps>
   #props: () => TProps
   #injector: () => Injector
   #viewContainerRef: ViewContainerRef
   #templateRef: TemplateRef<unknown>
   #flexRenderComponentFactory: FlexRenderComponentFactory
+
+  readonly #getLatestContentValue = () => {
+    const content = this.#content()
+    const props = this.#props()
+    return typeof content !== 'function'
+      ? content
+      : runInInjectionContext(this.#injector(), () => content(props))
+  }
+
+  readonly #latestContent = computed(() => this.#getLatestContentValue())
+
+  readonly #getContentValue = computed(() => {
+    return mapToFlexRenderTypedContent(this.#latestContent())
+  })
 
   constructor(options: RendererViewOptions<TProps>) {
     this.#content = options.content
@@ -132,81 +149,150 @@ export class FlexViewRenderer<
   }
 
   mount(): EffectRef {
-    if (this.#renderEffectRef) {
-      return this.#renderEffectRef
+    if (this.#outerRenderEffectRef) {
+      return this.#outerRenderEffectRef
     }
 
-    this.#renderEffectRef = effect(
-      () => {
-        const content = this.#content()
-        const props = this.#props()
-        const injector = this.#injector()
-        const resolvedContent =
-          typeof content === 'function'
-            ? runInInjectionContext(injector, () => content(props))
-            : content
+    let previousContent: FlexRenderInputContent<TProps> | undefined
+    let previousProps: TProps | undefined
 
-        untracked(() =>
-          this.#update(
-            mapToFlexRenderTypedContent(resolvedContent),
-            props,
-            injector,
-          ),
-        )
+    this.#outerRenderEffectRef = effect(
+      () => {
+        const props = this.#props()
+        const content = this.#content()
+
+        if (!(this.#renderFlags & FlexRenderFlags.ViewFirstRender)) {
+          if (previousContent !== content) {
+            this.#renderFlags |= FlexRenderFlags.ContentChanged
+          }
+          if (previousProps !== props) {
+            this.#renderFlags |= FlexRenderFlags.PropsReferenceChanged
+          }
+        }
+
+        untracked(() => this.#update())
+
+        if (this.#renderFlags & FlexRenderFlags.ViewFirstRender) {
+          this.#renderFlags &= ~FlexRenderFlags.ViewFirstRender
+        }
+
+        previousContent = content
+        previousProps = props
       },
       { injector: this.#viewContainerRef.injector },
     )
 
-    return this.#renderEffectRef
+    return this.#outerRenderEffectRef
   }
 
   destroy(): void {
-    if (this.#renderEffectRef) {
-      this.#renderEffectRef.destroy()
-      this.#renderEffectRef = null
+    if (this.#outerRenderEffectRef) {
+      this.#outerRenderEffectRef.destroy()
+      this.#outerRenderEffectRef = null
     }
+    this.#destroyContentEffect()
     this.#destroyView()
+    this.#renderFlags = FlexRenderFlags.ViewFirstRender
   }
 
-  #update(
-    content: FlexRenderTypedContent,
-    props: TProps,
-    injector: Injector,
-  ): void {
-    if (content.kind === 'null') {
-      this.#destroyView()
-      this.#previousProps = props
+  #destroyContentEffect(): void {
+    if (this.#currentRenderEffectRef) {
+      this.#currentRenderEffectRef.destroy()
+      this.#currentRenderEffectRef = null
+    }
+    this.#renderFlags &= ~FlexRenderFlags.RenderEffectChecked
+  }
+
+  #update(): void {
+    if (
+      this.#renderFlags &
+      (FlexRenderFlags.ContentChanged | FlexRenderFlags.ViewFirstRender)
+    ) {
+      this.#render()
       return
     }
 
-    const parentInjector =
-      content.kind === 'flexRenderComponent'
-        ? (content.content.injector ?? injector)
-        : injector
-    const renderView = this.#renderView
-
-    if (!renderView || !renderView.eq(content)) {
-      this.#render(content, props, parentInjector)
-      return
+    if (this.#renderFlags & FlexRenderFlags.PropsReferenceChanged) {
+      this.#renderView?.updateProps(this.#props())
+      this.#renderFlags &= ~FlexRenderFlags.PropsReferenceChanged
     }
 
-    const propsChanged = this.#previousProps !== props
-    renderView.content = content
-    if (propsChanged) {
-      renderView.updateProps(props)
+    if (this.#renderFlags & FlexRenderFlags.Dirty) {
+      this.#renderView?.dirtyCheck()
+      this.#renderFlags &= ~FlexRenderFlags.Dirty
     }
-    renderView.dirtyCheck()
-    this.#previousProps = props
   }
 
-  #render(
-    content: Exclude<FlexRenderTypedContent, { kind: 'null' }>,
-    props: TProps,
-    parentInjector: Injector,
-  ): void {
+  #render(): void {
+    // Recreating a view also recreates its render-function effect. Its first
+    // execution only records dependencies; later executions schedule updates.
+    if (this.#shouldRecreateEntireView()) {
+      this.#destroyContentEffect()
+    }
+
     this.#destroyView()
-    this.#renderView = this.#renderViewByContent(content, props, parentInjector)
-    this.#previousProps = props
+
+    this.#renderFlags &=
+      FlexRenderFlags.ViewFirstRender | FlexRenderFlags.RenderEffectChecked
+
+    const content = this.#getContentValue()
+    if (content.kind !== 'null') {
+      const injector = this.#injector()
+      const parentInjector =
+        content.kind === 'flexRenderComponent'
+          ? (content.content.injector ?? injector)
+          : injector
+      this.#renderView = this.#renderViewByContent(
+        content,
+        this.#props(),
+        parentInjector,
+      )
+    }
+
+    // Render functions can read signals. Keep their dependency tracking in a
+    // dedicated effect so the outer effect remains responsible only for
+    // content and props input-reference changes.
+    if (
+      !this.#currentRenderEffectRef &&
+      typeof untracked(this.#content) === 'function'
+    ) {
+      this.#currentRenderEffectRef = effect(
+        () => {
+          const latestContent = this.#getContentValue()
+          if (!(this.#renderFlags & FlexRenderFlags.RenderEffectChecked)) {
+            this.#renderFlags |= FlexRenderFlags.RenderEffectChecked
+            return
+          }
+
+          untracked(() => {
+            this.#renderFlags |= FlexRenderFlags.Dirty
+            this.#doCheck(latestContent)
+          })
+        },
+        { injector: this.#viewContainerRef.injector },
+      )
+    }
+  }
+
+  #shouldRecreateEntireView(): boolean {
+    return !!(
+      this.#renderFlags &
+      (FlexRenderFlags.ContentChanged | FlexRenderFlags.ViewFirstRender)
+    )
+  }
+
+  #doCheck(latestContent: FlexRenderTypedContent): void {
+    if (
+      latestContent.kind === 'null' ||
+      !this.#renderView ||
+      !this.#renderView.canReuse(latestContent)
+    ) {
+      this.#renderFlags |= FlexRenderFlags.ContentChanged
+    } else {
+      this.#renderView.content = latestContent
+    }
+
+    this.#update()
   }
 
   #destroyView(): void {
@@ -224,7 +310,7 @@ export class FlexViewRenderer<
     if (content.kind === 'primitive') {
       return this.#renderStringContent(content)
     } else if (content.kind === 'templateRef') {
-      return this.#renderTemplateRefContent(content, props, parentInjector)
+      return this.#renderTemplateRefContent(content, parentInjector)
     } else if (content.kind === 'flexRenderComponent') {
       return this.#renderComponent(content, parentInjector)
     }
@@ -234,20 +320,30 @@ export class FlexViewRenderer<
   #renderStringContent(
     template: Extract<FlexRenderTypedContent, { kind: 'primitive' }>,
   ): FlexRenderTemplateView {
+    const latestContent = () => untracked(this.#getContentValue)
     const ref = this.#viewContainerRef.createEmbeddedView(this.#templateRef, {
-      $implicit: template.content,
+      get $implicit() {
+        // The view can be checked while an incompatible replacement is being
+        // scheduled. Only expose content that still belongs to this context.
+        const content = latestContent()
+        return content.kind === 'primitive' ? content.content : undefined
+      },
     })
     return new FlexRenderTemplateView(template, ref)
   }
 
   #renderTemplateRefContent(
     template: Extract<FlexRenderTypedContent, { kind: 'templateRef' }>,
-    props: TProps,
     parentInjector: Injector,
   ): FlexRenderTemplateView {
+    const latestProps = () => untracked(this.#props)
     const view = this.#viewContainerRef.createEmbeddedView(
       template.content,
-      { $implicit: props },
+      {
+        get $implicit() {
+          return latestProps()
+        },
+      },
       { injector: this.#getInjector(parentInjector) },
     )
     return new FlexRenderTemplateView(template, view)

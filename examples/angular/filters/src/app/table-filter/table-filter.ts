@@ -30,6 +30,28 @@ import type { Column, Table } from '@tanstack/angular-table'
           />
         </div>
       }
+      @case ('dateRange') {
+        <div class="filter-row">
+          <input
+            debouncedInput
+            [debounce]="500"
+            type="date"
+            class="filter-input"
+            [attr.aria-label]="column().id + ' min'"
+            [value]="columnFilterValue()?.[0] ?? ''"
+            (changeEvent)="changeMinDateValue($event)"
+          />
+          <input
+            debouncedInput
+            [debounce]="500"
+            type="date"
+            class="filter-input"
+            [attr.aria-label]="column().id + ' max'"
+            [value]="columnFilterValue()?.[1] ?? ''"
+            (changeEvent)="changeMaxDateValue($event)"
+          />
+        </div>
+      }
       @case ('select') {
         <select
           [value]="columnFilterValue()?.toString()"
@@ -73,7 +95,8 @@ export class TableFilter {
   )
 
   readonly sortedUniqueValues = computed(() => {
-    if (this.filterVariant() === 'range') return []
+    const filterVariant = this.filterVariant()
+    if (filterVariant === 'range' || filterVariant === 'dateRange') return []
     const columnId = this.column().id
     return Array.from(
       new Set(
@@ -93,5 +116,14 @@ export class TableFilter {
   readonly changeMaxRangeValue = (event: Event) => {
     const value = (event.target as HTMLInputElement).value
     this.column().setFilterValue((old?: [number, number]) => [old?.[0], value])
+  }
+
+  readonly changeMinDateValue = (event: Event) => {
+    const value = (event.target as HTMLInputElement).value
+    this.column().setFilterValue((old?: [string, string]) => [value, old?.[1]])
+  }
+  readonly changeMaxDateValue = (event: Event) => {
+    const value = (event.target as HTMLInputElement).value
+    this.column().setFilterValue((old?: [string, string]) => [old?.[0], value])
   }
 }

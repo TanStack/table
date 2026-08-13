@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import type { Locator, Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import path from 'node:path'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
 
@@ -39,64 +39,95 @@ async function openExample(page: Page) {
   return { errors, server }
 }
 
-function getTable(page: Page) {
-  return page
-    .locator('table:visible, .divTable:visible')
-    .filter({ has: page.locator('thead th, .thead .th') })
-    .filter({ has: page.locator('tbody tr, .tbody .tr') })
-    .first()
-}
-
-function getHeaderCells(table: Locator) {
-  return table.locator('thead th, .thead .th')
-}
-
-function getBodyRows(table: Locator) {
-  return table.locator('tbody tr, .tbody .tr')
-}
-
-async function getFirstBodyRowData(table: Locator) {
-  const row = getBodyRows(table).first()
-  const firstInput = row
-    .locator('input:not([type="checkbox"]):not([type="radio"])')
-    .first()
-
-  if ((await firstInput.count()) > 0 && (await firstInput.isVisible())) {
-    return firstInput.inputValue()
-  }
-
-  const text = await row.textContent()
-  return text?.replace(/\s+/g, ' ').trim() ?? ''
-}
-
-test('renders the table without crashing', async ({ page }) => {
+test('renders both query examples without crashing', async ({ page }) => {
   const { errors, server } = await openExample(page)
 
   try {
-    const table = getTable(page)
-    const bodyRows = getBodyRows(table)
+    const useQueryExample = page.getByTestId('use-query-example')
+    const useInfiniteQueryExample = page.getByTestId(
+      'use-infinite-query-example',
+    )
 
-    await expect(table).toBeVisible()
-    await expect(getHeaderCells(table).first()).toBeVisible()
-    await expect(bodyRows.first()).toBeVisible()
+    await expect(useQueryExample.getByRole('heading')).toBeVisible()
+    await expect(useInfiniteQueryExample.getByRole('heading')).toBeVisible()
+    await expect(useQueryExample.locator('tbody tr').first()).toBeVisible()
+    await expect(
+      useInfiniteQueryExample.locator('tbody tr').first(),
+    ).toBeVisible()
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
 
-    const regenerateButton = page
-      .getByRole('button', { name: /^Regenerate Data$/i })
-      .first()
+test('navigates finite pages with useQuery', async ({ page }) => {
+  const { errors, server } = await openExample(page)
 
-    if ((await regenerateButton.count()) > 0) {
-      await expect(regenerateButton).toBeVisible()
+  try {
+    const example = page.getByTestId('use-query-example')
+    const rows = example.locator('tbody tr')
+    const nextPage = example.getByRole('button', { name: '>', exact: true })
+    const lastPage = example.getByRole('button', { name: '>>', exact: true })
 
-      const firstRowBefore = await getFirstBodyRowData(table)
+    await expect(rows).toHaveCount(10)
+    await expect(rows.first().locator('td').first()).toHaveText('1')
+    await expect(lastPage).toBeEnabled()
 
-      await regenerateButton.click()
+    await nextPage.click()
 
-      await expect
-        .poll(() => getFirstBodyRowData(table))
-        .not.toBe(firstRowBefore)
-      await expect(bodyRows.first()).toBeVisible()
-    }
+    await expect(page.getByTestId('offset-page-number')).toHaveText(
+      '2 of 1,000',
+    )
+    await expect(rows.first().locator('td').first()).toHaveText('11')
 
+    await lastPage.click()
+
+    await expect(page.getByTestId('offset-page-number')).toHaveText(
+      '1,000 of 1,000',
+    )
+    await expect(rows.first().locator('td').first()).toHaveText('9991')
+    await expect(lastPage).toBeDisabled()
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('navigates cursor pages and reuses cached previous pages', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const example = page.getByTestId('use-infinite-query-example')
+    const rows = example.locator('tbody tr')
+    const previousPage = example.getByRole('button', {
+      name: '<',
+      exact: true,
+    })
+    const nextPage = example.getByRole('button', { name: '>', exact: true })
+    const lastPage = example.getByRole('button', { name: '>>', exact: true })
+
+    await expect(rows).toHaveCount(10)
+    await expect(rows.first().locator('td').first()).toHaveText('1')
+    await expect(page.getByTestId('cursor-status')).toContainText(
+      'Next cursor: 10',
+    )
+    await expect(previousPage).toBeDisabled()
+    await expect(lastPage).toBeDisabled()
+
+    await nextPage.click()
+
+    await expect(page.getByTestId('cursor-page-number')).toHaveText('2')
+    await expect(rows.first().locator('td').first()).toHaveText('11')
+    await expect(page.getByTestId('cursor-status')).toContainText(
+      'Next cursor: 20',
+    )
+
+    await previousPage.click()
+
+    await expect(page.getByTestId('cursor-page-number')).toHaveText('1')
+    await expect(rows.first().locator('td').first()).toHaveText('1')
     expect(errors).toEqual([])
   } finally {
     await server.close()

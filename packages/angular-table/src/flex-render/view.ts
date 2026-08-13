@@ -50,7 +50,6 @@ export abstract class FlexRenderView<
   TContent extends FlexRenderTypedContent,
 > {
   readonly view: TView
-  #previousContent: FlexRenderTypedContent | undefined
   #content: FlexRenderTypedContent
 
   protected constructor(
@@ -61,16 +60,11 @@ export abstract class FlexRenderView<
     this.view = view
   }
 
-  get previousContent(): FlexRenderTypedContent {
-    return this.#previousContent ?? { kind: 'null' }
-  }
-
   get content() {
     return this.#content
   }
 
   set content(content: FlexRenderTypedContent) {
-    this.#previousContent = this.#content
     this.#content = content
   }
 
@@ -78,7 +72,7 @@ export abstract class FlexRenderView<
 
   abstract dirtyCheck(): void
 
-  abstract eq(view: TContent): boolean
+  abstract canReuse(content: TContent): boolean
 
   abstract unmount(): void
 }
@@ -105,21 +99,18 @@ export class FlexRenderTemplateView extends FlexRenderView<
 
   override updateProps(_props: Record<string, any>) {
     if (this.content.kind === 'templateRef') {
-      const context = this.view.context as { $implicit: unknown }
-      context.$implicit = _props
+      // Template contexts are getter-backed. Mark the embedded view so Angular
+      // reads the latest props; the context object itself does not need to be
+      // replaced.
       this.view.markForCheck()
     }
   }
 
   override dirtyCheck() {
-    if (this.content.kind !== 'primitive') return
-
-    const context = this.view.context as { $implicit: unknown }
-    context.$implicit = this.content.content
-    if (
-      this.previousContent.kind !== 'primitive' ||
-      !Object.is(this.previousContent.content, this.content.content)
-    ) {
+    if (this.content.kind === 'primitive') {
+      // Primitive contexts are getter-backed too. The renderer has already
+      // memoized the new value, so checking the view is enough to refresh
+      // `$implicit` without mutating the context.
       this.view.markForCheck()
     }
   }
@@ -128,7 +119,7 @@ export class FlexRenderTemplateView extends FlexRenderView<
     this.view.destroy()
   }
 
-  override eq(
+  override canReuse(
     compare: Extract<
       FlexRenderTypedContent,
       { kind: 'primitive' | 'templateRef' }
@@ -166,12 +157,12 @@ export class FlexRenderComponentView extends FlexRenderView<
   override updateProps(props: Record<string, any>) {
     switch (this.content.kind) {
       case 'component': {
-        this.view.updateInputs(props)
+        this.view.setInputs(props)
         break
       }
       case 'flexRenderComponent': {
-        // Wrapper inputs and outputs come from the newly resolved content and
-        // are synchronized in `dirtyCheck`.
+        // No-op. A props change can produce a new wrapper descriptor; its
+        // inputs and outputs are synchronized by `dirtyCheck`.
         break
       }
     }
@@ -187,7 +178,9 @@ export class FlexRenderComponentView extends FlexRenderView<
         break
       }
       case 'flexRenderComponent': {
-        // Reuse the component and synchronize only changed inputs and outputs.
+        // Render functions commonly create a new descriptor on every run. If
+        // its type and key still identify the mounted instance, update that
+        // instance instead of recreating the component view.
         if (this.view.eqType(this.content.content)) {
           this.view.update(this.content.content)
         }
@@ -201,7 +194,7 @@ export class FlexRenderComponentView extends FlexRenderView<
     this.view.componentRef.destroy()
   }
 
-  override eq(
+  override canReuse(
     compare: Extract<
       FlexRenderTypedContent,
       { kind: 'component' | 'flexRenderComponent' }

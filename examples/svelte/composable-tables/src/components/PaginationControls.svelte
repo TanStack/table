@@ -32,7 +32,7 @@
   </button>
   <button
     onclick={() => table.lastPage()}
-    disabled={!table.getCanNextPage()}
+    disabled={!table.getCanLastPage()}
   >
     {'>>'}
   </button>

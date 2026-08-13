@@ -2,7 +2,6 @@ import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
-  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -16,6 +15,7 @@ import {
   createTableHook,
   filterFn_inNumberRange,
   filterFn_includesString,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
@@ -256,8 +256,8 @@ function App() {
         </button>
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>

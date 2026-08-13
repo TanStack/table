@@ -9,7 +9,7 @@ title: table_resetPagination
 function table_resetPagination<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L91)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L92)
 
 Resets `pagination` to the configured initial state or feature default.
 

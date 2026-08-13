@@ -8,6 +8,7 @@ import {
   getDefaultPaginationState,
   table_autoResetPageIndex,
   table_firstPage,
+  table_getCanLastPage,
   table_getCanNextPage,
   table_getCanPreviousPage,
   table_getPageCount,
@@ -110,6 +111,7 @@ describe('table_resetPagination', () => {
     const table = makeTable(DEFAULT_ROW_COUNT, {
       onPaginationChange,
       initialState: { pagination: { pageIndex: 2, pageSize: 5 } },
+      state: { pagination: getDefaultPaginationState() },
     })
 
     table_resetPagination(table)
@@ -134,7 +136,10 @@ describe('table_setPageIndex', () => {
 
   it('should clamp negative page indexes to 0', () => {
     const onPaginationChange = vi.fn()
-    const table = makeTable(DEFAULT_ROW_COUNT, { onPaginationChange })
+    const table = makeTable(DEFAULT_ROW_COUNT, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
 
     table_setPageIndex(table, -5)
 
@@ -205,7 +210,8 @@ describe('table_resetPageIndex', () => {
 
     table_resetPageIndex(table, true)
 
-    expect(onPaginationChange).not.toHaveBeenCalled()
+    const pagination = getDefaultPaginationState()
+    expect(getUpdaterResult(onPaginationChange, pagination)).toBe(pagination)
   })
 
   it('should reset to the initial page index by default', () => {
@@ -243,7 +249,8 @@ describe('table_resetPageSize', () => {
 
     table_resetPageSize(table, true)
 
-    expect(onPaginationChange).not.toHaveBeenCalled()
+    const pagination = getDefaultPaginationState()
+    expect(getUpdaterResult(onPaginationChange, pagination)).toBe(pagination)
   })
 
   it('should reset to the initial page size by default', () => {
@@ -282,6 +289,34 @@ describe('table_setPageSize', () => {
     expect(
       getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 10 }),
     ).toEqual({ pageIndex: 4, pageSize: 5 })
+  })
+
+  it('should reset to page 0 when the page size changes to Infinity', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(DEFAULT_ROW_COUNT, { onPaginationChange })
+
+    table_setPageSize(table, Infinity)
+
+    expect(
+      getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 10 }),
+    ).toEqual({ pageIndex: 0, pageSize: Infinity })
+  })
+
+  it('should reset to page 0 when changing from an infinite page size', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(DEFAULT_ROW_COUNT, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 0, pageSize: Infinity } },
+    })
+
+    table_setPageSize(table, 10)
+
+    expect(
+      getUpdaterResult(onPaginationChange, {
+        pageIndex: 0,
+        pageSize: Infinity,
+      }),
+    ).toEqual({ pageIndex: 0, pageSize: 10 })
   })
 })
 
@@ -347,6 +382,47 @@ describe('table_getCanNextPage', () => {
   })
 })
 
+describe('table_getCanLastPage', () => {
+  it('should return true when a known last page exists after the current page', () => {
+    const table = makeTable(25)
+
+    expect(table_getCanLastPage(table)).toBe(true)
+    expect(table.getCanLastPage()).toBe(true)
+  })
+
+  it('should return false on the last page', () => {
+    const table = makeTable(25, {
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
+
+    expect(table_getCanLastPage(table)).toBe(false)
+  })
+
+  it('should return false when the page count is unknown', () => {
+    const table = makeTable(25, {
+      manualPagination: true,
+      pageCount: -1,
+    })
+
+    expect(table_getCanNextPage(table)).toBe(true)
+    expect(table_getCanLastPage(table)).toBe(false)
+  })
+
+  it('should return false when the page count is non-finite', () => {
+    const table = makeTable(25, {
+      manualPagination: true,
+      pageCount: Infinity,
+    })
+
+    expect(table_getCanNextPage(table)).toBe(true)
+    expect(table_getCanLastPage(table)).toBe(false)
+  })
+
+  it('should return false when the page count is 0', () => {
+    expect(table_getCanLastPage(makeTable(0))).toBe(false)
+  })
+})
+
 describe('page navigation', () => {
   it('table_nextPage should advance the page index', () => {
     const onPaginationChange = vi.fn()
@@ -361,7 +437,10 @@ describe('page navigation', () => {
 
   it('table_previousPage should decrement the page index and clamp at 0', () => {
     const onPaginationChange = vi.fn()
-    const table = makeTable(25, { onPaginationChange })
+    const table = makeTable(25, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
 
     table_previousPage(table)
 
@@ -375,7 +454,10 @@ describe('page navigation', () => {
 
   it('table_firstPage should go to page 0', () => {
     const onPaginationChange = vi.fn()
-    const table = makeTable(25, { onPaginationChange })
+    const table = makeTable(25, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
 
     table_firstPage(table)
 
@@ -391,6 +473,21 @@ describe('page navigation', () => {
 
     expect(table.atoms.pagination.get().pageIndex).toBe(2)
   })
+
+  it.each([-1, 0, Infinity])(
+    'table_lastPage should do nothing when pageCount is %s',
+    (pageCount) => {
+      const table = makeTable(25, {
+        manualPagination: true,
+        pageCount,
+        initialState: { pagination: { pageIndex: 1, pageSize: 10 } },
+      })
+
+      table.lastPage()
+
+      expect(table.atoms.pagination.get().pageIndex).toBe(1)
+    },
+  )
 })
 
 describe('table_getPageCount', () => {
@@ -398,6 +495,25 @@ describe('table_getPageCount', () => {
     expect(table_getPageCount(makeTable(25))).toBe(3)
     expect(table_getPageCount(makeTable(30))).toBe(3)
     expect(table_getPageCount(makeTable(31))).toBe(4)
+  })
+
+  it('should return one page for a non-empty table with pageSize Infinity', () => {
+    const table = makeTable(25, {
+      initialState: { pagination: { pageIndex: 0, pageSize: Infinity } },
+    })
+
+    expect(table_getPageCount(table)).toBe(1)
+    expect(table_getPageOptions(table)).toEqual([0])
+    expect(table_getCanNextPage(table)).toBe(false)
+  })
+
+  it('should return zero pages for an empty table with pageSize Infinity', () => {
+    const table = makeTable(0, {
+      initialState: { pagination: { pageIndex: 0, pageSize: Infinity } },
+    })
+
+    expect(table_getPageCount(table)).toBe(0)
+    expect(table_getPageOptions(table)).toEqual([])
   })
 
   it('should prefer options.pageCount for manual pagination', () => {
@@ -458,6 +574,29 @@ describe('table_autoResetPageIndex', () => {
     table_autoResetPageIndex(table)
 
     expect(table.atoms.pagination.get().pageIndex).toBe(0)
+  })
+
+  it('should not invoke onPaginationChange when already on the default page', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(25, { onPaginationChange })
+
+    table_autoResetPageIndex(table)
+
+    expect(onPaginationChange).not.toHaveBeenCalled()
+  })
+
+  it('should invoke onPaginationChange when off the default page', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(25, {
+      onPaginationChange,
+      state: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
+
+    table_autoResetPageIndex(table)
+
+    expect(
+      getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 10 }),
+    ).toEqual({ pageIndex: 0, pageSize: 10 })
   })
 
   it('should not reset when manualPagination is set', () => {

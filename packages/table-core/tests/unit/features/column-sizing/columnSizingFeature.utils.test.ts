@@ -501,6 +501,7 @@ describe('column_resetSize', () => {
       ] as Array<ColumnDef<typeof features, Item, any>>,
       data,
       onColumnSizingChange,
+      state: { columnSizing: { a: 250, b: 300 } },
     })
 
     column_resetSize(table.getColumn('a')!)
@@ -553,6 +554,7 @@ describe('table_setColumnSizing / table_resetColumnSizing', () => {
     const table = makeSizingTable({
       onColumnSizingChange,
       initialState: { columnSizing: { a: 250 } },
+      state: { columnSizing: {} },
     })
 
     table_resetColumnSizing(table)

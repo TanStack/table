@@ -80,6 +80,10 @@ test('renders the table without crashing', async ({ page }) => {
     await expect(getHeaderCells(table).first()).toBeVisible()
     await expect(bodyRows.first()).toBeVisible()
 
+    const allPageSizeOption = page.locator('.controls select option').last()
+    await expect(allPageSizeOption).toHaveAttribute('value', 'Infinity')
+    await expect(allPageSizeOption).toHaveText('Show All')
+
     const regenerateButton = page
       .getByRole('button', { name: /^Regenerate Data$/i })
       .first()

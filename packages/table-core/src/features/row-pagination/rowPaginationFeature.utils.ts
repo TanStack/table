@@ -1,4 +1,4 @@
-import { cloneState, functionalUpdate } from '../../utils'
+import { cloneState, functionalUpdate, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -46,6 +46,13 @@ export function table_autoResetPageIndex<
     table.options.autoResetPageIndex ??
     !table.options.manualPagination
   ) {
+    // Auto resets are fire-and-forget, so skip the reset entirely when
+    // already on the default page. Routing a no-op through the pagination
+    // handler would still run user `onPaginationChange` side effects (such
+    // as refetching) on every data, filter, sort, or grouping change.
+    const currentPageIndex =
+      table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+    if (currentPageIndex === defaultPageIndex) return
     table_resetPageIndex(table, true)
   }
 }
@@ -66,13 +73,7 @@ export function table_setPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<PaginationState>) {
-  const safeUpdater: Updater<PaginationState> = (old) => {
-    const newState = functionalUpdate(updater, old)
-
-    return newState
-  }
-
-  return table.options.onPaginationChange?.(safeUpdater)
+  setStateSlice(table, 'pagination', updater)
 }
 
 /**
@@ -151,13 +152,12 @@ export function table_resetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
-  const currentPageIndex =
-    table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
-  const newPageIndex = defaultState
-    ? defaultPageIndex
-    : (table.initialState.pagination?.pageIndex ?? defaultPageIndex)
-  if (newPageIndex === currentPageIndex) return
-  table_setPageIndex(table, newPageIndex)
+  table_setPageIndex(
+    table,
+    defaultState
+      ? defaultPageIndex
+      : (table.initialState.pagination?.pageIndex ?? defaultPageIndex),
+  )
 }
 
 /**
@@ -176,13 +176,12 @@ export function table_resetPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
-  const currentPageSize =
-    table.atoms.pagination?.get()?.pageSize ?? defaultPageSize
-  const newPageSize = defaultState
-    ? defaultPageSize
-    : (table.initialState.pagination?.pageSize ?? defaultPageSize)
-  if (newPageSize === currentPageSize) return
-  table_setPageSize(table, newPageSize)
+  table_setPageSize(
+    table,
+    defaultState
+      ? defaultPageSize
+      : (table.initialState.pagination?.pageSize ?? defaultPageSize),
+  )
 }
 
 /**
@@ -202,8 +201,10 @@ export function table_setPageSize<
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<number>) {
   table_setPagination(table, (old) => {
     const pageSize = Math.max(1, functionalUpdate(updater, old.pageSize))
-    const topRowIndex = old.pageSize * old.pageIndex
-    const pageIndex = Math.floor(topRowIndex / pageSize)
+    const topRowIndex =
+      old.pageSize === Infinity ? 0 : old.pageSize * old.pageIndex
+    const pageIndex =
+      pageSize === Infinity ? 0 : Math.floor(topRowIndex / pageSize)
 
     return {
       ...old,
@@ -285,6 +286,29 @@ export function table_getCanNextPage<
 }
 
 /**
+ * Checks whether a known, finite last page exists after the current page.
+ *
+ * Unknown (`-1`), empty, and non-finite page counts do not have a navigable
+ * last page.
+ *
+ * @example
+ * ```ts
+ * const canGoToLastPage = table_getCanLastPage(table)
+ * ```
+ */
+export function table_getCanLastPage<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>) {
+  const pageIndex = table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+  const pageCount = table_getPageCount(table)
+
+  return (
+    Number.isFinite(pageCount) && pageCount > 0 && pageIndex < pageCount - 1
+  )
+}
+
+/**
  * Moves the table to the previous page.
  *
  * This delegates to `table_setPageIndex` so pagination state ownership and
@@ -342,7 +366,8 @@ export function table_firstPage<
 /**
  * Moves the table to the last known page.
  *
- * The target page is derived from `table_getPageCount(table) - 1`.
+ * Unknown, empty, and non-finite page counts do not have a navigable last
+ * page, so this does nothing for those states.
  *
  * @example
  * ```ts
@@ -353,7 +378,13 @@ export function table_lastPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return table_setPageIndex(table, table_getPageCount(table) - 1)
+  const pageCount = table_getPageCount(table)
+
+  if (!Number.isFinite(pageCount) || pageCount <= 0) {
+    return
+  }
+
+  return table_setPageIndex(table, pageCount - 1)
 }
 
 /**
@@ -371,13 +402,19 @@ export function table_getPageCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (
-    table.options.pageCount ??
-    Math.ceil(
-      table_getRowCount(table) /
-        (table.atoms.pagination?.get()?.pageSize ?? defaultPageSize),
-    )
-  )
+  const configuredPageCount = table.options.pageCount
+  if (configuredPageCount != null) {
+    return configuredPageCount
+  }
+
+  const rowCount = table_getRowCount(table)
+  const pageSize = table.atoms.pagination?.get()?.pageSize ?? defaultPageSize
+
+  if (pageSize === Infinity && Number.isFinite(rowCount) && rowCount > 0) {
+    return 1
+  }
+
+  return Math.ceil(rowCount / pageSize)
 }
 
 /**

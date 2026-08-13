@@ -25,4 +25,7 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:6](https://gi
 pageSize: number;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L7)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L11)
+
+The number of rows per page. Set to `Infinity` to place all rows on a
+single page.

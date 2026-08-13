@@ -100,6 +100,8 @@ export function table_setGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: any) {
+  // Unguarded: the global filter is a scalar, so the state owner's own
+  // identity bailout (Object.is) already suppresses no-op writes by value.
   table.options.onGlobalFilterChange?.(updater)
 }
 

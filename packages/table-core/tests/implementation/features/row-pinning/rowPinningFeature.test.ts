@@ -80,7 +80,9 @@ describe('table methods', () => {
 
       table.setRowPinning(newState)
 
-      expect(onRowPinningChangeMock).toHaveBeenCalledWith(newState)
+      expect(onRowPinningChangeMock).toHaveBeenCalledTimes(1)
+      const updater = onRowPinningChangeMock.mock.calls[0]![0]
+      expect(updater({ top: [], bottom: [] })).toEqual(newState)
     })
   })
 

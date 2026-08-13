@@ -9,7 +9,7 @@ title: SubscribePropsWithStore
 type SubscribePropsWithStore<TFeatures, TSelected> = object;
 ```
 
-Defined in: [Subscribe.ts:20](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L20)
+Defined in: [react-table/src/Subscribe.ts:20](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L20)
 
 Subscribe to `table.store` (full table state). The selector receives the full
 TableState.
@@ -32,7 +32,7 @@ TableState.
 children: (state) => ReactNode | ReactNode;
 ```
 
-Defined in: [Subscribe.ts:33](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L33)
+Defined in: [react-table/src/Subscribe.ts:33](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L33)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [Subscribe.ts:33](https://github.com/TanStack/table/blob/main/packag
 selector: (state) => TSelected;
 ```
 
-Defined in: [Subscribe.ts:32](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L32)
+Defined in: [react-table/src/Subscribe.ts:32](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L32)
 
 Select from full table state. Re-renders when the selected value changes
 (shallow compare).
@@ -68,4 +68,4 @@ store without an explicit projection.
 source: SubscribeSource<TableState<TFeatures>>;
 ```
 
-Defined in: [Subscribe.ts:24](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L24)
+Defined in: [react-table/src/Subscribe.ts:24](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L24)

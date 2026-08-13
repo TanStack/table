@@ -6,10 +6,10 @@ title: FacetedRowModelFactory
 # Type Alias: FacetedRowModelFactory()\<TData\>
 
 ```ts
-type FacetedRowModelFactory<TData> = (table, columnId) => () => RowModel<StockFeatures, TData>;
+type FacetedRowModelFactory<TData> = (table, columnId) => () => RowModel<LegacyFeatures, TData>;
 ```
 
-Defined in: [useLegacyTable.ts:170](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L170)
+Defined in: [react-table/src/useLegacyTable.ts:184](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L184)
 
 Faceted row model factory function type from v8 API
 
@@ -23,7 +23,7 @@ Faceted row model factory function type from v8 API
 
 ### table
 
-`Table`\<`StockFeatures`, `TData`\>
+`Table`\<[`LegacyFeatures`](../interfaces/LegacyFeatures.md), `TData`\>
 
 ### columnId
 
@@ -32,9 +32,9 @@ Faceted row model factory function type from v8 API
 ## Returns
 
 ```ts
-(): RowModel<StockFeatures, TData>;
+(): RowModel<LegacyFeatures, TData>;
 ```
 
 ### Returns
 
-`RowModel`\<`StockFeatures`, `TData`\>
+`RowModel`\<[`LegacyFeatures`](../interfaces/LegacyFeatures.md), `TData`\>

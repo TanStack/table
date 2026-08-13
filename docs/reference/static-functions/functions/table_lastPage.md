@@ -9,11 +9,12 @@ title: table_lastPage
 function table_lastPage<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:352](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L352)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:377](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L377)
 
 Moves the table to the last known page.
 
-The target page is derived from `table_getPageCount(table) - 1`.
+Unknown, empty, and non-finite page counts do not have a navigable last
+page, so this does nothing for those states.
 
 ## Type Parameters
 

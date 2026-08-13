@@ -21,8 +21,8 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFn_includesString,
   filterFn_inNumberRange,
+  filterFn_includesString,
   injectTable,
   metaHelper,
   sortFn_alphanumeric,
@@ -246,6 +246,9 @@ export class App {
   pageSize() {
     return this.table.atoms.pagination.get().pageSize
   }
+
+  readonly allPageSize = Infinity
+  readonly pageSizes = [10, 20, 30, 50, 100, Infinity]
 
   refreshData = () => this.data.set(makeData(1_000))
   nestedData = () => this.data.set(makeData(100, 5, 3))

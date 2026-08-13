@@ -319,7 +319,7 @@ describe('columnVisibilityFeature.utils', () => {
 
       table_setColumnVisibility(table, { firstName: false })
 
-      expect(onColumnVisibilityChange).toHaveBeenCalledWith({
+      expect(getUpdaterResult(onColumnVisibilityChange, {})).toEqual({
         firstName: false,
       })
     })
@@ -330,11 +330,14 @@ describe('columnVisibilityFeature.utils', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = makeTable(1, {
         onColumnVisibilityChange,
+        state: { columnVisibility: { firstName: false } },
       })
 
       table_resetColumnVisibility(table, true)
 
-      expect(onColumnVisibilityChange).toHaveBeenCalledWith({})
+      expect(
+        getUpdaterResult(onColumnVisibilityChange, { firstName: false }),
+      ).toEqual({})
     })
 
     it('should reset to initial state when defaultState is false', () => {
@@ -343,11 +346,12 @@ describe('columnVisibilityFeature.utils', () => {
       const table = makeTable(1, {
         initialState,
         onColumnVisibilityChange,
+        state: { columnVisibility: {} },
       })
 
       table_resetColumnVisibility(table, false)
 
-      expect(onColumnVisibilityChange).toHaveBeenCalledWith({
+      expect(getUpdaterResult(onColumnVisibilityChange, {})).toEqual({
         firstName: false,
       })
     })
@@ -363,7 +367,7 @@ describe('columnVisibilityFeature.utils', () => {
       table_toggleAllColumnsVisible(table, true)
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
-      const result = onColumnVisibilityChange.mock.calls[0]?.[0]
+      const result = getUpdaterResult(onColumnVisibilityChange, {})
       const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id) => [id, true]),
@@ -379,7 +383,7 @@ describe('columnVisibilityFeature.utils', () => {
       table_toggleAllColumnsVisible(table, false)
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
-      const result = onColumnVisibilityChange.mock.calls[0]?.[0]
+      const result = getUpdaterResult(onColumnVisibilityChange, {})
       const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id) => [id, false]),
@@ -456,7 +460,7 @@ describe('columnVisibilityFeature.utils', () => {
       handler({ target: { checked: true } })
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
-      const result = onColumnVisibilityChange.mock.calls[0]?.[0]
+      const result = getUpdaterResult(onColumnVisibilityChange, {})
       const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id) => [id, true]),

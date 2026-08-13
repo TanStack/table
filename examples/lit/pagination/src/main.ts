@@ -159,7 +159,7 @@ class LitTableExample extends LitElement {
           <button
             class="demo-button demo-button-sm"
             @click="${() => table.lastPage()}"
-            ?disabled="${!table.getCanNextPage()}"
+            ?disabled="${!table.getCanLastPage()}"
           >
             &gt;&gt;
           </button>
@@ -193,9 +193,11 @@ class LitTableExample extends LitElement {
               table.setPageSize(Number(target.value))
             }}"
           >
-            ${[10, 20, 30, 40, 50].map(
+            ${[10, 20, 30, 40, 50, Infinity].map(
               (pageSize) =>
-                html`<option value="${pageSize}">Show ${pageSize}</option>`,
+                html`<option value="${pageSize}">
+                  Show ${pageSize === Infinity ? 'All' : pageSize}
+                </option>`,
             )}
           </select>
         </div>

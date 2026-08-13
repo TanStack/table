@@ -7,29 +7,8 @@ import {
   OutputRefSubscription,
   ViewContainerRef,
 } from '@angular/core'
-import { FlexRenderComponent } from './flexRenderComponent'
-import type { Type } from '@angular/core'
-
-const inputNameCache = new WeakMap<Type<unknown>, Map<string, string>>()
-const hasOwn = (value: object, key: PropertyKey): boolean =>
-  Object.prototype.hasOwnProperty.call(value, key)
-
-function getInputName<T>(
-  componentData: FlexRenderComponent<T>,
-  propName: string,
-): string | undefined {
-  let names = inputNameCache.get(componentData.component)
-  if (!names) {
-    names = new Map(
-      componentData.mirror.inputs.map((input) => [
-        input.propName,
-        input.templateName,
-      ]),
-    )
-    inputNameCache.set(componentData.component, names)
-  }
-  return names.get(propName)
-}
+import { hasOwn } from '@tanstack/table-core'
+import type { FlexRenderComponent } from './flexRenderComponent'
 
 /**
  * Creates and manages Angular component instances used by flex-rendered table
@@ -78,7 +57,6 @@ export class FlexRenderComponentFactory {
  */
 export class FlexRenderComponentRef<T> {
   #componentData: FlexRenderComponent<T>
-  readonly #inputValues: Record<string, unknown> = {}
   readonly #creationKey: FlexRenderComponent<T>['key']
   readonly #outputRegistry: FlexRenderComponentOutputManager
 
@@ -90,7 +68,6 @@ export class FlexRenderComponentRef<T> {
     this.#componentData = componentData
     this.#creationKey = componentData.key
     this.#outputRegistry = new FlexRenderComponentOutputManager()
-
     this.componentRef.onDestroy(() => this.#outputRegistry.unsubscribeAll())
   }
 
@@ -136,22 +113,14 @@ export class FlexRenderComponentRef<T> {
 
   setInputs(inputs: Record<string, unknown>) {
     for (const prop in inputs) {
-      if (hasOwn(inputs, prop)) {
-        this.setInput(prop, inputs[prop])
-      }
+      this.setInput(prop, inputs[prop])
     }
-  }
-
-  updateInputs(inputs: Record<string, unknown>): void {
-    this.#syncInputs(inputs)
   }
 
   setInput(key: string, value: unknown) {
-    const inputName = getInputName(this.#componentData, key)
-    if (inputName) {
-      this.componentRef.setInput(inputName, value)
-      this.#inputValues[key] = value
-    }
+    const inputName = this.#componentData.metadata.inputNames.get(key)
+    if (inputName === undefined) return
+    this.componentRef.setInput(inputName, value)
   }
 
   setOutputs(
@@ -162,22 +131,22 @@ export class FlexRenderComponentRef<T> {
   ) {
     this.#outputRegistry.unsubscribeAll()
     for (const prop in outputs) {
-      if (hasOwn(outputs, prop)) {
-        this.setOutput(prop, outputs[prop])
-      }
+      this.setOutput(prop, outputs[prop])
     }
   }
 
   setOutput(
-    outputName: string,
+    key: string,
     emit: OutputEmitterRef<unknown>['emit'] | undefined | null,
   ): void {
-    if (!this.#componentData.allowedOutputNames.includes(outputName)) return
+    if (!this.#componentData.metadata.outputNames.has(key)) return
+    const outputName = key
     if (!emit) {
       this.#outputRegistry.unsubscribe(outputName)
       return
     }
 
+    // If the output was already subscribed, just swap the listener callback.
     const hasSubscription = this.#outputRegistry.hasSubscription(outputName)
     this.#outputRegistry.setListener(outputName, emit)
 
@@ -197,23 +166,12 @@ export class FlexRenderComponentRef<T> {
     }
   }
 
-  #syncInputs(inputs: Record<string, unknown>): void {
-    for (const prop in inputs) {
-      if (
-        hasOwn(inputs, prop) &&
-        (!hasOwn(this.#inputValues, prop) ||
-          !Object.is(this.#inputValues[prop], inputs[prop]))
-      ) {
-        this.setInput(prop, inputs[prop])
-      }
-    }
-    for (const prop in this.#inputValues) {
-      if (!hasOwn(inputs, prop)) {
-        const inputName = getInputName(this.#componentData, prop)
-        if (inputName) {
-          this.componentRef.setInput(inputName, undefined)
-        }
-        delete this.#inputValues[prop]
+  #syncInputs(newInputs: Record<string, unknown>): void {
+    // Inputs use patch semantics: omitted keys keep their current value, while
+    // an explicitly provided `undefined` is forwarded to Angular.
+    for (const prop in newInputs) {
+      if (hasOwn(newInputs, prop)) {
+        this.setInput(prop, newInputs[prop])
       }
     }
   }
@@ -224,58 +182,56 @@ export class FlexRenderComponentRef<T> {
       OutputEmitterRef<unknown>['emit'] | null | undefined
     >,
   ): void {
-    for (const prop in outputs) {
-      if (
-        hasOwn(outputs, prop) &&
-        !Object.is(this.#outputRegistry.getListener(prop), outputs[prop])
-      ) {
-        this.setOutput(prop, outputs[prop])
+    const outputKeys = Object.keys(outputs)
+    const currentSubscribedKeys = this.#outputRegistry.getSubscribedKeys()
+    // When outputs updates, unsubscribe missing keys
+    for (const key of currentSubscribedKeys) {
+      if (!outputKeys.includes(key)) {
+        this.#outputRegistry.unsubscribe(key)
       }
     }
-    this.#outputRegistry.unsubscribeMissing(outputs)
+    for (const prop in outputs) {
+      this.setOutput(prop, outputs[prop])
+    }
   }
 }
 
 class FlexRenderComponentOutputManager {
-  readonly #outputSubscribers: Record<string, OutputRefSubscription> = {}
-  readonly #outputListeners: Record<string, (...args: Array<any>) => void> = {}
+  readonly #outputSubscribers = new Map<string, OutputRefSubscription>()
+  readonly #outputListeners = new Map<string, (...args: Array<any>) => void>()
+
+  getSubscribedKeys() {
+    return Array.from(this.#outputListeners.keys())
+  }
 
   hasSubscription(outputName: string) {
-    return outputName in this.#outputSubscribers
+    return this.#outputSubscribers.has(outputName)
   }
 
   setListener(outputName: string, callback: (...args: Array<any>) => void) {
-    this.#outputListeners[outputName] = callback
+    this.#outputListeners.set(outputName, callback)
   }
 
   getListener(outputName: string) {
-    return this.#outputListeners[outputName]
+    return this.#outputListeners.get(outputName)
   }
 
   setSubscription(
     outputName: string,
     subscription: OutputRefSubscription,
   ): void {
-    this.#outputSubscribers[outputName] = subscription
+    this.#outputSubscribers.set(outputName, subscription)
   }
 
   unsubscribeAll(): void {
-    for (const prop in this.#outputListeners) {
-      this.unsubscribe(prop)
-    }
-  }
-
-  unsubscribeMissing(outputs: Record<string, unknown>): void {
-    for (const prop in this.#outputListeners) {
-      if (!hasOwn(outputs, prop)) {
-        this.unsubscribe(prop)
-      }
+    for (const outputName of this.#outputListeners.keys()) {
+      this.unsubscribe(outputName)
     }
   }
 
   unsubscribe(outputName: string) {
-    this.#outputSubscribers[outputName]?.unsubscribe()
-    delete this.#outputSubscribers[outputName]
-    delete this.#outputListeners[outputName]
+    this.#outputSubscribers.get(outputName)?.unsubscribe()
+    this.#outputSubscribers.delete(outputName)
+    this.#outputListeners.delete(outputName)
   }
 }

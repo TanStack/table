@@ -3,7 +3,7 @@ name: column-ordering
 description: >
   Control TanStack Table v9 leaf columnOrder with stable IDs while accounting for pinning regions, visibility, and groupedColumnMode precedence. Load for drag-and-drop columns or rendered order that differs from state.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.2' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/framework/react/guide/column-ordering.md'

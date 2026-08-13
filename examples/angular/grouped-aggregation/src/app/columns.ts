@@ -1,5 +1,4 @@
 import {
-  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -10,6 +9,7 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createTableHook,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   tableFeatures,

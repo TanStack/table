@@ -4,7 +4,6 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   FlexRender,
   TableController,
-  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -18,6 +17,7 @@ import {
   createSortedRowModel,
   filterFn_inNumberRange,
   filterFn_includesString,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
@@ -276,8 +276,8 @@ class LitTableExample extends LitElement {
             &gt;
           </button>
           <button
-            @click=${() => table.setPageIndex(table.getPageCount() - 1)}
-            ?disabled=${!table.getCanNextPage()}
+            @click=${() => table.lastPage()}
+            ?disabled=${!table.getCanLastPage()}
           >
             &gt;&gt;
           </button>

@@ -58,7 +58,7 @@ In this new age of AI, where markup can be generated in seconds, the old value p
 
 TanStack Table might be a bit of a different table library than you are used to. It is **_NOT_** a pre-built table component, like you might find from a library like [AG Grid](https://ag-grid.com?utm_source=reacttable&utm_campaign=githubreacttable). Instead, TanStack Table is a headless UI library that gives you the power to build your own fully customizable table and datagrid components the right way with whatever JavaScript libraries, component libraries, or design systems you want. TanStack Table is the _engine_ that you can hook up to your own favorite front-end tech, no matter what you're already using or want to use.
 
-At its core, TanStack Table is **agnostic**. ~95% of the source code of TanStack Table is written in vanilla, framework-agnostic TypeScript, and thin framework adapters are available for your favorite frameworks. Official adapters are provided for React, Preact, Octane, Vue, Solid, Svelte, Angular, Ember, Lit, and Alpine, or you can use the core directly in vanilla JavaScript via `@tanstack/table-core`.
+At its core, TanStack Table is **agnostic**. Most table data-processing and state logic is written in framework-agnostic TypeScript, and framework adapters connect that core to your favorite frameworks. Official adapters are provided for React, Preact, Octane, Vue, Solid, Svelte, Angular, Ember, Lit, and Alpine, or you can use the core directly in vanilla JavaScript via `@tanstack/table-core`.
 
 It also **does not care which CSS or component library** you use, and is compatible with anything from Tailwind, Bootstrap, Material UI, ShadCN UI, or even your own custom design system.
 
@@ -380,7 +380,7 @@ Here's the difference in practice. With a pre-built table component, you pass pr
 
 ## Features
 
-TanStack Table is packed with features, but you only ever bundle the ones you use. Many libraries claim to be "lightweight"; TanStack Table happens to be lightweight too (under 20 KB even with every feature enabled), but more importantly, it is **modular**! You register only the features and row models that your table actually uses, and your bundler tree-shakes away the rest. A basic table bundles just the small core. The code for sorting, filtering, grouping, and every other feature below is only included in your bundle once you register it. So if you only use half of the features from TanStack Table, you only bundle about half of the library.
+TanStack Table is packed with features, but you only ever bundle the ones you use. The full v9 package is about 25 KB when minified and Brotli-compressed, but more importantly, it is **modular**! You register only the features and row models that your table actually uses, and your bundler can tree-shake away unused optional capabilities. A basic table bundles just the small core. Because features vary in size and share that core, the exact savings depend on which capabilities you register.
 
 We like to think of TanStack Table as more of a "system" for building tables than just a library, as it is one of the most customizable table libraries ever built. TanStack Table has the following built-in features, plus a custom feature (plugin) system for adding your own state and APIs.
 
@@ -388,8 +388,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # React
 
+- [Cell Selection](./framework/react/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/react/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/react/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/react/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/react/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/react/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/react/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/react/guide/column-resizing) - Let users resize columns with drag handles
@@ -397,6 +399,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/react/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/react/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/react/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/react/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/react/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/react/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/react/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -405,8 +408,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Preact
 
+- [Cell Selection](./framework/preact/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/preact/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/preact/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/preact/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/preact/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/preact/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/preact/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/preact/guide/column-resizing) - Let users resize columns with drag handles
@@ -414,6 +419,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/preact/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/preact/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/preact/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/preact/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/preact/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/preact/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/preact/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -422,8 +428,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Octane
 
+- [Cell Selection](./framework/octane/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/octane/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/octane/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/octane/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/octane/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/octane/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/octane/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/octane/guide/column-resizing) - Let users resize columns with drag handles
@@ -431,6 +439,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/octane/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/octane/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/octane/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/octane/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/octane/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/octane/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/octane/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -439,8 +448,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Solid
 
+- [Cell Selection](./framework/solid/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/solid/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/solid/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/solid/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/solid/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/solid/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/solid/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/solid/guide/column-resizing) - Let users resize columns with drag handles
@@ -448,6 +459,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/solid/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/solid/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/solid/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/solid/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/solid/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/solid/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/solid/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -456,8 +468,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Svelte
 
+- [Cell Selection](./framework/svelte/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/svelte/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/svelte/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/svelte/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/svelte/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/svelte/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/svelte/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/svelte/guide/column-resizing) - Let users resize columns with drag handles
@@ -465,6 +479,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/svelte/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/svelte/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/svelte/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/svelte/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/svelte/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/svelte/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/svelte/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -473,8 +488,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Vue
 
+- [Cell Selection](./framework/vue/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/vue/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/vue/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/vue/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/vue/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/vue/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/vue/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/vue/guide/column-resizing) - Let users resize columns with drag handles
@@ -482,6 +499,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/vue/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/vue/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/vue/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/vue/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/vue/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/vue/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/vue/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -490,8 +508,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Angular
 
+- [Cell Selection](./framework/angular/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/angular/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/angular/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/angular/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/angular/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/angular/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/angular/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/angular/guide/column-resizing) - Let users resize columns with drag handles
@@ -499,6 +519,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/angular/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/angular/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/angular/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/angular/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/angular/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/angular/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/angular/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -507,8 +528,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Ember
 
+- [Cell Selection](./framework/ember/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/ember/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/ember/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/ember/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/ember/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/ember/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/ember/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/ember/guide/column-resizing) - Let users resize columns with drag handles
@@ -516,6 +539,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/ember/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/ember/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/ember/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/ember/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/ember/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/ember/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/ember/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -524,8 +548,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Lit
 
+- [Cell Selection](./framework/lit/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/lit/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/lit/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/lit/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/lit/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/lit/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/lit/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/lit/guide/column-resizing) - Let users resize columns with drag handles
@@ -533,6 +559,7 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/lit/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/lit/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/lit/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/lit/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/lit/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/lit/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/lit/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
@@ -541,8 +568,10 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 
 # Alpine
 
+- [Cell Selection](./framework/alpine/guide/cell-selection) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./framework/alpine/guide/cell-spanning) - Merge adjacent body cells across rows or columns
 - [Column Filtering](./framework/alpine/guide/column-filtering) - Filter rows based on search values for a column
-- [Column Grouping](./framework/alpine/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Grouping](./framework/alpine/guide/grouping) - Group rows by one or more column values
 - [Column Ordering](./framework/alpine/guide/column-ordering) - Dynamically change the order of columns
 - [Column Pinning](./framework/alpine/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
 - [Column Resizing](./framework/alpine/guide/column-resizing) - Let users resize columns with drag handles
@@ -550,11 +579,32 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Column Visibility](./framework/alpine/guide/column-visibility) - Hide/show columns
 - [Faceting](./framework/alpine/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/alpine/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/alpine/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
 - [Row Expanding](./framework/alpine/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/alpine/guide/pagination) - Paginate rows
 - [Row Pinning](./framework/alpine/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
 - [Row Selection](./framework/alpine/guide/row-selection) - Select/deselect rows (checkboxes)
 - [Row Sorting](./framework/alpine/guide/sorting) - Sort rows by column values
+
+# Vanilla
+
+- [Cell Selection](./reference/index/variables/cellSelectionFeature) - Select spreadsheet-style rectangular ranges of cells
+- [Cell Spanning](./reference/index/variables/cellSpanningFeature) - Merge adjacent body cells across rows or columns
+- [Column Filtering](./reference/index/variables/columnFilteringFeature) - Filter rows based on search values for a column
+- [Column Grouping](./reference/index/variables/columnGroupingFeature) - Group rows by one or more column values
+- [Column Ordering](./reference/index/variables/columnOrderingFeature) - Dynamically change the order of columns
+- [Column Pinning](./reference/index/variables/columnPinningFeature) - Pin (Freeze) columns to the left or right of the table
+- [Column Resizing](./reference/index/variables/columnResizingFeature) - Let users resize columns with drag handles
+- [Column Sizing](./reference/index/variables/columnSizingFeature) - Dynamically change the size of columns
+- [Column Visibility](./reference/index/variables/columnVisibilityFeature) - Hide/show columns
+- [Faceting](./reference/index/variables/columnFacetingFeature) - List unique values or min/max values for a column or for the entire table
+- [Global Filtering](./reference/index/variables/globalFilteringFeature) - Filter rows based on search values for the entire table
+- [Row Aggregation](./framework/vanilla/guide/aggregation) - Calculate summary values for grouped, root, or custom row sets
+- [Row Expanding](./reference/index/variables/rowExpandingFeature) - Expand/collapse rows (sub-rows)
+- [Row Pagination](./reference/index/variables/rowPaginationFeature) - Paginate rows
+- [Row Pinning](./reference/index/variables/rowPinningFeature) - Pin (Freeze) rows to the top or bottom of the table
+- [Row Selection](./reference/index/variables/rowSelectionFeature) - Select/deselect rows (checkboxes)
+- [Row Sorting](./reference/index/variables/rowSortingFeature) - Sort rows by column values
 
 <!-- ::end:framework -->
 
@@ -616,10 +666,18 @@ Using a component library? These examples pair TanStack Table with popular React
 - [Svelte Quick Start](./framework/svelte/quick-start)
 - [Kitchen Sink example](./framework/svelte/examples/kitchen-sink) - Most of the built-in features working together in one table
 
+Using a component library? These examples pair TanStack Table with shadcn-svelte:
+
+- shadcn-svelte: [Basic Example](./framework/svelte/examples/lib-shadcn) | [Advanced Example](./framework/svelte/examples/kitchen-sink-shadcn)
+
 # Vue
 
 - [Vue Quick Start](./framework/vue/quick-start)
 - [Kitchen Sink example](./framework/vue/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+Using a component library? These examples pair TanStack Table with shadcn-vue:
+
+- shadcn-vue: [Basic Example](./framework/vue/examples/lib-shadcn) | [Advanced Example](./framework/vue/examples/kitchen-sink-shadcn)
 
 # Angular
 

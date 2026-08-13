@@ -9,7 +9,7 @@ title: table_getSelectedCellIds
 function table_getSelectedCellIds<TFeatures, TData>(table): string[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1183](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1183)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1206](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1206)
 
 Returns the ids of all selected cells, in row-major order.
 

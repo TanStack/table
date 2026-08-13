@@ -191,6 +191,12 @@ describe('table_resetHeaderSizeInfo', () => {
     const onColumnResizingChange = vi.fn()
     const table = makeTable(1, {
       onColumnResizingChange,
+      state: {
+        columnResizing: {
+          ...getDefaultColumnResizingState(),
+          isResizingColumn: 'firstName',
+        },
+      },
     })
 
     table_resetHeaderSizeInfo(table, true)
@@ -215,6 +221,7 @@ describe('table_resetHeaderSizeInfo', () => {
     const table = makeTable(1, {
       onColumnResizingChange,
       initialState,
+      state: { columnResizing: getDefaultColumnResizingState() },
     })
 
     table_resetHeaderSizeInfo(table, false)

@@ -371,8 +371,8 @@ class LitTableExample extends LitElement {
           </button>
           <button
             class="demo-button demo-button-sm"
-            @click=${() => table.setPageIndex(table.getPageCount() - 1)}
-            ?disabled=${!table.getCanNextPage()}
+            @click=${() => table.lastPage()}
+            ?disabled=${!table.getCanLastPage()}
           >
             &gt;&gt;
           </button>
@@ -410,6 +410,7 @@ class LitTableExample extends LitElement {
               (pageSize) =>
                 html`<option value=${pageSize}>Show ${pageSize}</option>`,
             )}
+            <option value=${Infinity}>Show All</option>
           </select>
         </div>
         <div class="spacer-sm"></div>

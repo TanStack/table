@@ -26,6 +26,7 @@ import {
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(), // if using client-side sorting
+  // manualSorting: true, // if using manual server-side sorting
   sortFns: {
     alphanumeric: sortFn_alphanumeric,
     text: sortFn_text,
@@ -146,6 +147,8 @@ const table = useTable({
 Sorting should operate over the same dataset as filtering and pagination. If the server returns only a page or filtered subset, client-side sorting sorts only those loaded rows, not the full dataset.
 
 See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework and the cases where mixing client-side and server-side operations is intentional.
+
+The client-side sorted row model also invokes the page-index auto-reset hook when sorting inputs change. Whether the page index resets depends on the `autoResetPageIndex`, `autoResetAll`, and `manualPagination` options. If sorting is manual and this row model is omitted or bypassed, a sorting state change does not invoke that hook, so reset server-side pagination in the sorting change handler when needed.
 
 ### Manual Server-Side Sorting
 

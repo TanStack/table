@@ -54,6 +54,13 @@ const columns = ref(
               header: 'Profile Progress',
               footer: (props) => props.column.id,
             }),
+            columnHelper.accessor('birthDate', {
+              header: 'Birth Date',
+              // A locale-independent date format keeps the demo (and its tests) stable
+              cell: (info) => info.getValue().toISOString().slice(0, 10),
+              filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
+              footer: (props) => props.column.id,
+            }),
           ]),
         }),
       ]),
@@ -197,7 +204,7 @@ function handlePageSizeChange(e: any) {
       <button
         class="demo-button demo-button-sm"
         @click="() => table.lastPage()"
-        :disabled="!table.getCanNextPage()"
+        :disabled="!table.getCanLastPage()"
       >
         >>
       </button>

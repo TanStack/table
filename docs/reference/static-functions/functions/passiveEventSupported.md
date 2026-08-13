@@ -9,7 +9,7 @@ title: passiveEventSupported
 function passiveEventSupported(): boolean;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.utils.ts:394](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L394)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:397](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L397)
 
 Detects whether the current environment supports passive event listeners.
 

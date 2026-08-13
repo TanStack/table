@@ -9,7 +9,7 @@ title: getDefaultColumnFiltersState
 function getDefaultColumnFiltersState(): ColumnFiltersState;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L22)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L27)
 
 Creates the default column filter state.
 

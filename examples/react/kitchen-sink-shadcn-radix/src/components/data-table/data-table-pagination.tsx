@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select'
 
 export function DataTablePagination({
-  pageSizeOptions = [10, 20, 30, 40, 50],
+  pageSizeOptions = [10, 20, 30, 40, 50, Infinity],
 }: {
   pageSizeOptions?: Array<number>
 }): React.ReactNode {
@@ -47,7 +47,7 @@ export function DataTablePagination({
             <SelectContent side="top">
               {pageSizeOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
+                  {pageSize === Infinity ? 'All' : pageSize}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -92,8 +92,8 @@ export function DataTablePagination({
             variant="outline"
             size="icon"
             className="hidden size-8 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
+            onClick={() => table.lastPage()}
+            disabled={!table.getCanLastPage()}
           >
             <ChevronsRight className="size-4" aria-hidden="true" />
           </Button>

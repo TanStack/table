@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -12,6 +11,7 @@ import {
   createPaginatedRowModel,
   filterFn_includesString,
   metaHelper,
+  rowAggregationFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
@@ -212,7 +212,7 @@ function setPage(event: Event) {
       ><button
         class="demo-button demo-button-sm"
         @click="table.lastPage()"
-        :disabled="!table.getCanNextPage()"
+        :disabled="!table.getCanLastPage()"
       >
         &gt;&gt;
       </button>

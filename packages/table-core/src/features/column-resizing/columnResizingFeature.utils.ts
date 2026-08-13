@@ -349,6 +349,9 @@ export function table_setColumnResizing<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<columnResizingState>,
 ) {
+  // Unguarded: pointer moves intentionally produce high-frequency transient
+  // state. The local resize calculations already decide whether a write is
+  // necessary.
   table.options.onColumnResizingChange?.(updater)
 }
 

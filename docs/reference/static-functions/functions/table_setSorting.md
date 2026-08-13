@@ -9,12 +9,14 @@ title: table_setSorting
 function table_setSorting<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L41)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L43)
 
 Routes a sorting updater through the table's sorting change handler.
 
 The updater may be a next `SortingState` array or a function of the previous
-sorting state, matching the instance `table.setSorting` behavior.
+sorting state, matching the instance `table.setSorting` behavior. State
+owners receive an equality-guarded updater so structurally equal sorting
+values preserve the owner's existing reference.
 
 ## Type Parameters
 

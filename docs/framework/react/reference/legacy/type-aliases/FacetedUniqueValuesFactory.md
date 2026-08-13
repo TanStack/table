@@ -9,7 +9,7 @@ title: FacetedUniqueValuesFactory
 type FacetedUniqueValuesFactory<TData> = (table, columnId) => () => Map<any, number>;
 ```
 
-Defined in: [useLegacyTable.ts:186](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L186)
+Defined in: [react-table/src/useLegacyTable.ts:200](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L200)
 
 Faceted unique values factory function type from v8 API
 
@@ -23,7 +23,7 @@ Faceted unique values factory function type from v8 API
 
 ### table
 
-`Table`\<`StockFeatures`, `TData`\>
+`Table`\<[`LegacyFeatures`](../interfaces/LegacyFeatures.md), `TData`\>
 
 ### columnId
 

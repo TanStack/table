@@ -3,7 +3,7 @@ name: sorting
 description: >
   Sort with rowSortingFeature, sortedRowModel, sortFns, multi-sort and removal options, sortUndefined, and manualSorting. Load for comparator direction, incoming server order, or product-specific sorting cycles.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.2' }
 requires: ['core', 'table-features', 'client-vs-server']
 sources:
   - 'TanStack/table:docs/framework/react/guide/sorting.md'

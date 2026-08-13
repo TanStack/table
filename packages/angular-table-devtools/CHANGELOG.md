@@ -1,5 +1,39 @@
 # @tanstack/angular-table-devtools
 
+## 9.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`ff43666`](https://github.com/TanStack/table/commit/ff436663f808e22091e8a4d2ee7ca81b37ea99c2)]:
+  - @tanstack/table-core@9.1.2
+  - @tanstack/table-devtools@9.1.2
+
+## 9.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`269e0d8`](https://github.com/TanStack/table/commit/269e0d81c8b5c128de01cbab4ddb40240a4b8b38)]:
+  - @tanstack/table-core@9.1.1
+  - @tanstack/table-devtools@9.1.1
+
+## 9.1.0
+
+### Patch Changes
+
+- Updated dependencies [[`09598d2`](https://github.com/TanStack/table/commit/09598d2e413fe63396d183a8a4fc145c31c6d2ea)]:
+  - @tanstack/table-core@9.1.0
+  - @tanstack/table-devtools@9.1.0
+
+## 9.0.1
+
+### Patch Changes
+
+- [#6516](https://github.com/TanStack/table/pull/6516) [`2d5d6c5`](https://github.com/TanStack/table/commit/2d5d6c580c799d54ac9789c757c49bebd23f99cc) - Hotfix: Fixes TableDevtoolsPanel rendering while using as a standalone component in TanStack Devtools
+
+- Updated dependencies [[`2d5d6c5`](https://github.com/TanStack/table/commit/2d5d6c580c799d54ac9789c757c49bebd23f99cc)]:
+  - @tanstack/table-devtools@9.0.1
+  - @tanstack/table-core@9.0.1
+
 ## 9.0.0
 
 ### Major Changes

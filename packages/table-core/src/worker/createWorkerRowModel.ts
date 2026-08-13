@@ -109,7 +109,7 @@ export function createWorkerRowModel(
             }
           }
         }
-        return rebuildRowModel(table, payload, stage !== 'filtered')
+        return rebuildRowModel(table, payload, stage)
       },
     })
 

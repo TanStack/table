@@ -1,5 +1,4 @@
 import {
-  rowAggregationFeature,
   aggregationFn_extent,
   aggregationFn_mean,
   aggregationFn_median,
@@ -14,6 +13,7 @@ import {
   createSortedRowModel,
   filterFn_includesString,
   globalFilteringFeature,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,

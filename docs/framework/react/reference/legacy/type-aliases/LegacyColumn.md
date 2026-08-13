@@ -6,10 +6,10 @@ title: LegacyColumn
 # ~~Type Alias: LegacyColumn\<TData, TValue\>~~
 
 ```ts
-type LegacyColumn<TData, TValue> = Column<StockFeatures, TData, TValue>;
+type LegacyColumn<TData, TValue> = Column<LegacyFeatures, TData, TValue>;
 ```
 
-Defined in: [useLegacyTable.ts:298](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L298)
+Defined in: [react-table/src/useLegacyTable.ts:312](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L312)
 
 ## Type Parameters
 

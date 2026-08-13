@@ -151,7 +151,7 @@ function MyTable(props: {
         <button
           class="demo-button demo-button-sm"
           onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>
@@ -187,6 +187,7 @@ function MyTable(props: {
           <For each={[10, 20, 30, 40, 50]}>
             {(pageSize) => <option value={pageSize}>Show {pageSize}</option>}
           </For>
+          <option value={Infinity}>Show All</option>
         </select>
       </div>
       <div>

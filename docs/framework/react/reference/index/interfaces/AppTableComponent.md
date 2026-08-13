@@ -5,7 +5,7 @@ title: AppTableComponent
 
 # Interface: AppTableComponent()\<TFeatures\>
 
-Defined in: [createTableHook.tsx:524](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L524)
+Defined in: [react-table/src/createTableHook.tsx:524](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L524)
 
 Component type for AppTable - root wrapper with optional Subscribe
 
@@ -21,7 +21,7 @@ Component type for AppTable - root wrapper with optional Subscribe
 AppTableComponent(props): ReactNode;
 ```
 
-Defined in: [createTableHook.tsx:525](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L525)
+Defined in: [react-table/src/createTableHook.tsx:525](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L525)
 
 Component type for AppTable - root wrapper with optional Subscribe
 
@@ -41,7 +41,7 @@ Component type for AppTable - root wrapper with optional Subscribe
 AppTableComponent<TSelected>(props): ReactNode;
 ```
 
-Defined in: [createTableHook.tsx:526](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L526)
+Defined in: [react-table/src/createTableHook.tsx:526](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L526)
 
 Component type for AppTable - root wrapper with optional Subscribe
 

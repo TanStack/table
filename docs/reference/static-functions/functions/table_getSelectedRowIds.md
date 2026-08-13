@@ -9,7 +9,7 @@ title: table_getSelectedRowIds
 function table_getSelectedRowIds<TFeatures, TData>(table): string[];
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:336](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L336)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:339](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L339)
 
 Returns the ids of all selected rows.
 

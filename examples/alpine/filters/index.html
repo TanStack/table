@@ -59,6 +59,27 @@
                               />
                             </div>
                           </template>
+                          <!-- dateRange variant -->
+                          <template
+                            x-if="filterVariant(header.column) === 'dateRange'"
+                          >
+                            <div class="filter-row">
+                              <input
+                                type="date"
+                                class="filter-input"
+                                :aria-label="header.column.id + ' min'"
+                                :value="rangeValue(header.column, 0)"
+                                @input="setDateMin(header.column, $event.target.value)"
+                              />
+                              <input
+                                type="date"
+                                class="filter-input"
+                                :aria-label="header.column.id + ' max'"
+                                :value="rangeValue(header.column, 1)"
+                                @input="setDateMax(header.column, $event.target.value)"
+                              />
+                            </div>
+                          </template>
                           <!-- text variant -->
                           <template
                             x-if="filterVariant(header.column) === 'text'"
@@ -107,10 +128,7 @@
         <button @click="table.nextPage()" :disabled="!table.getCanNextPage()">
           &gt;
         </button>
-        <button
-          @click="table.setPageIndex(table.getPageCount() - 1)"
-          :disabled="!table.getCanNextPage()"
-        >
+        <button @click="table.lastPage()" :disabled="!table.getCanLastPage()">
           &gt;&gt;
         </button>
         <span class="inline-controls">

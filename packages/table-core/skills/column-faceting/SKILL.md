@@ -3,7 +3,7 @@ name: column-faceting
 description: >
   Build faceted filter UIs with columnFacetingFeature, facetedRowModel, facetedUniqueValues, and facetedMinMaxValues. Load for facet counts, numeric ranges, own-filter exclusion, or server-page facet completeness.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.2' }
 requires: ['core', 'table-features', 'column-filtering']
 sources:
   - 'TanStack/table:docs/framework/react/guide/column-faceting.md'

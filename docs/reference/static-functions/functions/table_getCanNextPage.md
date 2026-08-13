@@ -9,7 +9,7 @@ title: table_getCanNextPage
 function table_getCanNextPage<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:268](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L268)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L269)
 
 Checks whether the current page index can move forward.
 

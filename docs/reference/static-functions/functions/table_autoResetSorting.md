@@ -9,7 +9,7 @@ title: table_autoResetSorting
 function table_autoResetSorting<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L81)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L83)
 
 Resets sorting after the table data changes when explicitly enabled.
 

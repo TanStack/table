@@ -212,7 +212,7 @@ export default class FiltersFuzzyTable extends Component {
   }
 
   stressTest = () => {
-    this.data = makeData(50_000)
+    this.data = makeData(1_000_000)
   }
 
   handleGlobalFilter = (event: Event) => {
@@ -236,7 +236,7 @@ export default class FiltersFuzzyTable extends Component {
   <template>
     <div>
       <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
-      <button {{on 'click' this.stressTest}}>Stress Test (50k rows)</button>
+      <button {{on 'click' this.stressTest}}>Stress Test (1M rows)</button>
     </div>
     <div class='spacer-sm'></div>
     <input

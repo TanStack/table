@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -13,6 +12,7 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
@@ -244,7 +244,7 @@ function handleGoToPage(e: Event) {
         <button
           class="demo-button demo-button-sm"
           @click="() => table.lastPage()"
-          :disabled="!table.getCanNextPage()"
+          :disabled="!table.getCanLastPage()"
         >
           >>
         </button>

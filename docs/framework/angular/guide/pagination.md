@@ -24,6 +24,7 @@ import {
 const features = tableFeatures({
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(), // if using client-side pagination
+  // manualPagination: true, // if using manual server-side pagination
 })
 
 export class App {
@@ -89,7 +90,7 @@ No pagination row model is needed for server-side pagination, but if you have pr
 
 #### Page Count and Row Count
 
-The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, you can just pass in `-1` for the `pageCount`, but the `getCanNextPage` and `getCanPreviousPage` row model functions will always return `true` in this case.
+The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, pass `-1` for `pageCount`. In that case, `getCanNextPage()` returns `true` because the table cannot detect the end, `getCanPreviousPage()` depends on the current `pageIndex`, and `getCanLastPage()` returns `false` because no finite last page is known.
 
 ```ts
 import {
@@ -111,6 +112,105 @@ readonly table = injectTable(() => ({
 ```
 
 > **Note**: Setting the `manualPagination` option to `true` will make the table instance assume that the `data` that you pass in is already paginated.
+
+#### Using TanStack Query
+
+TanStack Query can own the request lifecycle while TanStack Table owns the controlled pagination state. See the complete [With TanStack Query example](../examples/with-tanstack-query), which includes both patterns below.
+
+##### Page-Index Pagination with `injectQuery`
+
+Include the pagination state in the query key, return the requested rows plus a total `rowCount`, and pass both to the table:
+
+```ts
+readonly dataQuery = injectQuery(() => ({
+  queryKey: [
+    'people',
+    'offset',
+    this.pagination(),
+    this.sorting(),
+    this.globalFilter(),
+  ],
+  queryFn: () =>
+    fetchPeople({
+      pagination: this.pagination(),
+      sorting: this.sorting(),
+      globalFilter: this.globalFilter(),
+    }),
+  placeholderData: keepPreviousData,
+}))
+
+readonly table = injectTable(() => ({
+  features,
+  columns,
+  data: this.dataQuery.data()?.rows ?? [],
+  rowCount: this.dataQuery.data()?.rowCount,
+  state: { pagination: this.pagination() },
+  onPaginationChange: updater =>
+    isFunction(updater)
+      ? this.pagination.update(updater)
+      : this.pagination.set(updater),
+  manualPagination: true,
+}))
+```
+
+This supports page counts, page-number navigation, and `lastPage()` because the total row count is known.
+
+##### Cursor-Based Pagination with `injectInfiniteQuery`
+
+For a cursor API, return the current rows, a `nextCursor`, and `hasNextPage`. The cursor can be the last row ID when IDs are unique and the server's ordering is stable:
+
+```ts
+readonly dataQuery = injectInfiniteQuery(() => ({
+  queryKey: [
+    'people',
+    'cursor',
+    this.pagination().pageSize,
+    this.sorting(),
+    this.globalFilter(),
+  ],
+  queryFn: ({ pageParam }) =>
+    fetchPeople({
+      cursor: pageParam,
+      pageSize: this.pagination().pageSize,
+      sorting: this.sorting(),
+      globalFilter: this.globalFilter(),
+    }),
+  initialPageParam: null,
+  getNextPageParam: lastPage => lastPage.nextCursor,
+}))
+
+readonly currentPage = computed(
+  () => this.dataQuery.data()?.pages[this.pagination().pageIndex],
+)
+readonly canNextPage = computed(
+  () =>
+    Boolean(
+      this.dataQuery.data()?.pages[this.pagination().pageIndex + 1],
+    ) || Boolean(this.currentPage()?.hasNextPage),
+)
+
+readonly table = injectTable(() => ({
+  features,
+  columns,
+  data: this.currentPage()?.rows ?? [],
+  pageCount: -1,
+  state: { pagination: this.pagination() },
+  manualPagination: true,
+}))
+
+async goToNextPage() {
+  const nextPageIndex = this.pagination().pageIndex + 1
+
+  if (!this.dataQuery.data()?.pages[nextPageIndex]) {
+    const result = await this.dataQuery.fetchNextPage()
+    if (!result.data?.pages[nextPageIndex]) return
+  }
+
+  this.table.nextPage()
+}
+```
+
+Use `canNextPage()` for the Next button because `getCanNextPage()` cannot know when an unknown page count has reached the end. Cached pages support backward navigation. Since no finite last page is known, `getCanLastPage()` returns `false`. Reset `pageIndex` to `0` whenever sorting, filtering, or page size changes.
 
 ### Pagination State
 
@@ -204,6 +304,9 @@ Besides the `manualPagination`, `pageCount`, and `rowCount` options which are us
 
 By default, `pageIndex` is reset to `0` whenever the client-side row models recompute, such as when the `data` is updated, filters change, sorting changes, or grouping changes. This behavior is automatically disabled when `manualPagination` is `true`, but it can be overridden by explicitly assigning a boolean value to the `autoResetPageIndex` table option. There is also a global `autoResetAll` table option that disables (or enables) every auto-reset behavior at once.
 
+> [!NOTE]
+> Automatic resets run only when an included client-side row model that triggers them recomputes. If a manual server-side table omits the filtered, sorted, grouped, or other relevant row model, changing that controlled state does not trigger a page-index reset—even when `autoResetPageIndex` or `autoResetAll` is `true`. Reset `pageIndex` yourself in the corresponding change handler.
+
 ```ts
 readonly table = injectTable(() => ({
   features,
@@ -226,6 +329,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 
 - `getCanPreviousPage`: Useful for disabling the "previous page" button when on the first page.
 - `getCanNextPage`: Useful for disabling the "next page" button when there are no more pages.
+- `getCanLastPage`: Useful for disabling the "last page" button when no finite last page is known.
 - `previousPage`: Useful for going to the previous page. (Button click handler)
 - `nextPage`: Useful for going to the next page. (Button click handler)
 - `firstPage`: Useful for going to the first page. (Button click handler)
@@ -264,7 +368,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 <button
   type="button"
   (click)="table.lastPage()"
-  [disabled]="!table.getCanNextPage()"
+  [disabled]="!table.getCanLastPage()"
 >
   &gt;&gt;
 </button>
