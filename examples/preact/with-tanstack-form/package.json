@@ -18,7 +18,7 @@
     "@tanstack/preact-pacer": "^0.23.0",
     "@tanstack/preact-pacer-devtools": "0.7.0",
     "@tanstack/preact-table": "^9.1.2",
-    "@tanstack/preact-table-devtools": "^9.1.2",
+    "@tanstack/preact-table-devtools": "^9.2.0",
     "@tanstack/react-form-devtools": "^0.2.34",
     "preact": "^10.29.8",
     "zod": "^4.4.3"

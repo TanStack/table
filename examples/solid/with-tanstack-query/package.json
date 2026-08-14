@@ -23,7 +23,7 @@
     "@tanstack/solid-query": "^5.101.4",
     "@tanstack/solid-query-devtools": "^5.101.4",
     "@tanstack/solid-table": "^9.1.2",
-    "@tanstack/solid-table-devtools": "^9.1.2",
+    "@tanstack/solid-table-devtools": "^9.2.0",
     "solid-js": "^1.9.14"
   }
 }

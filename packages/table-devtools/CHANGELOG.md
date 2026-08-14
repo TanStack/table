@@ -1,5 +1,11 @@
 # @tanstack/table-devtools
 
+## 9.2.0
+
+### Minor Changes
+
+- [#6553](https://github.com/TanStack/table/pull/6553) [`faa261b`](https://github.com/TanStack/table/commit/faa261b54c00ab4758861c1903bfce70a158f1c6) - Support the latest `@tanstack/devtools` by flattening nested plugin theme props and skipping broken Devtools UI font URLs under Angular Vite.
+
 ## 9.1.2
 
 ## 9.1.1

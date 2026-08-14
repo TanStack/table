@@ -17,7 +17,7 @@
     "@tanstack/react-pacer": "^0.23.0",
     "@tanstack/react-store": "^0.11.1",
     "@tanstack/react-table": "^9.1.2",
-    "@tanstack/react-table-devtools": "^9.1.2",
+    "@tanstack/react-table-devtools": "^9.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

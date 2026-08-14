@@ -12,7 +12,7 @@
   "dependencies": {
     "@tanstack/vue-devtools": "^0.2.24",
     "@tanstack/vue-table": "^9.1.2",
-    "@tanstack/vue-table-devtools": "^9.1.2",
+    "@tanstack/vue-table-devtools": "^9.2.0",
     "vue": "^3.5.41"
   },
   "devDependencies": {

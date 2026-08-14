@@ -26,6 +26,6 @@
     "@tanstack/svelte-query": "^6.1.38",
     "@tanstack/svelte-query-devtools": "^6.1.38",
     "@tanstack/svelte-table": "^9.1.2",
-    "@tanstack/table-devtools": "^9.1.2"
+    "@tanstack/table-devtools": "^9.2.0"
   }
 }
