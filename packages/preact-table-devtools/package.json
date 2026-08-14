@@ -54,7 +54,7 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
     "@tanstack/table-core": "workspace:*",
-    "preact": "^10.29.7"
+    "preact": "^10.29.8"
   },
   "peerDependencies": {
     "@tanstack/table-core": "^9.0.0",

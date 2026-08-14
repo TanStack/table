@@ -14,7 +14,7 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "6.0.3",
-    "vite": "^8.2.0",
+    "vite": "^8.2.1",
     "vite-plugin-solid": "^2.11.14"
   },
   "dependencies": {

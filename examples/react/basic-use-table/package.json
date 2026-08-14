@@ -12,7 +12,7 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@tanstack/react-devtools": "^0.10.9",
+    "@tanstack/react-devtools": "^0.10.10",
     "@tanstack/react-table": "^9.1.2",
     "@tanstack/react-table-devtools": "^9.1.2",
     "react": "^19.2.8",
@@ -26,6 +26,6 @@
     "@vitejs/plugin-react": "^6.0.5",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.0"
+    "vite": "^8.2.1"
   }
 }
