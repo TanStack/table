@@ -48,13 +48,13 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/preact-store": "^0.13.1",
+    "@tanstack/preact-store": "^0.13.2",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
     "@testing-library/preact": "^3.2.4",
-    "preact": "^10.29.7",
+    "preact": "^10.29.8",
     "preact-render-to-string": "^6.7.0"
   },
   "peerDependencies": {

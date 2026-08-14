@@ -1,4 +1,5 @@
 import { computed, effect } from '@angular/core'
+import { resolveDevtoolsPanelProps } from '@tanstack/table-devtools'
 import { TableDevtoolsCore } from '@tanstack/table-devtools/production'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/angular'
 import type { TableDevtoolsAngularInit } from '../TableDevtools'
@@ -6,10 +7,7 @@ import type { TableDevtoolsAngularInit } from '../TableDevtools'
 function resolvePanelProps(
   props?: TableDevtoolsAngularInit,
 ): DevtoolsPanelProps {
-  return {
-    theme: props?.theme ?? 'dark',
-    devtoolsOpen: props?.devtoolsOpen ?? true,
-  }
+  return resolveDevtoolsPanelProps(props)
 }
 
 type TableDevtoolsPanelComponent = () => (

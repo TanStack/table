@@ -1,5 +1,8 @@
 import { createVuePanel } from '@tanstack/devtools-utils/vue'
-import { TableDevtoolsCore } from '@tanstack/table-devtools'
+import {
+  TableDevtoolsCore,
+  resolveDevtoolsPanelProps,
+} from '@tanstack/table-devtools'
 import { defineComponent, h } from 'vue'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/vue'
 import type { DefineComponent } from 'vue'
@@ -12,10 +15,7 @@ class TableDevtoolsVueCore {
   constructor(_props: DevtoolsPanelProps) {}
 
   mount(el: HTMLElement, props?: DevtoolsPanelProps) {
-    void this.core.mount(el, {
-      theme: props?.theme ?? 'dark',
-      devtoolsOpen: props?.devtoolsOpen ?? true,
-    })
+    void this.core.mount(el, resolveDevtoolsPanelProps(props))
   }
 
   unmount() {
@@ -37,14 +37,11 @@ function createPanelWrapper(
     props: ['theme', 'devtoolsOpen'],
     setup(props: TableDevtoolsVueInit) {
       return () => {
-        const devtoolsProps = {
-          theme: props.theme ?? 'dark',
-          devtoolsOpen: props.devtoolsOpen ?? true,
-        }
+        const panelProps = resolveDevtoolsPanelProps(props)
         return h(Component, {
-          key: `${devtoolsProps.theme}:${devtoolsProps.devtoolsOpen}`,
-          props,
-          devtoolsProps,
+          key: `${panelProps.theme}:${panelProps.devtoolsOpen}`,
+          props: panelProps,
+          devtoolsProps: panelProps,
         })
       }
     },

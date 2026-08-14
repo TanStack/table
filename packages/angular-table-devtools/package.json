@@ -53,7 +53,7 @@
     "@angular/core": ">=21.0.0"
   },
   "devDependencies": {
-    "@angular/compiler": "^22.1.0",
-    "@angular/core": "^22.1.0"
+    "@angular/compiler": "^22.1.1",
+    "@angular/core": "^22.1.1"
   }
 }
