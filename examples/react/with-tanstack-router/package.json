@@ -20,7 +20,7 @@
     "@tanstack/react-router": "^1.170.27",
     "@tanstack/react-router-devtools": "^1.167.1",
     "@tanstack/react-table": "^9.1.2",
-    "@tanstack/react-table-devtools": "^9.1.2",
+    "@tanstack/react-table-devtools": "^9.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

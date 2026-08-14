@@ -16,7 +16,7 @@
     "@tanstack/preact-devtools": "^0.10.10",
     "@tanstack/preact-store": "^0.13.2",
     "@tanstack/preact-table": "^9.1.2",
-    "@tanstack/preact-table-devtools": "^9.1.2",
+    "@tanstack/preact-table-devtools": "^9.2.0",
     "preact": "^10.29.8"
   },
   "devDependencies": {
