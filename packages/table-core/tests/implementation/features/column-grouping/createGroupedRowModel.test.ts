@@ -38,6 +38,22 @@ function makeTable(data: Array<TestRow>, grouping: Array<string>) {
   })
 }
 
+function flattenRows<TRow extends { subRows: Array<TRow> }>(rows: Array<TRow>) {
+  const flatRows: Array<TRow> = []
+
+  const visit = (nestedRows: Array<TRow>) => {
+    for (const row of nestedRows) {
+      flatRows.push(row)
+      if (row.subRows.length) {
+        visit(row.subRows)
+      }
+    }
+  }
+
+  visit(rows)
+  return flatRows
+}
+
 function expectUniqueFlatRowIds(rowModel: RowModel<any, any>) {
   const ids = rowModel.flatRows.map((row) => row.id)
   expect(new Set(ids).size).toBe(ids.length)
@@ -153,6 +169,72 @@ describe('createGroupedRowModel flatRows contain every row exactly once', () => 
     expect(rowModel.rows.length).toBe(3)
     expect(rowModel.flatRows.length).toBe(3)
     expectUniqueFlatRowIds(rowModel)
+  })
+})
+
+describe('createGroupedRowModel flatRows follow the grouped rows tree', () => {
+  it('lists a group ahead of its own rows over flat data', () => {
+    const data: Array<TestRow> = [
+      { status: 'a', firstName: 'one' },
+      { status: 'a', firstName: 'two' },
+      { status: 'b', firstName: 'three' },
+    ]
+    const rowModel = makeTable(data, ['status']).getGroupedRowModel()
+
+    expect(rowModel.flatRows.map((row) => row.id)).toEqual([
+      'status:a',
+      '0',
+      '1',
+      'status:b',
+      '2',
+    ])
+  })
+
+  it('lists a group ahead of its own rows at every grouping depth', () => {
+    const data: Array<TestRow> = [
+      { status: 'a', firstName: 'x' },
+      { status: 'a', firstName: 'y' },
+      { status: 'b', firstName: 'x' },
+    ]
+    const rowModel = makeTable(data, [
+      'status',
+      'firstName',
+    ]).getGroupedRowModel()
+
+    expect(rowModel.flatRows.map((row) => row.id)).toEqual([
+      'status:a',
+      'status:a>firstName:x',
+      '0',
+      'status:a>firstName:y',
+      '1',
+      'status:b',
+      'status:b>firstName:x',
+      '2',
+    ])
+  })
+
+  it('lists a parent ahead of its own sub-rows below the terminal grouping depth', () => {
+    // 2 parents, each with 2 children, each with 2 grandchildren
+    const data = generateTestData(2, 2, 2)
+    data[0]!.status = 'single'
+    data[1]!.status = 'complicated'
+
+    const table = constructTable<typeof features, Person>({
+      features,
+      renderFallbackValue: '',
+      data,
+      columns: [
+        { accessorKey: 'status', id: 'status' },
+        { accessorKey: 'firstName', id: 'firstName' },
+      ] as Array<ColumnDef<typeof features, Person, any>>,
+      getSubRows: (originalRow) => originalRow.subRows,
+      initialState: { grouping: ['status'] },
+    })
+    const rowModel = table.getGroupedRowModel()
+
+    expect(rowModel.flatRows.map((row) => row.id)).toEqual(
+      flattenRows(rowModel.rows).map((row) => row.id),
+    )
   })
 })
 

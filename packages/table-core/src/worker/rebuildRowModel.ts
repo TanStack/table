@@ -46,7 +46,9 @@ export function rebuildRowModel<
   // filtered model never touches them. Without this distinction a filtered
   // rebuild could zero depths assigned by a grouped/sorted tree rebuild.
   const resetDepths = stage !== 'filtered'
-  const flattenParentsFirst = stage === 'sorted'
+  // Only the filtered model still flattens post-order; every stage that can
+  // carry synthetic group rows lists a parent ahead of its own descendants.
+  const flattenParentsFirst = stage !== 'filtered'
 
   if (payload.kind === 'flat') {
     const { indices } = payload
@@ -84,7 +86,7 @@ export function rebuildRowModel<
         continue
       }
 
-      // Sorted flatRows preserve the recursive rows order. Reserve the
+      // These flatRows preserve the recursive rows order. Reserve the
       // synthetic parent's position before rebuilding its descendants, then
       // fill it once the row can be constructed from those descendants.
       const flatIndex = flattenParentsFirst ? flatRows.length : -1

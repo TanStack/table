@@ -234,6 +234,7 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const { rebuilt } = roundTrip(workerTable, mainTable, model, 'grouped')
 
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
     const firstGroup = rebuilt.rows[0]!
     const firstSubGroup = firstGroup.subRows[0]!
     expect(firstSubGroup.groupingColumnId).toBe('age')

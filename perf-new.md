@@ -69,6 +69,15 @@ coverage in `tests/implementation/features/column-grouping/createGroupedRowModel
 values 8→5, nonexistent-column grouping 6→3 flatRows; all with duplicate-id checks). The
 benchmark comparison layer gained a known-delta allowlist annotating the intentional v8↔v9
 `outputFlatRows` mismatch for grouping scenarios.
+
+**2026-08-14 follow-up (#6551):** accepted delta (a) is withdrawn. Pushing each row from its
+parent's frame left every group row behind its own descendants at every depth, not just below the
+terminal depth, and #6529 removed the "the sorted model already emits postorder" justification.
+Each frame now pushes the rows it returns, and a group reserves its flat-array slot before it
+descends, so grouped `flatRows` matches the `rows` tree the way core, paginated and sorted already
+do. Worker-backed grouped tree reconstruction mirrors it. The exactly-once property and delta (b)
+are unchanged.
+
 **Location:** `packages/table-core/src/features/column-grouping/createGroupedRowModel.ts:86–87` (terminal-branch push) and `:179–182` (parent group's subRows push); v8 has the identical double-push in `table-v8/packages/table-core/src/utils/getGroupedRowModel.ts`
 **Category:** `bug`, `allocation`, `big-o`
 
