@@ -110,6 +110,7 @@ export function TradingTable(props: TradingTableProps) {
     >
       <table
         class="trading-data-grid"
+        data-testid="trading-table"
         role="grid"
         aria-multiselectable="true"
         style={tableStyle()}

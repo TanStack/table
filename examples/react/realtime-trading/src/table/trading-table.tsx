@@ -81,6 +81,7 @@ export function TradingTable() {
       <table
         ref={layoutRefs.tableRef}
         className="trading-data-grid"
+        data-testid="trading-table"
         role="grid"
         aria-multiselectable="true"
       >

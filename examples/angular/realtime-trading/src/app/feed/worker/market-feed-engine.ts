@@ -1,4 +1,4 @@
-import { globalInstruments } from '../../../../../../realtime-trading-shared/sp500-instruments'
+import { globalInstruments } from '../sp500-instruments'
 import type {
   MarketQuoteSnapshot,
   MarketQuoteUpdate,

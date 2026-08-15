@@ -30,7 +30,7 @@ test('runs the React realtime trading workload', async ({ page }) => {
 
     await page.goto(server.url)
 
-    const table = page.getByRole('table')
+    const table = page.getByTestId('trading-table')
     await expect(table).toBeVisible()
     await expect(table.locator('tbody tr')).toHaveCount(250)
     await expect(table.locator('thead tr').last().locator('th')).toHaveCount(14)

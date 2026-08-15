@@ -684,11 +684,6 @@ td[data-selection-left='true']::after {
   color: var(--amber);
 }
 
-app-depth-cell {
-  display: block;
-  width: 100%;
-}
-
 .depth-cell {
   position: relative;
   display: flex;
