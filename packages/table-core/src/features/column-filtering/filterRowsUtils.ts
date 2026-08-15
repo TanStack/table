@@ -63,6 +63,7 @@ function filterRowModelFromLeafs<
       ) as Row<TFeatures, TData> &
         Partial<Row_ColumnFiltering<TFeatures, TData>>
       newRow.columnFilters = row.columnFilters
+      newRow.columnFiltersMeta = row.columnFiltersMeta
 
       if (row.subRows.length && depth < maxDepth) {
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
