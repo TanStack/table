@@ -43,6 +43,13 @@ export function flexRender(render: any, props: any): any {
       return rendered
     }
 
+    // An empty string renders to nothing on the server but Vue still emits a
+    // text node, producing a hydration mismatch when the client renders the
+    // same empty cell. Return null so both sides agree on no output.
+    if (rendered === '') {
+      return null
+    }
+
     if (typeof rendered === 'function' || typeof rendered === 'object') {
       return h(rendered, props)
     }
