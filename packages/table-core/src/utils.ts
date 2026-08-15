@@ -1,4 +1,5 @@
 import type { Table_Internal } from './types/Table'
+import { isDev } from './utils'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
@@ -8,6 +9,19 @@ import type { TableState, TableState_All } from './types/TableState'
  *
  * If the updater is a function it is called with the previous value; otherwise the updater value is returned directly.
  */
+
+/**
+ * Returns true when running in development mode.
+ * Safe in environments without Node.js globals (e.g. vanilla JS via
+ * importmap) where `process` is not defined.
+ */
+export function isDev(): boolean {
+  return (
+    typeof process !== 'undefined' &&
+    process.env != null &&
+    process.env.NODE_ENV !== 'production'
+  )
+}
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
     ? (updater as (i: T) => T)(input)
@@ -405,7 +419,7 @@ export function tableMemo<
   let debug: boolean | undefined
   let debugCache: boolean | undefined
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev()) {
     const { debugAll } = table.options
     const { parentName } = getFunctionNameInfo(fnName, '.')
 
@@ -467,7 +481,7 @@ export function tableMemo<
   }
 
   const debugOptions =
-    process.env.NODE_ENV === 'development'
+    isDev()
       ? {
           onBeforeCompare: () => {
             if (debugCache) {

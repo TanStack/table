@@ -1,4 +1,5 @@
 import { shallow } from '@tanstack/store'
+import { isDev } from '../../utils'
 import { coreFeatures } from '../coreFeatures'
 import { cloneState, hasOwn } from '../../utils'
 import { atomToStore } from '../reactivity/coreReactivityFeature.utils'
@@ -223,7 +224,7 @@ export function constructTable<
   }
 
   if (
-    process.env.NODE_ENV === 'development' &&
+    isDev() &&
     (tableOptions.debugAll || tableOptions.debugTable)
   ) {
     const features = Object.keys(table._features)

@@ -1,4 +1,5 @@
 import { tableMemo } from '../utils'
+import { isDev } from '../utils'
 import { getTableWorkerBridge, syncTableWorker } from './createTableWorker'
 import { rebuildRowModel } from './rebuildRowModel'
 import { tableWorkerPipeline } from './tableWorkerProtocol'
@@ -60,7 +61,7 @@ export function createWorkerRowModel(
     let warned = false
 
     const warnOnce = (message: string) => {
-      if (process.env.NODE_ENV === 'development' && !warned) {
+      if (isDev() && !warned) {
         warned = true
         console.warn(`[table-worker] ${message}`)
       }
