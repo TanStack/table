@@ -82,10 +82,16 @@ function _createFacetedUniqueValues<
       if (!values) continue
 
       for (let j = 0; j < values.length; j++) {
-        const value = values[j]
-        const previousValue = facetedUniqueValues.get(value)
+        const value = values[j]!
+        // Array-valued cells (e.g. multi-select columns) are wrapped in a
+        // single-item array by getUniqueValues, so `value` is an array. Arrays
+        // compare by reference in a Map, so two equal arrays would count as
+        // distinct facets. Normalize array values to a stable string key so
+        // the facet count is correct.
+        const key = Array.isArray(value) ? JSON.stringify(value) : value
+        const previousValue = facetedUniqueValues.get(key)
         facetedUniqueValues.set(
-          value,
+          key,
           previousValue === undefined ? 1 : previousValue + 1,
         )
       }
