@@ -25,6 +25,7 @@ export interface Row_CoreProperties<
   _displayIndexCache: number
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
+  _accessorFnsCache: Record<string, unknown>
   /**
    * The depth of the row (if nested or grouped) relative to the root row array.
    */

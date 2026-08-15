@@ -51,6 +51,7 @@ export const constructRow = <
   row._displayIndexCache = -1
   row._uniqueValuesCache = makeObjectMap()
   row._valuesCache = makeObjectMap()
+  row._accessorFnsCache = makeObjectMap()
   row.depth = depth
   row.id = id
   row.index = rowIndex
