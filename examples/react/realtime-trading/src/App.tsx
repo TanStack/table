@@ -1,18 +1,16 @@
 import { Profiler } from 'react'
-import { useTradingBenchmarkController } from './core/use-trading-benchmark-controller'
+import { useMarketFeedController } from './feed/use-market-feed-controller'
+import { useTradingBenchmarkController } from './benchmark/use-trading-benchmark-controller'
 import { TradingShell } from './shell/TradingShell'
 import {
   TradingShellProvider,
   useTradingShellController,
-  useTradingShellState,
 } from './shell/trading-shell-context'
-import {
-  LocalTradingTable,
-  V8TradingTable,
-} from './trading-table'
+import { TradingTable } from './table/trading-table'
 
 export function App() {
-  const controller = useTradingBenchmarkController()
+  const feed = useMarketFeedController()
+  const controller = useTradingBenchmarkController(feed)
   return (
     <TradingShellProvider controller={controller}>
       <TradingShell>
@@ -24,18 +22,13 @@ export function App() {
 
 function TradingTableOutlet() {
   const controller = useTradingShellController()
-  const tableAdapter = useTradingShellState((state) => state.tableAdapter)
-  const ActiveTradingTable =
-    tableAdapter === 'local'
-      ? LocalTradingTable
-      : V8TradingTable
 
   return (
     <Profiler
-      id={`trading-table-${tableAdapter}`}
+      id="trading-table"
       onRender={controller.monitor.recordProfilerRender}
     >
-      <ActiveTradingTable key={tableAdapter} />
+      <TradingTable />
     </Profiler>
   )
 }

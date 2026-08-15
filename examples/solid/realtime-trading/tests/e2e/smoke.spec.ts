@@ -14,9 +14,7 @@ function collectPageErrors(page: Page) {
   return errors
 }
 
-test('runs the same Solid workload across both table adapters', async ({
-  page,
-}) => {
+test('runs the Solid realtime trading workload', async ({ page }) => {
   const server = await startExampleServer(exampleDir)
   const errors = collectPageErrors(page)
 
@@ -26,12 +24,16 @@ test('runs the same Solid workload across both table adapters', async ({
     const table = page.getByRole('table')
     await expect(table).toBeVisible()
     await expect(table.locator('tbody tr')).toHaveCount(250)
-    await expect(table.locator('thead th')).toHaveCount(14)
-    await expect(table.locator('thead')).toContainText('Ticker')
-    await expect(table.locator('thead')).toContainText('Last Qty')
-    await expect(table.locator('thead')).toContainText('Traded Value')
-    const adapter = page.getByTestId('adapter-select')
-    await expect(adapter).toHaveValue('local')
+    await expect(table.locator('thead tr').last().locator('th')).toHaveCount(14)
+    await expect(table.locator('thead')).toContainText('Market')
+    await expect(table.locator('thead')).toContainText('Bid Vol')
+    await expect(table.locator('thead')).toContainText('Intraday')
+    const selectedRow = table.locator('tbody tr').first()
+    const selectedSymbol = await selectedRow.getAttribute('data-symbol')
+    await selectedRow.locator('td').nth(1).click()
+    await expect(page.getByTestId('selected-instrument')).toContainText(
+      selectedSymbol ?? '',
+    )
     await expect(page.getByTestId('feed-status')).toHaveText('FEED LIVE')
     const instrumentCount = page.getByTestId('instrument-count-select')
     await expect(instrumentCount.locator('option[value="150"]')).toHaveCount(1)
@@ -44,21 +46,21 @@ test('runs the same Solid workload across both table adapters', async ({
     await expect(page.getByTestId('target-rate-slider')).toHaveValue('25000')
     await loadProfile.selectOption('high')
 
-    const rowWorkload = page.getByTestId('row-workload-select')
-    await rowWorkload.selectOption('rotating-filter')
-    await expect(table.locator('tbody tr')).toHaveCount(200)
-    await rowWorkload.selectOption('identity-churn')
-    await expect(table.locator('tbody tr')).toHaveCount(250)
-    await expect(
-      table.locator('tbody tr[data-row-id*="-replacement-"]'),
-    ).toHaveCount(25)
-    await rowWorkload.selectOption('price-sort')
-    await expect(table.locator('tbody tr')).toHaveCount(250)
-    await rowWorkload.selectOption('stable')
+    const sparklineInterval = page.getByTestId(
+      'sparkline-sample-interval-select',
+    )
+    await expect(sparklineInterval).toHaveValue('250')
+    await sparklineInterval.selectOption('500')
+    await expect(sparklineInterval).toHaveValue('500')
+    await sparklineInterval.selectOption('250')
+
+    const publishInterval = page.getByTestId('publish-interval-select')
+    await expect(publishInterval.locator('option[value="500"]')).toHaveCount(1)
+    await expect(publishInterval.locator('option[value="1000"]')).toHaveCount(1)
 
     await expect
       .poll(async () => {
-        const text = await page.getByTestId('total-events').textContent()
+        const text = await page.getByTestId('row-update-rate').textContent()
         return Number(text?.replace(/\D/g, '') ?? 0)
       })
       .toBeGreaterThan(0)
@@ -70,7 +72,7 @@ test('runs the same Solid workload across both table adapters', async ({
       .toBeGreaterThan(0)
     await expect
       .poll(async () =>
-        Number(await page.getByTestId('raf-rate').textContent()),
+        Number(await page.getByTestId('message-rate').textContent()),
       )
       .toBeGreaterThan(0)
     await expect
@@ -79,18 +81,11 @@ test('runs the same Solid workload across both table adapters', async ({
       )
       .toBeGreaterThan(0)
 
-    for (const implementation of ['v8', 'local']) {
-      await adapter.selectOption(implementation)
-      await expect(adapter).toHaveValue(implementation)
-      await expect(page.getByRole('table')).toBeVisible()
-      await expect(page.locator('tbody tr')).toHaveCount(250)
-
-      const firstPrice = page.locator('tbody tr').first().getByRole('button')
-      const priceBeforeUpdate = await firstPrice.textContent()
-      await expect
-        .poll(() => firstPrice.textContent())
-        .not.toBe(priceBeforeUpdate)
-    }
+    const firstPrice = page.locator('tbody tr').first().getByRole('button')
+    const priceBeforeUpdate = await firstPrice.textContent()
+    await expect
+      .poll(() => firstPrice.textContent())
+      .not.toBe(priceBeforeUpdate)
 
     await page.locator('.config-section input[type="checkbox"]').first().check()
     await page.getByTestId('feed-toggle').click()

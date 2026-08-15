@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
-import { TradingBenchmarkController } from '../core/trading-benchmark.controller'
+import { TradingBenchmarkController } from '../benchmark/trading-benchmark.controller'
+import { MarketFeedService } from '../feed/market-feed.service'
 import { Diagnostics } from './diagnostics'
 import { SelectedInstrument } from './selected-instrument'
 import {
@@ -8,8 +9,7 @@ import {
   inputValue,
   selectValue,
 } from './shell-formatters'
-import type { FeedLoadProfile, RowWorkloadMode } from '../benchmark-profiles'
-import type { TableAdapter } from '../core/trading-benchmark.controller'
+import type { FeedLoadProfile } from '../feed/feed-load-profiles'
 
 @Component({
   selector: 'app-configurator',
@@ -19,28 +19,27 @@ import type { TableAdapter } from '../core/trading-benchmark.controller'
 })
 export class Configurator {
   readonly controller = inject(TradingBenchmarkController)
+  readonly feed = inject(MarketFeedService)
   readonly formatRate = formatRate
 
-  readonly setRowCount = (event: Event) =>
-    this.controller.setRowCount(Number(selectValue(event)))
+  readonly setRowCount = (event: Event) => {
+    this.controller.resetViewState()
+    this.feed.setInstrumentCount(Number(selectValue(event)))
+  }
   readonly setTargetRate = (event: Event) =>
-    this.controller.setTargetRate(Number(inputValue(event)))
+    this.feed.setTargetRate(Number(inputValue(event)))
   readonly setFeedLoadProfile = (event: Event) =>
-    this.controller.setFeedLoadProfile(
-      selectValue(event) as FeedLoadProfile,
-    )
-  readonly setRowWorkloadMode = (event: Event) =>
-    this.controller.setRowWorkloadMode(
-      selectValue(event) as RowWorkloadMode,
-    )
-  readonly setTableAdapter = (event: Event) =>
-    this.controller.setTableAdapter(selectValue(event) as TableAdapter)
+    this.feed.setLoadProfile(selectValue(event) as FeedLoadProfile)
+  readonly setPublishInterval = (event: Event) =>
+    this.feed.setPublishInterval(Number(selectValue(event)))
   readonly setRendererMode = (event: Event) =>
     this.controller.setRendererMode(inputChecked(event))
   readonly setTableWorkerEnabled = (event: Event) =>
     this.controller.setTableWorkerEnabled(inputChecked(event))
+  readonly setVirtualScrollEnabled = (event: Event) =>
+    this.controller.setVirtualScrollEnabled(inputChecked(event))
   readonly setSparklineUpdates = (event: Event) =>
-    this.controller.setSparklineUpdates(inputChecked(event))
-  readonly setQuoteAgeUpdates = (event: Event) =>
-    this.controller.setQuoteAgeUpdates(inputChecked(event))
+    this.feed.setSparklineUpdates(inputChecked(event))
+  readonly setSparklineSampleInterval = (event: Event) =>
+    this.feed.setSparklineSampleInterval(Number(selectValue(event)))
 }

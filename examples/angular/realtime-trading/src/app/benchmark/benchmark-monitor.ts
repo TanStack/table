@@ -1,9 +1,12 @@
-import { quoteCellLifecycle } from '../quote-cells'
-import type { MarketFeedCommand } from '../market-feed-protocol'
+import { quoteCellLifecycle } from '../table/table-config/quote-cells'
 
 export interface FeedMetrics {
-  actualEventsPerSecond: number
-  totalEvents: number
+  actualTicksPerSecond: number
+  rowUpdatesPerSecond: number
+  workerMessagesPerSecond: number
+  stateApplicationsPerSecond: number
+  supersededUpdatesPerSecond: number
+  totalTicks: number
   rafCallbacksPerSecond: number
   tableRendersPerSecond: number
   lastBatchSize: number
@@ -21,8 +24,12 @@ export interface FeedMetrics {
 }
 
 export const initialMetrics: FeedMetrics = {
-  actualEventsPerSecond: 0,
-  totalEvents: 0,
+  actualTicksPerSecond: 0,
+  rowUpdatesPerSecond: 0,
+  workerMessagesPerSecond: 0,
+  stateApplicationsPerSecond: 0,
+  supersededUpdatesPerSecond: 0,
+  totalTicks: 0,
   rafCallbacksPerSecond: 0,
   tableRendersPerSecond: 0,
   lastBatchSize: 0,
@@ -39,19 +46,17 @@ export const initialMetrics: FeedMetrics = {
   lastUpdateCount: 0,
 }
 
-interface PendingAck {
-  generation: number
-  sequence: number
-}
-
 export class BenchmarkMonitor {
   readonly #runtime = {
     sampleStartedAt: performance.now(),
     pendingRenderStartedAt: null as number | null,
-    pendingAck: null as PendingAck | null,
     renderSamples: [] as Array<number>,
-    totalEvents: 0,
-    eventsInSample: 0,
+    totalTicks: 0,
+    ticksInSample: 0,
+    rowUpdatesInSample: 0,
+    workerMessagesInSample: 0,
+    stateApplicationsInSample: 0,
+    supersededUpdatesInSample: 0,
     lastBatchSize: 0,
     lastUpdateCount: 0,
     workerMessages: 0,
@@ -65,32 +70,35 @@ export class BenchmarkMonitor {
     this.#runtime.pendingRenderStartedAt ??= performance.now()
   }
 
-  setPendingAck(ack: PendingAck | null): void {
-    this.#runtime.pendingAck = ack
-  }
-
-  recordCompletedRender(postCommand: (command: MarketFeedCommand) => void) {
+  recordCompletedRender(): void {
     const runtime = this.#runtime
     if (runtime.pendingRenderStartedAt !== null) {
       runtime.renderSamples.push(
         performance.now() - runtime.pendingRenderStartedAt,
       )
       runtime.pendingRenderStartedAt = null
-    }
-    if (runtime.pendingAck) {
       runtime.tableRendersInSample++
-      postCommand({ type: 'ack', ...runtime.pendingAck })
-      runtime.pendingAck = null
     }
   }
 
-  recordBatch(eventCount: number, updateCount: number): void {
+  recordWorkerMessage(): void {
+    this.#runtime.workerMessages++
+    this.#runtime.workerMessagesInSample++
+  }
+
+  recordBatch(
+    tickCount: number,
+    updateCount: number,
+    supersededUpdateCount: number,
+  ): void {
     const runtime = this.#runtime
-    runtime.lastBatchSize = eventCount
+    runtime.lastBatchSize = tickCount
     runtime.lastUpdateCount = updateCount
-    runtime.eventsInSample += eventCount
-    runtime.totalEvents += eventCount
-    runtime.workerMessages++
+    runtime.ticksInSample += tickCount
+    runtime.totalTicks += tickCount
+    runtime.rowUpdatesInSample += updateCount
+    runtime.stateApplicationsInSample++
+    runtime.supersededUpdatesInSample += supersededUpdateCount
   }
 
   recordAnimationFrame(): void {
@@ -126,11 +134,19 @@ export class BenchmarkMonitor {
       Math.ceil(sortedRenderSamples.length * 0.95) - 1,
     )
     const metrics: FeedMetrics = {
-      actualEventsPerSecond:
+      actualTicksPerSecond:
         sampleDuration === 0
           ? 0
-          : (runtime.eventsInSample / sampleDuration) * 1_000,
-      totalEvents: runtime.totalEvents,
+          : (runtime.ticksInSample / sampleDuration) * 1_000,
+      rowUpdatesPerSecond:
+        (runtime.rowUpdatesInSample / sampleDuration) * 1_000,
+      workerMessagesPerSecond:
+        (runtime.workerMessagesInSample / sampleDuration) * 1_000,
+      stateApplicationsPerSecond:
+        (runtime.stateApplicationsInSample / sampleDuration) * 1_000,
+      supersededUpdatesPerSecond:
+        (runtime.supersededUpdatesInSample / sampleDuration) * 1_000,
+      totalTicks: runtime.totalTicks,
       rafCallbacksPerSecond:
         (runtime.rafCallbacksInSample / sampleDuration) * 1_000,
       tableRendersPerSecond:
@@ -139,8 +155,7 @@ export class BenchmarkMonitor {
       averageRenderMs,
       p95RenderMs: sortedRenderSamples[p95Index] ?? 0,
       maxRenderMs: sortedRenderSamples.at(-1) ?? 0,
-      slowRenders: runtime.renderSamples.filter((value) => value > 16.7)
-        .length,
+      slowRenders: runtime.renderSamples.filter((value) => value > 16.7).length,
       longAnimationFrames: runtime.longAnimationFrameCount,
       worstLongAnimationFrameMs: runtime.worstLongAnimationFrameMs,
       heapMb: readHeapSizeMb(),
@@ -151,7 +166,11 @@ export class BenchmarkMonitor {
     }
 
     runtime.sampleStartedAt = now
-    runtime.eventsInSample = 0
+    runtime.ticksInSample = 0
+    runtime.rowUpdatesInSample = 0
+    runtime.workerMessagesInSample = 0
+    runtime.stateApplicationsInSample = 0
+    runtime.supersededUpdatesInSample = 0
     runtime.renderSamples = []
     runtime.rafCallbacksInSample = 0
     runtime.tableRendersInSample = 0
@@ -162,10 +181,13 @@ export class BenchmarkMonitor {
     const runtime = this.#runtime
     runtime.sampleStartedAt = performance.now()
     runtime.pendingRenderStartedAt = null
-    runtime.pendingAck = null
     runtime.renderSamples = []
-    runtime.totalEvents = 0
-    runtime.eventsInSample = 0
+    runtime.totalTicks = 0
+    runtime.ticksInSample = 0
+    runtime.rowUpdatesInSample = 0
+    runtime.workerMessagesInSample = 0
+    runtime.stateApplicationsInSample = 0
+    runtime.supersededUpdatesInSample = 0
     runtime.lastBatchSize = 0
     runtime.lastUpdateCount = 0
     runtime.workerMessages = 0

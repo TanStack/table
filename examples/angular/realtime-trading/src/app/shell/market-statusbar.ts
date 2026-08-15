@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
-import { TradingBenchmarkController } from '../core/trading-benchmark.controller'
+import { TradingBenchmarkController } from '../benchmark/trading-benchmark.controller'
 import { formatInteger } from './shell-formatters'
 
 @Component({
@@ -7,7 +7,7 @@ import { formatInteger } from './shell-formatters'
   template: `
     <footer class="market-statusbar">
       <span>
-        BATCH EVENTS
+        BATCH TICKS
         <strong>
           {{ formatInteger(controller.metrics().lastBatchSize) }}
         </strong>
@@ -19,7 +19,7 @@ import { formatInteger } from './shell-formatters'
         </strong>
       </span>
       <span>
-        HOSTS
+        CELL HOSTS
         <strong>{{ formatInteger(controller.mountedCells()) }}</strong>
       </span>
       <span>
@@ -27,7 +27,7 @@ import { formatInteger } from './shell-formatters'
         <strong>{{ formatInteger(controller.liveComponents()) }}</strong>
       </span>
       <span class="statusbar-spacer"></span>
-      <span>WORKER / ACKNOWLEDGED / IMMUTABLE</span>
+      <span>WORKER / FIXED CADENCE / IMMUTABLE</span>
     </footer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

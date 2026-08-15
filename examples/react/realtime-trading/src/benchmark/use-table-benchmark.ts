@@ -1,22 +1,16 @@
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect } from 'react'
 import { markBenchmarkAction } from './benchmark-monitor'
 import type { ScrollStressMode } from './benchmark-monitor'
-import type { TradingBenchmarkController } from '../core/trading-benchmark-controller'
-import type { TableAdapter } from '../trading-table'
+import type { TradingBenchmarkController } from './trading-benchmark-controller'
 
 export function useTableBenchmark(
   controller: TradingBenchmarkController,
-  tableAdapter: TableAdapter,
   scrollStressMode: ScrollStressMode,
 ): void {
   'use no memo'
-  useLayoutEffect(() => {
-    controller.recordCompletedRender()
-  })
-
   useEffect(() => {
     const tableBody = document.querySelector(
-      '.market-panel [data-table-adapter] tbody',
+      '.market-panel [data-trading-table] tbody',
     )
     if (!tableBody) {
       return
@@ -33,11 +27,11 @@ export function useTableBenchmark(
       subtree: true,
     })
     return () => observer.disconnect()
-  }, [controller, tableAdapter])
+  }, [controller])
 
   useEffect(() => {
     const scrollContainer = document.querySelector<HTMLElement>(
-      '.market-panel [data-table-adapter]',
+      '.market-panel [data-trading-table]',
     )
     if (!scrollContainer) {
       return
@@ -51,7 +45,6 @@ export function useTableBenchmark(
 
     markBenchmarkAction('scroll-start', {
       mode: scrollStressMode,
-      adapter: tableAdapter,
     })
     const runtime = {
       animationFrameId: 0,
@@ -66,10 +59,7 @@ export function useTableBenchmark(
       const previousTop = scrollContainer.scrollTop
       const previousLeft = scrollContainer.scrollLeft
 
-      if (
-        scrollStressMode === 'vertical' ||
-        scrollStressMode === 'both'
-      ) {
+      if (scrollStressMode === 'vertical' || scrollStressMode === 'both') {
         const maxTop =
           scrollContainer.scrollHeight - scrollContainer.clientHeight
         const candidateTop =
@@ -84,10 +74,7 @@ export function useTableBenchmark(
         }
       }
 
-      if (
-        scrollStressMode === 'horizontal' ||
-        scrollStressMode === 'both'
-      ) {
+      if (scrollStressMode === 'horizontal' || scrollStressMode === 'both') {
         const maxLeft =
           scrollContainer.scrollWidth - scrollContainer.clientWidth
         const candidateLeft =
@@ -111,5 +98,5 @@ export function useTableBenchmark(
 
     runtime.animationFrameId = requestAnimationFrame(scrollFrame)
     return () => cancelAnimationFrame(runtime.animationFrameId)
-  }, [controller, scrollStressMode, tableAdapter])
+  }, [controller, scrollStressMode])
 }

@@ -6,12 +6,6 @@ overrides:
   '@tanstack/alpine-table': 'workspace:*'
   '@tanstack/angular-table-devtools': 'workspace:*'
   '@tanstack/angular-table': 'workspace:*'
-  '@tanstack/angular-table@8.21.4>@tanstack/table-core': 8.21.3
-  '@tanstack/angular-table@9.0.0-beta.80>@tanstack/table-core': 9.0.0-beta.80
-  '@tanstack/react-table@8.21.3>@tanstack/table-core': 8.21.3
-  '@tanstack/react-table@9.0.0-beta.80>@tanstack/table-core': 9.0.0-beta.80
-  '@tanstack/solid-table@8.21.3>@tanstack/table-core': 8.21.3
-  '@tanstack/solid-table@9.0.0-beta.80>@tanstack/table-core': 9.0.0-beta.80
   '@tanstack/ember-table': 'workspace:*'
   '@tanstack/lit-table': 'workspace:*'
   '@tanstack/match-sorter-utils': 'workspace:*'

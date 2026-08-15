@@ -14,8 +14,7 @@
   },
   "dependencies": {
     "@tanstack/react-store": "^0.11.0",
-    "@tanstack/react-table": "^9.0.0",
-    "@tanstack/react-table-v8": "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.21.3.tgz",
+    "@tanstack/react-table": "9.1.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

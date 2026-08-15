@@ -1,17 +1,15 @@
-import { Match, Switch } from 'solid-js'
-import { createTradingBenchmarkController } from './core/trading-benchmark-controller'
+import { createTradingBenchmarkController } from './benchmark/trading-benchmark-controller'
+import { createMarketFeedController } from './feed/market-feed-controller'
 import { TradingShell } from './shell/TradingShell'
 import {
   TradingShellProvider,
   useTradingShellController,
 } from './shell/trading-shell-context'
-import {
-  LocalTradingTable,
-  V8TradingTable,
-} from './trading-table'
+import { TradingTable } from './table/trading-table'
 
 export default function App() {
-  const controller = createTradingBenchmarkController()
+  const feed = createMarketFeedController()
+  const controller = createTradingBenchmarkController(feed)
   return (
     <TradingShellProvider controller={controller}>
       <TradingShell>
@@ -24,27 +22,11 @@ export default function App() {
 function TradingTableOutlet() {
   const { state, actions } = useTradingShellController()
   return (
-    <Switch>
-      <Match when={state.tableAdapter() === 'local'}>
-        <LocalTradingTable
-          quotes={state.displayQuotes()}
-          rendererMode={state.rendererMode()}
-          updateQuoteAges={state.updateQuoteAges()}
-          quoteClock={state.quoteClock()}
-          selectedSymbol={state.selectedSymbol()}
-          onSelectSymbol={actions.selectSymbol}
-        />
-      </Match>
-      <Match when={state.tableAdapter() === 'v8'}>
-        <V8TradingTable
-          quotes={state.displayQuotes()}
-          rendererMode={state.rendererMode()}
-          updateQuoteAges={state.updateQuoteAges()}
-          quoteClock={state.quoteClock()}
-          selectedSymbol={state.selectedSymbol()}
-          onSelectSymbol={actions.selectSymbol}
-        />
-      </Match>
-    </Switch>
+    <TradingTable
+      quotes={state.displayQuotes()}
+      rendererMode={state.rendererMode()}
+      selectedSymbol={state.selectedSymbol()}
+      onSelectSymbol={actions.selectSymbol}
+    />
   )
 }

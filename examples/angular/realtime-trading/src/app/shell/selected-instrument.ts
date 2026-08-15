@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
-import { TradingBenchmarkController } from '../core/trading-benchmark.controller'
+import { TradingBenchmarkController } from '../benchmark/trading-benchmark.controller'
 
 @Component({
   selector: 'app-selected-instrument',
   template: `
-    <section class="config-section selected-instrument">
+    <section
+      class="config-section selected-instrument"
+      data-testid="selected-instrument"
+    >
       <h2>SELECTED INSTRUMENT</h2>
       @if (controller.selectedQuote(); as quote) {
         <div class="selection">
@@ -25,7 +28,9 @@ import { TradingBenchmarkController } from '../core/trading-benchmark.controller
           </div>
         </dl>
       } @else {
-        <p>Click a value in the Last column to inspect its output.</p>
+        <p>
+          Click or begin a cell selection in any row to inspect its instrument.
+        </p>
       }
     </section>
   `,

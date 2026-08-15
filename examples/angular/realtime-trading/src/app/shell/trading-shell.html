@@ -1,20 +1,27 @@
-<main class="trading-terminal">
-  <app-shell-header />
+<main
+  class="trading-terminal"
+  [class.is-sidebar-collapsed]="!sidebarOpen()"
+>
+  <div class="shell-header">
+    <app-shell-header
+      [sidebarOpen]="sidebarOpen()"
+      (sidebarToggle)="toggleSidebar()"
+    />
 
-  @if (devMode) {
-    <aside class="development-warning">
-      DEV BUILD — use the production configuration before recording results.
-    </aside>
-  }
+    @if (devMode) {
+      <aside class="development-warning">
+        DEV BUILD — use the production configuration before recording results.
+      </aside>
+    }
+  </div>
 
-  <div class="workspace">
-    <section class="market-panel" aria-label="Live synthetic quotes">
-      <app-market-toolbar />
-      <app-metrics-strip />
-      <ng-content />
-      <app-market-statusbar />
-    </section>
+  <section class="market-panel" aria-label="Live synthetic quotes">
+    <app-metrics-strip />
+    <ng-content />
+  </section>
 
+  <app-market-statusbar />
+  <div class="sidebar-slot">
     <app-configurator />
   </div>
 </main>

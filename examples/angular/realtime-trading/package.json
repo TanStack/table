@@ -17,9 +17,8 @@
     "@angular/compiler": "^22.1.0",
     "@angular/core": "^22.1.0",
     "@angular/platform-browser": "^22.1.0",
-    "@tanstack/angular-table": "^9.0.0",
-    "@tanstack/angular-table-beta": "https://registry.npmjs.org/@tanstack/angular-table/-/angular-table-9.0.0-beta.80.tgz",
-    "@tanstack/angular-table-v8": "https://registry.npmjs.org/@tanstack/angular-table/-/angular-table-8.21.4.tgz",
+    "@tanstack/angular-table": "9.1.3",
+    "@tanstack/angular-virtual": "^6.0.2",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
   },

@@ -12,8 +12,7 @@
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@tanstack/solid-table": "^9.0.0",
-    "@tanstack/solid-table-v8": "https://registry.npmjs.org/@tanstack/solid-table/-/solid-table-8.21.3.tgz",
+    "@tanstack/solid-table": "9.1.2",
     "solid-js": "^1.9.14"
   },
   "devDependencies": {

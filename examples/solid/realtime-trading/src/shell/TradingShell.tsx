@@ -1,10 +1,12 @@
-import { Show } from 'solid-js'
+import { Show, createSignal } from 'solid-js'
 import { longAnimationFramesSupported } from '../benchmark/benchmark-monitor'
-import { useTradingShellController } from './trading-shell-context'
+import {
+  useMarketFeedController,
+  useTradingShellController,
+} from './trading-shell-context'
 import type { JSX } from 'solid-js'
 import type { FeedMetrics } from '../benchmark/benchmark-monitor'
-import type { FeedLoadProfile, RowWorkloadMode } from '../benchmark-profiles'
-import type { TableAdapter } from '../trading-table'
+import type { FeedLoadProfile } from '../feed/feed-load-profiles'
 
 const integerFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
@@ -14,31 +16,45 @@ const rateFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 1,
 })
 export function TradingShell(props: { children: JSX.Element }) {
+  const [sidebarOpen, setSidebarOpen] = createSignal(true)
+  const toggleSidebar = () => setSidebarOpen((open) => !open)
+
   return (
-    <main class="trading-terminal">
-      <AppHeader />
+    <main
+      class="trading-terminal"
+      classList={{ 'is-sidebar-collapsed': !sidebarOpen() }}
+    >
+      <div class="shell-header">
+        <AppHeader
+          sidebarOpen={sidebarOpen()}
+          onSidebarToggle={toggleSidebar}
+        />
 
-      <Show when={import.meta.env.DEV}>
-        <aside class="development-warning">
-          DEV BUILD — use the production configuration before recording results.
-        </aside>
-      </Show>
+        <Show when={import.meta.env.DEV}>
+          <aside class="development-warning">
+            DEV BUILD — use the production configuration before recording
+            results.
+          </aside>
+        </Show>
+      </div>
 
-      <div class="workspace">
-        <section class="market-panel" aria-label="Live synthetic quotes">
-          <MarketToolbar />
-          <MetricsStrip />
-          {props.children}
-          <MarketStatusbar />
-        </section>
+      <section class="market-panel" aria-label="Live synthetic quotes">
+        <MetricsStrip />
+        {props.children}
+      </section>
+      <MarketStatusbar />
+      <div class="sidebar-slot">
         <Configurator />
       </div>
     </main>
   )
 }
 
-function AppHeader() {
-  const { workerReady, running } = useTradingShellController().state
+function AppHeader(props: {
+  sidebarOpen: boolean
+  onSidebarToggle: () => void
+}) {
+  const { workerReady, running } = useMarketFeedController().state
   return (
     <header class="app-bar">
       <div class="brand">
@@ -46,55 +62,38 @@ function AppHeader() {
         <strong>MARKET MONITOR</strong>
         <span class="environment">SIMULATED</span>
       </div>
-      <div class="session-info">
-        <span>SOLID / FLEX RENDER</span>
-        <span
-          class="feed-status"
-          classList={{ 'is-running': workerReady() && running() }}
-          data-testid="feed-status"
+      <div class="header-actions">
+        <div class="session-info">
+          <span>SOLID / FLEX RENDER</span>
+          <span
+            class="feed-status"
+            classList={{ 'is-running': workerReady() && running() }}
+            data-testid="feed-status"
+          >
+            <span class="status-dot" aria-hidden="true" />
+            {!workerReady()
+              ? 'FEED CONNECTING'
+              : running()
+                ? 'FEED LIVE'
+                : 'FEED PAUSED'}
+          </span>
+        </div>
+        <button
+          class="sidebar-toggle"
+          type="button"
+          aria-expanded={props.sidebarOpen}
+          aria-controls="benchmark-configurator"
+          aria-label={
+            props.sidebarOpen ? 'Close configurator' : 'Open configurator'
+          }
+          title={props.sidebarOpen ? 'Close configurator' : 'Open configurator'}
+          onClick={props.onSidebarToggle}
         >
-          <span class="status-dot" aria-hidden="true" />
-          {!workerReady()
-            ? 'FEED CONNECTING'
-            : running()
-              ? 'FEED LIVE'
-              : 'FEED PAUSED'}
-        </span>
-      </div>
-    </header>
-  )
-}
-
-function MarketToolbar() {
-  const {
-    rendererMode,
-    updateSparklines,
-    updateQuoteAges,
-    quotes,
-    displayQuotes,
-    adapterLabel,
-    workloadLabel,
-  } = useTradingShellController().state
-  return (
-    <header class="market-toolbar">
-      <div class="watchlist-name">
-        <span>WATCHLIST</span>
-        <strong>ALL INSTRUMENTS</strong>
-      </div>
-      <div class="market-context">
-        <span>
-          {formatInteger(displayQuotes().length)} /{' '}
-          {formatInteger(quotes().length)} SYMBOLS
-        </span>
-        <span>SOLID {adapterLabel()}</span>
-        <span>WORKER STREAM</span>
-        <span>IMMUTABLE ROWS</span>
-        <span>{workloadLabel()}</span>
-        <span>
-          {rendererMode() === 'stable' ? 'STABLE CELLS' : 'A/B CELL SWAP'}
-        </span>
-        <span>{updateSparklines() ? 'CHARTS ON' : 'CHARTS OFF'}</span>
-        <span>{updateQuoteAges() ? 'AGE CLOCK ON' : 'AGE CLOCK OFF'}</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <rect x="2.5" y="3" width="15" height="14" rx="1.5" />
+            <path d="M12.5 3v14" />
+          </svg>
+        </button>
       </div>
     </header>
   )
@@ -106,7 +105,7 @@ function MarketStatusbar() {
   return (
     <footer class="market-statusbar">
       <span>
-        BATCH EVENTS <strong>{formatInteger(metrics().lastBatchSize)}</strong>
+        BATCH TICKS <strong>{formatInteger(metrics().lastBatchSize)}</strong>
       </span>
       <span>
         ROW UPDATES <strong>{formatInteger(metrics().lastUpdateCount)}</strong>
@@ -118,268 +117,261 @@ function MarketStatusbar() {
         COMPONENTS <strong>{formatInteger(liveComponents())}</strong>
       </span>
       <span class="statusbar-spacer" />
-      <span>WORKER / ACKNOWLEDGED / IMMUTABLE</span>
+      <span>WORKER / FIXED CADENCE / IMMUTABLE</span>
     </footer>
   )
 }
 
 function Configurator() {
   const { state, actions } = useTradingShellController()
+  const feed = useMarketFeedController()
+  const { rendererMode, metrics, selectedQuote, mountedCells, liveComponents } =
+    state
   const {
     running,
-    tableAdapter,
     instrumentCount,
     feedLoadProfile,
-    targetEventsPerSecond,
-    rowWorkloadMode,
-    rendererMode,
+    targetTicksPerSecond,
+    publishIntervalMs,
     updateSparklines,
-    updateQuoteAges,
-    metrics,
-    selectedQuote,
-    mountedCells,
-    liveComponents,
-  } = state
+    sparklineSampleIntervalMs,
+  } = feed.state
+  const { resetViewState, setRendererMode, resetMarket } = actions
   const {
-    toggleFeed,
+    toggle,
     setInstrumentCount,
-    setFeedLoadProfile,
-    setTargetEventsPerSecond,
-    setRowWorkloadMode,
-    setTableAdapter,
-    setRendererMode,
-    setUpdateSparklines,
-    setUpdateQuoteAges,
+    setLoadProfile,
+    setTargetRate,
+    setPublishInterval,
+    setSparklineUpdates,
+    setSparklineSampleInterval,
     runBurst,
-    resetMarket,
-  } = actions
+  } = feed.actions
   return (
-    <aside class="configurator" aria-label="Benchmark configurator">
-          <header>
-            <span>CONFIGURATOR</span>
-            <small>RUN PARAMETERS</small>
-          </header>
+    <aside
+      id="benchmark-configurator"
+      class="configurator"
+      aria-label="Benchmark configurator"
+    >
+      <header>
+        <span>CONFIGURATOR</span>
+        <small>RUN PARAMETERS</small>
+      </header>
 
-          <section class="config-section" aria-labelledby="solid-adapter">
-            <h2 id="solid-adapter">TABLE ADAPTER</h2>
-            <label class="field">
-              <span>Implementation</span>
-              <select
-                data-testid="adapter-select"
-                value={tableAdapter()}
-                onChange={(event) =>
-                  setTableAdapter(event.currentTarget.value as TableAdapter)
-                }
-              >
-                <option value="local">Solid Table local v9</option>
-                <option value="v8">Solid Table 8.21.3</option>
-              </select>
-              <small>Switching disposes one adapter and mounts the next.</small>
-            </label>
-          </section>
+      <section class="config-section" aria-labelledby="feed-settings">
+        <h2 id="feed-settings">FEED</h2>
+        <button
+          class="primary-action"
+          type="button"
+          data-testid="feed-toggle"
+          onClick={toggle}
+        >
+          {running() ? 'PAUSE FEED' : 'START FEED'}
+        </button>
 
-          <section class="config-section" aria-labelledby="feed-settings">
-            <h2 id="feed-settings">FEED</h2>
-            <button
-              class="primary-action"
-              type="button"
-              data-testid="feed-toggle"
-              onClick={toggleFeed}
-            >
-              {running() ? 'PAUSE FEED' : 'START FEED'}
-            </button>
+        <label class="field">
+          <span>Instruments</span>
+          <select
+            data-testid="instrument-count-select"
+            value={instrumentCount()}
+            onChange={(event) => {
+              resetViewState()
+              setInstrumentCount(Number(event.currentTarget.value))
+            }}
+          >
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="150">150</option>
+            <option value="250">250</option>
+            <option value="350">350</option>
+            <option value="500">500</option>
+            <option value="750">750</option>
+            <option value="1000">1,000</option>
+            <option value="1500">1,500</option>
+            <option value="2500">2,500</option>
+            <option value="5000">5,000</option>
+          </select>
+        </label>
 
-            <label class="field">
-              <span>Instruments</span>
-              <select
-                data-testid="instrument-count-select"
-                value={instrumentCount()}
-                onChange={(event) =>
-                  setInstrumentCount(Number(event.currentTarget.value))
-                }
-              >
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="150">150</option>
-                <option value="250">250</option>
-                <option value="350">350</option>
-                <option value="500">500</option>
-                <option value="750">750</option>
-                <option value="1000">1,000</option>
-              </select>
-            </label>
+        <label class="field">
+          <span>Load profile</span>
+          <select
+            data-testid="load-profile-select"
+            value={feedLoadProfile()}
+            onChange={(event) =>
+              setLoadProfile(event.currentTarget.value as FeedLoadProfile)
+            }
+          >
+            <option value="low">Low · 1K/s</option>
+            <option value="medium">Medium · 5K/s</option>
+            <option value="high">High · 10K/s</option>
+            <option value="very-high">Very high · 25K/s</option>
+            <option value="max">Max · 100K/s</option>
+            <option value="custom">Custom</option>
+          </select>
+          <small>
+            High is the repeatable default; Max is intentionally saturating.
+          </small>
+        </label>
 
-            <label class="field">
-              <span>Load profile</span>
-              <select
-                data-testid="load-profile-select"
-                value={feedLoadProfile()}
-                onChange={(event) =>
-                  setFeedLoadProfile(
-                    event.currentTarget.value as FeedLoadProfile,
-                  )
-                }
-              >
-                <option value="low">Low · 1K/s</option>
-                <option value="medium">Medium · 5K/s</option>
-                <option value="high">High · 10K/s</option>
-                <option value="very-high">Very high · 25K/s</option>
-                <option value="max">Max · 100K/s</option>
-                <option value="custom">Custom</option>
-              </select>
-              <small>
-                High is the repeatable default; Max is intentionally saturating.
-              </small>
-            </label>
-
-            <label class="field rate-field">
-              <span>
-                Target event rate
-                <strong>{formatRate(targetEventsPerSecond())}/s</strong>
-              </span>
-              <input
-                data-testid="target-rate-slider"
-                type="range"
-                min="100"
-                max="100000"
-                step="100"
-                value={targetEventsPerSecond()}
-                onInput={(event) =>
-                  setTargetEventsPerSecond(
-                    Number(event.currentTarget.value),
-                  )
-                }
-              />
-              <small>100 — 100,000 events/s</small>
-            </label>
-          </section>
-
-          <section class="config-section" aria-labelledby="render-settings">
-            <h2 id="render-settings">RENDER PATH</h2>
-            <label class="field">
-              <span>Row workload</span>
-              <select
-                data-testid="row-workload-select"
-                value={rowWorkloadMode()}
-                onChange={(event) =>
-                  setRowWorkloadMode(
-                    event.currentTarget.value as RowWorkloadMode,
-                  )
-                }
-              >
-                <option value="stable">Stable universe</option>
-                <option value="price-sort">Continuously sort by Last</option>
-                <option value="rotating-filter">
-                  Rotate 20% filtered rows
-                </option>
-                <option value="identity-churn">
-                  Replace 10% of ticker IDs
-                </option>
-              </select>
-              <small>
-                Reorder preserves IDs; filter removes/reinserts rows;
-                replacement forces new row identities.
-              </small>
-            </label>
-
-            <label class="toggle-field">
-              <input
-                type="checkbox"
-                checked={rendererMode() === 'swap'}
-                onChange={(event) =>
-                  setRendererMode(
-                    event.currentTarget.checked ? 'swap' : 'stable',
-                  )
-                }
-              />
-              <span>
-                Swap Tick component A ↔ B
-                <small>destroy and recreate when direction changes</small>
-              </span>
-            </label>
-
-            <label class="toggle-field">
-              <input
-                type="checkbox"
-                checked={updateSparklines()}
-                onChange={(event) =>
-                  setUpdateSparklines(event.currentTarget.checked)
-                }
-              />
-              <span>
-                Update sparklines
-                <small>new history input every four quote events</small>
-              </span>
-            </label>
-
-            <label class="toggle-field">
-              <input
-                type="checkbox"
-                checked={updateQuoteAges()}
-                onChange={(event) =>
-                  setUpdateQuoteAges(event.currentTarget.checked)
-                }
-              />
-              <span>
-                Update quote age clock
-                <small>
-                  invalidates every Age cell on a shared 100 ms clock
-                </small>
-              </span>
-            </label>
-          </section>
-
-          <section class="config-section" aria-labelledby="stress-actions">
-            <h2 id="stress-actions">STRESS ACTIONS</h2>
-            <div class="action-grid">
-              <button type="button" onClick={runBurst}>
-                RUN 25K BURST
-              </button>
-              <button type="button" onClick={resetMarket}>
-                RESET SESSION
-              </button>
-            </div>
-          </section>
-
-          <Diagnostics
-            metrics={metrics()}
-            mountedCells={mountedCells()}
-            liveComponents={liveComponents()}
+        <label class="field rate-field">
+          <span>
+            Worker sample generation
+            <strong>{formatRate(targetTicksPerSecond())}/s</strong>
+          </span>
+          <input
+            data-testid="target-rate-slider"
+            type="range"
+            min="100"
+            max="100000"
+            step="100"
+            value={targetTicksPerSecond()}
+            onInput={(event) =>
+              setTargetRate(Number(event.currentTarget.value))
+            }
           />
+          <small>
+            Synthetic quote samples generated inside the worker, not browser
+            events. Repeated instruments are coalesced before each message.
+          </small>
+        </label>
 
-          <section class="config-section selected-instrument">
-            <h2>SELECTED INSTRUMENT</h2>
-            <Show
-              when={selectedQuote()}
-              fallback={
-                <p>Click a value in the Last column to inspect its output.</p>
-              }
-            >
-              {(quote) => (
-                <>
-                  <div class="selection">
-                    <div>
-                      <strong>{quote().symbol}</strong>
-                      <span>{quote().company}</span>
-                    </div>
-                    <small>{quote().venue}</small>
-                  </div>
-                  <dl>
-                    <div>
-                      <dt>Last</dt>
-                      <dd>{quote().price.toFixed(2)}</dd>
-                    </div>
-                    <div>
-                      <dt>Bid / ask</dt>
-                      <dd>
-                        {quote().bid.toFixed(2)} / {quote().ask.toFixed(2)}
-                      </dd>
-                    </div>
-                  </dl>
-                </>
-              )}
-            </Show>
-          </section>
+        <label class="field">
+          <span>Publish interval</span>
+          <select
+            data-testid="publish-interval-select"
+            value={publishIntervalMs()}
+            onChange={(event) =>
+              setPublishInterval(Number(event.currentTarget.value))
+            }
+          >
+            <option value="8">8 ms · 125 msg/s</option>
+            <option value="16">16 ms · 62.5 msg/s</option>
+            <option value="20">20 ms · 50 msg/s</option>
+            <option value="33">33 ms · 30 msg/s</option>
+            <option value="50">50 ms · 20 msg/s</option>
+            <option value="100">100 ms · 10 msg/s</option>
+            <option value="250">250 ms · 4 msg/s</option>
+            <option value="500">500 ms · 2 msg/s</option>
+            <option value="1000">1000 ms · 1 msg/s</option>
+          </select>
+          <small>
+            The worker posts one coalesced update message at this target
+            cadence.
+          </small>
+        </label>
+      </section>
+
+      <section class="config-section" aria-labelledby="render-settings">
+        <h2 id="render-settings">RENDER PATH</h2>
+        <label class="toggle-field">
+          <input
+            type="checkbox"
+            checked={rendererMode() === 'swap'}
+            onChange={(event) =>
+              setRendererMode(event.currentTarget.checked ? 'swap' : 'stable')
+            }
+          />
+          <span>
+            Swap Tick component A ↔ B
+            <small>destroy and recreate when direction changes</small>
+          </span>
+        </label>
+
+        <label class="toggle-field">
+          <input
+            type="checkbox"
+            checked={updateSparklines()}
+            onChange={(event) =>
+              setSparklineUpdates(event.currentTarget.checked)
+            }
+          />
+          <span>
+            Update intraday charts
+            <small>
+              sample rolling prices independently for every instrument
+            </small>
+          </span>
+        </label>
+
+        <label class="field">
+          <span>Intraday sample interval</span>
+          <select
+            data-testid="sparkline-sample-interval-select"
+            value={sparklineSampleIntervalMs()}
+            onChange={(event) =>
+              setSparklineSampleInterval(Number(event.currentTarget.value))
+            }
+          >
+            <option value="100">100 ms</option>
+            <option value="250">250 ms</option>
+            <option value="500">500 ms</option>
+            <option value="1000">1,000 ms</option>
+            <option value="2000">2,000 ms</option>
+          </select>
+          <small>
+            Minimum time between rolling samples for the same instrument.
+          </small>
+        </label>
+      </section>
+
+      <section class="config-section" aria-labelledby="stress-actions">
+        <h2 id="stress-actions">STRESS ACTIONS</h2>
+        <div class="action-grid">
+          <button type="button" onClick={runBurst}>
+            RUN 25K BURST
+          </button>
+          <button type="button" onClick={resetMarket}>
+            RESET SESSION
+          </button>
+        </div>
+      </section>
+
+      <Diagnostics
+        metrics={metrics()}
+        mountedCells={mountedCells()}
+        liveComponents={liveComponents()}
+      />
+
+      <section
+        class="config-section selected-instrument"
+        data-testid="selected-instrument"
+      >
+        <h2>SELECTED INSTRUMENT</h2>
+        <Show
+          when={selectedQuote()}
+          fallback={
+            <p>
+              Click or begin a cell selection in any row to inspect its
+              instrument.
+            </p>
+          }
+        >
+          {(quote) => (
+            <>
+              <div class="selection">
+                <div>
+                  <strong>{quote().symbol}</strong>
+                  <span>{quote().company}</span>
+                </div>
+                <small>{quote().venue}</small>
+              </div>
+              <dl>
+                <div>
+                  <dt>Last</dt>
+                  <dd>{quote().price.toFixed(2)}</dd>
+                </div>
+                <div>
+                  <dt>Bid / ask</dt>
+                  <dd>
+                    {quote().bid.toFixed(2)} / {quote().ask.toFixed(2)}
+                  </dd>
+                </div>
+              </dl>
+            </>
+          )}
+        </Show>
+      </section>
     </aside>
   )
 }
@@ -389,25 +381,39 @@ function MetricsStrip() {
   return (
     <section class="metrics-strip" aria-label="Live performance metrics">
       <article>
-        <span>THROUGHPUT</span>
+        <span>WORKER SAMPLES</span>
         <strong data-testid="actual-rate">
-          {formatRate(metrics().actualEventsPerSecond)}
+          {formatRate(metrics().actualTicksPerSecond)}
         </strong>
-        <small>events/s</small>
+        <small>generated samples/s</small>
       </article>
       <article>
-        <span>RAF RATE</span>
-        <strong data-testid="raf-rate">
-          {metrics().rafCallbacksPerSecond.toFixed(1)}
+        <span>ROW UPDATES</span>
+        <strong data-testid="row-update-rate">
+          {formatRate(metrics().rowUpdatesPerSecond)}
         </strong>
-        <small>callbacks/s</small>
+        <small>unique rows applied/s</small>
       </article>
       <article>
-        <span>TABLE RENDERS</span>
+        <span>MESSAGES</span>
+        <strong data-testid="message-rate">
+          {metrics().workerMessagesPerSecond.toFixed(1)}
+        </strong>
+        <small>worker messages/s</small>
+      </article>
+      <article>
+        <span>STATE APPLIES</span>
+        <strong data-testid="state-apply-rate">
+          {metrics().stateApplicationsPerSecond.toFixed(1)}
+        </strong>
+        <small>quote snapshots/s</small>
+      </article>
+      <article>
+        <span>TABLE COMMITS</span>
         <strong data-testid="table-render-rate">
           {metrics().tableRendersPerSecond.toFixed(1)}
         </strong>
-        <small>worker batches/s</small>
+        <small>completed renders/s</small>
       </article>
       <article>
         <span>AVG RENDER</span>
@@ -438,17 +444,8 @@ function MetricsStrip() {
           >
             {metrics().longAnimationFrames}
           </strong>
-          <small>
-            worst {formatMs(metrics().worstLongAnimationFrameMs)}
-          </small>
+          <small>worst {formatMs(metrics().worstLongAnimationFrameMs)}</small>
         </Show>
-      </article>
-      <article>
-        <span>TOTAL EVENTS</span>
-        <strong data-testid="total-events">
-          {formatInteger(metrics().totalEvents)}
-        </strong>
-        <small>since reset</small>
       </article>
     </section>
   )
@@ -515,7 +512,13 @@ function Diagnostics(props: {
           </dd>
         </div>
         <div>
-          <dt>Last batch events / rows</dt>
+          <dt>Worker-coalesced updates / s</dt>
+          <dd data-testid="superseded-update-rate">
+            {formatRate(props.metrics.supersededUpdatesPerSecond)}
+          </dd>
+        </div>
+        <div>
+          <dt>Last batch ticks / rows</dt>
           <dd>
             {formatInteger(props.metrics.lastBatchSize)} /{' '}
             {formatInteger(props.metrics.lastUpdateCount)}
@@ -567,8 +570,6 @@ function formatInvocationRates(
   return activeRates.length === 0
     ? 'No calls in sample'
     : activeRates
-        .map(
-          (rate) => `${rate.name} ${formatRate(rate.callsPerSecond)}`,
-        )
+        .map((rate) => `${rate.name} ${formatRate(rate.callsPerSecond)}`)
         .join(' · ')
 }

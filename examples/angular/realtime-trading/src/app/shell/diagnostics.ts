@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
-import { TradingBenchmarkController } from '../core/trading-benchmark.controller'
-import { formatInteger } from './shell-formatters'
+import { TradingBenchmarkController } from '../benchmark/trading-benchmark.controller'
+import { formatInteger, formatRate } from './shell-formatters'
 
 @Component({
   selector: 'app-diagnostics',
@@ -9,7 +9,14 @@ import { formatInteger } from './shell-formatters'
       <h2 id="diagnostics">DIAGNOSTICS</h2>
       <dl>
         <div>
-          <dt>Mounted cells</dt>
+          <dt>Rendered rows / source</dt>
+          <dd data-testid="rendered-row-count">
+            {{ formatInteger(controller.renderedRowCount()) }} /
+            {{ formatInteger(controller.displayQuotes().length) }}
+          </dd>
+        </div>
+        <div>
+          <dt>Mounted cell hosts</dt>
           <dd>{{ formatInteger(controller.mountedCells()) }}</dd>
         </div>
         <div>
@@ -30,7 +37,13 @@ import { formatInteger } from './shell-formatters'
           </dd>
         </div>
         <div>
-          <dt>Last batch events / rows</dt>
+          <dt>Worker-coalesced updates / s</dt>
+          <dd data-testid="superseded-update-rate">
+            {{ formatRate(controller.metrics().supersededUpdatesPerSecond) }}
+          </dd>
+        </div>
+        <div>
+          <dt>Last batch ticks / rows</dt>
           <dd>
             {{ formatInteger(controller.metrics().lastBatchSize) }} /
             {{ formatInteger(controller.metrics().lastUpdateCount) }}
@@ -68,4 +81,5 @@ import { formatInteger } from './shell-formatters'
 export class Diagnostics {
   readonly controller = inject(TradingBenchmarkController)
   readonly formatInteger = formatInteger
+  readonly formatRate = formatRate
 }

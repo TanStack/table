@@ -1,31 +1,45 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
-import { TradingBenchmarkController } from '../core/trading-benchmark.controller'
-import { formatInteger, formatMs, formatRate } from './shell-formatters'
+import { TradingBenchmarkController } from '../benchmark/trading-benchmark.controller'
+import { formatMs, formatRate } from './shell-formatters'
 
 @Component({
   selector: 'app-metrics-strip',
   template: `
     <section class="metrics-strip" aria-label="Live performance metrics">
       <article>
-        <span>THROUGHPUT</span>
+        <span>WORKER SAMPLES</span>
         <strong data-testid="actual-rate">
-          {{ formatRate(controller.metrics().actualEventsPerSecond) }}
+          {{ formatRate(controller.metrics().actualTicksPerSecond) }}
         </strong>
-        <small>events/s</small>
+        <small>generated samples/s</small>
       </article>
       <article>
-        <span>RAF RATE</span>
-        <strong data-testid="raf-rate">
-          {{ controller.metrics().rafCallbacksPerSecond.toFixed(1) }}
+        <span>ROW UPDATES</span>
+        <strong data-testid="row-update-rate">
+          {{ formatRate(controller.metrics().rowUpdatesPerSecond) }}
         </strong>
-        <small>callbacks/s</small>
+        <small>unique rows applied/s</small>
       </article>
       <article>
-        <span>TABLE RENDERS</span>
+        <span>MESSAGES</span>
+        <strong data-testid="message-rate">
+          {{ controller.metrics().workerMessagesPerSecond.toFixed(1) }}
+        </strong>
+        <small>worker messages/s</small>
+      </article>
+      <article>
+        <span>STATE APPLIES</span>
+        <strong data-testid="state-apply-rate">
+          {{ controller.metrics().stateApplicationsPerSecond.toFixed(1) }}
+        </strong>
+        <small>quote snapshots/s</small>
+      </article>
+      <article>
+        <span>TABLE COMMITS</span>
         <strong data-testid="table-render-rate">
           {{ controller.metrics().tableRendersPerSecond.toFixed(1) }}
         </strong>
-        <small>worker batches/s</small>
+        <small>completed renders/s</small>
       </article>
       <article>
         <span>AVG RENDER</span>
@@ -55,20 +69,12 @@ import { formatInteger, formatMs, formatRate } from './shell-formatters'
           <small>unsupported</small>
         }
       </article>
-      <article>
-        <span>TOTAL EVENTS</span>
-        <strong data-testid="total-events">
-          {{ formatInteger(controller.metrics().totalEvents) }}
-        </strong>
-        <small>since reset</small>
-      </article>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetricsStrip {
   readonly controller = inject(TradingBenchmarkController)
-  readonly formatInteger = formatInteger
   readonly formatMs = formatMs
   readonly formatRate = formatRate
 }

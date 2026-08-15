@@ -8,12 +8,6 @@ overrides:
   '@tanstack/alpine-table': workspace:*
   '@tanstack/angular-table-devtools': workspace:*
   '@tanstack/angular-table': workspace:*
-  '@tanstack/angular-table@8.21.4>@tanstack/table-core': 8.21.3
-  '@tanstack/angular-table@9.0.0-beta.80>@tanstack/table-core': 9.0.0-beta.80
-  '@tanstack/react-table@8.21.3>@tanstack/table-core': 8.21.3
-  '@tanstack/react-table@9.0.0-beta.80>@tanstack/table-core': 9.0.0-beta.80
-  '@tanstack/solid-table@8.21.3>@tanstack/table-core': 8.21.3
-  '@tanstack/solid-table@9.0.0-beta.80>@tanstack/table-core': 9.0.0-beta.80
   '@tanstack/ember-table': workspace:*
   '@tanstack/lit-table': workspace:*
   '@tanstack/match-sorter-utils': workspace:*
@@ -2288,12 +2282,9 @@ importers:
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-beta':
-        specifier: https://registry.npmjs.org/@tanstack/angular-table/-/angular-table-9.0.0-beta.80.tgz
-        version: '@tanstack/angular-table@9.0.0-beta.80(@angular/common@22.1.0(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))'
-      '@tanstack/angular-table-v8':
-        specifier: https://registry.npmjs.org/@tanstack/angular-table/-/angular-table-8.21.4.tgz
-        version: '@tanstack/angular-table@8.21.4(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))'
+      '@tanstack/angular-virtual':
+        specifier: ^6.0.2
+        version: 6.0.2(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -10285,9 +10276,6 @@ importers:
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
-      '@tanstack/react-table-v8':
-        specifier: https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.21.3.tgz
-        version: '@tanstack/react-table@8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -10302,11 +10290,11 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.62.3)
       '@types/react':
-        specifier: 19.2.16
-        version: 19.2.16
+        specifier: ^19.2.18
+        version: 19.2.18
       '@types/react-dom':
         specifier: ^19.2.4
-        version: 19.2.4(@types/react@19.2.16)
+        version: 19.2.4(@types/react@19.2.18)
       '@vitejs/plugin-react':
         specifier: ^6.0.5
         version: 6.0.5(@rolldown/plugin-babel@0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
@@ -11708,9 +11696,6 @@ importers:
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
-      '@tanstack/solid-table-v8':
-        specifier: https://registry.npmjs.org/@tanstack/solid-table/-/solid-table-8.21.3.tgz
-        version: '@tanstack/solid-table@8.21.3(solid-js@1.9.14)'
       solid-js:
         specifier: ^1.9.14
         version: 1.9.14
@@ -20890,18 +20875,6 @@ packages:
       '@angular/common': '>=19.0.0'
       '@angular/core': '>=19.0.0'
 
-  '@tanstack/angular-table@8.21.4':
-    resolution: {integrity: sha512-djyuJFvIB/pBuBIqny8b7+5ozeXJSElaxYRZyyKLpYrXn4xQSysBT//X51eDT/mi3kS0spcjIHhoObjk3iCjcQ==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      '@angular/core': '>=17'
-
-  '@tanstack/angular-table@9.0.0-beta.80':
-    resolution: {integrity: sha512-ILLMlF4tiXU7bvdX+pkmVZFIl1nbZmGrm3KgUxIrNAH71W/QnwMo4hYHzh3ZDDBH/ZmOH5pfUEPPKkb5GWtTNw==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      '@angular/core': '>=19'
-
   '@tanstack/angular-virtual@6.0.2':
     resolution: {integrity: sha512-y/u2ZKAN5ob+ljwUoSK+r2j2piXw/ol63ykFbzZ8Hahj0dRU9xCJ0cJIDxTQ9zRoGbk0ZIiy3BK5w8Mso1daKA==}
     peerDependencies:
@@ -21303,13 +21276,6 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@tanstack/react-table@8.21.3':
-    resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-
   '@tanstack/react-virtual@3.14.9':
     resolution: {integrity: sha512-qZyr0FZDP8rDC4WBhsryIZmAd9bveJvFGUJJtskWaew6/0dTRS6wZxnR6VQ5bY2KwL3LjerrHqQLk3a0GKcPXQ==}
     peerDependencies:
@@ -21464,12 +21430,6 @@ packages:
     peerDependencies:
       solid-js: ^1.6.0
 
-  '@tanstack/solid-table@8.21.3':
-    resolution: {integrity: sha512-PmhfSLBxVKiFs01LtYOYrCRhCyTUjxmb4KlxRQiqcALtip8+DOJeeezQM4RSX/GUS0SMVHyH/dNboCpcO++k2A==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      solid-js: '>=1.3'
-
   '@tanstack/solid-virtual@3.13.36':
     resolution: {integrity: sha512-9x4Eg3M+t7cY0/lswB6JnK1C/3YcsdBttUYQgSre+5zcwVJMZnp0Gy3mT++jeSN1bi7M5pxUPnAVoD1YE9DuLQ==}
     peerDependencies:
@@ -21545,14 +21505,6 @@ packages:
     resolution: {integrity: sha512-4ur3bPzSXnZZtQWwns/ziCR9pJ/4x/AlBIeDZu96MKrRMbZBL1TQkGiO+ZaX5zCgdpXUZwJnehKzBp32KOumCQ==}
     peerDependencies:
       svelte: ^3.48.0 || ^4.0.0 || ^5.0.0
-
-  '@tanstack/table-core@8.21.3':
-    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
-    engines: {node: '>=12'}
-
-  '@tanstack/table-core@9.0.0-beta.80':
-    resolution: {integrity: sha512-tD98Q6/qzjvbEomMtDqxrAQUAf9nsBD7RihY1073E0eaeYwP3GyW5Gdlb+PztSk9F0CsYArXeOqcrt1hV29O8w==}
-    engines: {node: '>=20'}
 
   '@tanstack/typedoc-config@0.3.3':
     resolution: {integrity: sha512-wVT2YfKDSpd+4f7fk6UaPIP3a2J7LSovlyVuFF1PH2yQb7gjqehod5zdFiwFyEXgvI9XGuFvvs1OehkKNYcr6A==}
@@ -35028,21 +34980,6 @@ snapshots:
       '@tanstack/store': 0.9.3
       tslib: 2.8.1
 
-  '@tanstack/angular-table@8.21.4(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))':
-    dependencies:
-      '@angular/core': 22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2)
-      '@tanstack/table-core': 8.21.3
-      tslib: 2.8.1
-
-  '@tanstack/angular-table@9.0.0-beta.80(@angular/common@22.1.0(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))':
-    dependencies:
-      '@angular/core': 22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2)
-      '@tanstack/angular-store': 0.11.0(@angular/common@22.1.0(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))
-      '@tanstack/table-core': 9.0.0-beta.80
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - '@angular/common'
-
   '@tanstack/angular-virtual@6.0.2(@angular/core@22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2))':
     dependencies:
       '@angular/core': 22.1.0(@angular/compiler@22.1.0)(rxjs@7.8.2)
@@ -35509,12 +35446,6 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
       use-sync-external-store: 1.6.0(react@19.2.8)
 
-  '@tanstack/react-table@8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
-    dependencies:
-      '@tanstack/table-core': 8.21.3
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
-
   '@tanstack/react-virtual@3.14.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@tanstack/virtual-core': 3.17.7
@@ -35725,11 +35656,6 @@ snapshots:
       '@tanstack/store': 0.11.0
       solid-js: 1.9.14
 
-  '@tanstack/solid-table@8.21.3(solid-js@1.9.14)':
-    dependencies:
-      '@tanstack/table-core': 8.21.3
-      solid-js: 1.9.14
-
   '@tanstack/solid-virtual@3.13.36(solid-js@1.9.14)':
     dependencies:
       '@tanstack/virtual-core': 3.17.7
@@ -35837,12 +35763,6 @@ snapshots:
     dependencies:
       '@tanstack/virtual-core': 3.17.7
       svelte: 5.56.8(@typescript-eslint/types@8.65.0)
-
-  '@tanstack/table-core@8.21.3': {}
-
-  '@tanstack/table-core@9.0.0-beta.80':
-    dependencies:
-      '@tanstack/store': 0.11.0
 
   '@tanstack/typedoc-config@0.3.3(typescript@6.0.3)':
     dependencies:

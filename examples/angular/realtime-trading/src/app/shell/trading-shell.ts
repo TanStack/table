@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
-import { TradingBenchmarkController } from '../core/trading-benchmark.controller'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core'
+import { TradingBenchmarkController } from '../benchmark/trading-benchmark.controller'
 import { Configurator } from './configurator'
 import { MarketStatusbar } from './market-statusbar'
-import { MarketToolbar } from './market-toolbar'
 import { MetricsStrip } from './metrics-strip'
 import { ShellHeader } from './shell-header'
 
@@ -11,7 +15,6 @@ import { ShellHeader } from './shell-header'
   imports: [
     Configurator,
     MarketStatusbar,
-    MarketToolbar,
     MetricsStrip,
     ShellHeader,
   ],
@@ -20,4 +23,6 @@ import { ShellHeader } from './shell-header'
 })
 export class TradingShell {
   readonly devMode = inject(TradingBenchmarkController).devMode
+  readonly sidebarOpen = signal(true)
+  readonly toggleSidebar = () => this.sidebarOpen.update((open) => !open)
 }

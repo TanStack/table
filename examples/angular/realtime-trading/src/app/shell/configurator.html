@@ -1,42 +1,20 @@
-<aside class="configurator" aria-label="Benchmark configurator">
+<aside id="benchmark-configurator" class="configurator" aria-label="Benchmark configurator">
   <header>
     <span>CONFIGURATOR</span>
     <small>RUN PARAMETERS</small>
   </header>
 
-  <section class="config-section" aria-labelledby="adapter-settings">
-    <h2 id="adapter-settings">TABLE ADAPTER</h2>
-    <label class="field">
-      <span>Implementation</span>
-      <select
-        data-testid="adapter-select"
-        [value]="controller.tableAdapter()"
-        (change)="setTableAdapter($event)"
-      >
-        <option value="local">Local optimized (v9)</option>
-        <option value="beta">Published 9.0.0-beta.80</option>
-        <option value="v8">Published 8.21.4</option>
-      </select>
-      <small>Switching destroys the active table and mounts the selected adapter.</small>
-    </label>
-  </section>
-
   <section class="config-section" aria-labelledby="feed-settings">
     <h2 id="feed-settings">FEED</h2>
-    <button
-      class="primary-action"
-      type="button"
-      data-testid="feed-toggle"
-      (click)="controller.toggleFeed()"
-    >
-      {{ controller.running() ? 'PAUSE FEED' : 'START FEED' }}
+    <button class="primary-action" type="button" data-testid="feed-toggle" (click)="feed.toggle()">
+      {{ feed.running() ? 'PAUSE FEED' : 'START FEED' }}
     </button>
 
     <label class="field">
       <span>Instruments</span>
       <select
         data-testid="instrument-count-select"
-        [value]="controller.instrumentCount()"
+        [value]="feed.instrumentCount()"
         (change)="setRowCount($event)"
       >
         <option value="50">50</option>
@@ -47,6 +25,11 @@
         <option value="500">500</option>
         <option value="750">750</option>
         <option value="1000">1,000</option>
+        <option value="1500">1,500</option>
+        <option value="2500">2,500</option>
+        <option value="5000">5,000</option>
+        <option value="1000000">1,000,000</option>
+        <option value="10000000">10,000,000</option>
       </select>
     </label>
 
@@ -54,7 +37,7 @@
       <span>Load profile</span>
       <select
         data-testid="load-profile-select"
-        [value]="controller.feedLoadProfile()"
+        [value]="feed.feedLoadProfile()"
         (change)="setFeedLoadProfile($event)"
       >
         <option value="low">Low · 1K/s</option>
@@ -69,8 +52,8 @@
 
     <label class="field rate-field">
       <span>
-        Target event rate
-        <strong>{{ formatRate(controller.targetEventsPerSecond()) }}/s</strong>
+        Worker sample generation
+        <strong>{{ formatRate(feed.targetTicksPerSecond()) }}/s</strong>
       </span>
       <input
         data-testid="target-rate-slider"
@@ -78,44 +61,71 @@
         min="100"
         max="100000"
         step="100"
-        [value]="controller.targetEventsPerSecond()"
+        [value]="feed.targetTicksPerSecond()"
         (input)="setTargetRate($event)"
       />
-      <small>100 — 100,000 events/s</small>
+      <small>
+        Synthetic quote samples generated inside the worker, not browser events. Repeated
+        instruments are coalesced before each message.
+      </small>
+    </label>
+
+    <label class="field">
+      <span>Publish interval</span>
+      <select
+        data-testid="publish-interval-select"
+        [value]="feed.publishIntervalMs()"
+        (change)="setPublishInterval($event)"
+      >
+        <option value="8">8 ms · 125 msg/s</option>
+        <option value="16">16 ms · 62.5 msg/s</option>
+        <option value="20">20 ms · 50 msg/s</option>
+        <option value="33">33 ms · 30 msg/s</option>
+        <option value="50">50 ms · 20 msg/s</option>
+        <option value="100">100 ms · 10 msg/s</option>
+        <option value="250">250 ms · 4 msg/s</option>
+        <option value="500">500 ms · 2 msg/s</option>
+        <option value="1000">1000 ms · 1 msg/s</option>
+      </select>
+      <small> The worker posts one coalesced update message at this target cadence. </small>
     </label>
   </section>
 
   <section class="config-section" aria-labelledby="render-settings">
     <h2 id="render-settings">RENDER PATH</h2>
-    <label class="field">
-      <span>Row workload</span>
-      <select
-        data-testid="row-workload-select"
-        [value]="controller.rowWorkloadMode()"
-        (change)="setRowWorkloadMode($event)"
-      >
-        <option value="stable">Stable universe</option>
-        <option value="price-sort">Continuously sort by Last</option>
-        <option value="rotating-filter">Rotate 20% filtered rows</option>
-        <option value="identity-churn">Replace 10% of ticker IDs</option>
-      </select>
-      <small>
-        Reorder preserves IDs; filter removes/reinserts rows; replacement forces
-        new row identities.
-      </small>
-    </label>
-
     <label class="toggle-field">
       <input
         data-testid="table-worker-toggle"
         type="checkbox"
-        [disabled]="controller.tableAdapter() !== 'local'"
         [checked]="controller.tableWorkerEnabled()"
         (change)="setTableWorkerEnabled($event)"
       />
       <span>
         Worker row model (v9 only)
         <small>offloads the filtered row-model stage to a dedicated worker</small>
+      </span>
+    </label>
+
+    <label class="toggle-field" data-testid="virtual-scroll-mode">
+      <input
+        data-testid="virtual-scroll-toggle"
+        type="checkbox"
+        [checked]="controller.virtualScrollMode() === 'tanstack'"
+        [disabled]="controller.virtualScrollForced()"
+        (change)="setVirtualScrollEnabled($event)"
+      />
+      <span>
+        Row rendering ·
+        <strong>
+          {{ controller.virtualScrollMode() === 'tanstack' ? 'TanStack Virtual' : 'Full DOM' }}
+        </strong>
+        <small>
+          @if (controller.virtualScrollForced()) {
+            Required and locked at 1,500+ instruments.
+          } @else {
+            Optional below 1,500 instruments.
+          }
+        </small>
       </span>
     </label>
 
@@ -134,32 +144,36 @@
     <label class="toggle-field">
       <input
         type="checkbox"
-        [checked]="controller.updateSparklines()"
+        [checked]="feed.updateSparklines()"
         (change)="setSparklineUpdates($event)"
       />
       <span>
-        Update sparklines
-        <small>new history input every four quote events</small>
+        Update intraday charts
+        <small>sample rolling prices independently for every instrument</small>
       </span>
     </label>
 
-    <label class="toggle-field">
-      <input
-        type="checkbox"
-        [checked]="controller.updateQuoteAges()"
-        (change)="setQuoteAgeUpdates($event)"
-      />
-      <span>
-        Update quote age clock
-        <small>invalidates every Age cell on a shared 100 ms clock</small>
-      </span>
+    <label class="field">
+      <span>Intraday sample interval</span>
+      <select
+        data-testid="sparkline-sample-interval-select"
+        [value]="feed.sparklineSampleIntervalMs()"
+        (change)="setSparklineSampleInterval($event)"
+      >
+        <option value="100">100 ms</option>
+        <option value="250">250 ms</option>
+        <option value="500">500 ms</option>
+        <option value="1000">1,000 ms</option>
+        <option value="2000">2,000 ms</option>
+      </select>
+      <small>Minimum time between rolling samples for the same instrument.</small>
     </label>
   </section>
 
   <section class="config-section" aria-labelledby="stress-actions">
     <h2 id="stress-actions">STRESS ACTIONS</h2>
     <div class="action-grid">
-      <button type="button" (click)="controller.runBurst()">RUN 25K BURST</button>
+      <button type="button" (click)="feed.runBurst()">RUN 25K BURST</button>
       <button type="button" (click)="controller.resetMarket()">RESET SESSION</button>
     </div>
   </section>
