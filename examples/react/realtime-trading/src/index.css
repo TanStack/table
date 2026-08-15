@@ -388,6 +388,7 @@ td {
   color: #eef1f5;
   border-right: 1px solid var(--border-soft);
   border-bottom: 1px solid var(--border-soft);
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -397,20 +398,22 @@ td:last-child {
   border-right: 0;
 }
 
-.numeric-cell {
-  text-align: right;
+td[data-column-id='market'],
+td[data-column-id='name'],
+td[data-column-id='symbol'] {
+  text-align: left;
 }
 
-.market-cell {
+td[data-column-id='market'] {
   color: var(--blue);
   font-weight: 550;
 }
 
-.name-cell {
+td[data-column-id='name'] {
   color: var(--text-strong);
 }
 
-.symbol-cell {
+td[data-column-id='symbol'] {
   color: #d8dde4;
   font-weight: 600;
 }
@@ -423,7 +426,7 @@ tbody tr:hover {
   background: var(--panel-hover);
 }
 
-tbody tr.is-symbol-selected {
+tbody tr[data-symbol-selected='true'] {
   background: var(--row-selected);
   box-shadow: inset 2px 0 0 var(--blue);
 }
@@ -577,24 +580,20 @@ th:hover > .column-resize-handle::after,
   opacity: 1;
 }
 
-tbody tr.is-row-selected {
+tbody tr[aria-selected='true'] {
   background: rgb(76 145 228 / 13%);
 }
 
-tbody tr.is-symbol-selected {
-  box-shadow: inset 2px 0 0 var(--blue);
-}
-
-td.is-cell-selected {
+td[aria-selected='true'] {
   position: relative;
   background: rgb(70 139 222 / 12%);
 }
 
-td.is-cell-focused {
+td[data-cell-focused='true'] {
   background: rgb(70 139 222 / 21%);
 }
 
-td.is-cell-selected::after {
+td[aria-selected='true']::after {
   position: absolute;
   z-index: 1;
   inset: 0;
@@ -603,19 +602,19 @@ td.is-cell-selected::after {
   pointer-events: none;
 }
 
-td.selection-top::after {
+td[data-selection-top='true']::after {
   border-top-color: var(--blue);
 }
 
-td.selection-right::after {
+td[data-selection-right='true']::after {
   border-right-color: var(--blue);
 }
 
-td.selection-bottom::after {
+td[data-selection-bottom='true']::after {
   border-bottom-color: var(--blue);
 }
 
-td.selection-left::after {
+td[data-selection-left='true']::after {
   border-left-color: var(--blue);
 }
 

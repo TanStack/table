@@ -407,21 +407,30 @@ function TradingRows(props: {
               }}
               onClick={(event) => selectRowFromPointer(props.table, row, event)}
             >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  style={{
-                    width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                  }}
-                  className={getCellClassName(cell)}
-                  aria-selected={cell.getIsSelected()}
-                  tabIndex={cell.getTabIndex()}
-                  onMouseDown={cell.getSelectionStartHandler()}
-                  onMouseEnter={cell.getSelectionExtendHandler()}
-                >
-                  <FlexRender cell={cell} />
-                </td>
-              ))}
+              {row.getVisibleCells().map((cell) => {
+                const edges = cell.getSelectionEdges()
+
+                return (
+                  <td
+                    key={cell.id}
+                    style={{
+                      width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+                    }}
+                    data-column-id={cell.column.id}
+                    data-cell-focused={cell.getIsFocused() ? 'true' : undefined}
+                    data-selection-top={edges.top ? 'true' : undefined}
+                    data-selection-right={edges.right ? 'true' : undefined}
+                    data-selection-bottom={edges.bottom ? 'true' : undefined}
+                    data-selection-left={edges.left ? 'true' : undefined}
+                    aria-selected={cell.getIsSelected()}
+                    tabIndex={cell.getTabIndex()}
+                    onMouseDown={cell.getSelectionStartHandler()}
+                    onMouseEnter={cell.getSelectionExtendHandler()}
+                  >
+                    <FlexRender cell={cell} />
+                  </td>
+                )
+              })}
             </TradingRow>
           )}
         </props.table.Subscribe>
@@ -436,37 +445,6 @@ function getHeaderClassName(header: {
 }): string | undefined {
   if (header.subHeaders.length > 0) return 'column-group-header'
   return isIdentityColumn(header.column.id) ? undefined : 'numeric-header'
-}
-
-function getCellClassName(cell: {
-  column: { id: string }
-  getIsFocused: () => boolean
-  getIsSelected: () => boolean
-  getSelectionEdges: () => {
-    top: boolean
-    right: boolean
-    bottom: boolean
-    left: boolean
-  }
-}): string {
-  const columnId = cell.column.id
-  const edges = cell.getSelectionEdges()
-  const classes = [
-    columnId === 'market'
-      ? 'market-cell'
-      : columnId === 'name'
-        ? 'name-cell'
-        : columnId === 'symbol'
-          ? 'symbol-cell'
-          : 'numeric-cell',
-  ]
-  if (cell.getIsSelected()) classes.push('is-cell-selected')
-  if (cell.getIsFocused()) classes.push('is-cell-focused')
-  if (edges.top) classes.push('selection-top')
-  if (edges.right) classes.push('selection-right')
-  if (edges.bottom) classes.push('selection-bottom')
-  if (edges.left) classes.push('selection-left')
-  return classes.join(' ')
 }
 
 function isIdentityColumn(columnId: string): boolean {

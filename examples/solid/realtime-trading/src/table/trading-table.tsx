@@ -247,13 +247,13 @@ export function TradingTable(props: TradingTableProps) {
           <For each={table.getRowModel().rows}>
             {(row) => (
               <tr
-                classList={{
-                  'is-symbol-selected':
-                    props.selectedSymbol === row.original.symbol,
-                  'is-row-selected': row.getIsSelected(),
-                }}
                 data-symbol={row.original.symbol}
                 data-row-id={row.original.id}
+                data-symbol-selected={
+                  props.selectedSymbol === row.original.symbol
+                    ? 'true'
+                    : undefined
+                }
                 title={row.original.company}
                 aria-selected={row.getIsSelected()}
                 onMouseDown={(event) => {
@@ -269,18 +269,22 @@ export function TradingTable(props: TradingTableProps) {
                       style={{
                         width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                       }}
-                      classList={{
-                        'numeric-cell': !isIdentityColumn(cell.column.id),
-                        'market-cell': cell.column.id === 'market',
-                        'name-cell': cell.column.id === 'name',
-                        'symbol-cell': cell.column.id === 'symbol',
-                        'is-cell-selected': cell.getIsSelected(),
-                        'is-cell-focused': cell.getIsFocused(),
-                        'selection-top': cell.getSelectionEdges().top,
-                        'selection-right': cell.getSelectionEdges().right,
-                        'selection-bottom': cell.getSelectionEdges().bottom,
-                        'selection-left': cell.getSelectionEdges().left,
-                      }}
+                      data-column-id={cell.column.id}
+                      data-cell-focused={
+                        cell.getIsFocused() ? 'true' : undefined
+                      }
+                      data-selection-top={
+                        cell.getSelectionEdges().top ? 'true' : undefined
+                      }
+                      data-selection-right={
+                        cell.getSelectionEdges().right ? 'true' : undefined
+                      }
+                      data-selection-bottom={
+                        cell.getSelectionEdges().bottom ? 'true' : undefined
+                      }
+                      data-selection-left={
+                        cell.getSelectionEdges().left ? 'true' : undefined
+                      }
                       aria-selected={cell.getIsSelected()}
                       tabindex={cell.getTabIndex()}
                       onMouseDown={cell.getSelectionStartHandler()}

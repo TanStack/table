@@ -322,14 +322,9 @@ export function TradingRow(props: {
   )
   return (
     <tr
-      className={[
-        selected ? 'is-symbol-selected' : '',
-        props.rowSelected ? 'is-row-selected' : '',
-      ]
-        .filter(Boolean)
-        .join(' ')}
       data-symbol={props.quote.symbol}
       data-row-id={props.quote.id}
+      data-symbol-selected={selected ? 'true' : undefined}
       title={props.quote.company}
       aria-selected={props.rowSelected}
       onMouseDown={props.onMouseDown}

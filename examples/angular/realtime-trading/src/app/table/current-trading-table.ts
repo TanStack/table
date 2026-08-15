@@ -103,8 +103,4 @@ export class CurrentTradingTable {
   constructor() {
     injectTradingTableInitialFit(this.table, this.tanStackScrollContainer)
   }
-
-  selectInstrument(symbol: string, event: MouseEvent): void {
-    if (event.button === 0) this.symbolSelected.emit(symbol)
-  }
 }

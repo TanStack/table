@@ -10,6 +10,8 @@
     >
       <table
         [appTradingGridSelection]="table"
+        [interactions]="interactions"
+        (symbolSelected)="symbolSelected.emit($event)"
         class="trading-data-grid virtual-table"
         data-testid="trading-table"
         role="grid"
@@ -34,15 +36,14 @@
             @if (rows()[virtualRow.index]; as row) {
               <tr
                 class="virtual-table-row"
-                [class.is-symbol-selected]="selectedSymbol() === row.original.symbol"
-                [class.is-row-selected]="row.getIsSelected()"
                 [style.transform]="'translateY(' + virtualRow.start + 'px)'"
                 [attr.data-virtual-index]="virtualRow.index"
                 [attr.data-symbol]="row.original.symbol"
                 [attr.data-row-id]="row.original.id"
+                [attr.data-symbol-selected]="
+                  selectedSymbol() === row.original.symbol ? 'true' : null
+                "
                 [attr.aria-selected]="row.getIsSelected()"
-                (mousedown)="selectInstrument(row.original.symbol, $event)"
-                (click)="interactions.selectRow(table, row, $event)"
               >
                 @for (cell of row.getVisibleCells(); track cell.id) {
                   <td [appTradingGridCell]="cell">
@@ -69,6 +70,8 @@
     >
       <table
         [appTradingGridSelection]="table"
+        [interactions]="interactions"
+        (symbolSelected)="symbolSelected.emit($event)"
         class="trading-data-grid"
         data-testid="trading-table"
         role="grid"
@@ -91,14 +94,11 @@
         <tbody>
           @for (row of rows(); track row.id) {
             <tr
-              [class.is-symbol-selected]="selectedSymbol() === row.original.symbol"
-              [class.is-row-selected]="row.getIsSelected()"
               [attr.data-symbol]="row.original.symbol"
               [attr.data-row-id]="row.original.id"
+              [attr.data-symbol-selected]="selectedSymbol() === row.original.symbol ? 'true' : null"
               [attr.title]="row.original.company"
               [attr.aria-selected]="row.getIsSelected()"
-              (mousedown)="selectInstrument(row.original.symbol, $event)"
-              (click)="interactions.selectRow(table, row, $event)"
             >
               @for (cell of row.getVisibleCells(); track cell.id) {
                 <td [appTradingGridCell]="cell">

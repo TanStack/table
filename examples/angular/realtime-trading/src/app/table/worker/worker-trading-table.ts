@@ -130,8 +130,4 @@ export class WorkerTradingTable {
     injectTradingTableInitialFit(this.table, this.tanStackScrollContainer)
     this.#destroyRef.onDestroy(() => this.#workerRuntime.worker.terminate())
   }
-
-  selectInstrument(symbol: string, event: MouseEvent): void {
-    if (event.button === 0) this.symbolSelected.emit(symbol)
-  }
 }
