@@ -12,28 +12,23 @@ import { MarketFeedService } from '../feed/market-feed.service'
   template: `
     <header class="app-bar">
       <div class="brand">
-        <span class="brand-mark">TT</span>
         <strong>MARKET MONITOR</strong>
-        <span class="environment">SIMULATED</span>
       </div>
       <div class="header-actions">
-        <div class="session-info">
-          <span>ANGULAR / FLEX RENDER</span>
-          <span
-            class="feed-status"
-            data-testid="feed-status"
-            [class.is-running]="feed.workerReady() && feed.running()"
-          >
-            <span class="status-dot" aria-hidden="true"></span>
-            {{
-              !feed.workerReady()
-                ? 'FEED CONNECTING'
-                : feed.running()
-                  ? 'FEED LIVE'
-                  : 'FEED PAUSED'
-            }}
-          </span>
-        </div>
+        <span
+          class="feed-status"
+          data-testid="feed-status"
+          [class.is-running]="feed.workerReady() && feed.running()"
+        >
+          <span class="status-dot" aria-hidden="true"></span>
+          {{
+            !feed.workerReady()
+              ? 'FEED CONNECTING'
+              : feed.running()
+                ? 'FEED LIVE'
+                : 'FEED PAUSED'
+          }}
+        </span>
         <button
           class="sidebar-toggle"
           type="button"

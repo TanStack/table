@@ -1,7 +1,7 @@
 import { batch, createStore } from '@tanstack/react-store'
-import { feedLoadRates } from './feed-load-profiles'
+import { normalizeFeedSampleRate } from './feed-sample-rates'
+import { initialMarketFeedConfig } from './market-feed-config'
 import { applyMarketUpdates, hydrateMarketQuotes } from './market-data'
-import type { FeedLoadProfile } from './feed-load-profiles'
 import type {
   MarketFeedCommand,
   MarketFeedEvent,
@@ -12,7 +12,6 @@ export interface MarketFeedState {
   workerReady: boolean
   running: boolean
   instrumentCount: number
-  feedLoadProfile: FeedLoadProfile
   targetTicksPerSecond: number
   publishIntervalMs: number
   updateSparklines: boolean
@@ -36,7 +35,6 @@ export interface MarketFeedObserver {
 export interface MarketFeedActions {
   toggle: () => void
   setInstrumentCount: (count: number) => void
-  setLoadProfile: (profile: FeedLoadProfile) => void
   setTargetRate: (rate: number) => void
   setPublishInterval: (intervalMs: number) => void
   setSparklineUpdates: (enabled: boolean) => void
@@ -48,12 +46,11 @@ export interface MarketFeedActions {
 const initialState: MarketFeedState = {
   workerReady: false,
   running: true,
-  instrumentCount: 250,
-  feedLoadProfile: 'high',
-  targetTicksPerSecond: 10_000,
-  publishIntervalMs: 20,
-  updateSparklines: true,
-  sparklineSampleIntervalMs: 250,
+  instrumentCount: initialMarketFeedConfig.instrumentCount,
+  targetTicksPerSecond: initialMarketFeedConfig.targetSamplesPerSecond,
+  publishIntervalMs: initialMarketFeedConfig.publishIntervalMs,
+  updateSparklines: initialMarketFeedConfig.updateSparklines,
+  sparklineSampleIntervalMs: initialMarketFeedConfig.sparklineSampleIntervalMs,
   quotes: [],
 }
 
@@ -67,6 +64,7 @@ export class MarketFeedController {
     renderPending: false,
     resetWaitingForCommit: false,
     resetSnapshotReady: false,
+    quoteIndexBySymbol: new Map<string, number>(),
   }
 
   constructor() {
@@ -80,24 +78,12 @@ export class MarketFeedController {
         this.#patch({ instrumentCount: count })
         this.#resetWorker(count)
       },
-      setLoadProfile: (profile) => {
-        if (profile === 'custom') {
-          this.#patch({ feedLoadProfile: profile })
-          return
-        }
-        const rate = feedLoadRates[profile]
-        this.#patch({
-          feedLoadProfile: profile,
-          targetTicksPerSecond: rate,
-        })
-        this.#post({ type: 'set-rate', ticksPerSecond: rate })
-      },
       setTargetRate: (rate) => {
+        const sampleRate = normalizeFeedSampleRate(rate)
         this.#patch({
-          feedLoadProfile: 'custom',
-          targetTicksPerSecond: rate,
+          targetTicksPerSecond: sampleRate,
         })
-        this.#post({ type: 'set-rate', ticksPerSecond: rate })
+        this.#post({ type: 'set-rate', ticksPerSecond: sampleRate })
       },
       setPublishInterval: (publishIntervalMs) => {
         this.#patch({ publishIntervalMs })
@@ -156,6 +142,16 @@ export class MarketFeedController {
     return () => this.#observers.delete(observer)
   }
 
+  getQuoteBySymbol(
+    quotes: Array<MarketQuote>,
+    symbol: string | null,
+  ): MarketQuote | null {
+    if (symbol === null) return null
+
+    const index = this.#runtime.quoteIndexBySymbol.get(symbol)
+    return index === undefined ? null : (quotes[index] ?? null)
+  }
+
   completeRender(): void {
     if (!this.#runtime.renderPending) return
 
@@ -182,9 +178,13 @@ export class MarketFeedController {
         this.#runtime.resetSnapshotReady = true
       }
       this.#startMutation()
+      const quotes = hydrateMarketQuotes(data.quotes)
+      this.#runtime.quoteIndexBySymbol = new Map(
+        quotes.map((quote, index) => [quote.symbol, index]),
+      )
       batch(() => {
         this.#patch({
-          quotes: hydrateMarketQuotes(data.quotes),
+          quotes,
           workerReady: true,
         })
       })

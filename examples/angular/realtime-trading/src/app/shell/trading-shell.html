@@ -1,12 +1,6 @@
-<main
-  class="trading-terminal"
-  [class.is-sidebar-collapsed]="!sidebarOpen()"
->
+<main class="trading-terminal" [class.is-sidebar-collapsed]="!sidebarOpen()">
   <div class="shell-header">
-    <app-shell-header
-      [sidebarOpen]="sidebarOpen()"
-      (sidebarToggle)="toggleSidebar()"
-    />
+    <app-shell-header [sidebarOpen]="sidebarOpen()" (sidebarToggle)="toggleSidebar()" />
 
     @if (devMode) {
       <aside class="development-warning">

@@ -14,7 +14,7 @@ const TANSTACK_OVERSCAN = 10
 
 export type VirtualScrollMode = 'tanstack' | 'none'
 
-interface TradingRowIdentity {
+interface TradingVirtualRow {
   id: string
 }
 
@@ -43,7 +43,7 @@ function injectLocalDomFlush() {
   }
 }
 
-export function injectTradingRowVirtualizer<TRow extends TradingRowIdentity>(
+export function injectTradingRowVirtualizer<TRow extends TradingVirtualRow>(
   rows: Signal<ReadonlyArray<TRow>>,
   mode: Signal<VirtualScrollMode>,
   tanStackScrollContainer: Signal<ElementRef<HTMLDivElement> | undefined>,

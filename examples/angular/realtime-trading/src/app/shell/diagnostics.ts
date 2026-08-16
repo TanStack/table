@@ -43,7 +43,7 @@ import { formatInteger, formatRate } from './shell-formatters'
           </dd>
         </div>
         <div>
-          <dt>Last batch ticks / rows</dt>
+          <dt>Last message samples / updated rows</dt>
           <dd>
             {{ formatInteger(controller.metrics().lastBatchSize) }} /
             {{ formatInteger(controller.metrics().lastUpdateCount) }}

@@ -1,3 +1,4 @@
+import { initialMarketFeedConfig } from '../market-feed-config'
 import { MarketFeedEngine } from './market-feed-engine'
 import type {
   MarketFeedCommand,
@@ -13,11 +14,11 @@ const runtime = {
   pendingCoalescedUpdateCount: 0,
   initialized: false,
   running: true,
-  ticksPerSecond: 10_000,
-  publishIntervalMs: 20,
+  ticksPerSecond: initialMarketFeedConfig.targetSamplesPerSecond,
+  publishIntervalMs: initialMarketFeedConfig.publishIntervalMs,
   publishTimerId: null as ReturnType<typeof setInterval> | null,
-  updateSparklines: true,
-  sparklineSampleIntervalMs: 250,
+  updateSparklines: initialMarketFeedConfig.updateSparklines,
+  sparklineSampleIntervalMs: initialMarketFeedConfig.sparklineSampleIntervalMs,
   tickBudget: 0,
   lastTickAt: performance.now(),
 }

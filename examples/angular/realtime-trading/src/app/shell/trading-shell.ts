@@ -12,12 +12,7 @@ import { ShellHeader } from './shell-header'
 
 @Component({
   selector: 'app-trading-shell',
-  imports: [
-    Configurator,
-    MarketStatusbar,
-    MetricsStrip,
-    ShellHeader,
-  ],
+  imports: [Configurator, MarketStatusbar, MetricsStrip, ShellHeader],
   templateUrl: './trading-shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

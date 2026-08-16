@@ -44,12 +44,7 @@ export interface FeedMetrics {
   rowModelAverageMs: number
   rowModelMaxMs: number
   visibleRows: number
-  scrollCallbacksPerSecond: number
-  scrollDistancePerSecond: number
-  scrollJankFrames: number
 }
-
-export type ScrollStressMode = 'off' | 'vertical' | 'horizontal' | 'both'
 
 export const initialMetrics: FeedMetrics = {
   actualTicksPerSecond: 0,
@@ -85,9 +80,6 @@ export const initialMetrics: FeedMetrics = {
   rowModelAverageMs: 0,
   rowModelMaxMs: 0,
   visibleRows: 0,
-  scrollCallbacksPerSecond: 0,
-  scrollDistancePerSecond: 0,
-  scrollJankFrames: 0,
 }
 
 const userTiming = { entryCount: 0 }
@@ -160,9 +152,6 @@ export class BenchmarkMonitor {
     domMutationsInSample: 0,
     previousRowModelCalls: 0,
     previousRowModelDuration: 0,
-    scrollCallbacksInSample: 0,
-    scrollDistanceInSample: 0,
-    scrollJankFramesInSample: 0,
   }
 
   readonly recordProfilerRender: ProfilerOnRenderCallback = (
@@ -241,15 +230,6 @@ export class BenchmarkMonitor {
 
   resetDomMutations(): void {
     this.#runtime.domMutationsInSample = 0
-  }
-
-  recordScrollFrame(distance: number, delayed: boolean): void {
-    const runtime = this.#runtime
-    runtime.scrollCallbacksInSample++
-    runtime.scrollDistanceInSample += distance
-    if (delayed) {
-      runtime.scrollJankFramesInSample++
-    }
   }
 
   shouldPublish(now: number): boolean {
@@ -359,11 +339,6 @@ export class BenchmarkMonitor {
         rowModelCalls === 0 ? 0 : rowModelDuration / rowModelCalls,
       rowModelMaxMs: rowModelDiagnostics.maxDurationMs,
       visibleRows: rowModelDiagnostics.lastRowCount,
-      scrollCallbacksPerSecond:
-        (runtime.scrollCallbacksInSample / sampleDuration) * 1_000,
-      scrollDistancePerSecond:
-        (runtime.scrollDistanceInSample / sampleDuration) * 1_000,
-      scrollJankFrames: runtime.scrollJankFramesInSample,
     }
 
     runtime.sampleStartedAt = now
@@ -380,9 +355,6 @@ export class BenchmarkMonitor {
     runtime.profilerSamples = []
     runtime.previousRowModelCalls = rowModelDiagnostics.calls
     runtime.previousRowModelDuration = rowModelDiagnostics.totalDurationMs
-    runtime.scrollCallbacksInSample = 0
-    runtime.scrollDistanceInSample = 0
-    runtime.scrollJankFramesInSample = 0
     runtime.ticksInSample = 0
     runtime.rowUpdatesInSample = 0
     runtime.workerMessagesInSample = 0
@@ -425,9 +397,6 @@ export class BenchmarkMonitor {
     runtime.domMutationsInSample = 0
     runtime.previousRowModelCalls = rowModelDiagnostics.calls
     runtime.previousRowModelDuration = rowModelDiagnostics.totalDurationMs
-    runtime.scrollCallbacksInSample = 0
-    runtime.scrollDistanceInSample = 0
-    runtime.scrollJankFramesInSample = 0
     rowModelDiagnostics.maxDurationMs = 0
   }
 }

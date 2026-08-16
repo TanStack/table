@@ -7,7 +7,7 @@ import { formatInteger } from './shell-formatters'
   template: `
     <footer class="market-statusbar">
       <span>
-        BATCH TICKS
+        MESSAGE SAMPLES
         <strong>
           {{ formatInteger(controller.metrics().lastBatchSize) }}
         </strong>
@@ -26,8 +26,6 @@ import { formatInteger } from './shell-formatters'
         COMPONENTS
         <strong>{{ formatInteger(controller.liveComponents()) }}</strong>
       </span>
-      <span class="statusbar-spacer"></span>
-      <span>WORKER / FIXED CADENCE / IMMUTABLE</span>
     </footer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -177,8 +177,7 @@ export function QuoteAgeCell({ ageMs }: { ageMs: number }) {
 export function SparklineCell({ values }: { values: ReadonlyArray<number> }) {
   useLifecycleCounter('SparklineCell')
   const rising = (values.at(-1) ?? 0) >= (values[0] ?? 0)
-  const min = Math.min(...values)
-  const max = Math.max(...values)
+  const { min, max } = findRange(values)
   const range = max - min || 1
   const denominator = Math.max(1, values.length - 1)
   const points = values
@@ -202,4 +201,19 @@ export function SparklineCell({ values }: { values: ReadonlyArray<number> }) {
 
 function formatSigned(value: number): string {
   return `${value >= 0 ? '+' : ''}${value.toFixed(2)}`
+}
+
+function findRange(values: ReadonlyArray<number>): {
+  min: number
+  max: number
+} {
+  const first = values[0] ?? 0
+  return values.reduce(
+    (range, value) => {
+      range.min = Math.min(range.min, value)
+      range.max = Math.max(range.max, value)
+      return range
+    },
+    { min: first, max: first },
+  )
 }

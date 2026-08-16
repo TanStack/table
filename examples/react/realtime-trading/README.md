@@ -1,8 +1,8 @@
 # React realtime trading benchmark
 
 This example stresses the current React Table adapter with a synthetic market
-feed, immutable quote snapshots, core sorting/filtering, dynamic cells, React
-Profiler measurements, and automated scroll pressure.
+feed, immutable quote snapshots, core sorting/filtering, dynamic cells, and
+React Profiler measurements.
 
 ## Run
 
@@ -27,12 +27,19 @@ pnpm --dir examples/react/realtime-trading build:profile
 - `trading-table.tsx` owns the current React Table instance and its subscription
   boundaries.
 - `trading-table-shared.tsx` owns columns, row rendering, and row-model timing.
-- `benchmark/` owns React Profiler, User Timing, DOM mutation, long-frame, and
-  scroll-pressure diagnostics.
+- `benchmark/` owns React Profiler, User Timing, DOM mutation, and long-frame
+  diagnostics.
 - `shell/` owns the trading-terminal layout and benchmark controls.
 
 There is one table implementation. The shell and application root do not
 subscribe to or switch between historical adapters.
+
+## Row rendering
+
+The example starts with 100 instruments. Below 250 instruments, the row-rendering
+select can compare **Full DOM** with **TanStack Virtual**. At 250 instruments or
+more, virtualization is enabled and locked so large row counts cannot
+accidentally mount the complete table.
 
 ## React Compiler
 
@@ -45,10 +52,9 @@ removed.
 - Stable market snapshots with sorting and filtering handled by the table.
 - Core Table sorting and filtering controlled through table atoms.
 - Stable or alternating cell component types.
-- Vertical, horizontal, or combined automated scrolling.
 - Per-column renderer and per-component render invocation rates.
-- Per-instrument Intraday history sampling with a configurable 100–2,000 ms
-  worker interval.
+- Per-instrument Intraday history sampling with a configurable 16–2,000 ms
+  worker interval, defaulting to 16 ms for the initial 100-row workload.
 
 The sample rate controls synthetic quote generation inside the worker; it is not
 a browser event or `postMessage` rate. The publish interval separately controls

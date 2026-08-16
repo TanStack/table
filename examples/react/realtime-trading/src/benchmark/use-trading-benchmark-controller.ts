@@ -1,12 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { TradingBenchmarkController } from './trading-benchmark-controller'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 
 export function useTradingBenchmarkController(feed: MarketFeedController) {
-  'use no memo'
-  const controllerRef = useRef<TradingBenchmarkController | null>(null)
-  controllerRef.current ??= new TradingBenchmarkController(feed)
-  const controller = controllerRef.current
+  const [controller] = useState(() => new TradingBenchmarkController(feed))
 
   useEffect(() => controller.start(), [controller])
 

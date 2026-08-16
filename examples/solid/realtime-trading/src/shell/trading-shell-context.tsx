@@ -33,7 +33,9 @@ export function TradingShellProvider(props: {
 export function useMarketFeedController(): MarketFeedController {
   const controller = useContext(MarketFeedContext)
   if (!controller) {
-    throw new Error('Market data consumers must be rendered inside MarketFeedProvider')
+    throw new Error(
+      'Market data consumers must be rendered inside MarketFeedProvider',
+    )
   }
   return controller
 }

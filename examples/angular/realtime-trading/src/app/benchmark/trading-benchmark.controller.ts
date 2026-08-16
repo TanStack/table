@@ -13,7 +13,7 @@ import type { VirtualScrollMode } from '../table/trading-row-virtualizer'
 import type { FeedMetrics } from './benchmark-monitor'
 import type { RendererMode } from '../table/table-config/trading-column-types'
 
-const FORCED_VIRTUALIZATION_ROW_COUNT = 1_500
+const FORCED_VIRTUALIZATION_ROW_COUNT = 250
 
 @Injectable({ providedIn: 'root' })
 export class TradingBenchmarkController {

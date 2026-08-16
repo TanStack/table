@@ -5,9 +5,7 @@ import type {
   MarketFeedState,
 } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../benchmark/use-trading-benchmark-controller'
-import type {
-  TradingBenchmarkState,
-} from '../benchmark/trading-benchmark-controller'
+import type { TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
 import type { UseSelectorOptions } from '@tanstack/react-store'
 
 const {

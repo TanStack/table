@@ -1,14 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { MarketFeedController } from './market-feed-controller'
 
 export function useMarketFeedController(): MarketFeedController {
-  'use no memo'
-  const controllerRef = useRef<MarketFeedController | null>(null)
-  controllerRef.current ??= new MarketFeedController()
-  const controller = controllerRef.current
+  const [controller] = useState(() => new MarketFeedController())
 
   useEffect(() => controller.start(), [controller])
 
   return controller
 }
-

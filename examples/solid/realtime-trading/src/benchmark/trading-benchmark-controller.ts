@@ -1,5 +1,4 @@
 import {
-  createEffect,
   createMemo,
   createSignal,
   onCleanup,
@@ -7,21 +6,30 @@ import {
 } from 'solid-js'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import {
+  FORCED_VIRTUALIZATION_ROW_COUNT,
+  resolveVirtualScrollMode,
+} from '../table/trading-row-virtualizer'
+import {
   BenchmarkMonitor,
   initialMetrics,
   longAnimationFramesSupported,
 } from './benchmark-monitor'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { RendererMode } from '../table/trading-table'
+import type { VirtualScrollMode } from '../table/trading-row-virtualizer'
 
 export function createTradingBenchmarkController(feed: MarketFeedController) {
   const [rendererMode, setRendererMode] = createSignal<RendererMode>('stable')
+  const [requestedVirtualScrollMode, setRequestedVirtualScrollMode] =
+    createSignal<VirtualScrollMode>('none')
+  const [renderedRowCount, setRenderedRowCount] = createSignal(0)
   const [selectedSymbol, setSelectedSymbol] = createSignal<string | null>(null)
   const [metrics, setMetrics] = createSignal(initialMetrics)
   const monitor = new BenchmarkMonitor()
   const runtime = {
     animationFrameId: 0,
     longAnimationFrameObserver: null as PerformanceObserver | null,
+    mutationObserver: null as MutationObserver | null,
   }
 
   const stopObservingFeed = feed.observe({
@@ -32,24 +40,23 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
     renderCommitted: () => monitor.recordCompletedRender(),
   })
 
-  createEffect(() => {
+  const observeTableMutations = (): void => {
     const tableBody = document.querySelector(
       '.market-panel [data-trading-table] tbody',
     )
     if (!tableBody) return
 
     monitor.resetDomMutations()
-    const observer = new MutationObserver((records) => {
+    runtime.mutationObserver = new MutationObserver((records) => {
       monitor.recordDomMutations(records.length)
     })
-    observer.observe(tableBody, {
+    runtime.mutationObserver.observe(tableBody, {
       attributes: true,
       characterData: true,
       childList: true,
       subtree: true,
     })
-    onCleanup(() => observer.disconnect())
-  })
+  }
 
   const benchmarkFrame = (now: number): void => {
     monitor.recordAnimationFrame()
@@ -60,6 +67,7 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
   }
 
   onMount(() => {
+    observeTableMutations()
     if (longAnimationFramesSupported) {
       runtime.longAnimationFrameObserver = new PerformanceObserver(
         (entries) => {
@@ -80,6 +88,7 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
     stopObservingFeed()
     cancelAnimationFrame(runtime.animationFrameId)
     runtime.longAnimationFrameObserver?.disconnect()
+    runtime.mutationObserver?.disconnect()
   })
 
   const resetViewState = (): void => {
@@ -89,6 +98,12 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
   const actions = {
     resetViewState,
     setRendererMode,
+    setVirtualScrollEnabled(enabled: boolean): void {
+      if (feed.state.instrumentCount() >= FORCED_VIRTUALIZATION_ROW_COUNT)
+        return
+      setRequestedVirtualScrollMode(enabled ? 'tanstack' : 'none')
+    },
+    setRenderedRowCount,
     selectSymbol: setSelectedSymbol,
     resetMarket(): void {
       monitor.reset()
@@ -98,14 +113,17 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
     },
   }
 
-  const displayQuotes = feed.state.quotes
-  const selectedQuote = createMemo(
-    () =>
-      displayQuotes().find((quote) => quote.symbol === selectedSymbol()) ??
-      null,
+  const virtualScrollForced = createMemo(
+    () => feed.state.instrumentCount() >= FORCED_VIRTUALIZATION_ROW_COUNT,
+  )
+  const virtualScrollMode = createMemo(() =>
+    resolveVirtualScrollMode(
+      requestedVirtualScrollMode(),
+      feed.state.instrumentCount(),
+    ),
   )
   const mountedCells = createMemo(
-    () => displayQuotes().length * TRADING_COLUMN_COUNT,
+    () => renderedRowCount() * TRADING_COLUMN_COUNT,
   )
   const liveComponents = createMemo(
     () => metrics().componentsCreated - metrics().componentsDestroyed,
@@ -115,10 +133,12 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
     feed,
     state: {
       rendererMode,
+      requestedVirtualScrollMode,
+      virtualScrollForced,
+      virtualScrollMode,
+      renderedRowCount,
       selectedSymbol,
       metrics,
-      displayQuotes,
-      selectedQuote,
       mountedCells,
       liveComponents,
     },

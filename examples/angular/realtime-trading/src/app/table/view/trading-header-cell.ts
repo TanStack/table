@@ -40,7 +40,7 @@ export class TradingHeaderCell {
 
   readonly isGroup = computed(() => this.header().subHeaders.length > 0)
   readonly isNumeric = computed(
-    () => !this.isGroup() && !isIdentityColumn(this.header().column.id),
+    () => !this.isGroup() && !isTextColumn(this.header().column.id),
   )
   readonly width = computed(
     () => `calc(var(--header-${this.header().id}-size) * 1px)`,
@@ -59,6 +59,6 @@ export class TradingHeaderCell {
   }
 }
 
-function isIdentityColumn(columnId: string): boolean {
+function isTextColumn(columnId: string): boolean {
   return columnId === 'market' || columnId === 'name' || columnId === 'symbol'
 }

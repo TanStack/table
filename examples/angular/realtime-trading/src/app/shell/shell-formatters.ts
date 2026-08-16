@@ -8,8 +8,7 @@ const rateFormatter = new Intl.NumberFormat('en-US', {
 
 export const formatInteger = (value: number): string =>
   integerFormatter.format(value)
-export const formatRate = (value: number): string =>
-  rateFormatter.format(value)
+export const formatRate = (value: number): string => rateFormatter.format(value)
 export const formatMs = (value: number): string => `${value.toFixed(2)} ms`
 
 export const selectValue = (event: Event): string =>

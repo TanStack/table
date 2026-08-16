@@ -5,9 +5,9 @@ import {
   inject,
   signal,
 } from '@angular/core'
-import { feedLoadRates } from './feed-load-profiles'
+import { normalizeFeedSampleRate } from './feed-sample-rates'
+import { initialMarketFeedConfig } from './market-feed-config'
 import { applyMarketUpdates, hydrateMarketQuotes } from './market-data'
-import type { FeedLoadProfile } from './feed-load-profiles'
 import type {
   MarketFeedCommand,
   MarketFeedEvent,
@@ -38,12 +38,15 @@ export class MarketFeedService {
 
   readonly workerReady = signal(false)
   readonly running = signal(true)
-  readonly instrumentCount = signal(250)
-  readonly feedLoadProfile = signal<FeedLoadProfile>('high')
-  readonly targetTicksPerSecond = signal(10_000)
-  readonly publishIntervalMs = signal(20)
-  readonly updateSparklines = signal(true)
-  readonly sparklineSampleIntervalMs = signal(250)
+  readonly instrumentCount = signal(initialMarketFeedConfig.instrumentCount)
+  readonly targetTicksPerSecond = signal(
+    initialMarketFeedConfig.targetSamplesPerSecond,
+  )
+  readonly publishIntervalMs = signal(initialMarketFeedConfig.publishIntervalMs)
+  readonly updateSparklines = signal(initialMarketFeedConfig.updateSparklines)
+  readonly sparklineSampleIntervalMs = signal(
+    initialMarketFeedConfig.sparklineSampleIntervalMs,
+  )
   readonly quotes = signal<Array<MarketQuote>>([])
 
   #feedSessionId = 0
@@ -96,18 +99,9 @@ export class MarketFeedService {
   }
 
   setTargetRate(rate: number): void {
-    this.feedLoadProfile.set('custom')
-    this.targetTicksPerSecond.set(rate)
-    this.#post({ type: 'set-rate', ticksPerSecond: rate })
-  }
-
-  setLoadProfile(profile: FeedLoadProfile): void {
-    this.feedLoadProfile.set(profile)
-    if (profile === 'custom') return
-
-    const rate = feedLoadRates[profile]
-    this.targetTicksPerSecond.set(rate)
-    this.#post({ type: 'set-rate', ticksPerSecond: rate })
+    const sampleRate = normalizeFeedSampleRate(rate)
+    this.targetTicksPerSecond.set(sampleRate)
+    this.#post({ type: 'set-rate', ticksPerSecond: sampleRate })
   }
 
   setPublishInterval(publishIntervalMs: number): void {

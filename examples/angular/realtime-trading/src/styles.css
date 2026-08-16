@@ -144,7 +144,6 @@ select {
 
 .brand,
 .header-actions,
-.session-info,
 .feed-status {
   display: flex;
   align-items: center;
@@ -153,31 +152,6 @@ select {
 .brand {
   gap: 0.65rem;
   color: var(--text-strong);
-}
-
-.brand-mark {
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  color: var(--text-inverse);
-  background: var(--surface-control);
-  border: 1px solid var(--border-strong);
-  font-size: 0.62rem;
-  font-weight: 800;
-}
-
-.environment {
-  padding: 0.16rem 0.3rem;
-  color: var(--amber);
-  background: color-mix(in srgb, var(--amber) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
-  font-size: 0.58rem;
-}
-
-.session-info {
-  gap: 1rem;
-  color: var(--muted);
 }
 
 .header-actions {
@@ -850,10 +824,6 @@ app-sparkline-cell {
   font-weight: 500;
 }
 
-.statusbar-spacer {
-  flex: 1;
-}
-
 .sidebar-slot {
   width: var(--sidebar-width);
   min-width: 0;
@@ -1007,6 +977,21 @@ input[type='range'] {
   border-bottom: 0;
 }
 
+.diagnostics dl > div:has(dd[data-testid$='-breakdown']) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  padding-block: 0.28rem;
+}
+
+.diagnostics dd[data-testid$='-breakdown'] {
+  width: 100%;
+  overflow-x: auto;
+  padding-block: 0.12rem;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
 dt {
   color: var(--muted);
   font-size: 0.61rem;
@@ -1060,10 +1045,6 @@ dd {
     height: 100dvh;
     min-height: 0;
     overflow: hidden;
-  }
-
-  .session-info > span:first-child {
-    display: none;
   }
 
   .market-panel {

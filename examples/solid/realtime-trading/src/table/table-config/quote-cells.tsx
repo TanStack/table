@@ -1,4 +1,4 @@
-import { onCleanup, onMount } from 'solid-js'
+import { createMemo, onCleanup, onMount } from 'solid-js'
 
 const compactNumber = new Intl.NumberFormat('en-US', {
   notation: 'compact',
@@ -137,11 +137,11 @@ export function PercentChangeCell(props: { value: number }) {
 
 export function SpreadCell(props: { bid: number; ask: number }) {
   trackLifecycle('SpreadCell')
-  const spread = () => Math.max(0, props.ask - props.bid)
-  const basisPoints = () => {
+  const spread = createMemo(() => Math.max(0, props.ask - props.bid))
+  const basisPoints = createMemo(() => {
     const midpoint = (props.bid + props.ask) / 2
     return midpoint === 0 ? 0 : (spread() / midpoint) * 10_000
-  }
+  })
 
   return (
     <span class="spread-cell" classList={{ 'spread-wide': basisPoints() >= 4 }}>
@@ -153,10 +153,10 @@ export function SpreadCell(props: { bid: number; ask: number }) {
 
 export function DepthCell(props: { bidSize: number; askSize: number }) {
   trackLifecycle('DepthCell')
-  const bidShare = () => {
+  const bidShare = createMemo(() => {
     const total = props.bidSize + props.askSize
     return total === 0 ? 50 : (props.bidSize / total) * 100
-  }
+  })
 
   return (
     <div
@@ -192,10 +192,11 @@ export function QuoteAgeCell(props: { ageMs: number }) {
 
 export function SparklineCell(props: { values: ReadonlyArray<number> }) {
   trackLifecycle('SparklineCell')
-  const rising = () => (props.values.at(-1) ?? 0) >= (props.values[0] ?? 0)
-  const points = () => {
-    const min = Math.min(...props.values)
-    const max = Math.max(...props.values)
+  const rising = createMemo(
+    () => (props.values.at(-1) ?? 0) >= (props.values[0] ?? 0),
+  )
+  const points = createMemo(() => {
+    const { min, max } = findRange(props.values)
     const range = max - min || 1
     const denominator = Math.max(1, props.values.length - 1)
     return props.values
@@ -205,7 +206,7 @@ export function SparklineCell(props: { values: ReadonlyArray<number> }) {
         return `${x.toFixed(1)},${y.toFixed(1)}`
       })
       .join(' ')
-  }
+  })
 
   return (
     <svg
@@ -221,4 +222,19 @@ export function SparklineCell(props: { values: ReadonlyArray<number> }) {
 
 function formatSigned(value: number): string {
   return `${value >= 0 ? '+' : ''}${value.toFixed(2)}`
+}
+
+function findRange(values: ReadonlyArray<number>): {
+  min: number
+  max: number
+} {
+  const first = values[0] ?? 0
+  return values.reduce(
+    (range, value) => {
+      range.min = Math.min(range.min, value)
+      range.max = Math.max(range.max, value)
+      return range
+    },
+    { min: first, max: first },
+  )
 }

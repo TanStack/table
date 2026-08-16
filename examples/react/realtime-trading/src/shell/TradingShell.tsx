@@ -1,18 +1,23 @@
-import { shallow } from '@tanstack/react-store'
+import { shallow, useSelector } from '@tanstack/react-store'
 import { useState } from 'react'
+import {
+  feedSampleRateAt,
+  feedSampleRateIndex,
+  feedSampleRateOptions,
+} from '../feed/feed-sample-rates'
+import {
+  FORCED_VIRTUALIZATION_ROW_COUNT,
+  resolveVirtualScrollMode,
+} from '../table/trading-row-virtualizer'
 import {
   useMarketFeedController,
   useMarketFeedState,
   useTradingShellController,
   useTradingShellState,
 } from './trading-shell-context'
+import { configuratorOptions } from './configurator-options'
 import type { ReactNode } from 'react'
-import type {
-  FeedMetrics,
-  ScrollStressMode,
-} from '../benchmark/benchmark-monitor'
-import type { FeedLoadProfile } from '../feed/feed-load-profiles'
-import type { CoreRowModelMode } from '../table/trading-table'
+import type { FeedMetrics } from '../benchmark/benchmark-monitor'
 
 const integerFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
@@ -53,7 +58,7 @@ export function TradingShell(props: { children: ReactNode }) {
       </section>
       <MarketStatusbar />
       <div className="sidebar-slot">
-        <Configurator />
+        {sidebarOpen && <Configurator />}
       </div>
     </main>
   )
@@ -73,25 +78,20 @@ function AppHeader(props: {
   return (
     <header className="app-bar">
       <div className="brand">
-        <span className="brand-mark">TT</span>
         <strong>MARKET MONITOR</strong>
-        <span className="environment">SIMULATED</span>
       </div>
       <div className="header-actions">
-        <div className="session-info">
-          <span>REACT / FLEX RENDER</span>
-          <span
-            className={`feed-status ${workerReady && running ? 'is-running' : ''}`}
-            data-testid="feed-status"
-          >
-            <span className="status-dot" aria-hidden="true" />
-            {!workerReady
-              ? 'FEED CONNECTING'
-              : running
-                ? 'FEED LIVE'
-                : 'FEED PAUSED'}
-          </span>
-        </div>
+        <span
+          className={`feed-status ${workerReady && running ? 'is-running' : ''}`}
+          data-testid="feed-status"
+        >
+          <span className="status-dot" aria-hidden="true" />
+          {!workerReady
+            ? 'FEED CONNECTING'
+            : running
+              ? 'FEED LIVE'
+              : 'FEED PAUSED'}
+        </span>
         <button
           className="sidebar-toggle"
           type="button"
@@ -127,7 +127,7 @@ function MarketStatusbar() {
   return (
     <footer className="market-statusbar">
       <span>
-        BATCH TICKS <strong>{formatInteger(lastBatchSize)}</strong>
+        MESSAGE SAMPLES <strong>{formatInteger(lastBatchSize)}</strong>
       </span>
       <span>
         ROW UPDATES <strong>{formatInteger(lastUpdateCount)}</strong>
@@ -138,8 +138,6 @@ function MarketStatusbar() {
       <span>
         COMPONENTS <strong>{formatInteger(liveComponents)}</strong>
       </span>
-      <span className="statusbar-spacer" />
-      <span>WORKER / FIXED CADENCE / IMMUTABLE</span>
     </footer>
   )
 }
@@ -149,7 +147,6 @@ function Configurator() {
     (storeState) => ({
       running: storeState.running,
       instrumentCount: storeState.instrumentCount,
-      feedLoadProfile: storeState.feedLoadProfile,
       targetTicksPerSecond: storeState.targetTicksPerSecond,
       publishIntervalMs: storeState.publishIntervalMs,
       updateSparklines: storeState.updateSparklines,
@@ -159,45 +156,43 @@ function Configurator() {
   )
   const benchmarkState = useTradingShellState(
     (storeState) => ({
-      coreRowModelMode: storeState.coreRowModelMode,
-      coreFilterValue: storeState.coreFilterValue,
-      scrollStressMode: storeState.scrollStressMode,
-      rendererMode: storeState.rendererMode,
+      requestedVirtualScrollMode: storeState.requestedVirtualScrollMode,
     }),
     { compare: shallow },
   )
   const controller = useTradingShellController()
   const feed = useMarketFeedController()
+  const rendererMode = useSelector(controller.renderAtoms.rendererMode)
   const { actions } = controller
   const feedActions = feed.actions
   const {
     running,
     instrumentCount,
-    feedLoadProfile,
     targetTicksPerSecond,
     publishIntervalMs,
     updateSparklines,
     sparklineSampleIntervalMs,
   } = feedState
-  const { coreRowModelMode, coreFilterValue, scrollStressMode, rendererMode } =
-    benchmarkState
+  const { requestedVirtualScrollMode } = benchmarkState
   const {
-    setCoreRowModelMode,
-    setCoreFilterValue,
-    setScrollStressMode,
     setRendererMode,
+    setVirtualScrollEnabled,
     resetMarket,
   } = actions
   const {
     toggle,
     setInstrumentCount,
-    setLoadProfile,
     setTargetRate,
     setPublishInterval,
     setSparklineUpdates,
     setSparklineSampleInterval,
     runBurst,
   } = feedActions
+  const virtualScrollForced = instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
+  const virtualScrollMode = resolveVirtualScrollMode(
+    requestedVirtualScrollMode,
+    instrumentCount,
+  )
 
   return (
     <aside
@@ -222,7 +217,7 @@ function Configurator() {
         </button>
 
         <label className="field">
-          <span>Instruments</span>
+          <span>Instruments (rows)</span>
           <select
             data-testid="instrument-count-select"
             value={instrumentCount}
@@ -231,65 +226,49 @@ function Configurator() {
               setInstrumentCount(Number(event.currentTarget.value))
             }}
           >
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="150">150</option>
-            <option value="250">250</option>
-            <option value="350">350</option>
-            <option value="500">500</option>
-            <option value="750">750</option>
-            <option value="1000">1,000</option>
-            <option value="1500">1,500</option>
-            <option value="2500">2,500</option>
-            <option value="5000">5,000</option>
+            {configuratorOptions.instrumentCounts.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
-        </label>
-
-        <label className="field">
-          <span>Load profile</span>
-          <select
-            data-testid="load-profile-select"
-            value={feedLoadProfile}
-            onChange={(event) =>
-              setLoadProfile(event.currentTarget.value as FeedLoadProfile)
-            }
-          >
-            <option value="low">Low · 1K/s</option>
-            <option value="medium">Medium · 5K/s</option>
-            <option value="high">High · 10K/s</option>
-            <option value="very-high">Very high · 25K/s</option>
-            <option value="max">Max · 100K/s</option>
-            <option value="custom">Custom</option>
-          </select>
-          <small>
-            High is the repeatable default; Max is intentionally saturating.
-          </small>
         </label>
 
         <label className="field rate-field">
           <span>
-            Worker sample generation
-            <strong>{formatRate(targetTicksPerSecond)}/s</strong>
+            Synthetic quote workload
+            <strong data-testid="target-sample-rate">
+              {formatRate(targetTicksPerSecond)} samples/s
+            </strong>
           </span>
           <input
             data-testid="target-rate-slider"
             type="range"
-            min="100"
-            max="100000"
-            step="100"
-            value={targetTicksPerSecond}
+            min={0}
+            max={feedSampleRateOptions.length - 1}
+            step={1}
+            list="worker-sample-rate-steps"
+            value={feedSampleRateIndex(targetTicksPerSecond)}
+            aria-valuetext={`${formatRate(
+              targetTicksPerSecond,
+            )} synthetic quote samples per second`}
             onChange={(event) =>
-              setTargetRate(Number(event.currentTarget.value))
+              setTargetRate(feedSampleRateAt(Number(event.currentTarget.value)))
             }
           />
+          <datalist id="worker-sample-rate-steps">
+            {feedSampleRateOptions.map((option, index) => (
+              <option key={option.value} value={index} label={option.label} />
+            ))}
+          </datalist>
           <small>
-            Synthetic quote samples generated inside the worker, not browser
-            events. Repeated instruments are coalesced before each message.
+            Fixed worker-side workload levels, from 100 to 100K samples/s.
+            Samples are coalesced; this is not the message delivery rate.
           </small>
         </label>
 
         <label className="field">
-          <span>Publish interval</span>
+          <span>Worker delivery interval</span>
           <select
             data-testid="publish-interval-select"
             value={publishIntervalMs}
@@ -297,15 +276,11 @@ function Configurator() {
               setPublishInterval(Number(event.currentTarget.value))
             }
           >
-            <option value="8">8 ms · 125 msg/s</option>
-            <option value="16">16 ms · 62.5 msg/s</option>
-            <option value="20">20 ms · 50 msg/s</option>
-            <option value="33">33 ms · 30 msg/s</option>
-            <option value="50">50 ms · 20 msg/s</option>
-            <option value="100">100 ms · 10 msg/s</option>
-            <option value="250">250 ms · 4 msg/s</option>
-            <option value="500">500 ms · 2 msg/s</option>
-            <option value="1000">1000 ms · 1 msg/s</option>
+            {configuratorOptions.workerDeliveryIntervals.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
           <small>
             The worker posts one coalesced update message at this target
@@ -316,41 +291,28 @@ function Configurator() {
 
       <section className="config-section" aria-labelledby="render-settings">
         <h2 id="render-settings">RENDER PATH</h2>
-        <label className="field">
-          <span>TanStack core row model</span>
+        <label className="field" data-testid="virtual-scroll-mode">
+          <span>Row rendering</span>
           <select
-            data-testid="core-row-model-select"
-            value={coreRowModelMode}
+            data-testid="virtual-scroll-select"
+            value={virtualScrollMode}
+            disabled={virtualScrollForced}
             onChange={(event) =>
-              setCoreRowModelMode(event.currentTarget.value as CoreRowModelMode)
+              setVirtualScrollEnabled(event.currentTarget.value === 'tanstack')
             }
           >
-            <option value="none">Off · source order</option>
-            <option value="sort">Sort Last descending</option>
-            <option value="filter">Filter Symbol</option>
-            <option value="sort-filter">Filter + sort Last</option>
+            {configuratorOptions.rowRenderingModes.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
           <small>
-            Runs inside the selected adapter against the stable market-data
-            array.
+            {virtualScrollForced
+              ? 'TanStack Virtual is required and locked at 250 or more rows.'
+              : 'Full DOM mounts every row; TanStack Virtual mounts only the visible window.'}
           </small>
         </label>
-
-        {(coreRowModelMode === 'filter' ||
-          coreRowModelMode === 'sort-filter') && (
-          <label className="field">
-            <span>Symbol contains</span>
-            <input
-              data-testid="core-filter-input"
-              type="text"
-              value={coreFilterValue}
-              onChange={(event) =>
-                setCoreFilterValue(event.currentTarget.value)
-              }
-            />
-            <small>Case-insensitive column filter; try ALP, 1, or R.</small>
-          </label>
-        )}
 
         <label className="toggle-field">
           <input
@@ -383,7 +345,7 @@ function Configurator() {
         </label>
 
         <label className="field">
-          <span>Intraday sample interval</span>
+          <span>Intraday chart sampling</span>
           <select
             data-testid="sparkline-sample-interval-select"
             value={sparklineSampleIntervalMs}
@@ -391,39 +353,21 @@ function Configurator() {
               setSparklineSampleInterval(Number(event.currentTarget.value))
             }
           >
-            <option value="100">100 ms</option>
-            <option value="250">250 ms</option>
-            <option value="500">500 ms</option>
-            <option value="1000">1,000 ms</option>
-            <option value="2000">2,000 ms</option>
+            {configuratorOptions.intradaySamplingIntervals.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
           <small>
-            Minimum time between rolling samples for the same instrument.
+            How often each row adds a point to its sparkline. Quote generation
+            and worker delivery are unaffected.
           </small>
         </label>
       </section>
 
       <section className="config-section" aria-labelledby="stress-actions">
         <h2 id="stress-actions">STRESS ACTIONS</h2>
-        <label className="field">
-          <span>Automated scroll pressure</span>
-          <select
-            data-testid="scroll-stress-select"
-            value={scrollStressMode}
-            onChange={(event) =>
-              setScrollStressMode(event.currentTarget.value as ScrollStressMode)
-            }
-          >
-            <option value="off">Off</option>
-            <option value="vertical">Vertical · 700 px/s</option>
-            <option value="horizontal">Horizontal · 420 px/s</option>
-            <option value="both">Vertical + horizontal</option>
-          </select>
-          <small>
-            Bounces the real table viewport and records callback rate, distance,
-            and delayed scroll frames.
-          </small>
-        </label>
         <div className="action-grid">
           <button type="button" onClick={runBurst}>
             RUN 25K BURST
@@ -558,25 +502,25 @@ function Diagnostics() {
           </dd>
         </div>
         <div>
-          <dt>Cell renderer calls / s</dt>
+          <dt>Renderer callbacks / s</dt>
           <dd data-testid="cell-render-rate">
             {formatRate(metrics.cellRendererCallsPerSecond)}
           </dd>
         </div>
         <div>
-          <dt>Component function calls / s</dt>
+          <dt>Component executions / s</dt>
           <dd data-testid="component-render-rate">
             {formatRate(metrics.componentRenderCallsPerSecond)}
           </dd>
         </div>
         <div>
-          <dt>Component function calls by type / s</dt>
+          <dt>Executions by component / s</dt>
           <dd data-testid="component-render-breakdown">
             {formatInvocationRates(metrics.componentRenderRates)}
           </dd>
         </div>
         <div>
-          <dt>Cell callbacks by column / s</dt>
+          <dt>Callbacks by column / s</dt>
           <dd data-testid="cell-render-breakdown">
             {formatInvocationRates(metrics.cellRendererRates)}
           </dd>
@@ -631,19 +575,6 @@ function Diagnostics() {
           </dd>
         </div>
         <div>
-          <dt>Scroll callbacks / distance</dt>
-          <dd data-testid="scroll-pressure-rate">
-            {metrics.scrollCallbacksPerSecond.toFixed(1)} /{' '}
-            {formatRate(metrics.scrollDistancePerSecond)} px/s
-          </dd>
-        </div>
-        <div>
-          <dt>Delayed scroll frames (&gt;34 ms)</dt>
-          <dd data-testid="scroll-jank-frames">
-            {formatInteger(metrics.scrollJankFrames)}
-          </dd>
-        </div>
-        <div>
           <dt>Worker messages</dt>
           <dd data-testid="worker-messages">
             {formatInteger(metrics.workerMessages)}
@@ -656,7 +587,7 @@ function Diagnostics() {
           </dd>
         </div>
         <div>
-          <dt>Last batch ticks / rows</dt>
+          <dt>Last message samples / updated rows</dt>
           <dd>
             {formatInteger(metrics.lastBatchSize)} /{' '}
             {formatInteger(metrics.lastUpdateCount)}
@@ -688,7 +619,12 @@ function Diagnostics() {
 }
 
 function SelectedInstrument() {
-  const selectedQuote = useTradingShellState((state) => state.selectedQuote)
+  const controller = useTradingShellController()
+  const feed = useMarketFeedController()
+  const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
+  const selectedQuote = useMarketFeedState((state) =>
+    feed.getQuoteBySymbol(state.quotes, selectedSymbol),
+  )
   return (
     <section
       className="config-section selected-instrument"

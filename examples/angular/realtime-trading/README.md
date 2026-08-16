@@ -43,11 +43,12 @@ inputs, outputs, queries and derived state; resource cleanup is registered with
 
 ## Row rendering
 
-The row count and the row-rendering control select the rendering path:
+The example starts with 100 instruments. The row count and the row-rendering
+control select the rendering path:
 
-- Below 1,500 instruments, **TanStack Virtual** can be enabled or disabled to
+- Below 250 instruments, **TanStack Virtual** can be enabled or disabled to
   compare it with **Full DOM**.
-- At 1,500 instruments or more, **TanStack Virtual** is enabled and locked. It
+- At 250 instruments or more, **TanStack Virtual** is enabled and locked. It
   mounts a keyed overscan window and positions rows with a transform.
 - Both paths apply `content-visibility: auto` and a fixed intrinsic row height;
   the Full DOM path can therefore skip offscreen browser rendering without
@@ -70,7 +71,8 @@ an external stream. Random seeds stay private to the feed engine.
 - Sparkline and quote-age toggles control high-frequency component input
   invalidation.
 - Intraday history is sampled independently per instrument in the worker. Its
-  minimum sampling interval is configurable from 100 ms to 2,000 ms.
+  sampling interval is configurable from 16 ms to 2,000 ms and defaults to
+  16 ms for the initial 100-row workload.
 
 ## Dependency resolution
 

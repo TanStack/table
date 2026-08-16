@@ -8,10 +8,12 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { useLayoutEffect, useRef } from 'react'
 import { useTableBenchmark } from '../benchmark/use-table-benchmark'
 import {
   useMarketFeedController,
+  useMarketFeedState,
   useTradingShellController,
   useTradingShellState,
 } from '../shell/trading-shell-context'
@@ -23,28 +25,33 @@ import {
 import {
   handleCellNavigation,
   reorderColumnIds,
-  selectRowFromPointer,
   sortAriaValue,
   sortIndicator,
 } from './table-interactions'
+import { useTradingGridPointer } from './use-trading-grid-pointer'
+import {
+  TRADING_ROW_HEIGHT,
+  TRADING_ROW_OVERSCAN,
+  resolveVirtualScrollMode,
+} from './trading-row-virtualizer'
+import type { VirtualScrollMode } from './trading-row-virtualizer'
 import type {
   CellSelectionBounds,
   CellSelectionState,
 } from '@tanstack/react-table'
+import type { VirtualItem } from '@tanstack/react-virtual'
 import type { MarketQuote } from '../feed/market-data'
 import type { CoreTableState } from './table-config/trading-table-config'
 
 export {
   TRADING_COLUMN_COUNT,
-  getCoreTableState,
   rowModelDiagnostics,
 } from './table-config/trading-table-config'
 export type {
-  CoreRowModelMode,
   CoreTableState,
   RendererMode,
-  TradingTableProps,
 } from './table-config/trading-table-config'
+export type { VirtualScrollMode } from './trading-row-virtualizer'
 
 const features = tableFeatures({
   ...stockFeatures,
@@ -57,38 +64,40 @@ const features = tableFeatures({
 export function TradingTable() {
   const controller = useTradingShellController()
   const feed = useMarketFeedController()
-  const quotes = useTradingShellState((state) => state.displayQuotes)
-  const scrollStressMode = useTradingShellState(
-    (state) => state.scrollStressMode,
+  const quotes = useMarketFeedState((state) => state.quotes)
+  const requestedVirtualScrollMode = useTradingShellState(
+    (state) => state.requestedVirtualScrollMode,
+  )
+  const instrumentCount = useMarketFeedState((state) => state.instrumentCount)
+  const virtualScrollMode = resolveVirtualScrollMode(
+    requestedVirtualScrollMode,
+    instrumentCount,
   )
 
   useLayoutEffect(() => feed.completeRender())
-  useTableBenchmark(controller, scrollStressMode)
-  const table = useTradingTable({
-    quotes,
-    tableAtoms: controller.tableAtoms,
-  })
+  useTableBenchmark(controller)
+  const table = useTradingTable({ quotes })
   const layoutRefs = useTradingTableLayout(table)
 
   return (
-    <div
-      ref={layoutRefs.scrollRef}
-      className="table-scroll"
-      data-trading-table
-      tabIndex={0}
-      onKeyDown={(event) => handleCellNavigation(table, event)}
+    <table.Subscribe
+      selector={(state) => ({
+        sorting: state.sorting,
+        columnFilters: state.columnFilters,
+        columnOrder: state.columnOrder,
+      })}
     >
-      <table
-        ref={layoutRefs.tableRef}
-        className="trading-data-grid"
-        data-testid="trading-table"
-        role="grid"
-        aria-multiselectable="true"
-      >
-        <TradingTableHeader table={table} />
-        <TradingTableBody table={table} quotes={quotes} />
-      </table>
-    </div>
+      {(coreState) => (
+        <TradingTableViewport
+          table={table}
+          rows={readRows(table, quotes, coreState)}
+          sourceRowCount={quotes.length}
+          layoutRefs={layoutRefs}
+          virtualScrollMode={virtualScrollMode}
+          reportRenderedRowCount={controller.actions.setRenderedRowCount}
+        />
+      )}
+    </table.Subscribe>
   )
 }
 
@@ -336,7 +345,6 @@ function TradingTableHeader(props: { table: TradingTableInstance }) {
 
 function useTradingTable(props: {
   quotes: Array<MarketQuote>
-  tableAtoms: ReturnType<typeof useTradingShellController>['tableAtoms']
 }) {
   return useTable(
     {
@@ -345,7 +353,6 @@ function useTradingTable(props: {
       columns: tradingColumns,
       data: props.quotes,
       getRowId: (row) => row.id,
-      atoms: props.tableAtoms,
       columnResizeMode: 'onChange',
       defaultColumn: { minSize: 56, maxSize: 800 },
       autoResetCellSelection: false,
@@ -354,89 +361,188 @@ function useTradingTable(props: {
   )
 }
 
-function TradingTableBody(props: {
+function TradingTableViewport(props: {
   table: ReturnType<typeof useTradingTable>
-  quotes: Array<MarketQuote>
+  rows: ReturnType<ReturnType<typeof useTradingTable>['getRowModel']>['rows']
+  sourceRowCount: number
+  layoutRefs: ReturnType<typeof useTradingTableLayout>
+  virtualScrollMode: VirtualScrollMode
+  reportRenderedRowCount: (count: number) => void
 }) {
+  const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
+    count: props.rows.length,
+    estimateSize: () => TRADING_ROW_HEIGHT,
+    getScrollElement: () => props.layoutRefs.scrollRef.current,
+    getItemKey: (index) => props.rows[index]?.id ?? index,
+    overscan: TRADING_ROW_OVERSCAN,
+    enabled: props.virtualScrollMode === 'tanstack',
+  })
+  const virtualRows = rowVirtualizer.getVirtualItems()
+  const renderedRowCount =
+    props.virtualScrollMode === 'tanstack'
+      ? virtualRows.length
+      : props.rows.length
+  const visibleRange = readVisibleRange(
+    rowVirtualizer.range,
+    props.rows.length,
+    props.virtualScrollMode,
+  )
+
+  useLayoutEffect(() => {
+    props.reportRenderedRowCount(renderedRowCount)
+  }, [props.reportRenderedRowCount, renderedRowCount])
+
   return (
-    <props.table.Subscribe
-      selector={(state) => ({
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-        columnOrder: state.columnOrder,
-      })}
-    >
-      {(coreState) => (
-        <TradingRows
-          table={props.table}
-          quoteSnapshot={props.quotes}
-          coreState={coreState}
-        />
+    <>
+      <div
+        ref={props.layoutRefs.scrollRef}
+        className={`table-scroll${
+          props.virtualScrollMode === 'tanstack' ? ' is-virtualized' : ''
+        }`}
+        data-trading-table
+        tabIndex={0}
+        onKeyDown={(event) => handleCellNavigation(props.table, event)}
+      >
+        <table
+          ref={props.layoutRefs.tableRef}
+          className={`trading-data-grid${
+            props.virtualScrollMode === 'tanstack' ? ' virtual-table' : ''
+          }`}
+          data-testid="trading-table"
+          role="grid"
+          aria-multiselectable="true"
+        >
+          <TradingTableHeader table={props.table} />
+          <TradingRows
+            table={props.table}
+            rows={props.rows}
+            sourceRowCount={props.sourceRowCount}
+            virtualRows={virtualRows}
+            virtualScrollMode={props.virtualScrollMode}
+          />
+        </table>
+      </div>
+      {props.virtualScrollMode === 'tanstack' && (
+        <footer
+          className="virtual-scroll-footer"
+          data-testid="virtual-scroll-footer"
+        >
+          <span>
+            TanStack · Total · {props.rows.length} rows ·{' '}
+            {props.table.getVisibleLeafColumns().length} columns
+          </span>
+          <span data-testid="visible-row-range">
+            {visibleRange
+              ? `Current · rows ${visibleRange.start}..${visibleRange.end}`
+              : 'Current · rows —'}
+          </span>
+        </footer>
       )}
-    </props.table.Subscribe>
+    </>
   )
 }
 
 function TradingRows(props: {
   table: ReturnType<typeof useTradingTable>
-  quoteSnapshot: Array<MarketQuote>
-  coreState: CoreTableState
+  rows: ReturnType<ReturnType<typeof useTradingTable>['getRowModel']>['rows']
+  sourceRowCount: number
+  virtualRows: Array<VirtualItem>
+  virtualScrollMode: VirtualScrollMode
 }) {
   const { selectSymbol } = useTradingShellController().actions
-  const rows = readRows(props.table, props.quoteSnapshot, props.coreState)
+  const pointerInteractions = useTradingGridPointer(props.table, selectSymbol)
 
   return (
-    <tbody data-source-row-count={props.quoteSnapshot.length}>
-      {rows.map((row) => (
-        <props.table.Subscribe
-          key={row.id}
-          selector={(state) =>
-            `${row.id in state.rowSelection ? 1 : 0}:${cellSelectionRowKey(
-              state.cellSelection,
-              props.table.getCellSelectionBounds(),
-              row.getDisplayIndex(),
-              row.id,
-            )}`
-          }
-        >
-          {() => (
-            <TradingRow
-              quote={row.original}
-              rowSelected={row.getIsSelected()}
-              onMouseDown={(event) => {
-                if (event.button === 0) selectSymbol(row.original.symbol)
-              }}
-              onClick={(event) => selectRowFromPointer(props.table, row, event)}
-            >
-              {row.getVisibleCells().map((cell) => {
-                const edges = cell.getSelectionEdges()
-
-                return (
-                  <td
-                    key={cell.id}
-                    style={{
-                      width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                    }}
-                    data-column-id={cell.column.id}
-                    data-cell-focused={cell.getIsFocused() ? 'true' : undefined}
-                    data-selection-top={edges.top ? 'true' : undefined}
-                    data-selection-right={edges.right ? 'true' : undefined}
-                    data-selection-bottom={edges.bottom ? 'true' : undefined}
-                    data-selection-left={edges.left ? 'true' : undefined}
-                    aria-selected={cell.getIsSelected()}
-                    tabIndex={cell.getTabIndex()}
-                    onMouseDown={cell.getSelectionStartHandler()}
-                    onMouseEnter={cell.getSelectionExtendHandler()}
-                  >
-                    <FlexRender cell={cell} />
-                  </td>
-                )
-              })}
-            </TradingRow>
-          )}
-        </props.table.Subscribe>
-      ))}
+    <tbody
+      className={
+        props.virtualScrollMode === 'tanstack'
+          ? 'virtual-table-body'
+          : undefined
+      }
+      style={
+        props.virtualScrollMode === 'tanstack'
+          ? { height: `${props.rows.length * TRADING_ROW_HEIGHT}px` }
+          : undefined
+      }
+      data-source-row-count={props.sourceRowCount}
+      {...pointerInteractions}
+    >
+      {props.virtualScrollMode === 'tanstack'
+        ? props.virtualRows.map((virtualRow) => {
+            const row = props.rows[virtualRow.index]
+            return (
+              <TradingRowBoundary
+                key={row.id}
+                table={props.table}
+                row={row}
+                virtualRow={virtualRow}
+              />
+            )
+          })
+        : props.rows.map((row) => (
+            <TradingRowBoundary
+              key={row.id}
+              table={props.table}
+              row={row}
+            />
+          ))}
     </tbody>
+  )
+}
+
+type TradingTableRow = ReturnType<
+  ReturnType<typeof useTradingTable>['getRowModel']
+>['rows'][number]
+
+function TradingRowBoundary(props: {
+  table: ReturnType<typeof useTradingTable>
+  row: TradingTableRow
+  virtualRow?: VirtualItem
+}) {
+  const { row, table, virtualRow } = props
+
+  return (
+    <table.Subscribe
+      selector={(state) =>
+        `${row.id in state.rowSelection ? 1 : 0}:${cellSelectionRowKey(
+          state.cellSelection,
+          table.getCellSelectionBounds(),
+          row.getDisplayIndex(),
+          row.id,
+        )}`
+      }
+    >
+      {() => (
+        <TradingRow
+          quote={row.original}
+          rowSelected={row.getIsSelected()}
+          virtualRow={virtualRow}
+        >
+          {row.getVisibleCells().map((cell) => {
+            const edges = cell.getSelectionEdges()
+
+            return (
+              <td
+                key={cell.id}
+                style={{
+                  width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+                }}
+                data-column-id={cell.column.id}
+                data-cell-focused={cell.getIsFocused() ? 'true' : undefined}
+                data-selection-top={edges.top ? 'true' : undefined}
+                data-selection-right={edges.right ? 'true' : undefined}
+                data-selection-bottom={edges.bottom ? 'true' : undefined}
+                data-selection-left={edges.left ? 'true' : undefined}
+                aria-selected={cell.getIsSelected()}
+                tabIndex={cell.getTabIndex()}
+              >
+                <FlexRender cell={cell} />
+              </td>
+            )
+          })}
+        </TradingRow>
+      )}
+    </table.Subscribe>
   )
 }
 
@@ -445,11 +551,28 @@ function getHeaderClassName(header: {
   column: { id: string }
 }): string | undefined {
   if (header.subHeaders.length > 0) return 'column-group-header'
-  return isIdentityColumn(header.column.id) ? undefined : 'numeric-header'
+  return isTextColumn(header.column.id) ? undefined : 'numeric-header'
 }
 
-function isIdentityColumn(columnId: string): boolean {
+function isTextColumn(columnId: string): boolean {
   return columnId === 'market' || columnId === 'name' || columnId === 'symbol'
+}
+
+function readVisibleRange(
+  range: { startIndex: number; endIndex: number } | null,
+  rowCount: number,
+  virtualScrollMode: VirtualScrollMode,
+): { start: number; end: number } | null {
+  if (virtualScrollMode !== 'tanstack' || rowCount === 0 || range === null) {
+    return null
+  }
+
+  const lastRowIndex = rowCount - 1
+  const start = Math.min(range.startIndex, lastRowIndex)
+  return {
+    start,
+    end: Math.min(Math.max(start, range.endIndex), lastRowIndex),
+  }
 }
 
 function readRows(

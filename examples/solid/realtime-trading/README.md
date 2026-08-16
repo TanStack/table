@@ -32,14 +32,21 @@ pnpm --dir examples/solid/realtime-trading build
 The application renders one table implementation directly. Historical adapter
 switching and compatibility code are not part of the benchmark.
 
+## Row rendering
+
+The example starts with 100 instruments. Below 250 instruments, the row-rendering
+select can compare **Full DOM** with **TanStack Virtual**. At 250 instruments or
+more, virtualization is enabled and locked so large row counts cannot
+accidentally mount the complete table.
+
 ## Workloads
 
 - Stable market snapshots with interactive table sorting.
 - Stable or alternating cell component types.
 - Optional sparkline and quote-age invalidation.
-- Per-instrument Intraday history sampling with a configurable 100–2,000 ms
-  worker interval.
-- Configurable worker-sample profiles and explicit sample bursts.
+- Per-instrument Intraday history sampling with a configurable 16–2,000 ms
+  worker interval, defaulting to 16 ms for the initial 100-row workload.
+- Discrete worker-side sample workloads and explicit sample bursts.
 
 The sample rate controls synthetic quote generation inside the worker; it is not
 a browser event or `postMessage` rate. The publish interval separately controls

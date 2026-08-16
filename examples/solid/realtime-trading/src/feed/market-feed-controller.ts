@@ -1,7 +1,7 @@
-import { createEffect, createSignal, onCleanup, onMount } from 'solid-js'
-import { feedLoadRates } from './feed-load-profiles'
+import { createSignal, onCleanup, onMount } from 'solid-js'
+import { normalizeFeedSampleRate } from './feed-sample-rates'
+import { initialMarketFeedConfig } from './market-feed-config'
 import { applyMarketUpdates, hydrateMarketQuotes } from './market-data'
-import type { FeedLoadProfile } from './feed-load-profiles'
 import type {
   MarketFeedCommand,
   MarketFeedEvent,
@@ -24,20 +24,27 @@ export interface MarketFeedObserver {
 export function createMarketFeedController() {
   const [workerReady, setWorkerReady] = createSignal(false)
   const [running, setRunning] = createSignal(true)
-  const [instrumentCount, setInstrumentCount] = createSignal(250)
-  const [feedLoadProfile, setFeedLoadProfile] =
-    createSignal<FeedLoadProfile>('high')
-  const [targetTicksPerSecond, setTargetTicksPerSecond] = createSignal(10_000)
-  const [publishIntervalMs, setPublishIntervalMsState] = createSignal(20)
-  const [updateSparklines, setUpdateSparklines] = createSignal(true)
+  const [instrumentCount, setInstrumentCount] = createSignal(
+    initialMarketFeedConfig.instrumentCount,
+  )
+  const [targetTicksPerSecond, setTargetTicksPerSecond] = createSignal(
+    initialMarketFeedConfig.targetSamplesPerSecond,
+  )
+  const [publishIntervalMs, setPublishIntervalMsState] = createSignal(
+    initialMarketFeedConfig.publishIntervalMs,
+  )
+  const [updateSparklines, setUpdateSparklines] = createSignal(
+    initialMarketFeedConfig.updateSparklines,
+  )
   const [sparklineSampleIntervalMs, setSparklineSampleIntervalMs] =
-    createSignal(250)
+    createSignal(initialMarketFeedConfig.sparklineSampleIntervalMs)
   const [quotes, setQuotes] = createSignal<Array<MarketQuote>>([])
   const observers = new Set<MarketFeedObserver>()
   const runtime = {
     worker: null as Worker | null,
     feedSessionId: 0,
     renderPending: false,
+    quoteIndexBySymbol: new Map<string, number>(),
   }
 
   const post = (command: MarketFeedCommand): void =>
@@ -59,18 +66,17 @@ export function createMarketFeedController() {
     }
   }
 
-  createEffect(() => {
-    quotes()
-    completeRender()
-  })
-
   const handleWorkerMessage = ({
     data,
   }: MessageEvent<MarketFeedEvent>): void => {
     if (data.type === 'snapshot') {
       runtime.feedSessionId = data.sessionId
       startMutation()
-      setQuotes(hydrateMarketQuotes(data.quotes))
+      const nextQuotes = hydrateMarketQuotes(data.quotes)
+      runtime.quoteIndexBySymbol = new Map(
+        nextQuotes.map((quote, index) => [quote.symbol, index]),
+      )
+      setQuotes(nextQuotes)
       setWorkerReady(true)
       return
     }
@@ -141,18 +147,10 @@ export function createMarketFeedController() {
       setInstrumentCount(count)
       reset()
     },
-    setLoadProfile(profile: FeedLoadProfile): void {
-      setFeedLoadProfile(profile)
-      if (profile === 'custom') return
-
-      const rate = feedLoadRates[profile]
-      setTargetTicksPerSecond(rate)
-      post({ type: 'set-rate', ticksPerSecond: rate })
-    },
     setTargetRate(rate: number): void {
-      setFeedLoadProfile('custom')
-      setTargetTicksPerSecond(rate)
-      post({ type: 'set-rate', ticksPerSecond: rate })
+      const sampleRate = normalizeFeedSampleRate(rate)
+      setTargetTicksPerSecond(sampleRate)
+      post({ type: 'set-rate', ticksPerSecond: sampleRate })
     },
     setPublishInterval(intervalMs: number): void {
       setPublishIntervalMsState(intervalMs)
@@ -177,7 +175,6 @@ export function createMarketFeedController() {
       workerReady,
       running,
       instrumentCount,
-      feedLoadProfile,
       targetTicksPerSecond,
       publishIntervalMs,
       updateSparklines,
@@ -188,6 +185,12 @@ export function createMarketFeedController() {
     observe(observer: MarketFeedObserver): () => void {
       observers.add(observer)
       return () => observers.delete(observer)
+    },
+    getQuoteBySymbol(symbol: string | null): MarketQuote | null {
+      if (symbol === null) return null
+
+      const index = runtime.quoteIndexBySymbol.get(symbol)
+      return index === undefined ? null : (quotes()[index] ?? null)
     },
     completeRender,
   }

@@ -1,7 +1,6 @@
 import type {
   AriaAttributes,
   KeyboardEvent as ReactKeyboardEvent,
-  MouseEvent as ReactMouseEvent,
 } from 'react'
 
 export type CellDirection = 'up' | 'down' | 'left' | 'right'
@@ -15,6 +14,30 @@ interface SelectableRow {
   getToggleSelectedHandler: (options?: {
     selectChildren?: boolean
   }) => (event: unknown) => void
+}
+
+interface SelectableGridCell {
+  row: SelectableGridRow
+  getSelectionStartHandler: (
+    contextDocument?: Document,
+  ) => (event: unknown) => void
+  getSelectionExtendHandler: () => (event: unknown) => void
+}
+
+interface SelectableGridRow extends SelectableRow {
+  original: { symbol: string }
+  getAllCellsByColumnId: () => Partial<Record<string, SelectableGridCell>>
+}
+
+export interface TradingGridTable extends RowSelectionTable {
+  getRowModel: () => {
+    rowsById: Partial<Record<string, SelectableGridRow>>
+  }
+}
+
+export interface SelectionCellTarget {
+  element: HTMLTableCellElement
+  cell: SelectableGridCell
 }
 
 interface CellNavigationTable {
@@ -52,7 +75,7 @@ export function reorderColumnIds(
 export function selectRowFromPointer(
   table: RowSelectionTable,
   row: SelectableRow,
-  event: ReactMouseEvent,
+  event: MouseEvent,
 ): void {
   const additive = event.ctrlKey || event.metaKey
   const checked = additive ? !row.getIsSelected() : true
@@ -64,8 +87,28 @@ export function selectRowFromPointer(
     shiftKey: event.shiftKey,
     ctrlKey: event.ctrlKey,
     metaKey: event.metaKey,
-    nativeEvent: event.nativeEvent,
+    nativeEvent: event,
   })
+}
+
+export function findTradingGridCellTarget(
+  table: TradingGridTable,
+  path: Array<EventTarget>,
+): SelectionCellTarget | null {
+  for (const target of path) {
+    if (!(target instanceof HTMLTableCellElement)) continue
+
+    const columnId = target.dataset['columnId']
+    const rowId =
+      target.closest<HTMLTableRowElement>('tr[data-row-id]')?.dataset['rowId']
+    if (!columnId || !rowId) return null
+
+    const row = table.getRowModel().rowsById[rowId]
+    const cell = row?.getAllCellsByColumnId()[columnId]
+    return row && cell ? { element: target, cell } : null
+  }
+
+  return null
 }
 
 export function handleCellNavigation(
