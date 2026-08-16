@@ -201,6 +201,9 @@ In v9, table state lives in TanStack Store atoms, and the table instance is only
 
 Either way, treat stable `data` and `columns` references as a requirement.
 
+> [!NOTE]
+> When React Compiler successfully compiles a component, it can provide stable identities for values and calculations automatically. TanStack Table's examples keep the explicit patterns below so they also work without the compiler. See the [React Compiler Guide](../framework/react/guide/react-compiler) for when manual memoization can be removed.
+
 How you do this depends on which framework adapter you are using, but in React, you should often use `React.useState`, `React.useMemo`, or similar to ensure that both the `data` and `columns` table options have stable references.
 
 ```tsx

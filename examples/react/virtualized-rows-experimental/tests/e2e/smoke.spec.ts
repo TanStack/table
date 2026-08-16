@@ -1,7 +1,7 @@
-import { expect, test } from '@playwright/test'
-import type { Locator, Page } from '@playwright/test'
 import path from 'node:path'
+import { expect, test } from '@playwright/test'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
+import type { Locator, Page } from '@playwright/test'
 
 const exampleDir = path.resolve()
 
@@ -79,6 +79,21 @@ test('regenerates table data', async ({ page }) => {
 
     await expect.poll(() => getFirstBodyRowText(table)).not.toBe(firstRowBefore)
     await expect(bodyRows.first()).toBeVisible()
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('updates sorting indicators', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const sortableHeader = page.locator('.sortable-header').first()
+
+    await expect(sortableHeader).toBeVisible()
+    await sortableHeader.click()
+    await expect(sortableHeader).toContainText(/🔼|🔽/)
     expect(errors).toEqual([])
   } finally {
     await server.close()

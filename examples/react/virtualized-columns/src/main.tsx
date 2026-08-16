@@ -260,7 +260,13 @@ interface TableHeadCellProps {
 
 function TableHeadCell({ header, table }: TableHeadCellProps) {
   return (
-    <table.Subscribe source={table.atoms.columnSizing}>
+    <table.Subscribe
+      selector={(state) => [
+        state.columnSizing[header.column.id],
+        state.columnResizing.isResizingColumn === header.column.id,
+        state.sorting.find((sort) => sort.id === header.column.id)?.desc,
+      ]}
+    >
       {() => (
         <th
           key={header.id}
@@ -413,7 +419,10 @@ interface TableBodyCellProps {
 
 function TableBodyCell({ cell, table }: TableBodyCellProps) {
   return (
-    <table.Subscribe source={table.atoms.columnSizing}>
+    <table.Subscribe
+      source={table.atoms.columnSizing}
+      selector={(columnSizing) => columnSizing[cell.column.id]}
+    >
       {() => (
         <td
           key={cell.id}

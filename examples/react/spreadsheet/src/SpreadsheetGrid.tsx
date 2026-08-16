@@ -140,12 +140,13 @@ export const SpreadsheetGrid = React.forwardRef<
   const endColumns = table.getEndVisibleLeafColumns()
   const topRows = table.getTopRows()
   const centerRows = table.getCenterRows()
+  const columnSizing = table.state.columnSizing
   const startWidth = startColumns.reduce(
-    (total, column) => total + column.getSize(),
+    (total, column) => total + getColumnSize(column, columnSizing),
     0,
   )
   const endWidth = endColumns.reduce(
-    (total, column) => total + column.getSize(),
+    (total, column) => total + getColumnSize(column, columnSizing),
     0,
   )
   const frozenRowsHeight = topRows.length * ROW_HEIGHT
@@ -164,7 +165,8 @@ export const SpreadsheetGrid = React.forwardRef<
     count: centerColumns.length,
     getScrollElement: () => scrollRef.current,
     getItemKey: (index) => centerColumns[index]?.id ?? index,
-    estimateSize: (index) => centerColumns[index]?.getSize() ?? 120,
+    estimateSize: (index) =>
+      getColumnSize(centerColumns[index], columnSizing, 120),
     horizontal: true,
     paddingStart: ROW_HEADER_WIDTH + startWidth,
     paddingEnd: endWidth,
@@ -558,10 +560,18 @@ export const SpreadsheetGrid = React.forwardRef<
             zoom: zoom / 100,
           }}
         >
-          <table.Subscribe source={table.atoms.cellSelection}>
-            {() => (
+          <table.Subscribe
+            source={table.atoms.cellSelection}
+            selector={() => table.getCellSelectionBounds()}
+          >
+            {(selectionBounds) => (
               <HeaderRow
                 table={table}
+                columnFilters={table.state.columnFilters}
+                columnSizing={columnSizing}
+                resizingColumnId={table.state.columnResizing.isResizingColumn}
+                selectionBounds={selectionBounds}
+                sorting={table.state.sorting}
                 virtualColumns={virtualColumns}
                 centerHeaders={table.getCenterLeafHeaders()}
                 startHeaders={table.getStartLeafHeaders()}
@@ -585,6 +595,7 @@ export const SpreadsheetGrid = React.forwardRef<
                   top={index * ROW_HEIGHT}
                   frozen
                   table={table}
+                  columnSizing={columnSizing}
                   virtualColumns={virtualColumns}
                   interactions={interactions}
                   onStartHeaderSelection={startHeaderSelection}
@@ -609,6 +620,7 @@ export const SpreadsheetGrid = React.forwardRef<
                 top={virtualRow.start}
                 frozen={false}
                 table={table}
+                columnSizing={columnSizing}
                 virtualColumns={virtualColumns}
                 interactions={interactions}
                 onStartHeaderSelection={startHeaderSelection}
@@ -624,9 +636,11 @@ export const SpreadsheetGrid = React.forwardRef<
           })}
 
           <table.Subscribe source={table.atoms.cellSelection}>
-            {() => (
+            {(cellSelection) => (
               <MergedCellsOverlay
                 table={table}
+                cellSelection={cellSelection}
+                columnSizing={columnSizing}
                 interactions={interactions}
                 topRowCount={topRows.length}
                 frozenRowsHeight={frozenRowsHeight}
@@ -666,6 +680,11 @@ export const SpreadsheetGrid = React.forwardRef<
 
 interface HeaderRowProps {
   table: SpreadsheetTable
+  columnFilters: SpreadsheetTable['state']['columnFilters']
+  columnSizing: SpreadsheetTable['state']['columnSizing']
+  resizingColumnId: false | string
+  selectionBounds: Array<CellSelectionBounds>
+  sorting: SpreadsheetTable['state']['sorting']
   virtualColumns: Array<VirtualItem>
   centerHeaders: Array<SpreadsheetTableHeader>
   startHeaders: Array<SpreadsheetTableHeader>
@@ -682,6 +701,11 @@ interface HeaderRowProps {
 
 function HeaderRow({
   table,
+  columnFilters,
+  columnSizing,
+  resizingColumnId,
+  selectionBounds,
+  sorting,
   virtualColumns,
   centerHeaders,
   startHeaders,
@@ -690,7 +714,6 @@ function HeaderRow({
   onExtendSelection,
   onOpenMenu,
 }: HeaderRowProps) {
-  const bounds = table.getCellSelectionBounds()
   const rowCount = table.getRowsInDisplayOrder().length
 
   return (
@@ -713,8 +736,12 @@ function HeaderRow({
           header={header}
           pinned="start"
           table={table}
-          bounds={bounds}
+          bounds={selectionBounds}
+          columnFilters={columnFilters}
+          columnSizing={columnSizing}
+          resizingColumnId={resizingColumnId}
           rowCount={rowCount}
+          sorting={sorting}
           onStartSelection={onStartSelection}
           onExtendSelection={onExtendSelection}
           onOpenMenu={onOpenMenu}
@@ -728,8 +755,12 @@ function HeaderRow({
             header={header}
             left={virtualColumn.start}
             table={table}
-            bounds={bounds}
+            bounds={selectionBounds}
+            columnFilters={columnFilters}
+            columnSizing={columnSizing}
+            resizingColumnId={resizingColumnId}
             rowCount={rowCount}
+            sorting={sorting}
             onStartSelection={onStartSelection}
             onExtendSelection={onExtendSelection}
             onOpenMenu={onOpenMenu}
@@ -742,8 +773,12 @@ function HeaderRow({
           header={header}
           pinned="end"
           table={table}
-          bounds={bounds}
+          bounds={selectionBounds}
+          columnFilters={columnFilters}
+          columnSizing={columnSizing}
+          resizingColumnId={resizingColumnId}
           rowCount={rowCount}
+          sorting={sorting}
           onStartSelection={onStartSelection}
           onExtendSelection={onExtendSelection}
           onOpenMenu={onOpenMenu}
@@ -757,7 +792,11 @@ interface HeaderCellProps {
   header: SpreadsheetTableHeader
   table: SpreadsheetTable
   bounds: Array<CellSelectionBounds>
+  columnFilters: SpreadsheetTable['state']['columnFilters']
+  columnSizing: SpreadsheetTable['state']['columnSizing']
+  resizingColumnId: false | string
   rowCount: number
+  sorting: SpreadsheetTable['state']['sorting']
   onStartSelection: HeaderRowProps['onStartSelection']
   onExtendSelection: HeaderRowProps['onExtendSelection']
   left?: number
@@ -769,7 +808,11 @@ function HeaderCell({
   header,
   table,
   bounds,
+  columnFilters,
+  columnSizing,
+  resizingColumnId,
   rowCount,
+  sorting,
   onStartSelection,
   onExtendSelection,
   left,
@@ -786,9 +829,10 @@ function HeaderCell({
       columnIndex <= bound.maxColumnIndex,
   )
   const meta = column.columnDef.meta
-  const sorted = column.getIsSorted()
-  const filtered = column.getIsFiltered()
-  const style = getColumnPositionStyle(column, left, pinned)
+  const sort = sorting.find((entry) => entry.id === column.id)
+  const sorted = sort ? (sort.desc ? 'desc' : 'asc') : false
+  const filtered = columnFilters.some((filter) => filter.id === column.id)
+  const style = getColumnPositionStyle(column, columnSizing, left, pinned)
 
   return (
     <div
@@ -835,7 +879,7 @@ function HeaderCell({
       <div
         className={[
           'column-resizer',
-          column.getIsResizing() && 'column-resizer-active',
+          resizingColumnId === column.id && 'column-resizer-active',
         ]
           .filter(Boolean)
           .join(' ')}
@@ -867,6 +911,7 @@ interface SubscribedRowProps {
   top: number
   frozen: boolean
   table: SpreadsheetTable
+  columnSizing: SpreadsheetTable['state']['columnSizing']
   virtualColumns: Array<VirtualItem>
   interactions: GridInteractions
   onStartHeaderSelection: (
@@ -885,21 +930,47 @@ interface SubscribedRowProps {
   ) => void
 }
 
+interface RowSelectionSnapshot {
+  activeBound?: CellSelectionBounds
+  focusedColumnId?: string
+  fullySelected: boolean
+  key: string
+}
+
 function SubscribedRow(props: SubscribedRowProps) {
   const { row, table } = props
   return (
     <table.Subscribe
       source={table.atoms.cellSelection}
-      selector={(ranges) =>
-        rowSelectionKey(
-          ranges,
-          table.getCellSelectionBounds(),
-          row.getDisplayIndex(),
-          row.id,
-        )
-      }
+      selector={(ranges) => {
+        const bounds = table.getCellSelectionBounds()
+        const rowIndex = row.getDisplayIndex()
+        const activeRange = ranges.at(-1)
+        const activeBound = bounds.at(-1)
+        const columnCount =
+          table.getStartVisibleLeafColumns().length +
+          table.getCenterVisibleLeafColumns().length +
+          table.getEndVisibleLeafColumns().length
+
+        return {
+          activeBound:
+            activeBound?.maxRowIndex === rowIndex ? activeBound : undefined,
+          focusedColumnId:
+            activeRange?.anchorRowId === row.id
+              ? activeRange.anchorColumnId
+              : undefined,
+          fullySelected: bounds.some(
+            (bound) =>
+              bound.minColumnIndex === 0 &&
+              bound.maxColumnIndex === columnCount - 1 &&
+              rowIndex >= bound.minRowIndex &&
+              rowIndex <= bound.maxRowIndex,
+          ),
+          key: rowSelectionKey(ranges, bounds, rowIndex, row.id),
+        }
+      }}
     >
-      {() => <SpreadsheetRowView {...props} />}
+      {(selection) => <SpreadsheetRowView {...props} selection={selection} />}
     </table.Subscribe>
   )
 }
@@ -909,6 +980,7 @@ function SpreadsheetRowView({
   top,
   frozen,
   table,
+  columnSizing,
   virtualColumns,
   interactions,
   onStartHeaderSelection,
@@ -916,26 +988,12 @@ function SpreadsheetRowView({
   fillPreview,
   onStartFill,
   onOpenContextMenu,
-}: SubscribedRowProps) {
+  selection,
+}: SubscribedRowProps & { selection: RowSelectionSnapshot }) {
   const rowIndex = row.getDisplayIndex()
-  const bounds = table.getCellSelectionBounds()
-  const activeBound = bounds.at(-1)
   const centerCells = row.getCenterVisibleCells()
   const startCells = row.getStartVisibleCells()
   const endCells = row.getEndVisibleCells()
-  const fullySelected = bounds.some(
-    (bound) =>
-      bound.minColumnIndex === 0 &&
-      bound.maxColumnIndex ===
-        [
-          ...table.getStartVisibleLeafColumns(),
-          ...table.getCenterVisibleLeafColumns(),
-          ...table.getEndVisibleLeafColumns(),
-        ].length -
-          1 &&
-      rowIndex >= bound.minRowIndex &&
-      rowIndex <= bound.maxRowIndex,
-  )
 
   return (
     <div
@@ -957,11 +1015,13 @@ function SpreadsheetRowView({
     >
       <button
         type="button"
-        className={fullySelected ? 'row-header header-selected' : 'row-header'}
+        className={
+          selection.fullySelected ? 'row-header header-selected' : 'row-header'
+        }
         aria-label={`Select row ${rowIndex + 1}`}
-        aria-selected={fullySelected}
+        aria-selected={selection.fullySelected}
         onMouseDown={(event) =>
-          onStartHeaderSelection(event, 'row', row.id, fullySelected)
+          onStartHeaderSelection(event, 'row', row.id, selection.fullySelected)
         }
         onMouseEnter={() => onExtendHeaderSelection('row', row.id)}
       >
@@ -976,10 +1036,11 @@ function SpreadsheetRowView({
             key={cell.id}
             cell={cell}
             rowIndex={rowIndex}
-            activeBound={activeBound}
+            selection={selection}
             fillPreview={fillPreview}
             pinned="start"
             table={table}
+            columnSizing={columnSizing}
             interactions={interactions}
             onStartFill={onStartFill}
             onOpenContextMenu={onOpenContextMenu}
@@ -1000,10 +1061,11 @@ function SpreadsheetRowView({
             key={cell.id}
             cell={cell}
             rowIndex={rowIndex}
-            activeBound={activeBound}
+            selection={selection}
             fillPreview={fillPreview}
             left={virtualColumn.start}
             table={table}
+            columnSizing={columnSizing}
             interactions={interactions}
             onStartFill={onStartFill}
             onOpenContextMenu={onOpenContextMenu}
@@ -1019,10 +1081,11 @@ function SpreadsheetRowView({
             key={cell.id}
             cell={cell}
             rowIndex={rowIndex}
-            activeBound={activeBound}
+            selection={selection}
             fillPreview={fillPreview}
             pinned="end"
             table={table}
+            columnSizing={columnSizing}
             interactions={interactions}
             onStartFill={onStartFill}
             onOpenContextMenu={onOpenContextMenu}
@@ -1036,9 +1099,10 @@ function SpreadsheetRowView({
 interface SpreadsheetCellProps {
   cell: SpreadsheetTableCell
   rowIndex: number
-  activeBound?: CellSelectionBounds
+  selection: RowSelectionSnapshot
   fillPreview: FillPreview | null
   table: SpreadsheetTable
+  columnSizing: SpreadsheetTable['state']['columnSizing']
   interactions: GridInteractions
   left?: number
   pinned?: 'start' | 'end'
@@ -1053,9 +1117,10 @@ interface SpreadsheetCellProps {
 function SpreadsheetCell({
   cell,
   rowIndex,
-  activeBound,
+  selection,
   fillPreview,
   table,
+  columnSizing,
   interactions,
   left,
   pinned,
@@ -1064,10 +1129,12 @@ function SpreadsheetCell({
 }: SpreadsheetCellProps) {
   const columnIndex =
     table.getCellSelectionColumnIndexes()[cell.column.id] ?? -1
-  const edges = cell.getSelectionEdges()
+  const { edges, isFocused, isSelected, tabIndex } =
+    getCellSelectionRenderState(cell, selection)
   const fillTarget =
     fillPreview &&
     isWithinBounds(fillPreview.destination, rowIndex, columnIndex)
+  const activeBound = selection.activeBound
   const showFillHandle =
     activeBound &&
     rowIndex === activeBound.maxRowIndex &&
@@ -1078,8 +1145,8 @@ function SpreadsheetCell({
   const className = [
     'spreadsheet-cell',
     pinned && 'cell-pinned',
-    cell.getIsSelected() && 'cell-selected',
-    cell.getIsFocused() && 'cell-focused',
+    isSelected && 'cell-selected',
+    isFocused && 'cell-focused',
     edges.top && 'cell-edge-top',
     edges.right && 'cell-edge-right',
     edges.bottom && 'cell-edge-bottom',
@@ -1095,12 +1162,12 @@ function SpreadsheetCell({
       className={className}
       role="gridcell"
       aria-colindex={columnIndex + 1}
-      aria-selected={cell.getIsSelected()}
+      aria-selected={isSelected}
       data-sheet-cell
       data-row-id={cell.row.id}
       data-column-id={cell.column.id}
-      tabIndex={isEditing ? -1 : cell.getTabIndex()}
-      style={getColumnPositionStyle(cell.column, left, pinned)}
+      tabIndex={isEditing ? -1 : tabIndex}
+      style={getColumnPositionStyle(cell.column, columnSizing, left, pinned)}
       onMouseDown={(event) => {
         if (isEditing || event.button !== 0) return
         const grid =
@@ -1158,6 +1225,8 @@ function SpreadsheetCell({
 
 interface MergedCellsOverlayProps {
   table: SpreadsheetTable
+  cellSelection: CellSelectionState
+  columnSizing: SpreadsheetTable['state']['columnSizing']
   interactions: GridInteractions
   topRowCount: number
   frozenRowsHeight: number
@@ -1183,6 +1252,8 @@ interface MergedCellsOverlayProps {
  */
 function MergedCellsOverlay({
   table,
+  cellSelection,
+  columnSizing,
   interactions,
   topRowCount,
   frozenRowsHeight,
@@ -1204,7 +1275,7 @@ function MergedCellsOverlay({
   let offset = 0
   for (const column of centerColumns) {
     centerOffsets.set(column.id, offset)
-    offset += column.getSize()
+    offset += getColumnSize(column, columnSizing)
   }
 
   type MergedAnchor = {
@@ -1232,7 +1303,8 @@ function MergedCellsOverlay({
     let width = 0
     const position = spanIndex.columnIndexes[columnId] ?? -1
     for (let c = 0; c < colSpan; c++) {
-      width += columnsByPosition[position + c]?.getSize() ?? 0
+      const column = columnsByPosition[position + c]
+      width += column ? getColumnSize(column, columnSizing) : 0
     }
 
     const rowOffset = (r - topRowCount) * ROW_HEIGHT
@@ -1310,6 +1382,7 @@ function MergedCellsOverlay({
           <MergedCellView
             key={anchor.cell.id}
             anchor={anchor}
+            cellSelection={cellSelection}
             interactions={interactions}
             onOpenContextMenu={onOpenContextMenu}
           />
@@ -1321,6 +1394,7 @@ function MergedCellsOverlay({
             <MergedCellView
               key={anchor.cell.id}
               anchor={anchor}
+              cellSelection={cellSelection}
               interactions={interactions}
               onOpenContextMenu={onOpenContextMenu}
             />
@@ -1333,6 +1407,7 @@ function MergedCellsOverlay({
 
 function MergedCellView({
   anchor,
+  cellSelection,
   interactions,
   onOpenContextMenu,
 }: {
@@ -1345,19 +1420,21 @@ function MergedCellView({
     width: number
     height: number
   }
+  cellSelection: CellSelectionState
   interactions: GridInteractions
   onOpenContextMenu: MergedCellsOverlayProps['onOpenContextMenu']
 }) {
   const { cell } = anchor
-  const edges = cell.getSelectionEdges()
+  const { edges, isFocused, isSelected, tabIndex } =
+    getCellSelectionRenderState(cell, cellSelection)
   const isEditing =
     interactions.editing?.rowId === cell.row.id &&
     interactions.editing.columnId === cell.column.id
   const className = [
     'spreadsheet-cell',
     'cell-merged',
-    cell.getIsSelected() && 'cell-selected',
-    cell.getIsFocused() && 'cell-focused',
+    isSelected && 'cell-selected',
+    isFocused && 'cell-focused',
     edges.top && 'cell-edge-top',
     edges.right && 'cell-edge-right',
     edges.bottom && 'cell-edge-bottom',
@@ -1370,14 +1447,14 @@ function MergedCellView({
     <div
       className={className}
       role="gridcell"
-      aria-selected={cell.getIsSelected()}
+      aria-selected={isSelected}
       aria-rowspan={anchor.rowSpan}
       aria-colspan={anchor.colSpan}
       data-sheet-cell
       data-merged-cell
       data-row-id={cell.row.id}
       data-column-id={cell.column.id}
-      tabIndex={isEditing ? -1 : cell.getTabIndex()}
+      tabIndex={isEditing ? -1 : tabIndex}
       style={{
         top: anchor.top,
         left: anchor.left,
@@ -1424,24 +1501,66 @@ function MergedCellView({
   )
 }
 
+function getCellSelectionRenderState(
+  cell: SpreadsheetTableCell,
+  selection: RowSelectionSnapshot | CellSelectionState,
+) {
+  const activeRange = Array.isArray(selection) ? selection.at(-1) : undefined
+  const focusedColumnId = Array.isArray(selection)
+    ? activeRange?.anchorRowId === cell.row.id
+      ? activeRange.anchorColumnId
+      : undefined
+    : selection.focusedColumnId
+  const isFocused = focusedColumnId === cell.column.id
+
+  return {
+    edges: cell.getSelectionEdges(),
+    isFocused,
+    isSelected: cell.getIsSelected(),
+    tabIndex: isFocused ? 0 : -1,
+  }
+}
+
 function getColumnPositionStyle(
   column: SpreadsheetTableColumn,
+  columnSizing: SpreadsheetTable['state']['columnSizing'],
   left?: number,
   pinned?: 'start' | 'end',
 ): React.CSSProperties {
+  const width = getColumnSize(column, columnSizing)
   if (pinned === 'start') {
     return {
-      width: column.getSize(),
+      width,
       insetInlineStart: ROW_HEADER_WIDTH + column.getStart('start'),
     }
   }
   if (pinned === 'end') {
     return {
-      width: column.getSize(),
+      width,
       insetInlineEnd: column.getAfter('end'),
     }
   }
-  return { width: column.getSize(), left }
+  return { width, left }
+}
+
+function getColumnSize(
+  column: SpreadsheetTableColumn | undefined,
+  columnSizing: SpreadsheetTable['state']['columnSizing'],
+  fallback = 150,
+) {
+  if (!column) return fallback
+
+  return Math.min(
+    Math.max(
+      column.columnDef.minSize ?? 20,
+      (Object.hasOwn(columnSizing, column.id)
+        ? columnSizing[column.id]
+        : undefined) ??
+        column.columnDef.size ??
+        fallback,
+    ),
+    column.columnDef.maxSize ?? Number.MAX_SAFE_INTEGER,
+  )
 }
 
 function rowSelectionKey(
