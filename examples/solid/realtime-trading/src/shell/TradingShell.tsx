@@ -267,7 +267,7 @@ function Configurator() {
           <small>
             {virtualScrollForced()
               ? `TanStack Virtual is required and locked at ${FORCED_VIRTUALIZATION_ROW_COUNT.toLocaleString()} or more rows.`
-              : 'Full DOM mounts every row; TanStack Virtual mounts only the visible window.'}
+              : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'}
           </small>
         </label>
 

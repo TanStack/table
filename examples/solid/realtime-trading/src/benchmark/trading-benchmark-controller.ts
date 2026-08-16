@@ -16,12 +16,12 @@ import {
 } from './benchmark-monitor'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { RendererMode } from '../table/trading-table'
-import type { VirtualScrollMode } from '../table/trading-row-virtualizer'
+import type { VirtualScrollPreference } from '../table/trading-row-virtualizer'
 
 export function createTradingBenchmarkController(feed: MarketFeedController) {
   const [rendererMode, setRendererMode] = createSignal<RendererMode>('stable')
   const [requestedVirtualScrollMode, setRequestedVirtualScrollMode] =
-    createSignal<VirtualScrollMode>('none')
+    createSignal<VirtualScrollPreference>('auto')
   const [renderedRowCount, setRenderedRowCount] = createSignal(0)
   const [selectedSymbol, setSelectedSymbol] = createSignal<string | null>(null)
   const [metrics, setMetrics] = createSignal(initialMetrics)

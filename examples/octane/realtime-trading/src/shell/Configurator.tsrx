@@ -102,7 +102,7 @@ export function Configurator(props: {
             <option value={option.value}>{option.label}</option>
           }
         </select>
-        <small>{forced ? 'TanStack Virtual is required and locked at 250 or more rows.' : 'Full DOM mounts every row; TanStack Virtual mounts the visible window.'}</small>
+        <small>{forced ? 'TanStack Virtual is required and locked at 1,500 or more rows.' : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'}</small>
       </label>
       <label className="toggle-field">
         <input type="checkbox" checked={rendererMode === 'swap'} onChange={(event) => props.controller.actions.setRendererMode(checked(event) ? 'swap' : 'stable')} />

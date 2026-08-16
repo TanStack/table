@@ -296,8 +296,8 @@ const Configurator = defineComponent({
             </select>
             <small>
               {virtualScrollForced.value
-                ? 'TanStack Virtual is required and locked at 250 or more rows.'
-                : 'Full DOM mounts every row; TanStack Virtual mounts the visible window.'}
+                ? 'TanStack Virtual is required and locked at 1,500 or more rows.'
+                : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'}
             </small>
           </label>
           <label class="toggle-field">

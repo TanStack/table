@@ -130,8 +130,6 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
         table.getVisibleLeafColumns().map((column) => [column.id, column.getSize() * ratio]),
       ))
     }
-    writeColumnSizes()
-    fitAvailableWidth()
     const sizing = table.atoms.columnSizing.subscribe(writeColumnSizes)
     const order = table.atoms.columnOrder.subscribe(writeColumnSizes)
     const resizing = table.atoms.columnResizing.subscribe((state) => {
@@ -139,6 +137,8 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
     })
     const resizeObserver = new ResizeObserver(fitAvailableWidth)
     if (scrollRef.current) resizeObserver.observe(scrollRef.current)
+    writeColumnSizes()
+    fitAvailableWidth()
     const stopBenchmark = startTableBenchmark(controller, bodyRef.current)
     return () => {
       sizing.unsubscribe()

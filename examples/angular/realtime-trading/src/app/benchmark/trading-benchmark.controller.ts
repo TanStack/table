@@ -8,12 +8,17 @@ import {
 } from '@angular/core'
 import { TRADING_COLUMN_COUNT } from '../table/table-config/trading-column-types'
 import { MarketFeedService } from '../feed/market-feed.service'
+import {
+  FORCED_VIRTUALIZATION_ROW_COUNT,
+  resolveVirtualScrollMode,
+} from '../table/trading-row-virtualizer'
 import { BenchmarkMonitor, initialMetrics } from './benchmark-monitor'
-import type { VirtualScrollMode } from '../table/trading-row-virtualizer'
+import type {
+  VirtualScrollMode,
+  VirtualScrollPreference,
+} from '../table/trading-row-virtualizer'
 import type { FeedMetrics } from './benchmark-monitor'
 import type { RendererMode } from '../table/table-config/trading-column-types'
-
-const FORCED_VIRTUALIZATION_ROW_COUNT = 250
 
 @Injectable({ providedIn: 'root' })
 export class TradingBenchmarkController {
@@ -28,7 +33,7 @@ export class TradingBenchmarkController {
   readonly tableWorkerEnabled = signal(false)
   readonly renderedRowCount = signal(0)
   readonly rendererMode = signal<RendererMode>('stable')
-  readonly requestedVirtualScrollMode = signal<VirtualScrollMode>('none')
+  readonly requestedVirtualScrollMode = signal<VirtualScrollPreference>('auto')
   readonly selectedSymbol = signal<string | null>(null)
   readonly metrics = signal<FeedMetrics>(initialMetrics)
   readonly displayQuotes = this.#feed.quotes
@@ -42,7 +47,10 @@ export class TradingBenchmarkController {
     () => this.#feed.instrumentCount() >= FORCED_VIRTUALIZATION_ROW_COUNT,
   )
   readonly virtualScrollMode = computed<VirtualScrollMode>(() =>
-    this.virtualScrollForced() ? 'tanstack' : this.requestedVirtualScrollMode(),
+    resolveVirtualScrollMode(
+      this.requestedVirtualScrollMode(),
+      this.#feed.instrumentCount(),
+    ),
   )
   readonly mountedCells = computed(
     () => this.renderedRowCount() * TRADING_COLUMN_COUNT,

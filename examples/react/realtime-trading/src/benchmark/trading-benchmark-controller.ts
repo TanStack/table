@@ -9,10 +9,10 @@ import {
 import type { FeedMetrics } from './benchmark-monitor'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { RendererMode } from '../table/trading-table'
-import type { VirtualScrollMode } from '../table/trading-row-virtualizer'
+import type { VirtualScrollPreference } from '../table/trading-row-virtualizer'
 
 export interface TradingBenchmarkState {
-  requestedVirtualScrollMode: VirtualScrollMode
+  requestedVirtualScrollMode: VirtualScrollPreference
   metrics: FeedMetrics
   mountedCells: number
   liveComponents: number
@@ -29,7 +29,7 @@ export interface TradingBenchmarkActions {
 }
 
 const initialState: TradingBenchmarkState = {
-  requestedVirtualScrollMode: 'none',
+  requestedVirtualScrollMode: 'auto',
   metrics: initialMetrics,
   mountedCells: 0,
   liveComponents: 0,

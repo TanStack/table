@@ -36,7 +36,7 @@ export default class Configurator extends Component<Signature> {
   get virtualMode() { return resolveVirtualScrollMode(this.benchmark.requestedVirtualScrollMode, this.feedState.instrumentCount) }
   get sampleRateIndex() { return feedSampleRateIndex(this.feedState.targetTicksPerSecond) }
   get sampleRateLabel() { return `${rate.format(this.feedState.targetTicksPerSecond)} samples/s` }
-  get virtualDescription() { return this.virtualForced ? 'TanStack Virtual is required and locked at 250 or more rows.' : 'Full DOM mounts every row; TanStack Virtual mounts the visible window.' }
+  get virtualDescription() { return this.virtualForced ? 'TanStack Virtual is required and locked at 1,500 or more rows.' : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.' }
 
   setInstrumentCount = (event: Event) => {
     this.args.controller.actions.resetViewState()

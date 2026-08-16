@@ -37,6 +37,15 @@ test('runs the Angular realtime trading workload', async ({ page }) => {
       'auto',
     )
     await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
+    await instrumentCount.selectOption('250')
+    await expect(virtualScrollSelect).toHaveValue('tanstack')
+    await expect(virtualScrollSelect).toBeEnabled()
+    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(250)
+    await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
+    await instrumentCount.selectOption('100')
+    await expect(virtualScrollSelect).toHaveValue('none')
+    await expect(table.locator('tbody tr')).toHaveCount(100)
+    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
     await virtualScrollSelect.selectOption('tanstack')
     await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(100)
     await expect(table.locator('tbody tr').first()).toHaveCSS(
@@ -46,12 +55,12 @@ test('runs the Angular realtime trading workload', async ({ page }) => {
     await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
     await virtualScrollSelect.selectOption('none')
     await expect(table.locator('tbody tr')).toHaveCount(100)
-    await instrumentCount.selectOption('250')
+    await instrumentCount.selectOption('1500')
     await expect(virtualScrollSelect).toHaveValue('tanstack')
     await expect(virtualScrollSelect).toBeDisabled()
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(250)
+    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(1500)
     await expect(page.getByTestId('virtual-scroll-footer')).toContainText(
-      'Total · 250 rows · 14 columns',
+      'Total · 1500 rows · 14 columns',
     )
     await expect(page.getByTestId('visible-row-range')).toHaveText(
       /^\s*Current · rows 0\.\.\d+\s*$/,
@@ -177,8 +186,8 @@ test('runs the Angular realtime trading workload', async ({ page }) => {
     await tableWorker.check()
     await expect(page.getByText('ROW MODEL WORKER ON')).toBeVisible()
     await expect(table.locator('tbody tr')).toHaveCount(100)
-    await instrumentCount.selectOption('250')
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(250)
+    await instrumentCount.selectOption('1500')
+    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(1500)
     await instrumentCount.selectOption('100')
     await expect(table.locator('tbody tr')).toHaveCount(100)
     await page.getByTestId('feed-toggle').click()
@@ -196,8 +205,8 @@ test('runs the Angular realtime trading workload', async ({ page }) => {
     await tableWorker.uncheck()
 
     await expect(tableWorker).toBeEnabled()
-    await instrumentCount.selectOption('250')
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(250)
+    await instrumentCount.selectOption('1500')
+    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(1500)
     await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
     const firstPrice = table.locator('tbody tr').first().getByRole('button')
     const priceBeforeUpdate = await firstPrice.textContent()
