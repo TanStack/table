@@ -8,31 +8,56 @@ import {
   signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { lazyInit } from '../src/lazySignalInitializer'
+import { injectLazyInit } from '../src/injectLazyInit'
 import { flushQueue, setFixtureSignalInputs } from './test-utils'
 import type { WritableSignal } from '@angular/core'
 
-describe('lazyInit', () => {
-  test('should init lazily in next tick when not accessing manually', () => {
+describe('injectLazyInit', () => {
+  test('should register cleanup only after initialization', () => {
+    const initializedObject = { data: signal(true) }
+    const initializer = vi.fn(() => initializedObject)
+    const cleanup = vi.fn<(object: typeof initializedObject) => void>()
+
+    @Component({ standalone: true, template: `` })
+    class Test {
+      readonly lazySignal = injectLazyInit(initializer, cleanup)
+    }
+
+    const uninitializedFixture = TestBed.createComponent(Test)
+    uninitializedFixture.destroy()
+
+    expect(initializer).not.toHaveBeenCalled()
+    expect(cleanup).not.toHaveBeenCalled()
+
+    const initializedFixture = TestBed.createComponent(Test)
+    initializedFixture.componentInstance.lazySignal.data()
+    initializedFixture.destroy()
+
+    expect(initializer).toHaveBeenCalledOnce()
+    expect(cleanup).toHaveBeenCalledOnce()
+    expect(cleanup).toHaveBeenCalledWith(initializedObject)
+  })
+
+  test('should not initialize until accessed', () => {
     const mockFn = vi.fn()
 
     TestBed.runInInjectionContext(() => {
-      const proxy = lazyInit(() => {
+      const proxy = injectLazyInit(() => {
         mockFn()
         return {
           data: signal(true),
         }
-      })
+      }, vi.fn())
 
       expect(mockFn).not.toHaveBeenCalled()
-      expect(proxy.initialized).toEqual(false)
-      expect(proxy.rawValue).toBeNullable()
 
       TestBed.tick()
 
-      expect(proxy.initialized).toEqual(true)
-      expect(proxy.rawValue).not.toBeNullable()
-      expect(mockFn).toHaveBeenCalled()
+      expect(mockFn).not.toHaveBeenCalled()
+
+      proxy.data()
+
+      expect(mockFn).toHaveBeenCalledOnce()
     })
   })
 
@@ -40,14 +65,14 @@ describe('lazyInit', () => {
     const mockFn = vi.fn()
 
     TestBed.runInInjectionContext(() => {
-      const lazySignal = lazyInit(() => {
+      const lazySignal = injectLazyInit(() => {
         mockFn()
         return {
           data: signal(true),
         }
-      })
+      }, vi.fn())
 
-      lazySignal.value.data()
+      lazySignal.data()
     })
 
     expect(mockFn).toHaveBeenCalled()
@@ -61,13 +86,13 @@ describe('lazyInit', () => {
     const outerSignal = signal(0)
 
     TestBed.runInInjectionContext(() => {
-      value = lazyInit(() => {
+      value = injectLazyInit(() => {
         initCallFn()
 
         void outerSignal()
 
         return { data: signal(0) }
-      }).value
+      }, vi.fn())
 
       effect(() => registerDataValue(value.data()))
     })
@@ -94,19 +119,19 @@ describe('lazyInit', () => {
   test('should support required signal input', async () => {
     @Component({
       standalone: true,
-      template: `{{ call }} - {{ lazySignal.data() }}`,
+      template: `{{ call() }} - {{ lazySignal.data() }}`,
       changeDetection: ChangeDetectionStrategy.OnPush,
     })
     class Test {
       readonly title = input.required<string>()
-      call = 0
+      readonly call = signal(0)
 
-      lazySignal = lazyInit(() => {
-        this.call++
+      lazySignal = injectLazyInit(() => {
+        this.call.update((value) => value + 1)
         return {
           data: computed(() => this.title()),
         }
-      }).value
+      }, vi.fn())
     }
 
     const fixture = TestBed.createComponent(Test)
