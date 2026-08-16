@@ -1,4 +1,7 @@
-import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
+import {
+  createTableDevtoolsRegistrationManager,
+  seedDevtoolsFontStyle,
+} from '@tanstack/table-devtools'
 import {
   DestroyRef,
   Injector,
@@ -8,6 +11,8 @@ import {
   untracked,
 } from '@angular/core'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
+
+seedDevtoolsFontStyle()
 
 export interface InjectTanStackTableDevtoolsOptions<
   TFeatures extends TableFeatures = TableFeatures,

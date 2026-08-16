@@ -10,6 +10,12 @@ export const TableDevtoolsCore: ClassType =
 
 export type { TableDevtoolsInit } from './core'
 export {
+  resolveDevtoolsPanelProps,
+  resolveDevtoolsTheme,
+  seedDevtoolsFontStyle,
+} from './panelProps'
+export type { TableDevtoolsPanelProps } from './panelProps'
+export {
   createTableDevtoolsRegistrationManager,
   getTableDevtoolsTargets,
   removeTableDevtoolsTarget,

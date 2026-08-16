@@ -1,7 +1,12 @@
 import { isDevMode } from '@angular/core'
+import { seedDevtoolsFontStyle } from '@tanstack/table-devtools'
 import * as plugin from './plugin'
 import * as Devtools from './TableDevtools'
 import * as inject from './injectTanStackTableDevtools'
+
+if (typeof document !== 'undefined' && isDevMode()) {
+  seedDevtoolsFontStyle()
+}
 
 export const TableDevtoolsPanel: typeof Devtools.TableDevtoolsPanel =
   isDevMode() ? Devtools.TableDevtoolsPanel : Devtools.TableDevtoolsPanelNoOp

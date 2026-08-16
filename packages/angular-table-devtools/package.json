@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/angular-table-devtools",
-  "version": "9.1.2",
+  "version": "9.2.0",
   "description": "Angular devtools for TanStack Table.",
   "license": "MIT",
   "repository": {
@@ -53,7 +53,7 @@
     "@angular/core": ">=21.0.0"
   },
   "devDependencies": {
-    "@angular/compiler": "^22.1.0",
-    "@angular/core": "^22.1.0"
+    "@angular/compiler": "^22.1.1",
+    "@angular/core": "^22.1.1"
   }
 }

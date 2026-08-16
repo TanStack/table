@@ -1,6 +1,7 @@
 import * as goober from 'goober'
 import { createMemo } from 'solid-js'
 import { createTheme } from '@tanstack/devtools-ui'
+import { resolveDevtoolsTheme } from '../panelProps'
 import { tokens } from './tokens'
 
 const stylesFactory = (theme: 'light' | 'dark') => {
@@ -398,7 +399,7 @@ const stylesFactory = (theme: 'light' | 'dark') => {
 
 export function useStyles() {
   const { theme } = createTheme()
-  const styles = createMemo(() => getStyles(theme()))
+  const styles = createMemo(() => getStyles(resolveDevtoolsTheme(theme())))
   return styles
 }
 

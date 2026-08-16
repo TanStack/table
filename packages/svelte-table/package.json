@@ -65,12 +65,12 @@
     "build": "svelte-package --input ./src --output ./dist"
   },
   "dependencies": {
-    "@tanstack/svelte-store": "^0.12.0",
+    "@tanstack/svelte-store": "^0.12.1",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
     "@sveltejs/package": "^2.5.8",
-    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@testing-library/svelte": "^5.4.2",
     "eslint-plugin-svelte": "^3.22.0",
     "svelte": "^5.56.8",

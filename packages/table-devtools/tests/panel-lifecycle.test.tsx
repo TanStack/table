@@ -54,6 +54,24 @@ describe('TableDevtools panel lifecycle', () => {
     cleanupTarget?.()
   })
 
+  it('accepts the nested theme object vue-devtools currently injects', async () => {
+    const { subscribe, table } = createDevtoolsTable()
+    const cleanupTarget = upsertTableDevtoolsTarget({
+      table: table as never,
+    })
+    const element = document.createElement('div')
+    const dispose = render(
+      () => <TableDevtools theme={{ theme: 'dark', devtoolsOpen: true }} />,
+      element,
+    )
+
+    await Promise.resolve()
+    expect(subscribe).toHaveBeenCalledTimes(1)
+
+    dispose()
+    cleanupTarget?.()
+  })
+
   it('subscribes only while the devtools panel is open', async () => {
     const { subscribe, table, unsubscribe } = createDevtoolsTable()
     const cleanupTarget = upsertTableDevtoolsTarget({

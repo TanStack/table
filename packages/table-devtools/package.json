@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/table-devtools",
-  "version": "9.1.2",
+  "version": "9.2.0",
   "description": "Devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -47,9 +47,9 @@
     "skills"
   ],
   "dependencies": {
-    "@tanstack/devtools-ui": "^0.6.0",
+    "@tanstack/devtools-ui": "^0.7.0",
     "@tanstack/devtools-utils": "^0.6.0",
-    "@tanstack/solid-store": "^0.11.0",
+    "@tanstack/solid-store": "^0.11.1",
     "goober": "^2.1.19",
     "solid-js": "^1.9.14"
   },

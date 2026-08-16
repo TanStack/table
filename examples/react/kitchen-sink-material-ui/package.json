@@ -19,13 +19,13 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@faker-js/faker": "^10.5.0",
-    "@mui/icons-material": "^9.2.0",
-    "@mui/material": "^9.2.0",
+    "@mui/icons-material": "^9.3.1",
+    "@mui/material": "^9.3.1",
     "@tanstack/match-sorter-utils": "^9.1.2",
-    "@tanstack/react-devtools": "^0.10.9",
-    "@tanstack/react-pacer": "^0.22.1",
+    "@tanstack/react-devtools": "^0.10.10",
+    "@tanstack/react-pacer": "^0.23.0",
     "@tanstack/react-table": "^9.1.2",
-    "@tanstack/react-table-devtools": "^9.1.2",
+    "@tanstack/react-table-devtools": "^9.2.0",
     "date-fns": "^4.4.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
@@ -38,6 +38,6 @@
     "@vitejs/plugin-react": "^6.0.5",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.0"
+    "vite": "^8.2.1"
   }
 }
