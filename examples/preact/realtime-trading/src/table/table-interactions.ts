@@ -101,6 +101,7 @@ export class TradingGridPointerController {
     const target = this.#findCellTarget(table, event.composedPath())
     if (!target) return
 
+    event.preventDefault()
     this.#lastPointerCell = target.element
     selectSymbol(target.cell.row.original.symbol)
     target.cell.getSelectionStartHandler(target.element.ownerDocument)(event)

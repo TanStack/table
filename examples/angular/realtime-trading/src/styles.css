@@ -356,6 +356,11 @@ table {
   display: grid;
 }
 
+.trading-data-grid tbody {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .trading-data-grid thead > tr,
 .trading-data-grid tbody > tr {
   display: flex;

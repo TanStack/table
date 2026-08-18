@@ -30,6 +30,7 @@ test('runs the Preact realtime trading workload', async ({ page }) => {
     await expect(virtualScrollSelect).toHaveValue('none')
     await expect(virtualScrollSelect).toBeEnabled()
     await expect(table.locator('tbody tr')).toHaveCount(100)
+    await expect(table.locator('tbody')).toHaveCSS('user-select', 'none')
     await expect(table.locator('tbody tr').first()).toHaveCSS(
       'content-visibility',
       'auto',

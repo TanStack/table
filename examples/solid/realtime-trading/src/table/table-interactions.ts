@@ -104,6 +104,7 @@ export function createTradingGridSelectionHandlers(
       const target = findCellTarget(table, event.composedPath())
       if (!target) return
 
+      event.preventDefault()
       runtime.lastCell = target.element
       selectSymbol(target.cell.row.original.symbol)
       target.cell.getSelectionStartHandler(target.element.ownerDocument)(event)

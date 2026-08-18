@@ -30,6 +30,7 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
     await expect(virtualScrollSelect).toHaveValue('none')
     await expect(virtualScrollSelect).toBeEnabled()
     await expect(table.locator('tbody tr')).toHaveCount(100)
+    await expect(table.locator('tbody')).toHaveCSS('user-select', 'none')
     const livePrice = table.locator('tbody tr').first().locator('td').nth(3)
     const initialPrice = await livePrice.textContent()
     await expect.poll(() => livePrice.textContent()).not.toBe(initialPrice)

@@ -133,12 +133,15 @@ function useTradingTableLayout(table: TradingTableInstance) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const tableRef = useRef<HTMLTableElement>(null)
   const fitRuntime = useRef({ manuallyResized: false })
+  const tableRuntime = useRef(table)
+  tableRuntime.current = table
 
   useLayoutEffect(() => {
     const writeColumnSizes = () => {
+      const currentTable = tableRuntime.current
       const tableElement = tableRef.current
       if (!tableElement) return
-      for (const header of table.getFlatHeaders()) {
+      for (const header of currentTable.getFlatHeaders()) {
         tableElement.style.setProperty(
           `--header-${header.id}-size`,
           String(header.getSize()),
@@ -148,38 +151,40 @@ function useTradingTableLayout(table: TradingTableInstance) {
           String(header.column.getSize()),
         )
       }
-      tableElement.style.width = `${table.getTotalSize()}px`
+      tableElement.style.width = `${currentTable.getTotalSize()}px`
     }
 
     writeColumnSizes()
-    const sizingSubscription =
-      table.atoms.columnSizing.subscribe(writeColumnSizes)
-    const orderSubscription =
-      table.atoms.columnOrder.subscribe(writeColumnSizes)
+    const sizingSubscription = tableRuntime.current.atoms.columnSizing.subscribe(
+      writeColumnSizes,
+    )
+    const orderSubscription = tableRuntime.current.atoms.columnOrder.subscribe(
+      writeColumnSizes,
+    )
     const fitAvailableWidth = () => {
+      const currentTable = tableRuntime.current
       const scrollElement = scrollRef.current
       if (!scrollElement || fitRuntime.current.manuallyResized) return
-      const currentWidth = table.getTotalSize()
+      const currentWidth = currentTable.getTotalSize()
       const availableWidth = scrollElement.clientWidth
       if (availableWidth <= currentWidth + 1 || currentWidth <= 0) return
 
       const ratio = availableWidth / currentWidth
-      table.setColumnSizing(
+      currentTable.setColumnSizing(
         Object.fromEntries(
-          table
+          currentTable
             .getVisibleLeafColumns()
             .map((column) => [column.id, column.getSize() * ratio]),
         ),
       )
     }
     const resizeObserver = new ResizeObserver(fitAvailableWidth)
-    const resizingSubscription = table.atoms.columnResizing.subscribe(
-      (state) => {
+    const resizingSubscription =
+      tableRuntime.current.atoms.columnResizing.subscribe((state) => {
         if (state.isResizingColumn !== false) {
           fitRuntime.current.manuallyResized = true
         }
-      },
-    )
+      })
     if (scrollRef.current) resizeObserver.observe(scrollRef.current)
     fitAvailableWidth()
 
@@ -189,7 +194,7 @@ function useTradingTableLayout(table: TradingTableInstance) {
       resizingSubscription.unsubscribe()
       resizeObserver.disconnect()
     }
-  }, [table])
+  }, [])
 
   return { scrollRef, tableRef }
 }
