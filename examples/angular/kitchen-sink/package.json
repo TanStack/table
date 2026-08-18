@@ -21,7 +21,7 @@
     "@angular/router": "^22.1.1",
     "@faker-js/faker": "^10.5.0",
     "@tanstack/angular-devtools": "^0.0.9",
-    "@tanstack/angular-table": "^9.1.3",
+    "@tanstack/angular-table": "^9.2.1",
     "@tanstack/angular-table-devtools": "^9.2.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
     "rxjs": "~7.8.2",
