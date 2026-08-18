@@ -10,33 +10,6 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { tableDevtoolsPlugin } from '@tanstack/react-table-devtools'
 import appCss from '../index.css?url'
 
-// Captures console errors/warnings (e.g. React hydration mismatches) from
-// before hydration starts so they can be inspected via window.__consoleLog.
-const consoleProbe = `
-window.__consoleLog = [];
-(function () {
-  var push = function (level, args) {
-    try {
-      window.__consoleLog.push({
-        level: level,
-        msg: Array.prototype.map
-          .call(args, function (a) {
-            return String((a && a.message) || (a && a.stack) || a);
-          })
-          .join(' ')
-          .slice(0, 10000),
-      });
-    } catch (e) {}
-  };
-  var origError = console.error;
-  var origWarn = console.warn;
-  console.error = function () { push('error', arguments); origError.apply(console, arguments); };
-  console.warn = function () { push('warn', arguments); origWarn.apply(console, arguments); };
-  window.addEventListener('error', function (e) { push('uncaught', [e.message]); });
-  window.addEventListener('unhandledrejection', function (e) { push('rejection', [e.reason]); });
-})();
-`
-
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -45,10 +18,7 @@ export const Route = createRootRoute({
       { title: 'TanStack Table Kitchen Sink (Start SSR)' },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
-    scripts: [
-      { src: 'https://unpkg.com/react-scan/dist/auto.global.js' },
-      { children: consoleProbe },
-    ],
+    scripts: [{ src: 'https://unpkg.com/react-scan/dist/auto.global.js' }],
   }),
   component: RootComponent,
 })
