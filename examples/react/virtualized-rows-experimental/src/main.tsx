@@ -213,30 +213,40 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
     rowVirtualizer.measure()
   }, [table.state])
 
+  const virtualRowIndexes = rowVirtualizer.getVirtualIndexes()
+  const totalSize = rowVirtualizer.getTotalSize()
+
   return (
     <TableBody
+      rows={rows}
       rowRefsMap={rowRefsMap}
       rowVirtualizer={rowVirtualizer}
-      table={table}
+      totalSize={totalSize}
+      virtualRowIndexes={virtualRowIndexes}
     />
   )
 }
 
 interface TableBodyProps {
-  table: ReactTable<typeof features, Person>
+  rows: Array<Row<typeof features, Person>>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
+  totalSize: number
+  virtualRowIndexes: Array<number>
 }
 
-function TableBody({ rowVirtualizer, table, rowRefsMap }: TableBodyProps) {
-  const { rows } = table.getRowModel()
-  const virtualRowIndexes = rowVirtualizer.getVirtualIndexes()
-
+function TableBody({
+  rows,
+  rowVirtualizer,
+  rowRefsMap,
+  totalSize,
+  virtualRowIndexes,
+}: TableBodyProps) {
   return (
     <tbody
       style={{
         display: 'grid',
-        height: `${rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+        height: `${totalSize}px`, // tells scrollbar how big the table is
         position: 'relative', // needed for absolute positioning of rows
       }}
     >

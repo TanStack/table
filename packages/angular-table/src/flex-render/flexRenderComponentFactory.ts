@@ -7,7 +7,6 @@ import {
   OutputRefSubscription,
   ViewContainerRef,
 } from '@angular/core'
-import { hasOwn } from '@tanstack/table-core'
 import type { FlexRenderComponent } from './flexRenderComponent'
 
 /**
@@ -112,7 +111,7 @@ export class FlexRenderComponentRef<T> {
   }
 
   setInputs(inputs: Record<string, unknown>) {
-    for (const prop in inputs) {
+    for (const prop of Object.keys(inputs)) {
       this.setInput(prop, inputs[prop])
     }
   }
@@ -130,7 +129,7 @@ export class FlexRenderComponentRef<T> {
     >,
   ) {
     this.#outputRegistry.unsubscribeAll()
-    for (const prop in outputs) {
+    for (const prop of Object.keys(outputs)) {
       this.setOutput(prop, outputs[prop])
     }
   }
@@ -169,10 +168,8 @@ export class FlexRenderComponentRef<T> {
   #syncInputs(newInputs: Record<string, unknown>): void {
     // Inputs use patch semantics: omitted keys keep their current value, while
     // an explicitly provided `undefined` is forwarded to Angular.
-    for (const prop in newInputs) {
-      if (hasOwn(newInputs, prop)) {
-        this.setInput(prop, newInputs[prop])
-      }
+    for (const prop of Object.keys(newInputs)) {
+      this.setInput(prop, newInputs[prop])
     }
   }
 
@@ -190,7 +187,7 @@ export class FlexRenderComponentRef<T> {
         this.#outputRegistry.unsubscribe(key)
       }
     }
-    for (const prop in outputs) {
+    for (const prop of outputKeys) {
       this.setOutput(prop, outputs[prop])
     }
   }

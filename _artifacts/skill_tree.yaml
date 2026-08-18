@@ -387,6 +387,7 @@ skills:
     requires: ['@tanstack/table-core#core', 'getting-started']
     sources:
       - 'TanStack/table:docs/framework/react/guide/table-state.md'
+      - 'TanStack/table:docs/framework/react/guide/react-compiler.md'
       - 'TanStack/table:examples/react/basic-subscribe'
       - 'TanStack/table:packages/react-table/src/Subscribe.ts'
       - 'TanStack/table:packages/react-table/src/useTable.ts'
