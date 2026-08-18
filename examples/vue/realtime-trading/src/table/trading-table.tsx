@@ -6,9 +6,9 @@ import {
   onMounted,
   onUpdated,
   ref,
+  watch,
   watchEffect,
 } from 'vue'
-import { useSelector } from '@tanstack/vue-store'
 import {
   FlexRender,
   createFilteredRowModel,
@@ -24,7 +24,6 @@ import { useTableBenchmark } from '../benchmark/use-table-benchmark'
 import {
   useMarketFeedController,
   useTradingShellController,
-  useTradingShellState,
 } from '../shell/trading-shell-context'
 import {
   TRADING_COLUMN_COUNT,
@@ -83,9 +82,7 @@ const TradingRowView = defineComponent({
     virtualRow: Object as PropType<VirtualItem>,
   },
   setup(props, { slots }) {
-    const selectedSymbol = useSelector(
-      useTradingShellController().renderAtoms.selectedSymbol,
-    )
+    const selectedSymbol = useTradingShellController().selectedSymbol
     return () => (
       <tr
         class={props.virtualRow ? 'virtual-table-row' : undefined}
@@ -116,39 +113,27 @@ export const TradingTable = defineComponent({
   setup() {
     const controller = useTradingShellController()
     const feed = useMarketFeedController()
-    const quotes = useSelector(feed.quotes)
-    const instrumentCount = useSelector(feed.instrumentCount)
-    const requestedVirtualScrollMode = useTradingShellState(
-      (state) => state.requestedVirtualScrollMode,
-    )
     const virtualScrollMode = computed(() =>
       resolveVirtualScrollMode(
-        requestedVirtualScrollMode.value,
-        instrumentCount.value,
+        controller.requestedVirtualScrollMode.value,
+        feed.instrumentCount.value,
       ),
     )
     const table = useTable({
       key: 'vue-realtime-trading',
       features,
       columns: tradingColumns,
-      get data() {
-        return quotes.value
-      },
+      data: feed.quotes,
       getRowId: (row: MarketQuote) => row.id,
       columnResizeMode: 'onChange',
       defaultColumn: { minSize: 56, maxSize: 800 },
       autoResetCellSelection: false,
     })
-    const tableState = useSelector(table.store, (state) => ({
-      sorting: state.sorting,
-      columnFilters: state.columnFilters,
-      columnOrder: state.columnOrder,
-      rowSelection: state.rowSelection,
-      cellSelection: state.cellSelection,
-    }))
     const rows = computed(() => {
-      void quotes.value
-      tableState.value
+      void feed.quotes.value
+      void table.atoms.sorting.get()
+      void table.atoms.columnFilters.get()
+      void table.atoms.columnOrder.get()
       return readMeasuredRows(() => table.getRowModel().rows)
     })
     const scrollElement = ref<HTMLDivElement | null>(null)
@@ -222,15 +207,21 @@ export const TradingTable = defineComponent({
       )
     }
     const resizeObserver = new ResizeObserver(fitAvailableWidth)
-    const sizingSubscription =
-      table.atoms.columnSizing.subscribe(writeColumnSizes)
-    const orderSubscription =
-      table.atoms.columnOrder.subscribe(writeColumnSizes)
-    const resizingSubscription = table.atoms.columnResizing.subscribe(
-      (state) => {
-        if (state.isResizingColumn !== false)
+    const stopLayoutWatch = watch(
+      [
+        () => table.atoms.columnSizing.get(),
+        () => table.atoms.columnOrder.get(),
+      ],
+      writeColumnSizes,
+      { flush: 'post' },
+    )
+    const stopResizingWatch = watch(
+      () => table.atoms.columnResizing.get().isResizingColumn,
+      (resizingColumn) => {
+        if (resizingColumn !== false)
           layoutRuntime.manuallyResized = true
       },
+      { flush: 'sync' },
     )
     onMounted(() => {
       nextTick(() => {
@@ -240,9 +231,8 @@ export const TradingTable = defineComponent({
       })
     })
     onBeforeUnmount(() => {
-      sizingSubscription.unsubscribe()
-      orderSubscription.unsubscribe()
-      resizingSubscription.unsubscribe()
+      stopLayoutWatch()
+      stopResizingWatch()
       resizeObserver.disconnect()
     })
     watchEffect(() => {
@@ -301,7 +291,6 @@ export const TradingTable = defineComponent({
     )
 
     return () => {
-      tableState.value
       const currentRows = rows.value
       const activeVirtualRows = virtualRows.value
       return (
@@ -466,7 +455,7 @@ export const TradingTable = defineComponent({
                     ? { height: `${currentRows.length * TRADING_ROW_HEIGHT}px` }
                     : undefined
                 }
-                data-source-row-count={quotes.value.length}
+                data-source-row-count={feed.quotes.value.length}
                 onMousedown={(event) =>
                   pointerInteractions.handleMouseDown(
                     table,

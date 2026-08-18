@@ -1,4 +1,4 @@
-import { batch, createAtom, createStore } from '@tanstack/store'
+import { ref, shallowRef } from 'vue'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import { FORCED_VIRTUALIZATION_ROW_COUNT } from '../table/trading-row-virtualizer'
 import {
@@ -11,14 +11,6 @@ import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { RendererMode } from '../table/trading-table'
 import type { VirtualScrollPreference } from '../table/trading-row-virtualizer'
 
-export interface TradingBenchmarkState {
-  requestedVirtualScrollMode: VirtualScrollPreference
-  metrics: FeedMetrics
-  mountedCells: number
-  liveComponents: number
-  longAnimationFramesSupported: boolean
-}
-
 export interface TradingBenchmarkActions {
   resetViewState: () => void
   setRendererMode: (mode: RendererMode) => void
@@ -28,20 +20,14 @@ export interface TradingBenchmarkActions {
   resetMarket: () => void
 }
 
-const initialState: TradingBenchmarkState = {
-  requestedVirtualScrollMode: 'auto',
-  metrics: initialMetrics,
-  mountedCells: 0,
-  liveComponents: 0,
-  longAnimationFramesSupported,
-}
-
 export class TradingBenchmarkController {
-  readonly store = createStore<TradingBenchmarkState>(initialState)
-  readonly renderAtoms = {
-    selectedSymbol: createAtom<string | null>(null),
-    rendererMode: createAtom<RendererMode>('stable'),
-  }
+  readonly requestedVirtualScrollMode = ref<VirtualScrollPreference>('auto')
+  readonly metrics = shallowRef<FeedMetrics>(initialMetrics)
+  readonly mountedCells = ref(0)
+  readonly liveComponents = ref(0)
+  readonly selectedSymbol = ref<string | null>(null)
+  readonly rendererMode = ref<RendererMode>('stable')
+  readonly longAnimationFramesSupported = longAnimationFramesSupported
   readonly monitor = new BenchmarkMonitor()
   readonly feed: MarketFeedController
   readonly actions: TradingBenchmarkActions
@@ -56,43 +42,36 @@ export class TradingBenchmarkController {
     this.feed = feed
     this.actions = {
       resetViewState: () => {
-        this.renderAtoms.selectedSymbol.set(null)
+        this.selectedSymbol.value = null
       },
       setRendererMode: (mode) => {
-        this.renderAtoms.rendererMode.set(mode)
+        this.rendererMode.value = mode
       },
       setVirtualScrollEnabled: (enabled) => {
         if (
-          this.feed.instrumentCount.get() >=
+          this.feed.instrumentCount.value >=
           FORCED_VIRTUALIZATION_ROW_COUNT
         ) {
           return
         }
-        this.#patch({
-          requestedVirtualScrollMode: enabled ? 'tanstack' : 'none',
-        })
+        this.requestedVirtualScrollMode.value = enabled ? 'tanstack' : 'none'
       },
       setRenderedRowCount: (count) => {
         const mountedCells = count * TRADING_COLUMN_COUNT
-        if (mountedCells !== this.store.get().mountedCells) {
-          this.#patch({ mountedCells })
+        if (mountedCells !== this.mountedCells.value) {
+          this.mountedCells.value = mountedCells
         }
       },
       selectSymbol: (symbol) => {
-        this.renderAtoms.selectedSymbol.set(symbol)
+        this.selectedSymbol.value = symbol
       },
       resetMarket: () => {
-        batch(() => {
-          this.monitor.reset()
-          this.store.setState((state) => ({
-            ...state,
-            metrics: { ...initialMetrics },
-            mountedCells: 0,
-            liveComponents: 0,
-          }))
-          this.renderAtoms.selectedSymbol.set(null)
-          this.feed.actions.reset()
-        })
+        this.monitor.reset()
+        this.metrics.value = { ...initialMetrics }
+        this.mountedCells.value = 0
+        this.liveComponents.value = 0
+        this.selectedSymbol.value = null
+        this.feed.actions.reset()
       },
     }
   }
@@ -141,14 +120,9 @@ export class TradingBenchmarkController {
     this.#runtime.animationFrameId = requestAnimationFrame(this.#benchmarkFrame)
   }
 
-  #patch(patch: Partial<TradingBenchmarkState>): void {
-    this.store.setState((state) => ({ ...state, ...patch }))
-  }
-
   #publishMetrics(metrics: FeedMetrics): void {
-    this.#patch({
-      metrics,
-      liveComponents: metrics.componentsCreated - metrics.componentsDestroyed,
-    })
+    this.metrics.value = metrics
+    this.liveComponents.value =
+      metrics.componentsCreated - metrics.componentsDestroyed
   }
 }

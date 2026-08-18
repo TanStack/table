@@ -1,5 +1,4 @@
 import { computed, defineComponent, ref } from 'vue'
-import { useSelector } from '@tanstack/vue-store'
 import {
   feedSampleRateAt,
   feedSampleRateIndex,
@@ -12,7 +11,6 @@ import {
 import {
   useMarketFeedController,
   useTradingShellController,
-  useTradingShellState,
 } from './trading-shell-context'
 import { configuratorOptions } from './configurator-options'
 import type { FeedMetrics } from '../benchmark/benchmark-monitor'
@@ -67,8 +65,6 @@ const AppHeader = defineComponent({
   },
   setup(props) {
     const feed = useMarketFeedController()
-    const workerReady = useSelector(feed.workerReady)
-    const running = useSelector(feed.running)
     return () => (
       <header class="app-bar">
         <div class="brand">
@@ -78,14 +74,14 @@ const AppHeader = defineComponent({
           <span
             class={[
               'feed-status',
-              workerReady.value && running.value && 'is-running',
+              feed.workerReady.value && feed.running.value && 'is-running',
             ]}
             data-testid="feed-status"
           >
             <span class="status-dot" aria-hidden="true" />
-            {!workerReady.value
+            {!feed.workerReady.value
               ? 'FEED CONNECTING'
-              : running.value
+              : feed.running.value
                 ? 'FEED LIVE'
                 : 'FEED PAUSED'}
           </span>
@@ -113,12 +109,9 @@ const AppHeader = defineComponent({
 const MetricsStrip = defineComponent({
   name: 'MetricsStrip',
   setup() {
-    const state = useTradingShellState((benchmark) => ({
-      metrics: benchmark.metrics,
-      longAnimationFramesSupported: benchmark.longAnimationFramesSupported,
-    }))
+    const controller = useTradingShellController()
     return () => {
-      const metrics = state.value.metrics
+      const metrics = controller.metrics.value
       return (
         <section class="metrics-strip" aria-labelledby="live-health">
           <h2 id="live-health">LIVE HEALTH</h2>
@@ -137,12 +130,12 @@ const MetricsStrip = defineComponent({
           <Metric
             label="LONG FRAMES"
             value={
-              state.value.longAnimationFramesSupported
+              controller.longAnimationFramesSupported
                 ? String(metrics.longAnimationFrames)
                 : 'N/A'
             }
             detail={
-              state.value.longAnimationFramesSupported
+              controller.longAnimationFramesSupported
                 ? `since reset · worst ${formatMs(metrics.worstLongAnimationFrameMs)}`
                 : 'unsupported by this browser'
             }
@@ -186,31 +179,27 @@ const Metric = defineComponent({
 const MarketStatusbar = defineComponent({
   name: 'MarketStatusbar',
   setup() {
-    const state = useTradingShellState((benchmark) => ({
-      lastBatchSize: benchmark.metrics.lastBatchSize,
-      lastUpdateCount: benchmark.metrics.lastUpdateCount,
-      mountedCells: benchmark.mountedCells,
-      liveComponents: benchmark.liveComponents,
-    }))
-    return () => (
-      <footer class="market-statusbar">
+    const controller = useTradingShellController()
+    return () => {
+      const metrics = controller.metrics.value
+      return <footer class="market-statusbar">
         <span>
           MESSAGE SAMPLES{' '}
-          <strong>{formatInteger(state.value.lastBatchSize)}</strong>
+          <strong>{formatInteger(metrics.lastBatchSize)}</strong>
         </span>
         <span>
           CHANGED ROWS{' '}
-          <strong>{formatInteger(state.value.lastUpdateCount)}</strong>
+          <strong>{formatInteger(metrics.lastUpdateCount)}</strong>
         </span>
         <span>
-          HOSTS <strong>{formatInteger(state.value.mountedCells)}</strong>
+          HOSTS <strong>{formatInteger(controller.mountedCells.value)}</strong>
         </span>
         <span>
           COMPONENTS{' '}
-          <strong>{formatInteger(state.value.liveComponents)}</strong>
+          <strong>{formatInteger(controller.liveComponents.value)}</strong>
         </span>
       </footer>
-    )
+    }
   },
 })
 
@@ -219,31 +208,13 @@ const Configurator = defineComponent({
   setup() {
     const controller = useTradingShellController()
     const feed = useMarketFeedController()
-    const running = useSelector(feed.running)
-    const instrumentCount = useSelector(feed.instrumentCount)
-    const targetTicksPerSecond = useSelector(feed.targetTicksPerSecond)
-    const publishIntervalMs = useSelector(feed.publishIntervalMs)
-    const updateSparklines = useSelector(feed.updateSparklines)
-    const sparklineSampleIntervalMs = useSelector(
-      feed.sparklineSampleIntervalMs,
-    )
-    const feedState = computed(() => ({
-      running: running.value,
-      instrumentCount: instrumentCount.value,
-      targetTicksPerSecond: targetTicksPerSecond.value,
-      publishIntervalMs: publishIntervalMs.value,
-      updateSparklines: updateSparklines.value,
-      sparklineSampleIntervalMs: sparklineSampleIntervalMs.value,
-    }))
-    const benchmarkState = useTradingShellState((state) => state)
-    const rendererMode = useSelector(controller.renderAtoms.rendererMode)
     const virtualScrollForced = computed(
-      () => feedState.value.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT,
+      () => feed.instrumentCount.value >= FORCED_VIRTUALIZATION_ROW_COUNT,
     )
     const virtualScrollMode = computed(() =>
       resolveVirtualScrollMode(
-        benchmarkState.value.requestedVirtualScrollMode,
-        feedState.value.instrumentCount,
+        controller.requestedVirtualScrollMode.value,
+        feed.instrumentCount.value,
       ),
     )
 
@@ -266,13 +237,13 @@ const Configurator = defineComponent({
             data-testid="feed-toggle"
             onClick={feed.actions.toggle}
           >
-            {feedState.value.running ? 'PAUSE FEED' : 'START FEED'}
+            {feed.running.value ? 'PAUSE FEED' : 'START FEED'}
           </button>
           <label class="field">
             <span>Instruments (rows)</span>
             <select
               data-testid="instrument-count-select"
-              value={feedState.value.instrumentCount}
+              value={feed.instrumentCount.value}
               onChange={(event) => {
                 controller.actions.resetViewState()
                 feed.actions.setInstrumentCount(numberValue(event))
@@ -285,7 +256,7 @@ const Configurator = defineComponent({
             <span>
               Synthetic quote workload
               <strong data-testid="target-sample-rate">
-                {formatRate(feedState.value.targetTicksPerSecond)} samples/s
+                {formatRate(feed.targetTicksPerSecond.value)} samples/s
               </strong>
             </span>
             <input
@@ -294,7 +265,7 @@ const Configurator = defineComponent({
               min={0}
               max={feedSampleRateOptions.length - 1}
               step={1}
-              value={feedSampleRateIndex(feedState.value.targetTicksPerSecond)}
+              value={feedSampleRateIndex(feed.targetTicksPerSecond.value)}
               onChange={(event) =>
                 feed.actions.setTargetRate(feedSampleRateAt(numberValue(event)))
               }
@@ -308,7 +279,7 @@ const Configurator = defineComponent({
             <span>Worker delivery interval</span>
             <select
               data-testid="publish-interval-select"
-              value={feedState.value.publishIntervalMs}
+              value={feed.publishIntervalMs.value}
               onChange={(event) =>
                 feed.actions.setPublishInterval(numberValue(event))
               }
@@ -343,7 +314,7 @@ const Configurator = defineComponent({
           <label class="toggle-field">
             <input
               type="checkbox"
-              checked={rendererMode.value === 'swap'}
+              checked={controller.rendererMode.value === 'swap'}
               onChange={(event) =>
                 controller.actions.setRendererMode(
                   checkedValue(event) ? 'swap' : 'stable',
@@ -358,7 +329,7 @@ const Configurator = defineComponent({
           <label class="toggle-field">
             <input
               type="checkbox"
-              checked={feedState.value.updateSparklines}
+              checked={feed.updateSparklines.value}
               onChange={(event) =>
                 feed.actions.setSparklineUpdates(checkedValue(event))
               }
@@ -372,7 +343,7 @@ const Configurator = defineComponent({
             <span>Intraday chart sampling</span>
             <select
               data-testid="sparkline-sample-interval-select"
-              value={feedState.value.sparklineSampleIntervalMs}
+              value={feed.sparklineSampleIntervalMs.value}
               onChange={(event) =>
                 feed.actions.setSparklineSampleInterval(numberValue(event))
               }
@@ -402,9 +373,9 @@ const Configurator = defineComponent({
 const Diagnostics = defineComponent({
   name: 'Diagnostics',
   setup() {
-    const state = useTradingShellState((benchmark) => benchmark)
+    const controller = useTradingShellController()
     return () => {
-      const { metrics } = state.value
+      const metrics = controller.metrics.value
       return (
         <section
           class="config-section diagnostics"
@@ -443,11 +414,11 @@ const Diagnostics = defineComponent({
             />
             <Diagnostic
               label="Mounted cells"
-              value={formatInteger(state.value.mountedCells)}
+              value={formatInteger(controller.mountedCells.value)}
             />
             <Diagnostic
               label="Live components"
-              value={formatInteger(state.value.liveComponents)}
+              value={formatInteger(controller.liveComponents.value)}
             />
             <Diagnostic
               label="Created / destroyed"
@@ -548,10 +519,8 @@ const SelectedInstrument = defineComponent({
   setup() {
     const controller = useTradingShellController()
     const feed = useMarketFeedController()
-    const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
-    const quotes = useSelector(feed.quotes)
     const selectedQuote = computed(() =>
-      feed.getQuoteBySymbol(quotes.value, selectedSymbol.value),
+      feed.getQuoteBySymbol(feed.quotes.value, controller.selectedSymbol.value),
     )
     return () => (
       <section

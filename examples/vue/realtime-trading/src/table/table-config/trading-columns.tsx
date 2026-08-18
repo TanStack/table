@@ -1,5 +1,4 @@
 import { defineComponent } from 'vue'
-import { useSelector } from '@tanstack/vue-store'
 import { useTradingShellController } from '../../shell/trading-shell-context'
 import {
   DownMoveCell,
@@ -256,9 +255,7 @@ const DayChangeCell = defineComponent({
     quote: { type: Object as PropType<MarketQuote>, required: true },
   },
   setup(props) {
-    const mode = useSelector(
-      useTradingShellController().renderAtoms.rendererMode,
-    )
+    const mode = useTradingShellController().rendererMode
     return () => {
       const change = getDayChange(props.quote)
       if (mode.value === 'stable') return <StableMoveCell move={change} />

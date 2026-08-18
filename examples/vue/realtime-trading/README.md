@@ -36,11 +36,11 @@ Use the production build for recordings; Vue development checks add overhead.
 
 `MarketFeedController` owns worker/feed state; `TradingBenchmarkController`
 observes it and owns benchmark/view state. Vue `provide`/`inject` distributes
-stable controller objects. `@tanstack/vue-store` selectors expose narrow
-reactive atoms instead of making the root consume the quotes and every metric.
-`quotes` is a dedicated high-frequency atom; feed status and each configuration
-value are independent atoms. Cleanup stops both controllers on application
-unmount.
+stable controller objects. The controllers use Vue primitives directly:
+`quotes` and metrics are independent `shallowRef` values, while feed status,
+configuration, selection, and view state use focused `ref` values. Consumers
+read only the refs they need, and the root never consumes the quote stream.
+Cleanup stops both controllers on application unmount.
 
 ## Feed and worker pipeline
 
@@ -73,11 +73,11 @@ double-click reset, drag ordering, CSS row hover, row selection, drag cell
 ranges, keyboard navigation, and component-based Price/Move/Percent/Sparkline
 cells.
 
-The table reads the dedicated quotes atom through a getter and uses the
-instrument ID for `getRowId`. Table state is selected independently from feed
-state; computed rows are invalidated only by the inputs relevant to the row
-model. Dedicated row views keep row markup and selected-instrument state below
-the whole-table boundary.
+The table accepts the dedicated quotes `shallowRef` directly and uses the
+instrument ID for `getRowId`. TanStack Vue Table's state atoms are Vue-backed,
+so row-model computations and layout watchers read only the required atoms from
+native `computed`/`watch` boundaries. Dedicated row views keep row markup and
+selected-instrument state below the whole-table boundary.
 
 A single `TradingGridPointerController` handles body pointer events. It maps
 `event.composedPath()` and data attributes back to the TanStack cell, avoiding
@@ -101,7 +101,7 @@ can reduce browser rendering but cannot prevent Vue from creating all rows.
 
 - market generation/coalescing is moved off the main thread;
 - immutable structural sharing preserves untouched rows/histories;
-- direct atom selectors and computed values narrow reactive invalidation;
+- focused Vue refs and computed values narrow reactive invalidation;
 - stable row and virtual item keys preserve identity;
 - row rendering is componentized without subscribing the app root to data;
 - pointer selection is delegated once;
