@@ -39,12 +39,8 @@ export class MarketFeedController {
   readonly targetTicksPerSecond = ref(
     initialMarketFeedConfig.targetSamplesPerSecond,
   )
-  readonly publishIntervalMs = ref(
-    initialMarketFeedConfig.publishIntervalMs,
-  )
-  readonly updateSparklines = ref(
-    initialMarketFeedConfig.updateSparklines,
-  )
+  readonly publishIntervalMs = ref(initialMarketFeedConfig.publishIntervalMs)
+  readonly updateSparklines = ref(initialMarketFeedConfig.updateSparklines)
   readonly sparklineSampleIntervalMs = ref(
     initialMarketFeedConfig.sparklineSampleIntervalMs,
   )
