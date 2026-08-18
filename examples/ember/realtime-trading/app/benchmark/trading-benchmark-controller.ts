@@ -52,9 +52,7 @@ export class TradingBenchmarkController {
         this.rendererMode = mode
       },
       setVirtualScrollEnabled: (enabled) => {
-        if (
-          this.feed.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
-        ) {
+        if (this.feed.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT) {
           return
         }
         this.requestedVirtualScrollMode = enabled ? 'tanstack' : 'none'
@@ -82,7 +80,10 @@ export class TradingBenchmarkController {
     const longAnimationFrameObserver = longAnimationFramesSupported
       ? new PerformanceObserver((entries) => {
           for (const entry of entries.getEntries()) {
-            this.monitor.recordLongAnimationFrame(entry.duration, entry.startTime)
+            this.monitor.recordLongAnimationFrame(
+              entry.duration,
+              entry.startTime,
+            )
           }
         })
       : null

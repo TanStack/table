@@ -4,10 +4,7 @@ import { TradingTableRow } from './trading-table-row'
 import type { Accessor, JSX } from 'solid-js'
 import type { TradingColumnSet } from './table-config/trading-columns'
 import type { TradingRowVirtualization } from './trading-row-virtualizer'
-import type {
-  TradingRow,
-  TradingTableInstance,
-} from './trading-table-features'
+import type { TradingRow, TradingTableInstance } from './trading-table-features'
 
 export interface TradingTableBodyProps {
   table: TradingTableInstance
@@ -24,10 +21,7 @@ export function TradingTableBody(props: TradingTableBodyProps) {
 
   return (
     <tbody {...bodyProps}>
-      <Show
-        when={props.virtualized()}
-        fallback={<FullTableRows {...props} />}
-      >
+      <Show when={props.virtualized()} fallback={<FullTableRows {...props} />}>
         <VirtualTableRows {...props} />
       </Show>
     </tbody>

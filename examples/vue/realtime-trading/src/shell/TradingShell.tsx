@@ -147,8 +147,8 @@ const MetricsStrip = defineComponent({
               {formatRate(metrics.rowUpdatesPerSecond)} rows/s
             </strong>
             <small>
-              {metrics.stateApplicationsPerSecond.toFixed(1)} snapshots/s ·
-              rows deduplicated per snapshot
+              {metrics.stateApplicationsPerSecond.toFixed(1)} snapshots/s · rows
+              deduplicated per snapshot
             </small>
           </article>
         </section>

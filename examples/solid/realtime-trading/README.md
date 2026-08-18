@@ -32,7 +32,7 @@ absolute timings.
 | `src/benchmark/`          | Benchmark monitor and the controller that exposes benchmark signals/actions.                       |
 | `src/shell/`              | Contexts, viewport shell, header, metrics, configurator, diagnostics, and selected instrument.     |
 | `src/table/table-config/` | Declarative columns, named cell renderers, component props, and quote value calculations.          |
-| `src/table/`              | Table model primitive, view components, interactions, layout, and virtualization.                    |
+| `src/table/`              | Table model primitive, view components, interactions, layout, and virtualization.                  |
 | `src/App.tsx`             | Creates feed/benchmark controllers and composes their providers with the table.                    |
 
 `createMarketFeedController` and `createTradingBenchmarkController` are

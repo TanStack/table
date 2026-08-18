@@ -121,10 +121,7 @@ export default class Configurator extends Component<Signature> {
           >
             {{#each this.options.instrumentCounts as |item|}}<option
                 value={{optionValue item}}
-                selected={{eq
-                  (optionValue item)
-                  this.instrumentCount
-                }}
+                selected={{eq (optionValue item) this.instrumentCount}}
               >{{optionLabel item}}</option>{{/each}}
           </select>
         </label>
@@ -152,10 +149,7 @@ export default class Configurator extends Component<Signature> {
           >
             {{#each this.options.workerDeliveryIntervals as |item|}}<option
                 value={{optionValue item}}
-                selected={{eq
-                  (optionValue item)
-                  this.publishIntervalMs
-                }}
+                selected={{eq (optionValue item) this.publishIntervalMs}}
               >{{optionLabel item}}</option>{{/each}}
           </select>
           <small>One coalesced worker message at this target cadence.</small>

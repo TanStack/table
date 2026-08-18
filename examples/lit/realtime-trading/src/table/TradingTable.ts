@@ -304,31 +304,32 @@ export class TradingTable extends ControllerElement {
                               ? html`<div
                                     class="leaf-header-content"
                                     @dragover=${(event: DragEvent) => {
-                                  event.preventDefault()
-                                  this.#showDrop(
-                                    header.column.id,
-                                    (
-                                      event.currentTarget as HTMLElement
-                                    ).closest('th'),
-                                  )
-                                }}
-                                    @drop=${(event: DragEvent) => {
-                                  event.preventDefault()
-                                  const source =
-                                    event.dataTransfer?.getData('text/plain') ||
-                                    this.#drag.columnId
-                                  if (source)
-                                    table.setColumnOrder(
-                                      reorderColumnIds(
-                                        table
-                                          .getVisibleLeafColumns()
-                                          .map((column) => column.id),
-                                        source,
+                                      event.preventDefault()
+                                      this.#showDrop(
                                         header.column.id,
-                                      ),
-                                    )
-                                  this.#clearDrag()
-                                }}
+                                        (
+                                          event.currentTarget as HTMLElement
+                                        ).closest('th'),
+                                      )
+                                    }}
+                                    @drop=${(event: DragEvent) => {
+                                      event.preventDefault()
+                                      const source =
+                                        event.dataTransfer?.getData(
+                                          'text/plain',
+                                        ) || this.#drag.columnId
+                                      if (source)
+                                        table.setColumnOrder(
+                                          reorderColumnIds(
+                                            table
+                                              .getVisibleLeafColumns()
+                                              .map((column) => column.id),
+                                            source,
+                                            header.column.id,
+                                          ),
+                                        )
+                                      this.#clearDrag()
+                                    }}
                                   >
                                     <button
                                       type="button"
@@ -336,21 +337,22 @@ export class TradingTable extends ControllerElement {
                                       draggable="true"
                                       aria-label="Move ${header.column.id} column"
                                       @dragstart=${(event: DragEvent) => {
-                                    this.#drag.columnId = header.column.id
-                                    this.#drag.source = (
-                                      event.currentTarget as HTMLElement
-                                    ).closest('th')
-                                    this.#drag.source?.classList.add(
-                                      'is-column-dragging',
-                                    )
-                                    if (event.dataTransfer) {
-                                      event.dataTransfer.effectAllowed = 'move'
-                                      event.dataTransfer.setData(
-                                        'text/plain',
-                                        header.column.id,
-                                      )
-                                    }
-                                  }}
+                                        this.#drag.columnId = header.column.id
+                                        this.#drag.source = (
+                                          event.currentTarget as HTMLElement
+                                        ).closest('th')
+                                        this.#drag.source?.classList.add(
+                                          'is-column-dragging',
+                                        )
+                                        if (event.dataTransfer) {
+                                          event.dataTransfer.effectAllowed =
+                                            'move'
+                                          event.dataTransfer.setData(
+                                            'text/plain',
+                                            header.column.id,
+                                          )
+                                        }
+                                      }}
                                       @dragend=${this.#clearDrag}
                                     >
                                       ⋮⋮</button

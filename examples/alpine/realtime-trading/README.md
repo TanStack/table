@@ -24,16 +24,16 @@ Use a production build for performance recordings.
 
 ## Structure and ownership
 
-| Path                                | Responsibility                                                                                                |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Path                                | Responsibility                                                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `src/feed/`                         | Market model, instrument universe, feed config, immutable update helpers, and direct TanStack atom controller. |
-| `src/feed/worker/`                  | Typed protocol, deterministic engine, and module worker.                                                      |
-| `src/benchmark/`                    | Browser monitor and benchmark controller.                                                                     |
-| `src/shell/configurator-options.ts` | Declarative select/range options used by the sidebar.                                                         |
-| `src/table/table-config/`           | Grouped columns and custom quote elements.                                                                    |
-| `src/table/`                        | Shared interaction helpers and virtualization constants.                                                      |
-| `src/main.ts`                       | Alpine component factory and the imperative bridges to Store, Table, Virtual Core, observers, and DOM layout. |
-| `index.html`                        | Declarative full-viewport shell, table template, controls, diagnostics, and status bar.                       |
+| `src/feed/worker/`                  | Typed protocol, deterministic engine, and module worker.                                                       |
+| `src/benchmark/`                    | Browser monitor and benchmark controller.                                                                      |
+| `src/shell/configurator-options.ts` | Declarative select/range options used by the sidebar.                                                          |
+| `src/table/table-config/`           | Grouped columns and custom quote elements.                                                                     |
+| `src/table/`                        | Shared interaction helpers and virtualization constants.                                                       |
+| `src/main.ts`                       | Alpine component factory and the imperative bridges to Store, Table, Virtual Core, observers, and DOM layout.  |
+| `index.html`                        | Declarative full-viewport shell, table template, controls, diagnostics, and status bar.                        |
 
 Alpine keeps the markup declarative in `index.html`; `tradingApp` owns only the
 runtime coordination that cannot live in HTML. Feed and benchmark remain
