@@ -287,11 +287,11 @@ export class TradingTable extends ControllerElement {
                         class="${!leaf ? 'column-group-header' : ''} ${leaf && !['market', 'name', 'symbol'].includes(header.column.id) ? 'numeric-header' : ''}"
                       >
                         ${
-                      !header.isPlaceholder
-                        ? leaf
-                          ? html`<div
-                                class="leaf-header-content"
-                                @dragover=${(event: DragEvent) => {
+                          !header.isPlaceholder
+                            ? leaf
+                              ? html`<div
+                                    class="leaf-header-content"
+                                    @dragover=${(event: DragEvent) => {
                                   event.preventDefault()
                                   this.#showDrop(
                                     header.column.id,
@@ -300,7 +300,7 @@ export class TradingTable extends ControllerElement {
                                     ).closest('th'),
                                   )
                                 }}
-                                @drop=${(event: DragEvent) => {
+                                    @drop=${(event: DragEvent) => {
                                   event.preventDefault()
                                   const source =
                                     event.dataTransfer?.getData('text/plain') ||
@@ -317,13 +317,13 @@ export class TradingTable extends ControllerElement {
                                     )
                                   this.#clearDrag()
                                 }}
-                              >
-                                <button
-                                  type="button"
-                                  class="column-drag-handle"
-                                  draggable="true"
-                                  aria-label="Move ${header.column.id} column"
-                                  @dragstart=${(event: DragEvent) => {
+                                  >
+                                    <button
+                                      type="button"
+                                      class="column-drag-handle"
+                                      draggable="true"
+                                      aria-label="Move ${header.column.id} column"
+                                      @dragstart=${(event: DragEvent) => {
                                     this.#drag.columnId = header.column.id
                                     this.#drag.source = (
                                       event.currentTarget as HTMLElement
@@ -339,24 +339,24 @@ export class TradingTable extends ControllerElement {
                                       )
                                     }
                                   }}
-                                  @dragend=${this.#clearDrag}
-                                >
-                                  ⋮⋮</button
-                                ><button
-                                  type="button"
-                                  class="sort-header-button ${header.column.getCanSort() ? 'is-sortable' : ''}"
-                                  ?disabled=${!header.column.getCanSort()}
-                                  @click=${header.column.getToggleSortingHandler()}
-                                >
-                                  <span class="header-label"
-                                    >${FlexRender({ header })}</span
-                                  >${header.column.getCanSort() ? html`<span class="sort-indicator ${sorted ? 'is-active' : ''}" aria-hidden="true">${sortIndicator(sorted)}</span>` : null}
-                                </button>
-                              </div>
-                              ${header.column.getCanResize() ? html`<div class="column-resize-handle ${header.column.getIsResizing() ? 'is-resizing' : ''}" role="separator" aria-orientation="vertical" @dblclick=${() => header.column.resetSize()} @mousedown=${header.getResizeHandler()} @touchstart=${header.getResizeHandler()}></div>` : null}`
-                          : FlexRender({ header })
-                        : null
-                    }
+                                      @dragend=${this.#clearDrag}
+                                    >
+                                      ⋮⋮</button
+                                    ><button
+                                      type="button"
+                                      class="sort-header-button ${header.column.getCanSort() ? 'is-sortable' : ''}"
+                                      ?disabled=${!header.column.getCanSort()}
+                                      @click=${header.column.getToggleSortingHandler()}
+                                    >
+                                      <span class="header-label"
+                                        >${FlexRender({ header })}</span
+                                      >${header.column.getCanSort() ? html`<span class="sort-indicator ${sorted ? 'is-active' : ''}" aria-hidden="true">${sortIndicator(sorted)}</span>` : null}
+                                    </button>
+                                  </div>
+                                  ${header.column.getCanResize() ? html`<div class="column-resize-handle ${header.column.getIsResizing() ? 'is-resizing' : ''}" role="separator" aria-orientation="vertical" @dblclick=${() => header.column.resetSize()} @mousedown=${header.getResizeHandler()} @touchstart=${header.getResizeHandler()}></div>` : null}`
+                              : FlexRender({ header })
+                            : null
+                        }
                       </th>`
                     },
                   )}
