@@ -1,4 +1,4 @@
-import { batch, createStore } from '@tanstack/react-store'
+import { batch, createAtom } from '@tanstack/react-store'
 import { normalizeFeedSampleRate } from './feed-sample-rates'
 import { initialMarketFeedConfig } from './market-feed-config'
 import { applyMarketUpdates, hydrateMarketQuotes } from './market-data'
@@ -7,17 +7,6 @@ import type {
   MarketFeedEvent,
 } from './worker/market-feed-protocol'
 import type { MarketQuote } from './market-data'
-
-export interface MarketFeedState {
-  workerReady: boolean
-  running: boolean
-  instrumentCount: number
-  targetTicksPerSecond: number
-  publishIntervalMs: number
-  updateSparklines: boolean
-  sparklineSampleIntervalMs: number
-  quotes: Array<MarketQuote>
-}
 
 export interface MarketFeedBatch {
   tickCount: number
@@ -43,19 +32,23 @@ export interface MarketFeedActions {
   reset: () => void
 }
 
-const initialState: MarketFeedState = {
-  workerReady: false,
-  running: true,
-  instrumentCount: initialMarketFeedConfig.instrumentCount,
-  targetTicksPerSecond: initialMarketFeedConfig.targetSamplesPerSecond,
-  publishIntervalMs: initialMarketFeedConfig.publishIntervalMs,
-  updateSparklines: initialMarketFeedConfig.updateSparklines,
-  sparklineSampleIntervalMs: initialMarketFeedConfig.sparklineSampleIntervalMs,
-  quotes: [],
-}
-
 export class MarketFeedController {
-  readonly store = createStore<MarketFeedState>(initialState)
+  readonly workerReady = createAtom(false)
+  readonly running = createAtom(true)
+  readonly instrumentCount = createAtom(initialMarketFeedConfig.instrumentCount)
+  readonly targetTicksPerSecond = createAtom(
+    initialMarketFeedConfig.targetSamplesPerSecond,
+  )
+  readonly publishIntervalMs = createAtom(
+    initialMarketFeedConfig.publishIntervalMs,
+  )
+  readonly updateSparklines = createAtom(
+    initialMarketFeedConfig.updateSparklines,
+  )
+  readonly sparklineSampleIntervalMs = createAtom(
+    initialMarketFeedConfig.sparklineSampleIntervalMs,
+  )
+  readonly quotes = createAtom<Array<MarketQuote>>([])
   readonly actions: MarketFeedActions
   readonly #observers = new Set<MarketFeedObserver>()
   readonly #runtime = {
@@ -70,38 +63,36 @@ export class MarketFeedController {
   constructor() {
     this.actions = {
       toggle: () => {
-        const running = !this.store.get().running
-        this.#patch({ running })
+        const running = !this.running.get()
+        this.running.set(running)
         this.#post({ type: 'set-running', running })
       },
       setInstrumentCount: (count) => {
-        this.#patch({ instrumentCount: count })
+        this.instrumentCount.set(count)
         this.#resetWorker(count)
       },
       setTargetRate: (rate) => {
         const sampleRate = normalizeFeedSampleRate(rate)
-        this.#patch({
-          targetTicksPerSecond: sampleRate,
-        })
+        this.targetTicksPerSecond.set(sampleRate)
         this.#post({ type: 'set-rate', ticksPerSecond: sampleRate })
       },
       setPublishInterval: (publishIntervalMs) => {
-        this.#patch({ publishIntervalMs })
+        this.publishIntervalMs.set(publishIntervalMs)
         this.#post({
           type: 'set-publish-interval',
           intervalMs: publishIntervalMs,
         })
       },
       setSparklineUpdates: (enabled) => {
-        this.#patch({ updateSparklines: enabled })
+        this.updateSparklines.set(enabled)
         this.#post({ type: 'set-sparklines', enabled })
       },
       setSparklineSampleInterval: (intervalMs) => {
-        this.#patch({ sparklineSampleIntervalMs: intervalMs })
+        this.sparklineSampleIntervalMs.set(intervalMs)
         this.#post({ type: 'set-sparkline-interval', intervalMs })
       },
       runBurst: () => this.#post({ type: 'burst', tickCount: 25_000 }),
-      reset: () => this.#resetWorker(this.store.get().instrumentCount),
+      reset: () => this.#resetWorker(this.instrumentCount.get()),
     }
   }
 
@@ -113,15 +104,14 @@ export class MarketFeedController {
     this.#runtime.worker = worker
     worker.addEventListener('message', this.#handleWorkerMessage)
     worker.addEventListener('error', this.#handleWorkerError)
-    const state = this.store.get()
     this.#post({
       type: 'start',
-      rowCount: state.instrumentCount,
-      running: state.running,
-      ticksPerSecond: state.targetTicksPerSecond,
-      publishIntervalMs: state.publishIntervalMs,
-      updateSparklines: state.updateSparklines,
-      sparklineSampleIntervalMs: state.sparklineSampleIntervalMs,
+      rowCount: this.instrumentCount.get(),
+      running: this.running.get(),
+      ticksPerSecond: this.targetTicksPerSecond.get(),
+      publishIntervalMs: this.publishIntervalMs.get(),
+      updateSparklines: this.updateSparklines.get(),
+      sparklineSampleIntervalMs: this.sparklineSampleIntervalMs.get(),
     })
     return () => this.stop()
   }
@@ -165,7 +155,7 @@ export class MarketFeedController {
     ) {
       this.#runtime.resetWaitingForCommit = false
       this.#runtime.resetSnapshotReady = false
-      this.#post({ type: 'set-running', running: this.store.get().running })
+      this.#post({ type: 'set-running', running: this.running.get() })
     }
   }
 
@@ -183,10 +173,8 @@ export class MarketFeedController {
         quotes.map((quote, index) => [quote.symbol, index]),
       )
       batch(() => {
-        this.#patch({
-          quotes,
-          workerReady: true,
-        })
+        this.quotes.set(quotes)
+        this.workerReady.set(true)
       })
       return
     }
@@ -197,9 +185,7 @@ export class MarketFeedController {
       observer.messageReceived?.()
     }
     this.#startMutation()
-    this.#patch({
-      quotes: applyMarketUpdates(this.store.get().quotes, data.updates),
-    })
+    this.quotes.set(applyMarketUpdates(this.quotes.get(), data.updates))
     const feedBatch = {
       tickCount: data.tickCount,
       updateCount: data.updates.length,
@@ -211,12 +197,15 @@ export class MarketFeedController {
   }
 
   readonly #handleWorkerError = (error: ErrorEvent): void => {
-    this.#patch({ workerReady: false, running: false })
+    batch(() => {
+      this.workerReady.set(false)
+      this.running.set(false)
+    })
     console.error('Market feed worker failed', error)
   }
 
   #resetWorker(rowCount: number): void {
-    this.#patch({ workerReady: false })
+    this.workerReady.set(false)
     this.#runtime.resetWaitingForCommit = true
     this.#runtime.resetSnapshotReady = false
     this.#post({ type: 'set-running', running: false })
@@ -228,10 +217,6 @@ export class MarketFeedController {
     for (const observer of this.#observers) {
       observer.mutationStarted?.()
     }
-  }
-
-  #patch(patch: Partial<MarketFeedState>): void {
-    this.store.setState((state) => ({ ...state, ...patch }))
   }
 
   #post(command: MarketFeedCommand): void {

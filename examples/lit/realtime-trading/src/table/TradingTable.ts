@@ -88,7 +88,8 @@ export class TradingTable extends ControllerElement {
   #cleanup: Array<() => void> = []
 
   protected firstUpdated() {
-    this.observe(this.feed.store)
+    this.observe(this.feed.quotes)
+    this.observe(this.feed.instrumentCount)
     this.observe(this.controller.store)
     this.observe(this.controller.renderAtoms.rendererMode)
     this.observe(this.controller.renderAtoms.selectedSymbol)
@@ -179,7 +180,7 @@ export class TradingTable extends ControllerElement {
         key: 'lit-realtime-trading',
         features,
         columns: this.#columns,
-        data: this.feed.store.get().quotes,
+        data: this.feed.quotes.get(),
         getRowId: (row) => row.id,
         columnResizeMode: 'onChange',
         defaultColumn: { minSize: 56, maxSize: 800 },
@@ -198,7 +199,7 @@ export class TradingTable extends ControllerElement {
     const benchmark = this.controller.store.get()
     const virtualMode = resolveVirtualScrollMode(
       benchmark.requestedVirtualScrollMode,
-      this.feed.store.get().instrumentCount,
+      this.feed.instrumentCount.get(),
     )
     const virtualizer = this.#virtualizer.getVirtualizer()
     virtualizer.setOptions({
@@ -366,7 +367,7 @@ export class TradingTable extends ControllerElement {
           <tbody
             class=${virtualMode === 'tanstack' ? 'virtual-table-body' : ''}
             style=${virtualMode === 'tanstack' ? `height:${virtualizer.getTotalSize()}px` : ''}
-            data-source-row-count=${this.feed.store.get().quotes.length}
+            data-source-row-count=${this.feed.quotes.get().length}
             @mousedown=${(event: MouseEvent) => this.#pointer.handleMouseDown(table, event, this.controller.actions.selectSymbol)}
             @pointerover=${(event: MouseEvent) => this.#pointer.handlePointerOver(table, event)}
             @mouseleave=${() => this.#pointer.resetPointerCell()}

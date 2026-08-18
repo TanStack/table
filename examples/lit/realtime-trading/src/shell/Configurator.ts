@@ -44,10 +44,22 @@ export class Configurator extends ControllerElement {
   protected firstUpdated() {
     this.observe(this.controller.store)
     this.observe(this.controller.renderAtoms.rendererMode)
-    this.observe(this.feed.store)
+    this.observe(this.feed.running)
+    this.observe(this.feed.instrumentCount)
+    this.observe(this.feed.targetTicksPerSecond)
+    this.observe(this.feed.publishIntervalMs)
+    this.observe(this.feed.updateSparklines)
+    this.observe(this.feed.sparklineSampleIntervalMs)
   }
   protected render() {
-    const feedState = this.feed.store.get()
+    const feedState = {
+      running: this.feed.running.get(),
+      instrumentCount: this.feed.instrumentCount.get(),
+      targetTicksPerSecond: this.feed.targetTicksPerSecond.get(),
+      publishIntervalMs: this.feed.publishIntervalMs.get(),
+      updateSparklines: this.feed.updateSparklines.get(),
+      sparklineSampleIntervalMs: this.feed.sparklineSampleIntervalMs.get(),
+    }
     const benchmark = this.controller.store.get()
     const forced = feedState.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
     const virtualMode = resolveVirtualScrollMode(

@@ -3,10 +3,7 @@ import { tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
 import { observeValue } from '../../utils/subscriptions'
 import type Owner from '@ember/owner'
-import type {
-  MarketFeedController,
-  MarketFeedState,
-} from '../../feed/market-feed-controller'
+import type { MarketFeedController } from '../../feed/market-feed-controller'
 
 interface Signature {
   Args: {
@@ -17,18 +14,19 @@ interface Signature {
 }
 
 export default class AppHeader extends Component<Signature> {
-  @tracked feedState: MarketFeedState
+  @tracked workerReady: boolean
+  @tracked running: boolean
   constructor(owner: Owner, args: Signature['Args']) {
     super(owner, args)
-    this.feedState = args.feed.store.get()
-    observeValue(this, args.feed.store, (state) => {
-      this.feedState = state
-    })
+    this.workerReady = args.feed.workerReady.get()
+    this.running = args.feed.running.get()
+    observeValue(this, args.feed.workerReady, (value) => { this.workerReady = value })
+    observeValue(this, args.feed.running, (value) => { this.running = value })
   }
   get status() {
-    return !this.feedState.workerReady
+    return !this.workerReady
       ? 'FEED CONNECTING'
-      : this.feedState.running
+      : this.running
         ? 'FEED LIVE'
         : 'FEED PAUSED'
   }
@@ -39,7 +37,7 @@ export default class AppHeader extends Component<Signature> {
         <span
           class='feed-status
             {{if
-              (and this.feedState.workerReady this.feedState.running)
+              (and this.workerReady this.running)
               "is-running"
             }}'
           data-testid='feed-status'

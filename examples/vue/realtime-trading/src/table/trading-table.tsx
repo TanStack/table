@@ -23,7 +23,6 @@ import { useVirtualizer } from '@tanstack/vue-virtual'
 import { useTableBenchmark } from '../benchmark/use-table-benchmark'
 import {
   useMarketFeedController,
-  useMarketFeedState,
   useTradingShellController,
   useTradingShellState,
 } from '../shell/trading-shell-context'
@@ -117,8 +116,8 @@ export const TradingTable = defineComponent({
   setup() {
     const controller = useTradingShellController()
     const feed = useMarketFeedController()
-    const quotes = useMarketFeedState((state) => state.quotes)
-    const instrumentCount = useMarketFeedState((state) => state.instrumentCount)
+    const quotes = useSelector(feed.quotes)
+    const instrumentCount = useSelector(feed.instrumentCount)
     const requestedVirtualScrollMode = useTradingShellState(
       (state) => state.requestedVirtualScrollMode,
     )

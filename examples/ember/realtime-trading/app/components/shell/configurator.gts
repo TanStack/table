@@ -15,10 +15,7 @@ import { configuratorOptions } from './configurator-options'
 import Diagnostics from './diagnostics.gts'
 import SelectedInstrument from './selected-instrument.gts'
 import type Owner from '@ember/owner'
-import type {
-  MarketFeedController,
-  MarketFeedState,
-} from '../../feed/market-feed-controller'
+import type { MarketFeedController } from '../../feed/market-feed-controller'
 import type {
   TradingBenchmarkController,
   TradingBenchmarkState,
@@ -36,18 +33,31 @@ const rate = new Intl.NumberFormat('en-US', {
 export default class Configurator extends Component<Signature> {
   readonly feedSampleRateOptions = feedSampleRateOptions
   readonly options = configuratorOptions
-  @tracked feedState: MarketFeedState
+  @tracked running: boolean
+  @tracked instrumentCount: number
+  @tracked targetTicksPerSecond: number
+  @tracked publishIntervalMs: number
+  @tracked updateSparklines: boolean
+  @tracked sparklineSampleIntervalMs: number
   @tracked benchmark: TradingBenchmarkState
   @tracked rendererMode: RendererMode
 
   constructor(owner: Owner, args: Signature['Args']) {
     super(owner, args)
-    this.feedState = args.feed.store.get()
+    this.running = args.feed.running.get()
+    this.instrumentCount = args.feed.instrumentCount.get()
+    this.targetTicksPerSecond = args.feed.targetTicksPerSecond.get()
+    this.publishIntervalMs = args.feed.publishIntervalMs.get()
+    this.updateSparklines = args.feed.updateSparklines.get()
+    this.sparklineSampleIntervalMs = args.feed.sparklineSampleIntervalMs.get()
     this.benchmark = args.controller.store.get()
     this.rendererMode = args.controller.renderAtoms.rendererMode.get()
-    observeValue(this, args.feed.store, (state) => {
-      this.feedState = state
-    })
+    observeValue(this, args.feed.running, (value) => { this.running = value })
+    observeValue(this, args.feed.instrumentCount, (value) => { this.instrumentCount = value })
+    observeValue(this, args.feed.targetTicksPerSecond, (value) => { this.targetTicksPerSecond = value })
+    observeValue(this, args.feed.publishIntervalMs, (value) => { this.publishIntervalMs = value })
+    observeValue(this, args.feed.updateSparklines, (value) => { this.updateSparklines = value })
+    observeValue(this, args.feed.sparklineSampleIntervalMs, (value) => { this.sparklineSampleIntervalMs = value })
     observeValue(this, args.controller.store, (state) => {
       this.benchmark = state
     })
@@ -57,19 +67,19 @@ export default class Configurator extends Component<Signature> {
   }
 
   get virtualForced() {
-    return this.feedState.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
+    return this.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
   }
   get virtualMode() {
     return resolveVirtualScrollMode(
       this.benchmark.requestedVirtualScrollMode,
-      this.feedState.instrumentCount,
+      this.instrumentCount,
     )
   }
   get sampleRateIndex() {
-    return feedSampleRateIndex(this.feedState.targetTicksPerSecond)
+    return feedSampleRateIndex(this.targetTicksPerSecond)
   }
   get sampleRateLabel() {
-    return `${rate.format(this.feedState.targetTicksPerSecond)} samples/s`
+    return `${rate.format(this.targetTicksPerSecond)} samples/s`
   }
   get virtualDescription() {
     return this.virtualForced
@@ -118,18 +128,18 @@ export default class Configurator extends Component<Signature> {
           type='button'
           data-testid='feed-toggle'
           {{on 'click' @feed.actions.toggle}}
-        >{{if this.feedState.running 'PAUSE FEED' 'START FEED'}}</button>
+        >{{if this.running 'PAUSE FEED' 'START FEED'}}</button>
         <label class='field'><span>Instruments (rows)</span>
           <select
             data-testid='instrument-count-select'
-            value={{this.feedState.instrumentCount}}
+            value={{this.instrumentCount}}
             {{on 'change' this.setInstrumentCount}}
           >
             {{#each this.options.instrumentCounts as |item|}}<option
                 value={{optionValue item}}
                 selected={{eq
                   (optionValue item)
-                  this.feedState.instrumentCount
+                  this.instrumentCount
                 }}
               >{{optionLabel item}}</option>{{/each}}
           </select>
@@ -153,14 +163,14 @@ export default class Configurator extends Component<Signature> {
         <label class='field'><span>Worker delivery interval</span>
           <select
             data-testid='publish-interval-select'
-            value={{this.feedState.publishIntervalMs}}
+            value={{this.publishIntervalMs}}
             {{on 'change' this.setPublishInterval}}
           >
             {{#each this.options.workerDeliveryIntervals as |item|}}<option
                 value={{optionValue item}}
                 selected={{eq
                   (optionValue item)
-                  this.feedState.publishIntervalMs
+                  this.publishIntervalMs
                 }}
               >{{optionLabel item}}</option>{{/each}}
           </select>
@@ -191,21 +201,21 @@ export default class Configurator extends Component<Signature> {
               direction changes</small></span></label>
         <label class='toggle-field'><input
             type='checkbox'
-            checked={{this.feedState.updateSparklines}}
+            checked={{this.updateSparklines}}
             {{on 'change' this.setSparklineUpdates}}
           /><span>Update intraday charts<small>sample rolling prices
               independently</small></span></label>
         <label class='field'><span>Intraday chart sampling</span>
           <select
             data-testid='sparkline-sample-interval-select'
-            value={{this.feedState.sparklineSampleIntervalMs}}
+            value={{this.sparklineSampleIntervalMs}}
             {{on 'change' this.setSparklineInterval}}
           >
             {{#each this.options.intradaySamplingIntervals as |item|}}<option
                 value={{optionValue item}}
                 selected={{eq
                   (optionValue item)
-                  this.feedState.sparklineSampleIntervalMs
+                  this.sparklineSampleIntervalMs
                 }}
               >{{optionLabel item}}</option>{{/each}}
           </select>

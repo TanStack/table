@@ -63,7 +63,7 @@ export class TradingBenchmarkController {
       },
       setVirtualScrollEnabled: (enabled) => {
         if (
-          this.feed.store.get().instrumentCount >=
+          this.feed.instrumentCount.get() >=
           FORCED_VIRTUALIZATION_ROW_COUNT
         ) {
           return

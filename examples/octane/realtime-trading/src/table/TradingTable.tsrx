@@ -9,7 +9,7 @@ import {
   useTable,
 } from '@tanstack/octane-table'
 import { startTableBenchmark } from '../benchmark/table-benchmark'
-import { shallowEqual, useStoreSelector, useStoreValue } from '../use-store-value'
+import { useStoreSelector, useStoreValue } from '../use-store-value'
 import { createTradingColumns, readMeasuredRows } from './table-config/trading-columns.tsrx'
 import { handleCellNavigation, reorderColumnIds, sortAriaValue, sortIndicator } from './table-interactions'
 import { TRADING_ROW_HEIGHT, TRADING_ROW_OVERSCAN, resolveVirtualScrollMode, useVirtualizer } from './trading-row-virtualizer'
@@ -17,7 +17,6 @@ import { useTradingGridPointer } from './use-trading-grid-pointer'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { MarketQuote } from '../feed/market-data'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
-import type { MarketFeedState } from '../feed/market-feed-controller'
 import type { TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
 
 const features = tableFeatures({
@@ -28,10 +27,6 @@ const features = tableFeatures({
   sortFns: { basic: sortFn_basic },
 })
 
-const selectTableFeedState = (state: MarketFeedState) => ({
-  quotes: state.quotes,
-  instrumentCount: state.instrumentCount,
-})
 const selectRequestedVirtualScrollMode = (state: TradingBenchmarkState) =>
   state.requestedVirtualScrollMode
 
@@ -41,11 +36,8 @@ interface TradingTableProps {
 }
 
 export function TradingTable({ controller, feed }: TradingTableProps) @{
-  const feedState = useStoreSelector(
-    feed.store,
-    selectTableFeedState,
-    shallowEqual,
-  )
+  const quotes = useStoreValue(feed.quotes)
+  const instrumentCount = useStoreValue(feed.instrumentCount)
   const requestedVirtualScrollMode = useStoreSelector(
     controller.store,
     selectRequestedVirtualScrollMode,
@@ -61,7 +53,7 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
     {
       features,
       columns,
-      data: feedState.quotes,
+      data: quotes,
       getRowId: (row: MarketQuote) => row.id,
       columnResizeMode: 'onChange',
       defaultColumn: { minSize: 56, maxSize: 800 },
@@ -78,7 +70,7 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
   const rows = readMeasuredRows(() => table.getRowModel().rows)
   const virtualMode = resolveVirtualScrollMode(
     requestedVirtualScrollMode,
-    feedState.instrumentCount,
+    instrumentCount,
   )
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const tableRef = useRef<HTMLTableElement | null>(null)
@@ -288,7 +280,7 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
           ref={bodyRef}
           className={virtualMode === 'tanstack' ? 'virtual-table-body' : undefined}
           style={virtualMode === 'tanstack' ? { height: `${virtualizer.getTotalSize()}px` } : undefined}
-          data-source-row-count={feedState.quotes.length}
+          data-source-row-count={quotes.length}
           onMouseDown={pointer.onMouseDown}
           onPointerOver={pointer.onPointerOver}
           onMouseLeave={pointer.onMouseLeave}

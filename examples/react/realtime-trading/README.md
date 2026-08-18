@@ -45,7 +45,7 @@ available.
 | `src/feed/`               | Market types, instruments, feed configuration, immutable update helpers, controller, and React lifecycle hook. |
 | `src/feed/worker/`        | Worker protocol, deterministic market engine, and the module Web Worker.                                       |
 | `src/benchmark/`          | Browser monitor, benchmark controller, table observers, and React Profiler integration.                        |
-| `src/shell/`              | Store contexts, full-viewport shell, metrics, configurator, diagnostics, selected instrument, and status bar.  |
+| `src/shell/`              | Controller contexts, full-viewport shell, metrics, configurator, diagnostics, selected instrument, and status bar. |
 | `src/table/table-config/` | Grouped columns, row boundary, custom cells, and render counters.                                              |
 | `src/table/`              | Table instance, subscription boundaries, interactions, pointer hook, initial fit, and virtualization.          |
 | `src/App.tsx`             | Composition root; creates controllers, providers, shell, table, and Profiler boundary.                         |
@@ -90,7 +90,13 @@ an upstream WebSocket/SSE producer but does not include network latency.
 
 ## React state and rendering architecture
 
-- Feed and benchmark controllers use TanStack Store.
+- `MarketFeedController` exposes each feed value as a direct TanStack atom:
+  `quotes`, status, row count, workload, delivery, and chart controls do not
+  share one aggregate `MarketFeedState` notification.
+- `quotes` is its own high-frequency atom. The table subscribes to it directly,
+  while the header/configurator subscribe only to their lower-frequency atoms.
+- Benchmark summary state remains a TanStack Store because its metrics are
+  published together as one coherent snapshot.
 - `createStoreContext` provides the controllers without making every consumer
   subscribe to the complete state object.
 - Shell components call `useSelector` with narrow slices and shallow comparison

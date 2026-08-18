@@ -26,7 +26,7 @@ Use the production build for measurements.
 
 | Path                              | Responsibility                                                                                       |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `src/feed/`                       | Market types, instruments, configuration, immutable updates, and Store-backed feed controller.       |
+| `src/feed/`                       | Market types, instruments, configuration, immutable updates, and direct TanStack atom feed controller. |
 | `src/feed/worker/`                | Protocol, deterministic engine, and module worker.                                                   |
 | `src/benchmark/`                  | Browser monitor, benchmark controller, table timing, and row-model diagnostics.                      |
 | `src/shell/`                      | Custom elements for header, metrics, controls, diagnostics, selected instrument, status, and layout. |
@@ -37,7 +37,9 @@ Use the production build for measurements.
 
 The feed controller is independent from the benchmark controller. The root
 passes stable controller objects; each shell/table custom element observes the
-specific Store/atom sources it consumes. `ControllerElement` converts those
+specific atom/store sources it consumes. Quotes and every feed control/status
+value are independent direct atoms; the table observes only `quotes` and
+`instrumentCount`. `ControllerElement` converts those
 notifications into `requestUpdate()` and guarantees unsubscribe on disconnect,
 avoiding one broad application-level subscription.
 
@@ -94,7 +96,7 @@ all elements even when the browser skips some offscreen layout/paint.
 
 - worker-side generation and coalescing;
 - structural sharing for unchanged rows/history arrays;
-- source-specific Store subscriptions in custom elements;
+- source-specific atom/store subscriptions in custom elements;
 - stable keyed row/virtual identity;
 - lifecycle-safe controller element subscriptions;
 - delegated pointer input and CSS hover;

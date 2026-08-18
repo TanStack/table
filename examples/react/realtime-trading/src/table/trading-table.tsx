@@ -9,11 +9,11 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { useSelector } from '@tanstack/react-store'
 import { useLayoutEffect, useRef } from 'react'
 import { useTableBenchmark } from '../benchmark/use-table-benchmark'
 import {
   useMarketFeedController,
-  useMarketFeedState,
   useTradingShellController,
   useTradingShellState,
 } from '../shell/trading-shell-context'
@@ -64,11 +64,11 @@ const features = tableFeatures({
 export function TradingTable() {
   const controller = useTradingShellController()
   const feed = useMarketFeedController()
-  const quotes = useMarketFeedState((state) => state.quotes)
+  const quotes = useSelector(feed.quotes)
   const requestedVirtualScrollMode = useTradingShellState(
     (state) => state.requestedVirtualScrollMode,
   )
-  const instrumentCount = useMarketFeedState((state) => state.instrumentCount)
+  const instrumentCount = useSelector(feed.instrumentCount)
   const virtualScrollMode = resolveVirtualScrollMode(
     requestedVirtualScrollMode,
     instrumentCount,

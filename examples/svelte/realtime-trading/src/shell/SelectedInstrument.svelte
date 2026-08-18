@@ -3,7 +3,7 @@
   import { useMarketFeedController, useTradingShellController } from './trading-shell-context'
   const feed = useMarketFeedController()
   const selectedSymbol = useSelector(useTradingShellController().renderAtoms.selectedSymbol)
-  const quotes = useSelector(feed.store, (state) => state.quotes)
+  const quotes = useSelector(feed.quotes)
   const selectedQuote = $derived(feed.getQuoteBySymbol(quotes.current, selectedSymbol.current))
 </script>
 

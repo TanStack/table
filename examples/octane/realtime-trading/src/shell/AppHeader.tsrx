@@ -1,26 +1,18 @@
-import { shallowEqual, useStoreSelector } from '../use-store-value'
-import type { MarketFeedController, MarketFeedState } from '../feed/market-feed-controller'
-
-const selectFeedStatus = (state: MarketFeedState) => ({
-  workerReady: state.workerReady,
-  running: state.running,
-})
+import { useStoreValue } from '../use-store-value'
+import type { MarketFeedController } from '../feed/market-feed-controller'
 
 export function AppHeader(props: {
   feed: MarketFeedController
   sidebarOpen: boolean
   toggleSidebar: () => void
 }) @{
-  const state = useStoreSelector(
-    props.feed.store,
-    selectFeedStatus,
-    shallowEqual,
-  )
-  const status = !state.workerReady ? 'FEED CONNECTING' : state.running ? 'FEED LIVE' : 'FEED PAUSED'
+  const workerReady = useStoreValue(props.feed.workerReady)
+  const running = useStoreValue(props.feed.running)
+  const status = !workerReady ? 'FEED CONNECTING' : running ? 'FEED LIVE' : 'FEED PAUSED'
   <header className="app-bar">
     <div className="brand"><strong>MARKET MONITOR</strong></div>
     <div className="header-actions">
-      <span className={`feed-status ${state.workerReady && state.running ? 'is-running' : ''}`} data-testid="feed-status">
+      <span className={`feed-status ${workerReady && running ? 'is-running' : ''}`} data-testid="feed-status">
         <span className="status-dot" aria-hidden="true" />{status}
       </span>
       <button

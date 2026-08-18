@@ -26,7 +26,7 @@ build for performance recordings.
 
 | Path                            | Responsibility                                                                                                |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `app/feed/`                     | Market model, instrument universe, configuration, immutable update helpers, and Store-backed feed controller. |
+| `app/feed/`                     | Market model, instrument universe, configuration, immutable update helpers, and direct TanStack atom controller. |
 | `app/feed/worker/`              | Typed protocol, deterministic engine, and module worker.                                                      |
 | `app/benchmark/`                | Browser monitor and benchmark controller.                                                                     |
 | `app/components/shell/`         | GTS header, metrics, configurator, diagnostics, selected instrument, status bar, and shell layout.            |
@@ -39,9 +39,10 @@ build for performance recordings.
 `MarketFeedController` owns worker/feed state. `TradingBenchmarkController`
 observes feed lifecycle callbacks and owns diagnostic/view state. The
 application passes stable controllers to shell/table components; owner-bound
-subscription helpers bridge selected TanStack Store values into Glimmer and
-register destruction automatically. The root does not proxy every quote or
-metric as application state.
+subscription helpers bridge selected TanStack atoms or stores into tracked
+Glimmer fields and register destruction automatically. `quotes` is an isolated
+high-frequency atom; feed status and each configuration value are separate
+atoms. The root does not proxy every quote or metric as application state.
 
 ## Feed and worker pipeline
 
@@ -96,7 +97,7 @@ creates every Glimmer row/cell.
 
 - worker-side generation and pre-message coalescing;
 - immutable structural sharing for rows/history;
-- owner-bound, slice-oriented Store subscriptions;
+- owner-bound, source-specific atom/store subscriptions;
 - stable table and virtual row identity;
 - componentized GTS shell/table/cell boundaries;
 - delegated pointer input and CSS hover;

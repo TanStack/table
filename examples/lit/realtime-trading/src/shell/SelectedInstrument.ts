@@ -10,11 +10,11 @@ export class SelectedInstrument extends ControllerElement {
   @property({ attribute: false }) feed!: MarketFeedController
   protected firstUpdated() {
     this.observe(this.controller.renderAtoms.selectedSymbol)
-    this.observe(this.feed.store)
+    this.observe(this.feed.quotes)
   }
   protected render() {
     const quote = this.feed.getQuoteBySymbol(
-      this.feed.store.get().quotes,
+      this.feed.quotes.get(),
       this.controller.renderAtoms.selectedSymbol.get(),
     )
     return html`<section

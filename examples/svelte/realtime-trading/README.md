@@ -37,7 +37,10 @@ Use a production build for performance recordings.
 The feed and benchmark are separate controllers. The feed owns worker state and
 quotes; the benchmark registers observers and owns metrics/view controls.
 Svelte context passes those controllers without routing the quote array through
-the root component. Shell pieces subscribe only to the stores they display.
+the root component. `quotes` is a dedicated high-frequency TanStack atom, and
+each feed status/configuration value is a separate atom. Shell pieces subscribe
+only to the atoms they display; benchmark metrics remain a coherent snapshot
+store.
 
 ## Feed and worker pipeline
 
@@ -97,7 +100,7 @@ Svelte row/cell even if the browser skips offscreen paint/layout work.
 - immutable structural sharing for unchanged rows/history;
 - controller context instead of root-level data prop drilling;
 - stable keyed row identity;
-- table/config/cell component boundaries with localized store reads;
+- table/config/cell component boundaries with localized atom/store reads;
 - delegated pointer selection and CSS hover;
 - CSS variables for column width propagation;
 - configurable chart frequency and opt-in component churn;

@@ -23,14 +23,15 @@
   })
   const controller = useTradingShellController()
   const feed = useMarketFeedController()
-  const feedState = useSelector(feed.store)
+  const quotes = useSelector(feed.quotes)
+  const instrumentCount = useSelector(feed.instrumentCount)
   const benchmarkState = useSelector(controller.store)
   const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
   const table = createTable({
     key: 'svelte-realtime-trading',
     features,
     columns: tradingColumns,
-    get data() { return feedState.current.quotes },
+    get data() { return quotes.current },
     getRowId: (row: MarketQuote) => row.id,
     columnResizeMode: 'onChange',
     defaultColumn: { minSize: 56, maxSize: 800 },
@@ -43,9 +44,9 @@
     rowSelection: state.rowSelection,
     cellSelection: state.cellSelection,
   }))
-  const virtualScrollMode = $derived(resolveVirtualScrollMode(benchmarkState.current.requestedVirtualScrollMode, feedState.current.instrumentCount))
+  const virtualScrollMode = $derived(resolveVirtualScrollMode(benchmarkState.current.requestedVirtualScrollMode, instrumentCount.current))
   const rows = $derived.by(() => {
-    void feedState.current.quotes
+    void quotes.current
     void tableState.current
     return readMeasuredRows(() => table.getRowModel().rows)
   })
@@ -81,7 +82,7 @@
     })
   })
   $effect(() => { controller.actions.setRenderedRowCount(virtualScrollMode === 'tanstack' ? virtualRows.length : rows.length) })
-  $effect(() => { void feedState.current.quotes; tick().then(() => feed.completeRender()) })
+  $effect(() => { void quotes.current; tick().then(() => feed.completeRender()) })
 
   const writeColumnSizes = (): void => {
     if (!refs.table) return
@@ -153,7 +154,7 @@
     <!-- Delegated table-grid pointer handling intentionally lives on one tbody. -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-    <tbody class:virtual-table-body={virtualScrollMode === 'tanstack'} style:height={virtualScrollMode === 'tanstack' ? `${rows.length * TRADING_ROW_HEIGHT}px` : undefined} data-source-row-count={feedState.current.quotes.length} onmousedown={(event) => pointerInteractions.handleMouseDown(table, event, controller.actions.selectSymbol)} onpointerover={(event) => pointerInteractions.handlePointerOver(table, event)} onmouseleave={() => pointerInteractions.resetPointerCell()} onclick={(event) => pointerInteractions.handleClick(table, event)}>
+    <tbody class:virtual-table-body={virtualScrollMode === 'tanstack'} style:height={virtualScrollMode === 'tanstack' ? `${rows.length * TRADING_ROW_HEIGHT}px` : undefined} data-source-row-count={quotes.current.length} onmousedown={(event) => pointerInteractions.handleMouseDown(table, event, controller.actions.selectSymbol)} onpointerover={(event) => pointerInteractions.handlePointerOver(table, event)} onmouseleave={() => pointerInteractions.resetPointerCell()} onclick={(event) => pointerInteractions.handleClick(table, event)}>
       {#if virtualScrollMode === 'tanstack'}
         {#each virtualRows as virtualRow (virtualRow.key)}{@render renderRow(rows[virtualRow.index], virtualRow)}{/each}
       {:else}

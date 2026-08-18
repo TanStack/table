@@ -26,7 +26,7 @@ Use a production build for performance recordings.
 
 | Path                                | Responsibility                                                                                                |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `src/feed/`                         | Market model, instrument universe, feed config, immutable update helpers, and Store-backed feed controller.   |
+| `src/feed/`                         | Market model, instrument universe, feed config, immutable update helpers, and direct TanStack atom controller. |
 | `src/feed/worker/`                  | Typed protocol, deterministic engine, and module worker.                                                      |
 | `src/benchmark/`                    | Browser monitor and benchmark controller.                                                                     |
 | `src/shell/configurator-options.ts` | Declarative select/range options used by the sidebar.                                                         |
@@ -37,10 +37,11 @@ Use a production build for performance recordings.
 
 Alpine keeps the markup declarative in `index.html`; `tradingApp` owns only the
 runtime coordination that cannot live in HTML. Feed and benchmark remain
-separate controllers. Their Store values are copied into one Alpine reactive
-view object by subscriptions, while selected symbol and renderer mode stay in
+separate controllers. Direct feed atoms are bridged into an Alpine reactive view
+object individually: the high-frequency `quotes` atom is independent from
+status and configuration atoms. Selected symbol and renderer mode are also
 dedicated atoms. Every subscription, observer, virtualizer mount, controller,
-and worker has an explicit cleanup registered by `init()`/`destroy()`.
+and worker has explicit cleanup registered by `init()`/`destroy()`.
 
 ## Feed and worker pipeline
 

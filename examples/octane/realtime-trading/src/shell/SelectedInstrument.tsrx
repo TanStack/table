@@ -6,9 +6,9 @@ export function SelectedInstrument(props: {
   controller: TradingBenchmarkController
   feed: MarketFeedController
 }) @{
-  const feedState = useStoreValue(props.feed.store)
+  const quotes = useStoreValue(props.feed.quotes)
   const symbol = useStoreValue(props.controller.renderAtoms.selectedSymbol)
-  const quote = props.feed.getQuoteBySymbol(feedState.quotes, symbol)
+  const quote = props.feed.getQuoteBySymbol(quotes, symbol)
   <section className="config-section selected-instrument" data-testid="selected-instrument">
     <h2>SELECTED INSTRUMENT</h2>
     {quote ? <>

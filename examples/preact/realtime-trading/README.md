@@ -38,9 +38,11 @@ absolute cost.
 Feed state and benchmark state are different controllers. The feed does not
 depend on the monitor; the benchmark subscribes to feed lifecycle callbacks.
 TanStack Preact Store contexts pass stable controller objects, while components
-use selectors for the state slices they actually display. Renderer mode and
-selected symbol are separate atoms so their updates do not invalidate unrelated
-shell content.
+subscribe to direct feed atoms. `quotes` has an independent high-frequency atom;
+status, instrument count, workload, delivery, and chart settings each have their
+own atom and cannot notify the table data boundary. Renderer mode and selected
+symbol are also separate atoms so their updates do not invalidate unrelated
+shell content. Benchmark metrics remain an aggregate snapshot store.
 
 ## Feed and worker pipeline
 
@@ -105,7 +107,7 @@ avoid mounting every component in Full DOM mode.
 - worker-side generation and pre-message coalescing;
 - structural sharing for unchanged rows and histories;
 - stable table/virtualizer keys;
-- selector-based Preact Store subscriptions;
+- direct Preact Store atom subscriptions, including an isolated quote atom;
 - table/row/resize subscription boundaries;
 - one delegated grid interaction controller;
 - CSS variables for column sizing;

@@ -1,9 +1,6 @@
 import { createStoreContext, useSelector } from '@tanstack/react-store'
 import type { ReactNode } from 'react'
-import type {
-  MarketFeedController,
-  MarketFeedState,
-} from '../feed/market-feed-controller'
+import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../benchmark/use-trading-benchmark-controller'
 import type { TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
 import type { UseSelectorOptions } from '@tanstack/react-store'
@@ -49,13 +46,5 @@ export function useTradingShellState<TSelected>(
   options?: UseSelectorOptions<TSelected>,
 ): TSelected {
   const controller = useTradingShellController()
-  return useSelector(controller.store, selector, options)
-}
-
-export function useMarketFeedState<TSelected>(
-  selector: (state: MarketFeedState) => TSelected,
-  options?: UseSelectorOptions<TSelected>,
-): TSelected {
-  const controller = useMarketFeedController()
   return useSelector(controller.store, selector, options)
 }

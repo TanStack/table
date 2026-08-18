@@ -1,21 +1,13 @@
 import { feedSampleRateAt, feedSampleRateIndex, feedSampleRateOptions } from '../feed/feed-sample-rates'
 import { FORCED_VIRTUALIZATION_ROW_COUNT, resolveVirtualScrollMode } from '../table/trading-row-virtualizer'
-import { shallowEqual, useStoreSelector, useStoreValue } from '../use-store-value'
+import { useStoreSelector, useStoreValue } from '../use-store-value'
 import { configuratorOptions } from './configurator-options'
 import { Diagnostics } from './Diagnostics.tsrx'
 import { SelectedInstrument } from './SelectedInstrument.tsrx'
-import type { MarketFeedController, MarketFeedState } from '../feed/market-feed-controller'
+import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController, TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
 
 const rate = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
-const selectConfiguratorFeedState = (state: MarketFeedState) => ({
-  running: state.running,
-  instrumentCount: state.instrumentCount,
-  targetTicksPerSecond: state.targetTicksPerSecond,
-  publishIntervalMs: state.publishIntervalMs,
-  updateSparklines: state.updateSparklines,
-  sparklineSampleIntervalMs: state.sparklineSampleIntervalMs,
-})
 const selectRequestedVirtualScrollMode = (state: TradingBenchmarkState) =>
   state.requestedVirtualScrollMode
 
@@ -23,10 +15,13 @@ export function Configurator(props: {
   controller: TradingBenchmarkController
   feed: MarketFeedController
 }) @{
-  const feedState = useStoreSelector(
-    props.feed.store,
-    selectConfiguratorFeedState,
-    shallowEqual,
+  const running = useStoreValue(props.feed.running)
+  const instrumentCount = useStoreValue(props.feed.instrumentCount)
+  const targetTicksPerSecond = useStoreValue(props.feed.targetTicksPerSecond)
+  const publishIntervalMs = useStoreValue(props.feed.publishIntervalMs)
+  const updateSparklines = useStoreValue(props.feed.updateSparklines)
+  const sparklineSampleIntervalMs = useStoreValue(
+    props.feed.sparklineSampleIntervalMs,
   )
   const requestedVirtualScrollMode = useStoreSelector(
     props.controller.store,
@@ -34,10 +29,10 @@ export function Configurator(props: {
     Object.is,
   )
   const rendererMode = useStoreValue(props.controller.renderAtoms.rendererMode)
-  const forced = feedState.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
+  const forced = instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
   const virtualMode = resolveVirtualScrollMode(
     requestedVirtualScrollMode,
-    feedState.instrumentCount,
+    instrumentCount,
   )
   const value = (event: Event): string => (event.target as HTMLInputElement | HTMLSelectElement).value
   const number = (event: Event): number => Number(value(event))
@@ -48,13 +43,13 @@ export function Configurator(props: {
     <section className="config-section" aria-labelledby="feed-settings">
       <h2 id="feed-settings">FEED</h2>
       <button className="primary-action" type="button" data-testid="feed-toggle" onClick={props.feed.actions.toggle}>
-        {feedState.running ? 'PAUSE FEED' : 'START FEED'}
+        {running ? 'PAUSE FEED' : 'START FEED'}
       </button>
       <label className="field">
         <span>Instruments (rows)</span>
         <select
           data-testid="instrument-count-select"
-          value={feedState.instrumentCount}
+          value={instrumentCount}
           onChange={(event) => {
             props.controller.actions.resetViewState()
             props.feed.actions.setInstrumentCount(number(event))
@@ -66,21 +61,21 @@ export function Configurator(props: {
         </select>
       </label>
       <label className="field rate-field">
-        <span>Synthetic quote workload <strong data-testid="target-sample-rate">{rate.format(feedState.targetTicksPerSecond)} samples/s</strong></span>
+        <span>Synthetic quote workload <strong data-testid="target-sample-rate">{rate.format(targetTicksPerSecond)} samples/s</strong></span>
         <input
           data-testid="target-rate-slider"
           type="range"
           min="0"
           max={feedSampleRateOptions.length - 1}
           step="1"
-          value={feedSampleRateIndex(feedState.targetTicksPerSecond)}
+          value={feedSampleRateIndex(targetTicksPerSecond)}
           onChange={(event) => props.feed.actions.setTargetRate(feedSampleRateAt(number(event)))}
         />
         <small>Fixed worker-side workload levels. Samples are coalesced; this is not the message delivery rate.</small>
       </label>
       <label className="field">
         <span>Worker delivery interval</span>
-        <select data-testid="publish-interval-select" value={feedState.publishIntervalMs} onChange={(event) => props.feed.actions.setPublishInterval(number(event))}>
+        <select data-testid="publish-interval-select" value={publishIntervalMs} onChange={(event) => props.feed.actions.setPublishInterval(number(event))}>
           @for (const option of configuratorOptions.workerDeliveryIntervals; key option.value) {
             <option value={option.value}>{option.label}</option>
           }
@@ -109,12 +104,12 @@ export function Configurator(props: {
         <span>Swap Tick component A ↔ B<small>destroy and recreate when direction changes</small></span>
       </label>
       <label className="toggle-field">
-        <input type="checkbox" checked={feedState.updateSparklines} onChange={(event) => props.feed.actions.setSparklineUpdates(checked(event))} />
+        <input type="checkbox" checked={updateSparklines} onChange={(event) => props.feed.actions.setSparklineUpdates(checked(event))} />
         <span>Update intraday charts<small>sample rolling prices independently</small></span>
       </label>
       <label className="field">
         <span>Intraday chart sampling</span>
-        <select data-testid="sparkline-sample-interval-select" value={feedState.sparklineSampleIntervalMs} onChange={(event) => props.feed.actions.setSparklineSampleInterval(number(event))}>
+        <select data-testid="sparkline-sample-interval-select" value={sparklineSampleIntervalMs} onChange={(event) => props.feed.actions.setSparklineSampleInterval(number(event))}>
           @for (const option of configuratorOptions.intradaySamplingIntervals; key option.value) {
             <option value={option.value}>{option.label}</option>
           }

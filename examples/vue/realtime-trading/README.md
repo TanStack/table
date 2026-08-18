@@ -37,8 +37,10 @@ Use the production build for recordings; Vue development checks add overhead.
 `MarketFeedController` owns worker/feed state; `TradingBenchmarkController`
 observes it and owns benchmark/view state. Vue `provide`/`inject` distributes
 stable controller objects. `@tanstack/vue-store` selectors expose narrow
-reactive slices instead of making the root consume the quotes and every metric.
-Cleanup stops both controllers on application unmount.
+reactive atoms instead of making the root consume the quotes and every metric.
+`quotes` is a dedicated high-frequency atom; feed status and each configuration
+value are independent atoms. Cleanup stops both controllers on application
+unmount.
 
 ## Feed and worker pipeline
 
@@ -71,7 +73,7 @@ double-click reset, drag ordering, CSS row hover, row selection, drag cell
 ranges, keyboard navigation, and component-based Price/Move/Percent/Sparkline
 cells.
 
-The table reads the selected quotes store value through a getter and uses the
+The table reads the dedicated quotes atom through a getter and uses the
 instrument ID for `getRowId`. Table state is selected independently from feed
 state; computed rows are invalidated only by the inputs relevant to the row
 model. Dedicated row views keep row markup and selected-instrument state below
@@ -99,7 +101,7 @@ can reduce browser rendering but cannot prevent Vue from creating all rows.
 
 - market generation/coalescing is moved off the main thread;
 - immutable structural sharing preserves untouched rows/histories;
-- store selectors and computed values narrow reactive invalidation;
+- direct atom selectors and computed values narrow reactive invalidation;
 - stable row and virtual item keys preserve identity;
 - row rendering is componentized without subscribing the app root to data;
 - pointer selection is delegated once;

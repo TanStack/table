@@ -64,7 +64,16 @@ Alpine.data('tradingApp', () => {
   const feed = new MarketFeedController()
   const controller = new TradingBenchmarkController(feed)
   const local = Alpine.reactive({
-    feed: feed.store.get(),
+    feed: {
+      workerReady: feed.workerReady.get(),
+      running: feed.running.get(),
+      instrumentCount: feed.instrumentCount.get(),
+      targetTicksPerSecond: feed.targetTicksPerSecond.get(),
+      publishIntervalMs: feed.publishIntervalMs.get(),
+      updateSparklines: feed.updateSparklines.get(),
+      sparklineSampleIntervalMs: feed.sparklineSampleIntervalMs.get(),
+      quotes: feed.quotes.get(),
+    },
     benchmark: controller.store.get(),
     selectedSymbol: controller.renderAtoms.selectedSymbol.get(),
     rendererMode: controller.renderAtoms.rendererMode.get(),
@@ -217,8 +226,29 @@ Alpine.data('tradingApp', () => {
         subtree: true,
       })
       const subscriptions = [
-        feed.store.subscribe((state) => {
-          local.feed = state
+        feed.workerReady.subscribe((value) => {
+          local.feed.workerReady = value
+        }),
+        feed.running.subscribe((value) => {
+          local.feed.running = value
+        }),
+        feed.instrumentCount.subscribe((value) => {
+          local.feed.instrumentCount = value
+        }),
+        feed.targetTicksPerSecond.subscribe((value) => {
+          local.feed.targetTicksPerSecond = value
+        }),
+        feed.publishIntervalMs.subscribe((value) => {
+          local.feed.publishIntervalMs = value
+        }),
+        feed.updateSparklines.subscribe((value) => {
+          local.feed.updateSparklines = value
+        }),
+        feed.sparklineSampleIntervalMs.subscribe((value) => {
+          local.feed.sparklineSampleIntervalMs = value
+        }),
+        feed.quotes.subscribe((quotes) => {
+          local.feed.quotes = quotes
           Alpine.nextTick(() => feed.completeRender())
         }),
         controller.store.subscribe((state) => {

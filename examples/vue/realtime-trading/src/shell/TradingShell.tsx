@@ -11,7 +11,6 @@ import {
 } from '../table/trading-row-virtualizer'
 import {
   useMarketFeedController,
-  useMarketFeedState,
   useTradingShellController,
   useTradingShellState,
 } from './trading-shell-context'
@@ -68,10 +67,9 @@ const AppHeader = defineComponent({
     onSidebarToggle: { type: Function, required: true },
   },
   setup(props) {
-    const state = useMarketFeedState((feedState) => ({
-      workerReady: feedState.workerReady,
-      running: feedState.running,
-    }))
+    const feed = useMarketFeedController()
+    const workerReady = useSelector(feed.workerReady)
+    const running = useSelector(feed.running)
     return () => (
       <header class="app-bar">
         <div class="brand">
@@ -81,14 +79,14 @@ const AppHeader = defineComponent({
           <span
             class={[
               'feed-status',
-              state.value.workerReady && state.value.running && 'is-running',
+              workerReady.value && running.value && 'is-running',
             ]}
             data-testid="feed-status"
           >
             <span class="status-dot" aria-hidden="true" />
-            {!state.value.workerReady
+            {!workerReady.value
               ? 'FEED CONNECTING'
-              : state.value.running
+              : running.value
                 ? 'FEED LIVE'
                 : 'FEED PAUSED'}
           </span>
@@ -239,7 +237,22 @@ const Configurator = defineComponent({
   setup() {
     const controller = useTradingShellController()
     const feed = useMarketFeedController()
-    const feedState = useMarketFeedState((state) => state)
+    const running = useSelector(feed.running)
+    const instrumentCount = useSelector(feed.instrumentCount)
+    const targetTicksPerSecond = useSelector(feed.targetTicksPerSecond)
+    const publishIntervalMs = useSelector(feed.publishIntervalMs)
+    const updateSparklines = useSelector(feed.updateSparklines)
+    const sparklineSampleIntervalMs = useSelector(
+      feed.sparklineSampleIntervalMs,
+    )
+    const feedState = computed(() => ({
+      running: running.value,
+      instrumentCount: instrumentCount.value,
+      targetTicksPerSecond: targetTicksPerSecond.value,
+      publishIntervalMs: publishIntervalMs.value,
+      updateSparklines: updateSparklines.value,
+      sparklineSampleIntervalMs: sparklineSampleIntervalMs.value,
+    }))
     const benchmarkState = useTradingShellState((state) => state)
     const rendererMode = useSelector(controller.renderAtoms.rendererMode)
     const virtualScrollForced = computed(
@@ -524,7 +537,7 @@ const SelectedInstrument = defineComponent({
     const controller = useTradingShellController()
     const feed = useMarketFeedController()
     const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
-    const quotes = useMarketFeedState((state) => state.quotes)
+    const quotes = useSelector(feed.quotes)
     const selectedQuote = computed(() =>
       feed.getQuoteBySymbol(quotes.value, selectedSymbol.value),
     )

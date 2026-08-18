@@ -39,10 +39,7 @@ import {
 import { observeValue, registerCleanup } from '../../utils/subscriptions'
 import type Owner from '@ember/owner'
 import type { MarketQuote } from '../../feed/market-data'
-import type {
-  MarketFeedController,
-  MarketFeedState,
-} from '../../feed/market-feed-controller'
+import type { MarketFeedController } from '../../feed/market-feed-controller'
 import type {
   TradingBenchmarkController,
   TradingBenchmarkState,
@@ -70,7 +67,8 @@ const captureElement = modifier(
 )
 
 export default class TradingTable extends Component<Signature> {
-  @tracked feedState: MarketFeedState
+  @tracked quotes: Array<MarketQuote>
+  @tracked instrumentCount: number
   @tracked benchmark: TradingBenchmarkState
   @tracked rendererMode: RendererMode
   @tracked selectedSymbol: string | null
@@ -95,7 +93,8 @@ export default class TradingTable extends Component<Signature> {
 
   constructor(owner: Owner, args: Signature['Args']) {
     super(owner, args)
-    this.feedState = args.feed.store.get()
+    this.quotes = args.feed.quotes.get()
+    this.instrumentCount = args.feed.instrumentCount.get()
     this.benchmark = args.controller.store.get()
     this.rendererMode = args.controller.renderAtoms.rendererMode.get()
     this.selectedSymbol = args.controller.renderAtoms.selectedSymbol.get()
@@ -103,16 +102,19 @@ export default class TradingTable extends Component<Signature> {
     this.table = useTable(this, () => ({
       features: tradingFeatures,
       columns: this.columns,
-      data: this.feedState.quotes,
+      data: this.quotes,
       getRowId: (row: MarketQuote) => row.id,
       columnResizeMode: 'onChange' as const,
       defaultColumn: { minSize: 56, maxSize: 800 },
       autoResetCellSelection: false,
     }))
-    observeValue(this, args.feed.store, (state) => {
-      this.feedState = state
-      this.table.setOptions((options) => ({ ...options, data: state.quotes }))
+    observeValue(this, args.feed.quotes, (quotes) => {
+      this.quotes = quotes
+      this.table.setOptions((options) => ({ ...options, data: quotes }))
       queueMicrotask(() => args.feed.completeRender())
+    })
+    observeValue(this, args.feed.instrumentCount, (instrumentCount) => {
+      this.instrumentCount = instrumentCount
     })
     observeValue(this, args.controller.store, (state) => {
       this.benchmark = state
@@ -159,7 +161,7 @@ export default class TradingTable extends Component<Signature> {
   get virtualMode() {
     return resolveVirtualScrollMode(
       this.benchmark.requestedVirtualScrollMode,
-      this.feedState.instrumentCount,
+      this.instrumentCount,
     )
   }
   get renderedRows(): Array<RenderedRow> {
@@ -405,7 +407,7 @@ export default class TradingTable extends Component<Signature> {
         <tbody
           class={{if (eq this.virtualMode 'tanstack') 'virtual-table-body'}}
           style={{bodyStyle this.virtualMode this.totalVirtualHeight}}
-          data-source-row-count={{this.feedState.quotes.length}}
+          data-source-row-count={{this.quotes.length}}
           {{captureElement this.captureBody}}
           {{on 'mousedown' this.onBodyMouseDown}}
           {{on 'pointerover' this.onBodyPointerOver}}

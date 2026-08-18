@@ -9,18 +9,20 @@ export class AppHeader extends ControllerElement {
   @property({ type: Boolean }) sidebarOpen = true
   @property({ attribute: false }) toggleSidebar: () => void = () => undefined
   protected firstUpdated() {
-    this.observe(this.feed.store)
+    this.observe(this.feed.workerReady)
+    this.observe(this.feed.running)
   }
   protected render() {
-    const state = this.feed.store.get()
+    const workerReady = this.feed.workerReady.get()
+    const running = this.feed.running.get()
     return html`<header class="app-bar">
       <div class="brand"><strong>MARKET MONITOR</strong></div>
       <div class="header-actions">
         <span
-          class="feed-status ${state.workerReady && state.running ? 'is-running' : ''}"
+          class="feed-status ${workerReady && running ? 'is-running' : ''}"
           data-testid="feed-status"
           ><span class="status-dot" aria-hidden="true"></span
-          >${!state.workerReady ? 'FEED CONNECTING' : state.running ? 'FEED LIVE' : 'FEED PAUSED'}</span
+          >${!workerReady ? 'FEED CONNECTING' : running ? 'FEED LIVE' : 'FEED PAUSED'}</span
         ><button
           class="sidebar-toggle"
           type="button"

@@ -1,10 +1,7 @@
 import { inject, provide } from 'vue'
 import { useSelector } from '@tanstack/vue-store'
 import type { InjectionKey } from 'vue'
-import type {
-  MarketFeedController,
-  MarketFeedState,
-} from '../feed/market-feed-controller'
+import type { MarketFeedController } from '../feed/market-feed-controller'
 import type {
   TradingBenchmarkController,
   TradingBenchmarkState,
@@ -41,10 +38,4 @@ export function useTradingShellState<TSelected>(
   selector: (state: TradingBenchmarkState) => TSelected,
 ) {
   return useSelector(useTradingShellController().store, selector)
-}
-
-export function useMarketFeedState<TSelected>(
-  selector: (state: MarketFeedState) => TSelected,
-) {
-  return useSelector(useMarketFeedController().store, selector)
 }
