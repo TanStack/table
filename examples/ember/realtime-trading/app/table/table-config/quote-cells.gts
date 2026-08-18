@@ -9,12 +9,30 @@ import type { tradingFeatures } from '../trading-features'
 export const quoteCellLifecycle = { created: 0, destroyed: 0 }
 
 export const quoteCellRendererNames = [
-  'Market', 'Name', 'Symbol', 'Last', 'Change', 'ChangePercent', 'Bid',
-  'BidVolume', 'Ask', 'AskVolume', 'Open', 'High', 'Low', 'Intraday',
+  'Market',
+  'Name',
+  'Symbol',
+  'Last',
+  'Change',
+  'ChangePercent',
+  'Bid',
+  'BidVolume',
+  'Ask',
+  'AskVolume',
+  'Open',
+  'High',
+  'Low',
+  'Intraday',
 ] as const
 export const quoteComponentNames = [
-  'PriceCell', 'StableMoveCell', 'UpMoveCell', 'DownMoveCell',
-  'PercentChangeCell', 'SpreadCell', 'DepthCell', 'QuoteAgeCell',
+  'PriceCell',
+  'StableMoveCell',
+  'UpMoveCell',
+  'DownMoveCell',
+  'PercentChangeCell',
+  'SpreadCell',
+  'DepthCell',
+  'QuoteAgeCell',
   'SparklineCell',
 ] as const
 export type QuoteCellRendererName = (typeof quoteCellRendererNames)[number]
@@ -36,24 +54,44 @@ export function recordCellRender<T>(name: QuoteCellRendererName, value: T): T {
   return value
 }
 
-interface PriceOptions { selectSymbol: (symbol: string) => void }
+interface PriceOptions {
+  selectSymbol: (symbol: string) => void
+}
 abstract class QuoteCell<Signature> extends Component<Signature> {
   constructor(owner: Owner, args: object, name: QuoteComponentName) {
     super(owner, args)
     quoteCellLifecycle.created++
-    registerDestructor(this, () => { quoteCellLifecycle.destroyed++ })
+    registerDestructor(this, () => {
+      quoteCellLifecycle.destroyed++
+    })
   }
 }
 
 export class PriceCell extends QuoteCell<
-  CellRenderableSignature<typeof tradingFeatures, MarketQuote, number, PriceOptions>
+  CellRenderableSignature<
+    typeof tradingFeatures,
+    MarketQuote,
+    number,
+    PriceOptions
+  >
 > {
-  constructor(owner: Owner, args: object) { super(owner, args, 'PriceCell') }
-  get quote() { return this.args.ctx.row.original }
-  select = () => { this.args.options?.selectSymbol(this.quote.symbol) }
+  constructor(owner: Owner, args: object) {
+    super(owner, args, 'PriceCell')
+  }
+  get quote() {
+    return this.args.ctx.row.original
+  }
+  select = () => {
+    this.args.options?.selectSymbol(this.quote.symbol)
+  }
   <template>
     {{recordComponent 'PriceCell'}}
-    <button class='price-button {{if (isPositive this.quote) "quote-up" "quote-down"}}' type='button' {{on 'click' this.select}}>
+    <button
+      class='price-button
+        {{if (isPositive this.quote) "quote-up" "quote-down"}}'
+      type='button'
+      {{on 'click' this.select}}
+    >
       {{fixed this.quote.price}}
     </button>
   </template>
@@ -62,20 +100,33 @@ export class PriceCell extends QuoteCell<
 abstract class MoveCellBase extends QuoteCell<
   CellRenderableSignature<typeof tradingFeatures, MarketQuote, number>
 > {
-  get move() { return this.args.ctx.row.original.price - this.args.ctx.row.original.previousClose }
-  get positive() { return this.move >= 0 }
+  get move() {
+    return (
+      this.args.ctx.row.original.price -
+      this.args.ctx.row.original.previousClose
+    )
+  }
+  get positive() {
+    return this.move >= 0
+  }
 }
 
 export class StableMoveCell extends MoveCellBase {
-  constructor(owner: Owner, args: object) { super(owner, args, 'StableMoveCell') }
+  constructor(owner: Owner, args: object) {
+    super(owner, args, 'StableMoveCell')
+  }
   <template>
     {{recordComponent 'StableMoveCell'}}
-    <span class='move-cell {{if this.positive "quote-up" "quote-down"}}'>{{signed this.move}}</span>
+    <span
+      class='move-cell {{if this.positive "quote-up" "quote-down"}}'
+    >{{signed this.move}}</span>
   </template>
 }
 
 export class UpMoveCell extends MoveCellBase {
-  constructor(owner: Owner, args: object) { super(owner, args, 'UpMoveCell') }
+  constructor(owner: Owner, args: object) {
+    super(owner, args, 'UpMoveCell')
+  }
   <template>
     {{recordComponent 'UpMoveCell'}}
     <span class='move-cell quote-up'>▲ {{signed this.move}}</span>
@@ -83,7 +134,9 @@ export class UpMoveCell extends MoveCellBase {
 }
 
 export class DownMoveCell extends MoveCellBase {
-  constructor(owner: Owner, args: object) { super(owner, args, 'DownMoveCell') }
+  constructor(owner: Owner, args: object) {
+    super(owner, args, 'DownMoveCell')
+  }
   <template>
     {{recordComponent 'DownMoveCell'}}
     <span class='move-cell quote-down'>▼ {{signed this.move}}</span>
@@ -93,48 +146,73 @@ export class DownMoveCell extends MoveCellBase {
 export class PercentChangeCell extends QuoteCell<
   CellRenderableSignature<typeof tradingFeatures, MarketQuote, number>
 > {
-  constructor(owner: Owner, args: object) { super(owner, args, 'PercentChangeCell') }
+  constructor(owner: Owner, args: object) {
+    super(owner, args, 'PercentChangeCell')
+  }
   get value() {
     const quote = this.args.ctx.row.original
-    return quote.previousClose === 0 ? 0 : ((quote.price - quote.previousClose) / quote.previousClose) * 100
+    return quote.previousClose === 0
+      ? 0
+      : ((quote.price - quote.previousClose) / quote.previousClose) * 100
   }
   <template>
     {{recordComponent 'PercentChangeCell'}}
-    <span class='percent-change-cell {{if (nonNegative this.value) "quote-up" "quote-down"}}'>{{percent this.value}}</span>
+    <span
+      class='percent-change-cell
+        {{if (nonNegative this.value) "quote-up" "quote-down"}}'
+    >{{percent this.value}}</span>
   </template>
 }
 
 export class SparklineCell extends QuoteCell<
   CellRenderableSignature<typeof tradingFeatures, MarketQuote>
 > {
-  constructor(owner: Owner, args: object) { super(owner, args, 'SparklineCell') }
-  get values() { return this.args.ctx.row.original.history }
-  get rising() { return (this.values.at(-1) ?? 0) >= (this.values[0] ?? 0) }
+  constructor(owner: Owner, args: object) {
+    super(owner, args, 'SparklineCell')
+  }
+  get values() {
+    return this.args.ctx.row.original.history
+  }
+  get rising() {
+    return (this.values.at(-1) ?? 0) >= (this.values[0] ?? 0)
+  }
   get points() {
     const first = this.values[0] ?? 0
     const range = this.values.reduce(
-      (result, value) => ({ min: Math.min(result.min, value), max: Math.max(result.max, value) }),
+      (result, value) => ({
+        min: Math.min(result.min, value),
+        max: Math.max(result.max, value),
+      }),
       { min: first, max: first },
     )
     const scale = range.max - range.min || 1
     const denominator = Math.max(1, this.values.length - 1)
-    return this.values.map((value, index) => {
-      const x = (index / denominator) * 100
-      const y = 22 - ((value - range.min) / scale) * 20
-      return `${x.toFixed(1)},${y.toFixed(1)}`
-    }).join(' ')
+    return this.values
+      .map((value, index) => {
+        const x = (index / denominator) * 100
+        const y = 22 - ((value - range.min) / scale) * 20
+        return `${x.toFixed(1)},${y.toFixed(1)}`
+      })
+      .join(' ')
   }
   <template>
     {{recordComponent 'SparklineCell'}}
-    <svg class='sparkline {{if this.rising "quote-up" "quote-down"}}' viewBox='0 0 100 24' preserveAspectRatio='none'><polyline points={{this.points}} /></svg>
+    <svg
+      class='sparkline {{if this.rising "quote-up" "quote-down"}}'
+      viewBox='0 0 100 24'
+      preserveAspectRatio='none'
+    ><polyline points={{this.points}} /></svg>
   </template>
 }
 
 const fixed = (value: number): string => value.toFixed(2)
-const signed = (value: number): string => `${value >= 0 ? '+' : ''}${value.toFixed(2)}`
-const percent = (value: number): string => `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`
+const signed = (value: number): string =>
+  `${value >= 0 ? '+' : ''}${value.toFixed(2)}`
+const percent = (value: number): string =>
+  `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`
 const nonNegative = (value: number): boolean => value >= 0
-const isPositive = (quote: MarketQuote): boolean => quote.price - quote.previousClose >= 0
+const isPositive = (quote: MarketQuote): boolean =>
+  quote.price - quote.previousClose >= 0
 const recordComponent = (name: QuoteComponentName): string => {
   quoteRenderDiagnostics.componentRenderCalls++
   quoteRenderDiagnostics.componentRenderCallsByName[name]++

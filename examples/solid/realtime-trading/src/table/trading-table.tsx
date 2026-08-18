@@ -185,28 +185,20 @@ export function TradingTable(props: TradingTableProps) {
     >
       <Index each={row().getVisibleCells()}>
         {(cell) => {
-          const selectionEdges = createMemo(() =>
-            cell().getSelectionEdges(),
-          )
+          const selectionEdges = createMemo(() => cell().getSelectionEdges())
           return (
             <td
               style={{
                 width: `calc(var(--col-${cell().column.id}-size) * 1px)`,
               }}
               data-column-id={cell().column.id}
-              data-cell-focused={
-                cell().getIsFocused() ? 'true' : undefined
-              }
+              data-cell-focused={cell().getIsFocused() ? 'true' : undefined}
               data-selection-top={selectionEdges().top ? 'true' : undefined}
-              data-selection-right={
-                selectionEdges().right ? 'true' : undefined
-              }
+              data-selection-right={selectionEdges().right ? 'true' : undefined}
               data-selection-bottom={
                 selectionEdges().bottom ? 'true' : undefined
               }
-              data-selection-left={
-                selectionEdges().left ? 'true' : undefined
-              }
+              data-selection-left={selectionEdges().left ? 'true' : undefined}
               aria-selected={cell().getIsSelected()}
               tabindex={cell().getTabIndex()}
             >
@@ -390,9 +382,7 @@ export function TradingTable(props: TradingTableProps) {
               pointerInteractions.handlePointerOver(table, event)
             }
             onMouseLeave={() => pointerInteractions.resetPointerCell()}
-            onClick={(event) =>
-              pointerInteractions.handleClick(table, event)
-            }
+            onClick={(event) => pointerInteractions.handleClick(table, event)}
           >
             <Show
               when={props.virtualScrollMode === 'tanstack'}

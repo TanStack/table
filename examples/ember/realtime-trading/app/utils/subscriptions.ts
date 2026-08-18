@@ -1,6 +1,8 @@
 import { registerDestructor } from '@ember/destroyable'
 
-interface Subscription { unsubscribe: () => void }
+interface Subscription {
+  unsubscribe: () => void
+}
 interface Subscribable<T> {
   get: () => T
   subscribe: (listener: (value: T) => void) => Subscription

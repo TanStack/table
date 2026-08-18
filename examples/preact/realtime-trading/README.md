@@ -25,15 +25,15 @@ absolute cost.
 
 ## Structure and ownership
 
-| Path | Responsibility |
-| --- | --- |
-| `src/feed/` | Market types, instruments, immutable update helpers, config, controller, and controller hook. |
-| `src/feed/worker/` | Worker protocol, deterministic market engine, and module worker. |
-| `src/benchmark/` | Feed/render timing, DOM/long-frame observers, row-model and component diagnostics. |
-| `src/shell/` | TanStack Store contexts, viewport shell, metrics, controls, selected instrument, and diagnostics. |
-| `src/table/table-config/` | Grouped columns, row/cell components, and render counters. |
-| `src/table/` | Preact Table instance, subscriptions, interactions, column layout, and Virtual Core hook. |
-| `src/App.tsx` | Creates the controllers and composes providers, shell, and table. |
+| Path                      | Responsibility                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| `src/feed/`               | Market types, instruments, immutable update helpers, config, controller, and controller hook.     |
+| `src/feed/worker/`        | Worker protocol, deterministic market engine, and module worker.                                  |
+| `src/benchmark/`          | Feed/render timing, DOM/long-frame observers, row-model and component diagnostics.                |
+| `src/shell/`              | TanStack Store contexts, viewport shell, metrics, controls, selected instrument, and diagnostics. |
+| `src/table/table-config/` | Grouped columns, row/cell components, and render counters.                                        |
+| `src/table/`              | Preact Table instance, subscriptions, interactions, column layout, and Virtual Core hook.         |
+| `src/App.tsx`             | Creates the controllers and composes providers, shell, and table.                                 |
 
 Feed state and benchmark state are different controllers. The feed does not
 depend on the monitor; the benchmark subscribes to feed lifecycle callbacks.

@@ -3,8 +3,12 @@ import type { Subscription } from '@tanstack/store'
 
 export abstract class ControllerElement extends LitElement {
   readonly #subscriptions: Array<Subscription> = []
-  protected createRenderRoot() { return this }
-  protected observe(source: { subscribe: (listener: () => void) => Subscription }): void {
+  protected createRenderRoot() {
+    return this
+  }
+  protected observe(source: {
+    subscribe: (listener: () => void) => Subscription
+  }): void {
     this.#subscriptions.push(source.subscribe(() => this.requestUpdate()))
   }
   disconnectedCallback() {

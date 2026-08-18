@@ -24,17 +24,17 @@ build for performance recordings.
 
 ## Structure and ownership
 
-| Path | Responsibility |
-| --- | --- |
-| `app/feed/` | Market model, instrument universe, configuration, immutable update helpers, and Store-backed feed controller. |
-| `app/feed/worker/` | Typed protocol, deterministic engine, and module worker. |
-| `app/benchmark/` | Browser monitor and benchmark controller. |
-| `app/components/shell/` | GTS header, metrics, configurator, diagnostics, selected instrument, status bar, and shell layout. |
-| `app/components/table/` | Trading table Glimmer component. |
-| `app/table/table-config/` | Grouped columns and custom GTS quote components. |
-| `app/table/` | Table construction, features, delegated interactions, and Virtual Core integration. |
-| `app/utils/subscriptions.ts` | Owner-bound Store subscription and cleanup helpers. |
-| `app/templates/application.gts` | Creates feed/benchmark controllers and composes the shell. |
+| Path                            | Responsibility                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `app/feed/`                     | Market model, instrument universe, configuration, immutable update helpers, and Store-backed feed controller. |
+| `app/feed/worker/`              | Typed protocol, deterministic engine, and module worker.                                                      |
+| `app/benchmark/`                | Browser monitor and benchmark controller.                                                                     |
+| `app/components/shell/`         | GTS header, metrics, configurator, diagnostics, selected instrument, status bar, and shell layout.            |
+| `app/components/table/`         | Trading table Glimmer component.                                                                              |
+| `app/table/table-config/`       | Grouped columns and custom GTS quote components.                                                              |
+| `app/table/`                    | Table construction, features, delegated interactions, and Virtual Core integration.                           |
+| `app/utils/subscriptions.ts`    | Owner-bound Store subscription and cleanup helpers.                                                           |
+| `app/templates/application.gts` | Creates feed/benchmark controllers and composes the shell.                                                    |
 
 `MarketFeedController` owns worker/feed state. `TradingBenchmarkController`
 observes feed lifecycle callbacks and owns diagnostic/view state. The

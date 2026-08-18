@@ -55,9 +55,7 @@ export const TradingShell = defineComponent({
           {slots.default?.()}
         </section>
         <MarketStatusbar />
-        <div class="sidebar-slot">
-          {sidebarOpen.value && <Configurator />}
-        </div>
+        <div class="sidebar-slot">{sidebarOpen.value && <Configurator />}</div>
       </main>
     )
   },
@@ -76,7 +74,9 @@ const AppHeader = defineComponent({
     }))
     return () => (
       <header class="app-bar">
-        <div class="brand"><strong>MARKET MONITOR</strong></div>
+        <div class="brand">
+          <strong>MARKET MONITOR</strong>
+        </div>
         <div class="header-actions">
           <span
             class={[
@@ -124,13 +124,46 @@ const MetricsStrip = defineComponent({
       const metrics = state.value.metrics
       return (
         <section class="metrics-strip" aria-label="Live performance metrics">
-          <Metric label="WORKER SAMPLES" value={formatRate(metrics.actualTicksPerSecond)} detail="generated samples/s" testId="actual-rate" />
-          <Metric label="ROW UPDATES" value={formatRate(metrics.rowUpdatesPerSecond)} detail="unique rows applied/s" testId="row-update-rate" />
-          <Metric label="MESSAGES" value={metrics.workerMessagesPerSecond.toFixed(1)} detail="worker messages/s" testId="message-rate" />
-          <Metric label="STATE APPLIES" value={metrics.stateApplicationsPerSecond.toFixed(1)} detail="quote snapshots/s" testId="state-apply-rate" />
-          <Metric label="TABLE COMMITS" value={metrics.tableRendersPerSecond.toFixed(1)} detail="completed renders/s" testId="table-render-rate" />
-          <Metric label="AVG RENDER" value={formatMs(metrics.averageRenderMs)} detail="mutation → render" />
-          <Metric label="P95 RENDER" value={formatMs(metrics.p95RenderMs)} detail={`max ${formatMs(metrics.maxRenderMs)}`} />
+          <Metric
+            label="WORKER SAMPLES"
+            value={formatRate(metrics.actualTicksPerSecond)}
+            detail="generated samples/s"
+            testId="actual-rate"
+          />
+          <Metric
+            label="ROW UPDATES"
+            value={formatRate(metrics.rowUpdatesPerSecond)}
+            detail="unique rows applied/s"
+            testId="row-update-rate"
+          />
+          <Metric
+            label="MESSAGES"
+            value={metrics.workerMessagesPerSecond.toFixed(1)}
+            detail="worker messages/s"
+            testId="message-rate"
+          />
+          <Metric
+            label="STATE APPLIES"
+            value={metrics.stateApplicationsPerSecond.toFixed(1)}
+            detail="quote snapshots/s"
+            testId="state-apply-rate"
+          />
+          <Metric
+            label="TABLE COMMITS"
+            value={metrics.tableRendersPerSecond.toFixed(1)}
+            detail="completed renders/s"
+            testId="table-render-rate"
+          />
+          <Metric
+            label="AVG RENDER"
+            value={formatMs(metrics.averageRenderMs)}
+            detail="mutation → render"
+          />
+          <Metric
+            label="P95 RENDER"
+            value={formatMs(metrics.p95RenderMs)}
+            detail={`max ${formatMs(metrics.maxRenderMs)}`}
+          />
           <Metric
             label="LONG FRAMES"
             value={
@@ -181,10 +214,21 @@ const MarketStatusbar = defineComponent({
     }))
     return () => (
       <footer class="market-statusbar">
-        <span>MESSAGE SAMPLES <strong>{formatInteger(state.value.lastBatchSize)}</strong></span>
-        <span>ROW UPDATES <strong>{formatInteger(state.value.lastUpdateCount)}</strong></span>
-        <span>HOSTS <strong>{formatInteger(state.value.mountedCells)}</strong></span>
-        <span>COMPONENTS <strong>{formatInteger(state.value.liveComponents)}</strong></span>
+        <span>
+          MESSAGE SAMPLES{' '}
+          <strong>{formatInteger(state.value.lastBatchSize)}</strong>
+        </span>
+        <span>
+          ROW UPDATES{' '}
+          <strong>{formatInteger(state.value.lastUpdateCount)}</strong>
+        </span>
+        <span>
+          HOSTS <strong>{formatInteger(state.value.mountedCells)}</strong>
+        </span>
+        <span>
+          COMPONENTS{' '}
+          <strong>{formatInteger(state.value.liveComponents)}</strong>
+        </span>
       </footer>
     )
   },
@@ -199,8 +243,7 @@ const Configurator = defineComponent({
     const benchmarkState = useTradingShellState((state) => state)
     const rendererMode = useSelector(controller.renderAtoms.rendererMode)
     const virtualScrollForced = computed(
-      () =>
-        feedState.value.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT,
+      () => feedState.value.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT,
     )
     const virtualScrollMode = computed(() =>
       resolveVirtualScrollMode(
@@ -215,7 +258,10 @@ const Configurator = defineComponent({
         class="configurator"
         aria-label="Benchmark configurator"
       >
-        <header><span>CONFIGURATOR</span><small>RUN PARAMETERS</small></header>
+        <header>
+          <span>CONFIGURATOR</span>
+          <small>RUN PARAMETERS</small>
+        </header>
         <section class="config-section" aria-labelledby="feed-settings">
           <h2 id="feed-settings">FEED</h2>
           <button
@@ -254,9 +300,7 @@ const Configurator = defineComponent({
               step={1}
               value={feedSampleRateIndex(feedState.value.targetTicksPerSecond)}
               onChange={(event) =>
-                feed.actions.setTargetRate(
-                  feedSampleRateAt(numberValue(event)),
-                )
+                feed.actions.setTargetRate(feedSampleRateAt(numberValue(event)))
               }
             />
             <small>
@@ -310,7 +354,10 @@ const Configurator = defineComponent({
                 )
               }
             />
-            <span>Swap Tick component A ↔ B<small>destroy and recreate when direction changes</small></span>
+            <span>
+              Swap Tick component A ↔ B
+              <small>destroy and recreate when direction changes</small>
+            </span>
           </label>
           <label class="toggle-field">
             <input
@@ -320,7 +367,10 @@ const Configurator = defineComponent({
                 feed.actions.setSparklineUpdates(checkedValue(event))
               }
             />
-            <span>Update intraday charts<small>sample rolling prices independently</small></span>
+            <span>
+              Update intraday charts
+              <small>sample rolling prices independently</small>
+            </span>
           </label>
           <label class="field">
             <span>Intraday chart sampling</span>
@@ -338,8 +388,12 @@ const Configurator = defineComponent({
         <section class="config-section" aria-labelledby="stress-actions">
           <h2 id="stress-actions">STRESS ACTIONS</h2>
           <div class="action-grid">
-            <button type="button" onClick={feed.actions.runBurst}>RUN 25K BURST</button>
-            <button type="button" onClick={controller.actions.resetMarket}>RESET SESSION</button>
+            <button type="button" onClick={feed.actions.runBurst}>
+              RUN 25K BURST
+            </button>
+            <button type="button" onClick={controller.actions.resetMarket}>
+              RESET SESSION
+            </button>
           </div>
         </section>
         <Diagnostics />
@@ -356,25 +410,90 @@ const Diagnostics = defineComponent({
     return () => {
       const { metrics } = state.value
       return (
-        <section class="config-section diagnostics" aria-labelledby="diagnostics">
+        <section
+          class="config-section diagnostics"
+          aria-labelledby="diagnostics"
+        >
           <h2 id="diagnostics">DIAGNOSTICS</h2>
           <dl>
-            <Diagnostic label="Mounted cells" value={formatInteger(state.value.mountedCells)} />
-            <Diagnostic label="Live components" value={formatInteger(state.value.liveComponents)} />
-            <Diagnostic label="Created / destroyed" value={`${formatInteger(metrics.componentsCreated)} / ${formatInteger(metrics.componentsDestroyed)}`} />
-            <Diagnostic label="Renderer callbacks / s" value={formatRate(metrics.cellRendererCallsPerSecond)} testId="cell-render-rate" />
-            <Diagnostic label="Component executions / s" value={formatRate(metrics.componentRenderCallsPerSecond)} testId="component-render-rate" />
-            <Diagnostic label="Executions by component / s" value={formatInvocationRates(metrics.componentRenderRates)} testId="component-render-breakdown" />
-            <Diagnostic label="Callbacks by column / s" value={formatInvocationRates(metrics.cellRendererRates)} testId="cell-render-breakdown" />
-            <Diagnostic label="DOM mutation records / s" value={formatRate(metrics.domMutationsPerSecond)} testId="dom-mutation-rate" />
-            <Diagnostic label="Core row model calls / s" value={metrics.rowModelCallsPerSecond.toFixed(1)} testId="row-model-call-rate" />
-            <Diagnostic label="Core row model avg / max" value={`${formatMs(metrics.rowModelAverageMs)} / ${formatMs(metrics.rowModelMaxMs)}`} testId="row-model-duration" />
-            <Diagnostic label="Visible rows" value={formatInteger(metrics.visibleRows)} testId="visible-row-count" />
-            <Diagnostic label="Worker messages" value={formatInteger(metrics.workerMessages)} testId="worker-messages" />
-            <Diagnostic label="Worker-coalesced updates / s" value={formatRate(metrics.supersededUpdatesPerSecond)} testId="superseded-update-rate" />
-            <Diagnostic label="Last samples / updated rows" value={`${formatInteger(metrics.lastBatchSize)} / ${formatInteger(metrics.lastUpdateCount)}`} />
-            <Diagnostic label="Renders > 16.7 ms" value={formatInteger(metrics.slowRenders)} />
-            <Diagnostic label="JS heap" value={metrics.heapMb === null ? 'N/A' : `${metrics.heapMb.toFixed(1)} MB`} />
+            <Diagnostic
+              label="Mounted cells"
+              value={formatInteger(state.value.mountedCells)}
+            />
+            <Diagnostic
+              label="Live components"
+              value={formatInteger(state.value.liveComponents)}
+            />
+            <Diagnostic
+              label="Created / destroyed"
+              value={`${formatInteger(metrics.componentsCreated)} / ${formatInteger(metrics.componentsDestroyed)}`}
+            />
+            <Diagnostic
+              label="Renderer callbacks / s"
+              value={formatRate(metrics.cellRendererCallsPerSecond)}
+              testId="cell-render-rate"
+            />
+            <Diagnostic
+              label="Component executions / s"
+              value={formatRate(metrics.componentRenderCallsPerSecond)}
+              testId="component-render-rate"
+            />
+            <Diagnostic
+              label="Executions by component / s"
+              value={formatInvocationRates(metrics.componentRenderRates)}
+              testId="component-render-breakdown"
+            />
+            <Diagnostic
+              label="Callbacks by column / s"
+              value={formatInvocationRates(metrics.cellRendererRates)}
+              testId="cell-render-breakdown"
+            />
+            <Diagnostic
+              label="DOM mutation records / s"
+              value={formatRate(metrics.domMutationsPerSecond)}
+              testId="dom-mutation-rate"
+            />
+            <Diagnostic
+              label="Core row model calls / s"
+              value={metrics.rowModelCallsPerSecond.toFixed(1)}
+              testId="row-model-call-rate"
+            />
+            <Diagnostic
+              label="Core row model avg / max"
+              value={`${formatMs(metrics.rowModelAverageMs)} / ${formatMs(metrics.rowModelMaxMs)}`}
+              testId="row-model-duration"
+            />
+            <Diagnostic
+              label="Visible rows"
+              value={formatInteger(metrics.visibleRows)}
+              testId="visible-row-count"
+            />
+            <Diagnostic
+              label="Worker messages"
+              value={formatInteger(metrics.workerMessages)}
+              testId="worker-messages"
+            />
+            <Diagnostic
+              label="Worker-coalesced updates / s"
+              value={formatRate(metrics.supersededUpdatesPerSecond)}
+              testId="superseded-update-rate"
+            />
+            <Diagnostic
+              label="Last samples / updated rows"
+              value={`${formatInteger(metrics.lastBatchSize)} / ${formatInteger(metrics.lastUpdateCount)}`}
+            />
+            <Diagnostic
+              label="Renders > 16.7 ms"
+              value={formatInteger(metrics.slowRenders)}
+            />
+            <Diagnostic
+              label="JS heap"
+              value={
+                metrics.heapMb === null
+                  ? 'N/A'
+                  : `${metrics.heapMb.toFixed(1)} MB`
+              }
+            />
           </dl>
         </section>
       )
@@ -391,7 +510,10 @@ const Diagnostic = defineComponent({
   },
   setup(props) {
     return () => (
-      <div><dt>{props.label}</dt><dd data-testid={props.testId}>{props.value}</dd></div>
+      <div>
+        <dt>{props.label}</dt>
+        <dd data-testid={props.testId}>{props.value}</dd>
+      </div>
     )
   },
 })
@@ -407,29 +529,54 @@ const SelectedInstrument = defineComponent({
       feed.getQuoteBySymbol(quotes.value, selectedSymbol.value),
     )
     return () => (
-      <section class="config-section selected-instrument" data-testid="selected-instrument">
+      <section
+        class="config-section selected-instrument"
+        data-testid="selected-instrument"
+      >
         <h2>SELECTED INSTRUMENT</h2>
         {selectedQuote.value ? (
           <>
             <div class="selection">
-              <div><strong>{selectedQuote.value.symbol}</strong><span>{selectedQuote.value.company}</span></div>
+              <div>
+                <strong>{selectedQuote.value.symbol}</strong>
+                <span>{selectedQuote.value.company}</span>
+              </div>
               <small>{selectedQuote.value.venue}</small>
             </div>
             <dl>
-              <div><dt>Last</dt><dd>{selectedQuote.value.price.toFixed(2)}</dd></div>
-              <div><dt>Bid / ask</dt><dd>{selectedQuote.value.bid.toFixed(2)} / {selectedQuote.value.ask.toFixed(2)}</dd></div>
+              <div>
+                <dt>Last</dt>
+                <dd>{selectedQuote.value.price.toFixed(2)}</dd>
+              </div>
+              <div>
+                <dt>Bid / ask</dt>
+                <dd>
+                  {selectedQuote.value.bid.toFixed(2)} /{' '}
+                  {selectedQuote.value.ask.toFixed(2)}
+                </dd>
+              </div>
             </dl>
           </>
         ) : (
-          <p>Click or begin a cell selection in any row to inspect its instrument.</p>
+          <p>
+            Click or begin a cell selection in any row to inspect its
+            instrument.
+          </p>
         )}
       </section>
     )
   },
 })
 
-function optionNode(option: { readonly label: string; readonly value: number | string }) {
-  return <option key={option.value} value={option.value}>{option.label}</option>
+function optionNode(option: {
+  readonly label: string
+  readonly value: number | string
+}) {
+  return (
+    <option key={option.value} value={option.value}>
+      {option.label}
+    </option>
+  )
 }
 
 function stringValue(event: Event): string {

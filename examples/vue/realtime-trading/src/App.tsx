@@ -20,9 +20,7 @@ export const App = defineComponent({
     })
 
     return () => (
-      <TradingShell>
-        {{ default: () => <TradingTable /> }}
-      </TradingShell>
+      <TradingShell>{{ default: () => <TradingTable /> }}</TradingShell>
     )
   },
 })

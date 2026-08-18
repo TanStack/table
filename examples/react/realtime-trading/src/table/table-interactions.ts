@@ -1,7 +1,4 @@
-import type {
-  AriaAttributes,
-  KeyboardEvent as ReactKeyboardEvent,
-} from 'react'
+import type { AriaAttributes, KeyboardEvent as ReactKeyboardEvent } from 'react'
 
 export type CellDirection = 'up' | 'down' | 'left' | 'right'
 

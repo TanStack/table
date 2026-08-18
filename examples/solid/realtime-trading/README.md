@@ -25,15 +25,15 @@ absolute timings.
 
 ## Structure and ownership
 
-| Path | Responsibility |
-| --- | --- |
-| `src/feed/` | Market model, instrument universe, feed config, immutable update logic, and Solid feed controller. |
-| `src/feed/worker/` | Protocol, deterministic market engine, and module worker. |
-| `src/benchmark/` | Benchmark monitor and the controller that exposes benchmark signals/actions. |
-| `src/shell/` | Contexts, viewport shell, header, metrics, configurator, diagnostics, and selected instrument. |
-| `src/table/table-config/` | Grouped columns and custom quote components. |
-| `src/table/` | Solid Table instance, interactions, column layout, and Solid Virtual integration. |
-| `src/App.tsx` | Creates feed/benchmark controllers and composes their providers with the table. |
+| Path                      | Responsibility                                                                                     |
+| ------------------------- | -------------------------------------------------------------------------------------------------- |
+| `src/feed/`               | Market model, instrument universe, feed config, immutable update logic, and Solid feed controller. |
+| `src/feed/worker/`        | Protocol, deterministic market engine, and module worker.                                          |
+| `src/benchmark/`          | Benchmark monitor and the controller that exposes benchmark signals/actions.                       |
+| `src/shell/`              | Contexts, viewport shell, header, metrics, configurator, diagnostics, and selected instrument.     |
+| `src/table/table-config/` | Grouped columns and custom quote components.                                                       |
+| `src/table/`              | Solid Table instance, interactions, column layout, and Solid Virtual integration.                  |
+| `src/App.tsx`             | Creates feed/benchmark controllers and composes their providers with the table.                    |
 
 `createMarketFeedController` and `createTradingBenchmarkController` are
 separate. The feed owns worker state and quotes; the benchmark observes feed

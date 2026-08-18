@@ -24,15 +24,15 @@ Use the production build for recordings; Vue development checks add overhead.
 
 ## Structure and ownership
 
-| Path | Responsibility |
-| --- | --- |
-| `src/feed/` | Market model, instrument universe, feed configuration, immutable updates, and feed controller. |
-| `src/feed/worker/` | Typed protocol, deterministic market engine, and module worker. |
-| `src/benchmark/` | Browser monitor, benchmark controller, table timing, lifecycle, and mutation observers. |
-| `src/shell/` | Controller injection, viewport shell, controls, metrics, selected instrument, and diagnostics. |
-| `src/table/table-config/` | Grouped columns and custom Vue quote cells. |
-| `src/table/` | Vue Table instance, delegated interactions, column layout, and Vue Virtual integration. |
-| `src/App.tsx` | Creates/starts controllers, provides them, and composes shell plus table. |
+| Path                      | Responsibility                                                                                 |
+| ------------------------- | ---------------------------------------------------------------------------------------------- |
+| `src/feed/`               | Market model, instrument universe, feed configuration, immutable updates, and feed controller. |
+| `src/feed/worker/`        | Typed protocol, deterministic market engine, and module worker.                                |
+| `src/benchmark/`          | Browser monitor, benchmark controller, table timing, lifecycle, and mutation observers.        |
+| `src/shell/`              | Controller injection, viewport shell, controls, metrics, selected instrument, and diagnostics. |
+| `src/table/table-config/` | Grouped columns and custom Vue quote cells.                                                    |
+| `src/table/`              | Vue Table instance, delegated interactions, column layout, and Vue Virtual integration.        |
+| `src/App.tsx`             | Creates/starts controllers, provides them, and composes shell plus table.                      |
 
 `MarketFeedController` owns worker/feed state; `TradingBenchmarkController`
 observes it and owns benchmark/view state. Vue `provide`/`inject` distributes

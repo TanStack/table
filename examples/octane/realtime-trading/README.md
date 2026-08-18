@@ -24,16 +24,16 @@ Use a production build for representative measurements.
 
 ## Structure and ownership
 
-| Path | Responsibility |
-| --- | --- |
-| `src/feed/` | Market model, instruments, feed config, immutable update helpers, and TanStack Store feed controller. |
-| `src/feed/worker/` | Typed protocol, deterministic engine, and module worker. |
-| `src/benchmark/` | Browser monitor, benchmark controller, table observer, and row-model timing. |
-| `src/shell/` | Separate TSRX header, metrics, configurator, diagnostics, selected-instrument, status, and shell components. |
-| `src/table/table-config/` | Grouped columns and custom TSRX quote components. |
-| `src/table/` | Octane Table view/setup, interactions, pointer hook, column layout, and Virtual Core hook. |
-| `src/use-store-value.ts` | Small Octane hooks that subscribe to a whole store or a compared selector slice. |
-| `src/main.tsrx` | Creates controllers and renders the shell composition root. |
+| Path                      | Responsibility                                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `src/feed/`               | Market model, instruments, feed config, immutable update helpers, and TanStack Store feed controller.        |
+| `src/feed/worker/`        | Typed protocol, deterministic engine, and module worker.                                                     |
+| `src/benchmark/`          | Browser monitor, benchmark controller, table observer, and row-model timing.                                 |
+| `src/shell/`              | Separate TSRX header, metrics, configurator, diagnostics, selected-instrument, status, and shell components. |
+| `src/table/table-config/` | Grouped columns and custom TSRX quote components.                                                            |
+| `src/table/`              | Octane Table view/setup, interactions, pointer hook, column layout, and Virtual Core hook.                   |
+| `src/use-store-value.ts`  | Small Octane hooks that subscribe to a whole store or a compared selector slice.                             |
+| `src/main.tsrx`           | Creates controllers and renders the shell composition root.                                                  |
 
 `MarketFeedController` owns feed/worker state. `TradingBenchmarkController`
 observes it and owns diagnostic/view state. The shell receives stable controller

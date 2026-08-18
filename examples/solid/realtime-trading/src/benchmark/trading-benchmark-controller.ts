@@ -1,9 +1,4 @@
-import {
-  createMemo,
-  createSignal,
-  onCleanup,
-  onMount,
-} from 'solid-js'
+import { createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import {
   FORCED_VIRTUALIZATION_ROW_COUNT,

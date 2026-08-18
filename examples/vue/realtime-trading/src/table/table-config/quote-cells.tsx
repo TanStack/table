@@ -82,10 +82,7 @@ export const PriceCell = defineComponent({
       recordRender()
       return (
         <button
-          class={[
-            'price-button',
-            props.move >= 0 ? 'quote-up' : 'quote-down',
-          ]}
+          class={['price-button', props.move >= 0 ? 'quote-up' : 'quote-down']}
           onClick={props.onSelect}
         >
           {props.price.toFixed(2)}
@@ -158,8 +155,7 @@ export const SparklineCell = defineComponent({
     const recordRender = useLifecycleCounter('SparklineCell')
     return () => {
       recordRender()
-      const rising =
-        (props.values.at(-1) ?? 0) >= (props.values[0] ?? 0)
+      const rising = (props.values.at(-1) ?? 0) >= (props.values[0] ?? 0)
       const { min, max } = findRange(props.values)
       const range = max - min || 1
       const denominator = Math.max(1, props.values.length - 1)

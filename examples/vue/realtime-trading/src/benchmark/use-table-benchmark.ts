@@ -1,7 +1,9 @@
 import { onBeforeUnmount, onMounted } from 'vue'
 import type { TradingBenchmarkController } from './trading-benchmark-controller'
 
-export function useTableBenchmark(controller: TradingBenchmarkController): void {
+export function useTableBenchmark(
+  controller: TradingBenchmarkController,
+): void {
   const runtime = { mutationObserver: null as MutationObserver | null }
 
   onMounted(() => {

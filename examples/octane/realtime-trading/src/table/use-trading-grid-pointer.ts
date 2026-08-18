@@ -28,8 +28,9 @@ export function useTradingGridPointer(
 
         lastPointerCell.current = target.element
         selectSymbol(target.cell.row.original.symbol)
-        target.cell
-          .getSelectionStartHandler(target.element.ownerDocument)(event)
+        target.cell.getSelectionStartHandler(target.element.ownerDocument)(
+          event,
+        )
       },
       onPointerOver(event) {
         if ((event.buttons & 1) === 0) {

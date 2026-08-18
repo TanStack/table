@@ -32,17 +32,17 @@ so its absolute timings should not be compared with a production build.
 
 ## Directory structure
 
-| Path | Responsibility |
-| --- | --- |
-| `src/app/feed/` | Market types, the instrument universe, feed configuration, immutable update helpers, and the Angular feed service. |
-| `src/app/feed/worker/` | Worker protocol, deterministic market engine, and the module Web Worker that generates and publishes quote updates. |
-| `src/app/benchmark/` | Performance monitor and the controller that connects feed lifecycle events to UI diagnostics. |
-| `src/app/shell/` | Full-viewport layout, header, metrics strip, sidebar configurator, selected-instrument panel, diagnostics, and status bar. |
-| `src/app/table/table-config/` | Grouped column definitions and custom quote cell components. |
-| `src/app/table/view/` | Header component plus table-level selection and cell host directives. |
-| `src/app/table/` | Current table, table interactions, initial column fitting, and the TanStack Virtual integration. |
-| `src/app/table/worker/` | Optional experimental table-worker implementation and its row-model worker. |
-| `src/app/app.ts` | Composition root; it projects only the selected table implementation into the shell. |
+| Path                          | Responsibility                                                                                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `src/app/feed/`               | Market types, the instrument universe, feed configuration, immutable update helpers, and the Angular feed service.         |
+| `src/app/feed/worker/`        | Worker protocol, deterministic market engine, and the module Web Worker that generates and publishes quote updates.        |
+| `src/app/benchmark/`          | Performance monitor and the controller that connects feed lifecycle events to UI diagnostics.                              |
+| `src/app/shell/`              | Full-viewport layout, header, metrics strip, sidebar configurator, selected-instrument panel, diagnostics, and status bar. |
+| `src/app/table/table-config/` | Grouped column definitions and custom quote cell components.                                                               |
+| `src/app/table/view/`         | Header component plus table-level selection and cell host directives.                                                      |
+| `src/app/table/`              | Current table, table interactions, initial column fitting, and the TanStack Virtual integration.                           |
+| `src/app/table/worker/`       | Optional experimental table-worker implementation and its row-model worker.                                                |
+| `src/app/app.ts`              | Composition root; it projects only the selected table implementation into the shell.                                       |
 
 The feed, benchmark, shell, and table layers are deliberately separate. The
 feed can run without the benchmark monitor, and shell components inject only

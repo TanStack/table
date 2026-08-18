@@ -64,8 +64,12 @@ const features = tableFeatures({
   sortFns: { basic: sortFn_basic },
 })
 
-type TradingTableInstance = ReturnType<typeof useTable<typeof features, MarketQuote>>
-type TradingRow = ReturnType<TradingTableInstance['getRowModel']>['rows'][number]
+type TradingTableInstance = ReturnType<
+  typeof useTable<typeof features, MarketQuote>
+>
+type TradingRow = ReturnType<
+  TradingTableInstance['getRowModel']
+>['rows'][number]
 
 interface ColumnDragRuntime {
   columnId: string | null
@@ -114,9 +118,7 @@ export const TradingTable = defineComponent({
     const controller = useTradingShellController()
     const feed = useMarketFeedController()
     const quotes = useMarketFeedState((state) => state.quotes)
-    const instrumentCount = useMarketFeedState(
-      (state) => state.instrumentCount,
-    )
+    const instrumentCount = useMarketFeedState((state) => state.instrumentCount)
     const requestedVirtualScrollMode = useTradingShellState(
       (state) => state.requestedVirtualScrollMode,
     )
@@ -221,13 +223,16 @@ export const TradingTable = defineComponent({
       )
     }
     const resizeObserver = new ResizeObserver(fitAvailableWidth)
-    const sizingSubscription = table.atoms.columnSizing.subscribe(
-      writeColumnSizes,
+    const sizingSubscription =
+      table.atoms.columnSizing.subscribe(writeColumnSizes)
+    const orderSubscription =
+      table.atoms.columnOrder.subscribe(writeColumnSizes)
+    const resizingSubscription = table.atoms.columnResizing.subscribe(
+      (state) => {
+        if (state.isResizingColumn !== false)
+          layoutRuntime.manuallyResized = true
+      },
     )
-    const orderSubscription = table.atoms.columnOrder.subscribe(writeColumnSizes)
-    const resizingSubscription = table.atoms.columnResizing.subscribe((state) => {
-      if (state.isResizingColumn !== false) layoutRuntime.manuallyResized = true
-    })
     onMounted(() => {
       nextTick(() => {
         writeColumnSizes()
@@ -280,9 +285,7 @@ export const TradingTable = defineComponent({
                     width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                   }}
                   data-column-id={cell.column.id}
-                  data-cell-focused={
-                    cell.getIsFocused() ? 'true' : undefined
-                  }
+                  data-cell-focused={cell.getIsFocused() ? 'true' : undefined}
                   data-selection-top={edges.top ? 'true' : undefined}
                   data-selection-right={edges.right ? 'true' : undefined}
                   data-selection-bottom={edges.bottom ? 'true' : undefined}
@@ -386,10 +389,9 @@ export const TradingTable = defineComponent({
                                     aria-label={`Move ${header.column.id} column`}
                                     onDragstart={(event) => {
                                       dragRuntime.columnId = header.column.id
-                                      dragRuntime.sourceElement =
-                                        (
-                                          event.currentTarget as HTMLElement
-                                        ).closest('th')
+                                      dragRuntime.sourceElement = (
+                                        event.currentTarget as HTMLElement
+                                      ).closest('th')
                                       dragRuntime.sourceElement?.classList.add(
                                         'is-column-dragging',
                                       )
@@ -408,12 +410,11 @@ export const TradingTable = defineComponent({
                                     type="button"
                                     class={[
                                       'sort-header-button',
-                                      header.column.getCanSort() && 'is-sortable',
+                                      header.column.getCanSort() &&
+                                        'is-sortable',
                                     ]}
                                     disabled={!header.column.getCanSort()}
-                                    onClick={
-                                      header.column.getToggleSortingHandler()
-                                    }
+                                    onClick={header.column.getToggleSortingHandler()}
                                   >
                                     <span class="header-label">
                                       <FlexRender header={header} />

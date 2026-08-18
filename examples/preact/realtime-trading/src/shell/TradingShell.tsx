@@ -49,9 +49,7 @@ export function TradingShell(props: { children: ComponentChildren }) {
         {props.children}
       </section>
       <MarketStatusbar />
-      <div className="sidebar-slot">
-        {sidebarOpen && <Configurator />}
-      </div>
+      <div className="sidebar-slot">{sidebarOpen && <Configurator />}</div>
     </main>
   )
 }
@@ -166,11 +164,7 @@ function Configurator() {
     sparklineSampleIntervalMs,
   } = feedState
   const { requestedVirtualScrollMode } = benchmarkState
-  const {
-    setRendererMode,
-    setVirtualScrollEnabled,
-    resetMarket,
-  } = actions
+  const { setRendererMode, setVirtualScrollEnabled, resetMarket } = actions
   const {
     toggle,
     setInstrumentCount,
@@ -589,10 +583,7 @@ function SelectedInstrument() {
   const feed = useMarketFeedController()
   const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
   const quotes = useMarketFeedState((state) => state.quotes)
-  const selectedQuote = feed.getQuoteBySymbol(
-    quotes,
-    selectedSymbol,
-  )
+  const selectedQuote = feed.getQuoteBySymbol(quotes, selectedSymbol)
   return (
     <section
       className="config-section selected-instrument"

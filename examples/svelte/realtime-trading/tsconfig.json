@@ -15,5 +15,11 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["svelte", "vite/client"]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.svelte", "tests/**/*.ts", "vite.config.ts"]
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "tests/**/*.ts",
+    "vite.config.ts"
+  ]
 }

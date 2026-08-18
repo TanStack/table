@@ -9,7 +9,9 @@ interface TradingControllers {
 
 const tradingControllersKey = Symbol('trading-controllers')
 
-export function provideTradingControllers(benchmark: TradingBenchmarkController): void {
+export function provideTradingControllers(
+  benchmark: TradingBenchmarkController,
+): void {
   setContext<TradingControllers>(tradingControllersKey, {
     benchmark,
     feed: benchmark.feed,
@@ -17,13 +19,17 @@ export function provideTradingControllers(benchmark: TradingBenchmarkController)
 }
 
 export function useTradingShellController(): TradingBenchmarkController {
-  const controllers = getContext<TradingControllers | undefined>(tradingControllersKey)
+  const controllers = getContext<TradingControllers | undefined>(
+    tradingControllersKey,
+  )
   if (!controllers) throw new Error('Missing trading controllers')
   return controllers.benchmark
 }
 
 export function useMarketFeedController(): MarketFeedController {
-  const controllers = getContext<TradingControllers | undefined>(tradingControllersKey)
+  const controllers = getContext<TradingControllers | undefined>(
+    tradingControllersKey,
+  )
   if (!controllers) throw new Error('Missing trading controllers')
   return controllers.feed
 }

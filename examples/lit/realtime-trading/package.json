@@ -3,13 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "vite", "dev": "vite", "build": "vite build", "serve": "vite preview",
-    "lint": "eslint ./src", "test:types": "tsc --noEmit",
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit",
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@tanstack/lit-table": "9.1.2", "@tanstack/lit-virtual": "^3.13.36",
-    "@tanstack/store": "^0.11.0", "lit": "^3.3.3"
+    "@tanstack/lit-table": "9.1.2",
+    "@tanstack/lit-virtual": "^3.13.36",
+    "@tanstack/store": "^0.11.0",
+    "lit": "^3.3.3"
   },
-  "devDependencies": { "typescript": "6.0.3", "vite": "^8.2.0" }
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vite": "^8.2.0"
+  }
 }

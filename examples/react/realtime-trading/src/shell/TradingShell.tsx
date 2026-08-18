@@ -57,9 +57,7 @@ export function TradingShell(props: { children: ReactNode }) {
         {props.children}
       </section>
       <MarketStatusbar />
-      <div className="sidebar-slot">
-        {sidebarOpen && <Configurator />}
-      </div>
+      <div className="sidebar-slot">{sidebarOpen && <Configurator />}</div>
     </main>
   )
 }
@@ -174,11 +172,7 @@ function Configurator() {
     sparklineSampleIntervalMs,
   } = feedState
   const { requestedVirtualScrollMode } = benchmarkState
-  const {
-    setRendererMode,
-    setVirtualScrollEnabled,
-    resetMarket,
-  } = actions
+  const { setRendererMode, setVirtualScrollEnabled, resetMarket } = actions
   const {
     toggle,
     setInstrumentCount,

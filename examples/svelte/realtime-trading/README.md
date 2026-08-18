@@ -24,15 +24,15 @@ Use a production build for performance recordings.
 
 ## Structure and ownership
 
-| Path | Responsibility |
-| --- | --- |
-| `src/feed/` | Market model, instrument universe, feed config, immutable updates, and feed controller. |
-| `src/feed/worker/` | Typed worker protocol, deterministic engine, and module worker. |
-| `src/benchmark/` | Browser monitor, benchmark controller, table observer, and row-model timing. |
-| `src/shell/` | Svelte context plus separate header, metrics, configurator, diagnostics, selected-instrument, and status components. |
-| `src/table/table-config/` | Grouped columns and dedicated Price/Move/Percent/Sparkline Svelte components. |
-| `src/table/` | Svelte Table setup, table view, delegated interactions, column layout, and Svelte Virtual integration. |
-| `src/App.svelte` | Creates/provides controllers and starts/stops them with the app lifecycle. |
+| Path                      | Responsibility                                                                                                       |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `src/feed/`               | Market model, instrument universe, feed config, immutable updates, and feed controller.                              |
+| `src/feed/worker/`        | Typed worker protocol, deterministic engine, and module worker.                                                      |
+| `src/benchmark/`          | Browser monitor, benchmark controller, table observer, and row-model timing.                                         |
+| `src/shell/`              | Svelte context plus separate header, metrics, configurator, diagnostics, selected-instrument, and status components. |
+| `src/table/table-config/` | Grouped columns and dedicated Price/Move/Percent/Sparkline Svelte components.                                        |
+| `src/table/`              | Svelte Table setup, table view, delegated interactions, column layout, and Svelte Virtual integration.               |
+| `src/App.svelte`          | Creates/provides controllers and starts/stops them with the app lifecycle.                                           |
 
 The feed and benchmark are separate controllers. The feed owns worker state and
 quotes; the benchmark registers observers and owns metrics/view controls.

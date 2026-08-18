@@ -65,7 +65,9 @@ test('runs the React realtime trading workload', async ({ page }) => {
     await instrumentCount.selectOption('1500')
     await expect(virtualScrollSelect).toHaveValue('tanstack')
     await expect(virtualScrollSelect).toBeDisabled()
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(1500)
+    await expect
+      .poll(() => table.locator('tbody tr').count())
+      .toBeLessThan(1500)
     await expect(page.getByTestId('virtual-scroll-footer')).toContainText(
       'Total · 1500 rows · 14 columns',
     )

@@ -322,9 +322,7 @@ function TradingTableHeader(props: { table: TradingTableInstance }) {
                                   }`}
                                   role="separator"
                                   aria-orientation="vertical"
-                                  onDblClick={() =>
-                                    header.column.resetSize()
-                                  }
+                                  onDblClick={() => header.column.resetSize()}
                                   onMouseDown={header.getResizeHandler()}
                                   onTouchStart={header.getResizeHandler()}
                                 />
@@ -346,9 +344,7 @@ function TradingTableHeader(props: { table: TradingTableInstance }) {
   )
 }
 
-function useTradingTable(props: {
-  quotes: Array<MarketQuote>
-}) {
+function useTradingTable(props: { quotes: Array<MarketQuote> }) {
   return useTable(
     {
       key: 'preact-realtime-trading',
@@ -471,19 +467,13 @@ function TradingRows(props: {
       }
       data-source-row-count={props.sourceRowCount}
       onMouseDown={(event) =>
-        pointerInteractions.handleMouseDown(
-          props.table,
-          event,
-          selectSymbol,
-        )
+        pointerInteractions.handleMouseDown(props.table, event, selectSymbol)
       }
       onPointerOver={(event) =>
         pointerInteractions.handlePointerOver(props.table, event)
       }
       onMouseLeave={() => pointerInteractions.resetPointerCell()}
-      onClick={(event) =>
-        pointerInteractions.handleClick(props.table, event)
-      }
+      onClick={(event) => pointerInteractions.handleClick(props.table, event)}
     >
       {props.virtualScrollMode === 'tanstack'
         ? props.virtualRows.map((virtualRow) => {
@@ -498,11 +488,7 @@ function TradingRows(props: {
             )
           })
         : props.rows.map((row) => (
-            <TradingRowBoundary
-              key={row.id}
-              table={props.table}
-              row={row}
-            />
+            <TradingRowBoundary key={row.id} table={props.table} row={row} />
           ))}
     </tbody>
   )

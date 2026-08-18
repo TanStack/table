@@ -127,11 +127,7 @@ function MarketStatusbar() {
 function Configurator() {
   const { state, actions } = useTradingShellController()
   const feed = useMarketFeedController()
-  const {
-    rendererMode,
-    virtualScrollForced,
-    virtualScrollMode,
-  } = state
+  const { rendererMode, virtualScrollForced, virtualScrollMode } = state
   const {
     running,
     instrumentCount,

@@ -343,9 +343,7 @@ function TradingTableHeader(props: { table: TradingTableInstance }) {
   )
 }
 
-function useTradingTable(props: {
-  quotes: Array<MarketQuote>
-}) {
+function useTradingTable(props: { quotes: Array<MarketQuote> }) {
   return useTable(
     {
       key: 'react-realtime-trading',
@@ -480,11 +478,7 @@ function TradingRows(props: {
             )
           })
         : props.rows.map((row) => (
-            <TradingRowBoundary
-              key={row.id}
-              table={props.table}
-              row={row}
-            />
+            <TradingRowBoundary key={row.id} table={props.table} row={row} />
           ))}
     </tbody>
   )

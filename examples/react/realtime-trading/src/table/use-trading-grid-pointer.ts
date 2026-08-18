@@ -39,8 +39,9 @@ export function useTradingGridPointer(
 
       lastPointerCell.current = target.element
       selectSymbol(target.cell.row.original.symbol)
-      target.cell
-        .getSelectionStartHandler(target.element.ownerDocument)(nativeEvent)
+      target.cell.getSelectionStartHandler(target.element.ownerDocument)(
+        nativeEvent,
+      )
     },
     onPointerOver(event) {
       const nativeEvent = event.nativeEvent

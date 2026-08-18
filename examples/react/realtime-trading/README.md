@@ -40,15 +40,15 @@ available.
 
 ## Directory structure
 
-| Path | Responsibility |
-| --- | --- |
-| `src/feed/` | Market types, instruments, feed configuration, immutable update helpers, controller, and React lifecycle hook. |
-| `src/feed/worker/` | Worker protocol, deterministic market engine, and the module Web Worker. |
-| `src/benchmark/` | Browser monitor, benchmark controller, table observers, and React Profiler integration. |
-| `src/shell/` | Store contexts, full-viewport shell, metrics, configurator, diagnostics, selected instrument, and status bar. |
-| `src/table/table-config/` | Grouped columns, row boundary, custom cells, and render counters. |
-| `src/table/` | Table instance, subscription boundaries, interactions, pointer hook, initial fit, and virtualization. |
-| `src/App.tsx` | Composition root; creates controllers, providers, shell, table, and Profiler boundary. |
+| Path                      | Responsibility                                                                                                 |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `src/feed/`               | Market types, instruments, feed configuration, immutable update helpers, controller, and React lifecycle hook. |
+| `src/feed/worker/`        | Worker protocol, deterministic market engine, and the module Web Worker.                                       |
+| `src/benchmark/`          | Browser monitor, benchmark controller, table observers, and React Profiler integration.                        |
+| `src/shell/`              | Store contexts, full-viewport shell, metrics, configurator, diagnostics, selected instrument, and status bar.  |
+| `src/table/table-config/` | Grouped columns, row boundary, custom cells, and render counters.                                              |
+| `src/table/`              | Table instance, subscription boundaries, interactions, pointer hook, initial fit, and virtualization.          |
+| `src/App.tsx`             | Composition root; creates controllers, providers, shell, table, and Profiler boundary.                         |
 
 Feed state and benchmark state are intentionally separate. `MarketFeedController`
 can run without `TradingBenchmarkController`; the latter observes feed lifecycle

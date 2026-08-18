@@ -24,9 +24,7 @@ export function useStoreSelector<T, TSelected>(
   useEffect(() => {
     const update = (value: T): void => {
       const next = selector(value)
-      setSelected((previous) =>
-        compare(previous, next) ? previous : next,
-      )
+      setSelected((previous) => (compare(previous, next) ? previous : next))
     }
 
     update(source.get())
@@ -53,8 +51,6 @@ export function shallowEqual<T>(previous: T, next: T): boolean {
   const nextKeys = Object.keys(nextRecord)
   return (
     previousKeys.length === nextKeys.length &&
-    previousKeys.every((key) =>
-      Object.is(previousRecord[key], nextRecord[key]),
-    )
+    previousKeys.every((key) => Object.is(previousRecord[key], nextRecord[key]))
   )
 }

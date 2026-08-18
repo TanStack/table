@@ -1,13 +1,29 @@
 export const quoteCellLifecycle = { created: 0, destroyed: 0 }
 
 export const quoteCellRendererNames = [
-  'Market', 'Name', 'Symbol', 'Last', 'Change', 'ChangePercent', 'Bid',
-  'BidVolume', 'Ask', 'AskVolume', 'Open', 'High', 'Low', 'Intraday',
+  'Market',
+  'Name',
+  'Symbol',
+  'Last',
+  'Change',
+  'ChangePercent',
+  'Bid',
+  'BidVolume',
+  'Ask',
+  'AskVolume',
+  'Open',
+  'High',
+  'Low',
+  'Intraday',
 ] as const
 
 export const quoteComponentNames = [
-  'PriceCell', 'StableMoveCell', 'UpMoveCell', 'DownMoveCell',
-  'PercentChangeCell', 'SparklineCell',
+  'PriceCell',
+  'StableMoveCell',
+  'UpMoveCell',
+  'DownMoveCell',
+  'PercentChangeCell',
+  'SparklineCell',
 ] as const
 
 export type QuoteCellRendererName = (typeof quoteCellRendererNames)[number]

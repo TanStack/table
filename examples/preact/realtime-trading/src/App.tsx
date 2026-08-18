@@ -1,9 +1,7 @@
 import { useMarketFeedController } from './feed/use-market-feed-controller'
 import { useTradingBenchmarkController } from './benchmark/use-trading-benchmark-controller'
 import { TradingShell } from './shell/TradingShell'
-import {
-  TradingShellProvider,
-} from './shell/trading-shell-context'
+import { TradingShellProvider } from './shell/trading-shell-context'
 import { TradingTable } from './table/trading-table'
 
 export function App() {

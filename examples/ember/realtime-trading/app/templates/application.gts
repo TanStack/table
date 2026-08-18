@@ -19,5 +19,7 @@ export default class Application extends Component {
     })
   }
 
-  <template><TradingShell @controller={{this.controller}} @feed={{this.feed}} /></template>
+  <template>
+    <TradingShell @controller={{this.controller}} @feed={{this.feed}} />
+  </template>
 }
