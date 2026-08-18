@@ -1,5 +1,11 @@
 # @tanstack/angular-table
 
+## 9.2.1
+
+### Patch Changes
+
+- [#6562](https://github.com/TanStack/table/pull/6562) [`5c210bb`](https://github.com/TanStack/table/commit/5c210bb3bea1cced0702c77419d1794b3106a90d) - improve flexRender instance reuse and reduce adapter allocations
+
 ## 9.1.3
 
 ### Patch Changes
