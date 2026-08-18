@@ -1,10 +1,16 @@
 # React realtime trading benchmark
 
-This example stresses the current React Table adapter with a synthetic market
-feed, immutable quote snapshots, core sorting/filtering, dynamic cells, and
-React Profiler measurements.
+This is a standalone stress example for the current TanStack React Table
+adapter. It combines a high-frequency synthetic market feed, immutable row
+snapshots, sortable and resizable columns, range selection, dynamic React cell
+components, optional row virtualization, React Profiler measurements, and
+browser performance instrumentation.
 
-## Run
+The goal is to make feed work, message delivery, state application, table work,
+React commits, and browser layout independently observable. It is a repeatable
+rendering benchmark, not an exchange or network simulator.
+
+## Run and verify
 
 ```bash
 pnpm --dir examples/react/realtime-trading dev
@@ -12,63 +18,13 @@ pnpm --dir examples/react/realtime-trading dev
 
 Open `http://localhost:7778`.
 
-Use the profiling production build when recording React commit timings:
+For React commit timings, use the profiling production build:
 
 ```bash
 pnpm --dir examples/react/realtime-trading build:profile
 ```
 
-## Architecture
-
-- `TradingBenchmarkController` uses TanStack Store for application state and
-  exposes dedicated atoms for table and cell subscriptions.
-- `market-feed.worker.ts` produces synthetic quote samples outside the main
-  thread and coalesces repeated instruments into one row update per message.
-- `trading-table.tsx` owns the current React Table instance and its subscription
-  boundaries.
-- `trading-table-shared.tsx` owns columns, row rendering, and row-model timing.
-- `benchmark/` owns React Profiler, User Timing, DOM mutation, and long-frame
-  diagnostics.
-- `shell/` owns the trading-terminal layout and benchmark controls.
-
-There is one table implementation. The shell and application root do not
-subscribe to or switch between historical adapters.
-
-## Row rendering
-
-The example starts with 100 instruments. Below 250 instruments, the row-rendering
-select can compare **Full DOM** with **TanStack Virtual**. At 250 instruments or
-more, virtualization is enabled and locked so large row counts cannot
-accidentally mount the complete table.
-
-## React Compiler
-
-The Vite build enables React Compiler. The current adapter is compiled normally;
-the historical compatibility module and its `use no memo` boundary have been
-removed.
-
-## Workloads
-
-- Stable market snapshots with sorting and filtering handled by the table.
-- Core Table sorting and filtering controlled through table atoms.
-- Stable or alternating cell component types.
-- Per-column renderer and per-component render invocation rates.
-- Per-instrument Intraday history sampling with a configurable 16–2,000 ms
-  worker interval, defaulting to 16 ms for the initial 100-row workload.
-
-The sample rate controls synthetic quote generation inside the worker; it is not
-a browser event or `postMessage` rate. The publish interval separately controls
-the target message cadence. The worker coalesces repeated instruments in each
-message and posts independently of React render completion, like an external
-stream.
-
-## Dependency resolution
-
-The example pins `@tanstack/react-table` to the current repository version. The
-root workspace override resolves it to `packages/react-table` while preserving a
-release-like manifest.
-
-## Verification
+The normal verification commands are:
 
 ```bash
 pnpm --dir examples/react/realtime-trading test:types
@@ -76,3 +32,174 @@ pnpm --dir examples/react/realtime-trading lint
 pnpm --dir examples/react/realtime-trading build
 pnpm --dir examples/react/realtime-trading test:e2e
 ```
+
+Development builds include React checks and produce deliberately pessimistic
+timings. The standard production build disables Profiler callbacks; the
+`profile` mode aliases the profiling React DOM client so commit metrics remain
+available.
+
+## Directory structure
+
+| Path | Responsibility |
+| --- | --- |
+| `src/feed/` | Market types, instruments, feed configuration, immutable update helpers, controller, and React lifecycle hook. |
+| `src/feed/worker/` | Worker protocol, deterministic market engine, and the module Web Worker. |
+| `src/benchmark/` | Browser monitor, benchmark controller, table observers, and React Profiler integration. |
+| `src/shell/` | Store contexts, full-viewport shell, metrics, configurator, diagnostics, selected instrument, and status bar. |
+| `src/table/table-config/` | Grouped columns, row boundary, custom cells, and render counters. |
+| `src/table/` | Table instance, subscription boundaries, interactions, pointer hook, initial fit, and virtualization. |
+| `src/App.tsx` | Composition root; creates controllers, providers, shell, table, and Profiler boundary. |
+
+Feed state and benchmark state are intentionally separate. `MarketFeedController`
+can run without `TradingBenchmarkController`; the latter observes feed lifecycle
+events and owns only controls/metrics used by this benchmark UI.
+
+## Data and worker pipeline
+
+The initial configuration is 100 instruments, 10K generated samples per
+second, a 20 ms delivery interval, enabled intraday charts, and 16 ms intraday
+sampling.
+
+1. `MarketFeedController` starts a module worker and sends the active config.
+2. `market-feed-engine.ts` mutates worker-private quote state using a
+   deterministic PRNG and stable instrument IDs.
+3. A 16 ms loop accrues a fractional sample budget and produces the requested
+   amount of synthetic market work.
+4. A `Map` keyed by row index retains the latest pending update for each
+   instrument, coalescing repeated samples.
+5. A separate timer publishes at the selected delivery interval. Worker work
+   rate and `postMessage` rate are deliberately independent.
+6. The main thread creates a new outer quotes array and replaces only the rows
+   present in the message. Unchanged row objects remain referentially stable.
+7. History arrays change only on an intraday sample. A session ID discards stale
+   messages after reset or instrument-count changes.
+
+UI terminology:
+
+- **Synthetic quote workload** means generated samples per second inside the
+  worker, not browser events, React renders, or messages.
+- **Worker delivery interval** is the target coalesced-message cadence; 20 ms
+  targets approximately 50 messages per second.
+- **Row updates** counts unique immutable row objects applied on the main
+  thread, often fewer than generated samples.
+- **Message samples** is the generated work represented by the latest message.
+
+Intraday history sampling is independent of the quote workload, and the 25K
+burst creates one intentionally expensive immediate batch. The worker resembles
+an upstream WebSocket/SSE producer but does not include network latency.
+
+## React state and rendering architecture
+
+- Feed and benchmark controllers use TanStack Store.
+- `createStoreContext` provides the controllers without making every consumer
+  subscribe to the complete state object.
+- Shell components call `useSelector` with narrow slices and shallow comparison
+  where a selector returns an object.
+- Selected symbol and renderer mode are dedicated atoms because they have
+  different consumers and update frequencies from aggregate diagnostics.
+- `TradingTable` subscribes directly to quote data and the virtualization
+  inputs it needs; the parent shell does not receive the quotes array.
+- `table.Subscribe` boundaries isolate sorting/filtering/order changes, each
+  resize handle, and each row's selection state.
+- Stable row IDs come from instrument IDs through `getRowId`.
+
+React Compiler is enabled in the Vite Babel pipeline for `src`. The current
+adapter is compiled normally; there is no historical v8 implementation or
+`use no memo` compatibility boundary in this example. Compiler optimization
+does not replace correct subscription ownership: components still subscribe to
+the smallest practical state slice.
+
+## Table behavior
+
+The grid has 14 leaf columns grouped into Instrument, Price & Change, Order
+Book, Session, and Chart sections. It provides:
+
+- core sorting and filtering;
+- on-change column resizing with double-click reset;
+- drag-and-drop leaf-column ordering;
+- CSS-only row hover;
+- click/modified-click row selection;
+- mouse-drag cell range selection and keyboard navigation;
+- custom Price, Move, Percent Change, and Sparkline components;
+- an opt-in mode that swaps move component A/B as direction changes.
+
+`useTradingGridPointer` installs handlers once on `tbody`. It uses
+`event.composedPath()` and data attributes to resolve the TanStack cell, so the
+table does not allocate pointer handlers for every cell. Refs retain transient
+drag state without triggering React renders.
+
+Column sizes are written to CSS custom properties only when sizing or ordering
+changes. Cells reference those properties, avoiding width-object churn during
+quote updates. A `ResizeObserver` expands the initial column sizes to the
+available viewport; the first manual resize disables later automatic fitting.
+
+## Full DOM and virtual rows
+
+The internal preference is `auto`, `tanstack`, or `none`:
+
+- Below 200 rows, `auto` resolves to **Full DOM**, while virtualization remains
+  manually selectable.
+- From 200 through 1,499 rows, `auto` resolves to **TanStack Virtual**, but the
+  user may still choose Full DOM.
+- At 1,500 rows or more, virtualization is forced and the control is locked.
+
+React Virtual uses a fixed 32 px estimate, 10-row overscan, stable row IDs as
+item keys, transformed rows, and a body-sized spacer. The footer reports the
+current range from the virtualizer. Full DOM maps the complete row model.
+
+Both paths apply `content-visibility: auto` with a matching intrinsic height.
+For Full DOM this can reduce browser work but not React element creation or DOM
+mount count. Virtualization is what limits mounted row components.
+
+## Performance decisions
+
+- Market calculations run outside the main thread.
+- Repeated samples are coalesced before worker messaging.
+- Immutable snapshots preserve untouched row/history references.
+- Stable row keys and `getRowId` preserve identity through sorting.
+- Controller contexts carry stable objects; selectors subscribe to slices.
+- Table, header, resize handle, row selection, and cell renderer boundaries are
+  independently subscribable.
+- Pointer selection is delegated and transient pointer state lives in refs.
+- Column widths use CSS variables instead of per-tick style recalculation.
+- Dynamic component destruction is opt-in; stable components are the baseline.
+- Virtualization limits React and DOM work at larger row counts.
+- Benchmark publication is throttled separately from the feed.
+
+A new outer data array is required to publish immutable state. Referentially
+stable untouched rows, keyed rows, and narrow subscriptions reduce downstream
+work; they do not guarantee that the table's sorted/filtered row model can skip
+all processing when its data input changes.
+
+## Diagnostics
+
+The benchmark monitor reports generated samples, unique row updates, messages,
+state applies, completed commits, average mutation-to-render latency, long
+animation frames, mounted hosts, component lifecycle counts, callbacks by
+column, executions by component type, DOM mutation records, core row-model
+timing, and optional heap information.
+
+The React Profiler additionally records actual/base duration and commit counts
+when using development or the profiling build. User Timing marks connect a feed
+mutation to its completed render; old measures are periodically pruned.
+
+Callback counts are not DOM mutation counts. A cell callback can execute while
+React reuses the existing component and DOM. Likewise, a rising heap during the
+component-swap stress test is not proof of a leak until repeated post-GC heap
+snapshots show retained instances.
+
+Use Chrome Performance and React DevTools for call stacks/flamegraphs, and keep
+the instrument count, workload, delivery interval, renderer mode, build mode,
+and virtualization mode fixed between comparisons.
+
+## Standalone example policy
+
+This directory owns its instrument list, feed engine, worker, diagnostics,
+styles, and UI instead of importing a common demo package. The duplication is
+intentional: each adapter example must run independently and remain easy to
+copy to StackBlitz. Shared architectural explanations are repeated in the
+READMEs for the same reason.
+
+The package pins `@tanstack/react-table` to the repository version. The root
+workspace override resolves it to `packages/react-table` while preserving a
+release-like manifest.
