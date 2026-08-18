@@ -105,7 +105,7 @@ export class FlexViewRenderer<
   TRowData extends RowData,
   TValue extends CellData,
   TProps extends
-      | NonNullable<unknown>
+    | NonNullable<unknown>
     | CellContext<TFeatures, TRowData, TValue>
     | HeaderContext<TFeatures, TRowData, TValue>,
 > {

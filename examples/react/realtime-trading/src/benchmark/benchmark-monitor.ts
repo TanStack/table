@@ -329,12 +329,11 @@ export class BenchmarkMonitor {
       supersededUpdatesPerSecond:
         (runtime.supersededUpdatesInSample / sampleDuration) * 1_000,
       totalTicks: runtime.totalTicks,
-      estimatedFrameRate:
-        calculateFrameRate(
-          runtime.frameTimestamps,
-          runtime.frameTrackingStartedAt,
-          now,
-        ),
+      estimatedFrameRate: calculateFrameRate(
+        runtime.frameTimestamps,
+        runtime.frameTrackingStartedAt,
+        now,
+      ),
       tableCommitsPerSecond:
         (runtime.tableCommitsInSample / sampleDuration) * 1_000,
       lastBatchSize: runtime.lastBatchSize,

@@ -140,9 +140,7 @@ function Configurator() {
   const targetTicksPerSecond = useSelector(feed.targetTicksPerSecond)
   const publishIntervalMs = useSelector(feed.publishIntervalMs)
   const updateSparklines = useSelector(feed.updateSparklines)
-  const sparklineSampleIntervalMs = useSelector(
-    feed.sparklineSampleIntervalMs,
-  )
+  const sparklineSampleIntervalMs = useSelector(feed.sparklineSampleIntervalMs)
   const rendererMode = useSelector(controller.renderAtoms.rendererMode)
   const { actions } = controller
   const feedActions = feed.actions
@@ -391,8 +389,7 @@ function LiveHealth() {
               {metrics.longAnimationFrames}
             </strong>
             <small>
-              since reset · worst{' '}
-              {formatMs(metrics.worstLongAnimationFrameMs)}
+              since reset · worst {formatMs(metrics.worstLongAnimationFrameMs)}
             </small>
           </>
         ) : (

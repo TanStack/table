@@ -63,8 +63,7 @@ export class TradingBenchmarkController {
       },
       setVirtualScrollEnabled: (enabled) => {
         if (
-          this.feed.instrumentCount.get() >=
-          FORCED_VIRTUALIZATION_ROW_COUNT
+          this.feed.instrumentCount.get() >= FORCED_VIRTUALIZATION_ROW_COUNT
         ) {
           return
         }
@@ -101,7 +100,10 @@ export class TradingBenchmarkController {
     const longAnimationFrameObserver = longAnimationFramesSupported
       ? new PerformanceObserver((entries) => {
           for (const entry of entries.getEntries()) {
-            this.monitor.recordLongAnimationFrame(entry.duration, entry.startTime)
+            this.monitor.recordLongAnimationFrame(
+              entry.duration,
+              entry.startTime,
+            )
           }
         })
       : null

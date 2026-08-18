@@ -24,16 +24,16 @@ Use the production build for measurements.
 
 ## Structure and ownership
 
-| Path                              | Responsibility                                                                                       |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Path                              | Responsibility                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `src/feed/`                       | Market types, instruments, configuration, immutable updates, and direct TanStack atom feed controller. |
-| `src/feed/worker/`                | Protocol, deterministic engine, and module worker.                                                   |
-| `src/benchmark/`                  | Browser monitor, benchmark controller, table timing, and row-model diagnostics.                      |
-| `src/shell/`                      | Custom elements for header, metrics, controls, diagnostics, selected instrument, status, and layout. |
-| `src/shell/controller-element.ts` | Base element that subscribes to controller sources and releases subscriptions on disconnect.         |
-| `src/table/table-config/`         | Grouped columns and custom quote cell elements.                                                      |
-| `src/table/`                      | Lit Table element, delegated interactions, column layout, and Lit Virtual integration.               |
-| `src/main.ts`                     | Root custom element that creates, starts, stops, and passes the controllers.                         |
+| `src/feed/worker/`                | Protocol, deterministic engine, and module worker.                                                     |
+| `src/benchmark/`                  | Browser monitor, benchmark controller, table timing, and row-model diagnostics.                        |
+| `src/shell/`                      | Custom elements for header, metrics, controls, diagnostics, selected instrument, status, and layout.   |
+| `src/shell/controller-element.ts` | Base element that subscribes to controller sources and releases subscriptions on disconnect.           |
+| `src/table/table-config/`         | Grouped columns and custom quote cell elements.                                                        |
+| `src/table/`                      | Lit Table element, delegated interactions, column layout, and Lit Virtual integration.                 |
+| `src/main.ts`                     | Root custom element that creates, starts, stops, and passes the controllers.                           |
 
 The feed controller is independent from the benchmark controller. The root
 passes stable controller objects; each shell/table custom element observes the

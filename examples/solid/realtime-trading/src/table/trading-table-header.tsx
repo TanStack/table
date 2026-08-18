@@ -49,10 +49,7 @@ function TradingHeaderCell(props: TradingHeaderCellProps) {
   return (
     <th {...headerCellProps}>
       <Show when={!props.header.isPlaceholder}>
-        <Show
-          when={isLeaf()}
-          fallback={<FlexRender header={props.header} />}
-        >
+        <Show when={isLeaf()} fallback={<FlexRender header={props.header} />}>
           <TradingLeafHeader
             header={props.header}
             columnDrag={props.columnDrag}
@@ -76,11 +73,7 @@ function TradingLeafHeader(props: TradingHeaderCellProps) {
   return (
     <>
       <div class="leaf-header-content" {...dropZoneProps}>
-        <button
-          type="button"
-          class="column-drag-handle"
-          {...dragHandleProps}
-        >
+        <button type="button" class="column-drag-handle" {...dragHandleProps}>
           ⋮⋮
         </button>
         <button {...sortButtonProps}>
@@ -122,9 +115,7 @@ function createHeaderCellProps(
       }
     },
     get ['aria-sort']() {
-      return isLeaf()
-        ? sortAriaValue(header().column.getIsSorted())
-        : undefined
+      return isLeaf() ? sortAriaValue(header().column.getIsSorted()) : undefined
     },
     get classList() {
       const columnId = header().column.id

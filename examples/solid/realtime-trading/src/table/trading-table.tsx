@@ -20,8 +20,9 @@ import { TradingTableHeader } from './trading-table-header'
 export function TradingTable() {
   const feed = useMarketFeedController()
   const { state, actions } = useTradingShellController()
-  const [scrollElement, setScrollElement] =
-    createSignal<HTMLDivElement | null>(null)
+  const [scrollElement, setScrollElement] = createSignal<HTMLDivElement | null>(
+    null,
+  )
   const virtualized = () => state.virtualScrollMode() === 'tanstack'
   const model = createTradingTableModel({
     quotes: feed.state.quotes,

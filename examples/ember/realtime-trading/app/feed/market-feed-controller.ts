@@ -36,8 +36,7 @@ export class MarketFeedController {
   @tracked workerReady = false
   @tracked running = true
   @tracked instrumentCount = initialMarketFeedConfig.instrumentCount
-  @tracked targetTicksPerSecond =
-    initialMarketFeedConfig.targetSamplesPerSecond
+  @tracked targetTicksPerSecond = initialMarketFeedConfig.targetSamplesPerSecond
   @tracked publishIntervalMs = initialMarketFeedConfig.publishIntervalMs
   @tracked updateSparklines = initialMarketFeedConfig.updateSparklines
   @tracked sparklineSampleIntervalMs =

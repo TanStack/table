@@ -13,10 +13,7 @@ export interface TradingTableFooterProps {
 export function TradingTableFooter(props: TradingTableFooterProps) {
   return (
     <Show when={props.virtualized()}>
-      <footer
-        class="virtual-scroll-footer"
-        data-testid="virtual-scroll-footer"
-      >
+      <footer class="virtual-scroll-footer" data-testid="virtual-scroll-footer">
         <span>
           TanStack · Total · {props.rows().length} rows ·{' '}
           {props.table.getVisibleLeafColumns().length} columns

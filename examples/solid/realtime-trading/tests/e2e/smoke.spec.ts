@@ -32,9 +32,7 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
     await expect(table.locator('tbody tr')).toHaveCount(100)
     const livePrice = table.locator('tbody tr').first().locator('td').nth(3)
     const initialPrice = await livePrice.textContent()
-    await expect
-      .poll(() => livePrice.textContent())
-      .not.toBe(initialPrice)
+    await expect.poll(() => livePrice.textContent()).not.toBe(initialPrice)
     await expect(table.locator('tbody tr').first()).toHaveCSS(
       'content-visibility',
       'auto',

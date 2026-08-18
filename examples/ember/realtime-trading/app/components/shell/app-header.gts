@@ -30,10 +30,7 @@ export default class AppHeader extends Component<Signature> {
       <div class='header-actions'>
         <span
           class='feed-status
-            {{if
-              (and this.workerReady this.running)
-              "is-running"
-            }}'
+            {{if (and this.workerReady this.running) "is-running"}}'
           data-testid='feed-status'
         >
           <span class='status-dot' aria-hidden='true'></span>{{this.status}}

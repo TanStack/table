@@ -238,9 +238,7 @@ export class BenchmarkMonitor {
     const percentileCommitLatencySamples = runtime.commitLatencySamples.map(
       (sample) => sample.duration,
     )
-    const sortedCommitLatencySamples = [
-      ...percentileCommitLatencySamples,
-    ].sort(
+    const sortedCommitLatencySamples = [...percentileCommitLatencySamples].sort(
       (left, right) => left - right,
     )
     const rowModelCalls =
@@ -286,12 +284,11 @@ export class BenchmarkMonitor {
       supersededUpdatesPerSecond:
         (runtime.supersededUpdatesInSample / sampleDuration) * 1_000,
       totalTicks: runtime.totalTicks,
-      rafCallbacksPerSecond:
-        calculateFrameRate(
-          runtime.frameTimestamps,
-          runtime.frameTrackingStartedAt,
-          now,
-        ),
+      rafCallbacksPerSecond: calculateFrameRate(
+        runtime.frameTimestamps,
+        runtime.frameTrackingStartedAt,
+        now,
+      ),
       tableCommitsPerSecond:
         (runtime.tableCommitsInSample / sampleDuration) * 1_000,
       lastBatchSize: runtime.lastBatchSize,
