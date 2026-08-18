@@ -17,6 +17,21 @@ import { injectTable } from '../src'
 import type { PaginationState } from '../src'
 
 describe('injectTable', () => {
+  test('evaluates options once while constructing the table', () => {
+    const options = vi.fn(() => ({
+      data: [],
+      features: stockFeatures,
+      columns: [],
+    }))
+    const table = TestBed.runInInjectionContext(() => injectTable(options))
+
+    expect(options).not.toHaveBeenCalled()
+
+    void table.options
+
+    expect(options).toHaveBeenCalledTimes(1)
+  })
+
   test('should support required signal inputs', async () => {
     type Data = { id: string; title: string }
 

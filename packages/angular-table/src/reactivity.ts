@@ -21,9 +21,7 @@ function signalToReadonlyAtom<T>(
     get: () => signal(),
     subscribe: (observer: Observer<T>) => {
       return untracked(() =>
-        toObservable(computed(signal), { injector: injector }).subscribe(
-          observer,
-        ),
+        toObservable(signal, { injector: injector }).subscribe(observer),
       )
     },
   })
@@ -47,9 +45,7 @@ function signalToWritableAtom<T>(
     get: () => signal(),
     subscribe: (observer: Observer<T>) => {
       return untracked(() =>
-        toObservable(computed(signal), { injector: injector }).subscribe(
-          observer,
-        ),
+        toObservable(signal, { injector: injector }).subscribe(observer),
       )
     },
   })

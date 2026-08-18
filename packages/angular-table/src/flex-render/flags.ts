@@ -1,34 +1,33 @@
 /**
- * Flags used to manage and optimize the rendering lifecycle of the content of the cell
- * while using {@link FlexViewRenderer}.
+ * Flags used to manage and optimize the rendering lifecycle of content inside
+ * {@link FlexViewRenderer}.
  */
 export const FlexRenderFlags = {
   /**
-   * Indicates that the view is being created for the first time or will be cleared during the next update phase.
-   * This is the initial state and will transition after the first ngDoCheck.
+   * The renderer has not completed its initial update. The first update creates
+   * the view from scratch, then clears this flag.
    */
   ViewFirstRender: 1 << 0,
   /**
-   * Indicates the `content` property has been modified or the view requires a complete re-render.
-   * When this flag is enabled, the view will be cleared and recreated from scratch.
+   * The `content` input changed by reference, or its resolved value is not
+   * compatible with the mounted view. The next update recreates the view.
    */
   ContentChanged: 1 << 1,
   /**
-   * Indicates that the `props` property reference has changed.
-   * When this flag is enabled, the view context is updated based on the type of the content.
-   *
-   * For Component view, inputs will be updated and view will be marked as dirty.
-   * For TemplateRef and primitive values, view will be marked as dirty
+   * The `props` input changed by reference. Components receive the latest
+   * inputs and embedded templates are marked so their getter-backed context is
+   * evaluated again.
    */
   PropsReferenceChanged: 1 << 2,
   /**
-   * Indicates that the current rendered view needs to be checked for changes.
-   * This will be set to true when `content(props)` result has changed or during
-   * forced update
+   * A render function produced compatible content that must be synchronized
+   * with the mounted view without recreating it.
    */
   Dirty: 1 << 3,
   /**
-   * Indicates that the first render effect has been checked at least one time.
+   * The render-function effect completed its initial dependency read. That
+   * first execution records dependencies; subsequent executions update the
+   * view.
    */
   RenderEffectChecked: 1 << 4,
 } as const
