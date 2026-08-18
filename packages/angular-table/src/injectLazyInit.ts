@@ -17,7 +17,9 @@ export function injectLazyInit<T extends object>(
     if (object === null) {
       const initializedObject = untracked(initializer)
       object = initializedObject
-      destroyRef.onDestroy(() => cleanup(initializedObject))
+      if (!destroyRef.destroyed) {
+        destroyRef.onDestroy(() => cleanup(initializedObject))
+      }
     }
 
     return object
