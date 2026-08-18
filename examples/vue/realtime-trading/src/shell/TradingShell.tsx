@@ -182,23 +182,26 @@ const MarketStatusbar = defineComponent({
     const controller = useTradingShellController()
     return () => {
       const metrics = controller.metrics.value
-      return <footer class="market-statusbar">
-        <span>
-          MESSAGE SAMPLES{' '}
-          <strong>{formatInteger(metrics.lastBatchSize)}</strong>
-        </span>
-        <span>
-          CHANGED ROWS{' '}
-          <strong>{formatInteger(metrics.lastUpdateCount)}</strong>
-        </span>
-        <span>
-          HOSTS <strong>{formatInteger(controller.mountedCells.value)}</strong>
-        </span>
-        <span>
-          COMPONENTS{' '}
-          <strong>{formatInteger(controller.liveComponents.value)}</strong>
-        </span>
-      </footer>
+      return (
+        <footer class="market-statusbar">
+          <span>
+            MESSAGE SAMPLES{' '}
+            <strong>{formatInteger(metrics.lastBatchSize)}</strong>
+          </span>
+          <span>
+            CHANGED ROWS{' '}
+            <strong>{formatInteger(metrics.lastUpdateCount)}</strong>
+          </span>
+          <span>
+            HOSTS{' '}
+            <strong>{formatInteger(controller.mountedCells.value)}</strong>
+          </span>
+          <span>
+            COMPONENTS{' '}
+            <strong>{formatInteger(controller.liveComponents.value)}</strong>
+          </span>
+        </footer>
+      )
     }
   },
 })

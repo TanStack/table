@@ -218,8 +218,7 @@ export const TradingTable = defineComponent({
     const stopResizingWatch = watch(
       () => table.atoms.columnResizing.get().isResizingColumn,
       (resizingColumn) => {
-        if (resizingColumn !== false)
-          layoutRuntime.manuallyResized = true
+        if (resizingColumn !== false) layoutRuntime.manuallyResized = true
       },
       { flush: 'sync' },
     )
