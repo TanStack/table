@@ -17,7 +17,7 @@ export class MarketStatusbar extends ControllerElement {
         >MESSAGE SAMPLES
         <strong>${integer.format(state.metrics.lastBatchSize)}</strong></span
       ><span
-        >ROW UPDATES
+        >CHANGED ROWS
         <strong>${integer.format(state.metrics.lastUpdateCount)}</strong></span
       ><span>HOSTS <strong>${integer.format(state.mountedCells)}</strong></span
       ><span

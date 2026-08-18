@@ -1,12 +1,6 @@
 import Component from '@glimmer/component'
-import { tracked } from '@glimmer/tracking'
-import { observeValue } from '../../utils/subscriptions'
-import type Owner from '@ember/owner'
 import type { NamedInvocationRate } from '../../benchmark/benchmark-monitor'
-import type {
-  TradingBenchmarkController,
-  TradingBenchmarkState,
-} from '../../benchmark/trading-benchmark-controller'
+import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
 interface Signature {
   Args: { controller: TradingBenchmarkController }
@@ -27,25 +21,17 @@ const invocations = (values: ReadonlyArray<NamedInvocationRate>): string => {
 }
 
 export default class Diagnostics extends Component<Signature> {
-  @tracked state: TradingBenchmarkState
-  constructor(owner: Owner, args: Signature['Args']) {
-    super(owner, args)
-    this.state = args.controller.store.get()
-    observeValue(this, args.controller.store, (state) => {
-      this.state = state
-    })
-  }
   get items() {
-    const metrics = this.state.metrics
+    const metrics = this.args.controller.metrics
     return [
       {
         label: 'Mounted cells',
-        value: integer.format(this.state.mountedCells),
+        value: integer.format(this.args.controller.mountedCells),
         testId: '',
       },
       {
         label: 'Live components',
-        value: integer.format(this.state.liveComponents),
+        value: integer.format(this.args.controller.liveComponents),
         testId: '',
       },
       {
@@ -74,9 +60,39 @@ export default class Diagnostics extends Component<Signature> {
         testId: 'cell-render-breakdown',
       },
       {
-        label: 'DOM mutation records / s',
+        label: 'Observed MutationRecords / s',
         value: rate.format(metrics.domMutationsPerSecond),
         testId: 'dom-mutation-rate',
+      },
+      {
+        label: 'Worker samples / s',
+        value: rate.format(metrics.actualTicksPerSecond),
+        testId: 'actual-rate',
+      },
+      {
+        label: 'Worker messages / s',
+        value: metrics.workerMessagesPerSecond.toFixed(1),
+        testId: 'message-rate',
+      },
+      {
+        label: 'Changed rows / s',
+        value: rate.format(metrics.rowUpdatesPerSecond),
+        testId: 'row-update-rate',
+      },
+      {
+        label: 'State snapshots / s',
+        value: metrics.stateApplicationsPerSecond.toFixed(1),
+        testId: 'state-apply-rate',
+      },
+      {
+        label: 'Table DOM commits / s',
+        value: metrics.tableRendersPerSecond.toFixed(1),
+        testId: 'table-render-rate',
+      },
+      {
+        label: 'P95 / max commit latency (rolling 10 s)',
+        value: `${ms(metrics.p95RenderMs)} / ${ms(metrics.maxRenderMs)}`,
+        testId: '',
       },
       {
         label: 'Core row model calls / s',
@@ -94,7 +110,7 @@ export default class Diagnostics extends Component<Signature> {
         testId: 'visible-row-count',
       },
       {
-        label: 'Worker messages',
+        label: 'Worker messages since reset',
         value: integer.format(metrics.workerMessages),
         testId: 'worker-messages',
       },
@@ -109,12 +125,12 @@ export default class Diagnostics extends Component<Signature> {
         testId: '',
       },
       {
-        label: 'Renders > 16.7 ms',
+        label: 'Commits > 16.7 ms since reset',
         value: integer.format(metrics.slowRenders),
         testId: '',
       },
       {
-        label: 'JS heap',
+        label: 'JS heap (GC-sensitive)',
         value:
           metrics.heapMb === null ? 'N/A' : `${metrics.heapMb.toFixed(1)} MB`,
         testId: '',
@@ -127,6 +143,11 @@ export default class Diagnostics extends Component<Signature> {
       <dl>{{#each this.items as |item|}}<div><dt>{{item.label}}</dt><dd
               data-testid={{or item.testId undefined}}
             >{{item.value}}</dd></div>{{/each}}</dl>
+      <p class='diagnostic-note'>MutationObserver counts delivered records, not
+        individual DOM operations, and adds profiling overhead. Only class/style
+        attributes, text, and child-list changes are observed. Heap is a
+        Chromium-only point-in-time value and can move before garbage
+        collection.</p>
     </section>
   </template>
 }

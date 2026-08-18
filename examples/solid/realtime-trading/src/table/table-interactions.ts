@@ -1,3 +1,5 @@
+import type { JSX } from 'solid-js'
+
 export type CellDirection = 'up' | 'down' | 'left' | 'right'
 
 interface RowSelectionTable {
@@ -85,66 +87,71 @@ export function selectRowFromPointer(
   })
 }
 
-export class TradingGridPointerController {
-  #lastPointerCell: HTMLTableCellElement | null = null
+/**
+ * Creates the only pointer listeners used by the table body. Cells expose just
+ * identity data; delegated events resolve the current TanStack cell on demand.
+ */
+export function createTradingGridSelectionHandlers(
+  table: TradingGridTable,
+  selectSymbol: (symbol: string) => void,
+) {
+  const runtime = { lastCell: null as HTMLTableCellElement | null }
 
-  handleMouseDown(
-    table: TradingGridTable,
-    event: MouseEvent,
-    selectSymbol: (symbol: string) => void,
-  ): void {
-    if (event.button !== 0) return
+  return {
+    onMouseDown(event) {
+      if (event.button !== 0) return
 
-    const target = this.#findCellTarget(table, event.composedPath())
-    if (!target) return
+      const target = findCellTarget(table, event.composedPath())
+      if (!target) return
 
-    this.#lastPointerCell = target.element
-    selectSymbol(target.cell.row.original.symbol)
-    target.cell.getSelectionStartHandler(target.element.ownerDocument)(event)
+      runtime.lastCell = target.element
+      selectSymbol(target.cell.row.original.symbol)
+      target.cell.getSelectionStartHandler(target.element.ownerDocument)(event)
+    },
+    onMouseOver(event) {
+      if ((event.buttons & 1) === 0) {
+        runtime.lastCell = null
+        return
+      }
+
+      const target = findCellTarget(table, event.composedPath())
+      if (!target || target.element === runtime.lastCell) return
+
+      runtime.lastCell = target.element
+      target.cell.getSelectionExtendHandler()(event)
+    },
+    onMouseLeave() {
+      runtime.lastCell = null
+    },
+    onClick(event) {
+      const target = findCellTarget(table, event.composedPath())
+      if (!target) return
+      selectRowFromPointer(table, target.cell.row, event)
+    },
+  } satisfies Pick<
+    JSX.IntrinsicElements['tbody'],
+    'onMouseDown' | 'onMouseOver' | 'onMouseLeave' | 'onClick'
+  >
+}
+
+function findCellTarget(
+  table: TradingGridTable,
+  path: Array<EventTarget>,
+): SelectionCellTarget | null {
+  for (const target of path) {
+    if (!(target instanceof HTMLTableCellElement)) continue
+
+    const columnId = target.dataset['columnId']
+    const rowId =
+      target.closest<HTMLTableRowElement>('tr[data-row-id]')?.dataset['rowId']
+    if (!columnId || !rowId) return null
+
+    const row = table.getRowModel().rowsById[rowId]
+    const cell = row.getAllCellsByColumnId()[columnId]
+    return { element: target, cell }
   }
 
-  handlePointerOver(table: TradingGridTable, event: MouseEvent): void {
-    if ((event.buttons & 1) === 0) {
-      this.resetPointerCell()
-      return
-    }
-
-    const target = this.#findCellTarget(table, event.composedPath())
-    if (!target || target.element === this.#lastPointerCell) return
-
-    this.#lastPointerCell = target.element
-    target.cell.getSelectionExtendHandler()(event)
-  }
-
-  handleClick(table: TradingGridTable, event: MouseEvent): void {
-    const target = this.#findCellTarget(table, event.composedPath())
-    if (!target) return
-    selectRowFromPointer(table, target.cell.row, event)
-  }
-
-  resetPointerCell(): void {
-    this.#lastPointerCell = null
-  }
-
-  #findCellTarget(
-    table: TradingGridTable,
-    path: Array<EventTarget>,
-  ): SelectionCellTarget | null {
-    for (const target of path) {
-      if (!(target instanceof HTMLTableCellElement)) continue
-
-      const columnId = target.dataset['columnId']
-      const rowId =
-        target.closest<HTMLTableRowElement>('tr[data-row-id]')?.dataset['rowId']
-      if (!columnId || !rowId) return null
-
-      const row = table.getRowModel().rowsById[rowId]
-      const cell = row.getAllCellsByColumnId()[columnId]
-      return { element: target, cell }
-    }
-
-    return null
-  }
+  return null
 }
 
 export function handleCellNavigation(

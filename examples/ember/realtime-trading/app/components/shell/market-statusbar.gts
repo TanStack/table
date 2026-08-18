@@ -1,11 +1,5 @@
 import Component from '@glimmer/component'
-import { tracked } from '@glimmer/tracking'
-import { observeValue } from '../../utils/subscriptions'
-import type Owner from '@ember/owner'
-import type {
-  TradingBenchmarkController,
-  TradingBenchmarkState,
-} from '../../benchmark/trading-benchmark-controller'
+import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
 interface Signature {
   Args: { controller: TradingBenchmarkController }
@@ -13,23 +7,24 @@ interface Signature {
 const integer = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
 
 export default class MarketStatusbar extends Component<Signature> {
-  @tracked state: TradingBenchmarkState
-  constructor(owner: Owner, args: Signature['Args']) {
-    super(owner, args)
-    this.state = args.controller.store.get()
-    observeValue(this, args.controller.store, (state) => {
-      this.state = state
-    })
+  get metrics() {
+    return this.args.controller.metrics
+  }
+  get mountedCells() {
+    return this.args.controller.mountedCells
+  }
+  get liveComponents() {
+    return this.args.controller.liveComponents
   }
   <template>
     <footer class='market-statusbar'>
       <span>MESSAGE SAMPLES
-        <strong>{{format this.state.metrics.lastBatchSize}}</strong></span>
-      <span>ROW UPDATES
-        <strong>{{format this.state.metrics.lastUpdateCount}}</strong></span>
-      <span>HOSTS <strong>{{format this.state.mountedCells}}</strong></span>
+        <strong>{{format this.metrics.lastBatchSize}}</strong></span>
+      <span>CHANGED ROWS
+        <strong>{{format this.metrics.lastUpdateCount}}</strong></span>
+      <span>HOSTS <strong>{{format this.mountedCells}}</strong></span>
       <span>COMPONENTS
-        <strong>{{format this.state.liveComponents}}</strong></span>
+        <strong>{{format this.liveComponents}}</strong></span>
     </footer>
   </template>
 }

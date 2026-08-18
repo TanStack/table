@@ -31,7 +31,44 @@ import { formatInteger, formatRate } from './shell-formatters'
           </dd>
         </div>
         <div>
-          <dt>Worker messages</dt>
+          <dt>Worker samples / s</dt>
+          <dd data-testid="actual-rate">
+            {{ formatRate(controller.metrics().actualTicksPerSecond) }}
+          </dd>
+        </div>
+        <div>
+          <dt>Worker messages / s</dt>
+          <dd data-testid="message-rate">
+            {{ controller.metrics().workerMessagesPerSecond.toFixed(1) }}
+          </dd>
+        </div>
+        <div>
+          <dt>Changed rows / s</dt>
+          <dd data-testid="row-update-rate">
+            {{ formatRate(controller.metrics().rowUpdatesPerSecond) }}
+          </dd>
+        </div>
+        <div>
+          <dt>State snapshots / s</dt>
+          <dd data-testid="state-apply-rate">
+            {{ controller.metrics().stateApplicationsPerSecond.toFixed(1) }}
+          </dd>
+        </div>
+        <div>
+          <dt>Table DOM commits / s</dt>
+          <dd data-testid="table-render-rate">
+            {{ controller.metrics().tableRendersPerSecond.toFixed(1) }}
+          </dd>
+        </div>
+        <div>
+          <dt>P95 / max commit latency (rolling 10 s)</dt>
+          <dd>
+            {{ controller.metrics().p95RenderMs.toFixed(2) }} ms /
+            {{ controller.metrics().maxRenderMs.toFixed(2) }} ms
+          </dd>
+        </div>
+        <div>
+          <dt>Worker messages since reset</dt>
           <dd data-testid="worker-messages">
             {{ formatInteger(controller.metrics().workerMessages) }}
           </dd>
@@ -50,8 +87,14 @@ import { formatInteger, formatRate } from './shell-formatters'
           </dd>
         </div>
         <div>
-          <dt>Renders &gt; 16.7 ms</dt>
+          <dt>Commits &gt; 16.7 ms since reset</dt>
           <dd>{{ controller.metrics().slowRenders }}</dd>
+        </div>
+        <div>
+          <dt>Observed MutationRecords / s</dt>
+          <dd data-testid="dom-mutation-rate">
+            {{ formatRate(controller.metrics().domMutationsPerSecond) }}
+          </dd>
         </div>
         <div>
           <dt>Long animation frames</dt>
@@ -64,7 +107,7 @@ import { formatInteger, formatRate } from './shell-formatters'
           </dd>
         </div>
         <div>
-          <dt>JS heap</dt>
+          <dt>JS heap (GC-sensitive)</dt>
           <dd>
             {{
               controller.metrics().heapMb === null
@@ -74,6 +117,12 @@ import { formatInteger, formatRate } from './shell-formatters'
           </dd>
         </div>
       </dl>
+      <p class="diagnostic-note">
+        MutationObserver counts delivered records, not individual DOM
+        operations, and adds profiling overhead. Only class/style attributes,
+        text, and child-list changes are observed. Heap is a Chromium-only
+        point-in-time value and can move before garbage collection.
+      </p>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

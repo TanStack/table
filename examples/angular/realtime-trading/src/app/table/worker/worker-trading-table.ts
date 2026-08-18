@@ -27,6 +27,7 @@ import { injectTradingTableInitialFit } from '../trading-table-initial-fit'
 import { TradingGridCellDirective } from '../view/trading-grid-cell.directive'
 import { TradingGridSelectionDirective } from '../view/trading-grid-selection.directive'
 import { TradingHeaderCell } from '../view/trading-header-cell'
+import { TradingTableBenchmarkDirective } from '../view/trading-table-benchmark.directive'
 import {
   TRADING_ROW_HEIGHT,
   injectTradingRowVirtualizer,
@@ -60,6 +61,7 @@ function createWorkerTableRuntime() {
     TradingGridCellDirective,
     TradingGridSelectionDirective,
     TradingHeaderCell,
+    TradingTableBenchmarkDirective,
   ],
   templateUrl: '../table-v9.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

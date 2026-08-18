@@ -216,17 +216,19 @@ export function readMeasuredRows<Row>(readRows: () => Array<Row>): Array<Row> {
   )
   rowModelDiagnostics.lastRowCount = rows.length
 
-  try {
-    performance.measure('tanstack-row-model', {
-      start,
-      end,
-      detail: { rowCount: rows.length },
-    })
-    if (rowModelDiagnostics.calls % 1_000 === 0) {
-      performance.clearMeasures('tanstack-row-model')
+  if (rowModelDiagnostics.calls % 1_000 === 0) {
+    performance.clearMeasures('tanstack-row-model')
+  }
+  if ((rowModelDiagnostics.calls - 1) % 20 === 0) {
+    try {
+      performance.measure('tanstack-row-model', {
+        start,
+        end,
+        detail: { rowCount: rows.length },
+      })
+    } catch {
+      // User Timing Level 3 detail is not implemented in every browser.
     }
-  } catch {
-    // User Timing Level 3 detail is not implemented in every browser.
   }
 
   return rows

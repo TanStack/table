@@ -116,16 +116,34 @@ changes.
 
 ## Diagnostics and interpretation
 
-The monitor records generated samples, worker messages, unique row updates,
-state applies, table commits, average mutation-to-render latency, long animation
-frames, mounted hosts, component creation/destruction and execution, cell
-callbacks by column, DOM mutation records, core row-model timing, and optional
-heap data.
+The sidebar starts with four cross-framework health signals: estimated rAF
+callbacks/s over one second, average snapshot-to-DOM-commit latency over three
+seconds, long animation frames accumulated since reset, and throughput as
+changed rows/s plus applied snapshots/s. “Changed rows” is deduplicated within
+each snapshot; the same instrument can count again in a later snapshot. The
+advanced diagnostics retain worker samples/messages, DOM commits, a rolling
+10-second p95/max commit latency, slow commits, lifecycle/execution rates,
+row-model timing, DOM mutation records, and optional heap data.
+
+The frame figure is deliberately labeled estimated: it counts this page's rAF
+callbacks, is capped by the display refresh rate, and falls when a tab is
+throttled. It is a portable responsiveness signal, not compositor-presented
+FPS.
+
+Vue closes the pending measurement from the table's mounted/updated commit
+hooks. User Timing entries for commits and row-model work are sampled at one in
+20 calls; the in-memory counters and latency windows still measure every call.
 
 Callback counts are not DOM mutation counts. Temporary heap growth during the
-swap workload is not a leak unless post-GC snapshots retain instances. Compare
-identical production configurations and use Chrome Performance plus Vue
-DevTools for call stacks and component detail.
+swap workload is not a leak unless post-GC snapshots retain instances. The heap
+value is Chromium-only and GC-sensitive, not retained size. The DOM rate counts
+`MutationRecord` objects rather than browser operations, and records may be
+coalesced; the observer watches text/child changes plus only `class`/`style`
+attributes to limit its own overhead. Non-feed text/child changes and
+interaction-driven `class`/`style` changes (including virtual scrolling) are
+included, so this is not a feed-only rate. Compare identical production
+configurations and use Chrome Performance plus Vue DevTools for call stacks and
+component detail.
 
 ## Standalone policy
 

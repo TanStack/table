@@ -18,6 +18,7 @@ export function useTableBenchmark(
     })
     runtime.mutationObserver.observe(tableBody, {
       attributes: true,
+      attributeFilter: ['class', 'style'],
       characterData: true,
       childList: true,
       subtree: true,

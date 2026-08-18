@@ -8,6 +8,7 @@ import {
 import { MarketFeedService } from '../feed/market-feed.service'
 import { configuratorOptions } from './configurator-options'
 import { Diagnostics } from './diagnostics'
+import { MetricsStrip } from './metrics-strip'
 import { SelectedInstrument } from './selected-instrument'
 import {
   formatRate,
@@ -18,7 +19,7 @@ import {
 
 @Component({
   selector: 'app-configurator',
-  imports: [Diagnostics, SelectedInstrument],
+  imports: [Diagnostics, MetricsStrip, SelectedInstrument],
   templateUrl: './configurator.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

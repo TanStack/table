@@ -13,6 +13,7 @@ import {
 import { configuratorOptions } from './configurator-options'
 import { ControllerElement } from './controller-element'
 import './Diagnostics'
+import './MetricsStrip'
 import './SelectedInstrument'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
@@ -30,11 +31,18 @@ const options = (
     readonly label: string
     readonly value: number | string
   }>,
+  selectedValue: number | string,
 ) =>
   repeat(
     items,
     (item) => item.value,
-    (item) => html`<option value=${item.value}>${item.label}</option>`,
+    (item) =>
+      html`<option
+        value=${item.value}
+        ?selected=${String(item.value) === String(selectedValue)}
+      >
+        ${item.label}
+      </option>`,
   )
 
 @customElement('trading-configurator')
@@ -72,6 +80,9 @@ export class Configurator extends ControllerElement {
       aria-label="Benchmark configurator"
     >
       <header><span>CONFIGURATOR</span><small>RUN PARAMETERS</small></header>
+      <trading-metrics-strip
+        .controller=${this.controller}
+      ></trading-metrics-strip>
       <section class="config-section" aria-labelledby="feed-settings">
         <h2 id="feed-settings">FEED</h2>
         <button
@@ -92,7 +103,10 @@ export class Configurator extends ControllerElement {
               this.feed.actions.setInstrumentCount(number(event))
             }}
           >
-            ${options(configuratorOptions.instrumentCounts)}
+            ${options(
+              configuratorOptions.instrumentCounts,
+              feedState.instrumentCount,
+            )}
           </select></label
         >
         <label class="field rate-field"
@@ -121,7 +135,10 @@ export class Configurator extends ControllerElement {
             .value=${String(feedState.publishIntervalMs)}
             @change=${(event: Event) => this.feed.actions.setPublishInterval(number(event))}
           >
-            ${options(configuratorOptions.workerDeliveryIntervals)}</select
+            ${options(
+              configuratorOptions.workerDeliveryIntervals,
+              feedState.publishIntervalMs,
+            )}</select
           ><small
             >One coalesced worker message at this target cadence.</small
           ></label
@@ -137,7 +154,7 @@ export class Configurator extends ControllerElement {
             ?disabled=${forced}
             @change=${(event: Event) => this.controller.actions.setVirtualScrollEnabled(value(event) === 'tanstack')}
           >
-            ${options(configuratorOptions.rowRenderingModes)}</select
+            ${options(configuratorOptions.rowRenderingModes, virtualMode)}</select
           ><small
             >${forced ? 'TanStack Virtual is required and locked at 1,500 or more rows.' : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'}</small
           ></label
@@ -171,7 +188,10 @@ export class Configurator extends ControllerElement {
             .value=${String(feedState.sparklineSampleIntervalMs)}
             @change=${(event: Event) => this.feed.actions.setSparklineSampleInterval(number(event))}
           >
-            ${options(configuratorOptions.intradaySamplingIntervals)}
+            ${options(
+              configuratorOptions.intradaySamplingIntervals,
+              feedState.sparklineSampleIntervalMs,
+            )}
           </select></label
         >
       </section>

@@ -5,51 +5,21 @@ import { formatMs, formatRate } from './shell-formatters'
 @Component({
   selector: 'app-metrics-strip',
   template: `
-    <section class="metrics-strip" aria-label="Live performance metrics">
+    <section class="metrics-strip" aria-labelledby="live-health">
+      <h2 id="live-health">LIVE HEALTH</h2>
       <article>
-        <span>WORKER SAMPLES</span>
-        <strong data-testid="actual-rate">
-          {{ formatRate(controller.metrics().actualTicksPerSecond) }}
+        <span>FRAME RATE (EST.)</span>
+        <strong data-testid="frame-rate">
+          {{ controller.metrics().rafCallbacksPerSecond.toFixed(1) }}
         </strong>
-        <small>generated samples/s</small>
+        <small>rAF callbacks/s · rolling 1 s</small>
       </article>
       <article>
-        <span>ROW UPDATES</span>
-        <strong data-testid="row-update-rate">
-          {{ formatRate(controller.metrics().rowUpdatesPerSecond) }}
+        <span>AVG COMMIT</span>
+        <strong data-testid="average-commit-latency">
+          {{ formatMs(controller.metrics().averageRenderMs) }}
         </strong>
-        <small>unique rows applied/s</small>
-      </article>
-      <article>
-        <span>MESSAGES</span>
-        <strong data-testid="message-rate">
-          {{ controller.metrics().workerMessagesPerSecond.toFixed(1) }}
-        </strong>
-        <small>worker messages/s</small>
-      </article>
-      <article>
-        <span>STATE APPLIES</span>
-        <strong data-testid="state-apply-rate">
-          {{ controller.metrics().stateApplicationsPerSecond.toFixed(1) }}
-        </strong>
-        <small>quote snapshots/s</small>
-      </article>
-      <article>
-        <span>TABLE COMMITS</span>
-        <strong data-testid="table-render-rate">
-          {{ controller.metrics().tableRendersPerSecond.toFixed(1) }}
-        </strong>
-        <small>completed renders/s</small>
-      </article>
-      <article>
-        <span>AVG RENDER</span>
-        <strong>{{ formatMs(controller.metrics().averageRenderMs) }}</strong>
-        <small>mutation → render</small>
-      </article>
-      <article>
-        <span>P95 RENDER</span>
-        <strong>{{ formatMs(controller.metrics().p95RenderMs) }}</strong>
-        <small>max {{ formatMs(controller.metrics().maxRenderMs) }}</small>
+        <small>snapshot → DOM · rolling 3 s</small>
       </article>
       <article>
         <span>LONG FRAMES</span>
@@ -61,13 +31,23 @@ import { formatMs, formatRate } from './shell-formatters'
             {{ controller.metrics().longAnimationFrames }}
           </strong>
           <small>
-            worst
+            since reset · worst
             {{ formatMs(controller.metrics().worstLongAnimationFrameMs) }}
           </small>
         } @else {
           <strong data-testid="long-frame-count">N/A</strong>
           <small>unsupported</small>
         }
+      </article>
+      <article>
+        <span>THROUGHPUT</span>
+        <strong data-testid="throughput-rate">
+          {{ formatRate(controller.metrics().rowUpdatesPerSecond) }} rows/s
+        </strong>
+        <small>
+          {{ controller.metrics().stateApplicationsPerSecond.toFixed(1) }}
+          snapshots/s · rows deduplicated per snapshot
+        </small>
       </article>
     </section>
   `,

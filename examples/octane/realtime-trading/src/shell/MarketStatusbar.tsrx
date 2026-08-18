@@ -17,7 +17,7 @@ export function MarketStatusbar({ controller }: { controller: TradingBenchmarkCo
   )
   <footer className="market-statusbar">
     <span>MESSAGE SAMPLES <strong>{integer.format(state.lastBatchSize)}</strong></span>
-    <span>ROW UPDATES <strong>{integer.format(state.lastUpdateCount)}</strong></span>
+    <span>CHANGED ROWS <strong>{integer.format(state.lastUpdateCount)}</strong></span>
     <span>HOSTS <strong>{integer.format(state.mountedCells)}</strong></span>
     <span>COMPONENTS <strong>{integer.format(state.liveComponents)}</strong></span>
   </footer>

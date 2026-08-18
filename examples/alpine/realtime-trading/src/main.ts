@@ -119,6 +119,8 @@ Alpine.data('tradingApp', () => {
     cachedRows: [] as ReturnType<Table['getRowModel']>['rows'],
     cachedFeed: null as Array<MarketQuote> | null,
     cachedTableVersion: -1,
+    lastRenderedRowCount: -1,
+    domCommitScheduled: false,
   }
   const rows = () => {
     if (
@@ -161,7 +163,12 @@ Alpine.data('tradingApp', () => {
             .getVirtualItems()
             .map((item) => ({ row: currentRows[item.index], virtual: item }))
         : currentRows.map((row) => ({ row, virtual: null }))
-    queueMicrotask(() => controller.actions.setRenderedRowCount(result.length))
+    if (runtime.lastRenderedRowCount !== result.length) {
+      runtime.lastRenderedRowCount = result.length
+      queueMicrotask(() =>
+        controller.actions.setRenderedRowCount(runtime.lastRenderedRowCount),
+      )
+    }
     return result
   }
   const writeSizes = (tableElement: HTMLTableElement) => {
@@ -176,6 +183,15 @@ Alpine.data('tradingApp', () => {
       )
     }
     tableElement.style.width = `${table.getTotalSize()}px`
+  }
+  const scheduleDomCommit = () => {
+    if (runtime.domCommitScheduled) return
+
+    runtime.domCommitScheduled = true
+    Alpine.nextTick(() => {
+      runtime.domCommitScheduled = false
+      feed.completeRender()
+    })
   }
 
   return {
@@ -221,6 +237,7 @@ Alpine.data('tradingApp', () => {
       )
       mutationObserver.observe(tableElement.tBodies[0], {
         attributes: true,
+        attributeFilter: ['class', 'style'],
         characterData: true,
         childList: true,
         subtree: true,
@@ -249,7 +266,7 @@ Alpine.data('tradingApp', () => {
         }),
         feed.quotes.subscribe((quotes) => {
           local.feed.quotes = quotes
-          Alpine.nextTick(() => feed.completeRender())
+          scheduleDomCommit()
         }),
         controller.store.subscribe((state) => {
           local.benchmark = state
@@ -282,10 +299,8 @@ Alpine.data('tradingApp', () => {
           (subscription) => () => subscription.unsubscribe(),
         ),
       )
-      Alpine.nextTick(() => {
-        writeSizes(tableElement)
-        feed.completeRender()
-      })
+      Alpine.nextTick(() => writeSizes(tableElement))
+      scheduleDomCommit()
     },
     destroy() {
       for (const cleanup of runtime.cleanups) cleanup()
@@ -362,41 +377,16 @@ Alpine.data('tradingApp', () => {
       const metrics = local.benchmark.metrics
       return [
         [
-          'WORKER SAMPLES',
-          rate.format(metrics.actualTicksPerSecond),
-          'generated samples/s',
-          'actual-rate',
+          'FRAME RATE (EST.)',
+          metrics.rafCallbacksPerSecond.toFixed(1),
+          'rAF callbacks/s · rolling 1 s',
+          'frame-rate',
         ],
         [
-          'ROW UPDATES',
-          rate.format(metrics.rowUpdatesPerSecond),
-          'unique rows applied/s',
-          'row-update-rate',
-        ],
-        [
-          'MESSAGES',
-          metrics.workerMessagesPerSecond.toFixed(1),
-          'worker messages/s',
-          'message-rate',
-        ],
-        [
-          'STATE APPLIES',
-          metrics.stateApplicationsPerSecond.toFixed(1),
-          'quote snapshots/s',
-          'state-apply-rate',
-        ],
-        [
-          'TABLE COMMITS',
-          metrics.tableRendersPerSecond.toFixed(1),
-          'completed renders/s',
-          'table-render-rate',
-        ],
-        ['AVG RENDER', ms(metrics.averageRenderMs), 'mutation → render', ''],
-        [
-          'P95 RENDER',
-          ms(metrics.p95RenderMs),
-          `max ${ms(metrics.maxRenderMs)}`,
-          '',
+          'AVG COMMIT',
+          ms(metrics.averageCommitLatencyMs),
+          'snapshot → DOM · rolling 3 s',
+          'average-commit-latency',
         ],
         [
           'LONG FRAMES',
@@ -404,9 +394,15 @@ Alpine.data('tradingApp', () => {
             ? String(metrics.longAnimationFrames)
             : 'N/A',
           local.benchmark.longAnimationFramesSupported
-            ? `worst ${ms(metrics.worstLongAnimationFrameMs)}`
+            ? `since reset · worst ${ms(metrics.worstLongAnimationFrameMs)}`
             : 'unsupported',
           'long-frame-count',
+        ],
+        [
+          'THROUGHPUT',
+          `${rate.format(metrics.rowUpdatesPerSecond)} rows/s`,
+          `${metrics.stateApplicationsPerSecond.toFixed(1)} snapshots/s · rows deduplicated per snapshot`,
+          'throughput-rate',
         ],
       ]
     },
@@ -421,6 +417,36 @@ Alpine.data('tradingApp', () => {
           : '—'
       }
       return [
+        [
+          'Worker-generated samples / s',
+          rate.format(metrics.actualTicksPerSecond),
+          'actual-rate',
+        ],
+        [
+          'Changed rows / s',
+          rate.format(metrics.rowUpdatesPerSecond),
+          'row-update-rate',
+        ],
+        [
+          'Worker messages / s',
+          metrics.workerMessagesPerSecond.toFixed(1),
+          'message-rate',
+        ],
+        [
+          'Snapshots applied / s',
+          metrics.stateApplicationsPerSecond.toFixed(1),
+          'state-apply-rate',
+        ],
+        [
+          'DOM commits / s',
+          metrics.tableCommitsPerSecond.toFixed(1),
+          'table-render-rate',
+        ],
+        [
+          'Commit latency p95 / max (10 s)',
+          `${ms(metrics.p95CommitLatencyMs)} / ${ms(metrics.maxCommitLatencyMs)}`,
+          '',
+        ],
         ['Mounted cells', integer.format(local.benchmark.mountedCells), ''],
         ['Live components', integer.format(local.benchmark.liveComponents), ''],
         [
@@ -449,7 +475,7 @@ Alpine.data('tradingApp', () => {
           'cell-render-breakdown',
         ],
         [
-          'DOM mutation records / s',
+          'Observed MutationRecords / s',
           rate.format(metrics.domMutationsPerSecond),
           'dom-mutation-rate',
         ],
@@ -483,9 +509,13 @@ Alpine.data('tradingApp', () => {
           `${integer.format(metrics.lastBatchSize)} / ${integer.format(metrics.lastUpdateCount)}`,
           '',
         ],
-        ['Renders > 16.7 ms', integer.format(metrics.slowRenders), ''],
         [
-          'JS heap',
+          'Commits > 16.7 ms (since reset)',
+          integer.format(metrics.slowCommits),
+          '',
+        ],
+        [
+          'JS heap (current, GC-sensitive)',
           metrics.heapMb === null ? 'N/A' : `${metrics.heapMb.toFixed(1)} MB`,
           '',
         ],

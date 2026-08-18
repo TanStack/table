@@ -43,14 +43,6 @@
         </aside>
       </div>
       <section class="market-panel" aria-label="Live synthetic quotes">
-        <section class="metrics-strip" aria-label="Live performance metrics">
-          <template x-for="item in metricItems()" :key="item[0]"
-            ><article>
-              <span x-text="item[0]"></span
-              ><strong :data-testid="item[3] || null" x-text="item[1]"></strong
-              ><small x-text="item[2]"></small></article
-          ></template>
-        </section>
         <div
           x-ref="scroll"
           class="table-scroll"
@@ -197,7 +189,7 @@
             x-text="formatInteger(local.benchmark.metrics.lastBatchSize)"
           ></strong></span
         ><span
-          >ROW UPDATES
+          >CHANGED ROWS
           <strong
             x-text="formatInteger(local.benchmark.metrics.lastUpdateCount)"
           ></strong></span
@@ -223,6 +215,18 @@
           <header>
             <span>CONFIGURATOR</span><small>RUN PARAMETERS</small>
           </header>
+          <section class="metrics-strip" aria-labelledby="live-health">
+            <h2 id="live-health">LIVE HEALTH</h2>
+            <template x-for="item in metricItems()" :key="item[0]"
+              ><article>
+                <span x-text="item[0]"></span
+                ><strong
+                  :data-testid="item[3] || null"
+                  x-text="item[1]"
+                ></strong
+                ><small x-text="item[2]"></small></article
+            ></template>
+          </section>
           <section class="config-section" aria-labelledby="feed-settings">
             <h2 id="feed-settings">FEED</h2>
             <button

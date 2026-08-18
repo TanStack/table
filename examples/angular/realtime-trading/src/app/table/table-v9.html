@@ -31,7 +31,11 @@
             </tr>
           }
         </thead>
-        <tbody class="virtual-table-body" [style.height.px]="tableHeight()">
+        <tbody
+          appTradingTableBenchmark
+          class="virtual-table-body"
+          [style.height.px]="tableHeight()"
+        >
           @for (virtualRow of virtualization.tanStackVirtualRows(); track virtualRow.key) {
             @if (rows()[virtualRow.index]; as row) {
               <tr
@@ -91,7 +95,7 @@
             </tr>
           }
         </thead>
-        <tbody>
+        <tbody appTradingTableBenchmark>
           @for (row of rows(); track row.id) {
             <tr
               [attr.data-symbol]="row.original.symbol"

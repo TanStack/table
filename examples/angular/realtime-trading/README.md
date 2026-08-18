@@ -186,23 +186,45 @@ filtered row model when its data/state inputs require it.
 The benchmark layer observes the feed through callbacks, so it can be removed
 without changing feed semantics. It reports:
 
-- generated worker samples, unique row updates, received messages, and state
-  applies;
-- completed table renders and average mutation-to-render latency;
+- a compact **Live health** summary in the configurator: estimated frame
+  callbacks over a rolling 1-second window, average market-mutation-to-DOM-
+  commit latency over 3 seconds, cumulative long animation frames, and
+  throughput as changed rows plus applied snapshots per second;
+- generated worker samples, changed rows, received messages, state applies,
+  and completed DOM commits;
+- p95/maximum commit latency over a rolling 10-second window and commits over
+  16.7 ms accumulated since reset;
 - long animation frames and worst duration when the browser supports the Long
   Animation Frames API;
 - mounted cell hosts and live/created/destroyed dynamic components;
 - cell-render callbacks by column and component executions by type;
-- DOM mutation records from a `MutationObserver`;
+- DOM `MutationRecord` delivery rate from a `MutationObserver` limited to text,
+  child-list, and `class`/`style` attributes;
 - core row-model call rate and average/maximum duration;
 - heap information where the browser exposes it.
 
+The frame-rate value is an estimated `requestAnimationFrame` callback rate, not
+GPU-presented FPS; its healthy ceiling follows the display refresh rate. The
+latency starts at the first pending feed mutation and ends in Angular's
+`afterEveryRender` callback, after Angular has committed the DOM.
+
+`Changed rows/s` sums the update array lengths delivered by each snapshot.
+Symbols are deduplicated inside one worker message, but the same row can count
+again in the next snapshot; it is therefore applied row throughput, not the
+number of distinct instruments touched during the entire second.
+
 Renderer callback counts are not DOM mutation counts. A callback can execute
 and still reuse a component/view, while a component execution count records the
-framework component path itself. Heap growth during the swap stress mode is not
-automatically a leak: garbage collection is nondeterministic, so retained
-objects must be confirmed with repeated heap snapshots after GC and a stable
-workload.
+framework component path itself. `MutationObserver` reports delivered records,
+not a one-to-one count of browser DOM operations; record coalescing and custom
+component internals affect it, and observing a hot subtree has profiling
+overhead. The attribute filter excludes selection-oriented `data-*` changes to
+reduce noise. Heap is Chromium-only and GC-sensitive. Growth during swap mode is
+not automatically a leak: confirm retention with repeated post-GC snapshots.
+The rAF loop only appends a timestamp; rolling aggregation and heap reads run at
+the 500 ms metrics publication cadence. Mutation observation remains the most
+intrusive diagnostic because the browser must create records for the observed
+subtree.
 
 Use Chrome Performance/Angular DevTools for call stacks and frame analysis, and
 the in-app diagnostics for controlled comparisons. Keep row count, workload,

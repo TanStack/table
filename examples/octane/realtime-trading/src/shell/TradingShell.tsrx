@@ -2,7 +2,6 @@ import { useEffect, useState } from 'octane'
 import { AppHeader } from './AppHeader.tsrx'
 import { Configurator } from './Configurator.tsrx'
 import { MarketStatusbar } from './MarketStatusbar.tsrx'
-import { MetricsStrip } from './MetricsStrip.tsrx'
 import { TradingTable } from '../table/TradingTable.tsrx'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
@@ -27,7 +26,6 @@ export function TradingShell(props: {
       {import.meta.env.DEV && <aside className="development-warning">DEV BUILD — use the production build before recording results.</aside>}
     </div>
     <section className="market-panel" aria-label="Live synthetic quotes">
-      <MetricsStrip controller={props.controller} />
       <TradingTable controller={props.controller} feed={props.feed} />
     </section>
     <MarketStatusbar controller={props.controller} />

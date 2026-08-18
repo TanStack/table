@@ -1,4 +1,13 @@
 import { createMemo, onCleanup, onMount } from 'solid-js'
+import type {
+  DepthCellProps,
+  MoveCellProps,
+  PercentChangeCellProps,
+  PriceCellProps,
+  QuoteAgeCellProps,
+  SparklineCellProps,
+  SpreadCellProps,
+} from './quote-cell-props'
 
 const compactNumber = new Intl.NumberFormat('en-US', {
   notation: 'compact',
@@ -74,11 +83,7 @@ function trackLifecycle(componentName: QuoteComponentName): void {
   })
 }
 
-export function PriceCell(props: {
-  price: number
-  move: number
-  onSelect: () => void
-}) {
+export function PriceCell(props: PriceCellProps) {
   trackLifecycle('PriceCell')
   return (
     <button
@@ -94,7 +99,7 @@ export function PriceCell(props: {
   )
 }
 
-export function StableMoveCell(props: { move: number }) {
+export function StableMoveCell(props: MoveCellProps) {
   trackLifecycle('StableMoveCell')
   return (
     <span
@@ -109,17 +114,17 @@ export function StableMoveCell(props: { move: number }) {
   )
 }
 
-export function UpMoveCell(props: { move: number }) {
+export function UpMoveCell(props: MoveCellProps) {
   trackLifecycle('UpMoveCell')
   return <span class="move-cell quote-up">▲ {formatSigned(props.move)}</span>
 }
 
-export function DownMoveCell(props: { move: number }) {
+export function DownMoveCell(props: MoveCellProps) {
   trackLifecycle('DownMoveCell')
   return <span class="move-cell quote-down">▼ {formatSigned(props.move)}</span>
 }
 
-export function PercentChangeCell(props: { value: number }) {
+export function PercentChangeCell(props: PercentChangeCellProps) {
   trackLifecycle('PercentChangeCell')
   return (
     <span
@@ -135,7 +140,7 @@ export function PercentChangeCell(props: { value: number }) {
   )
 }
 
-export function SpreadCell(props: { bid: number; ask: number }) {
+export function SpreadCell(props: SpreadCellProps) {
   trackLifecycle('SpreadCell')
   const spread = createMemo(() => Math.max(0, props.ask - props.bid))
   const basisPoints = createMemo(() => {
@@ -151,7 +156,7 @@ export function SpreadCell(props: { bid: number; ask: number }) {
   )
 }
 
-export function DepthCell(props: { bidSize: number; askSize: number }) {
+export function DepthCell(props: DepthCellProps) {
   trackLifecycle('DepthCell')
   const bidShare = createMemo(() => {
     const total = props.bidSize + props.askSize
@@ -173,7 +178,7 @@ export function DepthCell(props: { bidSize: number; askSize: number }) {
   )
 }
 
-export function QuoteAgeCell(props: { ageMs: number }) {
+export function QuoteAgeCell(props: QuoteAgeCellProps) {
   trackLifecycle('QuoteAgeCell')
   return (
     <span
@@ -190,7 +195,7 @@ export function QuoteAgeCell(props: { ageMs: number }) {
   )
 }
 
-export function SparklineCell(props: { values: ReadonlyArray<number> }) {
+export function SparklineCell(props: SparklineCellProps) {
   trackLifecycle('SparklineCell')
   const rising = createMemo(
     () => (props.values.at(-1) ?? 0) >= (props.values[0] ?? 0),

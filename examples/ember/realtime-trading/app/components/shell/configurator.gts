@@ -1,5 +1,4 @@
 import Component from '@glimmer/component'
-import { tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
 import {
   feedSampleRateAt,
@@ -10,17 +9,12 @@ import {
   FORCED_VIRTUALIZATION_ROW_COUNT,
   resolveVirtualScrollMode,
 } from '../../table/trading-row-virtualizer'
-import { observeValue } from '../../utils/subscriptions'
 import { configuratorOptions } from './configurator-options'
 import Diagnostics from './diagnostics.gts'
+import MetricsStrip from './metrics-strip.gts'
 import SelectedInstrument from './selected-instrument.gts'
-import type Owner from '@ember/owner'
 import type { MarketFeedController } from '../../feed/market-feed-controller'
-import type {
-  TradingBenchmarkController,
-  TradingBenchmarkState,
-} from '../../benchmark/trading-benchmark-controller'
-import type { RendererMode } from '../../table/trading-table'
+import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
 interface Signature {
   Args: { controller: TradingBenchmarkController; feed: MarketFeedController }
@@ -33,37 +27,26 @@ const rate = new Intl.NumberFormat('en-US', {
 export default class Configurator extends Component<Signature> {
   readonly feedSampleRateOptions = feedSampleRateOptions
   readonly options = configuratorOptions
-  @tracked running: boolean
-  @tracked instrumentCount: number
-  @tracked targetTicksPerSecond: number
-  @tracked publishIntervalMs: number
-  @tracked updateSparklines: boolean
-  @tracked sparklineSampleIntervalMs: number
-  @tracked benchmark: TradingBenchmarkState
-  @tracked rendererMode: RendererMode
-
-  constructor(owner: Owner, args: Signature['Args']) {
-    super(owner, args)
-    this.running = args.feed.running.get()
-    this.instrumentCount = args.feed.instrumentCount.get()
-    this.targetTicksPerSecond = args.feed.targetTicksPerSecond.get()
-    this.publishIntervalMs = args.feed.publishIntervalMs.get()
-    this.updateSparklines = args.feed.updateSparklines.get()
-    this.sparklineSampleIntervalMs = args.feed.sparklineSampleIntervalMs.get()
-    this.benchmark = args.controller.store.get()
-    this.rendererMode = args.controller.renderAtoms.rendererMode.get()
-    observeValue(this, args.feed.running, (value) => { this.running = value })
-    observeValue(this, args.feed.instrumentCount, (value) => { this.instrumentCount = value })
-    observeValue(this, args.feed.targetTicksPerSecond, (value) => { this.targetTicksPerSecond = value })
-    observeValue(this, args.feed.publishIntervalMs, (value) => { this.publishIntervalMs = value })
-    observeValue(this, args.feed.updateSparklines, (value) => { this.updateSparklines = value })
-    observeValue(this, args.feed.sparklineSampleIntervalMs, (value) => { this.sparklineSampleIntervalMs = value })
-    observeValue(this, args.controller.store, (state) => {
-      this.benchmark = state
-    })
-    observeValue(this, args.controller.renderAtoms.rendererMode, (mode) => {
-      this.rendererMode = mode
-    })
+  get running() {
+    return this.args.feed.running
+  }
+  get instrumentCount() {
+    return this.args.feed.instrumentCount
+  }
+  get targetTicksPerSecond() {
+    return this.args.feed.targetTicksPerSecond
+  }
+  get publishIntervalMs() {
+    return this.args.feed.publishIntervalMs
+  }
+  get updateSparklines() {
+    return this.args.feed.updateSparklines
+  }
+  get sparklineSampleIntervalMs() {
+    return this.args.feed.sparklineSampleIntervalMs
+  }
+  get rendererMode() {
+    return this.args.controller.rendererMode
   }
 
   get virtualForced() {
@@ -71,7 +54,7 @@ export default class Configurator extends Component<Signature> {
   }
   get virtualMode() {
     return resolveVirtualScrollMode(
-      this.benchmark.requestedVirtualScrollMode,
+      this.args.controller.requestedVirtualScrollMode,
       this.instrumentCount,
     )
   }
@@ -121,6 +104,7 @@ export default class Configurator extends Component<Signature> {
       aria-label='Benchmark configurator'
     >
       <header><span>CONFIGURATOR</span><small>RUN PARAMETERS</small></header>
+      <MetricsStrip @controller={{@controller}} />
       <section class='config-section' aria-labelledby='feed-settings'>
         <h2 id='feed-settings'>FEED</h2>
         <button

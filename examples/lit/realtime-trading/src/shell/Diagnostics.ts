@@ -29,6 +29,36 @@ export class Diagnostics extends ControllerElement {
     const state = this.controller.store.get()
     const metrics = state.metrics
     const items = [
+      [
+        'Worker-generated samples / s',
+        rate.format(metrics.actualTicksPerSecond),
+        'actual-rate',
+      ],
+      [
+        'Changed rows / s',
+        rate.format(metrics.rowUpdatesPerSecond),
+        'row-update-rate',
+      ],
+      [
+        'Worker messages / s',
+        metrics.workerMessagesPerSecond.toFixed(1),
+        'message-rate',
+      ],
+      [
+        'Snapshots applied / s',
+        metrics.stateApplicationsPerSecond.toFixed(1),
+        'state-apply-rate',
+      ],
+      [
+        'DOM commits / s',
+        metrics.tableCommitsPerSecond.toFixed(1),
+        'table-render-rate',
+      ],
+      [
+        'Commit latency p95 / max (10 s)',
+        `${ms(metrics.p95CommitLatencyMs)} / ${ms(metrics.maxCommitLatencyMs)}`,
+        '',
+      ],
       ['Mounted cells', integer.format(state.mountedCells), ''],
       ['Live components', integer.format(state.liveComponents), ''],
       [
@@ -57,7 +87,7 @@ export class Diagnostics extends ControllerElement {
         'cell-render-breakdown',
       ],
       [
-        'DOM mutation records / s',
+        'Observed MutationRecords / s',
         rate.format(metrics.domMutationsPerSecond),
         'dom-mutation-rate',
       ],
@@ -91,9 +121,13 @@ export class Diagnostics extends ControllerElement {
         `${integer.format(metrics.lastBatchSize)} / ${integer.format(metrics.lastUpdateCount)}`,
         '',
       ],
-      ['Renders > 16.7 ms', integer.format(metrics.slowRenders), ''],
       [
-        'JS heap',
+        'Commits > 16.7 ms (since reset)',
+        integer.format(metrics.slowCommits),
+        '',
+      ],
+      [
+        'JS heap (current, GC-sensitive)',
         metrics.heapMb === null ? 'N/A' : `${metrics.heapMb.toFixed(1)} MB`,
         '',
       ],

@@ -93,7 +93,11 @@ export function readMeasuredRows<Row>(readRows: () => Array<Row>): Array<Row> {
   rowModelDiagnostics.totalDurationMs += duration
   rowModelDiagnostics.maxDurationMs = Math.max(rowModelDiagnostics.maxDurationMs, duration)
   rowModelDiagnostics.lastRowCount = rows.length
-  try { performance.measure('tanstack-row-model', { start, end, detail: { rowCount: rows.length } }) } catch { /* optional User Timing detail */ }
+  if (rowModelDiagnostics.calls % 20 !== 0) return rows
+  try {
+    performance.measure('tanstack-row-model', { start, end, detail: { rowCount: rows.length } })
+    if (rowModelDiagnostics.calls % 20_000 === 0) performance.clearMeasures('tanstack-row-model')
+  } catch { /* optional User Timing detail */ }
   return rows
 }
 

@@ -4,7 +4,6 @@ import { on } from '@ember/modifier'
 import AppHeader from './app-header.gts'
 import Configurator from './configurator.gts'
 import MarketStatusbar from './market-statusbar.gts'
-import MetricsStrip from './metrics-strip.gts'
 import TradingTable from '../table/trading-table.gts'
 import type { MarketFeedController } from '../../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
@@ -33,7 +32,6 @@ export default class TradingShell extends Component<Signature> {
             the production build before recording results.</aside>{{/if}}
       </div>
       <section class='market-panel' aria-label='Live synthetic quotes'>
-        <MetricsStrip @controller={{@controller}} />
         <TradingTable @controller={{@controller}} @feed={{@feed}} />
       </section>
       <MarketStatusbar @controller={{@controller}} />

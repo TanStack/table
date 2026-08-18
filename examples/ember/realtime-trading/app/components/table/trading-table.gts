@@ -1,5 +1,5 @@
 import Component from '@glimmer/component'
-import { tracked } from '@glimmer/tracking'
+import { cached, tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
 import { htmlSafe } from '@ember/template'
 import { modifier } from 'ember-modifier'
@@ -36,14 +36,11 @@ import {
   TRADING_ROW_OVERSCAN,
   resolveVirtualScrollMode,
 } from '../../table/trading-row-virtualizer'
-import { observeValue, registerCleanup } from '../../utils/subscriptions'
+import { registerCleanup } from '../../utils/subscriptions'
 import type Owner from '@ember/owner'
 import type { MarketQuote } from '../../feed/market-data'
 import type { MarketFeedController } from '../../feed/market-feed-controller'
-import type {
-  TradingBenchmarkController,
-  TradingBenchmarkState,
-} from '../../benchmark/trading-benchmark-controller'
+import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
 interface Signature {
   Args: { controller: TradingBenchmarkController; feed: MarketFeedController }
@@ -66,12 +63,17 @@ const captureElement = modifier(
   },
 )
 
+const markRenderCommitted = modifier(
+  (
+    _element: HTMLElement,
+    [feed, quotes]: [MarketFeedController, Array<MarketQuote>],
+  ) => {
+    void quotes
+    queueMicrotask(() => feed.completeRender())
+  },
+)
+
 export default class TradingTable extends Component<Signature> {
-  @tracked quotes: Array<MarketQuote>
-  @tracked instrumentCount: number
-  @tracked benchmark: TradingBenchmarkState
-  @tracked rendererMode: RendererMode
-  @tracked selectedSymbol: string | null
   @tracked virtualVersion = 0
   readonly pointer = new TradingGridPointerController()
   readonly layout = { manuallyResized: false }
@@ -80,76 +82,51 @@ export default class TradingTable extends Component<Signature> {
     source: null as HTMLTableCellElement | null,
     target: null as HTMLTableCellElement | null,
   }
-  @tracked columns: ReturnType<typeof createTradingColumns>
   scrollElement: HTMLDivElement | null = null
-  tableElement: HTMLTableElement | null = null
   bodyElement: HTMLTableSectionElement | null = null
   virtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement> | null = null
   stopVirtualizer: (() => void) | null = null
   resizeObserver: ResizeObserver | null = null
   mutationObserver: MutationObserver | null = null
 
-  table: Table<typeof tradingFeatures, MarketQuote>
+  table: Table<typeof tradingFeatures, MarketQuote> = useTable(this, () => ({
+    features: tradingFeatures,
+    columns: this.columns,
+    data: this.data,
+    getRowId: (row: MarketQuote) => row.id,
+    columnResizeMode: 'onChange' as const,
+    defaultColumn: { minSize: 56, maxSize: 800 },
+    autoResetCellSelection: false,
+  }))
 
   constructor(owner: Owner, args: Signature['Args']) {
     super(owner, args)
-    this.quotes = args.feed.quotes.get()
-    this.instrumentCount = args.feed.instrumentCount.get()
-    this.benchmark = args.controller.store.get()
-    this.rendererMode = args.controller.renderAtoms.rendererMode.get()
-    this.selectedSymbol = args.controller.renderAtoms.selectedSymbol.get()
-    this.columns = createTradingColumns(args.controller, this.rendererMode)
-    this.table = useTable(this, () => ({
-      features: tradingFeatures,
-      columns: this.columns,
-      data: this.quotes,
-      getRowId: (row: MarketQuote) => row.id,
-      columnResizeMode: 'onChange' as const,
-      defaultColumn: { minSize: 56, maxSize: 800 },
-      autoResetCellSelection: false,
-    }))
-    observeValue(this, args.feed.quotes, (quotes) => {
-      this.quotes = quotes
-      this.table.setOptions((options) => ({ ...options, data: quotes }))
-      queueMicrotask(() => args.feed.completeRender())
-    })
-    observeValue(this, args.feed.instrumentCount, (instrumentCount) => {
-      this.instrumentCount = instrumentCount
-    })
-    observeValue(this, args.controller.store, (state) => {
-      this.benchmark = state
-    })
-    observeValue(this, args.controller.renderAtoms.selectedSymbol, (symbol) => {
-      this.selectedSymbol = symbol
-    })
-    observeValue(this, args.controller.renderAtoms.rendererMode, (mode) => {
-      this.rendererMode = mode
-      this.columns = createTradingColumns(args.controller, mode)
-      this.table.setOptions((options) => ({
-        ...options,
-        columns: this.columns,
-      }))
-    })
-    const sizing = this.table.atoms.columnSizing.subscribe(() =>
-      this.writeColumnSizes(),
-    )
-    const order = this.table.atoms.columnOrder.subscribe(() =>
-      this.writeColumnSizes(),
-    )
-    const resizing = this.table.atoms.columnResizing.subscribe((state) => {
-      if (state.isResizingColumn !== false) this.layout.manuallyResized = true
-    })
     registerCleanup(this, () => {
-      sizing.unsubscribe()
-      order.unsubscribe()
-      resizing.unsubscribe()
       this.stopVirtualizer?.()
       this.resizeObserver?.disconnect()
       this.mutationObserver?.disconnect()
     })
   }
 
+  @cached
+  get columns(): ReturnType<typeof createTradingColumns> {
+    return createTradingColumns(
+      this.args.controller,
+      this.args.controller.rendererMode,
+    )
+  }
+  get data(): Array<MarketQuote> {
+    return this.args.feed.quotes
+  }
+  get selectedSymbol() {
+    return this.args.controller.selectedSymbol
+  }
+
   get rows(): Array<TradingRow> {
+    // The table-core memo compares `table.options.data` internally. Consume the
+    // Ember source explicitly as well so this template getter owns the Glimmer
+    // tag that schedules the row-block update for an external worker message.
+    void this.data
     return readMeasuredRows(() => this.table.getRowModel().rows)
   }
   get headerGroups() {
@@ -158,10 +135,13 @@ export default class TradingTable extends Component<Signature> {
   get visibleLeafColumnCount() {
     return this.table.getVisibleLeafColumns().length
   }
+  get sourceRowCount() {
+    return this.args.feed.quotes.length
+  }
   get virtualMode() {
     return resolveVirtualScrollMode(
-      this.benchmark.requestedVirtualScrollMode,
-      this.instrumentCount,
+      this.args.controller.requestedVirtualScrollMode,
+      this.args.feed.instrumentCount,
     )
   }
   get renderedRows(): Array<RenderedRow> {
@@ -201,6 +181,10 @@ export default class TradingTable extends Component<Signature> {
   }
 
   captureScroll = (element: HTMLElement | null) => {
+    this.stopVirtualizer?.()
+    this.resizeObserver?.disconnect()
+    this.stopVirtualizer = null
+    this.resizeObserver = null
     this.scrollElement = element as HTMLDivElement | null
     if (!this.scrollElement) return
     this.virtualizer = new Virtualizer({
@@ -219,14 +203,9 @@ export default class TradingTable extends Component<Signature> {
     this.resizeObserver = new ResizeObserver(() => this.fitAvailableWidth())
     this.resizeObserver.observe(this.scrollElement)
     queueMicrotask(() => {
-      this.writeColumnSizes()
       this.fitAvailableWidth()
       this.virtualVersion++
     })
-  }
-  captureTable = (element: HTMLElement | null) => {
-    this.tableElement = element as HTMLTableElement | null
-    if (this.tableElement) queueMicrotask(() => this.writeColumnSizes())
   }
   captureBody = (element: HTMLElement | null) => {
     this.mutationObserver?.disconnect()
@@ -238,6 +217,7 @@ export default class TradingTable extends Component<Signature> {
     )
     this.mutationObserver.observe(this.bodyElement, {
       attributes: true,
+      attributeFilter: ['class', 'style'],
       characterData: true,
       childList: true,
       subtree: true,
@@ -254,19 +234,22 @@ export default class TradingTable extends Component<Signature> {
     })
     this.virtualizer._willUpdate()
   }
-  writeColumnSizes() {
-    if (!this.tableElement) return
-    for (const header of this.table.getFlatHeaders()) {
-      this.tableElement.style.setProperty(
-        `--header-${header.id}-size`,
-        String(header.getSize()),
-      )
-      this.tableElement.style.setProperty(
-        `--col-${header.column.id}-size`,
-        String(header.column.getSize()),
-      )
-    }
-    this.tableElement.style.width = `${this.table.getTotalSize()}px`
+  @cached
+  get columnSizeVars(): string {
+    void this.table.store.state.columnSizing
+    void this.table.store.state.columnOrder
+    return this.table
+      .getFlatHeaders()
+      .flatMap((header) => [
+        `--header-${header.id}-size:${header.getSize()}`,
+        `--col-${header.column.id}-size:${header.column.getSize()}`,
+      ])
+      .join(';')
+  }
+  get tableStyle() {
+    return htmlSafe(
+      `${this.columnSizeVars};width:${this.table.getTotalSize()}px`,
+    )
   }
   fitAvailableWidth() {
     if (!this.scrollElement || this.layout.manuallyResized) return
@@ -280,6 +263,15 @@ export default class TradingTable extends Component<Signature> {
           .map((column) => [column.id, column.getSize() * ratio]),
       ),
     )
+  }
+
+  resizeColumn = (header: TradingHeader) => (event: Event) => {
+    this.layout.manuallyResized = true
+    header.getResizeHandler()?.(event)
+  }
+  resetColumnSize = (header: TradingHeader) => () => {
+    this.layout.manuallyResized = true
+    header.column.resetSize()
   }
 
   onGridKeyDown = (event: KeyboardEvent) =>
@@ -350,7 +342,7 @@ export default class TradingTable extends Component<Signature> {
         role='grid'
         aria-multiselectable='true'
         tabindex='0'
-        {{captureElement this.captureTable}}
+        style={{this.tableStyle}}
         {{on 'keydown' this.onGridKeyDown}}
       >
         <thead>
@@ -395,9 +387,9 @@ export default class TradingTable extends Component<Signature> {
                             {{if (isResizing header) "is-resizing"}}'
                           role='separator'
                           aria-orientation='vertical'
-                          {{on 'dblclick' (resetSize header)}}
-                          {{on 'mousedown' (resizeHandler header)}}
-                          {{on 'touchstart' (resizeHandler header)}}
+                          {{on 'dblclick' (this.resetColumnSize header)}}
+                          {{on 'mousedown' (this.resizeColumn header)}}
+                          {{on 'touchstart' (this.resizeColumn header)}}
                         ></div>{{/if}}
                     {{else}}<FlexRenderHeader @header={{header}} />{{/if}}
                   {{/unless}}
@@ -407,8 +399,9 @@ export default class TradingTable extends Component<Signature> {
         <tbody
           class={{if (eq this.virtualMode 'tanstack') 'virtual-table-body'}}
           style={{bodyStyle this.virtualMode this.totalVirtualHeight}}
-          data-source-row-count={{this.quotes.length}}
+          data-source-row-count={{this.sourceRowCount}}
           {{captureElement this.captureBody}}
+          {{markRenderCommitted @feed @feed.quotes}}
           {{on 'mousedown' this.onBodyMouseDown}}
           {{on 'pointerover' this.onBodyPointerOver}}
           {{on 'mouseleave' this.resetPointer}}
@@ -468,9 +461,6 @@ const isResizing = (header: TradingHeader): boolean =>
   header.column.getIsResizing()
 const toggleSort = (header: TradingHeader) =>
   header.column.getToggleSortingHandler() ?? (() => undefined)
-const resetSize = (header: TradingHeader) => () => header.column.resetSize()
-const resizeHandler = (header: TradingHeader) => (event: Event) =>
-  header.getResizeHandler()?.(event)
 const indicator = (header: TradingHeader): string =>
   sortIndicator(header.column.getIsSorted())
 const sortAria = (header: TradingHeader) =>

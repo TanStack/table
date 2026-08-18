@@ -8,16 +8,13 @@ export function MetricsStrip({ controller }: { controller: TradingBenchmarkContr
   const state = useStoreValue(controller.store)
   const metrics = state.metrics
   const items = [
-    ['WORKER SAMPLES', rate.format(metrics.actualTicksPerSecond), 'generated samples/s', 'actual-rate'],
-    ['ROW UPDATES', rate.format(metrics.rowUpdatesPerSecond), 'unique rows applied/s', 'row-update-rate'],
-    ['MESSAGES', metrics.workerMessagesPerSecond.toFixed(1), 'worker messages/s', 'message-rate'],
-    ['STATE APPLIES', metrics.stateApplicationsPerSecond.toFixed(1), 'quote snapshots/s', 'state-apply-rate'],
-    ['TABLE COMMITS', metrics.tableRendersPerSecond.toFixed(1), 'completed renders/s', 'table-render-rate'],
-    ['AVG RENDER', ms(metrics.averageRenderMs), 'mutation → render', ''],
-    ['P95 RENDER', ms(metrics.p95RenderMs), `max ${ms(metrics.maxRenderMs)}`, ''],
-    ['LONG FRAMES', state.longAnimationFramesSupported ? String(metrics.longAnimationFrames) : 'N/A', state.longAnimationFramesSupported ? `worst ${ms(metrics.worstLongAnimationFrameMs)}` : 'unsupported', 'long-frame-count'],
+    ['FRAME RATE (EST.)', metrics.rafCallbacksPerSecond.toFixed(1), 'rAF callbacks/s · rolling 1 s', 'frame-rate'],
+    ['AVG COMMIT', ms(metrics.averageRenderMs), 'snapshot → DOM · rolling 3 s', 'average-commit-latency'],
+    ['LONG FRAMES', state.longAnimationFramesSupported ? String(metrics.longAnimationFrames) : 'N/A', state.longAnimationFramesSupported ? `since reset · worst ${ms(metrics.worstLongAnimationFrameMs)}` : 'unsupported', 'long-frame-count'],
+    ['THROUGHPUT', `${rate.format(metrics.rowUpdatesPerSecond)} rows/s`, `${metrics.stateApplicationsPerSecond.toFixed(1)} snapshots/s · rows deduplicated per snapshot`, 'throughput-rate'],
   ] as const
-  <section className="metrics-strip" aria-label="Live performance metrics">
+  <section className="metrics-strip" aria-labelledby="live-health">
+    <h2 id="live-health">LIVE HEALTH</h2>
     @for (const item of items; key item[0]) {
       <article><span>{item[0]}</span><strong data-testid={item[3] || undefined}>{item[1]}</strong><small>{item[2]}</small></article>
     }

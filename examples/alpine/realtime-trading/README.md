@@ -115,14 +115,29 @@ cell work, but sorting/filtering can still require a fresh row-model pass.
 
 ## Diagnostics and interpretation
 
-The monitor reports generated samples, messages, unique row updates, state
-applies, table commits, average mutation-to-render latency, long animation
-frames, mounted cells, custom component lifecycle/execution, callbacks per
-column, DOM mutation records, core row-model timing, and optional heap data.
+The sidebar keeps four cross-framework health signals prominent: estimated
+frame callbacks, average snapshot-to-DOM-commit latency, cumulative long
+animation frames, and changed-row/snapshot throughput. The remaining counters
+stay in Diagnostics so they do not look like equally important scores.
 
-Callback counts do not imply DOM changes. Temporary heap growth is not proof of
-a leak; verify post-GC retained objects. Compare identical production settings
-and use Chrome Performance together with the in-app counters.
+`AVG COMMIT` is not the duration of an Alpine render function and it does not
+include the browser's later layout or paint. It starts when a new immutable
+snapshot is applied and ends in one coalesced `Alpine.nextTick()` callback,
+after Alpine has flushed the corresponding DOM work. The average uses a rolling
+3-second window; diagnostic p95/max use 10 seconds. If several worker
+messages arrive before one Alpine flush, they intentionally produce one commit
+sample from the earliest pending snapshot.
+
+The frame-rate estimate counts standard `requestAnimationFrame` callbacks over
+one second; it is refresh-rate dependent and is not GPU/compositor FPS.
+`Observed MutationRecords/s` is observer delivery count, not browser DOM
+operations. It tracks text, child-list, class, and style changes while excluding
+selection data attributes to reduce noise. The observer itself still adds work
+at very high mutation rates. Heap is Chrome-only, current and GC-sensitive;
+temporary growth is not proof of a leak without post-GC retention. React Scan is
+not part of these shared measurements. User Timing commit and row-model entries
+are sampled once every 20 candidates; the numeric counters remain exact, while
+the Performance timeline avoids one retained entry per hot-path execution.
 
 ## Standalone policy
 

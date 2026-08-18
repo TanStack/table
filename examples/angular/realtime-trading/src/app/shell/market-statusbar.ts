@@ -13,7 +13,7 @@ import { formatInteger } from './shell-formatters'
         </strong>
       </span>
       <span>
-        ROW UPDATES
+        CHANGED ROWS
         <strong>
           {{ formatInteger(controller.metrics().lastUpdateCount) }}
         </strong>

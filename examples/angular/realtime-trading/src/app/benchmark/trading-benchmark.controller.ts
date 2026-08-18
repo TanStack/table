@@ -79,7 +79,6 @@ export class TradingBenchmarkController {
       : null
     this.#longAnimationFrameObserver?.observe({
       type: 'long-animation-frame',
-      buffered: true,
     })
     this.#animationFrameId = requestAnimationFrame(this.#benchmarkFrame)
     this.#destroyRef.onDestroy(() => {
@@ -108,6 +107,14 @@ export class TradingBenchmarkController {
     this.renderedRowCount.set(count)
   }
 
+  recordDomMutations(count: number): void {
+    this.#monitor.recordDomMutations(count)
+  }
+
+  resetDomMutations(): void {
+    this.#monitor.resetDomMutations()
+  }
+
   resetViewState(): void {
     this.selectedSymbol.set(null)
   }
@@ -120,7 +127,7 @@ export class TradingBenchmarkController {
   }
 
   readonly #benchmarkFrame = (now: number): void => {
-    this.#monitor.recordAnimationFrame()
+    this.#monitor.recordAnimationFrame(now)
     if (this.#monitor.shouldPublish(now)) {
       this.metrics.set(this.#monitor.publish(now))
     }
@@ -131,7 +138,7 @@ export class TradingBenchmarkController {
     entries: PerformanceObserverEntryList,
   ): void => {
     for (const entry of entries.getEntries()) {
-      this.#monitor.recordLongAnimationFrame(entry.duration)
+      this.#monitor.recordLongAnimationFrame(entry.duration, entry.startTime)
     }
   }
 }

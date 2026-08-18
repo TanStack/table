@@ -80,8 +80,10 @@ UI terminology:
   worker, not browser events, React renders, or messages.
 - **Worker delivery interval** is the target coalesced-message cadence; 20 ms
   targets approximately 50 messages per second.
-- **Row updates** counts unique immutable row objects applied on the main
-  thread, often fewer than generated samples.
+- **Changed rows** counts immutable row objects applied on the main thread.
+  Rows are deduplicated within one snapshot, but the same row can be counted
+  again in a later snapshot, so this is intentionally a throughput rate rather
+  than a count of distinct instruments over the whole second.
 - **Message samples** is the generated work represented by the latest message.
 
 Intraday history sampling is independent of the quote workload, and the 25K
@@ -179,15 +181,49 @@ all processing when its data input changes.
 
 ## Diagnostics
 
-The benchmark monitor reports generated samples, unique row updates, messages,
-state applies, completed commits, average mutation-to-render latency, long
-animation frames, mounted hosts, component lifecycle counts, callbacks by
-column, executions by component type, DOM mutation records, core row-model
-timing, and optional heap information.
+The compact **Live health** block lives in the configurator sidebar and keeps
+four cross-framework signals visible:
+
+- **Frame rate (est.)** counts `requestAnimationFrame` callbacks over a rolling
+  one-second window. It is a main-thread scheduling signal capped by the
+  display refresh rate, not proof of GPU-presented frames or a React Scan FPS
+  value.
+- **Average commit latency** is the rolling three-second average from the first
+  pending market mutation to the table's DOM commit. Several snapshots may be
+  coalesced behind one commit, so this includes scheduling, React work, and DOM
+  commit latency; it is not component render duration.
+- **Long frames** comes from the browser Long Animation Frames API and is
+  cumulative since reset. The worst duration is shown when supported.
+- **Throughput** pairs changed rows/s with applied snapshots/s. Changed rows are
+  deduplicated per snapshot, not across the full reporting window.
+
+The detailed section retains generated worker samples, messages, state applies,
+table DOM commits, a 10-second commit-latency p95/max, cumulative slow commits,
+mounted hosts, component lifecycle counts, callbacks by column, executions by
+component type, DOM `MutationRecord` rate, core row-model timing, and optional
+heap information.
 
 The React Profiler additionally records actual/base duration and commit counts
-when using development or the profiling build. User Timing marks connect a feed
-mutation to its completed render; old measures are periodically pruned.
+when using development or the profiling build. The in-memory latency, Profiler,
+and row-model aggregates inspect every call, but the Performance timeline emits
+only one User Timing measure per 20 calls to avoid making instrumentation a
+significant part of a hot run. Old measures are periodically pruned.
+
+The `MutationObserver` watches the table body for text/children and only
+`class`/`style` attribute changes. Its value is browser `MutationRecord`s per
+second, not DOM operations: a record can represent a coalesced change, and
+framework write patterns can produce different record counts for equivalent
+screens. Creating records also has real overhead at high rates, so treat it as
+a diagnostic and confirm important comparisons with a Performance recording.
+Heap is Chrome-only `usedJSHeapSize`, changes with garbage-collection timing,
+and is useful as a trend rather than a leak verdict.
+
+The monitor itself schedules one lightweight `requestAnimationFrame` callback
+and publishes its sidebar snapshot every 500 ms. The sidebar subscribes to that
+snapshot independently, so publishing diagnostics does not update the quotes
+atom or table data boundary, but it is still instrumentation overhead and must
+remain enabled in both sides of an A/B comparison. React Profiler and React
+DevTools also add overhead by design.
 
 Callback counts are not DOM mutation counts. A cell callback can execute while
 React reuses the existing component and DOM. Likewise, a rising heap during the
@@ -197,6 +233,11 @@ snapshots show retained instances.
 Use Chrome Performance and React DevTools for call stacks/flamegraphs, and keep
 the instrument count, workload, delivery interval, renderer mode, build mode,
 and virtualization mode fixed between comparisons.
+
+React Scan remains an optional development-only aid in this example. It is not
+used by any canonical counter because the other adapter examples cannot share
+it, and its instrumentation can alter a recording. Use the profiling production
+build without React Scan for cross-framework comparisons.
 
 ## Standalone example policy
 

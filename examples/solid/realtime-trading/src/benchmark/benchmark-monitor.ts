@@ -8,6 +8,15 @@ export interface NamedInvocationRate {
   callsPerSecond: number
 }
 
+interface TimedLatencySample {
+  recordedAt: number
+  duration: number
+}
+
+const averageLatencyWindowMs = 3_000
+const percentileLatencyWindowMs = 10_000
+const frameRateWindowMs = 1_000
+
 export interface FeedMetrics {
   actualTicksPerSecond: number
   rowUpdatesPerSecond: number
@@ -16,12 +25,12 @@ export interface FeedMetrics {
   supersededUpdatesPerSecond: number
   totalTicks: number
   rafCallbacksPerSecond: number
-  tableRendersPerSecond: number
+  tableCommitsPerSecond: number
   lastBatchSize: number
-  averageRenderMs: number
-  p95RenderMs: number
-  maxRenderMs: number
-  slowRenders: number
+  averageCommitLatencyMs: number
+  p95CommitLatencyMs: number
+  maxCommitLatencyMs: number
+  slowCommits: number
   longAnimationFrames: number
   worstLongAnimationFrameMs: number
   heapMb: number | null
@@ -44,12 +53,12 @@ export const initialMetrics: FeedMetrics = {
   supersededUpdatesPerSecond: 0,
   totalTicks: 0,
   rafCallbacksPerSecond: 0,
-  tableRendersPerSecond: 0,
+  tableCommitsPerSecond: 0,
   lastBatchSize: 0,
-  averageRenderMs: 0,
-  p95RenderMs: 0,
-  maxRenderMs: 0,
-  slowRenders: 0,
+  averageCommitLatencyMs: 0,
+  p95CommitLatencyMs: 0,
+  maxCommitLatencyMs: 0,
+  slowCommits: 0,
   longAnimationFrames: 0,
   worstLongAnimationFrameMs: 0,
   heapMb: null,
@@ -64,11 +73,29 @@ export const initialMetrics: FeedMetrics = {
   domMutationsPerSecond: 0,
 }
 
+const userTiming = { entryCount: 0, measureCalls: 0 }
+
+function recordCommitMeasure(start: number, end: number): void {
+  userTiming.measureCalls++
+  if (userTiming.measureCalls % 20 !== 0) return
+  try {
+    performance.measure('market-update-to-dom-commit', { start, end })
+    userTiming.entryCount++
+    if (userTiming.entryCount % 1_000 === 0) {
+      performance.clearMeasures('market-update-to-dom-commit')
+    }
+  } catch {
+    // User Timing Level 3 options are not implemented in every browser.
+  }
+}
+
 export class BenchmarkMonitor {
   readonly #runtime = {
     sampleStartedAt: performance.now(),
-    pendingRenderStartedAt: null as number | null,
-    renderSamples: [] as Array<number>,
+    sessionStartedAt: performance.now(),
+    pendingMutationStartedAt: null as number | null,
+    commitLatencySamples: [] as Array<TimedLatencySample>,
+    slowCommitCount: 0,
     totalTicks: 0,
     ticksInSample: 0,
     rowUpdatesInSample: 0,
@@ -78,8 +105,9 @@ export class BenchmarkMonitor {
     lastBatchSize: 0,
     lastUpdateCount: 0,
     workerMessages: 0,
-    rafCallbacksInSample: 0,
-    tableRendersInSample: 0,
+    frameTrackingStartedAt: performance.now(),
+    frameTimestamps: [] as Array<number>,
+    tableCommitsInSample: 0,
     longAnimationFrameCount: 0,
     worstLongAnimationFrameMs: 0,
     previousCellRendererCalls: 0,
@@ -93,18 +121,20 @@ export class BenchmarkMonitor {
     domMutationsInSample: 0,
   }
 
-  markRenderPending(): void {
-    this.#runtime.pendingRenderStartedAt ??= performance.now()
+  markCommitPending(): void {
+    this.#runtime.pendingMutationStartedAt ??= performance.now()
   }
 
-  recordCompletedRender(): void {
+  recordDomCommit(): void {
     const runtime = this.#runtime
-    if (runtime.pendingRenderStartedAt !== null) {
-      runtime.renderSamples.push(
-        performance.now() - runtime.pendingRenderStartedAt,
-      )
-      runtime.pendingRenderStartedAt = null
-      runtime.tableRendersInSample++
+    if (runtime.pendingMutationStartedAt !== null) {
+      const commitEndedAt = performance.now()
+      const duration = commitEndedAt - runtime.pendingMutationStartedAt
+      runtime.commitLatencySamples.push({ recordedAt: commitEndedAt, duration })
+      if (duration > 16.7) runtime.slowCommitCount++
+      recordCommitMeasure(runtime.pendingMutationStartedAt, commitEndedAt)
+      runtime.pendingMutationStartedAt = null
+      runtime.tableCommitsInSample++
     }
   }
 
@@ -128,12 +158,15 @@ export class BenchmarkMonitor {
     runtime.supersededUpdatesInSample += supersededUpdateCount
   }
 
-  recordAnimationFrame(): void {
-    this.#runtime.rafCallbacksInSample++
+  recordAnimationFrame(now: number): void {
+    const timestamps = this.#runtime.frameTimestamps
+    timestamps.push(now)
+    pruneFrameTimestamps(timestamps, now)
   }
 
-  recordLongAnimationFrame(duration: number): void {
+  recordLongAnimationFrame(duration: number, startTime: number): void {
     const runtime = this.#runtime
+    if (startTime < runtime.sessionStartedAt) return
     runtime.longAnimationFrameCount++
     runtime.worstLongAnimationFrameMs = Math.max(
       runtime.worstLongAnimationFrameMs,
@@ -172,17 +205,25 @@ export class BenchmarkMonitor {
       runtime.previousComponentRenderCallsByName,
       sampleDuration,
     )
-    const sortedRenderSamples = [...runtime.renderSamples].sort(
+    pruneLatencySamples(runtime.commitLatencySamples, now)
+    pruneFrameTimestamps(runtime.frameTimestamps, now)
+    const averageCommitLatencySamples = runtime.commitLatencySamples
+      .filter((sample) => sample.recordedAt >= now - averageLatencyWindowMs)
+      .map((sample) => sample.duration)
+    const percentileCommitLatencySamples = runtime.commitLatencySamples.map(
+      (sample) => sample.duration,
+    )
+    const sortedCommitLatencySamples = [...percentileCommitLatencySamples].sort(
       (left, right) => left - right,
     )
-    const averageRenderMs =
-      runtime.renderSamples.length === 0
+    const averageCommitLatencyMs =
+      averageCommitLatencySamples.length === 0
         ? 0
-        : runtime.renderSamples.reduce((sum, value) => sum + value, 0) /
-          runtime.renderSamples.length
+        : averageCommitLatencySamples.reduce((sum, value) => sum + value, 0) /
+          averageCommitLatencySamples.length
     const p95Index = Math.max(
       0,
-      Math.ceil(sortedRenderSamples.length * 0.95) - 1,
+      Math.ceil(sortedCommitLatencySamples.length * 0.95) - 1,
     )
     const metrics: FeedMetrics = {
       actualTicksPerSecond:
@@ -199,18 +240,20 @@ export class BenchmarkMonitor {
         (runtime.supersededUpdatesInSample / sampleDuration) * 1_000,
       totalTicks: runtime.totalTicks,
       rafCallbacksPerSecond:
+        calculateFrameRate(
+          runtime.frameTimestamps,
+          runtime.frameTrackingStartedAt,
+          now,
+        ),
+      tableCommitsPerSecond:
         sampleDuration === 0
           ? 0
-          : (runtime.rafCallbacksInSample / sampleDuration) * 1_000,
-      tableRendersPerSecond:
-        sampleDuration === 0
-          ? 0
-          : (runtime.tableRendersInSample / sampleDuration) * 1_000,
+          : (runtime.tableCommitsInSample / sampleDuration) * 1_000,
       lastBatchSize: runtime.lastBatchSize,
-      averageRenderMs,
-      p95RenderMs: sortedRenderSamples[p95Index] ?? 0,
-      maxRenderMs: sortedRenderSamples.at(-1) ?? 0,
-      slowRenders: runtime.renderSamples.filter((value) => value > 16.7).length,
+      averageCommitLatencyMs,
+      p95CommitLatencyMs: sortedCommitLatencySamples[p95Index] ?? 0,
+      maxCommitLatencyMs: sortedCommitLatencySamples.at(-1) ?? 0,
+      slowCommits: runtime.slowCommitCount,
       longAnimationFrames: runtime.longAnimationFrameCount,
       worstLongAnimationFrameMs: runtime.worstLongAnimationFrameMs,
       heapMb: readHeapSizeMb(),
@@ -243,17 +286,17 @@ export class BenchmarkMonitor {
     runtime.workerMessagesInSample = 0
     runtime.stateApplicationsInSample = 0
     runtime.supersededUpdatesInSample = 0
-    runtime.renderSamples = []
-    runtime.rafCallbacksInSample = 0
-    runtime.tableRendersInSample = 0
+    runtime.tableCommitsInSample = 0
     return metrics
   }
 
   reset(): void {
     const runtime = this.#runtime
     runtime.sampleStartedAt = performance.now()
-    runtime.pendingRenderStartedAt = null
-    runtime.renderSamples = []
+    runtime.sessionStartedAt = runtime.sampleStartedAt
+    runtime.pendingMutationStartedAt = null
+    runtime.commitLatencySamples = []
+    runtime.slowCommitCount = 0
     runtime.totalTicks = 0
     runtime.ticksInSample = 0
     runtime.rowUpdatesInSample = 0
@@ -263,8 +306,9 @@ export class BenchmarkMonitor {
     runtime.lastBatchSize = 0
     runtime.lastUpdateCount = 0
     runtime.workerMessages = 0
-    runtime.rafCallbacksInSample = 0
-    runtime.tableRendersInSample = 0
+    runtime.frameTrackingStartedAt = runtime.sampleStartedAt
+    runtime.frameTimestamps = []
+    runtime.tableCommitsInSample = 0
     runtime.longAnimationFrameCount = 0
     runtime.worstLongAnimationFrameMs = 0
     runtime.previousCellRendererCalls = quoteRenderDiagnostics.cellRendererCalls
@@ -304,4 +348,37 @@ function calculateInvocationRates(
         ? 0
         : ((calls - (previous[name] ?? 0)) / sampleDuration) * 1_000,
   }))
+}
+
+function pruneLatencySamples(
+  samples: Array<TimedLatencySample>,
+  now: number,
+): void {
+  const cutoff = now - percentileLatencyWindowMs
+  const firstRetainedIndex = samples.findIndex(
+    (sample) => sample.recordedAt >= cutoff,
+  )
+  if (firstRetainedIndex > 0) samples.splice(0, firstRetainedIndex)
+  else if (firstRetainedIndex === -1) samples.length = 0
+}
+
+function pruneFrameTimestamps(timestamps: Array<number>, now: number): void {
+  const cutoff = now - frameRateWindowMs
+  const firstRetainedIndex = timestamps.findIndex(
+    (timestamp) => timestamp >= cutoff,
+  )
+  if (firstRetainedIndex > 0) timestamps.splice(0, firstRetainedIndex)
+  else if (firstRetainedIndex === -1) timestamps.length = 0
+}
+
+function calculateFrameRate(
+  timestamps: ReadonlyArray<number>,
+  trackingStartedAt: number,
+  now: number,
+): number {
+  const observedWindowMs = Math.min(
+    frameRateWindowMs,
+    Math.max(1, now - trackingStartedAt),
+  )
+  return (timestamps.length / observedWindowMs) * 1_000
 }

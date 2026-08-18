@@ -1,4 +1,4 @@
-import { batch, createAtom, createStore } from '@tanstack/store'
+import { cached, tracked } from '@glimmer/tracking'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import { FORCED_VIRTUALIZATION_ROW_COUNT } from '../table/trading-row-virtualizer'
 import {
@@ -11,14 +11,6 @@ import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { RendererMode } from '../table/trading-table'
 import type { VirtualScrollPreference } from '../table/trading-row-virtualizer'
 
-export interface TradingBenchmarkState {
-  requestedVirtualScrollMode: VirtualScrollPreference
-  metrics: FeedMetrics
-  mountedCells: number
-  liveComponents: number
-  longAnimationFramesSupported: boolean
-}
-
 export interface TradingBenchmarkActions {
   resetViewState: () => void
   setRendererMode: (mode: RendererMode) => void
@@ -28,20 +20,18 @@ export interface TradingBenchmarkActions {
   resetMarket: () => void
 }
 
-const initialState: TradingBenchmarkState = {
-  requestedVirtualScrollMode: 'auto',
-  metrics: initialMetrics,
-  mountedCells: 0,
-  liveComponents: 0,
-  longAnimationFramesSupported,
-}
-
 export class TradingBenchmarkController {
-  readonly store = createStore<TradingBenchmarkState>(initialState)
-  readonly renderAtoms = {
-    selectedSymbol: createAtom<string | null>(null),
-    rendererMode: createAtom<RendererMode>('stable'),
+  @tracked requestedVirtualScrollMode: VirtualScrollPreference = 'auto'
+  @tracked metrics: FeedMetrics = initialMetrics
+  @tracked mountedCells = 0
+  @tracked selectedSymbol: string | null = null
+  @tracked rendererMode: RendererMode = 'stable'
+  @cached
+  get liveComponents(): number {
+    const metrics = this.metrics
+    return metrics.componentsCreated - metrics.componentsDestroyed
   }
+  readonly longAnimationFramesSupported = longAnimationFramesSupported
   readonly monitor = new BenchmarkMonitor()
   readonly feed: MarketFeedController
   readonly actions: TradingBenchmarkActions
@@ -56,43 +46,34 @@ export class TradingBenchmarkController {
     this.feed = feed
     this.actions = {
       resetViewState: () => {
-        this.renderAtoms.selectedSymbol.set(null)
+        this.selectedSymbol = null
       },
       setRendererMode: (mode) => {
-        this.renderAtoms.rendererMode.set(mode)
+        this.rendererMode = mode
       },
       setVirtualScrollEnabled: (enabled) => {
         if (
-          this.feed.instrumentCount.get() >=
-          FORCED_VIRTUALIZATION_ROW_COUNT
+          this.feed.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
         ) {
           return
         }
-        this.#patch({
-          requestedVirtualScrollMode: enabled ? 'tanstack' : 'none',
-        })
+        this.requestedVirtualScrollMode = enabled ? 'tanstack' : 'none'
       },
       setRenderedRowCount: (count) => {
         const mountedCells = count * TRADING_COLUMN_COUNT
-        if (mountedCells !== this.store.get().mountedCells) {
-          this.#patch({ mountedCells })
+        if (mountedCells !== this.mountedCells) {
+          this.mountedCells = mountedCells
         }
       },
       selectSymbol: (symbol) => {
-        this.renderAtoms.selectedSymbol.set(symbol)
+        this.selectedSymbol = symbol
       },
       resetMarket: () => {
-        batch(() => {
-          this.monitor.reset()
-          this.store.setState((state) => ({
-            ...state,
-            metrics: { ...initialMetrics },
-            mountedCells: 0,
-            liveComponents: 0,
-          }))
-          this.renderAtoms.selectedSymbol.set(null)
-          this.feed.actions.reset()
-        })
+        this.monitor.reset()
+        this.metrics = { ...initialMetrics }
+        this.mountedCells = 0
+        this.selectedSymbol = null
+        this.feed.actions.reset()
       },
     }
   }
@@ -101,7 +82,7 @@ export class TradingBenchmarkController {
     const longAnimationFrameObserver = longAnimationFramesSupported
       ? new PerformanceObserver((entries) => {
           for (const entry of entries.getEntries()) {
-            this.monitor.recordLongAnimationFrame(entry.duration)
+            this.monitor.recordLongAnimationFrame(entry.duration, entry.startTime)
           }
         })
       : null
@@ -116,7 +97,6 @@ export class TradingBenchmarkController {
     })
     longAnimationFrameObserver?.observe({
       type: 'long-animation-frame',
-      buffered: true,
     })
     this.#runtime.animationFrameId = requestAnimationFrame(this.#benchmarkFrame)
 
@@ -132,21 +112,14 @@ export class TradingBenchmarkController {
   }
 
   readonly #benchmarkFrame = (now: number): void => {
-    this.monitor.recordAnimationFrame()
+    this.monitor.recordAnimationFrame(now)
     if (this.monitor.shouldPublish(now)) {
       this.#publishMetrics(this.monitor.publish(now))
     }
     this.#runtime.animationFrameId = requestAnimationFrame(this.#benchmarkFrame)
   }
 
-  #patch(patch: Partial<TradingBenchmarkState>): void {
-    this.store.setState((state) => ({ ...state, ...patch }))
-  }
-
   #publishMetrics(metrics: FeedMetrics): void {
-    this.#patch({
-      metrics,
-      liveComponents: metrics.componentsCreated - metrics.componentsDestroyed,
-    })
+    this.metrics = metrics
   }
 }

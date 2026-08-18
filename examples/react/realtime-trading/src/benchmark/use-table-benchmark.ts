@@ -18,6 +18,7 @@ export function useTableBenchmark(
     })
     observer.observe(tableBody, {
       attributes: true,
+      attributeFilter: ['class', 'style'],
       characterData: true,
       childList: true,
       subtree: true,

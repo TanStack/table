@@ -119,16 +119,33 @@ when the data input changes.
 
 ## Diagnostics and interpretation
 
-The monitor records worker samples, messages, unique row updates, state applies,
-completed renders, average mutation-to-render latency, long animation frames,
-mounted cells, component lifecycle/execution, callbacks by column, DOM mutation
-records, row-model timing, and optional heap information.
+The compact **Live health** section lives in the configurator and reports the
+estimated frame callback rate over 1 second, average market-mutation-to-DOM-
+commit latency over 3 seconds, cumulative long animation frames, and throughput
+as changed rows plus applied snapshots per second. Detailed diagnostics retain
+worker samples/messages, state applies, DOM commits, rolling 10-second p95/max
+commit latency, cumulative slow commits, mounted cells, component
+lifecycle/execution, row-model timing, DOM mutation records, and heap.
 
 Octane's completed-render measurement is connected to the feed mutation and
 the table's committed layout lifecycle; it should be compared using the same
-build and settings. Callback execution does not equal DOM mutation, and heap
-growth is not a confirmed leak without post-GC retention. Use Chrome
-Performance alongside the in-app diagnostics.
+build and settings. The frame value counts `requestAnimationFrame` callbacks,
+not GPU-presented frames. `MutationObserver` reports delivered records, not
+individual DOM operations, and adds overhead on a hot subtree; it is limited to
+text, child-list, and `class`/`style` changes. Heap is Chromium-only and
+GC-sensitive. User Timing timeline measures are sampled 1-in-20 while the
+in-memory latency calculation keeps every commit. Callback execution does not
+equal DOM mutation, and heap growth is not a confirmed leak without post-GC
+retention.
+The rAF loop only appends a timestamp; rolling aggregation and heap reads run at
+the 500 ms metrics publication cadence. Mutation observation remains the most
+intrusive diagnostic because the browser must create records for the observed
+subtree.
+
+`Changed rows/s` sums the update array lengths delivered by each snapshot.
+Symbols are deduplicated inside one message, but the same row can count again in
+the next snapshot; it is applied row throughput, not distinct instruments per
+second.
 
 ## Standalone policy
 

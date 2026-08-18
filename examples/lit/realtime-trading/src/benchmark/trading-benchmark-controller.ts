@@ -101,7 +101,7 @@ export class TradingBenchmarkController {
     const longAnimationFrameObserver = longAnimationFramesSupported
       ? new PerformanceObserver((entries) => {
           for (const entry of entries.getEntries()) {
-            this.monitor.recordLongAnimationFrame(entry.duration)
+            this.monitor.recordLongAnimationFrame(entry.duration, entry.startTime)
           }
         })
       : null
@@ -109,14 +109,13 @@ export class TradingBenchmarkController {
     this.#runtime.longAnimationFrameObserver = longAnimationFrameObserver
     this.#runtime.stopObservingFeed = this.feed.observe({
       messageReceived: () => this.monitor.recordWorkerMessage(),
-      mutationStarted: () => this.monitor.markRenderPending(),
+      mutationStarted: () => this.monitor.markCommitPending(),
       batchApplied: ({ tickCount, updateCount, supersededUpdateCount }) =>
         this.monitor.recordBatch(tickCount, updateCount, supersededUpdateCount),
-      renderCommitted: () => this.monitor.recordCompletedRender(),
+      renderCommitted: () => this.monitor.recordDomCommit(),
     })
     longAnimationFrameObserver?.observe({
       type: 'long-animation-frame',
-      buffered: true,
     })
     this.#runtime.animationFrameId = requestAnimationFrame(this.#benchmarkFrame)
 
@@ -132,7 +131,7 @@ export class TradingBenchmarkController {
   }
 
   readonly #benchmarkFrame = (now: number): void => {
-    this.monitor.recordAnimationFrame()
+    this.monitor.recordAnimationFrame(now)
     if (this.monitor.shouldPublish(now)) {
       this.#publishMetrics(this.monitor.publish(now))
     }

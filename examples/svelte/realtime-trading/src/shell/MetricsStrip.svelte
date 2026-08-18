@@ -6,17 +6,14 @@
   const formatMs = (value: number) => `${value.toFixed(2)} ms`
   const metrics = $derived(state.current.metrics)
   const items = $derived([
-    { label: 'WORKER SAMPLES', value: rate.format(metrics.actualTicksPerSecond), detail: 'generated samples/s', testId: 'actual-rate' },
-    { label: 'ROW UPDATES', value: rate.format(metrics.rowUpdatesPerSecond), detail: 'unique rows applied/s', testId: 'row-update-rate' },
-    { label: 'MESSAGES', value: metrics.workerMessagesPerSecond.toFixed(1), detail: 'worker messages/s', testId: 'message-rate' },
-    { label: 'STATE APPLIES', value: metrics.stateApplicationsPerSecond.toFixed(1), detail: 'quote snapshots/s', testId: 'state-apply-rate' },
-    { label: 'TABLE COMMITS', value: metrics.tableRendersPerSecond.toFixed(1), detail: 'completed renders/s', testId: 'table-render-rate' },
-    { label: 'AVG RENDER', value: formatMs(metrics.averageRenderMs), detail: 'mutation → render' },
-    { label: 'P95 RENDER', value: formatMs(metrics.p95RenderMs), detail: `max ${formatMs(metrics.maxRenderMs)}` },
-    { label: 'LONG FRAMES', value: state.current.longAnimationFramesSupported ? String(metrics.longAnimationFrames) : 'N/A', detail: state.current.longAnimationFramesSupported ? `worst ${formatMs(metrics.worstLongAnimationFrameMs)}` : 'unsupported', testId: 'long-frame-count' },
+    { label: 'FRAME RATE (EST.)', value: metrics.rafCallbacksPerSecond.toFixed(1), detail: 'rAF callbacks/s · rolling 1 s', testId: 'frame-rate' },
+    { label: 'AVG COMMIT', value: formatMs(metrics.averageCommitLatencyMs), detail: 'snapshot → DOM · rolling 3 s', testId: 'average-commit-latency' },
+    { label: 'LONG FRAMES', value: state.current.longAnimationFramesSupported ? String(metrics.longAnimationFrames) : 'N/A', detail: state.current.longAnimationFramesSupported ? `since reset · worst ${formatMs(metrics.worstLongAnimationFrameMs)}` : 'unsupported by this browser', testId: 'long-frame-count' },
   ])
 </script>
 
-<section class="metrics-strip" aria-label="Live performance metrics">
+<section class="metrics-strip" aria-labelledby="live-health">
+  <h2 id="live-health">LIVE HEALTH</h2>
   {#each items as item (item.label)}<article><span>{item.label}</span><strong data-testid={item.testId}>{item.value}</strong><small>{item.detail}</small></article>{/each}
+  <article><span>THROUGHPUT</span><strong data-testid="throughput-rate">{rate.format(metrics.rowUpdatesPerSecond)} rows/s</strong><small>{metrics.stateApplicationsPerSecond.toFixed(1)} snapshots/s · rows deduplicated per snapshot</small></article>
 </section>

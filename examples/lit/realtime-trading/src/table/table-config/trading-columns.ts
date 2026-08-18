@@ -229,14 +229,18 @@ export function readMeasuredRows<Row>(readRows: () => Array<Row>): Array<Row> {
     duration,
   )
   rowModelDiagnostics.lastRowCount = rows.length
-  try {
-    performance.measure('tanstack-row-model', {
-      start,
-      end,
-      detail: { rowCount: rows.length },
-    })
-  } catch {
-    /* optional User Timing detail */
+  if (rowModelDiagnostics.calls % 20 === 0) {
+    try {
+      performance.measure('tanstack-row-model', {
+        start,
+        end,
+        detail: { rowCount: rows.length },
+      })
+      if (rowModelDiagnostics.calls % 1_000 === 0)
+        performance.clearMeasures('tanstack-row-model')
+    } catch {
+      /* optional sampled User Timing detail */
+    }
   }
   return rows
 }

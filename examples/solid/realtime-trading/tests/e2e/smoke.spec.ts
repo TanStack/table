@@ -30,6 +30,11 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
     await expect(virtualScrollSelect).toHaveValue('none')
     await expect(virtualScrollSelect).toBeEnabled()
     await expect(table.locator('tbody tr')).toHaveCount(100)
+    const livePrice = table.locator('tbody tr').first().locator('td').nth(3)
+    const initialPrice = await livePrice.textContent()
+    await expect
+      .poll(() => livePrice.textContent())
+      .not.toBe(initialPrice)
     await expect(table.locator('tbody tr').first()).toHaveCSS(
       'content-visibility',
       'auto',
@@ -100,6 +105,40 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
     await expect(page.getByTestId('selected-instrument')).toContainText(
       selectedSymbol ?? '',
     )
+
+    await page.getByTestId('feed-toggle').click()
+    await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
+    const dragStart = table.locator('tbody tr').nth(0).locator('td').nth(1)
+    const dragEnd = table.locator('tbody tr').nth(2).locator('td').nth(4)
+    const dragStartBox = await dragStart.boundingBox()
+    const dragEndBox = await dragEnd.boundingBox()
+    expect(dragStartBox).not.toBeNull()
+    expect(dragEndBox).not.toBeNull()
+    if (dragStartBox && dragEndBox) {
+      await page.mouse.move(
+        dragStartBox.x + dragStartBox.width / 2,
+        dragStartBox.y + dragStartBox.height / 2,
+      )
+      await page.mouse.down()
+      await page.mouse.move(
+        dragEndBox.x + dragEndBox.width / 2,
+        dragEndBox.y + dragEndBox.height / 2,
+        { steps: 12 },
+      )
+      await page.mouse.up()
+    }
+    await expect(table.locator('td[aria-selected="true"]')).toHaveCount(12)
+    await expect(table.locator('td[data-cell-focused="true"]')).toHaveCount(1)
+    await expect(table.locator('td[data-selection-top="true"]')).toHaveCount(4)
+    await expect(table.locator('td[data-selection-right="true"]')).toHaveCount(
+      3,
+    )
+    await expect(table.locator('td[data-selection-bottom="true"]')).toHaveCount(
+      4,
+    )
+    await expect(table.locator('td[data-selection-left="true"]')).toHaveCount(3)
+    await page.getByTestId('feed-toggle').click()
+
     await expect(page.getByTestId('feed-status')).toHaveText('FEED LIVE')
     await expect(instrumentCount.locator('option[value="150"]')).toHaveCount(1)
     await expect(instrumentCount.locator('option[value="350"]')).toHaveCount(1)

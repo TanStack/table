@@ -45,7 +45,6 @@ export function TradingShell(props: { children: JSX.Element }) {
       </div>
 
       <section class="market-panel" aria-label="Live synthetic quotes">
-        <MetricsStrip />
         {props.children}
       </section>
       <MarketStatusbar />
@@ -112,7 +111,7 @@ function MarketStatusbar() {
         <strong>{formatInteger(metrics().lastBatchSize)}</strong>
       </span>
       <span>
-        ROW UPDATES <strong>{formatInteger(metrics().lastUpdateCount)}</strong>
+        CHANGED ROWS <strong>{formatInteger(metrics().lastUpdateCount)}</strong>
       </span>
       <span>
         HOSTS <strong>{formatInteger(mountedCells())}</strong>
@@ -161,6 +160,8 @@ function Configurator() {
         <span>CONFIGURATOR</span>
         <small>RUN PARAMETERS</small>
       </header>
+
+      <MetricsStrip />
 
       <section class="config-section" aria-labelledby="feed-settings">
         <h2 id="feed-settings">FEED</h2>
@@ -338,51 +339,21 @@ function Configurator() {
 function MetricsStrip() {
   const { metrics } = useTradingShellController().state
   return (
-    <section class="metrics-strip" aria-label="Live performance metrics">
+    <section class="metrics-strip" aria-labelledby="live-health">
+      <h2 id="live-health">LIVE HEALTH</h2>
       <article>
-        <span>WORKER SAMPLES</span>
-        <strong data-testid="actual-rate">
-          {formatRate(metrics().actualTicksPerSecond)}
+        <span>FRAME RATE (EST.)</span>
+        <strong data-testid="frame-rate">
+          {metrics().rafCallbacksPerSecond.toFixed(1)}
         </strong>
-        <small>generated samples/s</small>
+        <small>rAF callbacks/s · rolling 1 s</small>
       </article>
       <article>
-        <span>ROW UPDATES</span>
-        <strong data-testid="row-update-rate">
-          {formatRate(metrics().rowUpdatesPerSecond)}
+        <span>AVG COMMIT</span>
+        <strong data-testid="average-commit-latency">
+          {formatMs(metrics().averageCommitLatencyMs)}
         </strong>
-        <small>unique rows applied/s</small>
-      </article>
-      <article>
-        <span>MESSAGES</span>
-        <strong data-testid="message-rate">
-          {metrics().workerMessagesPerSecond.toFixed(1)}
-        </strong>
-        <small>worker messages/s</small>
-      </article>
-      <article>
-        <span>STATE APPLIES</span>
-        <strong data-testid="state-apply-rate">
-          {metrics().stateApplicationsPerSecond.toFixed(1)}
-        </strong>
-        <small>quote snapshots/s</small>
-      </article>
-      <article>
-        <span>TABLE COMMITS</span>
-        <strong data-testid="table-render-rate">
-          {metrics().tableRendersPerSecond.toFixed(1)}
-        </strong>
-        <small>completed renders/s</small>
-      </article>
-      <article>
-        <span>AVG RENDER</span>
-        <strong>{formatMs(metrics().averageRenderMs)}</strong>
-        <small>mutation → render</small>
-      </article>
-      <article>
-        <span>P95 RENDER</span>
-        <strong>{formatMs(metrics().p95RenderMs)}</strong>
-        <small>max {formatMs(metrics().maxRenderMs)}</small>
+        <small>snapshot → DOM · rolling 3 s</small>
       </article>
       <article>
         <span>LONG FRAMES</span>
@@ -391,7 +362,7 @@ function MetricsStrip() {
           fallback={
             <>
               <strong data-testid="long-frame-count">N/A</strong>
-              <small>unsupported</small>
+              <small>unsupported by this browser</small>
             </>
           }
         >
@@ -403,8 +374,20 @@ function MetricsStrip() {
           >
             {metrics().longAnimationFrames}
           </strong>
-          <small>worst {formatMs(metrics().worstLongAnimationFrameMs)}</small>
+          <small>
+            since reset · worst {formatMs(metrics().worstLongAnimationFrameMs)}
+          </small>
         </Show>
+      </article>
+      <article>
+        <span>THROUGHPUT</span>
+        <strong data-testid="throughput-rate">
+          {formatRate(metrics().rowUpdatesPerSecond)} rows/s
+        </strong>
+        <small>
+          {metrics().stateApplicationsPerSecond.toFixed(1)}
+          snapshots/s · rows deduplicated per snapshot
+        </small>
       </article>
     </section>
   )
@@ -417,6 +400,43 @@ function Diagnostics() {
     <section class="config-section diagnostics" aria-labelledby="diagnostics">
       <h2 id="diagnostics">DIAGNOSTICS</h2>
       <dl>
+        <div>
+          <dt>Worker samples / s</dt>
+          <dd data-testid="actual-rate">
+            {formatRate(metrics().actualTicksPerSecond)}
+          </dd>
+        </div>
+        <div>
+          <dt>Worker messages / s</dt>
+          <dd data-testid="message-rate">
+            {metrics().workerMessagesPerSecond.toFixed(1)}
+          </dd>
+        </div>
+        <div>
+          <dt>Changed rows / s</dt>
+          <dd data-testid="row-update-rate">
+            {formatRate(metrics().rowUpdatesPerSecond)}
+          </dd>
+        </div>
+        <div>
+          <dt>Snapshots applied / s</dt>
+          <dd data-testid="state-apply-rate">
+            {metrics().stateApplicationsPerSecond.toFixed(1)}
+          </dd>
+        </div>
+        <div>
+          <dt>DOM commits / s</dt>
+          <dd data-testid="table-render-rate">
+            {metrics().tableCommitsPerSecond.toFixed(1)}
+          </dd>
+        </div>
+        <div>
+          <dt>P95 / max commit latency</dt>
+          <dd>
+            {formatMs(metrics().p95CommitLatencyMs)} /{' '}
+            {formatMs(metrics().maxCommitLatencyMs)}
+          </dd>
+        </div>
         <div>
           <dt>Mounted cells</dt>
           <dd>{formatInteger(mountedCells())}</dd>
@@ -457,7 +477,7 @@ function Diagnostics() {
           </dd>
         </div>
         <div>
-          <dt>DOM mutation records / s</dt>
+          <dt>Observed MutationRecords / s</dt>
           <dd data-testid="dom-mutation-rate">
             {formatRate(metrics().domMutationsPerSecond)}
           </dd>
@@ -482,8 +502,8 @@ function Diagnostics() {
           </dd>
         </div>
         <div>
-          <dt>Renders &gt; 16.7 ms</dt>
-          <dd>{metrics().slowRenders}</dd>
+          <dt>Commits &gt; 16.7 ms</dt>
+          <dd>{metrics().slowCommits}</dd>
         </div>
         <div>
           <dt>Long animation frames</dt>
@@ -494,7 +514,7 @@ function Diagnostics() {
           </dd>
         </div>
         <div>
-          <dt>JS heap</dt>
+          <dt>JS heap (GC-sensitive)</dt>
           <dd>
             {metrics().heapMb === null
               ? 'N/A'

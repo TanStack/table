@@ -1,7 +1,4 @@
 import Component from '@glimmer/component'
-import { tracked } from '@glimmer/tracking'
-import { observeValue } from '../../utils/subscriptions'
-import type Owner from '@ember/owner'
 import type { MarketQuote } from '../../feed/market-data'
 import type { MarketFeedController } from '../../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
@@ -11,19 +8,11 @@ interface Signature {
 }
 
 export default class SelectedInstrument extends Component<Signature> {
-  @tracked quotes: Array<MarketQuote>
-  @tracked symbol: string | null
-  constructor(owner: Owner, args: Signature['Args']) {
-    super(owner, args)
-    this.quotes = args.feed.quotes.get()
-    this.symbol = args.controller.renderAtoms.selectedSymbol.get()
-    observeValue(this, args.feed.quotes, (quotes) => { this.quotes = quotes })
-    observeValue(this, args.controller.renderAtoms.selectedSymbol, (symbol) => {
-      this.symbol = symbol
-    })
-  }
   get quote(): MarketQuote | null {
-    return this.args.feed.getQuoteBySymbol(this.quotes, this.symbol)
+    return this.args.feed.getQuoteBySymbol(
+      this.args.feed.quotes,
+      this.args.controller.selectedSymbol,
+    )
   }
   <template>
     <section

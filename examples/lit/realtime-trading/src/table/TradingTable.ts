@@ -86,6 +86,7 @@ export class TradingTable extends ControllerElement {
   #table?: TradingTableInstance
   #columns?: ReturnType<typeof createTradingColumns<typeof features>>
   #cleanup: Array<() => void> = []
+  #domCommitScheduled = false
 
   protected firstUpdated() {
     this.observe(this.feed.quotes)
@@ -115,11 +116,11 @@ export class TradingTable extends ControllerElement {
     )
     this.#writeColumnSizes()
     this.#fitAvailableWidth()
-    this.feed.completeRender()
+    this.#scheduleDomCommit()
   }
   protected updated() {
     this.#writeColumnSizes()
-    this.feed.completeRender()
+    this.#scheduleDomCommit()
   }
   disconnectedCallback() {
     for (const cleanup of this.#cleanup) cleanup()
@@ -142,6 +143,16 @@ export class TradingTable extends ControllerElement {
       )
     }
     element.style.width = `${table.getTotalSize()}px`
+  }
+
+  #scheduleDomCommit() {
+    if (this.#domCommitScheduled) return
+
+    this.#domCommitScheduled = true
+    queueMicrotask(() => {
+      this.#domCommitScheduled = false
+      if (this.isConnected) this.feed.completeRender()
+    })
   }
   #fitAvailableWidth() {
     const container = this.#scrollRef.value

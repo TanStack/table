@@ -5,6 +5,7 @@
   import { configuratorOptions } from './configurator-options'
   import { useMarketFeedController, useTradingShellController } from './trading-shell-context'
   import Diagnostics from './Diagnostics.svelte'
+  import MetricsStrip from './MetricsStrip.svelte'
   import SelectedInstrument from './SelectedInstrument.svelte'
 
   const controller = useTradingShellController()
@@ -27,6 +28,7 @@
 
 <aside id="benchmark-configurator" class="configurator" aria-label="Benchmark configurator">
   <header><span>CONFIGURATOR</span><small>RUN PARAMETERS</small></header>
+  <MetricsStrip />
   <section class="config-section" aria-labelledby="feed-settings"><h2 id="feed-settings">FEED</h2>
     <button class="primary-action" type="button" data-testid="feed-toggle" onclick={feed.actions.toggle}>{running.current ? 'PAUSE FEED' : 'START FEED'}</button>
     <label class="field"><span>Instruments (rows)</span><select data-testid="instrument-count-select" value={instrumentCount.current} onchange={(event) => { controller.actions.resetViewState(); feed.actions.setInstrumentCount(numberValue(event)) }}>{#each configuratorOptions.instrumentCounts as option (option.value)}<option value={option.value}>{option.label}</option>{/each}</select></label>

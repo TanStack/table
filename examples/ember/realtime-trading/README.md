@@ -26,23 +26,24 @@ build for performance recordings.
 
 | Path                            | Responsibility                                                                                                |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `app/feed/`                     | Market model, instrument universe, configuration, immutable update helpers, and direct TanStack atom controller. |
+| `app/feed/`                     | Market model, instrument universe, configuration, immutable update helpers, and Ember-native tracked controller. |
 | `app/feed/worker/`              | Typed protocol, deterministic engine, and module worker.                                                      |
 | `app/benchmark/`                | Browser monitor and benchmark controller.                                                                     |
 | `app/components/shell/`         | GTS header, metrics, configurator, diagnostics, selected instrument, status bar, and shell layout.            |
 | `app/components/table/`         | Trading table Glimmer component.                                                                              |
 | `app/table/table-config/`       | Grouped columns and custom GTS quote components.                                                              |
 | `app/table/`                    | Table construction, features, delegated interactions, and Virtual Core integration.                           |
-| `app/utils/subscriptions.ts`    | Owner-bound Store subscription and cleanup helpers.                                                           |
+| `app/utils/subscriptions.ts`    | Owner-bound destruction cleanup helper.                                                                       |
 | `app/templates/application.gts` | Creates feed/benchmark controllers and composes the shell.                                                    |
 
 `MarketFeedController` owns worker/feed state. `TradingBenchmarkController`
 observes feed lifecycle callbacks and owns diagnostic/view state. The
-application passes stable controllers to shell/table components; owner-bound
-subscription helpers bridge selected TanStack atoms or stores into tracked
-Glimmer fields and register destruction automatically. `quotes` is an isolated
-high-frequency atom; feed status and each configuration value are separate
-atoms. The root does not proxy every quote or metric as application state.
+application passes stable controllers to shell/table components; Glimmer
+components read the controller's `@tracked` properties directly. `quotes` is
+its own high-frequency tracked property; feed status and each configuration
+value are separate tracked properties. Derived benchmark values use `@cached`.
+There is no foreign Store subscription or mirrored component state, and the
+root does not proxy every quote or metric as application state.
 
 ## Feed and worker pipeline
 
@@ -77,8 +78,11 @@ keyboard navigation, and Price/Move/Percent/Sparkline Glimmer components.
 back row identity. One table/body interaction path resolves cells through
 `event.composedPath()` and data attributes instead of allocating handlers on
 every cell. Column widths are CSS variables updated on sizing/order; a
-`ResizeObserver` performs initial fitting until manual resize. A/B move
-component swapping is an explicit lifecycle stress mode.
+`ResizeObserver` performs initial fitting until manual resize. The
+CSS-variable string is an `@cached` getter that reads Ember-reactive table
+sizing and order, so the first fit and later table updates reach the DOM
+without an imperative Store subscription. A/B move component swapping is an
+explicit lifecycle stress mode.
 
 ## Virtualization
 
@@ -97,7 +101,7 @@ creates every Glimmer row/cell.
 
 - worker-side generation and pre-message coalescing;
 - immutable structural sharing for rows/history;
-- owner-bound, source-specific atom/store subscriptions;
+- direct `@tracked` feed/view state and `@cached` derived state;
 - stable table and virtual row identity;
 - componentized GTS shell/table/cell boundaries;
 - delegated pointer input and CSS hover;
@@ -112,15 +116,32 @@ processing when data changes.
 
 ## Diagnostics and interpretation
 
-The benchmark records worker samples, messages, unique row updates, state
-applies, completed renders, average mutation-to-render latency, long animation
-frames, mounted hosts, component lifecycle/execution, callbacks by column, DOM
-mutation records, row-model timing, and optional heap information.
+The compact **Live health** section lives in the configurator and reports the
+estimated frame callback rate over 1 second, average market-mutation-to-DOM-
+commit latency over 3 seconds, cumulative long animation frames, and throughput
+as changed rows plus applied snapshots per second. Detailed diagnostics retain
+worker samples/messages, state applies, DOM commits, rolling 10-second p95/max
+commit latency, cumulative slow commits, mounted hosts, component
+lifecycle/execution, row-model timing, DOM mutation records, and heap.
 
-Renderer callbacks and DOM mutations are different measurements. Temporary
-heap growth during component swapping is not a leak without post-GC retention.
-Compare identical production runs and use Chrome Performance with the in-app
-diagnostics.
+The frame value counts `requestAnimationFrame` callbacks, not GPU-presented
+frames, so its ceiling follows the display refresh rate. Renderer callbacks and
+DOM mutations are different measurements. `MutationObserver` counts delivered
+records, not individual DOM operations, and has overhead on a hot subtree; it
+only observes text, child-list, and `class`/`style` changes to reduce selection
+noise. Heap is a Chromium-only, GC-sensitive point-in-time value. User Timing
+timeline measures are sampled 1-in-20 while the in-memory latency calculation
+keeps every commit, reducing profiler self-interference. Temporary heap growth
+during component swapping is not a leak without post-GC retention.
+The rAF loop only appends a timestamp; rolling aggregation and heap reads run at
+the 500 ms metrics publication cadence. Mutation observation remains the most
+intrusive diagnostic because the browser must create records for the observed
+subtree.
+
+`Changed rows/s` sums the update array lengths delivered by each snapshot.
+Symbols are deduplicated inside one message, but the same row can count again in
+the next snapshot; it is applied row throughput, not distinct instruments per
+second.
 
 ## Standalone policy
 

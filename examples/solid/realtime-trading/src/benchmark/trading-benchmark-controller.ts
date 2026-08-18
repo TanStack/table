@@ -1,5 +1,5 @@
 import { createMemo, createSignal, onCleanup, onMount } from 'solid-js'
-import { TRADING_COLUMN_COUNT } from '../table/trading-table'
+import { TRADING_COLUMN_COUNT } from '../table/table-config/trading-columns'
 import {
   FORCED_VIRTUALIZATION_ROW_COUNT,
   resolveVirtualScrollMode,
@@ -10,7 +10,7 @@ import {
   longAnimationFramesSupported,
 } from './benchmark-monitor'
 import type { MarketFeedController } from '../feed/market-feed-controller'
-import type { RendererMode } from '../table/trading-table'
+import type { RendererMode } from '../table/table-config/trading-columns'
 import type { VirtualScrollPreference } from '../table/trading-row-virtualizer'
 
 export function createTradingBenchmarkController(feed: MarketFeedController) {
@@ -29,10 +29,10 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
 
   const stopObservingFeed = feed.observe({
     messageReceived: () => monitor.recordWorkerMessage(),
-    mutationStarted: () => monitor.markRenderPending(),
+    mutationStarted: () => monitor.markCommitPending(),
     batchApplied: ({ tickCount, updateCount, supersededUpdateCount }) =>
       monitor.recordBatch(tickCount, updateCount, supersededUpdateCount),
-    renderCommitted: () => monitor.recordCompletedRender(),
+    renderCommitted: () => monitor.recordDomCommit(),
   })
 
   const observeTableMutations = (): void => {
@@ -47,6 +47,7 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
     })
     runtime.mutationObserver.observe(tableBody, {
       attributes: true,
+      attributeFilter: ['class', 'style'],
       characterData: true,
       childList: true,
       subtree: true,
@@ -54,7 +55,7 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
   }
 
   const benchmarkFrame = (now: number): void => {
-    monitor.recordAnimationFrame()
+    monitor.recordAnimationFrame(now)
     if (monitor.shouldPublish(now)) {
       setMetrics(monitor.publish(now))
     }
@@ -67,13 +68,12 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
       runtime.longAnimationFrameObserver = new PerformanceObserver(
         (entries) => {
           for (const entry of entries.getEntries()) {
-            monitor.recordLongAnimationFrame(entry.duration)
+            monitor.recordLongAnimationFrame(entry.duration, entry.startTime)
           }
         },
       )
       runtime.longAnimationFrameObserver.observe({
         type: 'long-animation-frame',
-        buffered: true,
       })
     }
     runtime.animationFrameId = requestAnimationFrame(benchmarkFrame)

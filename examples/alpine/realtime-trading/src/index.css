@@ -226,40 +226,45 @@ select {
 
 .metrics-strip {
   display: grid;
-  flex: 0 0 var(--metrics-height);
-  grid-template-columns: repeat(8, minmax(8.25rem, 1fr));
-  overflow-x: auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   background: var(--border);
   border-bottom: 1px solid var(--border);
   gap: 1px;
 }
 
+.metrics-strip h2 {
+  margin: 0;
+  padding: 0.65rem var(--shell-inline-padding) 0.45rem;
+  color: var(--muted);
+  background: var(--surface-table);
+  font-size: 0.58rem;
+  grid-column: 1 / -1;
+  letter-spacing: 0.075em;
+}
+
 .metrics-strip article {
   min-width: 0;
-  padding: 0.4rem 0.55rem;
+  min-height: 4.25rem;
+  padding: 0.5rem var(--shell-inline-padding);
   background: var(--surface-bar);
 }
 
 .metrics-strip span,
 .metrics-strip small {
   display: block;
-  overflow: hidden;
   color: var(--muted);
   font-size: 0.56rem;
   letter-spacing: 0.045em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
 }
 
 .metrics-strip strong {
   display: block;
   margin: 0.12rem 0 0.08rem;
-  overflow: hidden;
   color: var(--text-strong);
   font-family: var(--font-mono);
   font-size: 0.88rem;
   font-variant-numeric: tabular-nums;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

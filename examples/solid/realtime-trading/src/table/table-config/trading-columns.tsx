@@ -1,32 +1,33 @@
 import {
-  DownMoveCell,
-  PercentChangeCell,
-  PriceCell,
-  SparklineCell,
-  StableMoveCell,
-  UpMoveCell,
-  recordCellRender,
-} from './quote-cells'
+  AskCellRenderer,
+  AskVolumeCellRenderer,
+  BidCellRenderer,
+  BidVolumeCellRenderer,
+  HighCellRenderer,
+  LowCellRenderer,
+  MarketCellRenderer,
+  NameCellRenderer,
+  OpenCellRenderer,
+  PercentChangeCellRenderer,
+  SparklineCellRenderer,
+  StableMoveCellRenderer,
+  SwappingMoveCellRenderer,
+  SymbolCellRenderer,
+  createPriceCellRenderer,
+} from './quote-cell-renderers'
+import { getDayChange, getDayChangePercent } from './market-quote-values'
 import type { JSX } from 'solid-js'
 import type { MarketQuote } from '../../feed/market-data'
-import type { VirtualScrollMode } from '../trading-row-virtualizer'
+import type { TradingCellContext } from '../trading-table-features'
 
 export type RendererMode = 'stable' | 'swap'
 
-export interface TradingTableProps {
-  quotes: Array<MarketQuote>
+export interface TradingColumnOptions {
   rendererMode: RendererMode
-  selectedSymbol: string | null
-  virtualScrollMode: VirtualScrollMode
   onSelectSymbol: (symbol: string) => void
-  onRenderedRowCount: (count: number) => void
 }
 
-interface TradingCellContext {
-  row: { original: MarketQuote }
-}
-
-interface TradingColumnDefinition {
+export interface TradingColumnDefinition {
   id: string
   header: string
   size?: number
@@ -36,13 +37,17 @@ interface TradingColumnDefinition {
   cell?: (context: TradingCellContext) => JSX.Element
 }
 
-const compactFormatter = new Intl.NumberFormat('en-US', {
-  notation: 'compact',
-  maximumFractionDigits: 1,
-})
+export type TradingColumnSet = Array<TradingColumnDefinition>
+
 export function createTradingColumns(
-  props: TradingTableProps,
-): Array<TradingColumnDefinition> {
+  options: TradingColumnOptions,
+): TradingColumnSet {
+  const priceCell = createPriceCellRenderer(options.onSelectSymbol)
+  const changeCell =
+    options.rendererMode === 'stable'
+      ? StableMoveCellRenderer
+      : SwappingMoveCellRenderer
+
   return [
     {
       id: 'instrument',
@@ -53,24 +58,21 @@ export function createTradingColumns(
           header: 'Market',
           size: 72,
           accessorFn: (row) => row.venue,
-          cell: ({ row }) =>
-            recordCellRender('Market', () => row.original.venue),
+          cell: MarketCellRenderer,
         },
         {
           id: 'name',
           header: 'Name',
           size: 180,
           accessorFn: (row) => row.company,
-          cell: ({ row }) =>
-            recordCellRender('Name', () => row.original.company),
+          cell: NameCellRenderer,
         },
         {
           id: 'symbol',
           header: 'Symbol',
           size: 92,
           accessorFn: (row) => row.symbol,
-          cell: ({ row }) =>
-            recordCellRender('Symbol', () => row.original.symbol),
+          cell: SymbolCellRenderer,
         },
       ],
     },
@@ -83,45 +85,21 @@ export function createTradingColumns(
           header: 'Price',
           size: 96,
           accessorFn: (row) => row.price,
-          cell: ({ row }) =>
-            recordCellRender('Last', () => {
-              const change = getDayChange(row.original)
-              return (
-                <PriceCell
-                  price={row.original.price}
-                  move={change}
-                  onSelect={() => props.onSelectSymbol(row.original.symbol)}
-                />
-              )
-            }),
+          cell: priceCell,
         },
         {
           id: 'change',
           header: 'Chg',
           size: 94,
           accessorFn: (row) => getDayChange(row),
-          cell: ({ row }) =>
-            recordCellRender('Change', () => {
-              const move = getDayChange(row.original)
-              if (props.rendererMode === 'stable') {
-                return <StableMoveCell move={move} />
-              }
-              return move >= 0 ? (
-                <UpMoveCell move={move} />
-              ) : (
-                <DownMoveCell move={move} />
-              )
-            }),
+          cell: changeCell,
         },
         {
           id: 'changePercent',
           header: 'Chg%',
           size: 90,
           accessorFn: (row) => getDayChangePercent(row),
-          cell: ({ row }) =>
-            recordCellRender('ChangePercent', () => (
-              <PercentChangeCell value={getDayChangePercent(row.original)} />
-            )),
+          cell: PercentChangeCellRenderer,
         },
       ],
     },
@@ -134,36 +112,28 @@ export function createTradingColumns(
           header: 'Bid',
           size: 90,
           accessorFn: (row) => row.bid,
-          cell: ({ row }) =>
-            recordCellRender('Bid', () => row.original.bid.toFixed(2)),
+          cell: BidCellRenderer,
         },
         {
           id: 'bidSize',
           header: 'Bid Vol',
           size: 100,
           accessorFn: (row) => row.bidSize,
-          cell: ({ row }) =>
-            recordCellRender('BidVolume', () =>
-              compactFormatter.format(row.original.bidSize),
-            ),
+          cell: BidVolumeCellRenderer,
         },
         {
           id: 'ask',
           header: 'Ask',
           size: 90,
           accessorFn: (row) => row.ask,
-          cell: ({ row }) =>
-            recordCellRender('Ask', () => row.original.ask.toFixed(2)),
+          cell: AskCellRenderer,
         },
         {
           id: 'askSize',
           header: 'Ask Vol',
           size: 100,
           accessorFn: (row) => row.askSize,
-          cell: ({ row }) =>
-            recordCellRender('AskVolume', () =>
-              compactFormatter.format(row.original.askSize),
-            ),
+          cell: AskVolumeCellRenderer,
         },
       ],
     },
@@ -176,24 +146,21 @@ export function createTradingColumns(
           header: 'Open',
           size: 90,
           accessorFn: (row) => row.open,
-          cell: ({ row }) =>
-            recordCellRender('Open', () => row.original.open.toFixed(2)),
+          cell: OpenCellRenderer,
         },
         {
           id: 'high',
           header: 'High',
           size: 90,
           accessorFn: (row) => row.high,
-          cell: ({ row }) =>
-            recordCellRender('High', () => row.original.high.toFixed(2)),
+          cell: HighCellRenderer,
         },
         {
           id: 'low',
           header: 'Low',
           size: 90,
           accessorFn: (row) => row.low,
-          cell: ({ row }) =>
-            recordCellRender('Low', () => row.original.low.toFixed(2)),
+          cell: LowCellRenderer,
         },
       ],
     },
@@ -206,24 +173,11 @@ export function createTradingColumns(
           header: 'Intraday',
           size: 150,
           enableSorting: false,
-          cell: ({ row }) =>
-            recordCellRender('Intraday', () => (
-              <SparklineCell values={row.original.history} />
-            )),
+          cell: SparklineCellRenderer,
         },
       ],
     },
   ]
-}
-
-function getDayChange(quote: MarketQuote): number {
-  return quote.price - quote.previousClose
-}
-
-function getDayChangePercent(quote: MarketQuote): number {
-  return quote.previousClose === 0
-    ? 0
-    : (getDayChange(quote) / quote.previousClose) * 100
 }
 
 export const TRADING_COLUMN_COUNT = 14

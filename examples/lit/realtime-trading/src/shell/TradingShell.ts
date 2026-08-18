@@ -4,7 +4,6 @@ import { ControllerElement } from './controller-element'
 import './AppHeader'
 import './Configurator'
 import './MarketStatusbar'
-import './MetricsStrip'
 import '../table/TradingTable'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
@@ -29,10 +28,7 @@ export class TradingShell extends ControllerElement {
         >${import.meta.env.DEV ? html`<aside class="development-warning">DEV BUILD — use the production build before recording results.</aside>` : null}
       </div>
       <section class="market-panel" aria-label="Live synthetic quotes">
-        <trading-metrics-strip
-          .controller=${this.controller}
-        ></trading-metrics-strip
-        ><trading-data-table
+        <trading-data-table
           .controller=${this.controller}
           .feed=${this.feed}
         ></trading-data-table>

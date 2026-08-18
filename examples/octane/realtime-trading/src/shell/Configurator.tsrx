@@ -3,6 +3,7 @@ import { FORCED_VIRTUALIZATION_ROW_COUNT, resolveVirtualScrollMode } from '../ta
 import { useStoreSelector, useStoreValue } from '../use-store-value'
 import { configuratorOptions } from './configurator-options'
 import { Diagnostics } from './Diagnostics.tsrx'
+import { MetricsStrip } from './MetricsStrip.tsrx'
 import { SelectedInstrument } from './SelectedInstrument.tsrx'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController, TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
@@ -40,6 +41,7 @@ export function Configurator(props: {
 
   <aside id="benchmark-configurator" className="configurator" aria-label="Benchmark configurator">
     <header><span>CONFIGURATOR</span><small>RUN PARAMETERS</small></header>
+    <MetricsStrip controller={props.controller} />
     <section className="config-section" aria-labelledby="feed-settings">
       <h2 id="feed-settings">FEED</h2>
       <button className="primary-action" type="button" data-testid="feed-toggle" onClick={props.feed.actions.toggle}>

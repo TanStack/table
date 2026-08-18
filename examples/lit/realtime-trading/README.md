@@ -111,14 +111,31 @@ data changes.
 
 ## Diagnostics and interpretation
 
-The monitor records generated samples, messages, unique row updates, state
-applies, completed renders, average mutation-to-render latency, long animation
-frames, mounted hosts, component lifecycle/execution, callbacks per column, DOM
-mutation records, row-model timing, and optional heap data.
+The sidebar keeps four cross-framework health signals prominent: estimated
+frame callbacks, average snapshot-to-DOM-commit latency, cumulative long
+animation frames, and changed-row/snapshot throughput. The remaining counters
+stay in Diagnostics so they do not look like equally important scores.
 
-Callback counts and DOM mutations describe different layers. Heap growth during
-component swapping is not a leak without post-GC retention. Compare identical
-production settings and use Chrome Performance with the in-app diagnostics.
+`AVG COMMIT` is not the duration of `render()` and it does not include the
+browser's later layout or paint. It starts when a new immutable snapshot is
+applied and ends in a guarded microtask queued from `updated()`. That extra
+microtask lets nested quote-cell custom elements finish their Lit updates
+before the sample closes. The average uses a rolling 3-second window; diagnostic
+p95/max use 10 seconds. The frame-rate estimate counts standard
+`requestAnimationFrame` callbacks over one second. It is refresh-rate dependent
+and is not a GPU/compositor FPS measurement.
+
+Callback counts and DOM mutations describe different layers.
+`Observed MutationRecords/s` is the number delivered by a `MutationObserver`
+on the table body, not the number of browser DOM operations. The observer tracks
+text, child-list, class, and style changes; it excludes selection data
+attributes to reduce noise. Registering an observer still adds work at very high
+mutation rates, so confirm close results with a Performance recording without
+treating this counter as a score. Heap is Chrome-only, current and GC-sensitive;
+growth is not a leak without post-GC retention. React Scan is not part of these
+shared measurements. User Timing commit and row-model entries are sampled once
+every 20 candidates; the numeric counters remain exact, while the Performance
+timeline avoids one retained entry per hot-path execution.
 
 ## Standalone policy
 

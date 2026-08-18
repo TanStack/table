@@ -61,7 +61,9 @@ IDs reject stale messages after reset or row-count changes.
   is not pointer events, renders, or messages.
 - **Worker delivery interval** controls coalesced `postMessage` cadence; 20 ms
   targets about 50 messages/s.
-- **Row updates** counts unique row snapshots applied on the main thread.
+- **Changed rows** counts row snapshots applied on the main thread. Rows are
+  deduplicated within one snapshot, but the same row can be counted again in a
+  later snapshot, so it is throughput rather than a global distinct-row count.
 - **Message samples** shows how much generated work the latest message contains.
 
 The 25K burst deliberately creates and flushes one expensive batch. The worker
@@ -121,11 +123,40 @@ row-model pass when data changes.
 
 ## Diagnostics and interpretation
 
-Diagnostics cover worker samples, messages, unique row updates, state applies,
-completed renders, average mutation-to-render latency, long animation frames,
-mounted hosts, component creation/destruction, cell callbacks by column,
-component executions by type, DOM mutation records, row-model timing, and heap
-data where supported.
+The compact **Live health** block lives in the configurator sidebar and shows
+four cross-framework signals:
+
+- **Frame rate (est.)** counts `requestAnimationFrame` callbacks over a rolling
+  one-second window. It is capped by display refresh and is not a measurement of
+  GPU-presented frames.
+- **Average commit latency** is a rolling three-second average from the first
+  pending market mutation to the table's DOM commit. It includes scheduling,
+  Preact work, and the commit; it is not component render duration.
+- **Long frames** comes from the Long Animation Frames API and is cumulative
+  since reset, with the worst observed duration when supported.
+- **Throughput** pairs changed rows/s with applied snapshots/s; changed rows are
+  deduplicated per snapshot, not across the complete reporting window.
+
+Detailed diagnostics retain worker samples, messages, state applies, table DOM
+commits, a 10-second commit-latency p95/max, cumulative slow commits, mounted
+hosts, component creation/destruction, cell callbacks by column, component
+executions by type, DOM `MutationRecord` rate, row-model timing, and heap data
+where supported.
+
+The in-memory latency and row-model aggregates inspect every call, while the
+Performance timeline writes only one User Timing measure per 20 calls to keep
+instrumentation from dominating a hot run. The `MutationObserver` watches the
+table body for text/children and only `class`/`style` attribute changes. Its
+rate counts browser records rather than DOM operations: records can be
+coalesced, equivalent UIs can produce different patterns, and creating records
+has real overhead. Heap is Chrome-only `usedJSHeapSize`, is sensitive to
+garbage-collection timing, and should be read as a trend rather than proof of a
+leak.
+
+The monitor itself adds one lightweight `requestAnimationFrame` callback and
+publishes the sidebar snapshot every 500 ms. That subscription is independent
+from the quote atom and table data boundary, but it remains instrumentation
+overhead and must stay enabled on both sides of an A/B comparison.
 
 Callback execution does not imply a DOM mutation, and temporary heap growth is
 not by itself a leak. Compare identical production configurations and confirm

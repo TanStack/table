@@ -1,8 +1,5 @@
 import Component from '@glimmer/component'
-import { tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
-import { observeValue } from '../../utils/subscriptions'
-import type Owner from '@ember/owner'
 import type { MarketFeedController } from '../../feed/market-feed-controller'
 
 interface Signature {
@@ -14,14 +11,11 @@ interface Signature {
 }
 
 export default class AppHeader extends Component<Signature> {
-  @tracked workerReady: boolean
-  @tracked running: boolean
-  constructor(owner: Owner, args: Signature['Args']) {
-    super(owner, args)
-    this.workerReady = args.feed.workerReady.get()
-    this.running = args.feed.running.get()
-    observeValue(this, args.feed.workerReady, (value) => { this.workerReady = value })
-    observeValue(this, args.feed.running, (value) => { this.running = value })
+  get workerReady() {
+    return this.args.feed.workerReady
+  }
+  get running() {
+    return this.args.feed.running
   }
   get status() {
     return !this.workerReady

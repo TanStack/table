@@ -50,7 +50,6 @@ export const TradingShell = defineComponent({
           )}
         </div>
         <section class="market-panel" aria-label="Live synthetic quotes">
-          <MetricsStrip />
           {slots.default?.()}
         </section>
         <MarketStatusbar />
@@ -121,46 +120,19 @@ const MetricsStrip = defineComponent({
     return () => {
       const metrics = state.value.metrics
       return (
-        <section class="metrics-strip" aria-label="Live performance metrics">
+        <section class="metrics-strip" aria-labelledby="live-health">
+          <h2 id="live-health">LIVE HEALTH</h2>
           <Metric
-            label="WORKER SAMPLES"
-            value={formatRate(metrics.actualTicksPerSecond)}
-            detail="generated samples/s"
-            testId="actual-rate"
+            label="FRAME RATE (EST.)"
+            value={metrics.rafCallbacksPerSecond.toFixed(1)}
+            detail="rAF callbacks/s · rolling 1 s"
+            testId="frame-rate"
           />
           <Metric
-            label="ROW UPDATES"
-            value={formatRate(metrics.rowUpdatesPerSecond)}
-            detail="unique rows applied/s"
-            testId="row-update-rate"
-          />
-          <Metric
-            label="MESSAGES"
-            value={metrics.workerMessagesPerSecond.toFixed(1)}
-            detail="worker messages/s"
-            testId="message-rate"
-          />
-          <Metric
-            label="STATE APPLIES"
-            value={metrics.stateApplicationsPerSecond.toFixed(1)}
-            detail="quote snapshots/s"
-            testId="state-apply-rate"
-          />
-          <Metric
-            label="TABLE COMMITS"
-            value={metrics.tableRendersPerSecond.toFixed(1)}
-            detail="completed renders/s"
-            testId="table-render-rate"
-          />
-          <Metric
-            label="AVG RENDER"
-            value={formatMs(metrics.averageRenderMs)}
-            detail="mutation → render"
-          />
-          <Metric
-            label="P95 RENDER"
-            value={formatMs(metrics.p95RenderMs)}
-            detail={`max ${formatMs(metrics.maxRenderMs)}`}
+            label="AVG COMMIT"
+            value={formatMs(metrics.averageCommitLatencyMs)}
+            detail="snapshot → DOM · rolling 3 s"
+            testId="average-commit-latency"
           />
           <Metric
             label="LONG FRAMES"
@@ -171,11 +143,21 @@ const MetricsStrip = defineComponent({
             }
             detail={
               state.value.longAnimationFramesSupported
-                ? `worst ${formatMs(metrics.worstLongAnimationFrameMs)}`
-                : 'unsupported'
+                ? `since reset · worst ${formatMs(metrics.worstLongAnimationFrameMs)}`
+                : 'unsupported by this browser'
             }
             testId="long-frame-count"
           />
+          <article>
+            <span>THROUGHPUT</span>
+            <strong data-testid="throughput-rate">
+              {formatRate(metrics.rowUpdatesPerSecond)} rows/s
+            </strong>
+            <small>
+              {metrics.stateApplicationsPerSecond.toFixed(1)} snapshots/s ·
+              rows deduplicated per snapshot
+            </small>
+          </article>
         </section>
       )
     }
@@ -217,7 +199,7 @@ const MarketStatusbar = defineComponent({
           <strong>{formatInteger(state.value.lastBatchSize)}</strong>
         </span>
         <span>
-          ROW UPDATES{' '}
+          CHANGED ROWS{' '}
           <strong>{formatInteger(state.value.lastUpdateCount)}</strong>
         </span>
         <span>
@@ -275,6 +257,7 @@ const Configurator = defineComponent({
           <span>CONFIGURATOR</span>
           <small>RUN PARAMETERS</small>
         </header>
+        <MetricsStrip />
         <section class="config-section" aria-labelledby="feed-settings">
           <h2 id="feed-settings">FEED</h2>
           <button
@@ -430,6 +413,35 @@ const Diagnostics = defineComponent({
           <h2 id="diagnostics">DIAGNOSTICS</h2>
           <dl>
             <Diagnostic
+              label="Worker samples / s"
+              value={formatRate(metrics.actualTicksPerSecond)}
+              testId="actual-rate"
+            />
+            <Diagnostic
+              label="Worker messages / s"
+              value={metrics.workerMessagesPerSecond.toFixed(1)}
+              testId="message-rate"
+            />
+            <Diagnostic
+              label="Changed rows / s"
+              value={formatRate(metrics.rowUpdatesPerSecond)}
+              testId="row-update-rate"
+            />
+            <Diagnostic
+              label="Snapshots applied / s"
+              value={metrics.stateApplicationsPerSecond.toFixed(1)}
+              testId="state-apply-rate"
+            />
+            <Diagnostic
+              label="DOM commits / s"
+              value={metrics.tableCommitsPerSecond.toFixed(1)}
+              testId="table-render-rate"
+            />
+            <Diagnostic
+              label="P95 / max commit latency"
+              value={`${formatMs(metrics.p95CommitLatencyMs)} / ${formatMs(metrics.maxCommitLatencyMs)}`}
+            />
+            <Diagnostic
               label="Mounted cells"
               value={formatInteger(state.value.mountedCells)}
             />
@@ -462,7 +474,7 @@ const Diagnostics = defineComponent({
               testId="cell-render-breakdown"
             />
             <Diagnostic
-              label="DOM mutation records / s"
+              label="Observed MutationRecords / s"
               value={formatRate(metrics.domMutationsPerSecond)}
               testId="dom-mutation-rate"
             />
@@ -496,11 +508,11 @@ const Diagnostics = defineComponent({
               value={`${formatInteger(metrics.lastBatchSize)} / ${formatInteger(metrics.lastUpdateCount)}`}
             />
             <Diagnostic
-              label="Renders > 16.7 ms"
-              value={formatInteger(metrics.slowRenders)}
+              label="Commits > 16.7 ms"
+              value={formatInteger(metrics.slowCommits)}
             />
             <Diagnostic
-              label="JS heap"
+              label="JS heap (GC-sensitive)"
               value={
                 metrics.heapMb === null
                   ? 'N/A'

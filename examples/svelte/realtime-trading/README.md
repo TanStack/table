@@ -113,15 +113,33 @@ new table row-model pass.
 
 ## Diagnostics and interpretation
 
-The benchmark reports generated samples, worker messages, unique row updates,
-state applies, table commits, average mutation-to-render latency, long animation
-frames, mounted hosts, component lifecycle/execution rates, callbacks by
-column, DOM mutation records, row-model timing, and optional heap information.
+The sidebar starts with four cross-framework health signals: estimated rAF
+callbacks/s over one second, average snapshot-to-DOM-commit latency over three
+seconds, long animation frames accumulated since reset, and throughput as
+changed rows/s plus applied snapshots/s. “Changed rows” is deduplicated within
+each snapshot; the same instrument can count again in a later snapshot. The
+advanced diagnostics retain worker samples/messages, DOM commits, a rolling
+10-second p95/max commit latency, slow commits, lifecycle/execution rates,
+row-model timing, DOM mutation records, and optional heap information.
+
+The frame figure is deliberately labeled estimated: it counts this page's rAF
+callbacks, is capped by the display refresh rate, and falls when a tab is
+throttled. It is a portable responsiveness signal, not compositor-presented
+FPS.
+
+Svelte waits for `tick()` before closing a pending DOM-commit measurement. User
+Timing entries for commits and row-model work are sampled at one in 20 calls;
+the in-memory counters and latency windows still measure every call.
 
 Renderer callbacks and DOM mutations measure different layers. Heap growth is
-not automatically a leak; verify retained objects after GC. Use identical
-production settings, Chrome Performance, and Svelte DevTools when comparing
-runs.
+not automatically a leak; verify retained objects after GC. The heap value is
+Chromium-only and GC-sensitive, not retained size. The DOM rate counts
+`MutationRecord` objects rather than browser operations, and records may be
+coalesced; the observer watches text/child changes plus only `class`/`style`
+attributes to reduce its own overhead. Non-feed text/child changes and
+interaction-driven `class`/`style` changes (including virtual scrolling) are
+included, so this is not a feed-only rate. Use identical production settings,
+Chrome Performance, and Svelte DevTools when comparing runs.
 
 ## Standalone policy
 
