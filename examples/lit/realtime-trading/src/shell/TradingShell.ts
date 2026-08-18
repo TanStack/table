@@ -23,8 +23,8 @@ export class TradingShell extends ControllerElement {
           .feed=${this.feed}
           .sidebarOpen=${this.sidebarOpen}
           .toggleSidebar=${() => {
-        this.sidebarOpen = !this.sidebarOpen
-      }}
+            this.sidebarOpen = !this.sidebarOpen
+          }}
         ></trading-app-header
         >${import.meta.env.DEV ? html`<aside class="development-warning">DEV BUILD — use the production build before recording results.</aside>` : null}
       </div>

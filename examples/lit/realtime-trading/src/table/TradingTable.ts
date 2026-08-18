@@ -234,25 +234,25 @@ export class TradingTable extends ControllerElement {
         aria-selected=${row.getIsSelected()}
       >
         ${repeat(
-        row.getVisibleCells(),
-        (cell) => cell.id,
-        (cell) => {
-          const edges = cell.getSelectionEdges()
-          return html`<td
-            style="width:calc(var(--col-${cell.column.id}-size) * 1px)"
-            data-column-id=${cell.column.id}
-            data-cell-focused=${cell.getIsFocused() ? 'true' : undefined}
-            data-selection-top=${edges.top ? 'true' : undefined}
-            data-selection-right=${edges.right ? 'true' : undefined}
-            data-selection-bottom=${edges.bottom ? 'true' : undefined}
-            data-selection-left=${edges.left ? 'true' : undefined}
-            aria-selected=${cell.getIsSelected()}
-            tabindex=${cell.getTabIndex()}
-          >
-            ${FlexRender({ cell })}
-          </td>`
-        },
-      )}
+          row.getVisibleCells(),
+          (cell) => cell.id,
+          (cell) => {
+            const edges = cell.getSelectionEdges()
+            return html`<td
+              style="width:calc(var(--col-${cell.column.id}-size) * 1px)"
+              data-column-id=${cell.column.id}
+              data-cell-focused=${cell.getIsFocused() ? 'true' : undefined}
+              data-selection-top=${edges.top ? 'true' : undefined}
+              data-selection-right=${edges.right ? 'true' : undefined}
+              data-selection-bottom=${edges.bottom ? 'true' : undefined}
+              data-selection-left=${edges.left ? 'true' : undefined}
+              aria-selected=${cell.getIsSelected()}
+              tabindex=${cell.getTabIndex()}
+            >
+              ${FlexRender({ cell })}
+            </td>`
+          },
+        )}
       </tr>`
     return html`<div
         ${ref(this.#scrollRef)}
@@ -270,11 +270,11 @@ export class TradingTable extends ControllerElement {
         >
           <thead>
             ${repeat(
-          table.getHeaderGroups(),
-          (group) => group.id,
-          (group) =>
-            html`<tr>
-              ${repeat(
+              table.getHeaderGroups(),
+              (group) => group.id,
+              (group) =>
+                html`<tr>
+                  ${repeat(
                 group.headers,
                 (header) => header.id,
                 (header) => {
@@ -360,8 +360,8 @@ export class TradingTable extends ControllerElement {
                   </th>`
                 },
               )}
-            </tr>`,
-        )}
+                </tr>`,
+            )}
           </thead>
           <tbody
             class=${virtualMode === 'tanstack' ? 'virtual-table-body' : ''}
@@ -373,18 +373,18 @@ export class TradingTable extends ControllerElement {
             @click=${(event: MouseEvent) => this.#pointer.handleClick(table, event)}
           >
             ${
-          virtualMode === 'tanstack'
-            ? repeat(
-                virtualRows,
-                (item) => item.key,
-                (item) => renderRow(rows[item.index], item),
-              )
-            : repeat(
-                rows,
-                (row) => row.id,
-                (row) => renderRow(row),
-              )
-        }
+              virtualMode === 'tanstack'
+                ? repeat(
+                    virtualRows,
+                    (item) => item.key,
+                    (item) => renderRow(rows[item.index], item),
+                  )
+                : repeat(
+                    rows,
+                    (row) => row.id,
+                    (row) => renderRow(row),
+                  )
+            }
           </tbody>
         </table>
       </div>

@@ -168,13 +168,11 @@ export default class TradingTable extends Component<Signature> {
     this.syncVirtualizer(rows)
     const result =
       this.virtualMode === 'tanstack' && this.virtualizer
-        ? this.virtualizer
-            .getVirtualItems()
-            .map((item) => ({
-              row: rows[item.index]!,
-              cells: rows[item.index]!.getVisibleCells(),
-              virtual: item,
-            }))
+        ? this.virtualizer.getVirtualItems().map((item) => ({
+            row: rows[item.index]!,
+            cells: rows[item.index]!.getVisibleCells(),
+            virtual: item,
+          }))
         : rows.map((row) => ({
             row,
             cells: row.getVisibleCells(),

@@ -76,9 +76,9 @@ export class Configurator extends ControllerElement {
             data-testid="instrument-count-select"
             .value=${String(feedState.instrumentCount)}
             @change=${(event: Event) => {
-          this.controller.actions.resetViewState()
-          this.feed.actions.setInstrumentCount(number(event))
-        }}
+              this.controller.actions.resetViewState()
+              this.feed.actions.setInstrumentCount(number(event))
+            }}
           >
             ${options(configuratorOptions.instrumentCounts)}
           </select></label
