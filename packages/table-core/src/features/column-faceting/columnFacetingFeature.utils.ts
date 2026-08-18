@@ -97,10 +97,18 @@ export function column_getFacetedUniqueValues<
   if (!facetedUniqueValuesFn) {
     facetedUniqueValuesFn = facetedUniqueValues[column.id] =
       table.options.features.facetedUniqueValues?.(table, column.id) ??
-      (() => new Map<any, number>())
+      createStableEmptyMapFn()
   }
 
   return facetedUniqueValuesFn()
+}
+
+// The no-factory fallback must return the same Map instance on every read so
+// consumers can rely on referential stability, matching the stock factories'
+// internally memoized results
+function createStableEmptyMapFn(): () => Map<any, number> {
+  const emptyMap = new Map<any, number>()
+  return () => emptyMap
 }
 
 /**
@@ -172,7 +180,7 @@ export function table_getGlobalFacetedUniqueValues<
   if (!table._rowModels.globalFacetedUniqueValues) {
     table._rowModels.globalFacetedUniqueValues =
       table.options.features.facetedUniqueValues?.(table, '__global__') ??
-      (() => new Map())
+      createStableEmptyMapFn()
   }
 
   const facetedUniqueValuesFn = table._rowModels.globalFacetedUniqueValues

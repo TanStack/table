@@ -74,7 +74,7 @@ export const columnSizingFeature: TableFeature = {
           table.options.columns,
           header.column.columns.length > 0
             ? table.atoms.columnSizing?.get() // must be all columns (sum child columns)
-            : table.atoms.columnSizing?.get()?.[header.column.id], // can just check it's associated column size state
+            : table.atoms.columnSizing?.get()?.[header.column.id], // can just check its associated column size state
         ],
       },
       header_getStart: {

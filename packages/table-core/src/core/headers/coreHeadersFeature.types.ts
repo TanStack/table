@@ -62,7 +62,7 @@ export interface Header_CoreProperties<
    */
   column: Column<TFeatures, TData, TValue>
   /**
-   * The depth of the header, zero-indexed based.
+   * The depth of the header, zero-indexed.
    */
   depth: number
   /**
@@ -78,7 +78,11 @@ export interface Header_CoreProperties<
    */
   index: number
   /**
-   * A boolean denoting if the header is a placeholder header.
+   * A boolean denoting if the header is a placeholder header. Placeholder
+   * headers fill the rows above a shallow leaf column's real header so that
+   * every header group row accounts for every visible column. Render them as
+   * empty cells, or use `header.rowSpan` to merge each chain of placeholders
+   * into one vertically spanning header cell.
    */
   isPlaceholder: boolean
   /**
@@ -86,7 +90,15 @@ export interface Header_CoreProperties<
    */
   placeholderId?: string
   /**
-   * The row-span for the header.
+   * The number of header group rows the header should span when merging header
+   * cells vertically. A leaf column that is shallower than the deepest leaf
+   * column produces a chain of placeholder headers above its real header; the
+   * placeholder at the top of the chain reports the chain's full span, and
+   * every header it covers (including the real leaf header in the bottom row)
+   * reports 0. To merge vertically, skip headers with a rowSpan of 0 and
+   * render every other header with the `rowSpan` attribute and its column's
+   * header content, even when it is a placeholder. Headers in even column
+   * trees always report 1.
    */
   rowSpan: number
   /**

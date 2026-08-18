@@ -15,7 +15,7 @@
       style="overflow: auto; position: relative; height: 600px"
       (scroll)="fetchMoreOnBottomReached(scrollContainer)"
     >
-      <!-- Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights -->
+      <!-- Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights -->
       <table style="display: grid">
         <thead style="display: grid; position: sticky; top: 0; z-index: 1">
           @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {

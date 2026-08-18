@@ -35,6 +35,7 @@ interface SpreadsheetGridProps {
   table: SpreadsheetTable
   interactions: GridInteractions
   zoom: number
+  onToggleMerge?: () => void
 }
 
 export interface SpreadsheetGridHandle {
@@ -67,7 +68,10 @@ interface HeaderSelectionDrag {
 export const SpreadsheetGrid = React.forwardRef<
   SpreadsheetGridHandle,
   SpreadsheetGridProps
->(function SpreadsheetGrid({ table, interactions, zoom }, forwardedRef) {
+>(function SpreadsheetGrid(
+  { table, interactions, zoom, onToggleMerge },
+  forwardedRef,
+) {
   const scrollRef = React.useRef<HTMLDivElement>(null)
 
   useHotkeys(
@@ -119,6 +123,7 @@ export const SpreadsheetGrid = React.forwardRef<
         callback: () => table.resetCellSelection(true),
       },
       { hotkey: 'Mod+A', callback: () => table.selectAllCells() },
+      { hotkey: 'Mod+M', callback: () => onToggleMerge?.() },
       { hotkey: 'Mod+Z', callback: interactions.undo },
       { hotkey: 'Mod+Shift+Z', callback: interactions.redo },
       { hotkey: 'Mod+Y', callback: interactions.redo },
@@ -202,6 +207,31 @@ export const SpreadsheetGrid = React.forwardRef<
       topRows,
     ],
   )
+
+  // Center-region merged cells live in a canvas-coordinate layer that must
+  // slide *under* the sticky row gutter and frozen columns. Row transforms
+  // create stacking contexts that flatten the pinned cells' z-index below any
+  // canvas-level overlay, so instead of fighting z-index the layer clips
+  // itself at the pinned edge, tracked directly on scroll to stay off the
+  // React render path.
+  const mergeClipRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const element = scrollRef.current
+    const layer = mergeClipRef.current
+    if (!element || !layer) return
+
+    const update = () => {
+      const scale = zoom / 100
+      layer.style.clipPath = `inset(0 0 0 ${
+        element.scrollLeft / scale + ROW_HEADER_WIDTH + startWidth
+      }px)`
+    }
+
+    update()
+    element.addEventListener('scroll', update, { passive: true })
+    return () => element.removeEventListener('scroll', update)
+  }, [startWidth, zoom])
 
   const [openMenu, setOpenMenu] = React.useState<OpenColumnMenu | null>(null)
   const [openCellMenu, setOpenCellMenu] = React.useState<OpenCellMenu | null>(
@@ -592,6 +622,23 @@ export const SpreadsheetGrid = React.forwardRef<
               />
             )
           })}
+
+          <table.Subscribe source={table.atoms.cellSelection}>
+            {() => (
+              <MergedCellsOverlay
+                table={table}
+                interactions={interactions}
+                topRowCount={topRows.length}
+                frozenRowsHeight={frozenRowsHeight}
+                startWidth={startWidth}
+                clipLayerRef={mergeClipRef}
+                onOpenContextMenu={(x, y, column) => {
+                  setOpenMenu(null)
+                  setOpenCellMenu({ x, y, column })
+                }}
+              />
+            )}
+          </table.Subscribe>
         </div>
       </div>
 
@@ -920,22 +967,34 @@ function SpreadsheetRowView({
       >
         {rowIndex + 1}
       </button>
-      {startCells.map((cell) => (
-        <SpreadsheetCell
-          key={cell.id}
-          cell={cell}
-          rowIndex={rowIndex}
-          activeBound={activeBound}
-          fillPreview={fillPreview}
-          pinned="start"
-          table={table}
-          interactions={interactions}
-          onStartFill={onStartFill}
-          onOpenContextMenu={onOpenContextMenu}
-        />
-      ))}
+      {startCells.map((cell) => {
+        if (cell.getRowSpan() !== 1 || cell.getColSpan() !== 1) {
+          return null
+        }
+        return (
+          <SpreadsheetCell
+            key={cell.id}
+            cell={cell}
+            rowIndex={rowIndex}
+            activeBound={activeBound}
+            fillPreview={fillPreview}
+            pinned="start"
+            table={table}
+            interactions={interactions}
+            onStartFill={onStartFill}
+            onOpenContextMenu={onOpenContextMenu}
+          />
+        )
+      })}
       {virtualColumns.map((virtualColumn) => {
         const cell = centerCells[virtualColumn.index]
+        // Cells that take part in a merge render in the merged-cell overlay:
+        // the anchor as one large cell, the covered cells not at all. Merges
+        // never include pinned rows or columns, so the pinned loops above and
+        // below stay untouched.
+        if (cell.getRowSpan() !== 1 || cell.getColSpan() !== 1) {
+          return null
+        }
         return (
           <SpreadsheetCell
             key={cell.id}
@@ -951,20 +1010,25 @@ function SpreadsheetRowView({
           />
         )
       })}
-      {endCells.map((cell) => (
-        <SpreadsheetCell
-          key={cell.id}
-          cell={cell}
-          rowIndex={rowIndex}
-          activeBound={activeBound}
-          fillPreview={fillPreview}
-          pinned="end"
-          table={table}
-          interactions={interactions}
-          onStartFill={onStartFill}
-          onOpenContextMenu={onOpenContextMenu}
-        />
-      ))}
+      {endCells.map((cell) => {
+        if (cell.getRowSpan() !== 1 || cell.getColSpan() !== 1) {
+          return null
+        }
+        return (
+          <SpreadsheetCell
+            key={cell.id}
+            cell={cell}
+            rowIndex={rowIndex}
+            activeBound={activeBound}
+            fillPreview={fillPreview}
+            pinned="end"
+            table={table}
+            interactions={interactions}
+            onStartFill={onStartFill}
+            onOpenContextMenu={onOpenContextMenu}
+          />
+        )
+      })}
     </div>
   )
 }
@@ -1088,6 +1152,274 @@ function SpreadsheetCell({
           }
         />
       ) : null}
+    </div>
+  )
+}
+
+interface MergedCellsOverlayProps {
+  table: SpreadsheetTable
+  interactions: GridInteractions
+  topRowCount: number
+  frozenRowsHeight: number
+  startWidth: number
+  clipLayerRef: React.RefObject<HTMLDivElement | null>
+  onOpenContextMenu: (
+    x: number,
+    y: number,
+    column: SpreadsheetTableColumn,
+  ) => void
+}
+
+/**
+ * Renders every merged cell as one absolutely positioned cell in canvas
+ * coordinates, independent of both virtualizers.
+ *
+ * Anchors and covered cells are skipped by the per-row loops, so a merge whose
+ * anchor row scrolls out of the virtual window still renders here: the browser
+ * clips the overlay against the scroll container instead of the row window.
+ * Rows are fixed-height and merges never include pinned rows or columns, so a
+ * merge's rectangle is computable directly from its position in the span
+ * index without consulting virtual items.
+ */
+function MergedCellsOverlay({
+  table,
+  interactions,
+  topRowCount,
+  frozenRowsHeight,
+  startWidth,
+  clipLayerRef,
+  onOpenContextMenu,
+}: MergedCellsOverlayProps) {
+  const spanIndex = table.getCellSpanIndex()
+  const startColumns = table.getStartVisibleLeafColumns()
+  const centerColumns = table.getCenterVisibleLeafColumns()
+  const endColumns = table.getEndVisibleLeafColumns()
+
+  const columnsByPosition: Array<SpreadsheetTableColumn | undefined> = []
+  for (const column of [...startColumns, ...centerColumns, ...endColumns]) {
+    columnsByPosition[spanIndex.columnIndexes[column.id]] = column
+  }
+
+  const centerOffsets = new Map<string, number>()
+  let offset = 0
+  for (const column of centerColumns) {
+    centerOffsets.set(column.id, offset)
+    offset += column.getSize()
+  }
+
+  type MergedAnchor = {
+    cell: SpreadsheetTableCell
+    rowSpan: number
+    colSpan: number
+    top: number
+    left: number
+    width: number
+    height: number
+  }
+
+  const centerAnchors: Array<MergedAnchor> = []
+  const pinnedAnchors: Array<MergedAnchor> = []
+
+  const pushAnchor = (columnId: string, r: number, rowSpan: number) => {
+    const row = spanIndex.rows[r]
+    const cell = row.getAllCellsByColumnId()[columnId]
+    const pinned = cell.column.getIsPinned()
+    // The example only freezes leading columns, so end-pinned anchors have no
+    // render path and are skipped.
+    if (pinned === 'end') return
+
+    const colSpan = Math.max(cell.getColSpan(), 1)
+    let width = 0
+    const position = spanIndex.columnIndexes[columnId] ?? -1
+    for (let c = 0; c < colSpan; c++) {
+      width += columnsByPosition[position + c]?.getSize() ?? 0
+    }
+
+    const rowOffset = (r - topRowCount) * ROW_HEIGHT
+    const height = rowSpan * ROW_HEIGHT
+
+    if (pinned === 'start') {
+      // The sticky layer sits at the header + frozen-rows flow offset and
+      // sticks horizontally, so children use layer-local tops and the same
+      // viewport inset the pinned cells use.
+      pinnedAnchors.push({
+        cell,
+        rowSpan,
+        colSpan,
+        top: rowOffset,
+        left: ROW_HEADER_WIDTH + cell.column.getStart('start'),
+        width,
+        height,
+      })
+      return
+    }
+
+    const columnOffset = centerOffsets.get(columnId)
+    if (columnOffset === undefined) return
+
+    centerAnchors.push({
+      cell,
+      rowSpan,
+      colSpan,
+      top: HEADER_HEIGHT + frozenRowsHeight + rowOffset,
+      left: ROW_HEADER_WIDTH + startWidth + columnOffset,
+      width,
+      height,
+    })
+  }
+
+  // Vertical runs and full rectangles anchor in the row-span index.
+  for (const columnId in spanIndex.rowSpans) {
+    const spans = spanIndex.rowSpans[columnId]
+    for (let r = 0; r < spans.length; r++) {
+      const rowSpan = spans[r]
+      if (rowSpan > 1) pushAnchor(columnId, r, rowSpan)
+    }
+  }
+
+  // Horizontal-only merges never enter the row-span index, so collect them
+  // from the column spans, skipping anchors the pass above already emitted.
+  if (spanIndex.colSpans.length) {
+    const columnIdBySpanIndex: Array<string | undefined> = []
+    for (const columnId in spanIndex.columnIndexes) {
+      columnIdBySpanIndex[spanIndex.columnIndexes[columnId]] = columnId
+    }
+
+    for (let r = 0; r < spanIndex.colSpans.length; r++) {
+      const rowColSpans = spanIndex.colSpans[r]
+      if (!rowColSpans) continue
+
+      for (let c = 0; c < rowColSpans.length; c++) {
+        if (rowColSpans[c] <= 1) continue
+
+        const columnId = columnIdBySpanIndex[c]
+        if (columnId === undefined) continue
+
+        const vertical = spanIndex.rowSpans[columnId] as Int32Array | undefined
+        if (vertical && vertical[r] !== 1) continue
+
+        pushAnchor(columnId, r, 1)
+      }
+    }
+  }
+
+  return (
+    <>
+      <div ref={clipLayerRef} className="merge-layer">
+        {centerAnchors.map((anchor) => (
+          <MergedCellView
+            key={anchor.cell.id}
+            anchor={anchor}
+            interactions={interactions}
+            onOpenContextMenu={onOpenContextMenu}
+          />
+        ))}
+      </div>
+      {pinnedAnchors.length ? (
+        <div className="pinned-merge-layer">
+          {pinnedAnchors.map((anchor) => (
+            <MergedCellView
+              key={anchor.cell.id}
+              anchor={anchor}
+              interactions={interactions}
+              onOpenContextMenu={onOpenContextMenu}
+            />
+          ))}
+        </div>
+      ) : null}
+    </>
+  )
+}
+
+function MergedCellView({
+  anchor,
+  interactions,
+  onOpenContextMenu,
+}: {
+  anchor: {
+    cell: SpreadsheetTableCell
+    rowSpan: number
+    colSpan: number
+    top: number
+    left: number
+    width: number
+    height: number
+  }
+  interactions: GridInteractions
+  onOpenContextMenu: MergedCellsOverlayProps['onOpenContextMenu']
+}) {
+  const { cell } = anchor
+  const edges = cell.getSelectionEdges()
+  const isEditing =
+    interactions.editing?.rowId === cell.row.id &&
+    interactions.editing.columnId === cell.column.id
+  const className = [
+    'spreadsheet-cell',
+    'cell-merged',
+    cell.getIsSelected() && 'cell-selected',
+    cell.getIsFocused() && 'cell-focused',
+    edges.top && 'cell-edge-top',
+    edges.right && 'cell-edge-right',
+    edges.bottom && 'cell-edge-bottom',
+    edges.left && 'cell-edge-left',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <div
+      className={className}
+      role="gridcell"
+      aria-selected={cell.getIsSelected()}
+      aria-rowspan={anchor.rowSpan}
+      aria-colspan={anchor.colSpan}
+      data-sheet-cell
+      data-merged-cell
+      data-row-id={cell.row.id}
+      data-column-id={cell.column.id}
+      tabIndex={isEditing ? -1 : cell.getTabIndex()}
+      style={{
+        top: anchor.top,
+        left: anchor.left,
+        width: anchor.width,
+        height: anchor.height,
+      }}
+      onMouseDown={(event) => {
+        if (isEditing || event.button !== 0) return
+        const grid =
+          event.currentTarget.closest<HTMLElement>('.spreadsheet-grid')
+        grid?.focus({ preventScroll: true })
+        cell.getSelectionStartHandler(document)(event)
+      }}
+      onMouseEnter={cell.getSelectionExtendHandler()}
+      onDoubleClick={() =>
+        interactions.startEditing(cell.row.id, cell.column.id)
+      }
+      onContextMenu={(event) => {
+        event.preventDefault()
+        event.currentTarget
+          .closest<HTMLElement>('.spreadsheet-grid')
+          ?.focus({ preventScroll: true })
+        onOpenContextMenu(event.clientX, event.clientY, cell.column)
+      }}
+    >
+      {isEditing ? (
+        <input
+          autoFocus
+          className="cell-editor"
+          aria-label={`Edit merged cell ${cell.column.columnDef.meta?.letter}`}
+          value={interactions.editing?.draft ?? ''}
+          onFocus={(event) => event.currentTarget.select()}
+          onMouseDown={(event) => event.stopPropagation()}
+          onChange={(event) => interactions.setEditingDraft(event.target.value)}
+          onKeyDown={interactions.handleEditorKeyDown}
+          onBlur={() => interactions.commitEditing()}
+        />
+      ) : (
+        <span className="cell-value">
+          {formatRenderedValue(cell.getValue())}
+        </span>
+      )}
     </div>
   )
 }

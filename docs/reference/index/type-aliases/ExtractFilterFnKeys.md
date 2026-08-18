@@ -11,7 +11,7 @@ type ExtractFilterFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | BuiltInFilterFn : TFeatures extends object ? Extract<keyof TFilterFns, string> : keyof FilterFns;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L160)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L165)
 
 Resolves the valid string names for `columnDef.filterFn` and
 `options.globalFilterFn` for a feature set.

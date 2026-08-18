@@ -9,7 +9,7 @@ title: table_reset
 function table_reset<TFeatures, TData>(table): void;
 ```
 
-Defined in: [core/table/coreTablesFeature.utils.ts:96](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L96)
+Defined in: [core/table/coreTablesFeature.utils.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L102)
 
 Resets all internal table base atoms to `table.initialState`, then clears
 transient instance data through registered feature reset hooks.

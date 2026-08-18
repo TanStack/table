@@ -9,7 +9,7 @@ title: table_getIsAllColumnsVisible
 function table_getIsAllColumnsVisible<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:348](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L348)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:359](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L359)
 
 Checks whether every leaf column is currently visible.
 

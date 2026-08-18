@@ -9,7 +9,7 @@ title: SubscribePropsWithSourceWithSelector
 type SubscribePropsWithSourceWithSelector<TSourceValue, TSelected> = object;
 ```
 
-Defined in: [Subscribe.ts:51](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L51)
+Defined in: [Subscribe.ts:48](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L48)
 
 Subscribe to a projected value from a source (atom or store).
 
@@ -31,7 +31,7 @@ Subscribe to a projected value from a source (atom or store).
 children: (state) => ComponentChildren | ComponentChildren;
 ```
 
-Defined in: [Subscribe.ts:54](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L54)
+Defined in: [Subscribe.ts:51](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L51)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [Subscribe.ts:54](https://github.com/TanStack/table/blob/main/packag
 selector: (state) => TSelected;
 ```
 
-Defined in: [Subscribe.ts:53](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L53)
+Defined in: [Subscribe.ts:50](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L50)
 
 #### Parameters
 
@@ -61,4 +61,4 @@ Defined in: [Subscribe.ts:53](https://github.com/TanStack/table/blob/main/packag
 source: SubscribeSource<TSourceValue>;
 ```
 
-Defined in: [Subscribe.ts:52](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L52)
+Defined in: [Subscribe.ts:49](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L49)

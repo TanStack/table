@@ -9,7 +9,7 @@ title: table_getTopRows
 function table_getTopRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L152)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L153)
 
 Resolves the visible rows pinned to the top region.
 

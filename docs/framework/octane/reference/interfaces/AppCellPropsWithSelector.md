@@ -5,7 +5,7 @@ title: AppCellPropsWithSelector
 
 # Interface: AppCellPropsWithSelector\<TFeatures, TData, TValue, TCellComponents, TSelected\>
 
-Defined in: [types.ts:622](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L622)
+Defined in: [types.ts:618](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L618)
 
 Props for AppCell component — with selector.
 
@@ -39,7 +39,7 @@ Props for AppCell component — with selector.
 cell: Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types.ts:629](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L629)
+Defined in: [types.ts:625](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L625)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [types.ts:629](https://github.com/TanStack/table/blob/main/packages/
 children: (cell, state) => unknown;
 ```
 
-Defined in: [types.ts:630](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L630)
+Defined in: [types.ts:626](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L626)
 
 #### Parameters
 
@@ -73,7 +73,7 @@ Defined in: [types.ts:630](https://github.com/TanStack/table/blob/main/packages/
 selector: (state) => TSelected;
 ```
 
-Defined in: [types.ts:635](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L635)
+Defined in: [types.ts:631](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L631)
 
 #### Parameters
 

@@ -144,6 +144,51 @@ export function addCellSelectionBounds(
   return mergeAdjacentCellSelectionBounds([...selected, ...fragments])
 }
 
+/**
+ * Grows a rectangle until it fully contains every merged-cell rectangle it
+ * touches.
+ *
+ * Merged cells make plain rectangles insufficient: a selection that clips part
+ * of a merge must cover the whole merge, and covering it can bring the
+ * rectangle into contact with further merges, so the expansion runs to a fixed
+ * point. The loop is bounded by the merge count, since each pass that changes
+ * the rectangle consumes at least one merge.
+ */
+export function expandCellSelectionBounds(
+  bounds: CellSelectionBounds,
+  merges: ReadonlyArray<CellSelectionBounds>,
+): CellSelectionBounds {
+  let expanded = bounds
+  let changed = true
+
+  while (changed) {
+    changed = false
+
+    for (const merge of merges) {
+      if (!intersectCellSelectionBounds(expanded, merge)) continue
+
+      const union = {
+        minRowIndex: Math.min(expanded.minRowIndex, merge.minRowIndex),
+        maxRowIndex: Math.max(expanded.maxRowIndex, merge.maxRowIndex),
+        minColumnIndex: Math.min(expanded.minColumnIndex, merge.minColumnIndex),
+        maxColumnIndex: Math.max(expanded.maxColumnIndex, merge.maxColumnIndex),
+      }
+
+      if (
+        union.minRowIndex !== expanded.minRowIndex ||
+        union.maxRowIndex !== expanded.maxRowIndex ||
+        union.minColumnIndex !== expanded.minColumnIndex ||
+        union.maxColumnIndex !== expanded.maxColumnIndex
+      ) {
+        expanded = union
+        changed = true
+      }
+    }
+  }
+
+  return expanded
+}
+
 export function applyCellSelectionBoundsOperations(
   operations: ReadonlyArray<CellSelectionBoundsOperation>,
 ): Array<CellSelectionBounds> {

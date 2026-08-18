@@ -9,7 +9,7 @@ title: createSortedRowModel
 function createSortedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/createSortedRowModel.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/createSortedRowModel.ts#L24)
+Defined in: [features/row-sorting/createSortedRowModel.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/createSortedRowModel.ts#L28)
 
 Creates a memoized sorted row model factory.
 

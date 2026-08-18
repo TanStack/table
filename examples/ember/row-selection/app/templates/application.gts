@@ -180,6 +180,7 @@ export default class RowSelectionTable extends Component {
       rowSelection: this.rowSelection,
     },
     enableRowSelection: true,
+    // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
     onRowSelectionChange: (updater) => {
       this.rowSelection =
         typeof updater === 'function' ? updater(this.rowSelection) : updater

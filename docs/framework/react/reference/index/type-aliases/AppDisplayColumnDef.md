@@ -9,7 +9,7 @@ title: AppDisplayColumnDef
 type AppDisplayColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<DisplayColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [createTableHook.tsx:117](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L117)
+Defined in: [createTableHook.tsx:116](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L116)
 
 Enhanced display column definition with pre-bound components.
 

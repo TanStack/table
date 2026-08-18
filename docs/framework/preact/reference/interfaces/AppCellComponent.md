@@ -5,7 +5,7 @@ title: AppCellComponent
 
 # Interface: AppCellComponent()\<TFeatures, TData, TCellComponents\>
 
-Defined in: [createTableHook.tsx:468](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L468)
+Defined in: [createTableHook.tsx:467](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L467)
 
 Component type for AppCell - wraps a cell and provides cell context with optional Subscribe
 
@@ -29,7 +29,7 @@ Component type for AppCell - wraps a cell and provides cell context with optiona
 AppCellComponent<TValue>(props): ComponentChildren;
 ```
 
-Defined in: [createTableHook.tsx:473](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L473)
+Defined in: [createTableHook.tsx:472](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L472)
 
 Component type for AppCell - wraps a cell and provides cell context with optional Subscribe
 
@@ -55,7 +55,7 @@ Component type for AppCell - wraps a cell and provides cell context with optiona
 AppCellComponent<TValue, TSelected>(props): ComponentChildren;
 ```
 
-Defined in: [createTableHook.tsx:481](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L481)
+Defined in: [createTableHook.tsx:480](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L480)
 
 Component type for AppCell - wraps a cell and provides cell context with optional Subscribe
 

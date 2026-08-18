@@ -46,10 +46,12 @@ export function createGroupedRowModel<
       onAfterUpdate: () => {
         const grouping = table.atoms.grouping?.get()
         const preGroupedRowModel = table.getPreGroupedRowModel()
+        // The first computation is not a change; auto-resets fire only once
+        // a previously observed grouping or pre-grouped row model differs.
         const rowInputsChanged =
-          !hasAutoResetDependencies ||
-          grouping !== previousGrouping ||
-          preGroupedRowModel !== previousPreGroupedRowModel
+          hasAutoResetDependencies &&
+          (grouping !== previousGrouping ||
+            preGroupedRowModel !== previousPreGroupedRowModel)
 
         previousGrouping = grouping
         previousPreGroupedRowModel = preGroupedRowModel
@@ -76,10 +78,11 @@ function _createGroupedRowModel<
   const grouping = table.atoms.grouping?.get()
 
   if (!rowModel.rows.length || !grouping?.length) {
-    rowModel.rows.forEach((row) => {
-      row.depth = 0
-      row.parentId = undefined
-    })
+    // A previous grouped pass rewrote depth/parentId on these shared row
+    // objects, shifting the whole tree down by the number of grouping levels.
+    // Restore the natural relationships all the way down, not just at the
+    // top level.
+    resetRowRelationships(rowModel.rows, 0, undefined)
     return rowModel
   }
 
@@ -98,8 +101,8 @@ function _createGroupedRowModel<
     depth = 0,
     parentId?: string,
   ) => {
-    // Grouping depth has been been met
-    // Stop grouping and simply rewrite thd depth and row relationships
+    // Grouping depth has been met
+    // Stop grouping and simply rewrite the depth and row relationships
     if (depth >= existingGrouping.length) {
       return rows.map((row) => {
         row.depth = depth
@@ -226,6 +229,24 @@ function _createGroupedRowModel<
     rows: groupedRows,
     flatRows: groupedFlatRows,
     rowsById: groupedRowsById,
+  }
+}
+
+function resetRowRelationships<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rows: Array<Row<TFeatures, TData>>,
+  depth: number,
+  parentId: string | undefined,
+) {
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]!
+    row.depth = depth
+    row.parentId = parentId
+    if (row.subRows.length) {
+      resetRowRelationships(row.subRows, depth + 1, row.id)
+    }
   }
 }
 

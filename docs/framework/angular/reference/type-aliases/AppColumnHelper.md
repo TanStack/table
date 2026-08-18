@@ -9,7 +9,7 @@ title: AppColumnHelper
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:167](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L167)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:166](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L166)
 
 Enhanced column helper with pre-bound components in cell/header/footer contexts.
 This enables TypeScript to know about the registered components when defining columns.
@@ -40,7 +40,7 @@ This enables TypeScript to know about the registered components when defining co
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:177](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L177)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:176](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L176)
 
 Creates a data column definition with an accessor key or function.
 The cell, header, and footer contexts include pre-bound components.
@@ -77,7 +77,7 @@ The cell, header, and footer contexts include pre-bound components.
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:208](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L208)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:207](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L207)
 
 Wraps an array of column definitions to preserve each column's individual TValue type.
 
@@ -105,7 +105,7 @@ Wraps an array of column definitions to preserve each column's individual TValue
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:216](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L216)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:215](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L215)
 
 Creates a display column definition for non-data columns.
 The cell, header, and footer contexts include pre-bound components.
@@ -128,7 +128,7 @@ The cell, header, and footer contexts include pre-bound components.
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:229](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L229)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:228](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L228)
 
 Creates a group column definition with nested child columns.
 The cell, header, and footer contexts include pre-bound components.

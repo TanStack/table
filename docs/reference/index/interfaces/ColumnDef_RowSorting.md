@@ -51,7 +51,7 @@ optional invertSorting: boolean;
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L133)
 
-Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring
+Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, e.g. a ranking (1st, 2nd, 3rd) or golf-like scoring
 
 ***
 
@@ -87,12 +87,16 @@ The sorting function to use with this column.
 optional sortUndefined: false | 1 | -1 | "first" | "last";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L153)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:157](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L157)
 
 The priority of undefined values when sorting this column.
 - `false`
-  - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
+  - Undefined values will be passed to the sorting function like any other value with no special handling; the sorting function is responsible for handling them
 - `-1`
   - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1`
   - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
+- `'first'`
+  - Undefined values will be pushed to the beginning of the list regardless of sort direction
+- `'last'`
+  - Undefined values will be pushed to the end of the list regardless of sort direction

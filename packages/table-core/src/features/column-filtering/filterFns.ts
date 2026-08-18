@@ -278,10 +278,18 @@ export const filterFn_betweenInclusive = constructFilterFn({
  * Keeps rows whose numeric value is inside an inclusive `[min, max]` range.
  *
  * Filter values are normalized so blank endpoints become open-ended and
- * reversed endpoints are swapped.
+ * reversed endpoints are swapped. Only real numbers can fall inside the
+ * range: non-numeric row values (`null`, `undefined`, strings, booleans)
+ * never match.
  */
 export const filterFn_inNumberRange = constructFilterFn({
   filter: (dataValue: number, filterValue: [number, number]) => {
+    // Guard against non-numeric values: JavaScript's loose relational
+    // coercion would otherwise let values such as `null`, `''` and booleans
+    // slip into a numeric range (`null >= 0 && null <= 20` is true)
+    if (typeof dataValue !== 'number' || Number.isNaN(dataValue)) {
+      return false
+    }
     const [min, max] = filterValue
     return dataValue >= min && dataValue <= max
   },

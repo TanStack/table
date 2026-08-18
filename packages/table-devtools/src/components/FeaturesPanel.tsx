@@ -157,19 +157,15 @@ export function FeaturesPanel() {
     () => table()?.store,
     (state) => state,
   )
-  const tableOptions = useTableStore(
-    () => {
-      const tableInstance = table()
-      return tableInstance?.optionsStore ?? tableInstance?.store
-    },
-    () => table()?.options as unknown,
+  const optionsStoreValue = useTableStore(
+    () => table()?.optionsStore,
+    (options) => options,
   )
 
   const tableFeatures = createMemo((): Set<string> => {
     const tableInstance = table()
     if (!tableInstance) return new Set()
 
-    tableState()
     return new Set(Object.keys(tableInstance._features))
   })
 
@@ -177,8 +173,7 @@ export function FeaturesPanel() {
     const tableInstance = table()
     if (!tableInstance) return []
 
-    tableState()
-    tableOptions()
+    optionsStoreValue()
 
     return Object.keys(tableInstance.options.features ?? {}).filter((key) =>
       ROW_MODEL_FEATURE_SLOTS.includes(key),
@@ -191,8 +186,7 @@ export function FeaturesPanel() {
     const tableInstance = table()
     if (!tableInstance) return []
 
-    tableState()
-    tableOptions()
+    optionsStoreValue()
 
     const rowModelFns = toFnBuckets(tableInstance._rowModelFns)
     const optionFns = toFnBuckets(tableInstance.options)
@@ -298,7 +292,7 @@ export function FeaturesPanel() {
                 </div>
                 <div class={styles().featureEstimateSummaryNote}>
                   Allocated from the current `size-limit` metric: minified and
-                  brotlied.
+                  Brotli-compressed.
                 </div>
               </div>
 

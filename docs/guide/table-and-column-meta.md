@@ -237,7 +237,7 @@ const variant = column.columnDef.meta?.filterVariant
 
 ## Typing Meta Per-Table (Recommended)
 
-By default, both meta types are empty objects, so to get type safety you declare their shapes yourself. New in v9, you can declare meta types **per features set** with the type-only `tableMeta` and `columnMeta` slots in your `tableFeatures()` call, using the `metaHelper` utility.
+By default, both meta types are empty objects, so to get type safety you declare their shapes yourself. New in v9, you can declare meta types **per feature set** with the type-only `tableMeta` and `columnMeta` slots in your `tableFeatures()` call, using the `metaHelper` utility.
 
 First, define the shapes you want (this is the same in every framework):
 

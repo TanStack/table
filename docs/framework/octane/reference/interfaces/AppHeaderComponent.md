@@ -5,7 +5,7 @@ title: AppHeaderComponent
 
 # Interface: AppHeaderComponent()\<TFeatures, TData, THeaderComponents\>
 
-Defined in: [types.ts:702](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L702)
+Defined in: [types.ts:698](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L698)
 
 Component type for AppHeader/AppFooter — wraps a header and provides header
 context with optional Subscribe.
@@ -30,7 +30,7 @@ context with optional Subscribe.
 AppHeaderComponent<TValue>(props): unknown;
 ```
 
-Defined in: [types.ts:707](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L707)
+Defined in: [types.ts:703](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L703)
 
 Component type for AppHeader/AppFooter — wraps a header and provides header
 context with optional Subscribe.
@@ -57,7 +57,7 @@ context with optional Subscribe.
 AppHeaderComponent<TValue, TSelected>(props): unknown;
 ```
 
-Defined in: [types.ts:715](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L715)
+Defined in: [types.ts:711](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L711)
 
 Component type for AppHeader/AppFooter — wraps a header and provides header
 context with optional Subscribe.

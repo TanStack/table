@@ -9,7 +9,7 @@ title: TransformFilterValueFn
 type TransformFilterValueFn<TFeatures, TData, TValue> = (value, column?) => TValue;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L133)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L138)
 
 ## Type Parameters
 

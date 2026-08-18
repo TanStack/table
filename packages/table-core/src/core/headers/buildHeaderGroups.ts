@@ -175,7 +175,6 @@ function updateHeaderSpans<
     }
 
     let colSpan = 0
-    let minChildRowSpan = Infinity
 
     if (header.subHeaders.length) {
       updateHeaderSpans(header.subHeaders)
@@ -189,17 +188,42 @@ function updateHeaderSpans<
         }
 
         colSpan += child.colSpan
-        if (child.rowSpan < minChildRowSpan) {
-          minChildRowSpan = child.rowSpan
-        }
       }
     } else {
       colSpan = 1
-      minChildRowSpan = 0
     }
 
     header.colSpan = colSpan
-    header.rowSpan = minChildRowSpan
+
+    // A shallow leaf column produces a chain of same-column headers: the
+    // placeholder at the column's own depth, more placeholders below it, and
+    // the real leaf header in the bottom row. The top of the chain carries the
+    // full rowSpan and renders the column's header content when merging
+    // vertically; every header it covers gets a rowSpan of 0 so rowSpan-aware
+    // renderers can skip it. All other headers span a single row.
+    if (
+      header.isPlaceholder &&
+      header.subHeaders.length === 1 &&
+      header.subHeaders[0]!.column === header.column
+    ) {
+      let rowSpan = 1
+      let chainChild: Header<TFeatures, TData, TValue> | undefined =
+        header.subHeaders[0]
+      while (chainChild) {
+        chainChild.rowSpan = 0
+        rowSpan++
+        chainChild =
+          chainChild.subHeaders.length === 1 &&
+          chainChild.subHeaders[0]!.column === header.column
+            ? chainChild.subHeaders[0]
+            : undefined
+      }
+      header.rowSpan = rowSpan
+    } else {
+      // Chain members are visited before their chain top, so this default is
+      // overwritten with 0 when the chain top claims them.
+      header.rowSpan = 1
+    }
   }
 }
 

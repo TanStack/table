@@ -9,7 +9,7 @@ title: AppGroupColumnDef
 type AppGroupColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<GroupColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer" | "columns"> & object;
 ```
 
-Defined in: [types.ts:433](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L433)
+Defined in: [types.ts:429](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L429)
 
 Enhanced group column definition with pre-bound components.
 

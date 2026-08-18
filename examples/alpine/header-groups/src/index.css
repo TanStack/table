@@ -131,3 +131,15 @@ button:disabled {
 .filter-input {
   width: 6rem;
 }
+
+/* Lays the header group examples side by side when the viewport allows it. */
+.example-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 1.5rem;
+}
+
+.example-panel {
+  flex: 0 1 auto;
+}

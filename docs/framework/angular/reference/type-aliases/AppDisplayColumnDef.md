@@ -9,7 +9,7 @@ title: AppDisplayColumnDef
 type AppDisplayColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<DisplayColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:115](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L115)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:114](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L114)
 
 Enhanced display column definition with pre-bound components.
 

@@ -5,7 +5,7 @@ title: AppTablePropsWithSelector
 
 # Interface: AppTablePropsWithSelector\<TFeatures, TSelected\>
 
-Defined in: [createTableHook.tsx:388](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L388)
+Defined in: [createTableHook.tsx:387](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L387)
 
 Props for AppTable component - with selector
 
@@ -27,7 +27,7 @@ Props for AppTable component - with selector
 children: (state) => ReactNode;
 ```
 
-Defined in: [createTableHook.tsx:392](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L392)
+Defined in: [createTableHook.tsx:391](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L391)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [createTableHook.tsx:392](https://github.com/TanStack/table/blob/mai
 selector: (state) => TSelected;
 ```
 
-Defined in: [createTableHook.tsx:393](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L393)
+Defined in: [createTableHook.tsx:392](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L392)
 
 #### Parameters
 

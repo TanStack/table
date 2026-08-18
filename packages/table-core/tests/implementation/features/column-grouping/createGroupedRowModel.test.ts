@@ -436,12 +436,18 @@ describe('createGroupedRowModel ungrouping reset', () => {
     })
   })
 
-  it('should reset depth and parentId on top-level tree rows after setGrouping([])', () => {
+  it('should reset depth and parentId on nested tree rows after setGrouping([])', () => {
     const data: Array<TreeRow> = [
       {
         status: 'x',
         firstName: 'parent1',
-        subRows: [{ status: 'x', firstName: 'child1' }],
+        subRows: [
+          {
+            status: 'x',
+            firstName: 'child1',
+            subRows: [{ status: 'x', firstName: 'grandchild1' }],
+          },
+        ],
       },
       { status: 'y', firstName: 'parent2' },
     ]
@@ -451,6 +457,7 @@ describe('createGroupedRowModel ungrouping reset', () => {
     expect(grouped.rowsById['0']!.depth).toBe(1)
     expect(grouped.rowsById['0']!.parentId).toBe('status:x')
     expect(grouped.rowsById['0.0']!.depth).toBe(2)
+    expect(grouped.rowsById['0.0.0']!.depth).toBe(3)
 
     table.setGrouping([])
     const ungrouped = table.getGroupedRowModel()
@@ -459,12 +466,12 @@ describe('createGroupedRowModel ungrouping reset', () => {
       expect(row.depth).toBe(0)
       expect(row.parentId).toBeUndefined()
     })
-    // Pinning current behavior (possible bug): the ungrouping reset branch
-    // only rewrites top-level rows, so nested tree descendants keep the
-    // shifted depth (2) from the previous grouped pass instead of returning
-    // to their natural tree depth (1).
-    expect(ungrouped.rowsById['0.0']!.depth).toBe(2)
+    // Nested descendants return to their natural tree depth instead of
+    // keeping the shifted depth from the previous grouped pass.
+    expect(ungrouped.rowsById['0.0']!.depth).toBe(1)
     expect(ungrouped.rowsById['0.0']!.parentId).toBe('0')
+    expect(ungrouped.rowsById['0.0.0']!.depth).toBe(2)
+    expect(ungrouped.rowsById['0.0.0']!.parentId).toBe('0.0')
   })
 })
 

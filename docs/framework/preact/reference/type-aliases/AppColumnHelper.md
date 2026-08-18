@@ -9,7 +9,7 @@ title: AppColumnHelper
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```
 
-Defined in: [createTableHook.tsx:166](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L166)
+Defined in: [createTableHook.tsx:165](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L165)
 
 Enhanced column helper with pre-bound components in cell/header/footer contexts.
 This enables TypeScript to know about the registered components when defining columns.
@@ -40,7 +40,7 @@ This enables TypeScript to know about the registered components when defining co
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:176](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L176)
+Defined in: [createTableHook.tsx:175](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L175)
 
 Creates a data column definition with an accessor key or function.
 The cell, header, and footer contexts include pre-bound components.
@@ -77,7 +77,7 @@ The cell, header, and footer contexts include pre-bound components.
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
 ```
 
-Defined in: [createTableHook.tsx:207](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L207)
+Defined in: [createTableHook.tsx:206](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L206)
 
 Wraps an array of column definitions to preserve each column's individual TValue type.
 
@@ -105,7 +105,7 @@ Wraps an array of column definitions to preserve each column's individual TValue
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [createTableHook.tsx:215](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L215)
+Defined in: [createTableHook.tsx:214](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L214)
 
 Creates a display column definition for non-data columns.
 The cell, header, and footer contexts include pre-bound components.
@@ -128,7 +128,7 @@ The cell, header, and footer contexts include pre-bound components.
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [createTableHook.tsx:228](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L228)
+Defined in: [createTableHook.tsx:227](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L227)
 
 Creates a group column definition with nested child columns.
 The cell, header, and footer contexts include pre-bound components.

@@ -24,7 +24,7 @@ Every cell object has an `id` property that makes it unique within the table ins
 }
 ```
 
-During grouping or aggregation features, the `cell.id` will have additional string appended to it.
+During grouping or aggregation features, the `cell.id` will have an additional string appended to it.
 
 ### Cell Parent Objects
 
@@ -55,7 +55,7 @@ const firstName = cell.row.original.firstName // { firstName: 'John', lastName: 
 
 ## More Cell APIs
 
-Depending on the features that you are using for your table, there are dozens more useful APIs for interacting with cells. See each features' respective API docs or guide for more information.
+Depending on the features that you are using for your table, there are dozens more useful APIs for interacting with cells. See each feature's respective API docs or guide for more information.
 
 ## Cell Rendering
 
@@ -82,3 +82,7 @@ const columns = [
   })}
 </tr>
 ```
+
+### Cell Spanning
+
+When the optional `cellSpanningFeature` is registered, adjacent cells can merge into one rendered cell. A cell reporting a span of `0` is covered by another cell's span and must be skipped instead of rendered. See the [Cell Spanning Guide](../framework/react/guide/cell-spanning) for the full rendering pattern.

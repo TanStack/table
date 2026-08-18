@@ -287,6 +287,32 @@ describe('column_setFilterValue', () => {
       ]),
     ).toEqual([{ id: 'lastName', value: 'b' }])
   })
+
+  it('should keep an empty-string filter when a custom autoRemove allows it', () => {
+    const onColumnFiltersChange = vi.fn()
+    const emptyAwareFilterFn: any = (row: any, columnId: string, value: any) =>
+      row.getValue(columnId) === value
+    emptyAwareFilterFn.autoRemove = (val: any) => val === undefined
+
+    const table = constructTable<typeof features, Person>({
+      data: people,
+      columns: [
+        {
+          accessorKey: 'firstName',
+          id: 'firstName',
+          filterFn: emptyAwareFilterFn,
+        },
+      ],
+      features,
+      onColumnFiltersChange,
+    })
+
+    column_setFilterValue(table.getColumn('firstName')!, '')
+
+    expect(getUpdaterResult(onColumnFiltersChange, [])).toEqual([
+      { id: 'firstName', value: '' },
+    ])
+  })
 })
 
 describe('table_setColumnFilters', () => {
@@ -359,5 +385,23 @@ describe('shouldAutoRemoveFilter', () => {
   it("should consult the filter fn's autoRemove hook", () => {
     expect(shouldAutoRemoveFilter(filterFn_arrIncludes, [])).toBe(true)
     expect(shouldAutoRemoveFilter(filterFn_arrIncludes, ['a'])).toBe(false)
+  })
+
+  it('should treat a provided autoRemove as authoritative for defined values', () => {
+    const customFilterFn: any = () => true
+    customFilterFn.autoRemove = (val: any) => val === null
+
+    // A custom autoRemove that keeps empty strings wins over the default
+    // empty-string heuristic, so filtering for '' becomes possible
+    expect(shouldAutoRemoveFilter(customFilterFn, '')).toBe(false)
+    expect(shouldAutoRemoveFilter(customFilterFn, null)).toBe(true)
+    expect(shouldAutoRemoveFilter(customFilterFn, 'x')).toBe(false)
+  })
+
+  it('should always remove undefined even when autoRemove would keep it', () => {
+    const customFilterFn: any = () => true
+    customFilterFn.autoRemove = () => false
+
+    expect(shouldAutoRemoveFilter(customFilterFn, undefined)).toBe(true)
   })
 })

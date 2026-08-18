@@ -382,7 +382,7 @@ Here's the difference in practice. With a pre-built table component, you pass pr
 
 TanStack Table is packed with features, but you only ever bundle the ones you use. Many libraries claim to be "lightweight"; TanStack Table happens to be lightweight too (under 20 KB even with every feature enabled), but more importantly, it is **modular**! You register only the features and row models that your table actually uses, and your bundler tree-shakes away the rest. A basic table bundles just the small core. The code for sorting, filtering, grouping, and every other feature below is only included in your bundle once you register it. So if you only use half of the features from TanStack Table, you only bundle about half of the library.
 
-We like to think of TanStack Table as more of a "system" for building tables than just a library, as it is one of the most customizable table libraries ever built. TanStack Table has the following built-in features, plus a custom features (plugin) system for adding your own state and APIs.
+We like to think of TanStack Table as more of a "system" for building tables than just a library, as it is one of the most customizable table libraries ever built. TanStack Table has the following built-in features, plus a custom feature (plugin) system for adding your own state and APIs.
 
 <!-- ::start:framework -->
 

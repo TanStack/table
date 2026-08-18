@@ -5,7 +5,7 @@ title: Cell_CellSelection
 
 # Interface: Cell\_CellSelection
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:159](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L159)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:158](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L158)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:159](https://
 getCanSelect: () => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L163)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L162)
 
 Checks whether this cell can currently be selected.
 
@@ -31,7 +31,7 @@ Checks whether this cell can currently be selected.
 getIsFocused: () => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L168)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:167](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L167)
 
 Checks whether this cell is the active cell, i.e. the anchor of the most
 recent range.
@@ -48,7 +48,7 @@ recent range.
 getIsSelected: () => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:172](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L172)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:171](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L171)
 
 Checks whether this cell falls inside the final positive selection.
 
@@ -64,7 +64,7 @@ Checks whether this cell falls inside the final positive selection.
 getSelectionEdges: () => CellSelectionEdges;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L180)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L179)
 
 Returns which sides of this cell sit on the outer boundary of the
 selection, for rendering a spreadsheet-style outline without each cell
@@ -84,7 +84,7 @@ All sides are `false` when the cell is not selected.
 getSelectionExtendHandler: () => (event) => void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:188](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L188)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L187)
 
 Creates a handler that extends the active range to this cell while a drag
 is in progress. Bind it to `mouseenter`.
@@ -116,7 +116,7 @@ the active range already focuses this cell.
 getSelectionStartHandler: (contextDocument?) => (event) => void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L199)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L198)
 
 Creates a handler that begins a selection at this cell. Bind it to
 `mousedown`.
@@ -157,7 +157,7 @@ another document, such as an iframe or popout window.
 getTabIndex: () => number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:205](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L205)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:204](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L204)
 
 Returns `0` for the focused cell and `-1` otherwise, for roving tabindex.
 

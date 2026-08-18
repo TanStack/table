@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
+  columnGroupingFeature,
   constructTable,
+  createGroupedRowModel,
   createPaginatedRowModel,
   rowPaginationFeature,
   rowPinningFeature,
@@ -19,6 +21,12 @@ const featuresWithPagination = testFeatures({
   rowPaginationFeature,
   rowPinningFeature,
   paginatedRowModel: createPaginatedRowModel(),
+})
+
+const featuresWithGrouping = testFeatures({
+  columnGroupingFeature,
+  rowPinningFeature,
+  groupedRowModel: createGroupedRowModel(),
 })
 
 function makeTable(
@@ -137,6 +145,31 @@ describe('table methods', () => {
   })
 
   describe('getTopRows/getBottomRows/getCenterRows', () => {
+    it('does not throw when a pinned grouped row disappears after ungrouping', () => {
+      const data = generateTestData(3)
+      const table = constructTable({
+        features: featuresWithGrouping,
+        data,
+        columns: generateTestColumnDefs<typeof featuresWithGrouping>(data),
+        initialState: {
+          grouping: ['status'],
+        },
+      })
+      const groupedRow = table.getRowModel().rows[0]!
+
+      groupedRow.pin('top')
+      expect(table.getTopRows()).toEqual([groupedRow])
+
+      table.setGrouping([])
+
+      expect(table.getTopRows()).toEqual([])
+      expect(table.atoms.rowPinning.get().top).toEqual([groupedRow.id])
+
+      table.setGrouping(['status'])
+
+      expect(table.getTopRows().map((row) => row.id)).toEqual([groupedRow.id])
+    })
+
     it('should return correct rows for each section', () => {
       const table = makeTable({
         initialState: {

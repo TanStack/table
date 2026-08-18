@@ -42,6 +42,7 @@ export const rowSortingFeature: TableFeature = {
 
   getDefaultTableOptions(table) {
     return {
+      autoResetSorting: false,
       onSortingChange: makeStateUpdater('sorting', table),
       isMultiSortEvent: (e: unknown) => {
         return (e as MouseEvent).shiftKey

@@ -9,7 +9,7 @@ title: table_getSelectedCellRangesData
 function table_getSelectedCellRangesData<TFeatures, TData>(table): unknown[][][];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:914](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L914)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1215](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1215)
 
 Returns each final positive region's values as a row-major grid.
 

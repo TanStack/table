@@ -53,3 +53,42 @@ test('renders the table without crashing', async ({ page }) => {
     await server.close()
   }
 })
+
+test('exposes cell selection and spans adjacent status values', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = page.locator('table').first()
+    await expect(
+      table.locator('tbody td.cell-selectable').first(),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Select all cells' }),
+    ).toBeVisible()
+
+    const statusHeader = table.locator('th').filter({ hasText: 'Status' })
+    await statusHeader.locator('.sortable-header').click()
+    await expect(table.locator('tbody td[rowspan="2"]').first()).toBeVisible()
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('does not render undefined names on grouped rows', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = page.locator('table').first()
+    const visitsHeader = table.locator('th').filter({ hasText: 'Visits' })
+
+    await visitsHeader.getByTitle('Group by this column').click()
+
+    await expect(table.locator('tbody')).not.toContainText('undefined')
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

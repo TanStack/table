@@ -5,7 +5,7 @@ title: AppCellPropsWithoutSelector
 
 # Interface: AppCellPropsWithoutSelector\<TFeatures, TData, TValue, TCellComponents\>
 
-Defined in: [types.ts:607](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L607)
+Defined in: [types.ts:603](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L603)
 
 Props for AppCell component — without selector.
 
@@ -35,7 +35,7 @@ Props for AppCell component — without selector.
 cell: Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types.ts:613](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L613)
+Defined in: [types.ts:609](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L609)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [types.ts:613](https://github.com/TanStack/table/blob/main/packages/
 children: (cell) => unknown;
 ```
 
-Defined in: [types.ts:614](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L614)
+Defined in: [types.ts:610](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L610)
 
 #### Parameters
 
@@ -65,4 +65,4 @@ Defined in: [types.ts:614](https://github.com/TanStack/table/blob/main/packages/
 optional selector: undefined;
 ```
 
-Defined in: [types.ts:618](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L618)
+Defined in: [types.ts:614](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L614)

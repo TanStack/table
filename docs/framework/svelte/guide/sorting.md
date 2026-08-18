@@ -158,11 +158,13 @@ const table = createTable({
 
 ### Client-Side vs Server-Side Sorting
 
-Whether or not you should use client-side or server-side sorting depends entirely on whether you are also using client-side or server-side pagination or filtering. Be consistent, because using client-side sorting with server-side pagination or filtering will only sort the data that is currently loaded, and not the entire dataset.
+Sorting should operate over the same dataset as filtering and pagination. If the server returns only a page or filtered subset, client-side sorting sorts only those loaded rows, not the full dataset.
+
+See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework and the cases where mixing client-side and server-side operations is intentional.
 
 ### Manual Server-Side Sorting
 
-If you plan to just use your own server-side sorting in your back-end logic, you do not need to provide a sorted row model. But if you have provided a sorting row model, but you want to disable it, you can use the `manualSorting` table option.
+If you plan to just use your own server-side sorting in your back-end logic, you do not need to provide a sorted row model. But if you have provided a sorted row model, but you want to disable it, you can use the `manualSorting` table option.
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/svelte-store'
@@ -257,7 +259,7 @@ const myCustomSortFn: SortFn<TFeatures, TData> = (
 
 > Note: The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take care of that logic. `sortFn` functions only need to provide a consistent comparison.
 
-Every sorting function receives 2 rows and a column ID and are expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
+Every sorting function receives 2 rows and a column ID and is expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
 
 | Return | Ascending Order |
 | ------ | --------------- |
@@ -419,7 +421,7 @@ const table = createTable({
 
 #### Invert Sorting
 
-Inverting sorting is not the same as changing the default sorting direction. If `invertSorting` column option is `true` for a column, then the "desc/asc" sorting states will still cycle like normal, but the actual sorting of the rows will be inverted. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring.
+Inverting sorting is not the same as changing the default sorting direction. If `invertSorting` column option is `true` for a column, then the "desc/asc" sorting states will still cycle like normal, but the actual sorting of the rows will be inverted. This is useful for values that have an inverted best/worst scale where lower numbers are better, e.g. a ranking (1st, 2nd, 3rd) or golf-like scoring.
 
 ```ts
 const columns = [
@@ -440,7 +442,7 @@ If not specified, the default value for `sortUndefined` is `1`, and undefined va
 
 - `'first'` - Undefined values will be pushed to the beginning of the list
 - `'last'` - Undefined values will be pushed to the end of the list
-- `false` - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
+- `false` - Undefined values will be passed to the sorting function like any other value with no special handling; the sorting function is responsible for handling them
 - `-1` - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1` - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
 
@@ -552,6 +554,14 @@ const table = createTable({
   enableMultiRemove: false, // disable the ability to remove multi-sorts
 })
 ```
+
+### Reset Sorting When Data Changes
+
+Sorting state is preserved when the `data` option changes by default. Set `autoResetSorting: true` to reset sorting whenever a new data reference is processed. The reset restores `initialState.sorting`, or an empty sorting state when no initial value was provided.
+
+This option responds only to data changes. Changing sorting, filters, or grouping does not trigger it. The global `autoResetAll` option overrides `autoResetSorting` when explicitly set.
+
+Be careful when combining this option with manual/server-side sorting: a server response normally replaces `data`, so enabling the reset can immediately clear the sorting state that requested that response.
 
 ### Sorting APIs
 

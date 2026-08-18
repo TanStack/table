@@ -5,7 +5,7 @@ title: AppHeaderProps
 
 # Interface: AppHeaderProps\<TFeatures, TData, TValue\>
 
-Defined in: [packages/vue-table/src/createTableHook.ts:204](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L204)
+Defined in: [packages/vue-table/src/createTableHook.ts:203](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L203)
 
 ## Type Parameters
 
@@ -29,4 +29,4 @@ Defined in: [packages/vue-table/src/createTableHook.ts:204](https://github.com/T
 header: Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:209](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L209)
+Defined in: [packages/vue-table/src/createTableHook.ts:208](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L208)

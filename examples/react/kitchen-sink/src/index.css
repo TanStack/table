@@ -10,18 +10,18 @@ html {
   border: 1px solid lightgray;
 }
 
-table {
+.table-container table {
   /* box-shadow / borders + position: sticky don't play well otherwise */
   border-collapse: collapse;
   border-spacing: 0;
   table-layout: fixed;
 }
 
-thead {
+.table-container thead {
   position: relative;
 }
 
-th {
+.table-container th {
   background-color: #f3f4f6;
   border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray;
@@ -32,18 +32,18 @@ th {
   vertical-align: top;
 }
 
-td {
+.table-container td {
   background-color: white;
   border-bottom: 1px solid #eee;
   padding: 2px 4px;
   vertical-align: middle;
 }
 
-tfoot {
+.table-container tfoot {
   color: gray;
 }
 
-tfoot th {
+.table-container tfoot th {
   font-weight: normal;
 }
 
@@ -287,6 +287,47 @@ tfoot th {
 
 .cell-placeholder {
   background: #ff000042;
+}
+
+/* Cell selection uses inset shadows so selecting cells does not change the
+ * collapsed-border table's layout. Spanned cells participate as one unit. */
+.cell-selectable {
+  cursor: cell;
+  user-select: none;
+  --cell-edge-top: 0 0 0 0 transparent;
+  --cell-edge-right: 0 0 0 0 transparent;
+  --cell-edge-bottom: 0 0 0 0 transparent;
+  --cell-edge-left: 0 0 0 0 transparent;
+  box-shadow:
+    inset var(--cell-edge-top),
+    inset var(--cell-edge-right),
+    inset var(--cell-edge-bottom),
+    inset var(--cell-edge-left);
+}
+
+.cell-selected {
+  background-color: #dbeafe !important;
+}
+
+.cell-focused {
+  outline: 1px dashed #2563eb;
+  outline-offset: -3px;
+}
+
+.cell-edge-top {
+  --cell-edge-top: 0 2px 0 0 #2563eb;
+}
+
+.cell-edge-right {
+  --cell-edge-right: -2px 0 0 0 #2563eb;
+}
+
+.cell-edge-bottom {
+  --cell-edge-bottom: 0 -2px 0 0 #2563eb;
+}
+
+.cell-edge-left {
+  --cell-edge-left: 2px 0 0 0 #2563eb;
 }
 
 /* Row pinning — light blue tint + outline so pinned rows are obvious

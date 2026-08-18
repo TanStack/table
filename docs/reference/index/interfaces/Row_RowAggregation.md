@@ -5,7 +5,7 @@ title: Row_RowAggregation
 
 # Interface: Row\_RowAggregation
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:304](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L304)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:303](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L303)
 
 Internal per-row cache used while grouped aggregates are evaluated.
 
@@ -17,6 +17,6 @@ Internal per-row cache used while grouped aggregates are evaluated.
 optional _aggregationValuesCache: Record<string, unknown>;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:306](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L306)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:305](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L305)
 
 Cached aggregate results keyed by column id; created lazily on grouped rows.

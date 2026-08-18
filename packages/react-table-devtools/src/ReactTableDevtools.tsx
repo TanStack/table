@@ -1,4 +1,4 @@
-import { createElement } from 'react'
+import { createElement, useMemo } from 'react'
 import { createReactPanel } from '@tanstack/devtools-utils/react'
 import { TableDevtoolsCore } from '@tanstack/table-devtools'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/react'
@@ -20,8 +20,22 @@ function resolvePanelProps(props?: TableDevtoolsReactInit): DevtoolsPanelProps {
   }
 }
 
-export const TableDevtoolsPanel: TableDevtoolsPanelComponent = (props) =>
-  createElement(TableDevtoolsPanelBase, resolvePanelProps(props))
+export const TableDevtoolsPanel: TableDevtoolsPanelComponent = (props) => {
+  const theme = props?.theme
+  const devtoolsOpen = props?.devtoolsOpen
+  const panelProps = useMemo(
+    () => resolvePanelProps({ theme, devtoolsOpen }),
+    [devtoolsOpen, theme],
+  )
+  return createElement(TableDevtoolsPanelBase, panelProps)
+}
 
-export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent = (props) =>
-  createElement(TableDevtoolsPanelNoOpBase, resolvePanelProps(props))
+export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent = (props) => {
+  const theme = props?.theme
+  const devtoolsOpen = props?.devtoolsOpen
+  const panelProps = useMemo(
+    () => resolvePanelProps({ theme, devtoolsOpen }),
+    [devtoolsOpen, theme],
+  )
+  return createElement(TableDevtoolsPanelNoOpBase, panelProps)
+}

@@ -9,7 +9,7 @@ title: AppSolidTable
 type AppSolidTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = SolidTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [createTableHook.tsx:345](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L345)
+Defined in: [createTableHook.tsx:344](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L344)
 
 Extended table API returned by createAppTable with all App wrapper components
 

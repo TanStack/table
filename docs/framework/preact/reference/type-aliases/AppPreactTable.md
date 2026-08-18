@@ -9,7 +9,7 @@ title: AppPreactTable
 type AppPreactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = PreactTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [createTableHook.tsx:532](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L532)
+Defined in: [createTableHook.tsx:531](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L531)
 
 Extended table API returned by useAppTable with all App wrapper components
 

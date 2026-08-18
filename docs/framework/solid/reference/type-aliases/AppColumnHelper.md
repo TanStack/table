@@ -9,7 +9,7 @@ title: AppColumnHelper
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```
 
-Defined in: [createTableHook.tsx:161](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L161)
+Defined in: [createTableHook.tsx:160](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L160)
 
 Enhanced column helper with pre-bound components in cell/header/footer contexts.
 This enables TypeScript to know about the registered components when defining columns.
@@ -40,7 +40,7 @@ This enables TypeScript to know about the registered components when defining co
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:171](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L171)
+Defined in: [createTableHook.tsx:170](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L170)
 
 Creates a data column definition with an accessor key or function.
 The cell, header, and footer contexts include pre-bound components.
@@ -77,7 +77,7 @@ The cell, header, and footer contexts include pre-bound components.
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
 ```
 
-Defined in: [createTableHook.tsx:202](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L202)
+Defined in: [createTableHook.tsx:201](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L201)
 
 Wraps an array of column definitions to preserve each column's individual TValue type.
 
@@ -105,7 +105,7 @@ Wraps an array of column definitions to preserve each column's individual TValue
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [createTableHook.tsx:210](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L210)
+Defined in: [createTableHook.tsx:209](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L209)
 
 Creates a display column definition for non-data columns.
 The cell, header, and footer contexts include pre-bound components.
@@ -128,7 +128,7 @@ The cell, header, and footer contexts include pre-bound components.
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [createTableHook.tsx:223](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L223)
+Defined in: [createTableHook.tsx:222](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L222)
 
 Creates a group column definition with nested child columns.
 The cell, header, and footer contexts include pre-bound components.

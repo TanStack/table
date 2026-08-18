@@ -157,6 +157,7 @@ export const rowSelectionFeature: TableFeature = {
           table.atoms.rowSelection?.get(),
           table.getFilteredRowModel(),
           table.options.enableRowSelection,
+          table.options.enableSubRowSelection,
         ],
       },
       table_getIsAllPageRowsSelected: {
@@ -165,6 +166,7 @@ export const rowSelectionFeature: TableFeature = {
           table.atoms.rowSelection?.get(),
           table.getPaginatedRowModel(),
           table.options.enableRowSelection,
+          table.options.enableSubRowSelection,
         ],
       },
       table_getIsSomeRowsSelected: {

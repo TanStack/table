@@ -11,7 +11,7 @@ title: Subscribe
 function Subscribe<TSourceValue>(props): ComponentChildren;
 ```
 
-Defined in: [Subscribe.ts:101](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L101)
+Defined in: [Subscribe.ts:98](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L98)
 
 A Preact component that allows you to subscribe to the table state.
 
@@ -62,7 +62,7 @@ JSX contextual typing works. This standalone component uses a union `props` type
 function Subscribe<TSourceValue, TSelected>(props): ComponentChildren;
 ```
 
-Defined in: [Subscribe.ts:104](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L104)
+Defined in: [Subscribe.ts:101](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L101)
 
 A Preact component that allows you to subscribe to the table state.
 
@@ -117,7 +117,7 @@ JSX contextual typing works. This standalone component uses a union `props` type
 function Subscribe<TFeatures, TSelected>(props): ComponentChildren;
 ```
 
-Defined in: [Subscribe.ts:107](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L107)
+Defined in: [Subscribe.ts:104](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L104)
 
 A Preact component that allows you to subscribe to the table state.
 

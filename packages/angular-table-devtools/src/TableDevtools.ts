@@ -1,11 +1,8 @@
 import { TableDevtoolsCore } from '@tanstack/table-devtools'
-import { createAngularPanel } from '@tanstack/devtools-utils/angular'
+import { computed, effect } from '@angular/core'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/angular'
 
 export interface TableDevtoolsAngularInit extends Partial<DevtoolsPanelProps> {}
-
-const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOpBase] =
-  createAngularPanel(TableDevtoolsCore)
 
 function resolvePanelProps(
   props?: TableDevtoolsAngularInit,
@@ -23,12 +20,26 @@ type TableDevtoolsPanelComponent = () => (
 
 export const TableDevtoolsPanel: TableDevtoolsPanelComponent =
   () => (props, host) => {
-    const panel = TableDevtoolsPanelBase()
-    return panel(() => resolvePanelProps(props()), host)
+    const panel = host.ownerDocument.createElement('div')
+    panel.style.height = '100%'
+    host.appendChild(panel)
+
+    const panelProps = computed(() => resolvePanelProps(props()), {
+      equal: (previous, next) =>
+        previous.theme === next.theme &&
+        previous.devtoolsOpen === next.devtoolsOpen,
+    })
+    const panelEffect = effect((onCleanup) => {
+      const instance = new TableDevtoolsCore()
+      void instance.mount(panel, panelProps())
+      onCleanup(() => instance.unmount())
+    })
+
+    return () => {
+      panelEffect.destroy()
+      panel.remove()
+    }
   }
 
 export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent =
-  () => (_props, _host) => {
-    const panel = TableDevtoolsPanelNoOpBase()
-    return () => panel
-  }
+  () => (_props, _host) => () => {}

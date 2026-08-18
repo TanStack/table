@@ -206,6 +206,25 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   return memoizedFn
 }
 
+/**
+ * Wraps a callback so that its first invocation is skipped.
+ *
+ * Row-model `onAfterUpdate` hooks schedule auto-resets when their inputs
+ * change. The initial computation of a row model is not a change, so state
+ * resets must not fire for it — otherwise merely reading a row model on mount
+ * would wipe initial or controlled state.
+ */
+export function skipFirstRun(fn: () => void): () => void {
+  let hasRun = false
+  return () => {
+    if (!hasRun) {
+      hasRun = true
+      return
+    }
+    fn()
+  }
+}
+
 interface TableMemoOptions<
   TFeatures extends TableFeatures,
   TDeps extends ReadonlyArray<any>,
@@ -475,7 +494,7 @@ export function assignPrototypeAPIs<
 }
 
 /**
- * Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fallback to the static method passed in.
+ * Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fall back to the static method passed in.
  */
 export function callMemoOrStaticFn<
   TObject extends Record<string, any>,

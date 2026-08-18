@@ -52,8 +52,8 @@ class App {
 }
 ```
 
-Can be imported through FlexRenderDirective or [FlexRender](../variables/FlexRender.md) import,
-which the latter is preferred.
+Can be imported through FlexRenderDirective or [FlexRender](../variables/FlexRender.md),
+with the latter preferred.
 
 ## Type Parameters
 

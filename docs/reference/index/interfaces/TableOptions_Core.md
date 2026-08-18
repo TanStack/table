@@ -5,7 +5,7 @@ title: TableOptions_Core
 
 # Interface: TableOptions\_Core\<TFeatures, TData\>
 
-Defined in: [types/TableOptions.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L32)
+Defined in: [types/TableOptions.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L33)
 
 Core options that are always available on a table, before optional feature
 options are mixed in.
@@ -140,7 +140,7 @@ optional getRowId: (originalRow, index, parent?) => string;
 
 Defined in: [core/rows/coreRowsFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L115)
 
-This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
+This optional function is used to derive a unique ID for any given row. If not provided the row's index is used (nested rows join together with `.` using their grandparents' index e.g. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity e.g. a userId, taskId, database ID field, etc.
 
 #### Parameters
 

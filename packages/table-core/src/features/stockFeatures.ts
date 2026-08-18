@@ -1,4 +1,5 @@
 import { cellSelectionFeature } from './cell-selection/cellSelectionFeature'
+import { cellSpanningFeature } from './cell-spanning/cellSpanningFeature'
 import { columnFacetingFeature } from './column-faceting/columnFacetingFeature'
 import { rowAggregationFeature } from './row-aggregation/rowAggregationFeature'
 import { columnFilteringFeature } from './column-filtering/columnFilteringFeature'
@@ -17,6 +18,7 @@ import { rowSortingFeature } from './row-sorting/rowSortingFeature'
 
 export interface StockFeatures {
   cellSelectionFeature: typeof cellSelectionFeature
+  cellSpanningFeature: typeof cellSpanningFeature
   columnFacetingFeature: typeof columnFacetingFeature
   columnFilteringFeature: typeof columnFilteringFeature
   columnGroupingFeature: typeof columnGroupingFeature
@@ -41,6 +43,7 @@ export interface StockFeatures {
  */
 export const stockFeatures: StockFeatures = {
   cellSelectionFeature,
+  cellSpanningFeature,
   columnFacetingFeature,
   columnFilteringFeature,
   columnGroupingFeature,

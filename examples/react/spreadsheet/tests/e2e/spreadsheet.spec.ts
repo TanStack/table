@@ -653,3 +653,237 @@ test('keeps the 10k × 250 stress grid interactive', async ({ page }) => {
     await server.close()
   }
 })
+
+test('merges and unmerges cells Excel-style', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const coveredValue = await cell(page, 2, 2).textContent()
+
+    // Select B2:C3 (data rows 1-2, columns 1-2), away from the frozen row and
+    // column, then merge from the ribbon.
+    await cell(page, 1, 1).hover()
+    await page.mouse.down()
+    await cell(page, 2, 2).hover()
+    await page.mouse.up()
+
+    await page.getByRole('button', { name: /Merge & center/ }).click()
+
+    const merged = page.locator('[data-merged-cell]')
+    await expect(merged).toHaveCount(1)
+    await expect(merged).toHaveAttribute('aria-rowspan', '2')
+    await expect(merged).toHaveAttribute('aria-colspan', '2')
+
+    // Covered cells stop rendering; the anchor renders as the merged cell.
+    await expect(cell(page, 1, 2)).toHaveCount(0)
+    await expect(cell(page, 2, 1)).toHaveCount(0)
+    await expect(cell(page, 2, 2)).toHaveCount(0)
+    await expect(cell(page, 1, 1)).toHaveAttribute('data-merged-cell', 'true')
+
+    // The still-selected region now counts the merge once.
+    await expect(page.locator('.selection-summary')).toContainText('1 selected')
+
+    // The overlay is drawn in canvas coordinates: it must line up with the
+    // grid geometry it replaces, spanning both columns and both rows.
+    const mergedBox = (await merged.boundingBox())!
+    const belowBox = (await cell(page, 3, 1).boundingBox())!
+    const rightBox = (await cell(page, 1, 3).boundingBox())!
+    expect(Math.abs(mergedBox.x - belowBox.x)).toBeLessThan(1.5)
+    expect(Math.abs(mergedBox.y - rightBox.y)).toBeLessThan(1.5)
+    expect(Math.abs(mergedBox.y + mergedBox.height - belowBox.y)).toBeLessThan(
+      1.5,
+    )
+    expect(mergedBox.width).toBeGreaterThan(rightBox.x - mergedBox.x - 1.5)
+
+    // The ribbon button flips to unmerge while the merge is selected.
+    const unmergeButton = page.getByRole('button', { name: /Unmerge cells/ })
+    await expect(unmergeButton).toHaveAttribute('aria-pressed', 'true')
+    await unmergeButton.click()
+
+    await expect(merged).toHaveCount(0)
+    // Covered values were preserved, so unmerging restores them.
+    await expect(cell(page, 2, 2)).toHaveText(coveredValue ?? '')
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('expands selection and navigation across a merged cell', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    await cell(page, 1, 1).hover()
+    await page.mouse.down()
+    await cell(page, 2, 2).hover()
+    await page.mouse.up()
+    await page.getByRole('button', { name: /Merge & center/ }).click()
+    await expect(page.locator('[data-merged-cell]')).toHaveCount(1)
+
+    // Drag from below the merge into it: the selection expands to the merge's
+    // full 2x2 extent, so rows 1-4 across both columns select as one region.
+    await cell(page, 4, 1).hover()
+    await page.mouse.down()
+    await cell(page, 1, 1).hover()
+    await page.mouse.up()
+
+    // One merge plus the four plain cells of rows 3-4.
+    await expect(page.locator('.selection-summary')).toContainText('5 selected')
+    await expect(page.locator('[data-merged-cell]')).toHaveClass(
+      /cell-selected/,
+    )
+
+    // Arrow navigation treats the merge as a single stop: up from row 3
+    // focuses the merge anchor in one step.
+    await cell(page, 3, 1).click()
+    await page.keyboard.press('ArrowUp')
+    await expect(page.locator('[data-merged-cell]')).toHaveClass(/cell-focused/)
+
+    // Ctrl/Cmd+M unmerges from the keyboard.
+    await page.keyboard.press('ControlOrMeta+m')
+    await expect(page.locator('[data-merged-cell]')).toHaveCount(0)
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('merges a horizontal single-row selection', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    // Select B2:D2 (one data row, three columns) and merge.
+    await cell(page, 1, 1).hover()
+    await page.mouse.down()
+    await cell(page, 1, 3).hover()
+    await page.mouse.up()
+    await page.getByRole('button', { name: /Merge & center/ }).click()
+
+    const merged = page.locator('[data-merged-cell]')
+    await expect(merged).toHaveCount(1)
+    await expect(merged).toHaveAttribute('aria-rowspan', '1')
+    await expect(merged).toHaveAttribute('aria-colspan', '3')
+
+    // Covered neighbours stop rendering while the row keeps its geometry: the
+    // merged cell spans from column B's left edge to column D's right edge.
+    await expect(cell(page, 1, 2)).toHaveCount(0)
+    await expect(cell(page, 1, 3)).toHaveCount(0)
+    const mergedBox = (await merged.boundingBox())!
+    const belowLeftBox = (await cell(page, 2, 1).boundingBox())!
+    const belowRightBox = (await cell(page, 2, 3).boundingBox())!
+    expect(Math.abs(mergedBox.x - belowLeftBox.x)).toBeLessThan(1.5)
+    expect(
+      Math.abs(
+        mergedBox.x + mergedBox.width - (belowRightBox.x + belowRightBox.width),
+      ),
+    ).toBeLessThan(1.5)
+
+    // Unmerge restores the individual cells.
+    await page.getByRole('button', { name: /Unmerge cells/ }).click()
+    await expect(merged).toHaveCount(0)
+    await expect(cell(page, 1, 3)).toHaveCount(1)
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('merges cells inside the frozen column and keeps them sticky', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    // Select A2:A4, entirely inside the frozen first column, and merge.
+    await cell(page, 1, 0).hover()
+    await page.mouse.down()
+    await cell(page, 3, 0).hover()
+    await page.mouse.up()
+    await page.getByRole('button', { name: /Merge & center/ }).click()
+
+    const merged = page.locator('[data-merged-cell]')
+    await expect(merged).toHaveCount(1)
+    await expect(merged).toHaveAttribute('aria-rowspan', '3')
+    await expect(cell(page, 2, 0)).toHaveCount(0)
+    await expect(cell(page, 3, 0)).toHaveCount(0)
+
+    // The merged cell sticks with the frozen column while the grid scrolls
+    // horizontally.
+    const before = (await merged.boundingBox())!
+    await page.getByTestId('spreadsheet-grid').evaluate((element) => {
+      element.scrollLeft = 400
+      element.dispatchEvent(new Event('scroll'))
+    })
+    await expect
+      .poll(async () => (await merged.boundingBox())!.x)
+      .toBeLessThan(before.x + 1.5)
+    expect(Math.abs((await merged.boundingBox())!.x - before.x)).toBeLessThan(
+      1.5,
+    )
+
+    // A selection that mixes frozen and scrolling columns cannot merge.
+    await cell(page, 5, 0).hover()
+    await page.mouse.down()
+    await cell(page, 6, 1).hover()
+    await page.mouse.up()
+    await expect(
+      page.getByRole('button', { name: /Merge & center/ }),
+    ).toBeDisabled()
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('clips a scrolling merged cell at the frozen column edge', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    await cell(page, 1, 1).hover()
+    await page.mouse.down()
+    await cell(page, 3, 2).hover()
+    await page.mouse.up()
+    await page.getByRole('button', { name: /Merge & center/ }).click()
+    await expect(page.locator('[data-merged-cell]')).toHaveCount(1)
+
+    // Scrolling right slides the merge toward the sticky gutter and frozen
+    // column; the layer's clip keeps it underneath instead of painting over.
+    await page.getByTestId('spreadsheet-grid').evaluate((element) => {
+      element.scrollLeft = 260
+      element.dispatchEvent(new Event('scroll'))
+    })
+
+    await expect
+      .poll(async () => {
+        const grid = page.getByTestId('spreadsheet-grid')
+        return grid.evaluate((element) => {
+          const layer = element.querySelector<HTMLElement>('.merge-layer')
+          return layer?.style.clipPath ?? ''
+        })
+      })
+      .toContain('inset')
+
+    // The frozen column's cells stay visible at the pinned edge: the topmost
+    // element there is a pinned cell, not the merged overlay.
+    const coveredByMerge = await page
+      .getByTestId('spreadsheet-grid')
+      .evaluate((element) => {
+        const rect = element.getBoundingClientRect()
+        const probe = document.elementFromPoint(rect.left + 80, rect.top + 80)
+        return probe?.closest('[data-merged-cell]') !== null
+      })
+    expect(coveredByMerge).toBe(false)
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

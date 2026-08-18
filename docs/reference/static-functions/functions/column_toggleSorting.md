@@ -12,13 +12,13 @@ function column_toggleSorting<TFeatures, TData, TValue>(
    multi?): void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L221)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:252](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L252)
 
 Applies the next sorting state for this column.
 
 The toggle can add, replace, flip, or remove this column's sort entry. Multi
-sorting respects `enableMultiSort`, `maxMultiSortColCount`, and the `multi`
-argument.
+sorting respects `enableMultiSort`, `enableMultiRemove`,
+`maxMultiSortColCount`, and the `multi` argument.
 
 ## Type Parameters
 

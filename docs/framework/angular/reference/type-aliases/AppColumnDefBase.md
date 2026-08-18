@@ -9,7 +9,7 @@ title: AppColumnDefBase
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:91](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L91)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:90](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L90)
 
 Enhanced column definition base with pre-bound components in cell/header/footer contexts.
 

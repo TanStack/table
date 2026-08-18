@@ -5,7 +5,7 @@ title: SubscribePropsWithStore
 
 # Interface: SubscribePropsWithStore\<TFeatures, TSelected\>
 
-Defined in: [types.ts:116](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L116)
+Defined in: [types.ts:113](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L113)
 
 Subscribe to `table.store` (full table state). The selector receives the full
 TableState.
@@ -30,7 +30,7 @@ children:
   | (state) => unknown;
 ```
 
-Defined in: [types.ts:129](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L129)
+Defined in: [types.ts:126](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L126)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [types.ts:129](https://github.com/TanStack/table/blob/main/packages/
 selector: (state) => TSelected;
 ```
 
-Defined in: [types.ts:128](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L128)
+Defined in: [types.ts:125](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L125)
 
 Select from full table state. Re-renders when the selected value changes
 (shallow compare).
@@ -66,4 +66,4 @@ store without an explicit projection.
 source: SubscribeSource<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
-Defined in: [types.ts:120](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L120)
+Defined in: [types.ts:117](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L117)

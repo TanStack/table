@@ -82,6 +82,7 @@ Alpine.data('table', () => {
       return local.data
     },
     enableRowSelection: true,
+    // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
     // initialState: { rowSelection: { '0': true } }, // select rows on first render
     // atoms: { rowSelection: rowSelectionAtom }, // preferred: own selection state with an external atom
     // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange

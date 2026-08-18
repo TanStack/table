@@ -9,7 +9,7 @@ title: table_selectAllCells
 function table_selectAllCells<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:599](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L599)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:850](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L850)
 
 Selects every selectable cell in the table as one range.
 

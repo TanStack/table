@@ -24,7 +24,7 @@ by other features.
 optional cellSelection: CellSelectionState;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L37)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L44)
 
 #### Inherited from
 
@@ -192,7 +192,7 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:13](https://github.
 optional rowSelection: RowSelectionState;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L20)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L31)
 
 #### Inherited from
 

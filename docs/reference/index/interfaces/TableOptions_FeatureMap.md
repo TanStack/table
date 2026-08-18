@@ -5,7 +5,7 @@ title: TableOptions_FeatureMap
 
 # Interface: TableOptions\_FeatureMap\<TFeatures, TData\>
 
-Defined in: [types/TableOptions.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L59)
+Defined in: [types/TableOptions.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L62)
 
 ## Type Parameters
 
@@ -25,7 +25,17 @@ Defined in: [types/TableOptions.ts:59](https://github.com/TanStack/table/blob/ma
 cellSelectionFeature: TableOptions_CellSelection<TFeatures, TData>;
 ```
 
-Defined in: [types/TableOptions.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L63)
+Defined in: [types/TableOptions.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L66)
+
+***
+
+### cellSpanningFeature
+
+```ts
+cellSpanningFeature: TableOptions_CellSpanning;
+```
+
+Defined in: [types/TableOptions.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L67)
 
 ***
 
@@ -35,7 +45,7 @@ Defined in: [types/TableOptions.ts:63](https://github.com/TanStack/table/blob/ma
 columnFilteringFeature: TableOptions_ColumnFiltering<TFeatures, TData>;
 ```
 
-Defined in: [types/TableOptions.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L64)
+Defined in: [types/TableOptions.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L68)
 
 ***
 
@@ -45,7 +55,7 @@ Defined in: [types/TableOptions.ts:64](https://github.com/TanStack/table/blob/ma
 columnGroupingFeature: TableOptions_ColumnGrouping;
 ```
 
-Defined in: [types/TableOptions.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L65)
+Defined in: [types/TableOptions.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L69)
 
 ***
 
@@ -55,7 +65,7 @@ Defined in: [types/TableOptions.ts:65](https://github.com/TanStack/table/blob/ma
 columnOrderingFeature: TableOptions_ColumnOrdering;
 ```
 
-Defined in: [types/TableOptions.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L66)
+Defined in: [types/TableOptions.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L70)
 
 ***
 
@@ -65,7 +75,7 @@ Defined in: [types/TableOptions.ts:66](https://github.com/TanStack/table/blob/ma
 columnPinningFeature: TableOptions_ColumnPinning;
 ```
 
-Defined in: [types/TableOptions.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L67)
+Defined in: [types/TableOptions.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L71)
 
 ***
 
@@ -75,7 +85,7 @@ Defined in: [types/TableOptions.ts:67](https://github.com/TanStack/table/blob/ma
 columnResizingFeature: TableOptions_ColumnResizing;
 ```
 
-Defined in: [types/TableOptions.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L68)
+Defined in: [types/TableOptions.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L72)
 
 ***
 
@@ -85,7 +95,7 @@ Defined in: [types/TableOptions.ts:68](https://github.com/TanStack/table/blob/ma
 columnSizingFeature: TableOptions_ColumnSizing;
 ```
 
-Defined in: [types/TableOptions.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L69)
+Defined in: [types/TableOptions.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L73)
 
 ***
 
@@ -95,7 +105,7 @@ Defined in: [types/TableOptions.ts:69](https://github.com/TanStack/table/blob/ma
 columnVisibilityFeature: TableOptions_ColumnVisibility;
 ```
 
-Defined in: [types/TableOptions.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L70)
+Defined in: [types/TableOptions.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L74)
 
 ***
 
@@ -105,7 +115,7 @@ Defined in: [types/TableOptions.ts:70](https://github.com/TanStack/table/blob/ma
 globalFilteringFeature: TableOptions_GlobalFiltering<TFeatures, TData>;
 ```
 
-Defined in: [types/TableOptions.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L71)
+Defined in: [types/TableOptions.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L75)
 
 ***
 
@@ -115,7 +125,7 @@ Defined in: [types/TableOptions.ts:71](https://github.com/TanStack/table/blob/ma
 rowAggregationFeature: TableOptions_RowAggregation;
 ```
 
-Defined in: [types/TableOptions.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L72)
+Defined in: [types/TableOptions.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L76)
 
 ***
 
@@ -125,7 +135,7 @@ Defined in: [types/TableOptions.ts:72](https://github.com/TanStack/table/blob/ma
 rowExpandingFeature: TableOptions_RowExpanding<TFeatures, TData>;
 ```
 
-Defined in: [types/TableOptions.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L73)
+Defined in: [types/TableOptions.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L77)
 
 ***
 
@@ -135,7 +145,7 @@ Defined in: [types/TableOptions.ts:73](https://github.com/TanStack/table/blob/ma
 rowPaginationFeature: TableOptions_RowPagination;
 ```
 
-Defined in: [types/TableOptions.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L74)
+Defined in: [types/TableOptions.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L78)
 
 ***
 
@@ -145,7 +155,7 @@ Defined in: [types/TableOptions.ts:74](https://github.com/TanStack/table/blob/ma
 rowPinningFeature: TableOptions_RowPinning<TFeatures, TData>;
 ```
 
-Defined in: [types/TableOptions.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L75)
+Defined in: [types/TableOptions.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L79)
 
 ***
 
@@ -155,7 +165,7 @@ Defined in: [types/TableOptions.ts:75](https://github.com/TanStack/table/blob/ma
 rowSelectionFeature: TableOptions_RowSelection<TFeatures, TData>;
 ```
 
-Defined in: [types/TableOptions.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L76)
+Defined in: [types/TableOptions.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L80)
 
 ***
 
@@ -165,4 +175,4 @@ Defined in: [types/TableOptions.ts:76](https://github.com/TanStack/table/blob/ma
 rowSortingFeature: TableOptions_RowSorting;
 ```
 
-Defined in: [types/TableOptions.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L77)
+Defined in: [types/TableOptions.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L81)

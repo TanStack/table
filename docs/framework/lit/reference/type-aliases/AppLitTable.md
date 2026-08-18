@@ -9,7 +9,7 @@ title: AppLitTable
 type AppLitTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = LitTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:289](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L289)
+Defined in: [packages/lit-table/src/createTableHook.ts:288](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L288)
 
 Extended table API returned by useAppTable with all App wrapper functions
 

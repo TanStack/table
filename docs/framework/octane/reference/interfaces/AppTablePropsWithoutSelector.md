@@ -5,7 +5,7 @@ title: AppTablePropsWithoutSelector
 
 # Interface: AppTablePropsWithoutSelector
 
-Defined in: [types.ts:592](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L592)
+Defined in: [types.ts:588](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L588)
 
 Props for AppTable component — without selector.
 
@@ -17,7 +17,7 @@ Props for AppTable component — without selector.
 children: unknown;
 ```
 
-Defined in: [types.ts:593](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L593)
+Defined in: [types.ts:589](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L589)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [types.ts:593](https://github.com/TanStack/table/blob/main/packages/
 optional selector: undefined;
 ```
 
-Defined in: [types.ts:594](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L594)
+Defined in: [types.ts:590](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L590)

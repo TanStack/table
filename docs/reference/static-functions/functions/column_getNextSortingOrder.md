@@ -9,7 +9,7 @@ title: column_getNextSortingOrder
 function column_getNextSortingOrder<TFeatures, TData, TValue>(column, multi?): false | "asc" | "desc";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:355](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L355)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:389](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L389)
 
 Resolves the next sort order for this column's toggle cycle.
 

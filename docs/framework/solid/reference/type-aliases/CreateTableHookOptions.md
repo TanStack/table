@@ -9,7 +9,7 @@ title: CreateTableHookOptions
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [createTableHook.tsx:241](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L241)
+Defined in: [createTableHook.tsx:240](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L240)
 
 Options for creating a table hook with pre-bound components and default table options.
 Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initialState'.

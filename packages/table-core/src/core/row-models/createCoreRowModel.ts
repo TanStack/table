@@ -1,7 +1,9 @@
 import { constructRow } from '../rows/constructRow'
-import { makeObjectMap, tableMemo } from '../../utils'
+import { makeObjectMap, skipFirstRun, tableMemo } from '../../utils'
 import { table_autoResetCellSelection } from '../../features/cell-selection/cellSelectionFeature.utils'
+import { table_autoResetExpanded } from '../../features/row-expanding/rowExpandingFeature.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
+import { table_autoResetSorting } from '../../features/row-sorting/rowSortingFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -26,12 +28,12 @@ export function createCoreRowModel<
       fnName: 'table.getCoreRowModel',
       memoDeps: () => [table.options.data],
       fn: () => _createCoreRowModel(table, table.options.data),
-      onAfterUpdate: () => {
+      onAfterUpdate: skipFirstRun(() => {
+        table_autoResetExpanded(table)
         table_autoResetPageIndex(table)
-        // this memo recomputes only when `options.data` changes, which is
-        // exactly when id-keyed cell ranges stop being meaningful
+        table_autoResetSorting(table)
         table_autoResetCellSelection(table)
-      },
+      }),
     })
   }
 }

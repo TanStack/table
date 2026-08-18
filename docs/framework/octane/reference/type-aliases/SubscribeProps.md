@@ -12,7 +12,7 @@ type SubscribeProps<TFeatures, TSelected, TSourceValue> =
 | SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>;
 ```
 
-Defined in: [types.ts:163](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L163)
+Defined in: [types.ts:160](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L160)
 
 ## Type Parameters
 

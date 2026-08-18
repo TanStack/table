@@ -86,7 +86,7 @@ Defined in: [packages/lit-table/src/TableController.ts:127](https://github.com/T
 hostConnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:251](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L251)
+Defined in: [packages/lit-table/src/TableController.ts:250](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L250)
 
 Called when the host is connected to the component tree. For custom
 element hosts, this corresponds to the `connectedCallback()` lifecycle,
@@ -110,7 +110,7 @@ ReactiveController.hostConnected
 hostDisconnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:270](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L270)
+Defined in: [packages/lit-table/src/TableController.ts:269](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L269)
 
 Called when the host is disconnected from the component tree. For custom
 element hosts, this corresponds to the `disconnectedCallback()` lifecycle,
@@ -135,7 +135,7 @@ ReactiveController.hostDisconnected
 hostUpdated(): void;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:258](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L258)
+Defined in: [packages/lit-table/src/TableController.ts:257](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L257)
 
 Called after a host update, just before the host calls firstUpdated and
 updated. It is not called in server-side rendering.

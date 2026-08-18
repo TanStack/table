@@ -5,7 +5,7 @@ title: CellSelectionBounds
 
 # Interface: CellSelectionBounds
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L46)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L53)
 
 A range resolved into inclusive display-order indexes.
 
@@ -20,7 +20,7 @@ range with a filtered-out corner contributes nothing while remaining in state.
 maxColumnIndex: number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L47)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L54)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:47](https://g
 maxRowIndex: number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L48)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L55)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:48](https://g
 minColumnIndex: number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L49)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L56)
 
 ***
 
@@ -50,4 +50,4 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:49](https://g
 minRowIndex: number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L50)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L57)

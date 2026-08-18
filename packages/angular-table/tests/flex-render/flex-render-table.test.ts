@@ -193,16 +193,21 @@ describe('FlexRenderDirective', () => {
     })
     class EmptyCell {}
 
-    const { fixture } = createTestTable(defaultData, [
-      {
-        id: 'cell',
-        header: 'Header',
-        cell: (context) => {
-          contextCaptor(context)
-          return flexRenderComponent(EmptyCell)
+    const { fixture } = createTestTable(
+      defaultData,
+      [
+        {
+          id: 'cell',
+          header: 'Header',
+          cell: (context) => {
+            contextCaptor(context)
+            return flexRenderComponent(EmptyCell)
+          },
         },
-      },
-    ])
+      ],
+      // The flat test rows have no subRows, so opt them into expandability
+      () => ({ getRowCanExpand: () => true }),
+    )
 
     const latestCall = () =>
       contextCaptor.mock.lastCall![0] as CellContext<
@@ -303,6 +308,8 @@ describe('FlexRenderDirective', () => {
             coreRowModel: createCoreRowModel(),
           },
           state: { expanded: this.expandState() },
+          // The flat test rows have no subRows, so opt them into expandability
+          getRowCanExpand: () => true,
           onExpandedChange: (updaterOrValue) => {
             typeof updaterOrValue === 'function'
               ? this.expandState.update(updaterOrValue)
@@ -404,6 +411,8 @@ describe('FlexRenderDirective', () => {
             coreRowModel: createCoreRowModel(),
           },
           state: { expanded: this.expandState() },
+          // The flat test rows have no subRows, so opt them into expandability
+          getRowCanExpand: () => true,
           onExpandedChange: (updaterOrValue) => {
             typeof updaterOrValue === 'function'
               ? this.expandState.update(updaterOrValue)

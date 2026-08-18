@@ -42,21 +42,15 @@ Using client-side pagination means that the `data` that you fetch will contain *
 
 #### Should You Use Client-Side Pagination?
 
-Client-side pagination is usually the simplest way to implement pagination when using TanStack Table, but it might not be practical for very large datasets.
+Client-side pagination is usually the simplest option when the browser can fetch and retain the complete dataset. Use server-side pagination when the full dataset would be too expensive to query, transfer, or store in the browser.
 
-However, a lot of people underestimate just how much data can be handled client-side. If your table will only ever have a few thousand rows or less, client-side pagination can still be a viable option. TanStack Table is designed to scale up to 10s of thousands of rows with decent performance for pagination, filtering, sorting, and grouping. The [official pagination example](../examples/pagination) loads 1,000 rows by default and includes a 200,000 row stress-test button that still performs well, albeit with only a handful of columns.
-
-Every use-case is different and will depend on the complexity of the table, how many columns you have, how large every piece of data is, etc. The main bottlenecks to pay attention to are:
-
-1. Can your server query all of the data in a reasonable amount of time (and cost)?
-2. What is the total size of the fetch? (This might not scale as badly as you think if you don't have many columns.)
-3. Is the client's browser using too much memory if all of the data is loaded at once?
-
-If you're not sure, you can always start with client-side pagination and then switch to server-side pagination in the future as your data grows.
+Row count alone does not decide the boundary. See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework, performance factors, and guidance for keeping filtering and sorting consistent with pagination.
 
 #### Should You Use Virtualization Instead?
 
-Alternatively, instead of paginating the data, you can render all rows of a large dataset on the same page, but only use the browser's resources to render the rows that are visible in the viewport. This strategy is often called "virtualization" or "windowing". TanStack offers a virtualization library called [TanStack Virtual](https://tanstack.com/virtual/latest) that can work well with TanStack Table. The UI/UX of both virtualization and pagination have their own trade-offs, so see which one works best for your use-case.
+Virtualization (or windowing) reduces rendering work by mounting only the visible rows, but the virtualized data still exists in the browser. It can complement client-side or server-side pagination, but it does not replace server-side processing when the complete dataset is too large to load.
+
+See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side#rendering-is-a-separate-decision) for that distinction, or [TanStack Virtual](https://tanstack.com/virtual/latest) for virtualization APIs.
 
 #### Pagination Row Model
 
@@ -249,7 +243,7 @@ const not = (value: unknown): boolean => !value
 const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 export default class PaginationTable extends Component {
-  // ...columns, data, and
+  // ...columns and data
   // table = useTable(() => ({ features, columns, data: this.data }))
 
   get canPreviousPage() {

@@ -19,8 +19,8 @@
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
     "@tanstack/solid-devtools": "^0.8.9",
-    "@tanstack/solid-table": "^9.0.0-beta.65",
-    "@tanstack/solid-table-devtools": "^9.0.0-beta.65",
+    "@tanstack/solid-table": "^9.0.0-beta.80",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.80",
     "solid-js": "^1.9.14"
   }
 }

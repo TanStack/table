@@ -9,7 +9,7 @@ title: cell_getIsSelected
 function cell_getIsSelected<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:400](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L400)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:581](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L581)
 
 Checks whether this cell falls inside the final positive selection.
 

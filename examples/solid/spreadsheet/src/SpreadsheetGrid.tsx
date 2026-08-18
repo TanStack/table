@@ -670,17 +670,13 @@ interface HeaderRowProps {
   onOpenMenu: (column: SpreadsheetTableColumn, rect: DOMRect) => void
 }
 
-function HeaderRow({
-  table,
-  virtualColumns,
-  centerHeaders,
-  startHeaders,
-  endHeaders,
-  onStartSelection,
-  onExtendSelection,
-  onOpenMenu,
-}: HeaderRowProps) {
-  const rowCount = table.getRowsInDisplayOrder().length
+// Do not destructure these props. The header row is created once, so reading a
+// prop here instead of inside the JSX would freeze it at its mount-time value:
+// column pinning is applied in an effect after mount, so `startHeaders` would
+// stay empty and `centerHeaders` would keep every column, leaving the pinned
+// column with no header and shifting every letter one column to the left.
+function HeaderRow(props: HeaderRowProps) {
+  const rowCount = () => props.table.getRowsInDisplayOrder().length
 
   return (
     <div
@@ -692,44 +688,46 @@ function HeaderRow({
         type="button"
         class="corner-header"
         aria-label="Select all cells"
-        onClick={() => table.selectAllCells()}
+        onClick={() => props.table.selectAllCells()}
       >
         <span />
       </button>
-      {startHeaders.map((header) => (
+      {props.startHeaders.map((header) => (
         <HeaderCell
           header={header}
           pinned="start"
-          table={table}
-          rowCount={rowCount}
-          onStartSelection={onStartSelection}
-          onExtendSelection={onExtendSelection}
-          onOpenMenu={onOpenMenu}
+          table={props.table}
+          rowCount={rowCount()}
+          onStartSelection={props.onStartSelection}
+          onExtendSelection={props.onExtendSelection}
+          onOpenMenu={props.onOpenMenu}
         />
       ))}
-      {virtualColumns.map((virtualColumn) => {
-        const header = centerHeaders[virtualColumn.index]
-        return (
+      {props.virtualColumns.map((virtualColumn) => {
+        // The virtualizer's item count trails a column swap by a tick, so an
+        // index can briefly point past the end of the header list.
+        const header = props.centerHeaders.at(virtualColumn.index)
+        return header ? (
           <HeaderCell
             header={header}
             left={virtualColumn.start}
-            table={table}
-            rowCount={rowCount}
-            onStartSelection={onStartSelection}
-            onExtendSelection={onExtendSelection}
-            onOpenMenu={onOpenMenu}
+            table={props.table}
+            rowCount={rowCount()}
+            onStartSelection={props.onStartSelection}
+            onExtendSelection={props.onExtendSelection}
+            onOpenMenu={props.onOpenMenu}
           />
-        )
+        ) : null
       })}
-      {endHeaders.map((header) => (
+      {props.endHeaders.map((header) => (
         <HeaderCell
           header={header}
           pinned="end"
-          table={table}
-          rowCount={rowCount}
-          onStartSelection={onStartSelection}
-          onExtendSelection={onExtendSelection}
-          onOpenMenu={onOpenMenu}
+          table={props.table}
+          rowCount={rowCount()}
+          onStartSelection={props.onStartSelection}
+          onExtendSelection={props.onExtendSelection}
+          onOpenMenu={props.onOpenMenu}
         />
       ))}
     </div>

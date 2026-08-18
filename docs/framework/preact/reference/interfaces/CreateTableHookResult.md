@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [createTableHook.tsx:296](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L296)
+Defined in: [createTableHook.tsx:295](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L295)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [createTableHook.tsx:296](https://github.com/TanStack/table/blob/mai
 appFeatures: TFeatures;
 ```
 
-Defined in: [createTableHook.tsx:303](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L303)
+Defined in: [createTableHook.tsx:302](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L302)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:308](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L308)
+Defined in: [createTableHook.tsx:307](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L307)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -68,7 +68,7 @@ the cell/header/footer render props expose the bound components.
 useAppTable: <TData, TSelected>(tableOptions, selector?) => AppPreactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:318](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L318)
+Defined in: [createTableHook.tsx:317](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L317)
 
 Creates a table with the `App*` wrapper components and registered
 `tableComponents` attached. `TData` is inferred from the `data` option.
@@ -105,7 +105,7 @@ Creates a table with the `App*` wrapper components and registered
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:355](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L355)
+Defined in: [createTableHook.tsx:354](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L354)
 
 Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 `cellComponents` and a context-bound `FlexRender`.
@@ -128,7 +128,7 @@ Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:366](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L366)
+Defined in: [createTableHook.tsx:365](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L365)
 
 Reads the header provided by the nearest `<table.AppHeader>` /
 `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -152,7 +152,7 @@ context-bound `FlexRender`.
 useTableContext: <TData, TSelected>() => AppPreactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:340](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L340)
+Defined in: [createTableHook.tsx:339](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L339)
 
 Reads the table provided by the nearest `<table.AppTable>`. This is the same
 extended instance `useAppTable` returns, so the `App*` components and your

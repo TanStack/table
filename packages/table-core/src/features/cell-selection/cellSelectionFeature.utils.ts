@@ -1,6 +1,9 @@
 import { callMemoOrStaticFn, cloneState, makeObjectMap } from '../../utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
-import { applyCellSelectionBoundsOperations } from './cellSelectionGeometry'
+import {
+  applyCellSelectionBoundsOperations,
+  expandCellSelectionBounds,
+} from './cellSelectionGeometry'
 import type { CellSelectionBoundsOperation } from './cellSelectionGeometry'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -198,6 +201,163 @@ export function table_getCellSelectionColumnIndexes<
   return indexes
 }
 
+const EMPTY_MERGE_BOUNDS: Array<CellSelectionBounds> = []
+
+/**
+ * The shape of `cellSpanningFeature`'s span index that selection reads.
+ *
+ * Declared structurally rather than imported so cell selection never depends
+ * on the cell spanning module: the probe below only ever calls the API that
+ * `cellSpanningFeature` installs on the table, and resolves to nothing when
+ * that feature is not registered.
+ */
+interface ProbedCellSpanIndex<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  colSpans: Array<Int32Array | undefined>
+  columnIndexes: Record<string, number>
+  rowSpans: Record<string, Int32Array>
+  rows: ReadonlyArray<Row<TFeatures, TData>>
+}
+
+function probeCellSpanIndex<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+): ProbedCellSpanIndex<TFeatures, TData> | undefined {
+  return (
+    table as Table_Internal<TFeatures, TData> & {
+      getCellSpanIndex?: () => ProbedCellSpanIndex<TFeatures, TData>
+    }
+  ).getCellSpanIndex?.()
+}
+
+/**
+ * Resolves the merged-cell rectangles of the rendered rows into selection's
+ * own index space.
+ *
+ * The span index positions rows by their paginated render order while
+ * selection positions them by pre-paginated display order, so each merge is
+ * mapped through `row.getDisplayIndex()`. A merge whose rows do not map to a
+ * contiguous display range is skipped defensively; it then behaves like
+ * unmerged cells instead of corrupting the geometry.
+ *
+ * Returns an empty array when `cellSpanningFeature` is not registered, which
+ * keeps every selection code path identical to the span-unaware behavior.
+ *
+ * @example
+ * ```ts
+ * const merges = table_getCellSelectionMergeBounds(table)
+ * ```
+ */
+export function table_getCellSelectionMergeBounds<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): Array<CellSelectionBounds> {
+  const spanIndex = probeCellSpanIndex(table)
+
+  if (!spanIndex) return EMPTY_MERGE_BOUNDS
+
+  const columnIndexes = callMemoOrStaticFn(
+    table,
+    'getCellSelectionColumnIndexes',
+    table_getCellSelectionColumnIndexes,
+  )
+  const merges: Array<CellSelectionBounds> = []
+
+  // Vertical runs, each widened by any column span on its anchor so a
+  // row-and-column merge maps to one rectangle.
+  for (const columnId in spanIndex.rowSpans) {
+    const columnIndex = columnIndexes[columnId]
+    if (columnIndex === undefined) continue
+
+    const spans = spanIndex.rowSpans[columnId]!
+    const spanColumnIndex = spanIndex.columnIndexes[columnId]
+
+    for (let r = 0; r < spans.length; r++) {
+      const span = spans[r]!
+      if (span <= 1) continue
+
+      const startRow = spanIndex.rows[r]!.getDisplayIndex()
+      const endRow = spanIndex.rows[r + span - 1]!.getDisplayIndex()
+      if (startRow < 0 || endRow - startRow !== span - 1) continue
+
+      const colSpan =
+        spanColumnIndex === undefined
+          ? 1
+          : Math.max(spanIndex.colSpans[r]?.[spanColumnIndex] ?? 1, 1)
+
+      merges.push({
+        minRowIndex: startRow,
+        maxRowIndex: endRow,
+        minColumnIndex: columnIndex,
+        maxColumnIndex: columnIndex + colSpan - 1,
+      })
+    }
+  }
+
+  // Horizontal-only spans on rows whose anchor has no vertical run.
+  if (spanIndex.colSpans.length) {
+    const columnIdBySpanIndex: Array<string> = []
+    for (const columnId in spanIndex.columnIndexes) {
+      columnIdBySpanIndex[spanIndex.columnIndexes[columnId]!] = columnId
+    }
+
+    for (let r = 0; r < spanIndex.colSpans.length; r++) {
+      const rowColSpans = spanIndex.colSpans[r]
+      if (!rowColSpans) continue
+
+      const displayRow = spanIndex.rows[r]?.getDisplayIndex() ?? -1
+      if (displayRow < 0) continue
+
+      for (let c = 0; c < rowColSpans.length; c++) {
+        const span = rowColSpans[c]!
+        if (span <= 1) continue
+
+        const columnId = columnIdBySpanIndex[c]
+        if (columnId === undefined) continue
+        // Vertical runs already emitted this anchor as a full rectangle, and
+        // their covered rows sit inside it.
+        const vertical = spanIndex.rowSpans[columnId]
+        if (vertical && vertical[r] !== 1) continue
+
+        const columnIndex = columnIndexes[columnId]
+        if (columnIndex === undefined) continue
+
+        merges.push({
+          minRowIndex: displayRow,
+          maxRowIndex: displayRow,
+          minColumnIndex: columnIndex,
+          maxColumnIndex: columnIndex + span - 1,
+        })
+      }
+    }
+  }
+
+  return merges
+}
+
+function findMergeBoundsAt(
+  merges: ReadonlyArray<CellSelectionBounds>,
+  rowIndex: number,
+  columnIndex: number,
+): CellSelectionBounds | undefined {
+  for (let i = 0; i < merges.length; i++) {
+    const merge = merges[i]!
+    if (
+      rowIndex >= merge.minRowIndex &&
+      rowIndex <= merge.maxRowIndex &&
+      columnIndex >= merge.minColumnIndex &&
+      columnIndex <= merge.maxColumnIndex
+    ) {
+      return merge
+    }
+  }
+  return undefined
+}
+
 /**
  * Resolves a row id to its display-order index, or `-1` when it no longer
  * identifies a row in the current order.
@@ -283,6 +443,27 @@ export function table_getCellSelectionBounds<
       maxColumnIndex: Math.max(anchorColumnIndex, focusColumnIndex),
       operation: range.operation ?? 'include',
     })
+  }
+
+  // Merged cells are all-or-nothing: every operation's rectangle, include and
+  // exclude alike, grows to enclose the merges it touches before the algebra
+  // runs. Expanding here rather than at write time keeps the stored corners
+  // stable while sorting, paging, or toggling spanning changes the merges.
+  const merges = callMemoOrStaticFn(
+    table,
+    'getCellSelectionMergeBounds',
+    table_getCellSelectionMergeBounds,
+  )
+
+  if (merges.length) {
+    for (let i = 0; i < operations.length; i++) {
+      const operation = operations[i]!
+      const expanded = expandCellSelectionBounds(operation, merges)
+      operation.minRowIndex = expanded.minRowIndex
+      operation.maxRowIndex = expanded.maxRowIndex
+      operation.minColumnIndex = expanded.minColumnIndex
+      operation.maxColumnIndex = expanded.maxColumnIndex
+    }
   }
 
   return applyCellSelectionBoundsOperations(operations)
@@ -485,12 +666,73 @@ export function cell_getSelectionEdges<
 
   if (!isWithinBounds(bounds, rowIndex, columnIndex)) return none
 
-  return {
-    top: !isWithinBounds(bounds, rowIndex - 1, columnIndex),
-    right: !isWithinBounds(bounds, rowIndex, columnIndex + 1),
-    bottom: !isWithinBounds(bounds, rowIndex + 1, columnIndex),
-    left: !isWithinBounds(bounds, rowIndex, columnIndex - 1),
+  const merges = callMemoOrStaticFn(
+    cell.table,
+    'getCellSelectionMergeBounds',
+    table_getCellSelectionMergeBounds,
+  )
+  const merge = merges.length
+    ? findMergeBoundsAt(merges, rowIndex, columnIndex)
+    : undefined
+
+  if (!merge) {
+    return {
+      top: !isWithinBounds(bounds, rowIndex - 1, columnIndex),
+      right: !isWithinBounds(bounds, rowIndex, columnIndex + 1),
+      bottom: !isWithinBounds(bounds, rowIndex + 1, columnIndex),
+      left: !isWithinBounds(bounds, rowIndex, columnIndex - 1),
+    }
   }
+
+  // A merged cell renders once but occupies a rectangle, so each side probes
+  // the full strip beyond that rectangle. A side is an edge when any strip
+  // cell falls outside the selection, since the single rendered border cannot
+  // be split into segments.
+  return {
+    top: isStripOutside(
+      bounds,
+      merge.minRowIndex - 1,
+      merge.minColumnIndex,
+      merge.maxColumnIndex,
+      true,
+    ),
+    right: isStripOutside(
+      bounds,
+      merge.maxColumnIndex + 1,
+      merge.minRowIndex,
+      merge.maxRowIndex,
+      false,
+    ),
+    bottom: isStripOutside(
+      bounds,
+      merge.maxRowIndex + 1,
+      merge.minColumnIndex,
+      merge.maxColumnIndex,
+      true,
+    ),
+    left: isStripOutside(
+      bounds,
+      merge.minColumnIndex - 1,
+      merge.minRowIndex,
+      merge.maxRowIndex,
+      false,
+    ),
+  }
+}
+
+function isStripOutside(
+  bounds: ReadonlyArray<CellSelectionBounds>,
+  fixedIndex: number,
+  from: number,
+  to: number,
+  fixedIsRow: boolean,
+): boolean {
+  for (let i = from; i <= to; i++) {
+    const rowIndex = fixedIsRow ? fixedIndex : i
+    const columnIndex = fixedIsRow ? i : fixedIndex
+    if (!isWithinBounds(bounds, rowIndex, columnIndex)) return true
+  }
+  return false
 }
 
 // Focus APIs
@@ -654,18 +896,50 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   columnId: string,
   direction: CellSelectionDirection,
 ): { rowId: string; columnId: string } | null {
-  const rows = table.getRowsInDisplayOrder()
+  // Navigation is constrained to the final row model. In particular, the
+  // pre-pagination display-order model contains rows from every page and
+  // would let ArrowDown move focus into a row that is not rendered.
+  const rows = table.getRowModel().rows
   const columns = getDisplayOrderedColumns(table)
 
   if (!rows.length || !columns.length) return null
 
   const { rowDelta, columnDelta } = getDirectionDelta(direction)
-  const rowIndex = resolveRowIndex(table, rows, rowId)
+  const rowIndex = rows.findIndex((row) => row.id === rowId)
   const columnIndex = columns.findIndex((column) => column.id === columnId)
 
   if (rowIndex < 0 || columnIndex < 0) return null
 
-  const nextRowIndex = rowIndex + rowDelta
+  // A merged cell is one navigation stop: step from its far edge in the
+  // travel direction so a single press crosses the whole merge, and snap any
+  // landing inside a merge to the merge's anchor.
+  const merges = callMemoOrStaticFn(
+    table,
+    'getCellSelectionMergeBounds',
+    table_getCellSelectionMergeBounds,
+  )
+  let fromRowIndex = rows[rowIndex]!.getDisplayIndex()
+  let fromColumnIndex = columnIndex
+
+  if (merges.length) {
+    const startMerge = findMergeBoundsAt(merges, rowIndex, columnIndex)
+    if (startMerge) {
+      if (rowDelta > 0) fromRowIndex = startMerge.maxRowIndex
+      if (rowDelta < 0) fromRowIndex = startMerge.minRowIndex
+      if (columnDelta > 0) fromColumnIndex = startMerge.maxColumnIndex
+      if (columnDelta < 0) fromColumnIndex = startMerge.minColumnIndex
+    }
+  }
+
+  let nextRowIndex = rowIndex + rowDelta
+
+  if (rowDelta && fromRowIndex !== rows[rowIndex]!.getDisplayIndex()) {
+    const edgeRowIndex = rows.findIndex(
+      (row) => row.getDisplayIndex() === fromRowIndex,
+    )
+    if (edgeRowIndex < 0) return null
+    nextRowIndex = edgeRowIndex + rowDelta
+  }
 
   if (nextRowIndex < 0 || nextRowIndex >= rows.length) {
     return null
@@ -677,7 +951,7 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
 
   if (!selectableColumnIds.size) return null
 
-  let nextColumnIndex = columnIndex
+  let nextColumnIndex = fromColumnIndex
 
   if (columnDelta) {
     do {
@@ -713,9 +987,33 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
     return null
   }
 
+  let landingRowIndex = nextRowIndex
+  let landingColumnIndex = nextColumnIndex
+
+  if (merges.length) {
+    const landingDisplayRowIndex = rows[nextRowIndex]!.getDisplayIndex()
+    const landingMerge = findMergeBoundsAt(
+      merges,
+      landingDisplayRowIndex,
+      nextColumnIndex,
+    )
+    if (landingMerge) {
+      landingRowIndex = rows.findIndex(
+        (row) => row.getDisplayIndex() === landingMerge.minRowIndex,
+      )
+      if (landingRowIndex < 0) return null
+      landingColumnIndex = landingMerge.minColumnIndex
+    }
+  }
+
+  const landingRow = rows[landingRowIndex]
+  const landingColumn = columns[landingColumnIndex]
+
+  if (!landingRow || !landingColumn) return null
+
   return {
-    rowId: rows[nextRowIndex]!.id,
-    columnId: columns[nextColumnIndex]!.id,
+    rowId: landingRow.id,
+    columnId: landingColumn.id,
   }
 }
 
@@ -738,7 +1036,7 @@ export function table_moveCellSelection<
   const active = ranges?.[ranges.length - 1]
 
   if (!active) {
-    const rows = table.getRowsInDisplayOrder()
+    const rows = table.getRowModel().rows
     const columns = getSelectableColumns(table)
 
     if (!rows.length || !columns.length) return
@@ -822,6 +1120,10 @@ function forEachSelectedCell<
     rowOffset: number,
     columnOffset: number,
   ) => void,
+  // Skip cells another cell's span covers, so ids and counts match what
+  // renders. Ranges data keeps them: covered cells still carry real values,
+  // and dropping them would misalign the row-major grid.
+  skipCovered = false,
 ) {
   const bounds = callMemoOrStaticFn(
     table,
@@ -860,6 +1162,16 @@ function forEachSelectedCell<
         if (!callMemoOrStaticFn(cell, 'getCanSelect', cell_getCanSelect)) {
           continue
         }
+        if (
+          skipCovered &&
+          (
+            cell as Cell<TFeatures, TData, any> & {
+              getIsCovered?: () => boolean
+            }
+          ).getIsCovered?.()
+        ) {
+          continue
+        }
 
         visit(
           cell,
@@ -890,11 +1202,15 @@ export function table_getSelectedCellIds<
   const ids: Array<string> = []
   const seen = new Set<string>()
 
-  forEachSelectedCell(table, (cell) => {
-    if (seen.has(cell.id)) return
-    seen.add(cell.id)
-    ids.push(cell.id)
-  })
+  forEachSelectedCell(
+    table,
+    (cell) => {
+      if (seen.has(cell.id)) return
+      seen.add(cell.id)
+      ids.push(cell.id)
+    },
+    true,
+  )
 
   return ids
 }
@@ -951,9 +1267,21 @@ export function table_getSelectedCellCount<
 
   if (!bounds.length) return 0
 
-  if (typeof table.options.enableCellSelection === 'function') {
+  const merges = callMemoOrStaticFn(
+    table,
+    'getCellSelectionMergeBounds',
+    table_getCellSelectionMergeBounds,
+  )
+
+  // A per-cell predicate requires enumeration, and so do merged cells: a
+  // merge counts once, and after subtraction a merge can straddle several
+  // final rectangles, which breaks per-rectangle arithmetic.
+  if (
+    typeof table.options.enableCellSelection === 'function' ||
+    merges.length
+  ) {
     const ids = new Set<string>()
-    forEachSelectedCell(table, (cell) => ids.add(cell.id))
+    forEachSelectedCell(table, (cell) => ids.add(cell.id), true)
     return ids.size
   }
 

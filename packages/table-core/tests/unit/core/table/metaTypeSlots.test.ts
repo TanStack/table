@@ -171,7 +171,7 @@ describe('tableMeta/columnMeta type-only feature slots', () => {
         >
       >
 
-      // fallback to the declaration-merged FilterMeta interface
+      // fall back to the declaration-merged FilterMeta interface
       const plainFeatures = tableFeatures({ columnFilteringFeature })
       true satisfies Expect<
         Equal<ExtractFilterMeta<typeof plainFeatures>, FilterMeta>

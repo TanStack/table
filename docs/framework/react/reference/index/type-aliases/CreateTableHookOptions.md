@@ -9,7 +9,7 @@ title: CreateTableHookOptions
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [createTableHook.tsx:249](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L249)
+Defined in: [createTableHook.tsx:248](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L248)
 
 Options for creating a table hook with pre-bound components and default table options.
 Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initialState'.

@@ -1,5 +1,19 @@
 <div align="center">
-  <img src="./media/header_table.png" alt="TanStack Table">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://tanstack.com/api/readme/table.png?theme=dark"
+    />
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="https://tanstack.com/api/readme/table.png"
+    />
+    <img
+      src="https://tanstack.com/api/readme/table.png"
+      alt="TanStack Table"
+      width="900"
+    />
+  </picture>
 </div>
 
 <br />
@@ -61,7 +75,7 @@ TanStack Table ships [TanStack Intent](https://github.com/TanStack/intent) skill
 npx @tanstack/intent@latest install
 ```
 
-to add skill-loading guidance for your agent (Claude Code, Cursor, Copilot, etc.). The same CLI also exposes `intent list` to browse available skills and `intent load <skill>` to print one for inspection. Skills version with the library — your agent gets guidance that matches the version of `@tanstack/<framework>-table` you installed. Only available for v9 and above.
+to add skill-loading guidance for your agent (Claude Code, Cursor, Copilot, etc.). The same CLI also exposes `intent list` to browse available skills and `intent load <skill>` to print one for inspection. Skills are versioned with the library — your agent gets guidance that matches the version of `@tanstack/<framework>-table` you installed. Only available for v9 and above.
 
 ## Get Involved
 

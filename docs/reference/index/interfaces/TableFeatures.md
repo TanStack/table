@@ -46,11 +46,25 @@ every built-in aggregation function in your bundle.
 optional cellSelectionFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L19)
+Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
 
 #### Inherited from
 
 [`StockFeatures`](StockFeatures.md).[`cellSelectionFeature`](StockFeatures.md#cellselectionfeature)
+
+***
+
+### cellSpanningFeature?
+
+```ts
+optional cellSpanningFeature: TableFeature;
+```
+
+Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
+
+#### Inherited from
+
+[`StockFeatures`](StockFeatures.md).[`cellSpanningFeature`](StockFeatures.md#cellspanningfeature)
 
 ***
 
@@ -60,7 +74,7 @@ Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blo
 optional columnFacetingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
+Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
 
 #### Inherited from
 
@@ -74,7 +88,7 @@ Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blo
 optional columnFilteringFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
+Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
 
 #### Inherited from
 
@@ -88,7 +102,7 @@ Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blo
 optional columnGroupingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
+Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
 
 #### Inherited from
 
@@ -121,7 +135,7 @@ When omitted, the global declaration-merged `ColumnMeta` interface applies.
 optional columnOrderingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
+Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
 
 #### Inherited from
 
@@ -135,7 +149,7 @@ Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blo
 optional columnPinningFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
+Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
 
 #### Inherited from
 
@@ -149,7 +163,7 @@ Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blo
 optional columnResizingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
+Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
 
 #### Inherited from
 
@@ -163,7 +177,7 @@ Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blo
 optional columnSizingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
+Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
 
 #### Inherited from
 
@@ -177,7 +191,7 @@ Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blo
 optional columnVisibilityFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
+Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
 
 #### Inherited from
 
@@ -520,7 +534,7 @@ When omitted, the global declaration-merged `FilterMeta` interface applies.
 optional globalFilteringFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
+Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)
 
 #### Inherited from
 
@@ -594,7 +608,7 @@ server-side pagination.
 optional rowAggregationFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
+Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L31)
 
 #### Inherited from
 
@@ -608,7 +622,7 @@ Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blo
 optional rowExpandingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)
+Defined in: [features/stockFeatures.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L32)
 
 #### Inherited from
 
@@ -622,7 +636,7 @@ Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blo
 optional rowPaginationFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L31)
+Defined in: [features/stockFeatures.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L33)
 
 #### Inherited from
 
@@ -636,7 +650,7 @@ Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blo
 optional rowPinningFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L32)
+Defined in: [features/stockFeatures.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L34)
 
 #### Inherited from
 
@@ -650,7 +664,7 @@ Defined in: [features/stockFeatures.ts:32](https://github.com/TanStack/table/blo
 optional rowSelectionFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L33)
+Defined in: [features/stockFeatures.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L35)
 
 #### Inherited from
 
@@ -664,7 +678,7 @@ Defined in: [features/stockFeatures.ts:33](https://github.com/TanStack/table/blo
 optional rowSortingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L34)
+Defined in: [features/stockFeatures.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L36)
 
 #### Inherited from
 

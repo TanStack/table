@@ -298,6 +298,44 @@ describe('createFilteredRowModel', () => {
       expect(rowNames(rows)).toEqual(['keep-a', 'keep-c', 'keep-d'])
     })
 
+    it('should include unfiltered descendants of kept rows in flatRows and rowsById (from root, depth 0)', () => {
+      const table = makeNestedTable({ maxLeafRowFilterDepth: 0 })
+      const model = table.getFilteredRowModel()
+
+      // keep-a, keep-c and keep-d pass at depth 0 and their subtrees stay
+      // visible unfiltered, so flatRows must contain every visible row, not
+      // just the depth-0 rows (facet counts derive from flatRows)
+      expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
+        'keep-a1',
+        'drop-a1a',
+        'drop-a2',
+        'keep-c',
+        'keep-d',
+        'drop-d1',
+      ])
+
+      const keepA1 = model.rows[0]!.subRows[0]!
+      expect(model.rowsById[keepA1.id]).toBe(keepA1)
+    })
+
+    it('should include kept-as-is grandchildren in flatRows when maxLeafRowFilterDepth is 1 (from root)', () => {
+      const table = makeNestedTable({ maxLeafRowFilterDepth: 1 })
+      const model = table.getFilteredRowModel()
+
+      // Depth-1 children are still filtered (drop-a2 removed), while the
+      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows. The
+      // pre-existing flatRows order pushes recursed children before their
+      // parent.
+      expect(rowNames(model.flatRows)).toEqual([
+        'keep-a1',
+        'drop-a1a',
+        'keep-a',
+        'keep-c',
+        'keep-d',
+      ])
+    })
+
     it('should stop filtering below depth 1 when maxLeafRowFilterDepth is 1 (from root)', () => {
       const table = makeNestedTable({ maxLeafRowFilterDepth: 1 })
       const keepA = table.getFilteredRowModel().rows[0]!

@@ -9,12 +9,14 @@ title: column_toggleVisibility
 function column_toggleVisibility<TFeatures, TData, TValue>(column, visible?): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L42)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L44)
 
 Updates this column's visibility when hiding is allowed.
 
 Passing `visible` stores that value. Omitting it flips the column's current
-visibility state. Columns that cannot hide are start unchanged.
+visibility state. Group columns update their hideable leaf columns because
+visibility state is keyed by leaf column ids. Columns that cannot hide stay
+unchanged.
 
 ## Type Parameters
 

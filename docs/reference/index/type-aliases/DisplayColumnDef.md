@@ -9,7 +9,7 @@ title: DisplayColumnDef
 type DisplayColumnDef<TFeatures, TData, TValue> = ColumnDefBase<TFeatures, TData, TValue> & ColumnIdentifiers<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/ColumnDef.ts:186](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L186)
+Defined in: [types/ColumnDef.ts:188](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L188)
 
 ## Type Parameters
 

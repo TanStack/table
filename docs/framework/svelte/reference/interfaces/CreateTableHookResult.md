@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:378](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L378)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:377](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L377)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:378](https://gi
 appFeatures: TFeatures;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:385](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L385)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:384](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L384)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:390](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L390)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:389](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L389)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -68,7 +68,7 @@ the cell/header/footer render props expose the bound components.
 createAppTable: <TData>(tableOptions) => AppSvelteTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:404](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L404)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:403](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L403)
 
 Creates a table with the `App*` wrapper components and registered
 `tableComponents` attached. `TData` is inferred from the `data` option.
@@ -101,7 +101,7 @@ These reads participate in Svelte dependency tracking inside templates,
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:429](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L429)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:428](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L428)
 
 Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 `cellComponents` and a context-bound `FlexRender`.
@@ -124,7 +124,7 @@ Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:440](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L440)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:439](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L439)
 
 Reads the header provided by the nearest `<table.AppHeader>` /
 `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -148,7 +148,7 @@ context-bound `FlexRender`.
 useTableContext: <TData>() => AppSvelteTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:418](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L418)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:417](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L417)
 
 Reads the table provided by the nearest `<table.AppTable>`. This is the same
 extended instance `createAppTable` returns, so the `App*` components and your

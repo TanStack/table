@@ -5,7 +5,7 @@ title: TableHookContexts
 
 # Interface: TableHookContexts\<TFeatures, TData\>
 
-Defined in: [types.ts:313](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L313)
+Defined in: [types.ts:310](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L310)
 
 The object returned by `createTableHookContexts`: three scoped octane
 contexts plus matching context hooks.
@@ -28,7 +28,7 @@ contexts plus matching context hooks.
 cellContext: Context<Cell<any, any, any>>;
 ```
 
-Defined in: [types.ts:318](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L318)
+Defined in: [types.ts:315](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L315)
 
 ***
 
@@ -38,17 +38,17 @@ Defined in: [types.ts:318](https://github.com/TanStack/table/blob/main/packages/
 headerContext: Context<Header<any, any, any>>;
 ```
 
-Defined in: [types.ts:319](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L319)
+Defined in: [types.ts:316](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L316)
 
 ***
 
 ### tableContext
 
 ```ts
-tableContext: Context<OctaneTable<any, any, TableState_ColumnResizing & TableState_RowPinning & TableState_RowSelection & TableState_ColumnOrdering & TableState_ColumnFiltering & TableState_GlobalFiltering & TableState_RowPagination & TableState_RowSorting & TableState_ColumnGrouping & TableState_ColumnVisibility & TableState_CellSelection & TableState_ColumnPinning & TableState_ColumnSizing & TableState_RowExpanding & TableState_WorkerRowModels>>;
+tableContext: Context<OctaneTable<any, any, TableState_ColumnSizing & TableState_ColumnResizing & TableState_RowExpanding & TableState_ColumnFiltering & TableState_RowPagination & TableState_ColumnGrouping & TableState_GlobalFiltering & TableState_ColumnOrdering & TableState_ColumnVisibility & TableState_RowPinning & TableState_RowSelection & TableState_CellSelection & TableState_ColumnPinning & TableState_RowSorting & TableState_WorkerRowModels>>;
 ```
 
-Defined in: [types.ts:317](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L317)
+Defined in: [types.ts:314](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L314)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [types.ts:317](https://github.com/TanStack/table/blob/main/packages/
 useCellContext: <TValue>() => Cell<TFeatures, any, TValue>;
 ```
 
-Defined in: [types.ts:324](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L324)
+Defined in: [types.ts:321](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L321)
 
 #### Type Parameters
 
@@ -78,7 +78,7 @@ Defined in: [types.ts:324](https://github.com/TanStack/table/blob/main/packages/
 useHeaderContext: <TValue>() => Header<TFeatures, any, TValue>;
 ```
 
-Defined in: [types.ts:329](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L329)
+Defined in: [types.ts:326](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L326)
 
 #### Type Parameters
 
@@ -98,7 +98,7 @@ Defined in: [types.ts:329](https://github.com/TanStack/table/blob/main/packages/
 useTableContext: <TTableData>() => OctaneTable<TFeatures, TTableData>;
 ```
 
-Defined in: [types.ts:320](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L320)
+Defined in: [types.ts:317](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L317)
 
 #### Type Parameters
 

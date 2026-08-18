@@ -865,3 +865,31 @@ button:disabled {
     min-height: 58px;
   }
 }
+
+/* Excel-style merged cells: one absolutely positioned cell per merge spans
+   the whole rectangle and centers its content, the way Merge & Center does.
+   Center-region merges live in a canvas layer that clips itself at the
+   frozen-column edge (row transforms flatten the pinned cells' own z-index,
+   so clipping replaces a z-index fight); frozen-column merges live in a
+   horizontally sticky layer, matching how pinned cells stay put. */
+.merge-layer {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pinned-merge-layer {
+  position: sticky;
+  z-index: 5;
+  inset-inline-start: 0;
+  width: 0;
+  height: 0;
+}
+
+.cell-merged {
+  height: auto;
+  justify-content: center;
+  text-align: center;
+  pointer-events: auto;
+}

@@ -9,7 +9,7 @@ title: column_getAggregationValue
 function column_getAggregationValue<TFeatures, TData, TValue>(column, options?): ColumnAggregationValue<TFeatures>;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:416](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L416)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:415](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L415)
 
 Implements `column.getAggregationValue(options?)` and its default cache.
 

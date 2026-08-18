@@ -12,11 +12,16 @@ function shouldAutoRemoveFilter<TFeatures, TData, TValue>(
    column?): boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:338](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L338)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:343](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L343)
 
 Returns whether a filter value should be removed from filter state.
 
-This checks the filter function's `autoRemove` hook and built-in empty-value rules.
+`undefined` always removes: it is the universal "clear this filter"
+sentinel used by `setFilterValue(undefined)` and functional updaters. For
+any other value, a filter function's `autoRemove` hook is authoritative
+when provided, so custom filter functions can keep values (such as empty
+strings) that the default heuristic would drop. Without an `autoRemove`
+hook, empty strings are removed.
 
 ## Type Parameters
 

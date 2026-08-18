@@ -33,7 +33,7 @@ Defined in: packages/ember-table/declarations/FlexRender.d.ts:54
 new FlexRenderFooter<TFeatures, TData, TValue>(owner, args): FlexRenderFooter<TFeatures, TData, TValue>;
 ```
 
-Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1/node\_modules/@glimmer/component/dist/index.d.ts:389
+Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1\_supports-color@8.1.1/node\_modules/@glimmer/component/dist/index.d.ts:389
 
 #### Parameters
 
@@ -65,7 +65,7 @@ Component<FlexRenderFooterSignature<TFeatures, TData, TValue>>.constructor
 [Context]: ComponentContext<FlexRenderFooter<TFeatures, TData, TValue>, FlexRenderFooterSignature<TFeatures, TData, TValue>>;
 ```
 
-Defined in: node\_modules/.pnpm/@glint+ember-tsc@1.8.11\_ember-source@7.0.0\_@glimmer+component@2.1.1\_\_typescript@6.0.3/node\_modules/@glint/ember-tsc/types/-private/dsl/integration-declarations.d.ts:33
+Defined in: node\_modules/.pnpm/@glint+ember-tsc@1.8.14\_ember-source@7.1.0\_@glimmer+component@2.1.1\_supports-color@8.1.\_8bece6e70d52a2dcadad1882db996878/node\_modules/@glint/ember-tsc/types/-private/dsl/integration-declarations.d.ts:33
 
 #### Inherited from
 
@@ -82,7 +82,7 @@ Component.[Context]
 }>, unknown>;
 ```
 
-Defined in: node\_modules/.pnpm/@glint+template@1.7.8/node\_modules/@glint/template/-private/integration.d.ts:22
+Defined in: node\_modules/.pnpm/@glint+template@1.7.10/node\_modules/@glint/template/-private/integration.d.ts:22
 
 #### Parameters
 
@@ -111,7 +111,7 @@ Component.[Invoke]
 readonly args: Readonly<Args<S>>;
 ```
 
-Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:236
+Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1\_supports-color@8.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:236
 
 Named arguments passed to the component from its parent component.
 They can be accessed in JavaScript via `this.args.argumentName` and in the template via `@argumentName`.
@@ -219,7 +219,7 @@ Defined in: packages/ember-table/declarations/FlexRender.d.ts:57
 get isDestroyed(): boolean;
 ```
 
-Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:238
+Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1\_supports-color@8.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:238
 
 ##### Returns
 
@@ -241,7 +241,7 @@ Component.isDestroyed
 get isDestroying(): boolean;
 ```
 
-Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:237
+Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1\_supports-color@8.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:237
 
 ##### Returns
 
@@ -293,7 +293,7 @@ Defined in: packages/ember-table/declarations/FlexRender.d.ts:55
 willDestroy(): void;
 ```
 
-Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:242
+Defined in: node\_modules/.pnpm/@glimmer+component@2.1.1\_supports-color@8.1.1/node\_modules/@glimmer/component/dist/-private/component.d.ts:242
 
 Called before the component has been removed from the DOM.
 

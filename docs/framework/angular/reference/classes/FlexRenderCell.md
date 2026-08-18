@@ -28,11 +28,11 @@ This replaces calling `*flexRender` directly like this:
 <td *flexRender="footer.column.columnDef.footer; props: footer.getContext(); let footer">{{footer}}</td>
 ```
 
-Can be imported through FlexRenderCell or [FlexRender](../variables/FlexRender.md) import,
-which the latter is preferred.
+Can be imported through FlexRenderCell or [FlexRender](../variables/FlexRender.md), with
+the latter preferred.
 
 ```ts
-import {FlexRender} from '@tanstack/angular-table
+import {FlexRender} from '@tanstack/angular-table'
 
 @Component({
  // ...

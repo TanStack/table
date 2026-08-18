@@ -5,7 +5,7 @@ title: AppHeaderComponent
 
 # Interface: AppHeaderComponent()\<TFeatures, TData, THeaderComponents\>
 
-Defined in: [createTableHook.tsx:495](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L495)
+Defined in: [createTableHook.tsx:494](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L494)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
 
@@ -29,7 +29,7 @@ Component type for AppHeader/AppFooter - wraps a header and provides header cont
 AppHeaderComponent<TValue>(props): ComponentChildren;
 ```
 
-Defined in: [createTableHook.tsx:500](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L500)
+Defined in: [createTableHook.tsx:499](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L499)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
 
@@ -55,7 +55,7 @@ Component type for AppHeader/AppFooter - wraps a header and provides header cont
 AppHeaderComponent<TValue, TSelected>(props): ComponentChildren;
 ```
 
-Defined in: [createTableHook.tsx:508](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L508)
+Defined in: [createTableHook.tsx:507](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L507)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
 

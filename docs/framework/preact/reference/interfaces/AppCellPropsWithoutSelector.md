@@ -5,7 +5,7 @@ title: AppCellPropsWithoutSelector
 
 # Interface: AppCellPropsWithoutSelector\<TFeatures, TData, TValue, TCellComponents\>
 
-Defined in: [createTableHook.tsx:396](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L396)
+Defined in: [createTableHook.tsx:395](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L395)
 
 Props for AppCell component - without selector
 
@@ -35,7 +35,7 @@ Props for AppCell component - without selector
 cell: Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:402](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L402)
+Defined in: [createTableHook.tsx:401](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L401)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [createTableHook.tsx:402](https://github.com/TanStack/table/blob/mai
 children: (cell) => ComponentChildren;
 ```
 
-Defined in: [createTableHook.tsx:403](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L403)
+Defined in: [createTableHook.tsx:402](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L402)
 
 #### Parameters
 
@@ -65,4 +65,4 @@ Defined in: [createTableHook.tsx:403](https://github.com/TanStack/table/blob/mai
 optional selector: undefined;
 ```
 
-Defined in: [createTableHook.tsx:407](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L407)
+Defined in: [createTableHook.tsx:406](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L406)

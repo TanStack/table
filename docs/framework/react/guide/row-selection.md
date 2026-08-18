@@ -167,6 +167,16 @@ const table = useTable({
 })
 ```
 
+Sub-row selection also applies to the select-all APIs. When a parent row blocks sub-row selection, `table.toggleAllRowsSelected()` and `table.toggleAllPageRowsSelected()` skip that parent's descendants, and `table.getIsAllRowsSelected()` and `table.getIsAllPageRowsSelected()` ignore those descendants when deciding whether everything is selected.
+
+Selecting a parent row writes the parent id and its selectable descendant ids into the row selection state. Deselecting a child afterwards does not remove the parent id by default, since some tables treat the state ids as literal selections. Pass the `deselectParents` option to the toggle APIs to remove ancestor ids whenever a row is deselected:
+
+```ts
+row.getToggleSelectedHandler({ deselectParents: true })
+// or
+row.toggleSelected(false, { deselectParents: true })
+```
+
 ### Shift Range Selection
 
 `row.getToggleSelectedHandler()` supports Shift range selection by default. After an ordinary selectable-row interaction establishes an anchor, Shift-selecting another row selects or deselects the inclusive interval between them. The clicked checkbox's resulting checked value controls the whole range, and the clicked endpoint becomes the anchor for the next Shift interaction.
@@ -205,7 +215,7 @@ TanStack table does not dictate how you should render your row selection UI. You
 
 #### Connect Row Selection APIs to Checkbox Inputs
 
-TanStack Table provides some handler functions that you can connect directly to your checkbox inputs to make it easy to toggle row selection. These function automatically call other internal APIs to update the row selection state and re-render the table.
+TanStack Table provides some handler functions that you can connect directly to your checkbox inputs to make it easy to toggle row selection. These functions automatically call other internal APIs to update the row selection state and re-render the table.
 
 Use the `row.getToggleSelectedHandler()` API to connect to your checkbox inputs to toggle the selection of a row.
 
@@ -226,8 +236,12 @@ const columns = [
     ),
     cell: ({ row }) => (
       <Checkbox
-        checked={row.getIsSelected()}
+        checked={
+          row.getIsSelected() ||
+          (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+        }
         disabled={!row.getCanSelect()}
+        indeterminate={row.getIsSomeSelected()}
         onChange={row.getToggleSelectedHandler()}
       />
     ),
@@ -235,6 +249,8 @@ const columns = [
   //... more column definitions...
 ]
 ```
+
+> **Note:** The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
 
 #### Connect Row Selection APIs to UI
 

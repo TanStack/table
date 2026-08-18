@@ -112,7 +112,7 @@ readonly table = injectTable(() => ({
 
 ### Pin Columns by Default
 
-A very common use case is to pin some columns by default. You can do this by either initializing the `columnPinning` state with the pinned columnIds, or by using the `initialState` table option
+A very common use case is to pin some columns by default. You can do this by either initializing the `columnPinning` state with the pinned columnIds, or by using the `initialState` table option:
 
 ```ts
 readonly table = injectTable(() => ({

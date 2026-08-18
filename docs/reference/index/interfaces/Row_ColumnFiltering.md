@@ -5,7 +5,7 @@ title: Row_ColumnFiltering
 
 # Interface: Row\_ColumnFiltering\<TFeatures, _TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:226](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L226)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:231](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L231)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:226](http
 columnFilters: Record<string, boolean>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L233)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:238](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L238)
 
 The column filters map for the row. This object tracks whether a row is passing/failing specific filters by their column ID.
 
@@ -37,6 +37,6 @@ The column filters map for the row. This object tracks whether a row is passing/
 columnFiltersMeta: Record<string, ExtractFilterMeta<TFeatures>>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:237](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L237)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:242](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L242)
 
 The column filters meta map for the row. This object tracks any filter meta for a row as optionally provided during the filtering process.

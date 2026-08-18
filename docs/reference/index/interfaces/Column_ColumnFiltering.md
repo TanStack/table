@@ -5,7 +5,7 @@ title: Column_ColumnFiltering
 
 # Interface: Column\_ColumnFiltering\<TFeatures, TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L189)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L194)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:189](http
 getAutoFilterFn: () => FilterFn<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:196](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L196)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L201)
 
 Returns an automatically calculated filter function for the column based off of the columns first known value.
 
@@ -41,7 +41,7 @@ Returns an automatically calculated filter function for the column based off of 
 getCanFilter: () => boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L200)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:205](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L205)
 
 Checks whether this accessor column can currently be column-filtered.
 
@@ -57,7 +57,7 @@ Checks whether this accessor column can currently be column-filtered.
 getFilterFn: () => FilterFn<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:204](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L204)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:209](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L209)
 
 Returns the filter function (either user-defined or automatic, depending on configuration) for the columnId specified.
 
@@ -73,7 +73,7 @@ Returns the filter function (either user-defined or automatic, depending on conf
 getFilterIndex: () => number;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L208)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L213)
 
 Returns the index (including `-1`) of the column filter in the table's `state.columnFilters` array.
 
@@ -89,7 +89,7 @@ Returns the index (including `-1`) of the column filter in the table's `state.co
 getFilterValue: () => unknown;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:212](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L212)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:217](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L217)
 
 Reads this column's current value from `state.columnFilters`.
 
@@ -105,7 +105,7 @@ Reads this column's current value from `state.columnFilters`.
 getIsFiltered: () => boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:216](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L216)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L221)
 
 Checks whether this column has an active entry in `state.columnFilters`.
 
@@ -121,7 +121,7 @@ Checks whether this column has an active entry in `state.columnFilters`.
 setFilterValue: (updater) => void;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L223)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:228](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L228)
 
 Adds, updates, or removes this column's filter value.
 

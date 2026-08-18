@@ -1,0 +1,197 @@
+<div class="demo-root">
+  <div class="controls">
+    <button class="demo-button" (click)="refreshData()">Regenerate Data</button>
+    <label>
+      <input type="checkbox" [checked]="spanningEnabled()" (change)="setSpanningEnabled($event)" />
+      Row spanning
+    </label>
+    @for (columnId of toggleableColumnIds; track columnId) {
+      <label>
+        <input
+          type="checkbox"
+          [checked]="table.getColumn(columnId)!.getIsVisible()"
+          (change)="table.getColumn(columnId)!.getToggleVisibilityHandler()($event)"
+        />
+        {{ columnHeader(columnId) }}
+      </label>
+    }
+    <select data-testid="status-filter" (change)="setStatusFilter($event)">
+      <option value="" [selected]="statusFilter() === ''">All statuses</option>
+      <option value="Approved" [selected]="statusFilter() === 'Approved'">Approved</option>
+      <option value="Pending" [selected]="statusFilter() === 'Pending'">Pending</option>
+      <option value="Rejected" [selected]="statusFilter() === 'Rejected'">Rejected</option>
+    </select>
+    <input
+      data-testid="employee-filter"
+      class="filter-input"
+      placeholder="Filter employees..."
+      [value]="employeeFilter()"
+      (input)="setEmployeeFilter($event)"
+    />
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="controls">
+    <button
+      class="demo-button-sm"
+      (click)="table.previousPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;
+    </button>
+    <button class="demo-button-sm" (click)="table.nextPage()" [disabled]="!table.getCanNextPage()">
+      &gt;
+    </button>
+    <span> Page {{ pagination().pageIndex + 1 }} of {{ table.getPageCount() }} </span>
+    <select data-testid="page-size" (change)="setPageSize($event)">
+      @for (pageSize of pageSizes; track pageSize) {
+        <option [value]="pageSize" [selected]="pageSize === pagination().pageSize">
+          Show {{ pageSize }}
+        </option>
+      }
+    </select>
+    <span>
+      Visible columns:
+      <span data-testid="visible-leaf-count">{{ table.getVisibleLeafColumns().length }}</span>
+    </span>
+    <span>
+      Selected cells:
+      <span data-testid="selected-count">{{ table.getSelectedCellCount() }}</span>
+    </span>
+  </div>
+  <div class="spacer-md"></div>
+  <!-- The panels wrap into a grid whenever the viewport is wide enough. -->
+  <div class="example-grid">
+    <section class="example-panel">
+      <h2 class="section-title">Row Spanning</h2>
+      <table data-testid="span-table" [tanStackTable]="table">
+        <thead>
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th [attr.colspan]="header.colSpan">
+                  <button
+                    type="button"
+                    class="sortable-header header-sort-button"
+                    (click)="header.column.getToggleSortingHandler()?.($event)"
+                  >
+                    <ng-container *flexRenderHeader="header; let headerCell">{{
+                      headerCell
+                    }}</ng-container
+                    >{{ sortIndicator(header.column.getIsSorted()) }}
+                  </button>
+                </th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (row of table.getRowModel().rows; track row.id) {
+            <tr>
+              @for (cell of row.getVisibleCells(); track cell.id) {
+                <!--
+                  A span of 0 means this cell is covered by a cell above or to
+                  its left. Skip it. Do NOT render `rowspan="0"`: in HTML that
+                  means "span to the end of the row group", so forgetting this
+                  check merges the cell down the whole tbody instead of
+                  rendering nothing.
+                -->
+                @if (cell.getRowSpan() !== 0 && cell.getColSpan() !== 0) {
+                  <td
+                    [attr.rowspan]="cell.getRowSpan()"
+                    [attr.colspan]="cell.getColSpan()"
+                    [class]="getCellClassName(cell)"
+                    (mousedown)="cell.getSelectionStartHandler()($event)"
+                    (mouseenter)="cell.getSelectionExtendHandler()($event)"
+                  >
+                    <ng-container *flexRenderCell="cell; let renderCell">{{
+                      renderCell
+                    }}</ng-container>
+                  </td>
+                }
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="example-panel">
+      <h2 class="section-title">Reference (no spanning)</h2>
+      <!--
+        The same table instance rendered flat. Under every sort, filter, and
+        page combination the merged panel must describe exactly this grid.
+      -->
+      <table data-testid="reference-table">
+        <thead>
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th [attr.colspan]="header.colSpan">
+                  <button
+                    type="button"
+                    class="sortable-header header-sort-button"
+                    (click)="header.column.getToggleSortingHandler()?.($event)"
+                  >
+                    <ng-container *flexRenderHeader="header; let headerCell">{{
+                      headerCell
+                    }}</ng-container
+                    >{{ sortIndicator(header.column.getIsSorted()) }}
+                  </button>
+                </th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (row of table.getRowModel().rows; track row.id) {
+            <tr>
+              @for (cell of row.getVisibleCells(); track cell.id) {
+                <td>
+                  <ng-container *flexRenderCell="cell; let renderCell">{{
+                    renderCell
+                  }}</ng-container>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <section class="example-panel">
+      <h2 class="section-title">Summary Rows (colSpan)</h2>
+      <table data-testid="summary-table" [tanStackTable]="summaryTable">
+        <thead>
+          @for (headerGroup of summaryTable.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th [attr.colspan]="header.colSpan">
+                  <ng-container *flexRenderHeader="header; let headerCell">{{
+                    headerCell
+                  }}</ng-container>
+                </th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (row of summaryTable.getRowModel().rows; track row.id) {
+            <tr [class.subtotal-row]="row.original.kind === 'subtotal'">
+              @for (cell of row.getVisibleCells(); track cell.id) {
+                @if (cell.getRowSpan() !== 0 && cell.getColSpan() !== 0) {
+                  <td [attr.rowspan]="cell.getRowSpan()" [attr.colspan]="cell.getColSpan()">
+                    <ng-container *flexRenderCell="cell; let renderCell">{{
+                      renderCell
+                    }}</ng-container>
+                  </td>
+                }
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  </div>
+  <div class="spacer-md"></div>
+  <pre data-testid="table-state">{{ stringifiedState() }}</pre>
+</div>

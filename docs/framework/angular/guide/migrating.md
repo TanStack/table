@@ -53,6 +53,7 @@ TanStack Table V9 is a major release with significant internal architectural imp
 ### 6. New and Refreshed Features
 
 - **New features**: `cellSelectionFeature` adds spreadsheet-style rectangular cell range selection, with drag, Shift-extend, and multiple disjoint ranges. See the [Cell Selection Guide](./cell-selection.md).
+- **Cell and header spanning**: the new `cellSpanningFeature` merges body cells across rows and columns (`spanRows` / `spanColumns`, with span-aware cell selection), and header groups now compute `header.rowSpan` so shallow columns can span header rows. See the [Cell Spanning Guide](./cell-spanning.md).
 - **More capable features**: Aggregation, Row Selection, Column Pinning, and Column Resizing have all been made more feature rich (multiple aggregation definitions per column, Shift range selection, logical `start`/`end` pinning, and more).
 - **New core APIs**: New table and row APIs (like `table.getMaxSubRowDepth()`, `row.getDisplayIndex()`) round out the core feature set.
 
@@ -725,7 +726,7 @@ When a component is rendered through the FlexRender directives, you can also acc
 
 If you need to render an Angular component with explicit configuration (custom `inputs`, `outputs`, `injector`, and Angular v20+ creation-time `bindings`/`directives`), return a `flexRenderComponent(Component, options)` wrapper from your column definition.
 
-For complete rendering details (including component rendering, `TemplateRef`, `flexRenderComponent`, and context helpers), see the [Rendering components Guide](./rendering.md).
+For complete rendering details (including component rendering, `TemplateRef`, `flexRenderComponent`, and context helpers), see the [FlexRender Guide](./flex-render).
 
 ---
 

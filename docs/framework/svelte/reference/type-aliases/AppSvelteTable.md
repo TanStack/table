@@ -9,7 +9,7 @@ title: AppSvelteTable
 type AppSvelteTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = SvelteTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:290](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L290)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:289](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L289)
 
 Svelte-aware table returned by `createAppTable`, extended with the registered
 table components and the `App*` context wrappers.

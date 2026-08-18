@@ -5,7 +5,7 @@ title: AppCellProps
 
 # Interface: AppCellProps\<TFeatures, TData, TValue, TCellComponents\>
 
-Defined in: [createTableHook.tsx:280](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L280)
+Defined in: [createTableHook.tsx:279](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L279)
 
 Props for AppCell component.
 
@@ -35,7 +35,7 @@ Props for AppCell component.
 cell: Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:286](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L286)
+Defined in: [createTableHook.tsx:285](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L285)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [createTableHook.tsx:286](https://github.com/TanStack/table/blob/mai
 children: (cell) => Element;
 ```
 
-Defined in: [createTableHook.tsx:287](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L287)
+Defined in: [createTableHook.tsx:286](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L286)
 
 #### Parameters
 

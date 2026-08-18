@@ -9,7 +9,7 @@ title: AppColumnDefBase
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [types.ts:386](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L386)
+Defined in: [types.ts:382](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L382)
 
 Enhanced column definition base with pre-bound components in
 cell/header/footer contexts.
