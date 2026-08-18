@@ -297,7 +297,7 @@ columnHelper.accessor('firstName', {
 })
 ```
 
-Cell formatters are also provided the `row` and `table` objects, allowing you to customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
+Cell formatters are also provided the `row` and `table` objects, so you can customize the cell formatting beyond just the cell value. The example below provides `firstName` as the accessor, but also displays a prefixed user ID located on the original row object:
 
 ```tsx
 columnHelper.accessor('firstName', {

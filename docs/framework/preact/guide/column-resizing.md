@@ -35,7 +35,7 @@ const table = useTable({
 
 ## Column Resizing (Preact) Guide
 
-TanStack Table provides built-in column resizing state and APIs that allow you to easily implement column resizing in your table UI with a variety of options for UX and performance.
+TanStack Table provides built-in column resizing state and APIs for implementing column resizing in your table UI with a variety of options for UX and performance.
 
 Column resizing builds on column sizing. If you only need to define starting, minimum, or maximum widths, see the [Column Sizing Guide](./column-sizing).
 
@@ -76,7 +76,7 @@ const table = useTable({
 
 By default, the column resize mode is set to `"onEnd"`. This means that the `column.getSize()` API will not return the new column size until the user has finished resizing (dragging) the column. Usually a small UI indicator will be displayed while the user is resizing the column.
 
-In the Preact TanStack Table adapter, where achieving 60 fps column resizing renders can be difficult depending on the complexity of your table or web page, the `"onEnd"` column resize mode can be a good default option to avoid stuttering or lagging while the user resizes columns. That is not to say that you cannot achieve 60 fps column resizing renders while using TanStack Preact Table, but you may have to do some extra memoization or other performance optimizations in order to achieve this.
+In the Preact TanStack Table adapter, where achieving 60 fps column resizing renders can be difficult depending on the complexity of your table or web page, the `"onEnd"` column resize mode can be a good default option to avoid stuttering or lagging while the user resizes columns. That is not to say that you cannot achieve 60 fps column resizing renders while using TanStack Preact Table, but you may have to do some extra memoization or other performance optimizations to achieve this.
 
 > Advanced column resizing performance tips will be discussed [down below](#advanced-column-resizing-performance).
 

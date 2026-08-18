@@ -56,7 +56,7 @@ type User = {
 We can then define our `data` array with this type, and then TanStack Table will be able to intelligently infer lots of types for us later on in our columns, rows, cells, etc. This is because the `data` type is literally defined as the `TData` generic type. Whatever you pass to the `data` table option will become the `TData` type for the rest of the table instance. Just make sure your column definitions use the same `TData` type as the `data` type when you define them later.
 
 ```ts
-//note: data needs a "stable" reference in order to prevent wasteful re-computation (more on this below)
+//note: data needs a "stable" reference to prevent wasteful re-computation (more on this below)
 const data: Array<User> = []
 //or
 const [data, setData] = React.useState<Array<User>>([])
@@ -192,7 +192,7 @@ You give up per-column value inference, but everything else still works. Column 
 
 ## Give Data a "Stable" Reference
 
-The `data` and `columns` arrays that you pass to the table instance should have "stable" references in order to prevent wasteful re-computation and rendering bugs.
+The `data` and `columns` arrays that you pass to the table instance should have "stable" references to prevent wasteful re-computation and rendering bugs.
 
 In v9, table state lives in TanStack Store atoms, and the table instance is only created once. Passing a new `data` or `columns` reference on every render will not, by itself, throw the table into the classic v8-style infinite re-render loop. However, the row models and column structures are memoized against the `data` and `columns` references, so an unstable reference still has real consequences:
 

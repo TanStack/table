@@ -11,7 +11,7 @@ Want to skip to the implementation? Check out these Angular examples:
 
 ### Global Filtering Setup
 
-Here's how you set up your table to use global filtering features. Global filtering depends on column filtering, so add `columnFilteringFeature` before `globalFilteringFeature`. Adding the global filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
+Here's how you set up your table to use global filtering features. Global filtering depends on column filtering, so add `columnFilteringFeature` before `globalFilteringFeature`. Adding the global filtering feature enables the related APIs. If you use client-side filtering, also set up `filteredRowModel` after its feature, since row model slots are type-checked.
 
 ```ts
 import { signal } from '@angular/core'
@@ -115,7 +115,7 @@ readonly table = injectTable(() => ({
 
 ### Global Filter Function
 
-The `globalFilterFn` option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a filter function (built-in or custom) registered in the `filterFns` slot of `tableFeatures`, or a filter function passed directly.
+The `globalFilterFn` option sets the filter function used for global filtering. The filter function can be a string that references a filter function (built-in or custom) registered in the `filterFns` slot of `tableFeatures`, or a filter function passed directly.
 
 ```ts
 readonly table = injectTable(() => ({

@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these Preact examples:
 
 ### Pagination Setup
 
-Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. Additionally, if using client-side pagination, you also need to set up `paginatedRowModel` after its associated feature because row model slots are type-checked.
+Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. If you use client-side pagination, also set up `paginatedRowModel` after its feature, since row model slots are type-checked.
 
 ```tsx
 import {
@@ -288,7 +288,7 @@ Besides the `manualPagination`, `pageCount`, and `rowCount` options which are us
 By default, `pageIndex` is reset to `0` whenever the client-side row models recompute, such as when the `data` is updated, filters change, sorting changes, or grouping changes. This behavior is automatically disabled when `manualPagination` is `true`, but it can be overridden by explicitly assigning a boolean value to the `autoResetPageIndex` table option. There is also a global `autoResetAll` table option that disables (or enables) every auto-reset behavior at once.
 
 > [!NOTE]
-> Automatic resets run only when an included client-side row model that triggers them recomputes. If a manual server-side table omits the filtered, sorted, grouped, or other relevant row model, changing that controlled state does not trigger a page-index reset—even when `autoResetPageIndex` or `autoResetAll` is `true`. Reset `pageIndex` yourself in the corresponding change handler.
+> Automatic resets run only when an included client-side row model that triggers them recomputes. If a manual server-side table omits the filtered, sorted, grouped, or other relevant row model, changing that controlled state does not trigger a page-index reset, even when `autoResetPageIndex` or `autoResetAll` is `true`. Reset `pageIndex` yourself in the corresponding change handler.
 
 ```tsx
 const table = useTable({

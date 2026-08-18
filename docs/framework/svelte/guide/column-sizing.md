@@ -34,7 +34,7 @@ const table = createTable({
 
 ## Column Sizing (Svelte) Guide
 
-The column sizing feature allows you to optionally specify the width of each column including min and max widths.
+The column sizing feature lets you optionally set the width of each column including min and max widths.
 
 If you want users to dynamically change column widths by dragging column headers, see the [Column Resizing Guide](./column-resizing).
 

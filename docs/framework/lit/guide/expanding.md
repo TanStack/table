@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these Lit examples:
 
 ### Expanding Setup
 
-Here's how you set up your table to use expanding features. Adding the expanding feature enables the related APIs. Additionally, if using client-side expanding, you also need to set up `expandedRowModel` after its associated feature because row model slots are type-checked.
+Here's how you set up your table to use expanding features. Adding the expanding feature enables the related APIs. If you use client-side expanding, also set up `expandedRowModel` after its feature, since row model slots are type-checked.
 
 ```ts
 import { LitElement, html } from 'lit'
@@ -85,7 +85,7 @@ Expanded data can either contain table rows or any other data you want to displa
 
 ### Table rows as expanded data
 
-Expanded rows are essentially child rows that inherit the same column structure as their parent rows. If your data object already includes expanded row data, you can utilize the `getSubRows` function to specify these child rows. However, if your data object does not contain expanded row data, it can be treated as custom expanded data, which is discussed in the next section.
+Expanded rows are child rows that inherit the same column structure as their parent rows. If your data object already includes expanded row data, use the `getSubRows` function to specify these child rows. If your data object does not contain expanded row data, it can be treated as custom expanded data, which is discussed in the next section.
 
 For example, if you have a data object like this:
 
@@ -276,7 +276,7 @@ Use `table.setExpanded` to update the expanded state directly. `table.resetExpan
 
 ### Filtering Expanded Rows
 
-By default, the filtering process starts from the parent rows and moves downwards. This means if a parent row is excluded by the filter, all its child rows will also be excluded. However, you can change this behavior by using the `filterFromLeafRows` option. When this option is enabled, the filtering process starts from the leaf (child) rows and moves upwards. This ensures that a parent row will be included in the filtered results as long as at least one of its child or grandchild rows meets the filter criteria. Additionally, you can control how deep into the child hierarchy the filter process goes by using the `maxLeafRowFilterDepth` option. This option allows you to specify the maximum depth of child rows that the filter should consider.
+By default, filtering starts from the parent rows and moves downwards. If a parent row is excluded by the filter, all of its child rows are excluded too. You can change this with the `filterFromLeafRows` option. When it is enabled, filtering starts from the leaf (child) rows and moves upwards, so a parent row is included in the filtered results as long as at least one of its child or grandchild rows meets the filter criteria. The `maxLeafRowFilterDepth` option sets the maximum depth of child rows that the filter considers.
 
 ```ts
 const features = tableFeatures({

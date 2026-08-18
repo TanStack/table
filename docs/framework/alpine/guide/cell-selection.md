@@ -85,7 +85,7 @@ type CellSelectionState = Array<CellSelectionRange>
 
 The `anchor` corner is where the selection started and stays put. The `focus` corner is the one that moves while dragging or Shift-extending. Storing both corners, rather than a normalized min/max rectangle, is what makes Shift-extend and "collapse back to the active cell" possible.
 
-Ranges are applied in order. An omitted `operation` is an inclusion for backward compatibility; an `exclude` range subtracts its rectangle from the selection produced so far. This compact operation log means a “select all except these cells” interaction does not build a map with one entry per selected cell.
+Ranges are applied in order. An omitted `operation` is an inclusion for backward compatibility; an `exclude` range subtracts its rectangle from the selection produced so far. This compact operation log means a "select all except these cells" interaction does not build a map with one entry per selected cell.
 
 ### Manage Cell Selection State
 

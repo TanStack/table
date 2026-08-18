@@ -90,7 +90,7 @@ A few things to note:
 
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
 - The core row model is always included. Feature row models (sorting, filtering, pagination) are registered directly on the features object when you need them.
-- Passing the `data` ref directly keeps the table reactive: reassign `data.value` and the table updates.
+- Passing the `data` ref directly keeps the table reactive. Reassign `data.value` and the table updates.
 - `FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values, render functions using `h`, or Vue components.
 - The `key` option is optional unless you use the [TanStack Table Devtools](../../devtools). The devtools identify tables by `key`, and you register a table by calling `useTanStackTableDevtools(table)` from `@tanstack/vue-table-devtools`.
 
@@ -158,7 +158,7 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 
 ## Where to Go Next
 
-**Table state.** In v9, table state is backed by TanStack Store atoms, and the Vue adapter wires them into Vue reactivity for you. You usually do not need to manage state yourself: set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state.md). It is the foundational guide for everything else.
+**Table state.** In v9, table state is backed by TanStack Store atoms, and the Vue adapter wires them into Vue reactivity for you. You usually do not need to manage state yourself. Set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state.md). It is the foundational guide for everything else.
 
 **Feature guides.** Each feature has its own guide, such as [Column Filtering](./guide/column-filtering.md), [Pagination](./guide/pagination.md), [Row Selection](./guide/row-selection.md), and [Column Visibility](./guide/column-visibility.md).
 
