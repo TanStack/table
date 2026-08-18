@@ -155,12 +155,10 @@ function useTradingTableLayout(table: TradingTableInstance) {
     }
 
     writeColumnSizes()
-    const sizingSubscription = tableRuntime.current.atoms.columnSizing.subscribe(
-      writeColumnSizes,
-    )
-    const orderSubscription = tableRuntime.current.atoms.columnOrder.subscribe(
-      writeColumnSizes,
-    )
+    const sizingSubscription =
+      tableRuntime.current.atoms.columnSizing.subscribe(writeColumnSizes)
+    const orderSubscription =
+      tableRuntime.current.atoms.columnOrder.subscribe(writeColumnSizes)
     const fitAvailableWidth = () => {
       const currentTable = tableRuntime.current
       const scrollElement = scrollRef.current
