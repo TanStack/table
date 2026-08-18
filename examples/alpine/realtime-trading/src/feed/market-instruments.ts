@@ -1,3 +1,27 @@
+export type MarketCode =
+  | 'US'
+  | 'NL'
+  | 'DE'
+  | 'FR'
+  | 'IT'
+  | 'ES'
+  | 'CH'
+  | 'DK'
+  | 'SE'
+  | 'FI'
+  | 'GB'
+  | 'KR'
+  | 'JP'
+  | 'HK'
+  | 'CA'
+  | 'AU'
+
+export type BaseInstrument = readonly [
+  symbol: string,
+  company: string,
+  market: MarketCode,
+]
+
 /**
  * Current S&P 500 constituent universe used by the realtime trading examples.
  *
@@ -5,7 +29,7 @@
  * Retrieved: 2026-08-15.
  * Multiple share classes are intentionally represented as separate instruments.
  */
-export const sp500Instruments = Object.freeze([
+export const marketInstruments = Object.freeze([
   ['MMM', '3M', 'US'],
   ['AOS', 'A. O. Smith', 'US'],
   ['ABT', 'Abbott Laboratories', 'US'],
@@ -705,7 +729,7 @@ const INTERNATIONAL_INSERTION_INTERVAL = 3
  * sizes exercise multiple symbol formats and market labels.
  */
 export const globalInstruments = Object.freeze(
-  sp500Instruments.flatMap((instrument, index) => {
+  marketInstruments.flatMap((instrument, index) => {
     const internationalInstrument =
       index % INTERNATIONAL_INSERTION_INTERVAL === 0
         ? internationalInstruments[index / INTERNATIONAL_INSERTION_INTERVAL]
@@ -715,4 +739,4 @@ export const globalInstruments = Object.freeze(
       ? [instrument, internationalInstrument]
       : [instrument]
   }),
-)
+) as unknown as ReadonlyArray<BaseInstrument>

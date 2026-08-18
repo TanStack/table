@@ -1,4 +1,4 @@
-import { globalInstruments } from '../sp500-instruments'
+import { globalInstruments } from '../market-instruments'
 import type {
   MarketQuoteSnapshot,
   MarketQuoteUpdate,
