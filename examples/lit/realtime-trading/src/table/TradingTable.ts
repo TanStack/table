@@ -275,18 +275,18 @@ export class TradingTable extends ControllerElement {
               (group) =>
                 html`<tr>
                   ${repeat(
-                group.headers,
-                (header) => header.id,
-                (header) => {
-                  const leaf = header.subHeaders.length === 0
-                  const sorted = header.column.getIsSorted()
-                  return html`<th
-                    colspan=${header.colSpan}
-                    style="width:calc(var(--header-${header.id}-size) * 1px)"
-                    aria-sort=${leaf ? sortAriaValue(sorted) : undefined}
-                    class="${!leaf ? 'column-group-header' : ''} ${leaf && !['market', 'name', 'symbol'].includes(header.column.id) ? 'numeric-header' : ''}"
-                  >
-                    ${
+                    group.headers,
+                    (header) => header.id,
+                    (header) => {
+                      const leaf = header.subHeaders.length === 0
+                      const sorted = header.column.getIsSorted()
+                      return html`<th
+                        colspan=${header.colSpan}
+                        style="width:calc(var(--header-${header.id}-size) * 1px)"
+                        aria-sort=${leaf ? sortAriaValue(sorted) : undefined}
+                        class="${!leaf ? 'column-group-header' : ''} ${leaf && !['market', 'name', 'symbol'].includes(header.column.id) ? 'numeric-header' : ''}"
+                      >
+                        ${
                       !header.isPlaceholder
                         ? leaf
                           ? html`<div
@@ -357,9 +357,9 @@ export class TradingTable extends ControllerElement {
                           : FlexRender({ header })
                         : null
                     }
-                  </th>`
-                },
-              )}
+                      </th>`
+                    },
+                  )}
                 </tr>`,
             )}
           </thead>
