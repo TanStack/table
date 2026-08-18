@@ -8,7 +8,8 @@ Want to skip to the implementation? Check out these Preact examples:
 
 - [Grouping](../examples/grouping)
 
-> **Note:** `columnGroupingFeature` and `rowAggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
+> [!NOTE]
+> `columnGroupingFeature` and `rowAggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
 
 ### Grouping Setup
 
@@ -131,7 +132,8 @@ const table = useTable({
 })
 ```
 
-> **Note:** There are not currently many known easy ways to do server-side grouping with TanStack Table. You will need to do lots of custom cell rendering to make this work.
+> [!NOTE]
+> There are not currently many known easy ways to do server-side grouping with TanStack Table. You will need to do lots of custom cell rendering to make this work.
 
 ### Controlled Grouping State
 

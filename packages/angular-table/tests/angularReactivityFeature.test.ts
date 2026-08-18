@@ -28,7 +28,7 @@ describe('angularReactivityFeature', () => {
     return TestBed.runInInjectionContext(() =>
       injectTable(() => ({
         data: _data(),
-        features: { ...stockFeatures },
+        features: stockFeatures,
         columns: columns,
         getRowId: (row) => row.id,
       })),

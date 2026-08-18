@@ -112,7 +112,8 @@ const table = useTable({
 })
 ```
 
-> **Note:** You can have a complicated `getSubRows` function, but keep in mind that it will run for every row and every sub-row. This can be expensive if the function is not optimized. Async functions are not supported.
+> [!NOTE]
+> You can have a complicated `getSubRows` function, but keep in mind that it will run for every row and every sub-row. This can be expensive if the function is not optimized. Async functions are not supported.
 
 ### Custom Expanding UI
 

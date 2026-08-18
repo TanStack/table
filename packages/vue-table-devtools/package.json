@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/vue-table-devtools",
-  "version": "9.1.2",
+  "version": "9.2.0",
   "description": "Vue devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@tanstack/table-core": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.8",
-    "vue": "^3.5.40"
+    "vue": "^3.5.41"
   },
   "peerDependencies": {
     "@tanstack/table-core": "^9.0.0",

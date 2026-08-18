@@ -110,7 +110,8 @@ const table = createTable({
 })
 ```
 
-> **Note**: Setting the `manualPagination` option to `true` will make the table instance assume that the `data` that you pass in is already paginated.
+> [!NOTE]
+> Setting the `manualPagination` option to `true` will make the table instance assume that the `data` that you pass in is already paginated.
 
 #### Using TanStack Query
 
@@ -300,7 +301,8 @@ const table = createTable({
 })
 ```
 
-> **Note**: Do NOT provide the `pagination` slice in more than one of the `atoms`, `state`, and `initialState` options. Controlled values (`atoms` or `state`) will overwrite `initialState`. Only use one of them.
+> [!NOTE]
+> Do NOT provide the `pagination` slice in more than one of the `atoms`, `state`, and `initialState` options. Controlled values (`atoms` or `state`) will overwrite `initialState`. Only use one of them.
 
 ### Pagination Options
 
@@ -348,7 +350,8 @@ There are several pagination table instance APIs that are useful for hooking up 
 - `setPagination`: Useful for setting all of the pagination state at once.
 - `resetPagination`: Useful for resetting the table state to the original pagination state.
 
-> **Note**: These pagination APIs are available when using `rowPaginationFeature`.
+> [!NOTE]
+> These pagination APIs are available when using `rowPaginationFeature`.
 
 ```svelte
 <button onclick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>{'<<'}</button>

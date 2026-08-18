@@ -112,7 +112,8 @@ const table = useTable({
 })
 ```
 
-> Note: a drag emits one change per cell boundary the pointer crosses, so `onCellSelectionChange` fires repeatedly during a drag. If you are syncing selection to a server or a URL, debounce it or commit on `mouseup`.
+> [!NOTE]
+> a drag emits one change per cell boundary the pointer crosses, so `onCellSelectionChange` fires repeatedly during a drag. If you are syncing selection to a server or a URL, debounce it or commit on `mouseup`.
 
 ### Useful Row Ids
 
@@ -225,7 +226,8 @@ function getCellClassName(cell) {
 }
 ```
 
-> Tip: draw the outline with `box-shadow: inset ...` rather than `border`. On a `border-collapse` table a thicker border widens the shared grid line, which makes rows change height as cells become selected. A box-shadow never affects layout.
+> [!TIP]
+> draw the outline with `box-shadow: inset ...` rather than `border`. On a `border-collapse` table a thicker border widens the shared grid line, which makes rows change height as cells become selected. A box-shadow never affects layout.
 
 ### Keyboard Navigation
 

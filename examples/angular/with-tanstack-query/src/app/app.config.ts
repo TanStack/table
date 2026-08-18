@@ -1,5 +1,6 @@
 import { isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core'
 import { provideTanStackDevtools } from '@tanstack/angular-devtools/provider'
+import { TableDevtoolsPanel } from '@tanstack/angular-table-devtools'
 import {
   QueryClient,
   provideTanStackQuery,
@@ -19,10 +20,7 @@ export const appConfig: ApplicationConfig = {
           plugins: [
             {
               name: 'TanStack Table',
-              render: () =>
-                import('@tanstack/angular-table-devtools').then((m) =>
-                  m.TableDevtoolsPanel(),
-                ),
+              render: TableDevtoolsPanel,
             },
             {
               name: 'TanStack Query',

@@ -12,17 +12,17 @@
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
-    "@tanstack/vue-devtools": "^0.2.23",
+    "@tanstack/vue-devtools": "^0.2.24",
     "@tanstack/vue-table": "^9.1.2",
-    "@tanstack/vue-table-devtools": "^9.1.2",
-    "vue": "^3.5.40"
+    "@tanstack/vue-table-devtools": "^9.2.0",
+    "vue": "^3.5.41"
   },
   "devDependencies": {
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
     "typescript": "6.0.3",
-    "vite": "^8.2.0",
-    "vue-tsc": "^3.3.5"
+    "vite": "^8.2.1",
+    "vue-tsc": "^3.3.9"
   }
 }

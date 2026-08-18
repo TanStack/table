@@ -13,23 +13,27 @@ import { flushQueue, setFixtureSignalInputs } from './test-utils'
 import type { WritableSignal } from '@angular/core'
 
 describe('lazyInit', () => {
-  test('should init lazily in next tick when not accessing manually', async () => {
+  test('should init lazily in next tick when not accessing manually', () => {
     const mockFn = vi.fn()
 
     TestBed.runInInjectionContext(() => {
-      lazyInit(() => {
+      const proxy = lazyInit(() => {
         mockFn()
         return {
           data: signal(true),
         }
       })
+
+      expect(mockFn).not.toHaveBeenCalled()
+      expect(proxy.initialized).toEqual(false)
+      expect(proxy.rawValue).toBeNullable()
+
+      TestBed.tick()
+
+      expect(proxy.initialized).toEqual(true)
+      expect(proxy.rawValue).not.toBeNullable()
+      expect(mockFn).toHaveBeenCalled()
     })
-
-    expect(mockFn).not.toHaveBeenCalled()
-
-    await new Promise(setImmediate)
-
-    expect(mockFn).toHaveBeenCalled()
   })
 
   test('should init eagerly accessing manually', () => {
@@ -43,7 +47,7 @@ describe('lazyInit', () => {
         }
       })
 
-      lazySignal.data()
+      lazySignal.value.data()
     })
 
     expect(mockFn).toHaveBeenCalled()
@@ -63,14 +67,14 @@ describe('lazyInit', () => {
         void outerSignal()
 
         return { data: signal(0) }
-      })
+      }).value
 
       effect(() => registerDataValue(value.data()))
     })
 
     value.data()
 
-    TestBed.flushEffects()
+    TestBed.tick()
 
     expect(outerSignal).toBeDefined()
 
@@ -102,13 +106,12 @@ describe('lazyInit', () => {
         return {
           data: computed(() => this.title()),
         }
-      })
+      }).value
     }
 
     const fixture = TestBed.createComponent(Test)
-
     setFixtureSignalInputs(fixture, { title: 'newValue' })
-    expect(fixture.debugElement.nativeElement.textContent).toBe('0 - newValue')
+    expect(fixture.debugElement.nativeElement.textContent).toBe('1 - newValue')
     await flushQueue()
 
     setFixtureSignalInputs(fixture, { title: 'updatedValue' })

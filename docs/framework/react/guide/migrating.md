@@ -14,7 +14,7 @@ TanStack Table V9 delivers major performance improvements, hundreds of bug fixes
 
 ### 2. State Management Overhaul (Backward Compatible)
 
-- **React Compiler compatibility**: The state system is built on [TanStack Store](https://tanstack.com/store), giving the table a reactive foundation that works correctly under the React Compiler.
+- **React Compiler compatibility**: The state system is built on [TanStack Store](https://tanstack.com/store), giving the table a reactive foundation that works correctly under the React Compiler. See the [React Compiler Guide](./react-compiler).
 - **Fine-grained subscriptions**: State slices can be read independently through `table.atoms`, `table.store`, `table.state`, selectors, or `table.Subscribe`.
 - **External state or atoms**: You can still use `state` plus `on[State]Change`, or own individual slices with writable atoms via the new `atoms` option.
 

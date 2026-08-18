@@ -159,6 +159,7 @@
           "label": "react",
           "children": [
             { "label": "Table State", "to": "framework/react/guide/table-state" },
+            { "label": "React Compiler", "to": "framework/react/guide/react-compiler" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/react/guide/composable-tables" },
             { "label": "Table Context", "to": "framework/react/guide/table-context" },
             { "label": "FlexRender", "to": "framework/react/guide/flex-render" },

@@ -30,7 +30,8 @@ const table = useTable({
 
 ## Cell Selection (React) Guide
 
-> Note: When the optional [cell spanning](./cell-spanning) feature is registered, selection rectangles expand to fully enclose any merged cell they touch, so a merge is always entirely selected or entirely unselected.
+> [!NOTE]
+> When the optional [cell spanning](./cell-spanning) feature is registered, selection rectangles expand to fully enclose any merged cell they touch, so a merge is always entirely selected or entirely unselected.
 
 The cell selection feature keeps track of spreadsheet-style rectangular selections. A user can click a cell, drag across a block of cells, Shift-click to extend, and Ctrl/Cmd-drag to add or subtract a rectangle based on whether the starting cell is selected. Let's take a look at some common use cases.
 
@@ -114,7 +115,8 @@ const table = useTable({
 })
 ```
 
-> Note: a drag emits one change per cell boundary the pointer crosses, so `onCellSelectionChange` fires repeatedly during a drag. If you are syncing selection to a server or a URL, debounce it or commit on `mouseup`.
+> [!NOTE]
+> a drag emits one change per cell boundary the pointer crosses, so `onCellSelectionChange` fires repeatedly during a drag. If you are syncing selection to a server or a URL, debounce it or commit on `mouseup`.
 
 ### Useful Row Ids
 
@@ -230,7 +232,8 @@ function getCellClassName(cell) {
 }
 ```
 
-> Tip: draw the outline with `box-shadow: inset ...` rather than `border`. On a `border-collapse` table a thicker border widens the shared grid line, which makes rows change height as cells become selected. A box-shadow never affects layout.
+> [!TIP]
+> draw the outline with `box-shadow: inset ...` rather than `border`. On a `border-collapse` table a thicker border widens the shared grid line, which makes rows change height as cells become selected. A box-shadow never affects layout.
 
 ### Keyboard Navigation
 
@@ -423,6 +426,6 @@ Two things worth knowing about this pattern:
 
 **Leave column layout out of the selector.** Pinning, reordering, and hiding columns change what a row renders, but those slices are usually part of your `useTable` selector already, so the parent re-renders and recreates these rows anyway. Adding them to the selection selector is redundant.
 
-**Prefer this over `React.memo`.** A memoized row component reads its cell classes through getters like `cell.getIsSelected()`, which hide their state dependency from the React Compiler. With the stable `row` object as its only visible input, the compiler can cache the row's cells and the highlight will never move, even though `React.memo` re-rendered correctly. `table.Subscribe` avoids the problem entirely because `useSelector` is a dependency the compiler recognizes. See [Subscribe for React Compiler Compatibility](./table-state#subscribe-for-react-compiler-compatibility) for more on this.
+**Prefer this over `React.memo`.** A memoized row component reads its cell classes through getters like `cell.getIsSelected()`, which hide their state dependency from the React Compiler. With the stable `row` object as its only visible input, the compiler can cache the row's cells and the highlight will never move, even though `React.memo` re-rendered correctly. `table.Subscribe` avoids the problem entirely because `useSelector` is a dependency the compiler recognizes. See [Use Subscribe in Nested Components](./react-compiler#use-subscribe-in-nested-components) for more on this.
 
 If your table is large enough that this is not sufficient, reach for [virtualization](./virtualization) so that only visible rows exist in the DOM at all.

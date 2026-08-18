@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   FlexRender,
+  Subscribe,
   columnResizingFeature,
   columnSizingFeature,
   createColumnHelper,
@@ -159,6 +160,8 @@ function TableContainer({ table }: TableContainerProps) {
     columnVirtualizer.measure()
   }, [columnVirtualizer, columnSizing])
 
+  const virtualColumnIndexes = columnVirtualizer.getVirtualIndexes()
+
   return (
     <div
       className="container"
@@ -171,11 +174,16 @@ function TableContainer({ table }: TableContainerProps) {
     >
       {/* Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights */}
       <table style={{ display: 'grid' }}>
-        <TableHead table={table} columnVirtualizer={columnVirtualizer} />
+        <TableHead
+          table={table}
+          columnVirtualizer={columnVirtualizer}
+          virtualColumnIndexes={virtualColumnIndexes}
+        />
         <TableBody
           columnVirtualizer={columnVirtualizer}
           table={table}
           tableContainerRef={tableContainerRef}
+          virtualColumnIndexes={virtualColumnIndexes}
         />
       </table>
     </div>
@@ -185,9 +193,14 @@ function TableContainer({ table }: TableContainerProps) {
 interface TableHeadProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
   table: ReactTable<typeof features, Person>
+  virtualColumnIndexes: Array<number>
 }
 
-function TableHead({ table, columnVirtualizer }: TableHeadProps) {
+function TableHead({
+  table,
+  columnVirtualizer,
+  virtualColumnIndexes,
+}: TableHeadProps) {
   return (
     <thead
       style={{
@@ -203,6 +216,7 @@ function TableHead({ table, columnVirtualizer }: TableHeadProps) {
           columnVirtualizer={columnVirtualizer}
           key={headerGroup.id}
           headerGroup={headerGroup}
+          virtualColumnIndexes={virtualColumnIndexes}
         />
       ))}
     </thead>
@@ -212,11 +226,14 @@ function TableHead({ table, columnVirtualizer }: TableHeadProps) {
 interface TableHeadRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
   headerGroup: HeaderGroup<typeof features, Person>
+  virtualColumnIndexes: Array<number>
 }
 
-function TableHeadRow({ columnVirtualizer, headerGroup }: TableHeadRowProps) {
-  const virtualColumnIndexes = columnVirtualizer.getVirtualIndexes()
-
+function TableHeadRow({
+  columnVirtualizer,
+  headerGroup,
+  virtualColumnIndexes,
+}: TableHeadRowProps) {
   return (
     <tr
       key={headerGroup.id}
@@ -250,44 +267,55 @@ function TableHeadCell({
   header,
 }: TableHeadCellProps) {
   return (
-    <th
-      key={header.id}
-      style={{
-        alignItems: 'center',
-        display: 'flex',
-        height: '34px',
-        position: 'relative', // needed for absolute positioning of the resizer
-        width: header.getSize(),
-      }}
+    <Subscribe
+      source={header.table.store}
+      selector={(state) => [
+        state.columnSizing[header.column.id],
+        state.columnResizing.isResizingColumn === header.column.id,
+        state.sorting.find((sort) => sort.id === header.column.id)?.desc,
+      ]}
     >
-      <div
-        className={header.column.getCanSort() ? 'sortable-header' : ''}
-        onClick={header.column.getToggleSortingHandler()}
-        title={
-          header.column.getCanSort()
-            ? header.column.getNextSortingOrder() === 'asc'
-              ? 'Sort ascending'
-              : header.column.getNextSortingOrder() === 'desc'
-                ? 'Sort descending'
-                : 'Clear sort'
-            : undefined
-        }
-      >
-        <FlexRender header={header} />
-        {{
-          asc: ' 🔼',
-          desc: ' 🔽',
-        }[header.column.getIsSorted() as string] ?? null}
-      </div>
-      <div
-        onDoubleClick={() => header.column.resetSize()}
-        onMouseDown={header.getResizeHandler()}
-        onTouchStart={header.getResizeHandler()}
-        className={`resizer ${
-          header.column.getIsResizing() ? 'isResizing' : ''
-        }`}
-      />
-    </th>
+      {() => (
+        <th
+          key={header.id}
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            height: '34px',
+            position: 'relative', // needed for absolute positioning of the resizer
+            width: header.getSize(),
+          }}
+        >
+          <div
+            className={header.column.getCanSort() ? 'sortable-header' : ''}
+            onClick={header.column.getToggleSortingHandler()}
+            title={
+              header.column.getCanSort()
+                ? header.column.getNextSortingOrder() === 'asc'
+                  ? 'Sort ascending'
+                  : header.column.getNextSortingOrder() === 'desc'
+                    ? 'Sort descending'
+                    : 'Clear sort'
+                : undefined
+            }
+          >
+            <FlexRender header={header} />
+            {{
+              asc: ' 🔼',
+              desc: ' 🔽',
+            }[header.column.getIsSorted() as string] ?? null}
+          </div>
+          <div
+            onDoubleClick={() => header.column.resetSize()}
+            onMouseDown={header.getResizeHandler()}
+            onTouchStart={header.getResizeHandler()}
+            className={`resizer ${
+              header.column.getIsResizing() ? 'isResizing' : ''
+            }`}
+          />
+        </th>
+      )}
+    </Subscribe>
   )
 }
 
@@ -300,12 +328,14 @@ interface TableBodyProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
   table: ReactTable<typeof features, Person>
   tableContainerRef: React.RefObject<HTMLDivElement | null>
+  virtualColumnIndexes: Array<number>
 }
 
 function TableBody({
   columnVirtualizer,
   table,
   tableContainerRef,
+  virtualColumnIndexes,
 }: TableBodyProps) {
   const tableBodyRef = React.useRef<HTMLTableSectionElement>(null)
   const rowRefsMap = React.useRef<Map<number, HTMLTableRowElement>>(new Map())
@@ -360,6 +390,7 @@ function TableBody({
             row={row}
             rowRefsMap={rowRefsMap}
             rowVirtualizer={rowVirtualizer}
+            virtualColumnIndexes={virtualColumnIndexes}
             virtualRowIndex={virtualRowIndex}
           />
         )
@@ -372,6 +403,7 @@ interface TableBodyRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
   row: Row<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
+  virtualColumnIndexes: Array<number>
   virtualRowIndex: number
   rowRefsMap: React.RefObject<Map<number, HTMLTableRowElement>>
 }
@@ -380,11 +412,11 @@ function TableBodyRow({
   columnVirtualizer,
   row,
   rowVirtualizer,
+  virtualColumnIndexes,
   virtualRowIndex,
   rowRefsMap,
 }: TableBodyRowProps) {
   const visibleCells = row.getAllCells()
-  const virtualColumnIndexes = columnVirtualizer.getVirtualIndexes()
 
   return (
     <tr
@@ -436,15 +468,22 @@ function TableBodyCell({
   columnVirtualizer: _columnVirtualizer,
 }: TableBodyCellProps) {
   return (
-    <td
-      key={cell.id}
-      style={{
-        display: 'flex',
-        width: cell.column.getSize(),
-      }}
+    <Subscribe
+      source={cell.table.atoms.columnSizing}
+      selector={(columnSizing) => columnSizing[cell.column.id]}
     >
-      <FlexRender cell={cell} />
-    </td>
+      {() => (
+        <td
+          key={cell.id}
+          style={{
+            display: 'flex',
+            width: cell.column.getSize(),
+          }}
+        >
+          <FlexRender cell={cell} />
+        </td>
+      )}
+    </Subscribe>
   )
 }
 

@@ -133,7 +133,8 @@ const columns = [
 
 This is discussed in more detail in the [Column Def Guide](./column-defs).
 
-> NOTE: The "keys" in your JSON data can usually be anything, but any periods in an `accessorKey` will be interpreted as a deep key path. If a key in your data contains a literal period, use an `accessorFn` to read it instead.
+> [!NOTE]
+> The "keys" in your JSON data can usually be anything, but any periods in an `accessorKey` will be interpreted as a deep key path. If a key in your data contains a literal period, use an `accessorFn` to read it instead.
 
 ### Nested Sub-Row Data
 
@@ -199,6 +200,9 @@ In v9, table state lives in TanStack Store atoms, and the table instance is only
 - **Auto-reset render loops.** Features that automatically reset state when the rows are recalculated can still cause infinite re-render loops. For example, with client-side pagination enabled, `autoResetPageIndex` resets the page index whenever the row model recomputes. With an unstable `data` reference, that means a state update after every render, and each state update triggers another render with yet another new `data` reference.
 
 Either way, treat stable `data` and `columns` references as a requirement.
+
+> [!NOTE]
+> When React Compiler successfully compiles a component, it can provide stable identities for values and calculations automatically. TanStack Table's examples keep the explicit patterns below so they also work without the compiler. See the [React Compiler Guide](../framework/react/guide/react-compiler) for when manual memoization can be removed.
 
 How you do this depends on which framework adapter you are using, but in React, you should often use `React.useState`, `React.useMemo`, or similar to ensure that both the `data` and `columns` table options have stable references.
 
