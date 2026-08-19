@@ -1,9 +1,11 @@
-import { describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   effect,
+  inject,
   input,
   signal,
 } from '@angular/core'
@@ -13,6 +15,9 @@ import { flushQueue, setFixtureSignalInputs } from './test-utils'
 import type { WritableSignal } from '@angular/core'
 
 describe('injectLazyInit', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
   test('should register cleanup only after initialization', () => {
     const initializedObject = { data: signal(true) }
     const initializer = vi.fn(() => initializedObject)
@@ -36,6 +41,39 @@ describe('injectLazyInit', () => {
     expect(initializer).toHaveBeenCalledOnce()
     expect(cleanup).toHaveBeenCalledOnce()
     expect(cleanup).toHaveBeenCalledWith(initializedObject)
+  })
+
+  test('does not initialize object when view is already destroyed', async () => {
+    vi.useFakeTimers()
+    const initializedObject = { data: signal(true) }
+    const initializer = vi.fn(() => initializedObject)
+    const cleanup = vi.fn<(object: typeof initializedObject) => void>()
+    const destroyFnSpy = vi.fn<(obj: Record<string, any>) => void>()
+
+    @Component({ standalone: true, template: `` })
+    class Test {
+      readonly lazySignal = injectLazyInit(initializer, cleanup)
+
+      constructor() {
+        inject(DestroyRef).onDestroy(() => {
+          setTimeout(() => {
+            destroyFnSpy(this.lazySignal.data)
+          })
+        })
+      }
+    }
+
+    const fixture = TestBed.createComponent(Test)
+    fixture.destroy()
+
+    expect(() => vi.runAllTimers()).toThrow(
+      new Error(
+        '[@tanstack/angular-table] Cannot initialize object after view is destroyed',
+      ),
+    )
+
+    expect(initializer).not.toHaveBeenCalledOnce()
+    expect(cleanup).not.toHaveBeenCalledOnce()
   })
 
   test('should not initialize until accessed', () => {

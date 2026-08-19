@@ -5,23 +5,30 @@ import {
   untracked,
 } from '@angular/core'
 
+const notInitializedObject = Symbol('notInitializedObject')
 export function injectLazyInit<T extends object>(
   initializer: () => T,
   cleanup: (object: T) => void,
 ): T {
   assertInInjectionContext(injectLazyInit)
   const destroyRef = inject(DestroyRef)
-  let object: T | null = null
+  let object: T | typeof notInitializedObject = notInitializedObject
+
+  destroyRef.onDestroy(() => {
+    if (object !== notInitializedObject) {
+      cleanup(object)
+    }
+  })
 
   const getObject = () => {
-    if (object === null) {
-      const initializedObject = untracked(initializer)
-      object = initializedObject
-      if (!destroyRef.destroyed) {
-        destroyRef.onDestroy(() => cleanup(initializedObject))
-      }
+    if (destroyRef.destroyed && object === notInitializedObject) {
+      throw new Error(
+        '[@tanstack/angular-table] Cannot initialize object after view is destroyed',
+      )
     }
-
+    if (object === notInitializedObject) {
+      object = untracked(initializer)
+    }
     return object
   }
 
