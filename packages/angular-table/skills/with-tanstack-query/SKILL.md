@@ -6,7 +6,7 @@ metadata:
   type: composition
   library: '@tanstack/angular-table'
   framework: angular
-  library_version: '9.2.1'
+  library_version: '9.2.2'
 requires:
   - '@tanstack/table-core#client-vs-server'
   - getting-started
