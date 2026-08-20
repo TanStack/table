@@ -62,7 +62,13 @@ function filterRowModelFromLeafs<
         row.parentId,
       ) as Row<TFeatures, TData> &
         Partial<Row_ColumnFiltering<TFeatures, TData>>
+      // `constructRow` gives the copy empty filter maps, so both halves of the
+      // row's filter state have to be carried over from the source row. The
+      // meta belongs to the row that produced it: each row is tagged
+      // independently in the pre-filter pass, so it is copied across rather
+      // than inherited from a parent or aggregated from `subRows`
       newRow.columnFilters = row.columnFilters
+      newRow.columnFiltersMeta = row.columnFiltersMeta
 
       if (row.subRows.length && depth < maxDepth) {
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
