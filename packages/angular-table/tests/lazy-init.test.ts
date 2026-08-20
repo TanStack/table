@@ -7,12 +7,13 @@ import {
   effect,
   inject,
   input,
+  runInInjectionContext,
   signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { injectLazyInit } from '../src/injectLazyInit'
 import { flushQueue, setFixtureSignalInputs } from './test-utils'
-import type { WritableSignal } from '@angular/core'
+import type { Injector, WritableSignal } from '@angular/core'
 
 describe('injectLazyInit', () => {
   afterEach(() => {
@@ -74,6 +75,40 @@ describe('injectLazyInit', () => {
 
     expect(initializer).not.toHaveBeenCalledOnce()
     expect(cleanup).not.toHaveBeenCalledOnce()
+  })
+
+  test('tracks destruction when DestroyRef.destroyed is unavailable', () => {
+    const initializedObject = { data: signal(true) }
+    const initializer = vi.fn(() => initializedObject)
+    const cleanup = vi.fn<(object: typeof initializedObject) => void>()
+    const destroyCallbacks = new Set<() => void>()
+    const legacyDestroyRef = {
+      onDestroy(callback: () => void) {
+        destroyCallbacks.add(callback)
+        return () => destroyCallbacks.delete(callback)
+      },
+    }
+    const injector = {
+      get(token: unknown) {
+        if (token === DestroyRef) {
+          return legacyDestroyRef
+        }
+        throw new Error('Unexpected injection token')
+      },
+    } as Injector
+
+    const lazySignal = runInInjectionContext(injector, () =>
+      injectLazyInit(initializer, cleanup),
+    )
+    destroyCallbacks.forEach((callback) => callback())
+
+    expect(() => lazySignal.data).toThrow(
+      new Error(
+        '[@tanstack/angular-table] Cannot initialize object after view is destroyed',
+      ),
+    )
+    expect(initializer).not.toHaveBeenCalled()
+    expect(cleanup).not.toHaveBeenCalled()
   })
 
   test('should not initialize until accessed', () => {
