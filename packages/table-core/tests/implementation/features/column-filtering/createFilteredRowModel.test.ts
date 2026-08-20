@@ -512,6 +512,99 @@ describe('createFilteredRowModel', () => {
       expect(preRows[0]!.columnFiltersMeta.name).toEqual({ globalHit: 'keep' })
       expect(preRows[1]!.columnFiltersMeta.name).toEqual({ globalHit: 'drop' })
     })
+
+    // A rank-scoring filter in the shape used by the fuzzy filtering docs: it
+    // records a score for every row it inspects so a sortingFn can order rows
+    // by match quality afterwards.
+    const rankFilterFn: FilterFn<typeof features, any> = (
+      row,
+      columnId,
+      filterValue,
+      addMeta,
+    ) => {
+      const value = row.getValue<string>(columnId)
+      const rank = value.startsWith(filterValue as string) ? value.length : 0
+      addMeta?.({ itemRank: { rank } })
+      return rank > 0
+    }
+
+    const rankColumns: Array<ColumnDef<typeof features, NestedRow, any>> = [
+      { accessorKey: 'name', id: 'name', filterFn: rankFilterFn },
+    ]
+
+    function makeRankTable(options: {
+      data: Array<NestedRow>
+      filterFromLeafRows?: boolean
+    }) {
+      return constructTable<typeof features, NestedRow>({
+        features,
+        columns: rankColumns,
+        data: options.data,
+        getSubRows: (row) => row.subRows,
+        filterFromLeafRows: options.filterFromLeafRows,
+        initialState: {
+          columnFilters: [{ id: 'name', value: 'keep' }],
+        },
+      })
+    }
+
+    it('should keep each row its own columnFiltersMeta on sub-rows when filtering from leaf rows', () => {
+      const table = makeRankTable({
+        filterFromLeafRows: true,
+        data: [
+          { name: 'drop-parent', subRows: [{ name: 'keep-child' }] },
+          { name: 'keep-parent-long', subRows: [{ name: 'drop-child' }] },
+        ],
+      })
+
+      const rows = table.getFilteredRowModel().rows
+      expect(rowNames(rows)).toEqual(['drop-parent', 'keep-parent-long'])
+
+      // The sub-row is retained because it matched, and it carries the rank
+      // that its own filter run produced
+      const subRow = rows[0]!.subRows[0]!
+      expect(rowNames(rows[0]!.subRows)).toEqual(['keep-child'])
+      expect(subRow.columnFiltersMeta.name).toEqual({
+        itemRank: { rank: 'keep-child'.length },
+      })
+
+      // Meta belongs to the row that produced it: the retained parent keeps its
+      // own non-matching score rather than inheriting the sub-row's, and the
+      // matching parent keeps a score derived from its own value
+      expect(rows[0]!.columnFiltersMeta.name).toEqual({
+        itemRank: { rank: 0 },
+      })
+      expect(rows[1]!.columnFiltersMeta.name).toEqual({
+        itemRank: { rank: 'keep-parent-long'.length },
+      })
+    })
+
+    it('should keep columnFiltersMeta on top-level rows that have no sub-rows when filtering from leaf rows', () => {
+      const table = makeRankTable({
+        filterFromLeafRows: true,
+        data: [{ name: 'keep-a' }, { name: 'keep-bb' }, { name: 'drop-c' }],
+      })
+
+      const rows = table.getFilteredRowModel().rows
+      expect(rowNames(rows)).toEqual(['keep-a', 'keep-bb'])
+      expect(rows.map((row) => row.columnFiltersMeta.name)).toEqual([
+        { itemRank: { rank: 'keep-a'.length } },
+        { itemRank: { rank: 'keep-bb'.length } },
+      ])
+    })
+
+    it('should keep columnFiltersMeta on top-level rows when filtering from the root down', () => {
+      const table = makeRankTable({
+        data: [{ name: 'keep-a' }, { name: 'keep-bb' }, { name: 'drop-c' }],
+      })
+
+      const rows = table.getFilteredRowModel().rows
+      expect(rowNames(rows)).toEqual(['keep-a', 'keep-bb'])
+      expect(rows.map((row) => row.columnFiltersMeta.name)).toEqual([
+        { itemRank: { rank: 'keep-a'.length } },
+        { itemRank: { rank: 'keep-bb'.length } },
+      ])
+    })
   })
 
   describe('row.columnFilters flags', () => {
