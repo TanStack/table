@@ -1,0 +1,57 @@
+{
+  "name": "tanstack-ember-table-example-basic-external-state",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#app/*": "./app/*",
+    "#config": "./app/config.ts",
+    "#components/*": "./app/components/*",
+    "#services/*": "./app/services/*",
+    "#test-helpers/*": "./tests/helpers/*",
+    "#utils/*": "./app/utils/*"
+  },
+  "exports": {
+    "./tests/*": "./tests/*",
+    "./*": "./app/*"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
+    "test:types": "ember-tsc --noEmit"
+  },
+  "dependencies": {
+    "@embroider/macros": "1.20.6",
+    "@embroider/router": "3.0.6",
+    "@faker-js/faker": "^10.5.0",
+    "@glimmer/component": "2.1.1",
+    "@tanstack/ember-table": "^9.1.2",
+    "decorator-transforms": "2.4.0",
+    "ember-source": "7.2.0",
+    "ember-strict-application-resolver": "0.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.7",
+    "@babel/plugin-transform-runtime": "7.29.7",
+    "@babel/plugin-transform-typescript": "7.29.7",
+    "@babel/runtime": "7.29.7",
+    "@ember/app-tsconfig": "2.0.0",
+    "@embroider/core": "4.6.3",
+    "@glint/ember-tsc": "1.10.0",
+    "@glint/template": "1.8.0",
+    "@glint/tsserver-plugin": "2.7.0",
+    "@nullvoxpopuli/ember-vite": "1.1.0",
+    "@rollup/plugin-babel": "7.1.0",
+    "babel-plugin-ember-template-compilation": "4.0.0",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
+  },
+  "engines": {
+    "node": ">= 24"
+  },
+  "ember": {
+    "edition": "octane"
+  }
+}

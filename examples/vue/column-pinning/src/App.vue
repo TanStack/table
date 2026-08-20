@@ -1,107 +1,98 @@
 <script setup lang="ts">
 import {
-  createColumnHelper,
   FlexRender,
-  getCoreRowModel,
-  useVueTable,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
-import type {
-  Column,
-  ColumnOrderState,
-  ColumnPinningState,
-} from '@tanstack/vue-table'
-
-import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Column } from '@tanstack/vue-table'
 
-const data = ref(makeData(5000))
+const data = ref(makeData(1_000))
 
-const columnHelper = createColumnHelper<Person>()
+const features = tableFeatures({
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnVisibilityFeature,
+})
 
-const columns = ref([
-  columnHelper.group({
-    // id: 'Name',
-    header: 'Name',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      }),
-      columnHelper.accessor(row => row.lastName, {
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => 'Last Name',
-        footer: props => props.column.id,
-      }),
-    ],
-  }),
-  columnHelper.group({
-    header: 'Info',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: props => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-    ],
-  }),
-])
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const columnVisibility = ref({})
-const columnOrder = ref<ColumnOrderState>([])
+const columns = ref(
+  columnHelper.columns([
+    columnHelper.group({
+      header: 'Name',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.group({
+          header: 'More Info',
+          columns: columnHelper.columns([
+            columnHelper.accessor('visits', {
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('status', {
+              header: 'Status',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('progress', {
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+            }),
+          ]),
+        }),
+      ]),
+    }),
+  ]),
+)
 
-const columnPinning = ref<ColumnPinningState>({})
 const isSplit = ref(false)
 
-const rerender = () => (data.value = makeData(5000))
+const refreshData = () => {
+  data.value = makeData(1_000)
+}
 
-const table = useVueTable({
-  get data() {
-    return data.value
-  },
+const stressTest = () => {
+  data.value = makeData(1_000_000)
+}
+
+const table = useTable({
+  features,
+  data,
   get columns() {
     return columns.value
   },
-  state: {
-    get columnVisibility() {
-      return columnVisibility.value
-    },
-    get columnOrder() {
-      return columnOrder.value
-    },
-    get columnPinning() {
-      return columnPinning.value
-    },
-  },
-
-  onColumnOrderChange: order => {
-    columnOrder.value =
-      order instanceof Function ? order(columnOrder.value) : order
-  },
-  onColumnPinningChange: pinning => {
-    columnPinning.value =
-      pinning instanceof Function ? pinning(columnPinning.value) : pinning
-  },
-  getCoreRowModel: getCoreRowModel(),
+  // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+  // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+  // state: { columnPinning }, // classic controlled state; pair with onColumnPinningChange
+  // onColumnPinningChange: setColumnPinning,
+  // enableColumnPinning: false, // disable pinning for every column; default true
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,
@@ -109,28 +100,34 @@ const table = useVueTable({
 
 const randomizeColumns = () => {
   table.setColumnOrder(
-    faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+    faker.helpers.shuffle(
+      table
+        .getAllLeafColumns()
+        .map((column: Column<typeof features, Person>) => column.id),
+    ),
   )
 }
 
-function toggleColumnVisibility(column: Column<any, any>) {
-  columnVisibility.value = {
-    ...columnVisibility.value,
+function toggleColumnVisibility(column: Column<typeof features, Person>) {
+  table.setColumnVisibility({
+    ...table.atoms.columnVisibility.get(),
     [column.id]: !column.getIsVisible(),
-  }
+  })
 }
 
 function toggleAllColumnsVisibility() {
-  table.getAllLeafColumns().forEach(column => {
-    toggleColumnVisibility(column)
-  })
+  table
+    .getAllLeafColumns()
+    .forEach((column: Column<typeof features, Person>) => {
+      toggleColumnVisibility(column)
+    })
 }
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="inline-block border border-black rounded shadow">
-      <div class="px-1 border-b border-black">
+  <div class="demo-root">
+    <div class="column-toggle-panel">
+      <div class="column-toggle-panel-header">
         <label>
           <input
             type="checkbox"
@@ -143,7 +140,7 @@ function toggleAllColumnsVisibility() {
       <div
         v-for="column in table.getAllLeafColumns()"
         :key="column.id"
-        class="px-1"
+        class="column-toggle-row"
       >
         <label>
           <input
@@ -155,27 +152,32 @@ function toggleAllColumnsVisibility() {
         </label>
       </div>
     </div>
-    <div class="h-4" />
-    <div class="flex flex-wrap gap-2">
-      <button @click="rerender" class="p-1 border">Regenerate</button>
-      <button @click="randomizeColumns" class="p-1 border">
+    <div class="spacer-md" />
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button demo-button-sm">
+        Regenerate Data
+      </button>
+      <button @click="stressTest" class="demo-button demo-button-sm">
+        Stress Test (1M rows)
+      </button>
+      <button @click="randomizeColumns" class="demo-button demo-button-sm">
         Shuffle Columns
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
     <div>
       <label>
         <input type="checkbox" v-model="isSplit" />
         Split Mode
       </label>
     </div>
-    <div class="h-4" />
-    <div :class="`flex ${isSplit ? 'gap-4' : ''}`">
+    <div class="spacer-md" />
+    <div :class="`table-row-group ${isSplit ? 'split-gap' : ''}`">
       <!-- left -->
-      <table v-if="isSplit" class="border-2 border-black table-left">
+      <table v-if="isSplit" class="outlined-table table-left">
         <thead>
           <tr
-            v-for="headerGroup in table.getLeftHeaderGroups()"
+            v-for="headerGroup in table.getStartHeaderGroups()"
             :key="headerGroup.id"
           >
             <th
@@ -183,35 +185,31 @@ function toggleAllColumnsVisibility() {
               :key="header.id"
               :colSpan="header.colSpan"
             >
-              <div class="whitespace-nowrap">
-                <FlexRender
-                  v-if="!header.isPlaceholder"
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+              <div class="nowrap">
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
-                class="flex justify-center gap-1"
+                class="pin-actions"
               >
                 <button
-                  v-if="header.column.getIsPinned() !== 'left'"
-                  @click="header.column.pin('left')"
-                  class="px-2 border rounded"
+                  v-if="header.column.getIsPinned() !== 'start'"
+                  @click="header.column.pin('start')"
+                  class="pin-button"
                 >
                   {{ '<=' }}
                 </button>
                 <button
                   v-if="header.column.getIsPinned()"
                   @click="header.column.pin(false)"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   X
                 </button>
                 <button
-                  v-if="header.column.getIsPinned() !== 'right'"
-                  @click="header.column.pin('right')"
-                  class="px-2 border rounded"
+                  v-if="header.column.getIsPinned() !== 'end'"
+                  @click="header.column.pin('end')"
+                  class="pin-button"
                 >
                   {{ '=>' }}
                 </button>
@@ -224,17 +222,14 @@ function toggleAllColumnsVisibility() {
             v-for="row in table.getRowModel().rows.slice(0, 20)"
             :key="row.id"
           >
-            <td v-for="cell in row.getLeftVisibleCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+            <td v-for="cell in row.getStartVisibleCells()" :key="cell.id">
+              <FlexRender :cell="cell" />
             </td>
           </tr>
         </tbody>
       </table>
       <!-- center -->
-      <table class="border-2 border-black table-center">
+      <table class="outlined-table table-center">
         <thead>
           <tr
             v-for="headerGroup in isSplit
@@ -247,35 +242,31 @@ function toggleAllColumnsVisibility() {
               :key="header.id"
               :colSpan="header.colSpan"
             >
-              <div class="whitespace-nowrap">
-                <FlexRender
-                  v-if="!header.isPlaceholder"
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+              <div class="nowrap">
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
-                class="flex justify-center gap-1"
+                class="pin-actions"
               >
                 <button
-                  v-if="header.column.getIsPinned() !== 'left'"
-                  @click="header.column.pin('left')"
-                  class="px-2 border rounded"
+                  v-if="header.column.getIsPinned() !== 'start'"
+                  @click="header.column.pin('start')"
+                  class="pin-button"
                 >
                   {{ '<=' }}
                 </button>
                 <button
                   v-if="header.column.getIsPinned()"
                   @click="header.column.pin(false)"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   X
                 </button>
                 <button
-                  v-if="header.column.getIsPinned() !== 'right'"
-                  @click="header.column.pin('right')"
-                  class="px-2 border rounded"
+                  v-if="header.column.getIsPinned() !== 'end'"
+                  @click="header.column.pin('end')"
+                  class="pin-button"
                 >
                   {{ '=>' }}
                 </button>
@@ -294,19 +285,16 @@ function toggleAllColumnsVisibility() {
                 : row.getVisibleCells()"
               :key="cell.id"
             >
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <FlexRender :cell="cell" />
             </td>
           </tr>
         </tbody>
       </table>
       <!-- right -->
-      <table v-if="isSplit" class="border-2 border-black table-right">
+      <table v-if="isSplit" class="outlined-table table-right">
         <thead>
           <tr
-            v-for="headerGroup in table.getRightHeaderGroups()"
+            v-for="headerGroup in table.getEndHeaderGroups()"
             :key="headerGroup.id"
           >
             <th
@@ -314,35 +302,31 @@ function toggleAllColumnsVisibility() {
               :key="header.id"
               :colSpan="header.colSpan"
             >
-              <div class="whitespace-nowrap">
-                <FlexRender
-                  v-if="!header.isPlaceholder"
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+              <div class="nowrap">
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
-                class="flex justify-center gap-1"
+                class="pin-actions"
               >
                 <button
-                  v-if="header.column.getIsPinned() !== 'left'"
-                  @click="header.column.pin('left')"
-                  class="px-2 border rounded"
+                  v-if="header.column.getIsPinned() !== 'start'"
+                  @click="header.column.pin('start')"
+                  class="pin-button"
                 >
                   {{ '<=' }}
                 </button>
                 <button
                   v-if="header.column.getIsPinned()"
                   @click="header.column.pin(false)"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   X
                 </button>
                 <button
-                  v-if="header.column.getIsPinned() !== 'right'"
-                  @click="header.column.pin('right')"
-                  class="px-2 border rounded"
+                  v-if="header.column.getIsPinned() !== 'end'"
+                  @click="header.column.pin('end')"
+                  class="pin-button"
                 >
                   {{ '=>' }}
                 </button>
@@ -355,17 +339,16 @@ function toggleAllColumnsVisibility() {
             v-for="row in table.getRowModel().rows.slice(0, 20)"
             :key="row.id"
           >
-            <td v-for="cell in row.getRightVisibleCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+            <td v-for="cell in row.getEndVisibleCells()" :key="cell.id">
+              <FlexRender :cell="cell" />
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <pre>{{ JSON.stringify(table.getState().columnOrder, null, 2) }}</pre>
+    <pre data-testid="table-state">{{
+      JSON.stringify(table.store.get(), null, 2)
+    }}</pre>
   </div>
 </template>
 
@@ -378,8 +361,9 @@ body {
 }
 
 table {
-  border: 1px solid lightgray;
+  border-spacing: 0;
   border-collapse: collapse;
+  border: 1px solid lightgray;
 }
 
 tbody {

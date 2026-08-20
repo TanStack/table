@@ -1,0 +1,61 @@
+import type { Table_Internal } from '../../types/Table'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
+import type { Cell_CoreProperties } from './coreCellsFeature.types'
+
+/**
+ * Creates or retrieves the cell prototype for a table.
+ * The prototype is cached on the table and shared by all cell instances.
+ */
+function getCellPrototype<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): object {
+  if (!table._cellPrototype) {
+    table._cellPrototype = { table }
+    const features = Object.values(table._features)
+    for (let i = 0; i < features.length; i++) {
+      features[i]!.assignCellPrototype?.(table._cellPrototype, table)
+    }
+  }
+  return table._cellPrototype
+}
+
+/**
+ * Constructs a cell instance from normalized table internals.
+ *
+ * This wires core properties, feature prototype APIs, and instance data used by table rendering and row-model operations.
+ */
+export function constructCell<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column<TFeatures, TData, TValue>,
+  row: Row<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
+): Cell<TFeatures, TData, TValue> {
+  // Create cell with shared prototype for memory efficiency
+  const cellPrototype = getCellPrototype(table)
+  const cell = Object.create(cellPrototype) as Cell_CoreProperties<
+    TFeatures,
+    TData,
+    TValue
+  >
+
+  // Only assign instance-specific properties
+  cell.column = column
+  cell.id = `${row.id}_${column.id}`
+  cell.row = row
+
+  // Initialize instance-specific data for features that need it
+  const initFns = table._cellInstanceInitFns
+  for (let i = 0; i < initFns.length; i++) {
+    initFns[i]!(cell as Cell<TFeatures, TData, TValue>)
+  }
+
+  return cell as Cell<TFeatures, TData, TValue>
+}

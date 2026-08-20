@@ -1,0 +1,469 @@
+import { useCallback, useMemo, useState } from 'preact/hooks'
+import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
+import { createAppColumnHelper, useAppTable } from './hooks/table'
+import { IndeterminateCheckbox } from './components/indeterminate-checkbox'
+import { makeData, makeProductData } from './makeData'
+import type { Person, Product } from './makeData'
+import './index.css'
+// Import cell components directly - they use useCellContext internally
+
+// Create column helpers with TFeatures already bound - only need TData!
+const personColumnHelper = createAppColumnHelper<Person>()
+const productColumnHelper = createAppColumnHelper<Product>()
+
+// Users Table Component - Original implementation
+function UsersTable() {
+  // Data state
+  const [data, setData] = useState(() => makeData(1000))
+
+  // Refresh data callback
+  const refreshData = useCallback(() => {
+    setData(makeData(1_000))
+  }, [])
+
+  const stressTest = useCallback(() => {
+    setData(makeData(1_000_000))
+  }, [])
+
+  // Define columns using the column helper
+  const columns = useMemo(
+    () =>
+      // NOTE: You must use `createAppColumnHelper` instead of `createColumnHelper` when using pre-bound components like <cell.TextCell />
+      personColumnHelper.columns([
+        personColumnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
+          ),
+          // Cell uses the pre-bound SelectCell component via AppCell
+          cell: ({ cell }) => <cell.SelectCell />,
+        }),
+        personColumnHelper.accessor('firstName', {
+          header: 'First Name',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.TextCell />,
+        }),
+        personColumnHelper.accessor('lastName', {
+          header: 'Last Name',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.TextCell />,
+        }),
+        personColumnHelper.accessor('age', {
+          header: 'Age',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.NumberCell />,
+        }),
+        personColumnHelper.accessor('visits', {
+          header: 'Visits',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.NumberCell />,
+        }),
+        personColumnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.StatusCell />,
+        }),
+        personColumnHelper.accessor('progress', {
+          header: 'Progress',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.ProgressCell />,
+        }),
+        personColumnHelper.display({
+          id: 'actions',
+          header: 'Actions',
+          cell: ({ cell }) => <cell.RowActionsCell />,
+        }),
+      ]),
+    [],
+  )
+
+  // Create the table - features and rowModels are already configured!
+  const table = useAppTable(
+    {
+      key: 'users-table', // needed for devtools
+      columns,
+      data,
+      debugTable: true,
+      enableRowSelection: true,
+      // more table options
+    },
+    (state) => state, // default selector
+  )
+
+  useTanStackTableDevtools(table)
+
+  return (
+    <table.AppTable>
+      <div className="table-container">
+        {/* Table toolbar using pre-bound component */}
+        <table.TableToolbar
+          title="Users Table"
+          onRefresh={refreshData}
+          onStressTest={stressTest}
+        />
+
+        {/* Scroll container with a fixed max-height so larger page sizes
+              scroll. If the App wrappers remount on state updates, the scroll
+              position jumps back to the top on every keystroke/selection. */}
+        <div className="table-scroll">
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((h) => (
+                    <table.AppHeader header={h} key={h.id}>
+                      {(header) => (
+                        <th
+                          colSpan={header.colSpan}
+                          className={
+                            header.column.getCanSort() ? 'sortable-header' : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {header.isPlaceholder ? null : (
+                            <>
+                              <header.FlexRender />
+                              <header.SortIndicator />
+                              <header.ColumnFilter />
+                              {/* Show sort order number when multiple columns sorted */}
+                              {table.state.sorting.length > 1 &&
+                                table.state.sorting.findIndex(
+                                  (s) => s.id === header.column.id,
+                                ) > -1 && (
+                                  <span className="sort-order">
+                                    {table.state.sorting.findIndex(
+                                      (s) => s.id === header.column.id,
+                                    ) + 1}
+                                  </span>
+                                )}
+                            </>
+                          )}
+                        </th>
+                      )}
+                    </table.AppHeader>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getAllCells().map((c) => (
+                    <table.AppCell cell={c} key={c.id}>
+                      {(cell) => (
+                        <td>
+                          {/* Cell components are pre-bound via AppCell */}
+                          <cell.FlexRender />
+                        </td>
+                      )}
+                    </table.AppCell>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              {table.getFooterGroups().map((footerGroup) => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map((f) => (
+                    <table.AppFooter header={f} key={f.id}>
+                      {(footer) => {
+                        const columnId = footer.column.id
+                        const hasFilter = table.state.columnFilters.some(
+                          (cf) => cf.id === columnId,
+                        )
+
+                        return (
+                          <td colSpan={footer.colSpan}>
+                            {footer.isPlaceholder ? null : (
+                              <>
+                                {/* Use FooterSum for numeric columns, FooterColumnId for others */}
+                                {columnId === 'age' ||
+                                columnId === 'visits' ||
+                                columnId === 'progress' ? (
+                                  <>
+                                    <footer.FooterSum />
+                                    {hasFilter && (
+                                      <span className="filtered-indicator">
+                                        {' '}
+                                        (filtered)
+                                      </span>
+                                    )}
+                                  </>
+                                ) : columnId === 'actions' ? null : (
+                                  <>
+                                    <footer.FooterColumnId />
+                                    {hasFilter && (
+                                      <span className="filtered-indicator">
+                                        {' '}
+                                        ✓
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </>
+                            )}
+                          </td>
+                        )
+                      }}
+                    </table.AppFooter>
+                  ))}
+                </tr>
+              ))}
+            </tfoot>
+          </table>
+        </div>
+
+        {/* Pagination using pre-bound component */}
+        <table.PaginationControls />
+
+        {/* Row count using pre-bound component */}
+        <table.RowCount />
+      </div>
+    </table.AppTable>
+  )
+}
+
+// Products Table Component - New implementation using same hook and components
+function ProductsTable() {
+  // Data state
+  const [data, setData] = useState(() => makeProductData(500))
+
+  // Refresh data callback
+  const refreshData = useCallback(() => {
+    setData(makeProductData(500))
+  }, [])
+
+  const stressTest = useCallback(() => {
+    setData(makeProductData(1_000_000))
+  }, [])
+
+  // Define columns using the column helper - different structure than Users table
+  const columns = useMemo(
+    () =>
+      productColumnHelper.columns([
+        productColumnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
+          ),
+          // Cell uses the pre-bound SelectCell component via AppCell
+          cell: ({ cell }) => <cell.SelectCell />,
+        }),
+        productColumnHelper.accessor('name', {
+          header: 'Product Name',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.TextCell />,
+        }),
+        productColumnHelper.accessor('category', {
+          header: 'Category',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.CategoryCell />,
+        }),
+        productColumnHelper.accessor('price', {
+          header: 'Price',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.PriceCell />,
+        }),
+        productColumnHelper.accessor('stock', {
+          header: 'In Stock',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.NumberCell />,
+        }),
+        productColumnHelper.accessor('rating', {
+          header: 'Rating',
+          footer: (props) => props.column.id,
+          cell: ({ cell }) => <cell.ProgressCell />,
+        }),
+      ]),
+    [],
+  )
+
+  // Create the table using the same useAppTable hook
+  const table = useAppTable(
+    {
+      key: 'products-table', // needed for devtools
+      debugTable: true,
+      columns,
+      data,
+      getRowId: (row) => row.id,
+      enableRowSelection: true,
+    },
+    (state) => state, // default selector
+  )
+
+  useTanStackTableDevtools(table)
+
+  return (
+    <table.AppTable>
+      <div className="table-container">
+        {/* Table toolbar using the same pre-bound component */}
+        <table.TableToolbar
+          title="Products Table"
+          onRefresh={refreshData}
+          onStressTest={stressTest}
+        />
+
+        {/* Scroll container with a fixed max-height so larger page sizes
+              scroll. If the App wrappers remount on state updates, the scroll
+              position jumps back to the top on every keystroke/selection. */}
+        <div className="table-scroll">
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((h) => (
+                    <table.AppHeader header={h} key={h.id}>
+                      {(header) => (
+                        <th
+                          colSpan={header.colSpan}
+                          className={
+                            header.column.getCanSort() ? 'sortable-header' : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {header.isPlaceholder ? null : (
+                            <>
+                              <header.FlexRender />
+                              <header.SortIndicator />
+                              <header.ColumnFilter />
+                              {table.state.sorting.length > 1 &&
+                                table.state.sorting.findIndex(
+                                  (s) => s.id === header.column.id,
+                                ) > -1 && (
+                                  <span className="sort-order">
+                                    {table.state.sorting.findIndex(
+                                      (s) => s.id === header.column.id,
+                                    ) + 1}
+                                  </span>
+                                )}
+                            </>
+                          )}
+                        </th>
+                      )}
+                    </table.AppHeader>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getAllCells().map((c) => (
+                    <table.AppCell cell={c} key={c.id}>
+                      {(cell) => (
+                        <td>
+                          {/* Cell components are pre-bound via AppCell */}
+                          <cell.FlexRender />
+                        </td>
+                      )}
+                    </table.AppCell>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              {table.getFooterGroups().map((footerGroup) => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map((f) => (
+                    <table.AppFooter header={f} key={f.id}>
+                      {(footer) => {
+                        const columnId = footer.column.id
+                        const hasFilter = table.state.columnFilters.some(
+                          (cf) => cf.id === columnId,
+                        )
+
+                        return (
+                          <td colSpan={footer.colSpan}>
+                            {footer.isPlaceholder ? null : (
+                              <>
+                                {/* Use FooterSum for numeric columns, FooterColumnId for others */}
+                                {columnId === 'price' ||
+                                columnId === 'stock' ||
+                                columnId === 'rating' ? (
+                                  <>
+                                    <footer.FooterSum />
+                                    {hasFilter && (
+                                      <span className="filtered-indicator">
+                                        {' '}
+                                        (filtered)
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    <footer.FooterColumnId />
+                                    {hasFilter && (
+                                      <span className="filtered-indicator">
+                                        {' '}
+                                        ✓
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </>
+                            )}
+                          </td>
+                        )
+                      }}
+                    </table.AppFooter>
+                  ))}
+                </tr>
+              ))}
+            </tfoot>
+          </table>
+        </div>
+
+        {/* Pagination using the same pre-bound component */}
+        <table.PaginationControls />
+
+        {/* Row count using the same pre-bound component */}
+        <table.RowCount />
+      </div>
+    </table.AppTable>
+  )
+}
+
+function App() {
+  return (
+    <div className="app">
+      <h1>Composable Tables Example</h1>
+      <p className="description">
+        Both tables below use the same <code>useAppTable</code> hook and
+        shareable components, but with different data types and column
+        configurations.
+      </p>
+
+      {/* Original Users Table */}
+      <UsersTable />
+
+      <div className="table-divider" />
+
+      {/* New Products Table */}
+      <ProductsTable />
+    </div>
+  )
+}
+
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
+
+render(
+  <>
+    <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </>,
+  rootElement,
+)

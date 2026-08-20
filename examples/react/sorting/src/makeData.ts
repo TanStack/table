@@ -3,17 +3,18 @@ import { faker } from '@faker-js/faker'
 export type Person = {
   firstName: string
   lastName: string | undefined
+  email: string
   age: number
   visits: number | undefined
   progress: number
   status: 'relationship' | 'complicated' | 'single'
   rank: number
   createdAt: Date
-  subRows?: Person[]
+  subRows?: Array<Person>
 }
 
 const range = (len: number) => {
-  const arr: number[] = []
+  const arr: Array<number> = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
   }
@@ -21,9 +22,16 @@ const range = (len: number) => {
 }
 
 const newPerson = (): Person => {
+  const firstName = faker.person.firstName()
+  const lastName = faker.person.lastName()
+
   return {
-    firstName: faker.person.firstName(),
-    lastName: Math.random() < 0.1 ? undefined : faker.person.lastName(),
+    firstName,
+    lastName: Math.random() < 0.1 ? undefined : lastName,
+    email: faker.internet
+      .email({ firstName, lastName })
+      .replace('@', `${faker.number.int(9999)}@`)
+      .toLowerCase(),
     age: faker.number.int(40),
     visits: Math.random() < 0.1 ? undefined : faker.number.int(1000),
     progress: faker.number.int(100),
@@ -32,14 +40,14 @@ const newPerson = (): Person => {
       'relationship',
       'complicated',
       'single',
-    ])[0]!,
+    ])[0],
     rank: faker.number.int(100),
   }
 }
 
-export function makeData(...lens: number[]) {
-  const makeDataLevel = (depth = 0): Person[] => {
-    const len = lens[depth]!
+export function makeData(...lens: Array<number>) {
+  const makeDataLevel = (depth = 0): Array<Person> => {
+    const len = lens[depth]
     return range(len).map((_d): Person => {
       return {
         ...newPerson(),

@@ -1,0 +1,143 @@
+import { Component, signal } from '@angular/core'
+import {
+  FlexRender,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  injectTable,
+  tableFeatures,
+} from '@tanstack/angular-table'
+import { faker } from '@faker-js/faker'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type {
+  Column,
+  ColumnOrderState,
+  ColumnPinningState,
+  ColumnVisibilityState,
+} from '@tanstack/angular-table'
+
+const features = tableFeatures({
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const defaultColumns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    id: 'firstName',
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+    footer: (props) => props.column.id,
+    size: 180,
+  }),
+  columnHelper.accessor('lastName', {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => 'Last Name',
+    footer: (props) => props.column.id,
+    size: 180,
+  }),
+  columnHelper.accessor('age', {
+    id: 'age',
+    header: 'Age',
+    footer: (props) => props.column.id,
+    size: 180,
+  }),
+  columnHelper.accessor('visits', {
+    id: 'visits',
+    header: 'Visits',
+    footer: (props) => props.column.id,
+    size: 180,
+  }),
+  columnHelper.accessor('status', {
+    id: 'status',
+    header: 'Status',
+    footer: (props) => props.column.id,
+    size: 180,
+  }),
+  columnHelper.accessor('progress', {
+    id: 'progress',
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+    size: 180,
+  }),
+])
+
+@Component({
+  selector: 'app-root',
+  imports: [FlexRender],
+  templateUrl: './app.html',
+})
+export class App {
+  readonly columns = signal([...defaultColumns])
+  readonly data = signal<Array<Person>>(makeData(20))
+  readonly columnVisibility = signal<ColumnVisibilityState>({})
+  readonly columnOrder = signal<ColumnOrderState>([])
+  readonly columnPinning = signal<ColumnPinningState>({
+    start: [],
+    end: [],
+  })
+  readonly split = signal(false)
+
+  table = injectTable(() => ({
+    features,
+    columns: this.columns(),
+    data: this.data(),
+    columnResizeMode: 'onChange' as const,
+    // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+    // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+    // state: { columnPinning }, // classic controlled state; pair with onColumnPinningChange
+    // onColumnPinningChange: setColumnPinning,
+    // enableColumnPinning: false, // disable pinning for every column; default true
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  }))
+
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
+
+  readonly getCommonPinningStyles = (
+    column: Column<typeof features, Person>,
+  ): Record<string, any> => {
+    const isPinned = column.getIsPinned()
+    const isLastLeftPinnedColumn =
+      isPinned === 'start' && column.getIsLastColumn('start')
+    const isFirstRightPinnedColumn =
+      isPinned === 'end' && column.getIsFirstColumn('end')
+
+    return {
+      boxShadow: isLastLeftPinnedColumn
+        ? '-4px 0 4px -4px gray inset'
+        : isFirstRightPinnedColumn
+          ? '4px 0 4px -4px gray inset'
+          : undefined,
+      insetInlineStart:
+        isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+      insetInlineEnd:
+        isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
+      opacity: isPinned ? 0.95 : 1,
+      position: isPinned ? 'sticky' : 'relative',
+      width: `${column.getSize()}px`,
+      zIndex: isPinned ? 1 : 0,
+    }
+  }
+
+  randomizeColumns() {
+    this.table.setColumnOrder(
+      faker.helpers.shuffle(this.table.getAllLeafColumns().map((d) => d.id)),
+    )
+  }
+
+  refreshData = () => this.data.set(makeData(20))
+  stressTest = () => this.data.set(makeData(1_000))
+}

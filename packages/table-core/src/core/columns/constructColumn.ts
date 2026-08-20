@@ -1,0 +1,126 @@
+import type { Table_Internal } from '../../types/Table'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type {
+  AccessorFn,
+  ColumnDef,
+  ColumnDefResolved,
+} from '../../types/ColumnDef'
+import type { Column } from '../../types/Column'
+import type { Column_CoreProperties } from './coreColumnsFeature.types'
+
+/**
+ * Creates or retrieves the column prototype for a table.
+ * The prototype is cached on the table and shared by all column instances.
+ */
+function getColumnPrototype<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): object {
+  if (!table._columnPrototype) {
+    table._columnPrototype = { table }
+    const features = Object.values(table._features)
+    for (let i = 0; i < features.length; i++) {
+      features[i]!.assignColumnPrototype?.(table._columnPrototype, table)
+    }
+  }
+  return table._columnPrototype
+}
+
+/**
+ * Constructs a column instance from normalized table internals.
+ *
+ * This wires core properties, feature prototype APIs, and instance data used by table rendering and row-model operations.
+ */
+export function constructColumn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  columnDef: ColumnDef<TFeatures, TData, TValue>,
+  depth: number,
+  parent?: Column<TFeatures, TData, TValue>,
+): Column<TFeatures, TData, TValue> {
+  const defaultColumn = table.getDefaultColumnDef()
+
+  const resolvedColumnDef = {
+    ...defaultColumn,
+    ...columnDef,
+  } as ColumnDefResolved<{}, TData, TValue>
+
+  const accessorKey = resolvedColumnDef.accessorKey
+  const accessorKeyString =
+    accessorKey === undefined ? undefined : String(accessorKey)
+
+  const id =
+    resolvedColumnDef.id ??
+    accessorKeyString?.replaceAll('.', '_') ??
+    (typeof resolvedColumnDef.header === 'string'
+      ? resolvedColumnDef.header
+      : undefined)
+
+  let accessorFn: AccessorFn<TData, TValue> | undefined
+
+  if (resolvedColumnDef.accessorFn) {
+    accessorFn = resolvedColumnDef.accessorFn
+  } else if (accessorKey !== undefined) {
+    // Support deep accessor keys
+    if (typeof accessorKey === 'string' && accessorKey.includes('.')) {
+      const keys = accessorKey.split('.')
+      accessorFn = (originalRow: TData) => {
+        let result = originalRow as Record<string, any> | undefined
+
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i]!
+          result = result?.[key]
+          if (process.env.NODE_ENV === 'development' && result === undefined) {
+            console.warn(
+              `"${key}" in deeply nested key "${accessorKey}" returned undefined.`,
+            )
+          }
+        }
+
+        return result as TValue
+      }
+    } else {
+      accessorFn = (originalRow: TData) =>
+        (originalRow as any)[resolvedColumnDef.accessorKey]
+    }
+  }
+
+  if (!id) {
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error(
+        resolvedColumnDef.accessorFn
+          ? `coreColumnsFeature require an id when using an accessorFn`
+          : `coreColumnsFeature require an id when using a non-string header`,
+      )
+    }
+    throw new Error()
+  }
+
+  // Create column with shared prototype for memory efficiency
+  const columnPrototype = getColumnPrototype(table)
+  const column = Object.create(columnPrototype) as Column_CoreProperties<
+    TFeatures,
+    TData,
+    TValue
+  >
+
+  // Only assign instance-specific properties
+  column.accessorFn = accessorFn
+  column.columnDef = resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>
+  column.columns = []
+  column.depth = depth
+  column.id = `${String(id)}`
+  column.parent = parent
+
+  // Initialize instance-specific data for features that need it
+  const initFns = table._columnInstanceInitFns
+  for (let i = 0; i < initFns.length; i++) {
+    initFns[i]!(column as Column<TFeatures, TData, TValue>)
+  }
+
+  return column as Column<TFeatures, TData, TValue>
+}

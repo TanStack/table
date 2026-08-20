@@ -1,0 +1,33 @@
+{
+  "name": "tanstack-react-table-example-lib-react-aria",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
+    "test:types": "tsc"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/react-table": "^9.1.2",
+    "react": "^19.2.8",
+    "react-aria-components": "^1.20.0",
+    "react-dom": "^19.2.8",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
+  }
+}

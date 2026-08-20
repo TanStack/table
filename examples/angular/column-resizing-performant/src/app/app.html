@@ -1,0 +1,69 @@
+<div class="demo-root">
+  <button (click)="refreshData()" class="demo-button">Regenerate Data</button>
+  <button (click)="stressTest()" class="demo-button">Stress Test (5k rows)</button>
+  <div class="spacer-md"></div>
+  <!-- Only this text binding updates per resize tick -->
+  <pre style="height: 10rem; overflow: auto">
+    {{ stringifiedState() }}
+  </pre>
+  <div class="spacer-md"></div>
+
+  ({{ data().length.toLocaleString() }} rows)
+
+  <div class="scroll-container">
+    <!-- This example is using semantic table tags, but also CSS Grid/Flexbox layout for more absolute column widths -->
+    <table [style]="tableStyle()">
+      <thead style="display: grid">
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr style="display: flex; width: 100%; height: 30px">
+            @for (header of headerGroup.headers; track header.id) {
+              <!-- use CSS variables for widths so cells never update -->
+              <th
+                [attr.colspan]="header.colSpan"
+                style="display: flex; flex-shrink: 0"
+                [style.width]="'calc(var(--header-' + header.id + '-size) * 1px)'"
+              >
+                @if (!header.isPlaceholder) {
+                  <ng-container *flexRenderHeader="header; let headerContent">
+                    <div [innerHTML]="headerContent"></div>
+                  </ng-container>
+                }
+
+                <div
+                  class="resizer"
+                  [class.isResizing]="header.column.getIsResizing()"
+                  (dblclick)="header.column.resetSize()"
+                  (mousedown)="header.getResizeHandler()($event)"
+                  (touchstart)="header.getResizeHandler()($event)"
+                ></div>
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <!-- No memoization needed: nothing in the body reads resize state -->
+      <tbody style="display: grid">
+        @for (row of table.getRowModel().rows; track row.id) {
+          <tr
+            style="
+              display: flex;
+              width: 100%;
+              height: 30px;
+              content-visibility: auto;
+              contain-intrinsic-height: auto 30px;
+            "
+          >
+            @for (cell of row.getAllCells(); track cell.id) {
+              <td
+                style="display: flex; flex-shrink: 0"
+                [style.width]="'calc(var(--col-' + cell.column.id + '-size) * 1px)'"
+              >
+                {{ cell.renderValue() }}
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

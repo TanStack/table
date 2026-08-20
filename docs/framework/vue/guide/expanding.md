@@ -1,0 +1,336 @@
+---
+title: Expanding (Vue) Guide
+---
+
+## Examples
+
+Want to skip to the implementation? Check out these Vue examples:
+
+- [Expanding](../examples/expanding)
+
+Vue refs can be passed directly where the adapter expects reactive table options.
+
+### Expanding Setup
+
+Here's how you set up your table to use expanding features. Adding the expanding feature enables the related APIs. If you use client-side expanding, also set up `expandedRowModel` after its feature, since row model slots are type-checked.
+
+```ts
+import {
+  useTable,
+  tableFeatures,
+  rowExpandingFeature,
+  createExpandedRowModel,
+} from '@tanstack/vue-table'
+
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(), // if using client-side expanding
+  // manualExpanding: true, // if using manual server-side expanding
+})
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
+## Expanding Feature (Vue) Guide
+
+Expanding is a feature that allows you to show and hide additional rows of data related to a specific row. This can be useful in cases where you have hierarchical data and you want to allow users to drill down into the data from a higher level. Or it can be useful for showing additional information related to a row.
+
+### Different use cases for Expanding Features
+
+There are multiple use cases for expanding features in TanStack Table that will be discussed below.
+
+1. Expanding sub-rows (child rows, aggregate rows, etc.)
+2. Expanding custom UI (detail panels, sub-tables, etc.)
+
+### Enable Client-Side Expanding
+
+To use the client-side expanding features, add the `rowExpandingFeature` and `expandedRowModel` to your `tableFeatures` call:
+
+```ts
+import {
+  useTable,
+  tableFeatures,
+  rowExpandingFeature,
+  createExpandedRowModel,
+} from '@tanstack/vue-table'
+
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
+
+const table = useTable({
+  features,
+  // other options...
+})
+```
+
+Expanded data can either contain table rows or any other data you want to display. We will discuss how to handle both cases in this guide.
+
+### Table rows as expanded data
+
+Expanded rows are child rows that inherit the same column structure as their parent rows. If your data object already includes expanded row data, use the `getSubRows` function to specify these child rows. If your data object does not contain expanded row data, it can be treated as custom expanded data, which is discussed in the next section.
+
+For example, if you have a data object like this:
+
+```ts
+type Person = {
+  id: number
+  name: string
+  age: number
+  children?: Person[] | undefined
+}
+
+const data: Person[] = [
+  {
+    id: 1,
+    name: 'John',
+    age: 30,
+    children: [
+      { id: 2, name: 'Jane', age: 5 },
+      { id: 5, name: 'Jim', age: 10 },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Doe',
+    age: 40,
+    children: [{ id: 4, name: 'Alice', age: 10 }],
+  },
+]
+```
+
+Then you can use the getSubRows function to return the children array in each row as expanded rows. The table instance will now understand where to look for the sub rows on each row.
+
+```ts
+const table = useTable({
+  features,
+  getSubRows: (row) => row.children, // return the children array as sub-rows
+  // other options...
+})
+```
+
+> [!NOTE]
+> You can have a complicated `getSubRows` function, but keep in mind that it will run for every row and every sub-row. This can be expensive if the function is not optimized. Async functions are not supported.
+
+### Custom Expanding UI
+
+In some cases, you may wish to show extra details or information, which may or may not be part of your table data object, such as expanded data for rows. This kind of expanding row UI has gone by many names over the years including "expandable rows", "detail panels", "sub-components", etc.
+
+By default, the `row.getCanExpand()` row instance API will return false unless it finds `subRows` on a row. This can be overridden by implementing your own `getRowCanExpand` function in the table instance options.
+
+```vue
+<tbody>
+  <template v-for="row in table.getRowModel().rows" :key="row.id">
+    <tr>
+      <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+        <FlexRender :cell="cell" />
+      </td>
+    </tr>
+    <tr v-if="row.getIsExpanded()">
+      <td :colSpan="row.getAllCells().length">
+        <!-- Your custom UI goes here -->
+      </td>
+    </tr>
+  </template>
+</tbody>
+```
+
+### Expanded rows state
+
+If you need access to the expanded state of the rows in other parts of your application, you can own the `expanded` state slice yourself. The recommended way in v9 is an external atom passed through the `atoms` table option. Atoms preserve fine-grained subscriptions, and the expanded value can be read anywhere in your app without depending on the table instance.
+
+```ts
+import { createAtom, useSelector } from '@tanstack/vue-store'
+
+const expandedAtom = createAtom<ExpandedState>({})
+
+// subscribe to the atom wherever you need the value
+const expanded = useSelector(expandedAtom) // a Vue ref
+
+const table = useTable({
+  features,
+
+  // other options...
+  atoms: {
+    expanded: expandedAtom, // expanding APIs now update expandedAtom
+  },
+})
+```
+
+Alternatively, the v8-style `state.expanded` plus `onExpandedChange` pattern is still supported. It can be convenient for simple integrations or when migrating v8 code, but it is less fine-grained than external atoms. Pass the current ref value through a getter so the adapter can track it. See the [Table State Guide](./table-state) for a deeper comparison.
+
+```ts
+const expanded = ref<ExpandedState>({})
+
+const table = useTable({
+  features,
+
+  // other options...
+  state: {
+    get expanded() {
+      return expanded.value
+    },
+  },
+  onExpandedChange: (updater) => {
+    expanded.value =
+      updater instanceof Function ? updater(expanded.value) : updater
+  },
+})
+```
+
+The ExpandedState type is defined as follows:
+
+```ts
+type ExpandedState = true | Record<string, boolean>
+```
+
+If the ExpandedState is true, it means all rows are expanded. If it's a record, only the rows whose IDs are present as keys in the record and have a value of true are expanded. For example, if the expanded state is { row1: true, row2: false }, it means the row with ID row1 is expanded and the row with ID row2 is not expanded. This state is used by the table to determine which rows are expanded and should display their subRows, if any.
+
+### UI toggling handler for expanded rows
+
+TanStack table will not add a toggling handler UI for expanded data to your table. You should manually add it within each row's UI to allow users to expand and collapse the row. For example, you can render an expander button inside a cell definition, as the [Expanding example](../examples/expanding) does:
+
+```tsx
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+  },
+  {
+    id: 'expander',
+    header: 'Children',
+    cell: ({ row }) =>
+      row.getCanExpand() ? (
+        <button
+          type="button"
+          onClick={row.getToggleExpandedHandler()}
+          style={{ cursor: 'pointer' }}
+        >
+          {row.getIsExpanded() ? 'Expanded' : 'Collapsed'}
+        </button>
+      ) : null,
+  },
+]
+```
+
+If you render rows manually in an SFC template instead, the same button looks like this:
+
+```vue
+<button
+  v-if="row.getCanExpand()"
+  type="button"
+  @click="row.toggleExpanded()"
+  style="cursor: pointer"
+>
+  {{ row.getIsExpanded() ? 'Expanded' : 'Collapsed' }}
+</button>
+```
+
+### Expanding APIs
+
+Rows expose helpers for reading and toggling their expanded state:
+
+```ts
+row.getCanExpand()
+row.getIsExpanded()
+row.getIsAllParentsExpanded()
+row.getToggleExpandedHandler()
+row.toggleExpanded()
+```
+
+The table instance exposes helpers for reading and toggling aggregate expanded state:
+
+```ts
+table.getCanSomeRowsExpand()
+table.getIsAllRowsExpanded()
+table.getIsSomeRowsExpanded()
+table.getExpandedDepth()
+table.getToggleAllRowsExpandedHandler()
+table.toggleAllRowsExpanded()
+table.resetExpanded()
+```
+
+Use `table.setExpanded` to update the expanded state directly. `table.resetExpanded()` resets to `initialState.expanded`, while `table.resetExpanded(true)` clears the expanded state.
+
+### Filtering Expanded Rows
+
+By default, filtering starts from the parent rows and moves downwards. If a parent row is excluded by the filter, all of its child rows are excluded too. You can change this with the `filterFromLeafRows` option. When it is enabled, filtering starts from the leaf (child) rows and moves upwards, so a parent row is included in the filtered results as long as at least one of its child or grandchild rows meets the filter criteria. The `maxLeafRowFilterDepth` option sets the maximum depth of child rows that the filter considers.
+
+```ts
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
+
+//...
+const table = useTable({
+  features,
+  getSubRows: (row) => row.subRows,
+  filterFromLeafRows: true, // search through the expanded rows
+  maxLeafRowFilterDepth: 1, // limit the depth of the expanded rows that are searched
+  // other options...
+})
+```
+
+### Paginating Expanded Rows
+
+By default, expanded rows are paginated along with the rest of the table (which means expanded rows may span multiple pages). If you want to disable this behavior (which means expanded rows will always render on their parent's page. This also means more rows will be rendered than the set page size) you can use the `paginateExpandedRows` option.
+
+```ts
+const table = useTable({
+  features,
+
+  // other options...
+  paginateExpandedRows: false,
+})
+```
+
+### Pinning Expanded Rows
+
+Pinning expanded rows works the same way as pinning regular rows. You can pin expanded rows to the top or bottom of the table. Please refer to the [Row Pinning Guide](./row-pinning) for more information on row pinning.
+
+### Sorting Expanded Rows
+
+By default, expanded rows are sorted along with the rest of the table.
+
+### Auto Reset Expanded State
+
+If you are also using the grouping feature, the `expanded` state is automatically reset whenever the grouped row model recomputes, such as when the `data` or the grouping state changes. This default is automatically disabled when `manualExpanding` is `true`, but it can be overridden by explicitly assigning a boolean value to the `autoResetExpanded` table option. There is also a global `autoResetAll` table option that disables (or enables) every auto-reset behavior at once.
+
+A common reason to set `autoResetExpanded: false` is editing data while viewing the table (for example, inline cell editing). Every edit updates `data`, which recomputes the row models and would otherwise collapse the user's expanded rows. If you also use the pagination feature, pair it with `autoResetPageIndex: false` so the current page is kept as well.
+
+```ts
+const table = useTable({
+  features,
+
+  // other options...
+  autoResetExpanded: false, // keep expanded state when data changes
+  // autoResetAll: false, // or turn off all auto resets at once
+})
+```
+
+### Manual Expanding (server-side)
+
+If you are doing server-side expansion, you can enable manual row expansion by setting the manualExpanding option to true. This means that the `getExpandedRowModel` will not be used to expand rows and you would be expected to perform the expansion in your own data model.
+
+```ts
+const features = tableFeatures({ rowExpandingFeature })
+
+const table = useTable({
+  features,
+  // other options...
+  manualExpanding: true,
+})
+```

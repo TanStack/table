@@ -1,13 +1,59 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignoreDependencies": ["@size-limit/preset-small-lib", "@tanstack/config"],
   "ignoreWorkspaces": ["examples/**"],
+  "ignore": ["**/*benchmark*", "**/benchmarks/**", "tests/e2e/**"],
   "workspaces": {
+    "packages/table-core": {
+      "ignore": ["**/tests/**"]
+    },
     "packages/match-sorter-utils": {
       "ignoreDependencies": ["remove-accents"]
     },
-    "packages/react-table": {
-      "ignore": ["**/*.notest.*", "**/makeTestData.ts"]
+    "packages/ember-table": {
+      "entry": [
+        "src/index.ts!",
+        "src/static-functions.ts!",
+        "src/flex-render.ts!",
+        "src/experimental-worker-plugin.ts!",
+        "babel.publish.config.cjs",
+        "testem.cjs",
+        "tests/test-helper.ts"
+      ],
+      "ignoreDependencies": [
+        "@ember/destroyable",
+        "@ember/library-tsconfig",
+        "@ember/routing",
+        "@embroider/shared-internals",
+        "@glimmer/tracking",
+        "@glimmer/validator",
+        "@glint/tsserver-plugin"
+      ]
+    },
+    "packages/angular-table": {
+      "entry": [
+        "src/index.ts!",
+        "static-functions/index.ts!",
+        "experimental-worker-plugin/index.ts!"
+      ]
+    },
+    "packages/octane-table": {
+      "entry": [
+        "docs-entry.d.ts!",
+        "src/Subscribe.tsrx!",
+        "src/createTableHook.tsrx!",
+        "src/useTable.tsrx!",
+        "src/internal.ts!",
+        "src/reactivity.ts!",
+        "tests/type-tests/public-surface.tsx!"
+      ]
+    },
+    "packages/svelte-table": {
+      "entry": [
+        "src/index.ts!",
+        "src/static-functions.ts!",
+        "src/flex-render.ts!",
+        "tests/public-api.types.ts!"
+      ]
     }
   }
 }

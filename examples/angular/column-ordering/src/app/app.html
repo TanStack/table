@@ -1,0 +1,97 @@
+<div class="demo-root">
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
+      <label>
+        <input
+          type="checkbox"
+          [checked]="table.getIsAllColumnsVisible()"
+          (change)="table.getToggleAllColumnsVisibilityHandler()($event)"
+        />
+        Toggle All
+      </label>
+    </div>
+
+    @for (column of table.getAllLeafColumns(); track column.id) {
+      <div class="column-toggle-row">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="column.getIsVisible()"
+            (change)="column.getToggleVisibilityHandler()($event)"
+          />
+          {{ column.id }}
+        </label>
+      </div>
+    }
+  </div>
+
+  <div class="spacer-md"></div>
+  <div class="button-row">
+    <button (click)="refreshData()" class="demo-button demo-button-sm">Regenerate Data</button>
+    <button (click)="stressTest()" class="demo-button demo-button-sm">Stress Test (1k rows)</button>
+    <button (click)="randomizeColumns()" class="demo-button demo-button-sm">Shuffle Columns</button>
+  </div>
+
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+                <ng-container
+                  *flexRender="
+                    header.column.columnDef.header;
+                    props: header.getContext();
+                    let header
+                  "
+                >
+                  {{ header }}
+                </ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getVisibleCells(); track cell.id) {
+            <td>
+              <ng-container
+                *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cell"
+              >
+                {{ cell }}
+              </ng-container>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (header of footerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+                <ng-container
+                  *flexRender="
+                    header.column.columnDef.footer;
+                    props: header.getContext();
+                    let header
+                  "
+                >
+                  {{ header }}
+                </ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+
+  <div class="spacer-md"></div>
+  <pre data-testid="table-state">{{ stringifiedState() }}</pre>
+</div>

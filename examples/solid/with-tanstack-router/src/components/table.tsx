@@ -1,0 +1,234 @@
+import {
+  columnFilteringFeature,
+  createTable,
+  metaHelper,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
+import { For, Show, createEffect } from 'solid-js'
+import { DebouncedInput } from './debouncedInput'
+import type {
+  ColumnDef,
+  OnChangeFn,
+  PaginationState,
+  SortingState,
+  TableOptions_RowPagination,
+} from '@tanstack/solid-table'
+import type { Filters } from '../api/types'
+
+interface MyColumnMeta {
+  filterKey?: string
+  filterVariant?: 'text' | 'number'
+}
+
+export const features = tableFeatures({
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
+export const DEFAULT_PAGE_INDEX = 0
+export const DEFAULT_PAGE_SIZE = 10
+
+type Props<TData extends Record<string, string | number>> = {
+  data: Array<TData>
+  columns: Array<ColumnDef<typeof features, TData>>
+  pagination: PaginationState
+  paginationOptions: Pick<
+    TableOptions_RowPagination,
+    'onPaginationChange' | 'rowCount'
+  >
+  filters: Filters<TData>
+  onFilterChange: (dataFilters: Partial<TData>) => void
+  sorting: SortingState
+  onSortingChange: OnChangeFn<SortingState>
+}
+
+export default function Table<T extends Record<string, string | number>>(
+  props: Props<T>,
+) {
+  const table = createTable({
+    key: 'with-tanstack-router-users',
+    debugTable: true,
+    features,
+    get columns() {
+      return props.columns
+    },
+    get data() {
+      return props.data
+    },
+    manualFiltering: true,
+    manualPagination: true,
+    manualSorting: true,
+    get onSortingChange() {
+      return props.onSortingChange
+    },
+    get onPaginationChange() {
+      return props.paginationOptions.onPaginationChange
+    },
+    get rowCount() {
+      return props.paginationOptions.rowCount
+    },
+  })
+
+  useTanStackTableDevtools(table)
+
+  // Sync controlled state with table store
+  createEffect(() => {
+    table.baseAtoms.pagination.set(props.pagination)
+    table.baseAtoms.sorting.set(props.sorting)
+  })
+
+  return (
+    <div>
+      <table>
+        <thead>
+          <For each={table.getHeaderGroups()}>
+            {(headerGroup) => (
+              <tr>
+                <For each={headerGroup.headers}>
+                  {(header) => {
+                    const fieldMeta = header.column.columnDef.meta
+                    return (
+                      <th colSpan={header.colSpan}>
+                        <Show when={!header.isPlaceholder}>
+                          <>
+                            <div
+                              class={
+                                header.column.getCanSort()
+                                  ? 'sortable-header'
+                                  : ''
+                              }
+                              onClick={header.column.getToggleSortingHandler()}
+                            >
+                              <table.FlexRender header={header} />
+                              {(
+                                {
+                                  asc: ' 🔼',
+                                  desc: ' 🔽',
+                                  false: ' 🔃',
+                                } as Record<string, string>
+                              )[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                            <Show
+                              when={
+                                header.column.getCanFilter() &&
+                                fieldMeta?.filterKey !== undefined
+                              }
+                            >
+                              <DebouncedInput
+                                devtoolsKey={`with-tanstack-router-${fieldMeta!.filterKey}`}
+                                class="filter-select"
+                                onChange={(value) => {
+                                  props.onFilterChange({
+                                    [fieldMeta!.filterKey as keyof T]: value,
+                                  } as Partial<T>)
+                                }}
+                                placeholder="Search..."
+                                type={
+                                  fieldMeta?.filterVariant === 'number'
+                                    ? 'number'
+                                    : 'text'
+                                }
+                                value={
+                                  (props.filters[
+                                    fieldMeta!.filterKey! as keyof T
+                                  ] as string | number) ?? ''
+                                }
+                              />
+                            </Show>
+                          </>
+                        </Show>
+                      </th>
+                    )
+                  }}
+                </For>
+              </tr>
+            )}
+          </For>
+        </thead>
+        <tbody>
+          <For each={table.getRowModel().rows}>
+            {(row) => (
+              <tr>
+                <For each={row.getAllCells()}>
+                  {(cell) => (
+                    <td>
+                      <table.FlexRender cell={cell} />
+                    </td>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
+        </tbody>
+      </table>
+      <div class="controls pagination-controls">
+        <button
+          class="demo-button demo-button-sm disabled-button"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm disabled-button"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm disabled-button"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          class="demo-button demo-button-sm disabled-button"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+        >
+          {'>>'}
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            value={table.atoms.pagination.get().pageIndex + 1}
+            onInput={(e) => {
+              const page = e.currentTarget.value
+                ? Number(e.currentTarget.value) - 1
+                : 0
+              table.setPageIndex(page)
+            }}
+            class="page-size-input"
+          />
+        </span>
+        <select
+          value={table.atoms.pagination.get().pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number(e.currentTarget.value))
+          }}
+        >
+          <For each={[10, 20, 30, 40, 50]}>
+            {(pageSize) => <option value={pageSize}>Show {pageSize}</option>}
+          </For>
+        </select>
+      </div>
+    </div>
+  )
+}

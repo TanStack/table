@@ -1,43 +1,65 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Injector,
   computed,
+  inject,
   signal,
-  TemplateRef,
   viewChild,
 } from '@angular/core'
 import {
-  ColumnDef,
-  createAngularTable,
   FlexRenderDirective,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  RowSelectionState,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  injectTable,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { FilterComponent } from './filter'
-import { makeData, type Person } from './makeData'
+import { makeData } from './makeData'
 import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
 } from './selection-column.component'
+import type { Person } from './makeData'
+import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
+import type { TemplateRef } from '@angular/core'
+
+export const features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+})
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FilterComponent, FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  private readonly injector = inject(Injector)
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
-  readonly data = signal(makeData(10_000))
+  readonly data = signal(makeData(1_000))
 
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: ColumnDef<Person>[] = [
+  readonly columns: Array<ColumnDef<typeof features, Person>> = [
     {
       id: 'select',
       header: () => TableHeadSelectionComponent<Person>,
@@ -45,31 +67,31 @@ export class AppComponent {
     },
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
           header: 'First name',
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => 'Last Name',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => this.ageHeaderCell(),
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -77,17 +99,17 @@ export class AppComponent {
             {
               accessorKey: 'visits',
               header: () => 'Visits',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -95,33 +117,44 @@ export class AppComponent {
     },
   ]
 
-  table = createAngularTable(() => ({
-    data: this.data(),
+  // TODO make this generic infer without passing in manually
+  table = injectTable<typeof features, Person>(() => ({
+    key: 'row-selection-signal', // needed for devtools
+    features,
     columns: this.columns,
+    data: this.data(),
     state: {
       rowSelection: this.rowSelection(),
     },
     enableRowSelection: true, // enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-    onRowSelectionChange: updaterOrValue => {
+    onRowSelectionChange: (updaterOrValue) => {
       this.rowSelection.set(
         typeof updaterOrValue === 'function'
           ? updaterOrValue(this.rowSelection())
-          : updaterOrValue
+          : updaterOrValue,
       )
     },
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   }))
 
-  readonly stringifiedRowSelection = computed(() =>
-    JSON.stringify(this.rowSelection(), null, 2)
-  )
+  ngOnInit() {
+    this.registerTableDevtools()
+  }
+
+  private registerTableDevtools() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      injector: this.injector,
+    }))
+  }
+
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   readonly rowSelectionLength = computed(
-    () => Object.keys(this.rowSelection()).length
+    () => Object.keys(this.rowSelection()).length,
   )
 
   onPageInputChange(event: Event): void {
@@ -137,11 +170,10 @@ export class AppComponent {
   logSelectedFlatRows(): void {
     console.info(
       'table.getSelectedRowModel().flatRows',
-      this.table.getSelectedRowModel().flatRows
+      this.table.getSelectedRowModel().flatRows,
     )
   }
 
-  refreshData(): void {
-    this.data.set(makeData(10_000))
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(1_000_000))
 }

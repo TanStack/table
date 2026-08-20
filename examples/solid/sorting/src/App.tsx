@@ -1,46 +1,69 @@
 import {
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  SortingState,
-  ColumnDef,
-  createSolidTable,
+  FlexRender,
+  createSortedRowModel,
+  createTable,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
 } from '@tanstack/solid-table'
-import { makeData, Person } from './makeData'
-import { createSignal, For, Show } from 'solid-js'
+import { For, Show, createSignal } from 'solid-js'
+import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/solid-table'
+import type { Person } from './makeData'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
+})
 
 function App() {
-  const [data, setData] = createSignal(makeData(100_000))
-  const [sorting, setSorting] = createSignal<SortingState>([])
-  const refreshData = () => setData(makeData(100_000))
+  const [data, setData] = createSignal(makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
-  const columns: ColumnDef<Person>[] = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
+    {
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    },
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => <span>Last Name</span>,
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
+        },
+        {
+          accessorKey: 'email',
+          header: 'Email',
+          sortFn: 'alphanumeric',
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => 'Age',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -48,17 +71,17 @@ function App() {
             {
               accessorKey: 'visits',
               header: () => <span>Visits</span>,
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -66,45 +89,52 @@ function App() {
     },
   ]
 
-  const table = createSolidTable({
+  const table = createTable({
+    features,
     get data() {
       return data()
     },
     columns,
-    state: {
-      get sorting() {
-        return sorting()
-      },
-    },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    // initialState: { sorting: [{ id: 'firstName', desc: false }] }, // set the initial sort once
+    // atoms: { sorting: sortingAtom }, // preferred: own sorting state with an external atom
+    // state: { sorting }, // classic controlled state; pair with onSortingChange
+    // onSortingChange: setSorting,
+    // enableSorting: false, // disable sorting for every column; default true
+    // sortDescFirst: true, // start every sort cycle with descending order; inferred by column data by default
+    // enableSortingRemoval: false, // keep a sorted column sorted when toggling; default true
+    // enableMultiSort: false, // disable Shift-click multi-sorting; default true
+    // enableMultiRemove: false, // prevent a multi-sort toggle from removing a sorted column; default true
+    // isMultiSortEvent: () => true, // make every sort interaction a multi-sort; default requires Shift
+    // maxMultiSortColCount: 3, // limit multi-sorting to three columns; default Infinity
+    // manualSorting: true, // pass data that is already sorted, for example from a server
+    // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
     debugTable: true,
   })
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+      </div>
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
-            {headerGroup => (
+            {(headerGroup) => (
               <tr>
                 <For each={headerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
                         <div
                           class={
                             header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
+                              ? 'sortable-header'
                               : undefined
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          <FlexRender header={header} />
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -120,15 +150,12 @@ function App() {
         </thead>
         <tbody>
           <For each={table.getRowModel().rows.slice(0, 10)}>
-            {row => (
+            {(row) => (
               <tr>
-                <For each={row.getVisibleCells()}>
-                  {cell => (
+                <For each={row.getAllCells()}>
+                  {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -137,11 +164,10 @@ function App() {
           </For>
         </tbody>
       </table>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <pre>{JSON.stringify(sorting(), null, 2)}</pre>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

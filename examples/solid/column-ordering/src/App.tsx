@@ -1,42 +1,48 @@
-import { createSignal, For, Show } from 'solid-js'
-import { makeData, Person } from './makeData'
+import { For, Show, createSignal } from 'solid-js'
 import { faker } from '@faker-js/faker'
 import {
-  flexRender,
-  getCoreRowModel,
-  ColumnOrderState,
-  VisibilityState,
-  ColumnDef,
-  createSolidTable,
+  FlexRender,
+  columnOrderingFeature,
+  columnVisibilityFeature,
+  createTable,
+  tableFeatures,
 } from '@tanstack/solid-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { ColumnDef } from '@tanstack/solid-table'
 
-const defaultColumns: ColumnDef<Person>[] = [
+const features = tableFeatures({
+  columnOrderingFeature,
+  columnVisibilityFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -44,17 +50,17 @@ const defaultColumns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -64,40 +70,32 @@ const defaultColumns: ColumnDef<Person>[] = [
 
 function App() {
   const [data, setData] = createSignal(makeData(20))
-  const [columnOrder, setColumnOrder] = createSignal<ColumnOrderState>([])
-  const [columnVisibility, setColumnVisibility] = createSignal<VisibilityState>(
-    {}
-  )
-  const rerender = () => setData(() => makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
-  const table = createSolidTable({
+  const table = createTable({
+    features,
     get data() {
       return data()
     },
     columns: defaultColumns,
-    state: {
-      get columnOrder() {
-        return columnOrder()
-      },
-      get columnVisibility() {
-        return columnVisibility()
-      },
-    },
-    onColumnOrderChange: setColumnOrder,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
+    // initialState: { columnOrder: ['lastName', 'firstName'] }, // set column order on first render
+    // atoms: { columnOrder: columnOrderAtom }, // preferred: own ordering state with an external atom
+    // state: { columnOrder }, // classic controlled state; pair with onColumnOrderChange
+    // onColumnOrderChange: setColumnOrder,
+    debugTable: true,
   })
 
   const randomizeColumns = () => {
     table.setColumnOrder(
-      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
   return (
-    <div class="p-2">
-      <div class="inline-block border border-black shadow rounded">
-        <div class="px-1 border-b border-black">
+    <div class="demo-root">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
           <label>
             <input
               checked={table.getIsAllColumnsVisible()}
@@ -108,8 +106,8 @@ function App() {
           </label>
         </div>
         <For each={table.getAllLeafColumns()}>
-          {column => (
-            <div class="px-1">
+          {(column) => (
+            <div class="column-toggle-row">
               <label>
                 <input
                   checked={column.getIsVisible()}
@@ -122,29 +120,35 @@ function App() {
           )}
         </For>
       </div>
-      <div class="h-4" />
-      <div class="flex flex-wrap gap-2">
-        <button onClick={() => rerender()} class="border p-1">
-          Regenerate
+      <div class="spacer-md" />
+      <div class="button-row">
+        <button
+          onClick={() => refreshData()}
+          class="demo-button demo-button-sm"
+        >
+          Regenerate Data
         </button>
-        <button onClick={() => randomizeColumns()} class="border p-1">
+        <button onClick={() => stressTest()} class="demo-button demo-button-sm">
+          Stress Test (1k rows)
+        </button>
+        <button
+          onClick={() => randomizeColumns()}
+          class="demo-button demo-button-sm"
+        >
           Shuffle Columns
         </button>
       </div>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
-            {headerGroup => (
+            {(headerGroup) => (
               <tr>
                 <For each={headerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        <FlexRender header={header} />
                       </Show>
                     </th>
                   )}
@@ -155,15 +159,12 @@ function App() {
         </thead>
         <tbody>
           <For each={table.getRowModel().rows}>
-            {row => (
+            {(row) => (
               <tr>
                 <For each={row.getVisibleCells()}>
-                  {cell => (
+                  {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -173,16 +174,13 @@ function App() {
         </tbody>
         <tfoot>
           <For each={table.getFooterGroups()}>
-            {footerGroup => (
+            {(footerGroup) => (
               <tr>
                 <For each={footerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
-                        {flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext()
-                        )}
+                        <FlexRender footer={header} />
                       </Show>
                     </th>
                   )}
@@ -192,8 +190,10 @@ function App() {
           </For>
         </tfoot>
       </table>
-      <div class="h-4" />
-      <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
+      <div class="spacer-md" />
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

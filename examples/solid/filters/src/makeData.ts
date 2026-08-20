@@ -7,11 +7,12 @@ export type Person = {
   visits: number
   progress: number
   status: 'relationship' | 'complicated' | 'single'
-  subRows?: Person[]
+  birthDate: Date
+  subRows?: Array<Person>
 }
 
 const range = (len: number) => {
-  const arr: number[] = []
+  const arr: Array<number> = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
   }
@@ -29,14 +30,15 @@ const newPerson = (): Person => {
       'relationship',
       'complicated',
       'single',
-    ])[0]!,
+    ])[0],
+    birthDate: faker.date.birthdate({ min: 18, max: 65, mode: 'age' }),
   }
 }
 
-export function makeData(...lens: number[]) {
-  const makeDataLevel = (depth = 0): Person[] => {
-    const len = lens[depth]!
-    return range(len).map((d): Person => {
+export function makeData(...lens: Array<number>) {
+  const makeDataLevel = (depth = 0): Array<Person> => {
+    const len = lens[depth]
+    return range(len).map((): Person => {
       return {
         ...newPerson(),
         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,

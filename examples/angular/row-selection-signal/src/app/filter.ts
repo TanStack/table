@@ -1,17 +1,17 @@
-import { CommonModule } from '@angular/common'
-import { Component, input, OnInit } from '@angular/core'
-import { Column } from '@tanstack/angular-table'
-import type { Table } from '@tanstack/angular-table'
+import { Component, input } from '@angular/core'
+import type { OnInit } from '@angular/core'
+import type { Column, RowData, Table } from '@tanstack/angular-table'
+import type { features } from './app.component'
 
 @Component({
   selector: 'app-table-filter',
   template: ` @if (columnType) {
     @if (columnType == 'number') {
-      <div class="flex space-x-2">
+      <div class="filter-row">
         <input
           #min
           type="number"
-          class="w-24 border shadow rounded"
+          class="filter-input"
           placeholder="Min"
           [value]="getMinValue()"
           (input)="updateMinFilterValue(min.value)"
@@ -19,7 +19,7 @@ import type { Table } from '@tanstack/angular-table'
         <input
           #max
           type="number"
-          class="w-36 border shadow rounded"
+          class="filter-select"
           placeholder="max"
           [value]="getMaxValue()"
           (input)="updateMaxFilterValue(max.value)"
@@ -29,20 +29,18 @@ import type { Table } from '@tanstack/angular-table'
       <input
         #search
         type="text"
-        class="w-36 border shadow rounded"
+        class="filter-select"
         placeholder="Search..."
         [value]="column().getFilterValue() ?? ''"
         (input)="column().setFilterValue(search.value)"
       />
     }
   }`,
-  standalone: true,
-  imports: [CommonModule],
 })
-export class FilterComponent<T> implements OnInit {
-  column = input.required<Column<any, any>>()
+export class FilterComponent<T extends RowData> implements OnInit {
+  column = input.required<Column<typeof features, T>>()
 
-  table = input.required<Table<T>>()
+  table = input.required<Table<typeof features, T>>()
 
   columnType!: string
 
@@ -53,14 +51,17 @@ export class FilterComponent<T> implements OnInit {
   }
 
   getMinValue() {
-    const minValue = this.column().getFilterValue() as any
+    const minValue = this.column().getFilterValue() as
+      [string | undefined, string | undefined] | undefined
 
-    return (minValue?.[0] ?? '') as string
+    return minValue?.[0] ?? ''
   }
 
   getMaxValue() {
-    const maxValue = this.column().getFilterValue() as any
-    return (maxValue?.[1] ?? '') as string
+    const maxValue = this.column().getFilterValue() as
+      [string | undefined, string | undefined] | undefined
+
+    return maxValue?.[1] ?? ''
   }
 
   updateMinFilterValue(newValue: string): void {

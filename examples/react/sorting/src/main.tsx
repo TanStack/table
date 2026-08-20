@@ -1,21 +1,38 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  SortingFn,
-  SortingState,
-  useReactTable,
+  createColumnHelper,
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { SortFn } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
-//custom sorting logic for one of our enum columns
-const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+// custom sorting logic for one of our enum columns
+const sortStatusFn: SortFn<typeof features, Person> = (
+  rowA,
+  rowB,
+  _columnId,
+) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -23,103 +40,102 @@ const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  const [sorting, setSorting] = React.useState<SortingState>([])
-
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        //this column will sort in ascending order by default since it is a string column
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        sortUndefined: 'last', //force undefined values to the end
-        sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        //this column will sort in descending order by default since it is a number column
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        sortUndefined: 'last', //force undefined values to the end
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        sortingFn: sortStatusFn, //use our custom sorting function for this enum column
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        // enableSorting: false, //disable sorting for this column
-      },
-      {
-        accessorKey: 'rank',
-        header: 'Rank',
-        invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-        // sortingFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
-      },
-    ],
-    []
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'rowNumber',
+          header: '#',
+          cell: ({ row }) => row.getDisplayIndex() + 1,
+        }),
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          // this column will sort in ascending order by default since it is a string column
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          sortUndefined: 'last', // force undefined values to the end
+          sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
+        }),
+        columnHelper.accessor('email', {
+          header: 'Email',
+          sortFn: 'alphanumeric',
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          // this column will sort in descending order by default since it is a number column
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          sortUndefined: 'last', // force undefined values to the end
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          sortFn: sortStatusFn, // use our custom sorting function for this enum column
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          // enableSorting: false, //disable sorting for this column
+        }),
+        columnHelper.accessor('rank', {
+          header: 'Rank',
+          invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
+        }),
+        columnHelper.accessor('createdAt', {
+          header: 'Created At',
+          // sortFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
+        }),
+      ]),
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(1_000))
-  const refreshData = () => setData(() => makeData(100_000)) //stress test with 100k rows
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
-  const table = useReactTable({
-    columns,
-    data,
-    debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(), //client-side sorting
-    onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
-    // sortingFns: {
-    //   sortStatusFn, //or provide our custom sorting function globally for all columns to be able to use
-    // },
-    //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
-    state: {
-      sorting,
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      // initialState: { sorting: [{ id: 'firstName', desc: false }] }, // set the initial sort once
+      // atoms: { sorting: sortingAtom }, // preferred: own sorting state with an external atom
+      // state: { sorting }, // classic controlled state; pair with onSortingChange
+      // onSortingChange: setSorting,
+      // enableSorting: false, // disable sorting for every column; default true
+      // sortDescFirst: true, // start every sort cycle with descending order; inferred by column data by default
+      // enableSortingRemoval: false, // keep a sorted column sorted when toggling; default true
+      // enableMultiSort: false, // disable Shift-click multi-sorting; default true
+      // enableMultiRemove: false, // prevent a multi-sort toggle from removing a sorted column; default true
+      // isMultiSortEvent: () => true, // make every sort interaction a multi-sort; default requires Shift
+      // maxMultiSortColCount: 3, // limit multi-sorting to three columns; default Infinity
+      // manualSorting: true, // pass data that is already sorted, for example from a server
+      // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
+      debugTable: true,
     },
-    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering - default on/true
-    // enableMultiSort: false, //Don't allow shift key to sort multiple columns - default on/true
-    // enableSorting: false, // - default on/true
-    // enableSortingRemoval: false, //Don't allow - default on/true
-    // isMultiSortEvent: (e) => true, //Make all clicks multi-sort - default requires `shift` key
-    // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
-  })
-
-  //access sorting state from the table instance
-  console.log(table.getState().sorting)
+    (state) => state, // default selector
+  )
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+      </div>
+      <div className="spacer-sm" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div
                         className={
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : ''
+                          header.column.getCanSort() ? 'sortable-header' : ''
                         }
                         onClick={header.column.getToggleSortingHandler()}
                         title={
@@ -132,10 +148,7 @@ function App() {
                             : undefined
                         }
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        <table.FlexRender header={header} />
                         {{
                           asc: ' 🔼',
                           desc: ' 🔽',
@@ -152,16 +165,13 @@ function App() {
           {table
             .getRowModel()
             .rows.slice(0, 10)
-            .map(row => {
+            .map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        <table.FlexRender cell={cell} />
                       </td>
                     )
                   })}
@@ -171,13 +181,11 @@ function App() {
         </tbody>
       </table>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <pre>{JSON.stringify(sorting, null, 2)}</pre>
+      <div></div>
+      {/* Store mode: dump full table state for debugging */}
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }
@@ -187,7 +195,7 @@ const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // <React.StrictMode>
+  <App />,
+  // </React.StrictMode>,
 )

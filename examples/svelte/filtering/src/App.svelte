@@ -1,111 +1,203 @@
 <script lang="ts">
-  import './index.css'
-  import { writable } from 'svelte/store'
-
-  import './index.css'
-
+  import type { ColumnDef } from '@tanstack/svelte-table'
   import {
-    createSvelteTable,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
+    FlexRender,
+    createTable,
   } from '@tanstack/svelte-table'
-
-  import type {
-    ColumnDef,
-    TableOptions,
-    FilterFn,
-  } from '@tanstack/svelte-table'
-
-  import { rankItem } from '@tanstack/match-sorter-utils'
-
+  import DebouncedInput from './DebouncedInput.svelte'
+  import ColumnFilter from './ColumnFilter.svelte'
+  import './index.css'
+  import { features } from './features'
   import { makeData, type Person } from './makeData'
 
-  let globalFilter = ''
-
-  const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-    // Rank the item
-    const itemRank = rankItem(row.getValue(columnId), value)
-
-    // Store the itemRank info
-    addMeta({ itemRank })
-
-    // Return if the item should be filtered in/out
-    return itemRank.passed
-  }
-
-  let columns: ColumnDef<Person>[] = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
-      accessorFn: row => `${row.firstName} ${row.lastName}`,
-      id: 'fullName',
       header: 'Name',
-      cell: info => info.getValue(),
-      footer: props => props.column.id,
-      filterFn: 'fuzzy',
+      footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: 'firstName',
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        },
+        {
+          accessorFn: (row) => row.lastName,
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        },
+      ],
+    },
+    {
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: 'age',
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+          filterFn: 'inNumberRange',
+        },
+        {
+          header: 'More Info',
+          columns: [
+            {
+              accessorKey: 'visits',
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+              filterFn: 'inNumberRange',
+            },
+            {
+              accessorKey: 'status',
+              header: 'Status',
+              footer: (props) => props.column.id,
+            },
+            {
+              accessorKey: 'progress',
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+              filterFn: 'inNumberRange',
+            },
+          ],
+        },
+      ],
     },
   ]
 
-  const options = writable<TableOptions<any>>({
-    data: makeData(25),
-    columns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
+
+  const table = createTable(
+    {
+      features,
+      get data() {
+        return data
+      },
+      columns,
+      globalFilterFn: 'includesString',
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: false,
     },
-    enableMultiRowSelection: true,
-    getPaginationRowModel: getPaginationRowModel(),
-    getCoreRowModel: getCoreRowModel(),
-    globalFilterFn: fuzzyFilter,
-    getFilteredRowModel: getFilteredRowModel(),
-  })
-
-  const table = createSvelteTable(options)
-
-  const handleKeyUp = (e: any) => {
-    $table.setGlobalFilter(String(e?.target?.value))
-  }
+  )
+  const pagination = $derived(table.atoms.pagination.get())
+  const globalFilter = $derived(table.atoms.globalFilter.get())
 </script>
 
-<input
-  type="text"
-  placeholder="Global filter"
-  class="border w-full p-1"
-  bind:value={globalFilter}
-  on:keyup={handleKeyUp}
-/>
-<div class="h-2" />
-<table class="w-full">
-  <thead>
-    {#each $table.getHeaderGroups() as headerGroup}
-      <tr>
-        {#each headerGroup.headers as header, idx}
-          <th scope="col">
-            {#if !header.isPlaceholder}
-              <svelte:component
-                this={flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-              />
-            {/if}
-          </th>
-        {/each}
-      </tr>
-    {/each}
-  </thead>
-  <tbody>
-    {#each $table.getRowModel().rows as row}
-      <tr>
-        {#each row.getVisibleCells() as cell}
-          <td>
-            <svelte:component
-              this={flexRender(cell.column.columnDef.cell, cell.getContext())}
-            />
-          </td>
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
-<div class="h-2" />
-<pre>"globalFilter": "{$table.getState().globalFilter}"</pre>
+<div class="demo-root">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
+  </div>
+  <DebouncedInput
+    value={globalFilter ?? ''}
+    onchange={(value) => table.setGlobalFilter(String(value))}
+    class="summary-panel"
+    placeholder="Search all columns..."
+  />
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
+        <tr>
+          {#each headerGroup.headers as header (header.id)}
+            <th colSpan={header.colSpan}>
+              {#if !header.isPlaceholder}
+                <FlexRender header={header} />
+                {#if header.column.getCanFilter()}
+                  <div>
+                    <ColumnFilter column={header.column} {table} />
+                  </div>
+                {/if}
+              {/if}
+            </th>
+          {/each}
+        </tr>
+      {/each}
+    </thead>
+    <tbody>
+      {#each table.getRowModel().rows as row (row.id)}
+        <tr>
+          {#each row.getAllCells() as cell (cell.id)}
+            <td>
+              <FlexRender cell={cell} />
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+  <div class="spacer-sm"></div>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.firstPage()
+      }
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.previousPage()}
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.nextPage()}
+      disabled={!table.getCanNextPage()}
+    >
+      {'>'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.lastPage()}
+      disabled={!table.getCanLastPage()}
+    >
+      {'>>'}
+    </button>
+    <span class="inline-controls">
+      <div>Page</div>
+      <strong>
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {table.getPageCount().toLocaleString()}
+      </strong>
+    </span>
+    <span class="inline-controls">
+      | Go to page:
+      <input
+        type="number"
+        min="1"
+        max={table.getPageCount()}
+        value={pagination.pageIndex + 1}
+        oninput={(e: Event) => {
+          const page = (e.target as HTMLInputElement).value
+            ? Number((e.target as HTMLInputElement).value) - 1
+            : 0
+          table.setPageIndex(page)
+        }}
+        class="page-size-input"
+      />
+    </span>
+    <select
+      value={pagination.pageSize}
+      onchange={(e: Event) => {
+        table.setPageSize(Number((e.target as HTMLSelectElement).value))
+      }}
+    >
+      {#each [10, 20, 30, 40, 50] as pageSize}
+        <option value={pageSize}>Show {pageSize}</option>
+      {/each}
+    </select>
+  </div>
+  <div>
+    Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+    {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
+  </div>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
+</div>

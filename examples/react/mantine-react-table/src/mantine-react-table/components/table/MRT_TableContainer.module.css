@@ -1,0 +1,20 @@
+.root {
+  background-color: var(--mrt-base-background-color);
+  max-width: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+.root-sticky {
+  max-height: clamp(
+    350px,
+    calc(100vh - calc(var(--mrt-top-toolbar-height) * 1px)),
+    9999px
+  );
+}
+
+.root-fullscreen {
+  max-height: calc(
+    100vh - calc(var(--mrt-top-toolbar-height) * 1px)
+  ) !important;
+}

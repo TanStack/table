@@ -1,5 +1,9 @@
-<div class="p-2">
-  <div class="h-2"></div>
+<div class="demo-root">
+  <button (click)="refreshData()" class="demo-button demo-button-spaced">Regenerate Data</button>
+  <button (click)="stressTest()" class="demo-button demo-button-spaced">
+    Stress Test (1M rows)
+  </button>
+  <div class="spacer-sm"></div>
 
   <table>
     <thead>
@@ -20,10 +24,8 @@
 
                 @if (header.column.getCanFilter()) {
                   <div>
-                    <app-table-filter
-                      [column]="header.column"
-                      [table]="table"
-                    />
+                    <!-- TODO fix type -->
+                    <app-table-filter [column]="$any(header.column)" [table]="table" />
                   </div>
                 }
               }
@@ -38,11 +40,7 @@
           @for (cell of row.getVisibleCells(); track cell.id) {
             <td>
               <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let renderCell
-                "
+                *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let renderCell"
               >
                 {{ renderCell }}
               </ng-container>
@@ -53,7 +51,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td class="p-1">
+        <td class="cell-padding">
           <input
             type="checkbox"
             [checked]="table.getIsAllPageRowsSelected()"
@@ -62,63 +60,60 @@
           />
         </td>
         <td [attr.colspan]="20">
-          Page Rows ({{ table.getRowModel().rows.length }})
+          Page Rows ({{ table.getRowModel().rows.length.toLocaleString() }})
         </td>
       </tr>
     </tfoot>
   </table>
 
-  <div class="h-2"></div>
-  <div class="flex items-center gap-2">
+  <div class="spacer-sm"></div>
+  <div class="controls">
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       (click)="table.setPageIndex(0)"
       [disabled]="!table.getCanPreviousPage()"
     >
-      <<
+      &lt;&lt;
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       (click)="table.previousPage()"
       [disabled]="!table.getCanPreviousPage()"
     >
-      <
+      &lt;
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       (click)="table.nextPage()"
       [disabled]="!table.getCanNextPage()"
     >
-      >
+      &gt;
     </button>
     <button
-      class="border rounded p-1"
-      (click)="table.setPageIndex(table.getPageCount() - 1)"
-      [disabled]="!table.getCanNextPage()"
+      class="demo-button demo-button-sm"
+      (click)="table.lastPage()"
+      [disabled]="!table.getCanLastPage()"
     >
-      >>
+      &gt;&gt;
     </button>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {{ table.getState().pagination.pageIndex + 1 }} of
-        {{ table.getPageCount() }}
+        {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       | Go to page:
       <input
         type="number"
-        [value]="table.getState().pagination.pageIndex + 1"
+        [value]="table.atoms.pagination.get().pageIndex + 1"
         (input)="onPageInputChange($event)"
-        class="border p-1 rounded w-16"
+        class="page-size-input"
       />
     </span>
 
-    <select
-      [value]="table.getState().pagination.pageSize"
-      (change)="onPageSizeChange($event)"
-    >
+    <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }
@@ -126,24 +121,19 @@
   </div>
   <br />
   <div>
-    {{ rowSelectionLength() }} of
-    {{ table.getPreFilteredRowModel().rows.length }} Total Rows
+    {{ rowSelectionLength().toLocaleString() }} of
+    {{ table.getPreFilteredRowModel().rows.length.toLocaleString() }} Total Rows
   </div>
   <hr />
   <br />
   <div>
-    <button class="border rounded p-2 mb-2" (click)="refreshData()">
-      Refresh Data
-    </button>
-  </div>
-  <div>
-    <button class="border rounded p-2 mb-2" (click)="logSelectedFlatRows()">
+    <button class="demo-button demo-button-spaced" (click)="logSelectedFlatRows()">
       Log table.getSelectedRowModel().flatRows
     </button>
   </div>
   <div>
     <label>Row Selection State:</label>
-    <pre>{{ stringifiedRowSelection() }}</pre>
+    <pre data-testid="table-state">{{ stringifiedState() }}</pre>
   </div>
 </div>
 

@@ -1,0 +1,189 @@
+<script lang="ts">
+  import {
+    createColumnHelper,
+    createPaginatedRowModel,
+    createTable,
+    rowPaginationFeature,
+    tableFeatures,
+    FlexRender,
+  } from '@tanstack/svelte-table'
+  import { makeData } from './makeData'
+  import type { Person } from './makeData'
+  import './index.css'
+
+  const features = tableFeatures({
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  })
+
+  const columnHelper = createColumnHelper<typeof features, Person>()
+
+  const columns = columnHelper.columns([
+    columnHelper.display({
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    }),
+    columnHelper.accessor('firstName', {
+      cell: (info) => info.getValue(),
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor((row) => row.lastName, {
+      id: 'lastName',
+      cell: (info) => info.getValue(),
+      header: () => 'Last Name',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('age', {
+      header: () => 'Age',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('visits', {
+      header: () => 'Visits',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('progress', {
+      header: 'Profile Progress',
+      footer: (props) => props.column.id,
+    }),
+  ])
+
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
+
+  const table = createTable(
+    {
+      features,
+      columns,
+      get data() {
+        return data
+      },
+      // initialState: { pagination: { pageIndex: 1, pageSize: 20 } }, // set the initial page once
+      // atoms: { pagination: paginationAtom }, // preferred: own pagination state with an external atom
+      // state: { pagination }, // classic controlled state; pair with onPaginationChange
+      // onPaginationChange: setPagination,
+      // autoResetPageIndex: false, // keep the current page after page-altering changes; default true
+      // autoResetAll: false, // turn off every feature's automatic reset, including page index
+      // manualPagination: true, // pass data that is already paginated, for example from a server
+      // pageCount: 10, // total pages for manual pagination; use -1 when unknown
+      // rowCount: 1_000, // total rows for manual pagination; pageCount is calculated from this and pageSize
+      debugTable: true,
+    },
+  )
+  const pagination = $derived(table.atoms.pagination.get())
+
+</script>
+
+<div class="demo-root">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
+  </div>
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
+        <tr>
+          {#each headerGroup.headers as header (header.id)}
+            <th colSpan={header.colSpan}>
+              <div>
+                {#if !header.isPlaceholder}
+                  <FlexRender header={header} />
+                {/if}
+              </div>
+            </th>
+          {/each}
+        </tr>
+      {/each}
+    </thead>
+    <tbody>
+      {#each table.getRowModel().rows as row (row.id)}
+        <tr>
+          {#each row.getAllCells() as cell (cell.id)}
+            <td>
+              <FlexRender cell={cell} />
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+  <div class="spacer-sm"></div>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.firstPage()
+      }
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.previousPage()}
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.nextPage()}
+      disabled={!table.getCanNextPage()}
+    >
+      {'>'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.lastPage()}
+      disabled={!table.getCanLastPage()}
+    >
+      {'>>'}
+    </button>
+    <span class="inline-controls">
+      <div>Page</div>
+      <strong>
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {table.getPageCount().toLocaleString()}
+      </strong>
+    </span>
+    <span class="inline-controls">
+      | Go to page:
+      <input
+        type="number"
+        min="1"
+        max={table.getPageCount()}
+        value={pagination.pageIndex + 1}
+        oninput={(e: Event) => {
+          const page = (e.target as HTMLInputElement).value
+            ? Number((e.target as HTMLInputElement).value) - 1
+            : 0
+          table.setPageIndex(page)
+        }}
+        class="page-size-input"
+      />
+    </span>
+    <select
+      value={pagination.pageSize}
+      onchange={(e: Event) => {
+        table.setPageSize(Number((e.target as HTMLSelectElement).value))
+      }}
+    >
+      {#each [10, 20, 30, 40, 50] as pageSize}
+        <option value={pageSize}>Show {pageSize}</option>
+      {/each}
+      <option value={Infinity}>Show All</option>
+    </select>
+  </div>
+  <div>
+    Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+    {table.getRowCount().toLocaleString()} Rows
+  </div>
+  <hr />
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
+</div>

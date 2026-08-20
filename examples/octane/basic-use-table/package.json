@@ -1,0 +1,22 @@
+{
+  "name": "tanstack-octane-table-example-basic-use-table",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src --ext .ts",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
+    "test:types": "tsrx-tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/octane-table": "^9.1.2",
+    "octane": "0.1.36"
+  },
+  "devDependencies": {
+    "@tsrx/typescript-plugin": "^0.3.118",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
+  }
+}

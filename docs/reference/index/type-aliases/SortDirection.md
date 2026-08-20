@@ -1,0 +1,12 @@
+---
+id: SortDirection
+title: SortDirection
+---
+
+# Type Alias: SortDirection
+
+```ts
+type SortDirection = "asc" | "desc";
+```
+
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L12)

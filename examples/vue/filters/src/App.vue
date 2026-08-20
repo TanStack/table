@@ -1,148 +1,133 @@
 <script setup lang="ts">
-import {
-  ColumnFiltersState,
-  FlexRender,
-  createColumnHelper,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  useVueTable,
-} from '@tanstack/vue-table'
 import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
 import Filter from './Filter.vue'
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
+import { createAppColumnHelper, useAppTable } from './tableHelper'
+import { makeData } from './makeData'
+import type { Person } from './tableHelper'
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const columns = ref(
+  columnHelper.columns([
+    columnHelper.display({
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    }),
+    columnHelper.group({
+      header: 'Name',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.group({
+          header: 'More Info',
+          columns: columnHelper.columns([
+            columnHelper.accessor('visits', {
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('status', {
+              header: 'Status',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('progress', {
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('birthDate', {
+              header: 'Birth Date',
+              // A locale-independent date format keeps the demo (and its tests) stable
+              cell: (info) => info.getValue().toISOString().slice(0, 10),
+              filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
+              footer: (props) => props.column.id,
+            }),
+          ]),
+        }),
+      ]),
+    }),
+  ]),
+)
+
+const INITIAL_PAGE_INDEX = 0
+
+const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
+const pageSizes = [10, 20, 30, 40, 50]
+const data = ref(makeData(1_000))
+
+const refreshData = () => {
+  data.value = makeData(1_000)
 }
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
-const columnHelper = createColumnHelper<Person>()
-const columns = [
-  columnHelper.group({
-    header: 'Name',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      }),
-      columnHelper.accessor(row => row.lastName, {
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => 'Last Name',
-        footer: props => props.column.id,
-      }),
-    ],
-  }),
-  columnHelper.group({
-    header: 'Info',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: props => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-    ],
-  }),
-]
-const data = ref(defaultData)
-const rerender = () => {
-  data.value = defaultData
+
+const stressTest = () => {
+  data.value = makeData(1_000_000)
 }
-const columnFilters = ref<ColumnFiltersState>([])
-const globalFilter = ref('')
-const table = useVueTable({
-  get data() {
-    return data.value
+
+const table = useAppTable({
+  data,
+  get columns() {
+    return columns.value
   },
-  columns,
-  state: {
-    get columnFilters() {
-      return columnFilters.value
-    },
-    get globalFilter() {
-      return globalFilter.value
-    },
-  },
-  onColumnFiltersChange: updaterOrValue => {
-    columnFilters.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(columnFilters.value)
-        : updaterOrValue
-  },
-  onGlobalFilterChange: updaterOrValue => {
-    globalFilter.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(globalFilter.value)
-        : updaterOrValue
-  },
-  getCoreRowModel: getCoreRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getFacetedRowModel: getFacetedRowModel(),
-  getFacetedUniqueValues: getFacetedUniqueValues(),
-  getFacetedMinMaxValues: getFacetedMinMaxValues(),
+  // initialState: { columnFilters: [{ id: 'firstName', value: 'Jane' }] }, // set filters once
+  // atoms: { columnFilters: columnFiltersAtom }, // preferred: own column filters with an external atom
+  // state: { columnFilters }, // classic controlled state; pair with onColumnFiltersChange
+  // onColumnFiltersChange: setColumnFilters,
+  // enableFilters: false, // disable all column and global filtering; default true
+  // enableColumnFilters: false, // disable per-column filters; default true
+  // filterFromLeafRows: true, // keep parents whose descendants match; default filters from parents down
+  // maxLeafRowFilterDepth: 1, // only filter through this nested-row depth; default 100
+  // manualFiltering: true, // pass data that is already filtered, for example from a server
+  debugTable: true,
 })
+
+function handleGoToPage(e: any) {
+  const page = e.target.value ? Number(e.target.value) - 1 : 0
+  goToPageNumber.value = page + 1
+  table.setPageIndex(page)
+}
+
+function handlePageSizeChange(e: any) {
+  table.setPageSize(Number(e.target.value))
+}
 </script>
 
 <template>
-  <div class="p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
+        Stress Test (1M rows)
+      </button>
+    </div>
+    <div class="spacer-md" />
     <div>
       <DebouncedInput
-        :modelValue="globalFilter ?? ''"
-        @update:modelValue="value => (globalFilter = String(value))"
-        className="p-2 font-lg shadow border border-block"
+        :modelValue="table.atoms.globalFilter.get() ?? ''"
+        @update:modelValue="(value) => table.setGlobalFilter(String(value))"
+        className="summary-panel"
         placeholder="Search all columns..."
       />
     </div>
-    <div className="h-2" />
+    <div className="spacer-sm" />
     <table>
       <thead>
         <tr
@@ -154,10 +139,10 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :header="header"
             />
             <template
               v-if="!header.isPlaceholder && header.column.getCanFilter()"
@@ -169,11 +154,8 @@ const table = useVueTable({
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <FlexRender
-              :render="cell.column.columnDef.cell"
-              :props="cell.getContext()"
-            />
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
+            <component :is="table.FlexRender" :cell="cell" />
           </td>
         </tr>
       </tbody>
@@ -187,17 +169,77 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :footer="header"
             />
           </th>
         </tr>
       </tfoot>
     </table>
-    <div class="h-4" />
-    <button @click="rerender" class="border p-2">Rerender</button>
+    <div class="spacer-md" />
+    <div class="controls">
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.firstPage()"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        <<
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.previousPage()"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        <
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.nextPage()"
+        :disabled="!table.getCanNextPage()"
+      >
+        >
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.lastPage()"
+        :disabled="!table.getCanLastPage()"
+      >
+        >>
+      </button>
+      <span class="inline-controls">
+        <div>Page</div>
+        <strong>
+          {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
+          {{ table.getPageCount().toLocaleString() }}
+        </strong>
+      </span>
+      <span class="inline-controls">
+        | Go to page:
+        <input
+          type="number"
+          :value="goToPageNumber"
+          @change="handleGoToPage"
+          class="page-size-input"
+        />
+      </span>
+      <select
+        :value="table.atoms.pagination.get().pageSize"
+        @change="handlePageSizeChange"
+      >
+        <option :key="pageSize" :value="pageSize" v-for="pageSize in pageSizes">
+          Show {{ pageSize }}
+        </option>
+      </select>
+    </div>
+    <div>
+      {{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows
+    </div>
+    <pre data-testid="table-state">{{
+      JSON.stringify(table.store.get(), null, 2)
+    }}</pre>
+    <div class="spacer-md" />
   </div>
 </template>
 <style>
@@ -207,6 +249,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

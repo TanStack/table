@@ -1,0 +1,136 @@
+import Alpine from 'alpinejs'
+import {
+  FlexRender,
+  createSortedRowModel,
+  createTable,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
+  tableFeatures,
+} from '@tanstack/alpine-table'
+import { makeData } from './makeData'
+import './index.css'
+import type { ColumnDef, SortFn } from '@tanstack/alpine-table'
+import type { Person } from './makeData'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
+})
+
+const sortStatusFn: SortFn<typeof features, Person> = (
+  rowA,
+  rowB,
+  _columnId,
+) => {
+  const statusA = rowA.original.status
+  const statusB = rowB.original.status
+  const statusOrder = ['single', 'complicated', 'relationship']
+  return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
+}
+
+const columns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  },
+  {
+    accessorKey: 'firstName',
+    cell: (info) => info.getValue(),
+    // this column will sort in ascending order by default since it is a string column
+  },
+  {
+    accessorFn: (row) => row.lastName,
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => '<span>Last Name</span>',
+    sortUndefined: 'last', // force undefined values to the end
+    sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+    sortFn: 'alphanumeric',
+  },
+  {
+    accessorKey: 'age',
+    header: () => 'Age',
+    // this column will sort in descending order by default since it is a number column
+  },
+  {
+    accessorKey: 'visits',
+    header: () => '<span>Visits</span>',
+    sortUndefined: 'last', // force undefined values to the end
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    sortFn: sortStatusFn, // use our custom sorting function for this enum column
+  },
+  {
+    accessorKey: 'progress',
+    header: 'Profile Progress',
+    // enableSorting: false, //disable sorting for this column
+  },
+  {
+    accessorKey: 'rank',
+    header: 'Rank',
+    invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
+  },
+  {
+    accessorKey: 'createdAt',
+    header: 'Created At',
+    // sortFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
+  },
+]
+
+Alpine.data('table', () => {
+  const local = Alpine.reactive({ data: makeData(1_000) })
+
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
+    },
+    // initialState: { sorting: [{ id: 'firstName', desc: false }] }, // set the initial sort once
+    // atoms: { sorting: sortingAtom }, // preferred: own sorting state with an external atom
+    // state: { sorting }, // classic controlled state; pair with onSortingChange
+    // onSortingChange: setSorting,
+    // enableSorting: false, // disable sorting for every column; default true
+    // sortDescFirst: true, // start every sort cycle with descending order; inferred by column data by default
+    // enableSortingRemoval: false, // keep a sorted column sorted when toggling; default true
+    // enableMultiSort: false, // disable Shift-click multi-sorting; default true
+    // enableMultiRemove: false, // prevent a multi-sort toggle from removing a sorted column; default true
+    // isMultiSortEvent: () => true, // make every sort interaction a multi-sort; default requires Shift
+    // maxMultiSortColCount: 3, // limit multi-sorting to three columns; default Infinity
+    // manualSorting: true, // pass data that is already sorted, for example from a server
+    // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
+    debugTable: true,
+  })
+
+  return {
+    table,
+    FlexRender,
+    // pick the indicator for a column's current sort direction
+    sortIndicator(isSorted: false | 'asc' | 'desc') {
+      return { asc: ' 🔼', desc: ' 🔽' }[isSorted as string] ?? ''
+    },
+    refreshData() {
+      local.data = makeData(1_000)
+    },
+    stressTest() {
+      local.data = makeData(1_000_000)
+    },
+  }
+})
+
+window.Alpine = Alpine
+Alpine.start()

@@ -1,0 +1,347 @@
+import { useState } from 'preact/hooks'
+import { render } from 'preact'
+import {
+  columnResizingFeature,
+  columnSizingFeature,
+  createColumnHelper,
+  tableFeatures,
+  useTable,
+} from '@tanstack/preact-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type {
+  ColumnResizeDirection,
+  ColumnResizeMode,
+} from '@tanstack/preact-table'
+import './index.css'
+
+const features = tableFeatures({ columnResizingFeature, columnSizingFeature })
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.group({
+    header: 'Name',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        cell: (info) => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: (props) => props.column.id,
+      }),
+    ]),
+  }),
+  columnHelper.group({
+    header: 'Info',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
+        header: () => 'Age',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.group({
+        header: 'More Info',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
+            header: () => <span>Visits</span>,
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('status', {
+            header: 'Status',
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('progress', {
+            header: 'Profile Progress',
+            footer: (props) => props.column.id,
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])
+
+function App() {
+  const [data, setData] = useState(() => makeData(10))
+  const refreshData = () => setData(makeData(10))
+  const stressTest = () => setData(makeData(100))
+
+  const [columnResizeMode, setColumnResizeMode] =
+    useState<ColumnResizeMode>('onChange')
+
+  const [columnResizeDirection, setColumnResizeDirection] =
+    useState<ColumnResizeDirection>('ltr')
+
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      columnResizeMode,
+      columnResizeDirection,
+      // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
+      // atoms: { columnResizing: columnResizingAtom }, // preferred: own transient resize state with an external atom
+      // state: { columnResizing }, // classic controlled state; pair with onColumnResizingChange
+      // onColumnResizingChange: setColumnResizing,
+      // enableColumnResizing: false, // disable resizing for every column; default true
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
+    },
+    (state) => state, // default selector
+  )
+
+  return (
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100 rows)</button>
+      </div>
+      <select
+        value={columnResizeMode}
+        onChange={(e) =>
+          setColumnResizeMode(
+            (e.target as HTMLSelectElement).value as ColumnResizeMode,
+          )
+        }
+        className="demo-button outlined-control"
+      >
+        <option value="onEnd">Resize: "onEnd"</option>
+        <option value="onChange">Resize: "onChange"</option>
+      </select>
+      <select
+        value={columnResizeDirection}
+        onChange={(e) =>
+          setColumnResizeDirection(
+            (e.target as HTMLSelectElement).value as ColumnResizeDirection,
+          )
+        }
+        className="demo-button outlined-control"
+      >
+        <option value="ltr">Resize Direction: "ltr"</option>
+        <option value="rtl">Resize Direction: "rtl"</option>
+      </select>
+      <div style={{ direction: table.options.columnResizeDirection }}>
+        <div className="spacer-md" />
+        <div className="section-title">{'<table/>'}</div>
+        <div className="scroll-container">
+          <table style={{ width: table.getCenterTotalSize() }}>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      style={{
+                        width: header.getSize(),
+                      }}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <table.FlexRender header={header} />
+                      )}
+                      <div
+                        onDblClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          table.options.columnResizeDirection
+                        } ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+                        style={{
+                          transform:
+                            columnResizeMode === 'onEnd' &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  (table.options.columnResizeDirection === 'rtl'
+                                    ? -1
+                                    : 1) *
+                                  (table.state.columnResizing.deltaOffset ?? 0)
+                                }px)`
+                              : '',
+                        }}
+                      />
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getAllCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      style={{
+                        width: cell.column.getSize(),
+                      }}
+                    >
+                      <table.FlexRender cell={cell} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="spacer-md" />
+        <div className="section-title">{'<div/> (relative)'}</div>
+        <div className="scroll-container">
+          <div className="divTable" style={{ width: table.getTotalSize() }}>
+            <div className="thead">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <div key={headerGroup.id} className="tr">
+                  {headerGroup.headers.map((header) => (
+                    <div
+                      key={header.id}
+                      className="th"
+                      style={{
+                        width: header.getSize(),
+                      }}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <table.FlexRender header={header} />
+                      )}
+                      <div
+                        onDblClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          table.options.columnResizeDirection
+                        } ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+                        style={{
+                          transform:
+                            columnResizeMode === 'onEnd' &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  (table.options.columnResizeDirection === 'rtl'
+                                    ? -1
+                                    : 1) *
+                                  (table.state.columnResizing.deltaOffset ?? 0)
+                                }px)`
+                              : '',
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className="tbody">
+              {table.getRowModel().rows.map((row) => (
+                <div key={row.id} className="tr">
+                  {row.getAllCells().map((cell) => (
+                    <div
+                      key={cell.id}
+                      className="td"
+                      style={{
+                        width: cell.column.getSize(),
+                      }}
+                    >
+                      <table.FlexRender cell={cell} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="spacer-md" />
+        <div className="section-title">{'<div/> (absolute positioning)'}</div>
+        <div className="scroll-container">
+          <div
+            className="divTable"
+            style={{
+              width: table.getTotalSize(),
+            }}
+          >
+            <div className="thead">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <div
+                  key={headerGroup.id}
+                  className="tr"
+                  style={{
+                    position: 'relative',
+                  }}
+                >
+                  {headerGroup.headers.map((header) => (
+                    <div
+                      key={header.id}
+                      className="th"
+                      style={{
+                        position: 'absolute',
+                        left: header.getStart(),
+                        width: header.getSize(),
+                      }}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <table.FlexRender header={header} />
+                      )}
+                      <div
+                        onDblClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          table.options.columnResizeDirection
+                        } ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+                        style={{
+                          transform:
+                            columnResizeMode === 'onEnd' &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  (table.options.columnResizeDirection === 'rtl'
+                                    ? -1
+                                    : 1) *
+                                  (table.state.columnResizing.deltaOffset ?? 0)
+                                }px)`
+                              : '',
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className="tbody">
+              {table.getRowModel().rows.map((row) => (
+                <div
+                  key={row.id}
+                  className="tr"
+                  style={{
+                    position: 'relative',
+                  }}
+                >
+                  {row.getAllCells().map((cell) => (
+                    <div
+                      key={cell.id}
+                      className="td"
+                      style={{
+                        position: 'absolute',
+                        left: cell.column.getStart(),
+                        width: cell.column.getSize(),
+                      }}
+                    >
+                      <table.FlexRender cell={cell} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="spacer-md" />
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
+    </div>
+  )
+}
+
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
+
+render(<App />, rootElement)

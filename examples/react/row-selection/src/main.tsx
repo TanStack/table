@@ -1,296 +1,315 @@
-import React, { HTMLAttributes, HTMLProps } from 'react'
+import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
-
+import {
+  columnFilteringFeature,
+  createColumnHelper,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
+import { useCreateAtom } from '@tanstack/react-store'
+import { makeData } from './makeData'
+import type { HTMLProps } from 'react'
+import type { Person } from './makeData'
+import type { Column, RowSelectionState, Table } from '@tanstack/react-table'
 import './index.css'
 
-import { makeData, Person } from './makeData'
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSelectionFeature,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+})
 
-import {
-  Column,
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  Table,
-  useReactTable,
-} from '@tanstack/react-table'
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [globalFilter, setGlobalFilter] = React.useState('')
-
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <div className="px-1">
-            <IndeterminateCheckbox
-              {...{
-                checked: row.getIsSelected(),
-                disabled: !row.getCanSelect(),
-                indeterminate: row.getIsSomeSelected(),
-                onChange: row.getToggleSelectedHandler(),
-              }}
-            />
-          </div>
-        ),
-      },
-      {
-        header: 'Name',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'select',
+          header: () => {
+            return (
+              <IndeterminateCheckbox
+                checked={table.getIsAllRowsSelected()}
+                indeterminate={table.getIsSomeRowsSelected()}
+                onChange={table.getToggleAllRowsSelectedHandler()}
+              />
+            )
           },
-          {
-            accessorFn: row => row.lastName,
-            id: 'lastName',
-            cell: info => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
-          },
-        ],
-      },
-      {
-        header: 'Info',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: props => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: props => props.column.id,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    []
+          cell: ({ row }) => (
+            <div className="column-toggle-row">
+              <IndeterminateCheckbox
+                checked={row.getIsSelected()}
+                disabled={!row.getCanSelect()}
+                indeterminate={row.getIsSomeSelected()}
+                onChange={row.getToggleSelectedHandler({
+                  // selectChildren: false
+                })}
+              />
+            </div>
+          ),
+        }),
+        columnHelper.accessor('firstName', {
+          header: 'First Name',
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          header: () => <span>Last Name</span>,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    [],
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      rowSelection,
+  // optionally, raise the selection state to your own atom
+  const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
+
+  const table = useTable(
+    {
+      key: 'row-selection', // needed for devtools
+      features,
+      atoms: {
+        rowSelection: rowSelectionAtom,
+      },
+      columns,
+      data,
+      getRowId: (row) => row.id,
+      enableRowSelection: true, // enable row selection for all rows
+      // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
+      // initialState: { rowSelection: { '0': true } }, // select rows on first render
+      // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
+      // onRowSelectionChange: setRowSelection,
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableRowRangeSelection: false, // disable Shift-click range selection; default true
+      // enableSubRowSelection: false, // do not select a parent's subrows with it; default true
+      // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
+      debugTable: true,
     },
-    enableRowSelection: true, //enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-    onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true,
-  })
+    (state) => state, // default selector
+  )
+
+  useTanStackTableDevtools(table)
 
   return (
-    <div className="p-2">
-      <div>
-        <input
-          value={globalFilter ?? ''}
-          onChange={e => setGlobalFilter(e.target.value)}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
-        />
-      </div>
-      <div className="h-2" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter column={header.column} table={table} />
-                          </div>
-                        ) : null}
-                      </>
-                    )}
-                  </th>
-                )
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+    <>
+      <div className="demo-root">
+        <div>
+          <button
+            className="demo-button demo-button-spaced"
+            onClick={() => refreshData()}
+          >
+            Regenerate Data
+          </button>
+          <button
+            className="demo-button demo-button-spaced"
+            onClick={() => stressTest()}
+          >
+            Stress Test (1M rows)
+          </button>
+        </div>
+        <div>
+          <DebouncedInput
+            value={table.state.globalFilter ?? ''}
+            onChange={(value) => table.setGlobalFilter(value)}
+            className="summary-panel"
+            placeholder="Search all columns..."
+          />
+        </div>
+        <div className="spacer-sm" />
+        <p>Hold Shift while selecting rows to select or deselect a range.</p>
+        <table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
                   return (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <>
+                          <table.FlexRender header={header} />
+                          {header.column.getCanFilter() ? (
+                            <div>
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </>
                       )}
-                    </td>
+                    </th>
                   )
                 })}
               </tr>
-            )
-          })}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className="p-1">
-              <IndeterminateCheckbox
-                {...{
-                  checked: table.getIsAllPageRowsSelected(),
-                  indeterminate: table.getIsSomePageRowsSelected(),
-                  onChange: table.getToggleAllPageRowsSelectedHandler(),
-                }}
-              />
-            </td>
-            <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
-          </tr>
-        </tfoot>
-      </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>>'}
-        </button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            min="1"
-            max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              table.setPageIndex(page)
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getAllCells().map((cell) => {
+                    return (
+                      <td key={cell.id}>
+                        <table.FlexRender cell={cell} />
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td className="cell-padding">
+                <IndeterminateCheckbox
+                  checked={table.getIsAllPageRowsSelected()}
+                  indeterminate={table.getIsSomePageRowsSelected()}
+                  onChange={table.getToggleAllPageRowsSelectedHandler()}
+                />
+              </td>
+              <td colSpan={20}>
+                Page Rows ({table.getRowModel().rows.length.toLocaleString()})
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <div className="spacer-sm" />
+        <div className="controls">
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.firstPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<<'}
+          </button>
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<'}
+          </button>
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>'}
+          </button>
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.lastPage()}
+            disabled={!table.getCanLastPage()}
+          >
+            {'>>'}
+          </button>
+          <span className="inline-controls">
+            <div>Page</div>
+            <strong>
+              {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+              {table.getPageCount().toLocaleString()}
+            </strong>
+          </span>
+          <span className="inline-controls">
+            | Go to page:
+            <input
+              type="number"
+              min="1"
+              max={table.getPageCount()}
+              value={table.state.pagination.pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0
+                table.setPageIndex(page)
+              }}
+              className="page-size-input"
+            />
+          </span>
+          <select
+            value={table.state.pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value))
             }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={e => {
-            table.setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+        <br />
+        <div>
+          <>
+            {Object.keys(table.state.rowSelection).length.toLocaleString()}{' '}
+            of{' '}
+          </>
+          {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total
+          Rows Selected
+        </div>
+        <hr />
+        <br />
+        <div></div>
+        <div>
+          <button
+            className="demo-button demo-button-spaced"
+            onClick={() =>
+              console.info(
+                'table.getSelectedRowModel().flatRows',
+                table.getSelectedRowModel().flatRows,
+              )
+            }
+          >
+            Log table.getSelectedRowModel().flatRows
+          </button>
+        </div>
+        <div>
+          <label>State:</label>
+          <pre data-testid="table-state">
+            {JSON.stringify(table.state, null, 2)}
+          </pre>
+        </div>
       </div>
-      <br />
-      <div>
-        {Object.keys(rowSelection).length} of{' '}
-        {table.getPreFilteredRowModel().rows.length} Total Rows Selected
-      </div>
-      <hr />
-      <br />
-      <div>
-        <button className="border rounded p-2 mb-2" onClick={() => rerender()}>
-          Force Rerender
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() => refreshData()}
-        >
-          Refresh Data
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() =>
-            console.info(
-              'table.getSelectedRowModel().flatRows',
-              table.getSelectedRowModel().flatRows
-            )
-          }
-        >
-          Log table.getSelectedRowModel().flatRows
-        </button>
-      </div>
-      <div>
-        <label>Row Selection State:</label>
-        <pre>{JSON.stringify(table.getState().rowSelection, null, 2)}</pre>
-      </div>
-    </div>
+    </>
   )
 }
 
@@ -298,41 +317,72 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <input
+    <div className="filter-row">
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onChange={e =>
-          column.setFilterValue((old: any) => [e.target.value, old?.[1]])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [value, old?.[1]])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
-      <input
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onChange={e =>
-          column.setFilterValue((old: any) => [old?.[0], e.target.value])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [old?.[0], value])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
-    <input
+    <DebouncedInput
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="filter-select"
+    />
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value)
+        debouncedOnChange(e.target.value)
+      }}
     />
   )
 }
@@ -348,13 +398,15 @@ function IndeterminateCheckbox({
     if (typeof indeterminate === 'boolean') {
       ref.current.indeterminate = !rest.checked && indeterminate
     }
-  }, [ref, indeterminate])
+    // `checked` belongs here too: `getIsSomePageRowsSelected` stays true when
+    // every page row is selected, so deselecting one only changes `checked`.
+  }, [ref, indeterminate, rest.checked])
 
   return (
     <input
       type="checkbox"
       ref={ref}
-      className={className + ' cursor-pointer'}
+      className={className + ' selection-checkbox'}
       {...rest}
     />
   )
@@ -366,5 +418,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </React.StrictMode>,
 )

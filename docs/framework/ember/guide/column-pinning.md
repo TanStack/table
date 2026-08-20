@@ -1,0 +1,357 @@
+---
+title: Column Pinning (Ember) Guide
+---
+
+## Examples
+
+Want to skip to the implementation? Check out these Ember examples:
+
+- [Column Pinning](../examples/column-pinning)
+- [Column Pinning Split](../examples/column-pinning-split)
+- [Sticky Column Pinning](../examples/column-pinning-sticky)
+
+### Column Pinning Setup
+
+Here's how you set up your table to use column pinning features. Adding the column pinning feature enables the related APIs.
+
+```ts
+import {
+  useTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/ember-table'
+
+const features = tableFeatures({ columnPinningFeature })
+
+const table = useTable(() => ({
+  features,
+  columns,
+  data,
+}))
+```
+
+## Column Pinning (Ember) Guide
+
+TanStack Table offers state and APIs helpful for implementing column pinning features in your table UI. You can implement column pinning in multiple ways. You can either split pinned columns into their own separate tables, or you can keep all columns in the same table, but use the pinning state to order the columns correctly and use sticky CSS to pin the columns to the start or end.
+
+`start` and `end` are logical pinning regions. In LTR languages/layouts, `start` usually corresponds to left and `end` to right. In RTL languages/layouts, `start` usually corresponds to right and `end` to left.
+
+### How Column Pinning Affects Column Order
+
+There are 3 table features that can reorder columns, which happen in the following order:
+
+1. **Column Pinning** - If pinning, columns are split into start, center (unpinned), and end pinned columns.
+2. Manual [Column Ordering](./column-ordering) - A manually specified column order is applied.
+3. [Grouping](./grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
+
+The only way to change the order of the pinned columns is in the `columnPinning.start` and `columnPinning.end` state itself. `columnOrder` state will only affect the order of the unpinned ("center") columns.
+
+### Column Pinning State
+
+Managing the `columnPinning` state is optional, and usually not necessary unless you are adding persistent state features. TanStack Table will already keep track of the column pinning state for you. Manage the `columnPinning` state just like any other table state if you need to.
+
+In v9, the recommended way to own a state slice is with an external atom passed to the table's `atoms` option. External atoms give you fine-grained subscriptions anywhere in your app, and other code can read or write the pinning state without re-rendering the component that owns the table.
+
+```gts
+import {
+  useTable,
+  createAtom,
+  tableFeatures,
+  columnPinningFeature,
+  type ColumnPinningState,
+} from '@tanstack/ember-table'
+
+const features = tableFeatures({ columnPinningFeature })
+
+export default class MyTable extends Component {
+  columnPinningAtom = createAtom<ColumnPinningState>({
+    start: [],
+    end: [],
+  })
+
+  table = useTable(() => ({
+    features,
+    //...
+    atoms: {
+      columnPinning: this.columnPinningAtom,
+    },
+    //...
+  }))
+
+  // read the atom wherever it is needed
+  get columnPinning() {
+    return this.columnPinningAtom.get()
+  }
+}
+```
+
+Alternatively, the v8-style `state.columnPinning` plus `onColumnPinningChange` pattern is still supported. It can be convenient for simple integrations or when migrating v8 code, but it is less fine-grained than external atoms. See the [Table State Guide](./table-state) for a deeper comparison.
+
+```gts
+export default class MyTable extends Component {
+  @tracked columnPinning: ColumnPinningState = {
+    start: [],
+    end: [],
+  }
+
+  table = useTable(() => ({
+    features,
+    //...
+    state: {
+      columnPinning: this.columnPinning,
+      //...
+    },
+    onColumnPinningChange: (updater) => {
+      this.columnPinning =
+        typeof updater === 'function' ? updater(this.columnPinning) : updater
+    },
+    //...
+  }))
+}
+```
+
+### Pin Columns by Default
+
+A very common use case is to pin some columns by default. You can do this by either initializing the `columnPinning` state with the pinned columnIds, or by using the `initialState` table option:
+
+```ts
+const table = useTable(() => ({
+  features,
+  //...
+  initialState: {
+    columnPinning: {
+      start: ['expand-column'],
+      end: ['actions-column'],
+    },
+    //...
+  },
+  //...
+}))
+```
+
+### Useful Column Pinning APIs
+
+> [!NOTE]
+> These APIs are available when using `columnPinningFeature`.
+
+There are a handful of useful Column API methods to help you implement column pinning features:
+
+- `column.getCanPin`: Use to determine if a column can be pinned.
+- `column.pin`: Use to pin a column to the start or end. Or use to unpin a column.
+- `column.getIsPinned`: Use to determine where a column is pinned.
+- `column.getPinnedIndex`: Use to read the column's index within its pinned column group.
+- `column.getStart`: Use to provide the correct `start` CSS value for a pinned column.
+- `column.getAfter`: Use to provide the correct `end` CSS value for a pinned column.
+- `column.getIsLastColumn`: Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow.
+- `column.getIsFirstColumn`: Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow.
+
+Use `table.setColumnPinning` to update the pinning state directly. Use `table.resetColumnPinning` to reset to `initialState.columnPinning`, or pass `true` to clear both pinned column arrays.
+
+```ts
+table.setColumnPinning({
+  start: ['firstName'],
+  end: ['actions'],
+})
+
+table.resetColumnPinning()
+table.resetColumnPinning(true)
+```
+
+The table instance exposes pinned column and header helpers for each region:
+
+```ts
+table.getStartLeafColumns()
+table.getCenterLeafColumns()
+table.getEndLeafColumns()
+
+table.getStartVisibleLeafColumns()
+table.getCenterVisibleLeafColumns()
+table.getEndVisibleLeafColumns()
+
+table.getStartHeaderGroups()
+table.getCenterHeaderGroups()
+table.getEndHeaderGroups()
+
+table.getStartFooterGroups()
+table.getCenterFooterGroups()
+table.getEndFooterGroups()
+
+table.getStartFlatHeaders()
+table.getCenterFlatHeaders()
+table.getEndFlatHeaders()
+
+table.getStartLeafHeaders()
+table.getCenterLeafHeaders()
+table.getEndLeafHeaders()
+```
+
+You can also request pinned leaf columns by region with `table.getPinnedLeafColumns(position)` and visible pinned leaf columns with `table.getPinnedVisibleLeafColumns(position)`.
+
+```ts
+table.getPinnedLeafColumns('start')
+table.getPinnedLeafColumns('center')
+table.getPinnedLeafColumns('end')
+
+table.getPinnedVisibleLeafColumns('start')
+table.getPinnedVisibleLeafColumns('center')
+table.getPinnedVisibleLeafColumns('end')
+```
+
+Use `table.getIsSomeColumnsPinned()` to check if any columns are pinned, or pass `'start'` or `'end'` to check one pinned side.
+
+Because Ember templates extract method references without binding them, wrap these Column and Table method calls in small module-scope helper functions (or getters), then call the helpers from your markup:
+
+```ts
+import { type Column, type ColumnPinningPosition } from '@tanstack/ember-table'
+
+const getCanPin = (column: Column<typeof features, Person>): boolean =>
+  column.getCanPin()
+
+const getIsPinned = (
+  column: Column<typeof features, Person>,
+): ColumnPinningPosition => column.getIsPinned()
+
+const isPinnedStart = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'start'
+
+const isPinnedEnd = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'end'
+
+const pin = (
+  column: Column<typeof features, Person>,
+  side: ColumnPinningPosition,
+) => {
+  return () => column.pin(side)
+}
+```
+
+```hbs
+{{#if (getCanPin header.column)}}
+  <div class='pin-actions'>
+    {{#unless (isPinnedStart header.column)}}
+      <button
+        class='pin-button'
+        {{on 'click' (pin header.column 'start')}}
+      >◀</button>
+    {{/unless}}
+    {{#if (getIsPinned header.column)}}
+      <button
+        class='pin-button'
+        {{on 'click' (pin header.column false)}}
+      >✕</button>
+    {{/if}}
+    {{#unless (isPinnedEnd header.column)}}
+      <button
+        class='pin-button'
+        {{on 'click' (pin header.column 'end')}}
+      >▶</button>
+    {{/unless}}
+  </div>
+{{/if}}
+```
+
+### Split Table Column Pinning
+
+If you are just using sticky CSS to pin columns, you can for the most part, just render the table as you normally would with the `table.getHeaderGroups` and `row.getVisibleCells` methods.
+
+However, if you are splitting up pinned columns into their own separate tables, you can make use of the `table.getStartHeaderGroups`, `table.getCenterHeaderGroups`, `table.getEndHeaderGroups`, `row.getStartVisibleCells`, `row.getCenterVisibleCells`, and `row.getEndVisibleCells` methods to only render the columns that are relevant to the current table.
+
+```ts
+const getStartVisibleCells = (
+  row: Row<typeof features, Person>,
+): Array<Cell<typeof features, Person>> => row.getStartVisibleCells()
+
+const getCenterVisibleCells = (
+  row: Row<typeof features, Person>,
+): Array<Cell<typeof features, Person>> => row.getCenterVisibleCells()
+
+const getEndVisibleCells = (
+  row: Row<typeof features, Person>,
+): Array<Cell<typeof features, Person>> => row.getEndVisibleCells()
+```
+
+```gts
+export default class MyTable extends Component {
+  table = useTable(() => ({
+    features,
+    columns,
+    data: this.data,
+    initialState: {
+      columnPinning: { start: ['firstName'], end: ['progress'] },
+    },
+  }))
+
+  get leftHeaderGroups() {
+    return this.table.getStartHeaderGroups()
+  }
+
+  get centerHeaderGroups() {
+    return this.table.getCenterHeaderGroups()
+  }
+
+  get rightHeaderGroups() {
+    return this.table.getEndHeaderGroups()
+  }
+
+  get rows() {
+    return this.table.getRowModel().rows
+  }
+
+  <template>
+    <div class='split-tables'>
+      {{! Center Side }}
+      <table>
+        <thead>
+          {{#each this.centerHeaderGroups as |headerGroup|}}
+            <tr>
+              {{#each headerGroup.headers as |header|}}
+                <th colspan={{header.colSpan}}>
+                  {{#unless header.isPlaceholder}}
+                    <FlexRenderHeader @header={{header}} />
+                  {{/unless}}
+                </th>
+              {{/each}}
+            </tr>
+          {{/each}}
+        </thead>
+        <tbody>
+          {{#each this.rows as |row|}}
+            <tr>
+              {{#each (getCenterVisibleCells row) as |cell|}}
+                <td><FlexRenderCell @cell={{cell}} /></td>
+              {{/each}}
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </template>
+}
+```
+
+For sticky CSS pinning, use `column.getStart('start')` and `column.getAfter('end')` to compute the correct offsets, then apply them as `left`/`right` values in your style string:
+
+```ts
+import { htmlSafe, type SafeString } from '@ember/template'
+
+const getStart = (column: Column<typeof features, Person>): number =>
+  column.getStart('start')
+
+const getAfter = (column: Column<typeof features, Person>): number =>
+  column.getAfter('end')
+
+const pinningStyle = (column: Column<typeof features, Person>): SafeString => {
+  const isPinned = column.getIsPinned()
+  const parts: Array<string> = [`width:${column.getSize()}px`]
+
+  if (isPinned === 'start') {
+    parts.push('position:sticky', `left:${getStart(column)}px`, 'z-index:1')
+  } else if (isPinned === 'end') {
+    parts.push('position:sticky', `right:${getAfter(column)}px`, 'z-index:1')
+  } else {
+    parts.push('position:relative')
+  }
+
+  return htmlSafe(parts.join(';'))
+}
+```

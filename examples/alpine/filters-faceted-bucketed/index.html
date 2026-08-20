@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Bucketed Faceted Filters</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div>
+                      <span x-html="FlexRender({ header })"></span>
+                      <template x-if="header.column.getCanFilter()">
+                        <div class="filter-row">
+                          <template x-if="isFacetColumn(header.column)">
+                            <fieldset class="facet-options">
+                              <template
+                                x-for="option in facetOptions(header.column)"
+                                :key="option.value"
+                              >
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    :checked="facetSelected(header.column, option.value)"
+                                    @change="toggleFacet(header.column, option.value)"
+                                  />
+                                  <span x-text="option.label"></span>
+                                  <span
+                                    class="count"
+                                    x-text="facetCount(header.column, option.value).toLocaleString()"
+                                  ></span>
+                                </label>
+                              </template>
+                            </fieldset>
+                          </template>
+                          <template x-if="!isFacetColumn(header.column)">
+                            <div>
+                              <input
+                                type="text"
+                                class="filter-input"
+                                style="width: 9rem"
+                                :value="header.column.getFilterValue() ?? ''"
+                                @input="onTextFilter(header.column, $event.target.value)"
+                                placeholder="Search…"
+                              />
+                            </div>
+                          </template>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.firstPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.nextPage()"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.lastPage()"
+          :disabled="!table.getCanLastPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.atoms.pagination.get().pageIndex + 1"
+            @input="goToPage($event.target.value)"
+            class="page-size-input"
+          />
+        </span>
+        <select
+          :value="table.atoms.pagination.get().pageSize"
+          @change="table.setPageSize(Number($event.target.value))"
+        >
+          <template x-for="pageSize in pageSizes" :key="pageSize">
+            <option
+              :value="pageSize"
+              x-text="'Show ' + pageSize"
+              :selected="pageSize === table.atoms.pagination.get().pageSize"
+            ></option>
+          </template>
+        </select>
+      </div>
+      <div>
+        Showing
+        <span x-text="table.getRowModel().rows.length.toLocaleString()"></span>
+        of
+        <span
+          x-text="table.getPrePaginatedRowModel().rows.length.toLocaleString()"
+        ></span>
+        Rows
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

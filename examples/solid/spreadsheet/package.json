@@ -1,0 +1,26 @@
+{
+  "name": "tanstack-solid-table-example-spreadsheet",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
+    "test:types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/solid-hotkeys": "^0.10.0",
+    "@tanstack/solid-table": "^9.1.2",
+    "@tanstack/solid-virtual": "^3.13.36",
+    "solid-js": "^1.9.14"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vite": "^8.2.1",
+    "vite-plugin-solid": "^2.11.14"
+  }
+}

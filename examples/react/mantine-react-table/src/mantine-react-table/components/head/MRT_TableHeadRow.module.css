@@ -1,0 +1,12 @@
+.root {
+  background-color: var(--mrt-base-background-color);
+  display: table-row;
+  &.layout-mode-grid {
+    display: flex;
+  }
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}

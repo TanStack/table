@@ -1,14 +1,17 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "main",
-  "nxCloudAccessToken": "OWExNzViODMtZjU4Ny00MTRmLTk3ZDYtMGY5YzlkOTRhZDQ2fHJlYWQtb25seQ==",
+  "nxCloudId": "6435ee4cd7387c45c0e4bf4c",
   "useInferencePlugins": false,
   "parallel": 5,
+  "tui": {
+    "enabled": false
+  },
   "namedInputs": {
     "sharedGlobals": [
       "{workspaceRoot}/.nvmrc",
       "{workspaceRoot}/package.json",
-      "{workspaceRoot}/scripts/getRollupConfig.js",
+      "{workspaceRoot}/scripts/rewrite-table-core-dts.mjs",
       "{workspaceRoot}/tsconfig.json"
     ],
     "default": [
@@ -31,13 +34,28 @@
       "outputs": ["{projectRoot}/coverage"],
       "cache": true
     },
+    "test:eslint": {
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
+      "cache": true
+    },
     "test:types": {
       "dependsOn": ["^build"],
       "inputs": ["default", "^public"],
       "cache": true
     },
-    "build": {
+    "test:e2e": {
       "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
+      "cache": true
+    },
+    "test:build": {
+      "dependsOn": ["build"],
+      "inputs": ["default", "^public"],
+      "cache": true
+    },
+    "build": {
+      "dependsOn": ["^build", { "target": "format", "projects": "table" }],
       "inputs": ["default", "^public"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
@@ -46,13 +64,10 @@
       "cache": true,
       "inputs": ["{workspaceRoot}/**/*"]
     },
-    "test:format": {
-      "cache": true,
-      "inputs": ["{workspaceRoot}/**/*"]
-    },
     "test:sherif": {
       "cache": true,
-      "inputs": ["{workspaceRoot}/**/*"]
+      "inputs": ["{workspaceRoot}/**/package.json"]
     }
-  }
+  },
+  "analytics": true
 }

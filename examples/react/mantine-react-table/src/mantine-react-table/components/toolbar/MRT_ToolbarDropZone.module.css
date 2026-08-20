@@ -1,0 +1,23 @@
+.root {
+  align-items: center;
+
+  border: dashed var(--mantine-primary-color-filled) 2px;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-primary-color-filled) 10%,
+    transparent
+  );
+}
+
+.hovered {
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-primary-color-filled) 20%,
+    transparent
+  );
+}

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Filters</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div>
+                      <div x-html="FlexRender({ header })"></div>
+                      <template x-if="header.column.getCanFilter()">
+                        <div class="filter-row">
+                          <!-- select variant -->
+                          <template
+                            x-if="filterVariant(header.column) === 'select'"
+                          >
+                            <select
+                              @change="setTextFilter(header.column, $event.target.value)"
+                            >
+                              <option value="">All</option>
+                              <option value="complicated">complicated</option>
+                              <option value="relationship">relationship</option>
+                              <option value="single">single</option>
+                            </select>
+                          </template>
+                          <!-- range variant -->
+                          <template
+                            x-if="filterVariant(header.column) === 'range'"
+                          >
+                            <div class="filter-row">
+                              <input
+                                type="number"
+                                class="filter-input"
+                                placeholder="Min"
+                                :value="rangeValue(header.column, 0)"
+                                @input="setRangeMin(header.column, $event.target.value)"
+                              />
+                              <input
+                                type="number"
+                                class="filter-input"
+                                placeholder="Max"
+                                :value="rangeValue(header.column, 1)"
+                                @input="setRangeMax(header.column, $event.target.value)"
+                              />
+                            </div>
+                          </template>
+                          <!-- dateRange variant -->
+                          <template
+                            x-if="filterVariant(header.column) === 'dateRange'"
+                          >
+                            <div class="filter-row">
+                              <input
+                                type="date"
+                                class="filter-input"
+                                :aria-label="header.column.id + ' min'"
+                                :value="rangeValue(header.column, 0)"
+                                @input="setDateMin(header.column, $event.target.value)"
+                              />
+                              <input
+                                type="date"
+                                class="filter-input"
+                                :aria-label="header.column.id + ' max'"
+                                :value="rangeValue(header.column, 1)"
+                                @input="setDateMax(header.column, $event.target.value)"
+                              />
+                            </div>
+                          </template>
+                          <!-- text variant -->
+                          <template
+                            x-if="filterVariant(header.column) === 'text'"
+                          >
+                            <input
+                              type="text"
+                              class="filter-input"
+                              placeholder="Search..."
+                              :value="header.column.getFilterValue() ?? ''"
+                              @input="setTextFilter(header.column, $event.target.value)"
+                            />
+                          </template>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="page-controls">
+        <button
+          @click="table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button @click="table.nextPage()" :disabled="!table.getCanNextPage()">
+          &gt;
+        </button>
+        <button @click="table.lastPage()" :disabled="!table.getCanLastPage()">
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <span>Page</span>
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+      </div>
+      <pre
+        data-testid="table-state"
+        x-text="JSON.stringify(table.store.get(), null, 2)"
+      ></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

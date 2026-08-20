@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/solid-table",
-  "version": "8.21.3",
+  "version": "9.1.2",
   "description": "Headless UI for building powerful tables & datagrids for Solid.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,42 +18,56 @@
     "solid",
     "table",
     "solid-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
-  "type": "commonjs",
-  "module": "build/lib/index.esm.js",
-  "main": "build/lib/index.js",
-  "types": "build/lib/index.d.ts",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js",
-      "solid": "./src/index.tsx"
+      "solid": "./dist/index.js",
+      "import": "./dist/index.js"
+    },
+    "./static-functions": {
+      "solid": "./dist/static-functions.js",
+      "import": "./dist/static-functions.js"
+    },
+    "./experimental-worker-plugin": {
+      "solid": "./dist/experimental-worker-plugin.js",
+      "import": "./dist/experimental-worker-plugin.js"
+    },
+    "./flex-render": {
+      "solid": "./dist/flex-render.js",
+      "import": "./dist/flex-render.js"
     },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=20"
   },
   "files": [
-    "build/lib/*",
-    "build/umd/*",
-    "src"
+    "dist",
+    "skills"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
-    "test:types": "tsc --noEmit",
-    "build": "pnpm build:rollup && pnpm build:types",
-    "build:rollup": "rollup --config rollup.config.mjs",
-    "build:types": "tsc --emitDeclarationOnly"
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
   },
   "dependencies": {
+    "@tanstack/store": "^0.11.1",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "solid-js": "^1.8.18"
+    "@solidjs/testing-library": "^0.8.10",
+    "solid-js": "^1.9.14",
+    "vite-plugin-solid": "^2.11.14"
   },
   "peerDependencies": {
     "solid-js": ">=1.3"

@@ -1,82 +1,75 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
-  Column,
-  ColumnDef,
-  PaginationState,
-  Table,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  createColumnHelper,
+  createPaginatedRowModel,
+  rowPaginationFeature,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 
-import { makeData, Person } from './makeData'
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        footer: props => props.column.id,
-      },
-    ],
-    []
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'rowNumber',
+          header: '#',
+          cell: ({ row }) => row.getDisplayIndex() + 1,
+        }),
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    [],
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   return (
     <>
-      <MyTable
-        {...{
-          data,
-          columns,
-        }}
-      />
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+      </div>
+      <MyTable data={data} columns={columns} />
       <hr />
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
+      <div></div>
     </>
   )
 }
@@ -85,61 +78,40 @@ function MyTable({
   data,
   columns,
 }: {
-  data: Person[]
-  columns: ColumnDef<Person>[]
+  data: Array<Person>
+  columns: ReturnType<typeof columnHelper.columns>
 }) {
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-
-  const table = useReactTable({
-    columns,
-    data,
-    debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
-    //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
-    state: {
-      pagination,
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      // initialState: { pagination: { pageIndex: 1, pageSize: 20 } }, // set the initial page once
+      // atoms: { pagination: paginationAtom }, // preferred: own pagination state with an external atom
+      // state: { pagination }, // classic controlled state; pair with onPaginationChange
+      // onPaginationChange: setPagination,
+      // autoResetPageIndex: false, // keep the current page after page-altering changes; default true
+      // autoResetAll: false, // turn off every feature's automatic reset, including page index
+      // manualPagination: true, // pass data that is already paginated, for example from a server
+      // pageCount: 10, // total pages for manual pagination; use -1 when unknown
+      // rowCount: 1_000, // total rows for manual pagination; pageCount is calculated from this and pageSize
+      debugTable: true,
     },
-    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
-  })
+    (state) => state, // default selector
+  )
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
+    <div className="demo-root">
+      <div className="spacer-sm" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
-                    <div
-                      {...{
-                        className: header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : '',
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted() as string] ?? null}
-                      {header.column.getCanFilter() ? (
-                        <div>
-                          <Filter column={header.column} table={table} />
-                        </div>
-                      ) : null}
+                    <div>
+                      <table.FlexRender header={header} />
                     </div>
                   </th>
                 )
@@ -148,16 +120,13 @@ function MyTable({
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}
@@ -166,128 +135,79 @@ function MyTable({
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            value={table.state.pagination.pageIndex + 1}
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
-          onChange={e => {
+          value={table.state.pagination.pageSize}
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
           ))}
+          <option value={Infinity}>Show All</option>
         </select>
       </div>
       <div>
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.getState().pagination, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
-  )
-}
-
-function Filter({
-  column,
-  table,
-}: {
-  column: Column<any, any>
-  table: Table<any>
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
-  const columnFilterValue = column.getFilterValue()
-
-  return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2" onClick={e => e.stopPropagation()}>
-      <input
-        type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
-            e.target.value,
-            old?.[1],
-          ])
-        }
-        placeholder={`Min`}
-        className="w-24 border shadow rounded"
-      />
-      <input
-        type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
-            old?.[0],
-            e.target.value,
-          ])
-        }
-        placeholder={`Max`}
-        className="w-24 border shadow rounded"
-      />
-    </div>
-  ) : (
-    <input
-      className="w-36 border shadow rounded"
-      onChange={e => column.setFilterValue(e.target.value)}
-      onClick={e => e.stopPropagation()}
-      placeholder={`Search...`}
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-    />
   )
 }
 
@@ -297,5 +217,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

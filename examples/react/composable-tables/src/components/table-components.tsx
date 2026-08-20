@@ -1,0 +1,120 @@
+/**
+ * Table-level components that use useTableContext
+ *
+ * These components can be used via the pre-bound tableComponents
+ * directly on the table object, e.g., <table.PaginationControls />
+ */
+import { useTableContext } from '../hooks/table'
+
+/**
+ * Pagination controls for the table
+ */
+export function PaginationControls() {
+  const table = useTableContext()
+
+  return (
+    <div className="pagination">
+      <button
+        onClick={() => table.firstPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        {'<<'}
+      </button>
+      <button
+        onClick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        {'<'}
+      </button>
+      <button
+        onClick={() => table.nextPage()}
+        disabled={!table.getCanNextPage()}
+      >
+        {'>'}
+      </button>
+      <button
+        onClick={() => table.lastPage()}
+        disabled={!table.getCanLastPage()}
+      >
+        {'>>'}
+      </button>
+      <span>
+        Page{' '}
+        <strong>
+          {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+          {table.getPageCount().toLocaleString()}
+        </strong>
+      </span>
+      <span>
+        | Go to page:
+        <input
+          type="number"
+          min="1"
+          max={table.getPageCount()}
+          defaultValue={table.state.pagination.pageIndex + 1}
+          onChange={(e) => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0
+            table.setPageIndex(page)
+          }}
+        />
+      </span>
+      <select
+        value={table.state.pagination.pageSize}
+        onChange={(e) => {
+          table.setPageSize(Number(e.target.value))
+        }}
+      >
+        {[10, 20, 30, 40, 50].map((pageSize) => (
+          <option key={pageSize} value={pageSize}>
+            Show {pageSize}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
+/**
+ * Row count display
+ */
+export function RowCount() {
+  const table = useTableContext()
+
+  return (
+    <div className="row-count">
+      Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+      {table.getRowCount().toLocaleString()} rows
+    </div>
+  )
+}
+
+/**
+ * Table toolbar with title and actions
+ */
+export function TableToolbar({
+  title,
+  onRefresh,
+  onStressTest,
+}: {
+  title: string
+  onRefresh?: () => void
+  onStressTest?: () => void
+}) {
+  const table = useTableContext()
+
+  return (
+    <div className="table-toolbar">
+      <h2>{title}</h2>
+      <div className="table-toolbar-actions">
+        {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
+        {onStressTest && (
+          <button onClick={onStressTest}>Stress Test (1M rows)</button>
+        )}
+        <button onClick={() => table.resetColumnFilters()}>
+          Clear Filters
+        </button>
+        <button onClick={() => table.resetSorting()}>Clear Sorting</button>
+      </div>
+    </div>
+  )
+}

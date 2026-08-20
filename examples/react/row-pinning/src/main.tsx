@@ -1,183 +1,219 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
-import { makeData, Person } from './makeData'
-
 import {
+  columnFilteringFeature,
+  columnSizingFeature,
+  createColumnHelper,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowPinningFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type {
   Column,
-  ColumnDef,
   ExpandedState,
-  flexRender,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
+  ReactTable,
   Row,
   RowPinningState,
-  Table,
-  useReactTable,
 } from '@tanstack/react-table'
+import './index.css'
 
+const features = tableFeatures({
+  rowPinningFeature,
+  rowExpandingFeature,
+  columnFilteringFeature,
+  columnSizingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  //table states
+  // table states
   const [rowPinning, setRowPinning] = React.useState<RowPinningState>({
     top: [],
     bottom: [],
   })
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  //demo states
+  // demo states
   const [keepPinnedRows, setKeepPinnedRows] = React.useState(true)
   const [includeLeafRows, setIncludeLeafRows] = React.useState(true)
   const [includeParentRows, setIncludeParentRows] = React.useState(false)
   const [copyPinnedRows, setCopyPinnedRows] = React.useState(false)
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => [
-      {
-        id: 'pin',
-        header: () => 'Pin',
-        cell: ({ row }) =>
-          row.getIsPinned() ? (
-            <button
-              onClick={() => row.pin(false, includeLeafRows, includeParentRows)}
-            >
-              ❌
-            </button>
-          ) : (
-            <div style={{ display: 'flex', gap: '4px' }}>
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'pin',
+          header: () => 'Pin',
+          cell: ({ row }) =>
+            row.getIsPinned() ? (
               <button
                 onClick={() =>
-                  row.pin('top', includeLeafRows, includeParentRows)
+                  row.pin(false, includeLeafRows, includeParentRows)
                 }
               >
-                ⬆️
+                ❌
               </button>
-              <button
-                onClick={() =>
-                  row.pin('bottom', includeLeafRows, includeParentRows)
-                }
-              >
-                ⬇️
-              </button>
-            </div>
+            ) : (
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <button
+                  onClick={() =>
+                    row.pin('top', includeLeafRows, includeParentRows)
+                  }
+                >
+                  ⬆️
+                </button>
+                <button
+                  onClick={() =>
+                    row.pin('bottom', includeLeafRows, includeParentRows)
+                  }
+                >
+                  ⬇️
+                </button>
+              </div>
+            ),
+        }),
+        columnHelper.accessor('firstName', {
+          header: ({ table }) => (
+            <>
+              <button onClick={table.getToggleAllRowsExpandedHandler()}>
+                {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+              </button>{' '}
+              First Name
+            </>
           ),
-      },
-      {
-        accessorKey: 'firstName',
-        header: ({ table }) => (
-          <>
-            <button
-              {...{
-                onClick: table.getToggleAllRowsExpandedHandler(),
+          cell: ({ row, getValue }) => (
+            <div
+              style={{
+                // Since rows are flattened by default,
+                // we can use the row.depth property
+                // and paddingLeft to visually indicate the depth
+                // of the row
+                paddingLeft: `${row.depth * 2}rem`,
               }}
             >
-              {table.getIsAllRowsExpanded() ? '👇' : '👉'}
-            </button>{' '}
-            First Name
-          </>
-        ),
-        cell: ({ row, getValue }) => (
-          <div
-            style={{
-              // Since rows are flattened by default,
-              // we can use the row.depth property
-              // and paddingLeft to visually indicate the depth
-              // of the row
-              paddingLeft: `${row.depth * 2}rem`,
-            }}
-          >
-            <>
-              {row.getCanExpand() ? (
-                <button
-                  {...{
-                    onClick: row.getToggleExpandedHandler(),
-                    style: { cursor: 'pointer' },
-                  }}
-                >
-                  {row.getIsExpanded() ? '👇' : '👉'}
-                </button>
-              ) : (
-                '🔵'
-              )}{' '}
-              {getValue()}
-            </>
-          </div>
-        ),
-        footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        size: 50,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        size: 50,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        size: 80,
-      },
-    ],
-    [includeLeafRows, includeParentRows]
+              <>
+                {row.getCanExpand() ? (
+                  <button
+                    onClick={row.getToggleExpandedHandler()}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {row.getIsExpanded() ? '👇' : '👉'}
+                  </button>
+                ) : (
+                  '🔵'
+                )}{' '}
+                {getValue()}
+              </>
+            </div>
+          ),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          size: 50,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          size: 50,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          size: 80,
+        }),
+      ]),
+    [includeLeafRows, includeParentRows],
   )
 
-  const [data, setData] = React.useState(() => makeData(1000, 2, 2))
-  const refreshData = () => setData(() => makeData(1000, 2, 2))
+  const [data, setData] = React.useState(() => makeData(1_000, 2, 2))
+  const refreshData = () => setData(makeData(1_000, 2, 2))
+  const stressTest = () => setData(makeData(200_000, 2, 2))
 
-  const table = useReactTable({
-    data,
-    columns,
-    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
-    state: {
-      expanded,
-      rowPinning,
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      initialState: {
+        pagination: { pageSize: 20, pageIndex: 0 },
+        // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+      },
+      state: {
+        expanded,
+        rowPinning,
+      },
+      onExpandedChange: setExpanded,
+      onRowPinningChange: setRowPinning,
+      getSubRows: (row) => row.subRows,
+      keepPinnedRows,
+      // atoms: { rowPinning: rowPinningAtom }, // preferred: own pinning state with an external atom
+      // enableRowPinning: row => row.original.age > 18, // allow pinning only for matching rows; default true
+      debugTable: true,
+      debugAll: true,
     },
-    onExpandedChange: setExpanded,
-    onRowPinningChange: setRowPinning,
-    getSubRows: row => row.subRows,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    keepPinnedRows,
-    debugRows: true,
-  })
+    (state) => state, // default selector
+  )
+
+  // console.log(table.getBottomRows)
+  // React.useEffect(() => {
+  //   console.log(table.getBottomRows())
+  //
+  // }, [table.getBottomRows()])
 
   return (
     <div className="app">
-      <div className="p-2 container">
-        <div className="h-2" />
+      <div className="demo-root container">
+        <div>
+          <button
+            className="demo-button demo-button-spaced"
+            onClick={() => refreshData()}
+          >
+            Regenerate Data
+          </button>
+          <button
+            className="demo-button demo-button-spaced"
+            onClick={() => stressTest()}
+          >
+            Stress Test (200k rows)
+          </button>
+        </div>
+        <div className="spacer-sm" />
         <table>
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          <table.FlexRender header={header} />
                           {header.column.getCanFilter() ? (
                             <div>
                               <Filter column={header.column} table={table} />
@@ -192,110 +228,107 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {table.getTopRows().map(row => (
+            {table.getTopRows().map((row) => (
               <PinnedRow key={row.id} row={row} table={table} />
             ))}
             {(copyPinnedRows
               ? table.getRowModel().rows
               : table.getCenterRows()
-            ).map(row => {
+            ).map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        <table.FlexRender cell={cell} />
                       </td>
                     )
                   })}
                 </tr>
               )
             })}
-            {table.getBottomRows().map(row => (
+            {table.getBottomRows().map((row) => (
               <PinnedRow key={row.id} row={row} table={table} />
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
+          className="demo-button demo-button-sm"
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
+          className="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            value={table.state.pagination.pageIndex + 1}
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
-          onChange={e => {
+          value={table.state.pagination.pageSize}
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
           ))}
         </select>
       </div>
-      <div className="h-2" />
+      <div className="spacer-sm" />
       <hr />
       <br />
-      <div className="flex flex-col gap-2 align-center vertical">
+      <div className="vertical-options">
         <div>
           <input
             type="checkbox"
             checked={keepPinnedRows}
             onChange={() => setKeepPinnedRows(!keepPinnedRows)}
           />
-          <label className="ml-2">
+          <label className="label-offset">
             Keep/Persist Pinned Rows across Pagination and Filtering
           </label>
         </div>
@@ -305,7 +338,9 @@ function App() {
             checked={includeLeafRows}
             onChange={() => setIncludeLeafRows(!includeLeafRows)}
           />
-          <label className="ml-2">Include Leaf Rows When Pinning Parent</label>
+          <label className="label-offset">
+            Include Leaf Rows When Pinning Parent
+          </label>
         </div>
         <div>
           <input
@@ -313,7 +348,9 @@ function App() {
             checked={includeParentRows}
             onChange={() => setIncludeParentRows(!includeParentRows)}
           />
-          <label className="ml-2">Include Parent Rows When Pinning Child</label>
+          <label className="label-offset">
+            Include Parent Rows When Pinning Child
+          </label>
         </div>
         <div>
           <input
@@ -321,30 +358,26 @@ function App() {
             checked={copyPinnedRows}
             onChange={() => setCopyPinnedRows(!copyPinnedRows)}
           />
-          <label className="ml-2">
+          <label className="label-offset">
             Duplicate/Keep Pinned Rows in main table
           </label>
         </div>
       </div>
-      <div>
-        <button className="border rounded p-2 mb-2" onClick={() => rerender()}>
-          Force Rerender
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() => refreshData()}
-        >
-          Refresh Data
-        </button>
-      </div>
-      <div>{JSON.stringify(rowPinning, null, 2)}</div>
+      <div></div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }
 
-function PinnedRow({ row, table }: { row: Row<any>; table: Table<any> }) {
+function PinnedRow({
+  row,
+  table,
+}: {
+  row: Row<typeof features, Person>
+  table: ReactTable<typeof features, Person>
+}) {
   return (
     <tr
       style={{
@@ -362,10 +395,10 @@ function PinnedRow({ row, table }: { row: Row<any>; table: Table<any> }) {
             : undefined,
       }}
     >
-      {row.getVisibleCells().map(cell => {
+      {row.getAllCells().map((cell) => {
         return (
           <td key={cell.id}>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            <table.FlexRender cell={cell} />
           </td>
         )
       })}
@@ -377,41 +410,72 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any>
+  column: Column<typeof features, Person>
+  table: ReactTable<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <input
+    <div className="filter-row">
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onChange={e =>
-          column.setFilterValue((old: any) => [e.target.value, old?.[1]])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [value, old?.[1]])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
-      <input
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onChange={e =>
-          column.setFilterValue((old: any) => [old?.[0], e.target.value])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [old?.[0], value])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
-    <input
+    <DebouncedInput
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="filter-select"
+    />
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value)
+        debouncedOnChange(e.target.value)
+      }}
     />
   )
 }
@@ -422,5 +486,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

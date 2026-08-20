@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "moduleResolution": "Bundler",
+    "types": ["vue/jsx"]
+  },
+  "include": ["src", "eslint.config.js", "vite.config.ts", "tests"]
+}

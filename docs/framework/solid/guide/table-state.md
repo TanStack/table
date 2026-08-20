@@ -2,220 +2,367 @@
 title: Table State (Solid) Guide
 ---
 
+## Examples
+
+Want to skip to the implementation? Check out these examples:
+
+- [Basic createTable](../examples/basic-use-table)
+- [Basic External Atoms](../examples/basic-external-atoms)
+- [Basic External State](../examples/basic-external-state)
+- [With TanStack Query](../examples/with-tanstack-query)
+
 ## Table State (Solid) Guide
 
-TanStack Table has a simple underlying internal state management system to store and manage the state of the table. It also lets you selectively pull out any state that you need to manage in your own state management. This guide will walk you through the different ways in which you can interact with and manage the state of the table.
+> **If you boil TanStack Table down to one sentence: TanStack Table is a large state-management coordinator for table states.**
+
+Understanding this guide is fundamental to understanding how TanStack Table works and how to interact with it for the best results.
+
+### Do you need to Manage External State?
+
+You usually do NOT need to manage table state yourself. If you pass nothing to `initialState`, `atoms`, `state`, or any of the `on[State]Change` table options, TanStack Table will manage its own state internally.
+
+There will be situations where you need to customize how you interact with the internal table state, or even hoist it up to your own scopes. TanStack Table lets you read, subscribe to, or own the state slices that matter to your app. This guide explains how table state works in Solid, how to read it, and when to use external atoms or external state.
+
+### State in v9
+
+TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For Solid, the table adapter supplies custom reactivity so table state atoms are backed by Solid primitives.
+
+A table instance has a few state surfaces:
+
+- `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
+- `table.atoms` are readonly derived atoms exposed per registered state slice.
+- `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
+
+The Solid adapter provides `solidReactivity(owner)` to the table's `coreReactivityFeature`. Core readonly atoms are Solid `createMemo` values and core writable atoms are Solid `createSignal` values. Because atom `.get()` reads through Solid signals and memos, table APIs can be consumed inside Solid computations and update only the computations that read the relevant state.
+
+### Feature-based State
+
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+
+```tsx
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
+
+const table = createTable({
+  features,
+  columns,
+  get data() {
+    return data()
+  },
+})
+
+table.atoms.pagination.get()
+table.atoms.sorting.get()
+
+// table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
+```
+
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.get()`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
-You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
+There are two different questions when reading table state:
 
-```jsx
-const table = createSolidTable({
+- Do you only need the current value?
+- Or should a Solid computation update when that value changes?
+
+Use direct atom reads for slice values. Use `table.store.get()` for the current flat state snapshot. Because Solid table atoms are backed by Solid signals and memos, atom reads participate in Solid dependency tracking when they happen inside JSX, `createMemo(...)`, `createEffect(...)`, or `table.Subscribe`.
+
+#### Reading State
+
+The simplest and most performant way to read a current state value is to read the matching atom:
+
+```tsx
+const pagination = table.atoms.pagination.get()
+const sorting = table.atoms.sorting.get()
+```
+
+You can also read the current flat store snapshot:
+
+```tsx
+const tableState = table.store.get()
+const pagination = table.store.get().pagination
+```
+
+These reads are current-value reads. They only participate in Solid dependency tracking when they are called inside a Solid reactive scope that tracks those reads. Prefer `table.atoms.<slice>.get()` for narrow reactive reads. Use `table.store.get()` for full-state debug output or when a computation intentionally depends on the whole table state.
+
+#### Reading Reactive State with Solid
+
+Use Solid's native primitives to derive reactive values from table atoms or the flat store snapshot.
+
+```tsx
+const table = createTable({
+  features,
   columns,
   get data() {
     return data()
   },
-  //...
 })
 
-console.log(table.getState()) //access the entire internal state
-console.log(table.getState().rowSelection) //access just the row selection state
+const pagination = createMemo(() => table.atoms.pagination.get())
+const pageIndex = createMemo(() => pagination().pageIndex)
+
+const tableStateJson = createMemo(() =>
+  JSON.stringify(table.store.get(), null, 2),
+)
 ```
 
-### Custom Initial State
+You can use atom reads directly in JSX too:
 
-If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
-
-```jsx
-const table = createSolidTable({
-  columns,
-  data,
-  initialState: {
-    columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
-    columnVisibility: {
-      id: false //hide the id column by default
-    },
-    expanded: true, //expand all rows by default
-    sorting: [
-      {
-        id: 'age',
-        desc: true //sort by age in descending order by default
-      }
-    ]
-  },
-  //...
-})
+```tsx
+<span>
+  Page {table.atoms.pagination.get().pageIndex + 1} of {table.getPageCount()}
+</span>
 ```
 
-> **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
+#### Fine-grained Updates with table.Subscribe
 
-### Controlled State
+Use `table.Subscribe` when you want a specific part of the Solid tree to create a reactive render boundary. Its child function receives `table.atoms`. As with any Solid component, the child function body runs once and is untracked, so perform atom reads inside JSX expressions or in thunks called from JSX; Solid tracks only those reads.
 
-If you need easy access to the table state in other areas of your application, TanStack Table makes it easy to control and manage any or all of the table state in your own state management system. You can do this by passing in your own state and state management functions to the `state` and `on[State]Change` table options.
+```tsx
+<table.Subscribe>
+  {(atoms) => {
+    // a thunk: the reads run (and track) when JSX calls it, not in the body
+    const rows = () => {
+      atoms.columnFilters.get()
+      atoms.globalFilter.get()
+      atoms.pagination.get()
+      return table.getRowModel().rows
+    }
 
-#### Individual Controlled State
-
-You can control just the state that you need easy access to. You do NOT have to control all of the table state if you do not need to. It is recommended to only control the state that you need on a case-by-case basis.
-
-In order to control a particular state, you need to both pass in the corresponding `state` value and the `on[State]Change` function to the table instance.
-
-Let's take filtering, sorting, and pagination as an example in a "manual" server-side data fetching scenario. You can store the filtering, sorting, and pagination state in your own state management, but leave out any other state like column order, column visibility, etc. if your API does not care about those values.
-
-```jsx
-const [columnFilters, setColumnFilters] = createSignal([]) //no default filters
-const [sorting, setSorting] = createSignal([{
-  id: 'age',
-  desc: true, //sort by age in descending order by default
-}]) 
-const [pagination, setPagination] = createSignal({ pageIndex: 0, pageSize: 15 })
-
-//Use our controlled state values to fetch data
-const tableQuery = createQuery({
-  queryKey: ['users', columnFilters, sorting, pagination],
-  queryFn: () => fetchUsers(columnFilters, sorting, pagination),
-  //...
-})
-
-const table = createSolidTable({
-  columns,
-  get data() {
-    return tableQuery.data()
-  },
-  //...
-  state: {
-    get columnFilters() {
-      return columnFilters() //pass controlled state back to the table (overrides internal state)
-    },
-    get sorting() {
-      return sorting()
-    },
-    get pagination() {
-      return pagination()
-    },
-  },
-  onColumnFiltersChange: setColumnFilters, //hoist columnFilters state into our own state management
-  onSortingChange: setSorting,
-  onPaginationChange: setPagination,
-})
-//...
+    return (
+      <tbody>
+        <For each={rows()}>{(row) => <tr>{/* ... */}</tr>}</For>
+      </tbody>
+    )
+  }}
+</table.Subscribe>
 ```
 
-#### Fully Controlled State
+```tsx
+<table.Subscribe>
+  {(atoms) => (
+    <tbody>
+      <For each={table.getRowModel().rows}>
+        {(row) => {
+          const isSelected = () => atoms.rowSelection.get()[row.id]
 
-Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a solid tree, like `columnSizingInfo` state`, might cause bad performance issues.
+          return (
+            <tr>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={!!isSelected()}
+                  onClick={row.getToggleSelectedHandler()}
+                />
+              </td>
+            </tr>
+          )
+        }}
+      </For>
+    </tbody>
+  )}
+</table.Subscribe>
+```
 
-A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use the `table.setOptions` API in a special way as shown below.
+### Setting Table State
 
-```jsx
-//create a table instance with default state values
-const table = createSolidTable({
-  columns,
-  get data() {
-    return data()
-  },
-  //... Note: `state` values are NOT passed in yet
-})
+You should almost never need to set table state directly. TanStack Table features expose dedicated APIs for interacting with their state, and those APIs are the safest way to make changes.
 
+```tsx
+table.nextPage()
+table.previousPage()
+table.setPageIndex(0)
+table.setPageSize(25)
+```
 
-const [state, setState] = createSignal({
-  ...table.initialState, //populate the initial state with all of the default state values from the table instance
-  pagination: {
-    pageIndex: 0,
-    pageSize: 15 //optionally customize the initial pagination state.
-  }
-})
+Use APIs like `table.setSorting(...)`, `table.setColumnFilters(...)`, `column.toggleVisibility()`, or `row.toggleSelected()` instead of manually editing the underlying state object.
 
-//Use the table.setOptions API to merge our fully controlled state onto the table instance
-table.setOptions(prev => ({
-  ...prev, //preserve any other options that we have set up above
-  get state() {
-    return state() //our fully controlled state overrides the internal state
-  },
-  onStateChange: setState //any state changes will be pushed up to our own state management
+If you only care about setting starting values, use `initialState`. If you want to reset a state slice back to its initial value, use that feature's reset API.
+
+If you really do need to write a state slice directly, the low-level write surface for internally owned state is the matching base atom:
+
+```tsx
+table.baseAtoms.pagination.set((old) => ({
+  ...old,
+  pageIndex: 0,
 }))
 ```
 
-### On State Change Callbacks
+Direct base atom writes should be rare. If a slice is owned by an external atom passed through `atoms`, write to that external atom instead; `table.atoms.pagination` will read from the external atom, not the internal base atom.
 
-So far, we have seen the `on[State]Change` and `onStateChange` table options work to "hoist" the table state changes into our own state management. However, there are a few things about these using these options that you should be aware of.
+### Custom Initial State
 
-#### 1. **State Change Callbacks MUST have their corresponding state value in the `state` option**.
+If you only need to customize the starting value for some table state, use `initialState`. You still do not need to manage that state yourself.
 
-Specifying an `on[State]Change` callback tells the table instance that this will be a controlled state. If you do not specify the corresponding `state` value, that state will be "frozen" with its initial value.
+`initialState` only applies to registered state slices. It is used to create the table's initial state and is also used by reset APIs such as `table.resetSorting()` or `table.resetPagination()`. Changing the `initialState` object later does not reset table state.
 
-```jsx
-const [sorting, setSorting] = createSignal([])
-//...
-const table = createSolidTable({
+```tsx
+const table = createTable({
+  features,
   columns,
-  data,
-  //...
-  state: {
-    get sorting() {
-      return sorting() //required because we are using `onSortingChange`
-    },
-  },
-  onSortingChange: setSorting, //makes the `state.sorting` controlled
-})
-```
-
-#### 2. **Updaters can either be raw values or callback functions**.
-
-The `on[State]Change` and `onStateChange` callbacks work exactly like the `setState` functions in React (Solid Setters). The updater values can either be a new state value or a callback function that takes the previous state value and returns the new state value.
-
-What implications does this have? It means that if you want to add in some extra logic in any of the `on[State]Change` callbacks, you can do so, but you need to check whether or not the new incoming updater value is a function or value.
-
-```jsx
-const [sorting, setSorting] = createSignal([])
-const [pagination, setPagination] = createSignal({ pageIndex: 0, pageSize: 10 })
-
-const table = createSolidTable({
-  get columns() {
-    return columns()
-  },
   get data() {
     return data()
   },
-  //...
-  state: {
-    get pagination() {
-      return pagination()
+  initialState: {
+    sorting: [
+      {
+        id: 'age',
+        desc: true,
+      },
+    ],
+    pagination: {
+      pageIndex: 0,
+      pageSize: 25,
     },
+  },
+})
+```
+
+> [!NOTE]
+> Do not provide the same state slice in multiple ownership places unless you intentionally want one to win. For a slice like `pagination`, prefer exactly one of `initialState.pagination`, `atoms.pagination`, or `state.pagination` as the source of truth. External atoms take precedence over external `state`; external `state` syncs into the table's internal base atom.
+
+#### Resetting to Initial State
+
+Feature reset APIs reset to `table.initialState` by default. Many reset APIs also accept `true` to reset to that feature's blank/default state instead:
+
+```tsx
+table.resetSorting()
+table.resetPagination()
+table.resetPagination(true)
+```
+
+Slice reset APIs like `resetPagination()` update through that feature's state updater and can update an externally owned atom. The core `table.reset()` API resets the internal base atoms, so do not use it as the primary way to reset state that is owned by external atoms.
+
+### Controlled State
+
+If you need easy access to table state in other parts of your application, you can control individual state slices. In Solid, use native signals with `state` plus `on[State]Change` when you want Solid to own the slice. Use external TanStack Store atoms when you already want app-level atom sharing or direct atom subscriptions outside the table.
+
+#### External Atoms
+
+Use external atoms when the app should own one or more table state slices as TanStack Store atoms. Create stable writable atoms with `createAtom`, pass them to `atoms`, and subscribe to them with `useSelector` anywhere else in your app. `@tanstack/solid-store` is only needed by your app if you choose this pattern; the Solid table adapter itself uses Solid-native reactivity.
+
+```tsx
+import { createAtom, useSelector } from '@tanstack/solid-store'
+import {
+  createTable,
+  rowPaginationFeature,
+  tableFeatures,
+  type PaginationState,
+} from '@tanstack/solid-table'
+
+const features = tableFeatures({
+  rowPaginationFeature,
+})
+
+const paginationAtom = createAtom<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const pagination = useSelector(paginationAtom)
+
+const dataQuery = useQuery(() => ({
+  queryKey: ['data', pagination()],
+  queryFn: () => fetchData(pagination()),
+}))
+
+const table = createTable({
+  features,
+  columns,
+  get data() {
+    return dataQuery.data?.rows ?? []
+  },
+  get rowCount() {
+    return dataQuery.data?.rowCount
+  },
+  atoms: {
+    pagination: paginationAtom,
+  },
+  manualPagination: true,
+})
+```
+
+When using the `atoms` option for a slice, you do not need to add the matching `on[State]Change` option.
+
+#### External State
+
+Use `state` plus `on[State]Change` when Solid signals should own a table state slice.
+
+```tsx
+const [sorting, setSorting] = createSignal<SortingState>([])
+const [pagination, setPagination] = createSignal<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const table = createTable({
+  features,
+  columns,
+  get data() {
+    return data()
+  },
+  state: {
     get sorting() {
       return sorting()
     },
-  }
-  //syntax 1
-  onPaginationChange: (updater) => {
-    setPagination(old => {
-      const newPaginationValue = updater instanceof Function ? updater(old) : updater
-      //do something with the new pagination value
-      //...
-      return newPaginationValue
-    })
+    get pagination() {
+      return pagination()
+    },
   },
-  //syntax 2
-  onSortingChange: (updater) => {
-    const newSortingValue = updater instanceof Function ? updater(sorting) : updater
-    //do something with the new sorting value
-    //...
-    setSorting(updater) //normal state update
-  }
+  onSortingChange: setSorting,
+  onPaginationChange: setPagination,
 })
+```
+
+Use the per-slice `on[State]Change` callbacks to keep controlled table state slices atomic and separated.
+
+##### On State Change Callbacks
+
+The `on[State]Change` callbacks are useful when you are controlling a matching slice through the `state` option. They work like setters: an updater can be a raw value or a function that receives the previous value and returns the next value.
+
+If you provide an `on[State]Change` callback, also provide the corresponding value in `state`. For example, `onSortingChange` should be paired with `state.sorting`.
+
+```tsx
+onPaginationChange: (updater) => {
+  setPagination((old) => {
+    const next = updater instanceof Function ? updater(old) : updater
+
+    // side effects or validation can happen here
+
+    return next
+  })
+}
 ```
 
 ### State Types
 
-All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
+Most complex states in TanStack Table have their own TypeScript types that you can import and use.
 
 ```tsx
-import { createSolidTable, type SortingState } from '@tanstack/solid-table'
-//...
-const [sorting, setSorting] = createSignal<SortingState[]>([
+import {
+  createTable,
+  type PaginationState,
+  type RowSelectionState,
+  type SortingState,
+  type TableState,
+} from '@tanstack/solid-table'
+
+const [sorting, setSorting] = createSignal<SortingState>([
   {
-    id: 'age', //you should get autocomplete for the `id` and `desc` properties
+    id: 'age',
     desc: true,
-  }
+  },
 ])
+```
+
+`TableState<typeof features>` is inferred from the features registered on that table:
+
+```tsx
+type MyTableState = TableState<typeof features>
 ```

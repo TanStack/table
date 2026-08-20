@@ -1,0 +1,53 @@
+<div class="demo-root">
+  <button (click)="refreshData()" class="demo-button demo-button-sm demo-button-spaced">
+    Regenerate Data
+  </button>
+  <button (click)="stressTest()" class="demo-button demo-button-sm demo-button-spaced">
+    Stress Test (1M rows)
+  </button>
+  <div class="spacer-sm"></div>
+  <button
+    (click)="table.toggleDensity()"
+    class="demo-button demo-button-sm primary-action wide-action-button demo-button-spaced"
+  >
+    Toggle Density
+  </button>
+
+  <table [attr.data-table-density]="density()">
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            @if (!header.isPlaceholder) {
+              <th *flexRenderHeader="header; let header">
+                <div [innerHTML]="header"></div>
+              </th>
+            }
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td *flexRenderCell="cell; let cell">
+              <div [innerHTML]="cell"></div>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (footer of footerGroup.headers; track footer.id) {
+            <th *flexRenderFooter="footer; let footer">
+              {{ footer }}
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+</div>

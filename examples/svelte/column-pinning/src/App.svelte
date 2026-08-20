@@ -1,50 +1,67 @@
 <script lang="ts">
-  import { writable } from 'svelte/store'
-  import {
-    createSvelteTable,
-    getCoreRowModel,
-    getSortedRowModel,
-    flexRender,
-  } from '@tanstack/svelte-table'
+  import { faker } from '@faker-js/faker'
   import type {
     ColumnDef,
     ColumnOrderState,
     ColumnPinningState,
-    OnChangeFn,
-    TableOptions,
-    VisibilityState,
+    ColumnVisibilityState,
+    Header,
   } from '@tanstack/svelte-table'
-  import { makeData, type Person } from './makeData'
-  import { faker } from '@faker-js/faker'
+  import {
+    columnPinningFeature,
+    columnVisibilityFeature,
+    FlexRender,
+    columnOrderingFeature,
+    rowSortingFeature,
+    createSortedRowModel,
+    createTable,
+    createTableState,
+    tableFeatures,
+    sortFn_alphanumeric,
+    sortFn_text,
+  } from '@tanstack/svelte-table'
   import './index.css'
+  import { makeData, type Person } from './makeData'
 
-  const columns: ColumnDef<Person>[] = [
+  const features = tableFeatures({
+    columnOrderingFeature,
+    columnPinningFeature,
+    columnVisibilityFeature,
+    rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
+  })
+
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => 'Last Name',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => 'Age',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -52,17 +69,17 @@
             {
               accessorKey: 'visits',
               header: () => 'Visits',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -70,111 +87,119 @@
     },
   ]
 
-  const data = makeData(5000)
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
-  let isSplit = false
+  let isSplit = $state(false)
 
-  let columnOrder: ColumnOrderState = []
-  let columnPinning: ColumnPinningState = {}
-  let columnVisibility: VisibilityState = {}
+  const [columnOrder, setColumnOrder] = createTableState<ColumnOrderState>([])
+  const [columnPinning, setColumnPinning] =
+    createTableState<ColumnPinningState>({ start: [], end: [] })
+  const [columnVisibility, setColumnVisibility] =
+    createTableState<ColumnVisibilityState>({})
 
-  const setColumnOrder: OnChangeFn<ColumnOrderState> = updater => {
-    if (updater instanceof Function) {
-      columnOrder = updater(columnOrder)
-    } else {
-      columnOrder = updater
-    }
-    options.update(old => ({
-      ...old,
-      state: {
-        ...old.state,
-        columnOrder,
-      },
-    }))
+  const randomizeColumns = () => {
+    table.setColumnOrder((_updater) =>
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
+    )
   }
 
-  const setColumnPinning: OnChangeFn<ColumnPinningState> = updater => {
-    if (updater instanceof Function) {
-      columnPinning = updater(columnPinning)
-    } else {
-      columnPinning = updater
-    }
-    options.update(old => ({
-      ...old,
-      state: {
-        ...old.state,
-        columnPinning,
-      },
-    }))
-  }
-
-  const setColumnVisibility: OnChangeFn<VisibilityState> = updater => {
-    if (updater instanceof Function) {
-      columnVisibility = updater(columnVisibility)
-    } else {
-      columnVisibility = updater
-    }
-    options.update(old => ({
-      ...old,
-      state: {
-        ...old.state,
-        columnVisibility,
-      },
-    }))
-  }
-
-  const options = writable<TableOptions<Person>>({
-    data,
+  const table = createTable({
+    features,
+    get data() {
+      return data
+    },
     columns,
     state: {
-      columnOrder,
-      columnPinning,
-      columnVisibility,
+      get columnOrder() {
+        return columnOrder()
+      },
+      get columnPinning() {
+        return columnPinning()
+      },
+      get columnVisibility() {
+        return columnVisibility()
+      },
     },
     onColumnOrderChange: setColumnOrder,
     onColumnPinningChange: setColumnPinning,
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+    // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+    // enableColumnPinning: false, // disable pinning for every column; default true
     debugTable: true,
   })
-
-  const randomizeColumns = () => {
-    $table.setColumnOrder(_updater =>
-      faker.helpers.shuffle($table.getAllLeafColumns().map(d => d.id))
-    )
-  }
-
-  const regenerate = () => {
-    options.update(options => ({
-      ...options,
-      data: makeData(5000),
-    }))
-  }
-
-  const table = createSvelteTable(options)
 </script>
 
-<div class="p-2">
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+{#snippet headerCell(header: Header<typeof features, Person, unknown>)}
+  <th colSpan={header.colSpan}>
+    <div class="nowrap">
+      {#if !header.isPlaceholder}
+        <FlexRender header={header} />
+      {/if}
+    </div>
+    {#if !header.isPlaceholder && header.column.getCanPin()}
+      <div class="pin-actions">
+        {#if header.column.getIsPinned() !== 'start'}
+          <button
+            class="pin-button"
+            onclick={() => {
+              header.column.pin('start')
+            }}
+          >
+            {'<='}
+          </button>
+        {/if}
+        {#if header.column.getIsPinned()}
+          <button
+            class="pin-button"
+            onclick={() => {
+              header.column.pin(false)
+            }}
+          >
+            X
+          </button>
+        {/if}
+        {#if header.column.getIsPinned() !== 'end'}
+          <button
+            class="pin-button"
+            onclick={() => {
+              header.column.pin('end')
+            }}
+          >
+            {'=>'}
+          </button>
+        {/if}
+      </div>
+    {/if}
+  </th>
+{/snippet}
+
+<div class="demo-root">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
+  </div>
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
-          checked={$table.getIsAllColumnsVisible()}
-          on:change={e => {
-            console.info($table.getToggleAllColumnsVisibilityHandler()(e))
+          checked={table.getIsAllColumnsVisible()}
+          onchange={(e) => {
+            console.info(table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
         />{' '}
         Toggle All
       </label>
     </div>
-    {#each $table.getAllLeafColumns() as column}
-      <div class="px-1">
+    {#each table.getAllLeafColumns() as column}
+      <div class="column-toggle-row">
         <label>
           <input
             checked={column.getIsVisible()}
-            on:change={column.getToggleVisibilityHandler()}
+            onchange={column.getToggleVisibilityHandler()}
             type="checkbox"
           />{' '}
           {column.id}
@@ -182,247 +207,101 @@
       </div>
     {/each}
   </div>
-  <div class="h-4" />
-  <div class="flex flex-wrap gap-2">
-    <button on:click={() => regenerate()} class="border p-1">
-      Regenerate
-    </button>
-    <button on:click={() => randomizeColumns()} class="border p-1">
+  <div class="spacer-md"></div>
+  <div class="button-row">
+    <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>
   </div>
-  <div class="h-4" />
+  <div class="spacer-md"></div>
   <div>
     <label>
       <input
         type="checkbox"
         checked={isSplit}
-        on:change={e => (isSplit = e.currentTarget.checked)}
+        onchange={(e) => (isSplit = e.currentTarget.checked)}
       />{' '}
       Split Mode
     </label>
   </div>
-  <div class={`flex ${isSplit ? 'gap-4' : ''}`}>
+  <div class={`table-row-group ${isSplit ? 'split-gap' : ''}`}>
     {#if isSplit}
-      <table class="border-2 border-black">
+      <table class="outlined-table">
         <thead>
-          {#each $table.getLeftHeaderGroups() as headerGroup}
+          {#each table.getStartHeaderGroups() as headerGroup (headerGroup.id)
+          }
             <tr>
-              {#each headerGroup.headers as header}
-                <th colSpan={header.colSpan}>
-                  <div class="whitespace-nowrap">
-                    {#if !header.isPlaceholder}
-                      <svelte:component
-                        this={flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      />
-                    {/if}
-                  </div>
-                  {#if !header.isPlaceholder && header.column.getCanPin()}
-                    <div class="flex gap-1 justify-center">
-                      {#if header.column.getIsPinned() !== 'left'}
-                        <button
-                          class="border rounded px-2"
-                          on:click={() => {
-                            header.column.pin('left')
-                          }}
-                        >
-                          {'<='}
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned()}
-                        <button
-                          class="border rounded px-2"
-                          on:click={() => {
-                            header.column.pin(false)
-                          }}
-                        >
-                          X
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned() !== 'right'}
-                        <button
-                          class="border rounded px-2"
-                          on:click={() => {
-                            header.column.pin('right')
-                          }}
-                        >
-                          {'=>'}
-                        </button>
-                      {/if}
-                    </div>
-                  {/if}
-                </th>
+              {#each headerGroup.headers as header (header.id)}
+                {@render headerCell(header)}
               {/each}
             </tr>
           {/each}
         </thead>
         <tbody>
-          {#each $table.getCoreRowModel().rows.slice(0, 20) as row}
+          {#each table.getCoreRowModel().rows.slice(0, 20) as row (row.id)}
             <tr>
-              {#each row.getLeftVisibleCells() as cell}
+              {#each row.getStartVisibleCells() as cell (cell.id)}
                 <td>
-                  <svelte:component
-                    this={flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
-                  />
+                  <FlexRender cell={cell} />
                 </td>
               {/each}
             </tr>
           {/each}
         </tbody>
       </table>
-    {/if}
-    <table class="border-2 border-black">
+    {/if
+    }
+    <table class="outlined-table">
       <thead>
-        {#each isSplit ? $table.getCenterHeaderGroups() : $table.getHeaderGroups() as headerGroup}
+        {#each isSplit ? table.getCenterHeaderGroups() : table.getHeaderGroups() as headerGroup (headerGroup.id)
+        }
           <tr>
-            {#each headerGroup.headers as header}
-              <th colSpan={header.colSpan}>
-                <div class="whitespace-nowrap">
-                  {#if !header.isPlaceholder}
-                    <svelte:component
-                      this={flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    />
-                  {/if}
-                </div>
-                {#if !header.isPlaceholder && header.column.getCanPin()}
-                  <div class="flex gap-1 justify-center">
-                    {#if header.column.getIsPinned() !== 'left'}
-                      <button
-                        class="border rounded px-2"
-                        on:click={() => {
-                          header.column.pin('left')
-                        }}
-                      >
-                        {'<='}
-                      </button>
-                    {/if}
-                    {#if header.column.getIsPinned()}
-                      <button
-                        class="border rounded px-2"
-                        on:click={() => {
-                          header.column.pin(false)
-                        }}
-                      >
-                        X
-                      </button>
-                    {/if}
-                    {#if header.column.getIsPinned() !== 'right'}
-                      <button
-                        class="border rounded px-2"
-                        on:click={() => {
-                          header.column.pin('right')
-                        }}
-                      >
-                        {'=>'}
-                      </button>
-                    {/if}
-                  </div>
-                {/if}
-              </th>
+            {#each headerGroup.headers as header (header.id)}
+              {@render headerCell(header)}
             {/each}
           </tr>
         {/each}
       </thead>
       <tbody>
-        {#each $table.getCoreRowModel().rows.slice(0, 20) as row}
+        {#each table.getCoreRowModel().rows.slice(0, 20) as row (row.id)}
           <tr>
-            {#each isSplit ? row.getCenterVisibleCells() : row.getVisibleCells() as cell}
+            {#each isSplit ? row.getCenterVisibleCells() : row.getVisibleCells() as cell (cell.id)}
               <td>
-                <svelte:component
-                  this={flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                  )}
-                />
+                <FlexRender cell={cell} />
               </td>
             {/each}
           </tr>
         {/each}
       </tbody>
     </table>
-    {#if isSplit}
-      <table class="border-2 border-black">
+    {#if isSplit
+    }
+      <table class="outlined-table">
         <thead>
-          {#each $table.getRightHeaderGroups() as headerGroup}
+          {#each table.getEndHeaderGroups() as headerGroup (headerGroup.id)
+          }
             <tr>
-              {#each headerGroup.headers as header}
-                <th colSpan={header.colSpan}>
-                  <div class="whitespace-nowrap">
-                    {#if !header.isPlaceholder}
-                      <svelte:component
-                        this={flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      />
-                    {/if}
-                  </div>
-                  {#if !header.isPlaceholder && header.column.getCanPin()}
-                    <div class="flex gap-1 justify-center">
-                      {#if header.column.getIsPinned() !== 'left'}
-                        <button
-                          class="border rounded px-2"
-                          on:click={() => {
-                            header.column.pin('left')
-                          }}
-                        >
-                          {'<='}
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned()}
-                        <button
-                          class="border rounded px-2"
-                          on:click={() => {
-                            header.column.pin(false)
-                          }}
-                        >
-                          X
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned() !== 'right'}
-                        <button
-                          class="border rounded px-2"
-                          on:click={() => {
-                            header.column.pin('right')
-                          }}
-                        >
-                          {'=>'}
-                        </button>
-                      {/if}
-                    </div>
-                  {/if}
-                </th>
+              {#each headerGroup.headers as header (header.id)}
+                {@render headerCell(header)}
               {/each}
             </tr>
           {/each}
         </thead>
         <tbody>
-          {#each $table.getRowModel().rows.slice(0, 20) as row}
+          {#each table.getRowModel().rows.slice(0, 20) as row (row.id)}
             <tr>
-              {#each row.getRightVisibleCells() as cell}
+              {#each row.getEndVisibleCells() as cell (cell.id)}
                 <td>
-                  <svelte:component
-                    this={flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
-                  />
+                  <FlexRender cell={cell} />
                 </td>
               {/each}
             </tr>
           {/each}
         </tbody>
       </table>
-    {/if}
+    {/if
+    }
   </div>
-  <pre>{JSON.stringify($table.getState().columnPinning, null, 2)}</pre>
+  <br />
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

@@ -1,46 +1,77 @@
 import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  ColumnDef,
-  ColumnFiltersState,
-  createSolidTable,
+  FlexRender,
+  columnFacetingFeature,
+  columnFilteringFeature,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createTable,
+  filterFn_inDateRange,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  tableFeatures,
 } from '@tanstack/solid-table'
-import { debounce } from '@solid-primitives/scheduled'
-import { makeData, Person } from './makeData'
+import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
+import { For, createSignal } from 'solid-js'
+import { makeData } from './makeData'
 import ColumnFilter from './ColumnFilter'
-import { createSignal, For } from 'solid-js'
+import type { Person } from './makeData'
+import type { ColumnDef } from '@tanstack/solid-table'
 
-const columns: ColumnDef<Person>[] = [
+export const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  columnFacetingFeature,
+  rowPaginationFeature,
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    inDateRange: filterFn_inDateRange,
+  },
+})
+
+const columns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  },
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
+        filterFn: 'inNumberRange',
       },
       {
         header: 'More Info',
@@ -48,17 +79,28 @@ const columns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
+            filterFn: 'inNumberRange',
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
+            filterFn: 'inNumberRange',
+          },
+          {
+            accessorKey: 'birthDate',
+            header: 'Birth Date',
+            // A locale-independent date format keeps the demo (and its tests) stable
+            cell: (info) =>
+              (info.getValue() as Date).toISOString().slice(0, 10),
+            footer: (props) => props.column.id,
+            filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
           },
         ],
       },
@@ -67,64 +109,62 @@ const columns: ColumnDef<Person>[] = [
 ]
 
 function App() {
-  const [data, setData] = createSignal(makeData(50000))
-  const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>([])
-  const [globalFilter, setGlobalFilter] = createSignal('')
-  const debounceSetGlobalFilter = debounce(
-    (value: string) => setGlobalFilter(value),
-    500
-  )
-  const refreshData = () => setData(makeData(50000))
+  const [data, setData] = createSignal(makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
-  const table = createSolidTable({
+  const table = createTable({
+    features,
     get data() {
       return data()
     },
     columns,
-    state: {
-      get columnFilters() {
-        return columnFilters()
-      },
-      get globalFilter() {
-        return globalFilter()
-      },
-    },
-    onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: 'includesString',
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    // initialState: { columnFilters: [{ id: 'firstName', value: 'Jane' }] }, // set filters once
+    // atoms: { columnFilters: columnFiltersAtom }, // preferred: own column filters with an external atom
+    // state: { columnFilters }, // classic controlled state; pair with onColumnFiltersChange
+    // onColumnFiltersChange: setColumnFilters,
+    // enableFilters: false, // disable all column and global filtering; default true
+    // enableColumnFilters: false, // disable per-column filters; default true
+    // filterFromLeafRows: true, // keep parents whose descendants match; default filters from parents down
+    // maxLeafRowFilterDepth: 1, // only filter through this nested-row depth; default 100
+    // manualFiltering: true, // pass data that is already filtered, for example from a server
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
   })
 
+  const globalFilterDebouncer = createDebouncer(
+    (value: string) => table.setGlobalFilter(value),
+    { wait: 500 },
+  )
+
   return (
-    <div class="p-2">
+    <div class="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+      </div>
       <input
-        class="p-2 font-lg shadow border border-block"
-        value={globalFilter() ?? ''}
-        onInput={e => debounceSetGlobalFilter(e.currentTarget.value)}
+        class="summary-panel"
+        value={table.atoms.globalFilter.get() ?? ''}
+        onInput={(e) =>
+          globalFilterDebouncer.maybeExecute(e.currentTarget.value)
+        }
         placeholder="Search all columns..."
       />
-      <div className="h-2" />
+      <div class="spacer-sm" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
-            {headerGroup => (
+            {(headerGroup) => (
               <tr>
                 <For each={headerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          <FlexRender header={header} />
                           {header.column.getCanFilter() ? (
                             <div>
                               <ColumnFilter
@@ -143,16 +183,13 @@ function App() {
           </For>
         </thead>
         <tbody>
-          <For each={table.getRowModel().rows.slice(0, 10)}>
-            {row => (
+          <For each={table.getRowModel().rows}>
+            {(row) => (
               <tr>
-                <For each={row.getVisibleCells()}>
-                  {cell => (
+                <For each={row.getAllCells()}>
+                  {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -161,11 +198,77 @@ function App() {
           </For>
         </tbody>
       </table>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
+      <div class="spacer-sm" />
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.firstPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+        >
+          {'>>'}
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            max={table.getPageCount()}
+            value={table.atoms.pagination.get().pageIndex + 1}
+            onInput={(e) => {
+              const page = e.currentTarget.value
+                ? Number(e.currentTarget.value) - 1
+                : 0
+              table.setPageIndex(page)
+            }}
+            class="page-size-input"
+          />
+        </span>
+        <select
+          value={table.atoms.pagination.get().pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number(e.currentTarget.value))
+          }}
+        >
+          <For each={[10, 20, 30, 40, 50]}>
+            {(pageSize) => <option value={pageSize}>Show {pageSize}</option>}
+          </For>
+        </select>
       </div>
-      <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
+      <div>
+        Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+        {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
+      </div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

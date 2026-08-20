@@ -1,0 +1,62 @@
+import { cellSelectionFeature } from './cell-selection/cellSelectionFeature'
+import { cellSpanningFeature } from './cell-spanning/cellSpanningFeature'
+import { columnFacetingFeature } from './column-faceting/columnFacetingFeature'
+import { rowAggregationFeature } from './row-aggregation/rowAggregationFeature'
+import { columnFilteringFeature } from './column-filtering/columnFilteringFeature'
+import { columnGroupingFeature } from './column-grouping/columnGroupingFeature'
+import { columnOrderingFeature } from './column-ordering/columnOrderingFeature'
+import { columnPinningFeature } from './column-pinning/columnPinningFeature'
+import { columnResizingFeature } from './column-resizing/columnResizingFeature'
+import { columnSizingFeature } from './column-sizing/columnSizingFeature'
+import { columnVisibilityFeature } from './column-visibility/columnVisibilityFeature'
+import { globalFilteringFeature } from './global-filtering/globalFilteringFeature'
+import { rowExpandingFeature } from './row-expanding/rowExpandingFeature'
+import { rowPaginationFeature } from './row-pagination/rowPaginationFeature'
+import { rowPinningFeature } from './row-pinning/rowPinningFeature'
+import { rowSelectionFeature } from './row-selection/rowSelectionFeature'
+import { rowSortingFeature } from './row-sorting/rowSortingFeature'
+
+export interface StockFeatures {
+  cellSelectionFeature: typeof cellSelectionFeature
+  cellSpanningFeature: typeof cellSpanningFeature
+  columnFacetingFeature: typeof columnFacetingFeature
+  columnFilteringFeature: typeof columnFilteringFeature
+  columnGroupingFeature: typeof columnGroupingFeature
+  columnOrderingFeature: typeof columnOrderingFeature
+  columnPinningFeature: typeof columnPinningFeature
+  columnResizingFeature: typeof columnResizingFeature
+  columnSizingFeature: typeof columnSizingFeature
+  columnVisibilityFeature: typeof columnVisibilityFeature
+  globalFilteringFeature: typeof globalFilteringFeature
+  rowAggregationFeature: typeof rowAggregationFeature
+  rowExpandingFeature: typeof rowExpandingFeature
+  rowPaginationFeature: typeof rowPaginationFeature
+  rowPinningFeature: typeof rowPinningFeature
+  rowSelectionFeature: typeof rowSelectionFeature
+  rowSortingFeature: typeof rowSortingFeature
+}
+
+/**
+ * The complete set of stock optional table features.
+ *
+ * Use individual feature exports for tree-shaking, or this aggregate when a table should include every built-in feature.
+ */
+export const stockFeatures: StockFeatures = {
+  cellSelectionFeature,
+  cellSpanningFeature,
+  columnFacetingFeature,
+  columnFilteringFeature,
+  columnGroupingFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  globalFilteringFeature,
+  rowAggregationFeature,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowPinningFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+} as const

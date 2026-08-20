@@ -1,0 +1,37 @@
+.root {
+  background-color: var(--mrt-base-background-color);
+  border-top: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  bottom: var(--mrt-bottom-toolbar-bottom);
+  box-shadow: 0 1px 2px -1px
+    color-mix(in srgb, var(--mantine-color-black) 10%, transparent) inset;
+  left: 0;
+  right: 0;
+  position: relative;
+}
+
+.root-fullscreen {
+  position: fixed !important;
+  bottom: 0;
+}
+
+.custom-toolbar-container {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  padding: rem(8px);
+  width: 100%;
+}
+
+.paginator-container {
+  display: flex;
+  justify-content: flex-end;
+  right: 0;
+  top: 0;
+  position: absolute;
+}
+
+.paginator-container-alert-banner {
+  position: relative !important;
+}

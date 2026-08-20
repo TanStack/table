@@ -1,0 +1,181 @@
+<script setup lang="ts">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
+import { computed, ref } from 'vue'
+import { createAppColumnHelper, useAppTable } from '../hooks/table'
+import { makeData } from '../makeData'
+import type { Person } from '../makeData'
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const data = ref(makeData(1_000))
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'select',
+    header: ({ header }) => header.SelectAllHeader,
+    cell: ({ cell }) => cell.SelectCell,
+  }),
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    footer: (props) => props.column.id,
+    cell: ({ cell }) => cell.TextCell,
+  }),
+  columnHelper.accessor('lastName', {
+    header: 'Last Name',
+    footer: (props) => props.column.id,
+    cell: ({ cell }) => cell.TextCell,
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+    footer: (props) => props.column.id,
+    cell: ({ cell }) => cell.NumberCell,
+  }),
+  columnHelper.accessor('visits', {
+    header: 'Visits',
+    footer: (props) => props.column.id,
+    cell: ({ cell }) => cell.NumberCell,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+    cell: ({ cell }) => cell.StatusCell,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Progress',
+    footer: (props) => props.column.id,
+    cell: ({ cell }) => cell.ProgressCell,
+  }),
+  columnHelper.display({
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ cell }) => cell.RowActionsCell,
+  }),
+])
+
+function refreshData() {
+  data.value = makeData(1_000)
+}
+
+function stressTest() {
+  data.value = makeData(1_000_000)
+}
+
+const table = useAppTable({
+  key: 'users-table', // needed for devtools
+  debugTable: true,
+  enableRowSelection: true,
+  columns,
+  data,
+  initialState: {
+    pagination: {
+      pageIndex: 0,
+      pageSize: 10,
+    },
+  },
+})
+
+useTanStackTableDevtools(table)
+
+const sorting = computed(() => table.atoms.sorting.get())
+</script>
+
+<template>
+  <component :is="table.AppTable">
+    <section class="table-container">
+      <component
+        :is="table.TableToolbar"
+        title="Users Table"
+        :onRefresh="refreshData"
+        :onStressTest="stressTest"
+      />
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr
+              v-for="headerGroup in table.getHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <component
+                :is="table.AppHeader"
+                v-for="header in headerGroup.headers"
+                :key="header.id"
+                :header="header"
+                v-slot="{ header: appHeader }"
+              >
+                <th
+                  :colspan="appHeader.colSpan"
+                  :class="{ 'sortable-header': appHeader.column.getCanSort() }"
+                  @click="appHeader.column.getToggleSortingHandler()?.($event)"
+                >
+                  <template v-if="!appHeader.isPlaceholder">
+                    <component :is="appHeader.FlexRender" />
+                    <component :is="appHeader.SortIndicator" />
+                    <component :is="appHeader.ColumnFilter" />
+                    <span v-if="sorting.length > 1" class="sort-indicator">
+                      {{
+                        sorting.findIndex(
+                          (sort: { id: string }) =>
+                            sort.id === appHeader.column.id,
+                        ) + 1 || ''
+                      }}
+                    </span>
+                  </template>
+                </th>
+              </component>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="row in table.getRowModel().rows"
+              :key="row.id + JSON.stringify(row.original)"
+            >
+              <component
+                :is="table.AppCell"
+                v-for="cell in row.getAllCells()"
+                :key="cell.id"
+                :cell="cell"
+                v-slot="{ cell: appCell }"
+              >
+                <td>
+                  <component :is="appCell.FlexRender" />
+                </td>
+              </component>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr
+              v-for="footerGroup in table.getFooterGroups()"
+              :key="footerGroup.id"
+            >
+              <component
+                :is="table.AppFooter"
+                v-for="header in footerGroup.headers"
+                :key="header.id"
+                :header="header"
+                v-slot="{ header: appFooter }"
+              >
+                <td :colspan="appFooter.colSpan">
+                  <template v-if="!appFooter.isPlaceholder">
+                    <component
+                      :is="
+                        ['age', 'visits', 'progress'].includes(
+                          appFooter.column.id,
+                        )
+                          ? appFooter.FooterSum
+                          : appFooter.FooterColumnId
+                      "
+                    />
+                  </template>
+                </td>
+              </component>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <component :is="table.PaginationControls" />
+      <component :is="table.RowCount" />
+    </section>
+  </component>
+</template>

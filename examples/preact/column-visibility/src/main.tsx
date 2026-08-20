@@ -1,0 +1,170 @@
+import { useState } from 'preact/hooks'
+import { render } from 'preact'
+import {
+  columnVisibilityFeature,
+  createColumnHelper,
+  tableFeatures,
+  useTable,
+} from '@tanstack/preact-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import './index.css'
+
+const features = tableFeatures({ columnVisibilityFeature })
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.group({
+    header: 'Name',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        cell: (info) => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: (props) => props.column.id,
+      }),
+    ]),
+  }),
+  columnHelper.group({
+    header: 'Info',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
+        header: () => 'Age',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.group({
+        header: 'More Info',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
+            header: () => <span>Visits</span>,
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('status', {
+            header: 'Status',
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('progress', {
+            header: 'Profile Progress',
+            footer: (props) => props.column.id,
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])
+
+function App() {
+  const [data, setData] = useState(() => makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
+
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      // initialState: { columnVisibility: { visits: false } }, // hide columns on first render
+      // atoms: { columnVisibility: columnVisibilityAtom }, // preferred: own visibility state with an external atom
+      // state: { columnVisibility }, // classic controlled state; pair with onColumnVisibilityChange
+      // onColumnVisibilityChange: setColumnVisibility,
+      // enableHiding: false, // prevent every column from being hidden; default true
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
+    },
+    (state) => state, // default selector
+  )
+
+  return (
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
+      </div>
+      <div className="spacer-md" />
+      <div className="column-toggle-panel">
+        <div className="column-toggle-panel-header">
+          <label>
+            <input
+              type="checkbox"
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
+            />{' '}
+            Toggle All
+          </label>
+        </div>
+        {table.getAllLeafColumns().map((column) => {
+          return (
+            <div key={column.id} className="column-toggle-row">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={column.getIsVisible()}
+                  onChange={column.getToggleVisibilityHandler()}
+                />{' '}
+                {column.id}
+              </label>
+            </div>
+          )
+        })}
+      </div>
+      <div className="spacer-md" />
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender header={header} />
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  <table.FlexRender cell={cell} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          {table.getFooterGroups().map((footerGroup) => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map((header) => (
+                <th key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender footer={header} />
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </tfoot>
+      </table>
+      <div className="spacer-md" />
+      <div className="spacer-md" />
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
+    </div>
+  )
+}
+
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
+
+render(<App />, rootElement)

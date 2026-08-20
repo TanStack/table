@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "checkJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "outDir": "./dist/declaration-emit",
+    "rootDir": ".."
+  },
+  "include": ["../src/process-env.d.ts", "declaration-emit/**/*.ts"]
+}

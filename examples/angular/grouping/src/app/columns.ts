@@ -1,71 +1,72 @@
-import { ColumnDef } from '@tanstack/angular-table'
+import {
+  columnFilteringFeature,
+  columnGroupingFeature,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  createPaginatedRowModel,
+  createTableHook,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  tableFeatures,
+} from '@tanstack/angular-table'
+import type { Person } from './makeData'
 
-export type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  progress: number
-  status: 'relationship' | 'complicated' | 'single'
-  subRows?: Person[]
-}
+const features = tableFeatures({
+  columnGroupingFeature,
+  rowPaginationFeature,
+  columnFilteringFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+})
 
-export const columns: ColumnDef<Person>[] = [
-  {
+export const { createAppColumnHelper, injectAppTable: injectTable } =
+  createTableHook({
+    features,
+  })
+const columnHelper = createAppColumnHelper<Person>()
+
+export const columns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
-    columns: [
-      {
-        accessorKey: 'firstName',
-        header: 'First Name',
-        cell: info => info.getValue(),
-        /**
-         * override the value used for row grouping
-         * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-         */
-        getGroupingValue: row => `${row.firstName} ${row.lastName}`,
-      },
-      {
-        accessorFn: row => row.lastName,
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        header: () => 'First Name',
+        cell: (info) => info.getValue(),
+        getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        header: () => `Last Name`,
-        cell: info => info.getValue(),
-      },
-    ],
-  },
-  {
+        header: () => 'Last Name',
+        cell: (info) => info.getValue(),
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
-    columns: [
-      {
-        accessorKey: 'age',
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
-        aggregatedCell: ({ getValue }) =>
-          Math.round(getValue<number>() * 100) / 100,
-        aggregationFn: 'median',
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
             header: () => `Visits`,
-            aggregationFn: 'sum',
-            // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-          },
-          {
-            accessorKey: 'status',
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
-          },
-          {
-            accessorKey: 'progress',
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             cell: ({ getValue }) =>
               Math.round(getValue<number>() * 100) / 100 + '%',
-            aggregationFn: 'mean',
-            aggregatedCell: ({ getValue }) =>
-              Math.round(getValue<number>() * 100) / 100 + '%',
-          },
-        ],
-      },
-    ],
-  },
-]
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])

@@ -1,153 +1,194 @@
-import React, { HTMLProps } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-
+import {
+  columnFilteringFeature,
+  createColumnHelper,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_between,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
+import { makeData } from './makeData'
+import type { HTMLProps } from 'react'
+import type { Person } from './makeData'
+import type { Column, Table } from '@tanstack/react-table'
 import './index.css'
 
-import {
-  Column,
-  Table,
-  ExpandedState,
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getExpandedRowModel,
-  ColumnDef,
-  flexRender,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: {
+    between: filterFn_between,
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        header: ({ table }) => (
-          <>
-            <IndeterminateCheckbox
-              {...{
-                checked: table.getIsAllRowsSelected(),
-                indeterminate: table.getIsSomeRowsSelected(),
-                onChange: table.getToggleAllRowsSelectedHandler(),
-              }}
-            />{' '}
-            <button
-              {...{
-                onClick: table.getToggleAllRowsExpandedHandler(),
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'rowNumber',
+          header: '#',
+          cell: ({ row }) => row.getDisplayIndex() + 1,
+        }),
+        columnHelper.accessor('firstName', {
+          header: ({ table }) => (
+            <>
+              <IndeterminateCheckbox
+                checked={table.getIsAllRowsSelected()}
+                indeterminate={table.getIsSomeRowsSelected()}
+                onChange={table.getToggleAllRowsSelectedHandler()}
+              />{' '}
+              <button onClick={table.getToggleAllRowsExpandedHandler()}>
+                {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+              </button>{' '}
+              First Name
+            </>
+          ),
+          cell: ({ row, getValue }) => (
+            <div
+              style={{
+                // Since rows are flattened by default,
+                // we can use the row.depth property
+                // and paddingLeft to visually indicate the depth
+                // of the row
+                paddingLeft: `${row.depth * 2}rem`,
               }}
             >
-              {table.getIsAllRowsExpanded() ? '👇' : '👉'}
-            </button>{' '}
-            First Name
-          </>
-        ),
-        cell: ({ row, getValue }) => (
-          <div
-            style={{
-              // Since rows are flattened by default,
-              // we can use the row.depth property
-              // and paddingLeft to visually indicate the depth
-              // of the row
-              paddingLeft: `${row.depth * 2}rem`,
-            }}
-          >
-            <div>
-              <IndeterminateCheckbox
-                {...{
-                  checked: row.getIsSelected(),
-                  indeterminate: row.getIsSomeSelected(),
-                  onChange: row.getToggleSelectedHandler(),
-                }}
-              />{' '}
-              {row.getCanExpand() ? (
-                <button
-                  {...{
-                    onClick: row.getToggleExpandedHandler(),
-                    style: { cursor: 'pointer' },
-                  }}
-                >
-                  {row.getIsExpanded() ? '👇' : '👉'}
-                </button>
-              ) : (
-                '🔵'
-              )}{' '}
-              {getValue<boolean>()}
+              <div>
+                <IndeterminateCheckbox
+                  checked={
+                    row.getIsSelected() ||
+                    (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+                  }
+                  indeterminate={row.getIsSomeSelected()}
+                  onChange={row.getToggleSelectedHandler({
+                    // selectChildren: false
+                  })}
+                />{' '}
+                {row.getCanExpand() ? (
+                  <button
+                    onClick={row.getToggleExpandedHandler()}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {row.getIsExpanded() ? '👇' : '👉'}
+                  </button>
+                ) : (
+                  '🔵'
+                )}{' '}
+                {getValue<boolean>()}
+              </div>
             </div>
-          </div>
-        ),
-        footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        footer: props => props.column.id,
-      },
-    ],
-    []
+          ),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+          filterFn: 'between',
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(100, 5, 3))
-  const refreshData = () => setData(() => makeData(100, 5, 3))
+  const refreshData = () => setData(makeData(100, 5, 3))
+  const stressTest = () => setData(makeData(10_000, 5, 3))
 
-  const [expanded, setExpanded] = React.useState<ExpandedState>({})
-
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      expanded,
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      getSubRows: (row) => row.subRows, // tell the table where nested rows live
+      // enableRowSelection: row => row.original.age > 18, // enable selection conditionally; default true
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableSubRowSelection: false, // disable sub-row selection; default true
+      // enableRowRangeSelection: false, // disable shift-click range selection; default true
+      // initialState: { expanded: { '0': true } }, // expand rows on first render
+      // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
+      // state: { expanded }, // classic controlled state; pair with onExpandedChange
+      // onExpandedChange: setExpanded,
+      // enableExpanding: false, // disable expanding for every row; default true
+      // getRowCanExpand: row => row.original.subRows?.length > 0, // override which rows can expand
+      // getIsRowExpanded: row => row.id === '0', // override whether a row is expanded
+      // manualExpanding: true, // pass data that is already expanded, for example from a server
+      // paginateExpandedRows: false, // keep expanded children on their parent page; default true
+      // autoResetExpanded: false, // keep expanded rows after page-altering changes; default true
+      // autoResetAll: false, // turn off every feature's automatic reset, including expansion
+      // enableFilters: false, // disable all column and global filtering; default true
+      // enableColumnFilters: false, // disable per-column filters; default true
+      // filterFromLeafRows: true, // with filtering, keep parents whose descendants match
+      // maxLeafRowFilterDepth: 0, // with filtering, only filter root rows
+      // manualFiltering: true, // pass data that is already filtered, for example from a server
+      debugTable: true,
+      debugRows: true,
     },
-    onExpandedChange: setExpanded,
-    getSubRows: row => row.subRows,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    // filterFromLeafRows: true,
-    // maxLeafRowFilterDepth: 0,
-    debugTable: true,
-  })
+    (state) => state, // default selector
+  )
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
+      </div>
+      <div className="spacer-sm" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        <table.FlexRender header={header} />
                         {header.column.getCanFilter() ? (
                           <div>
                             <Filter column={header.column} table={table} />
@@ -162,16 +203,13 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}
@@ -180,81 +218,75 @@ function App() {
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
+          className="demo-button demo-button-sm"
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
+          className="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            value={table.state.pagination.pageIndex + 1}
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
-          onChange={e => {
+          value={table.state.pagination.pageSize}
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
           ))}
         </select>
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <label>Expanded State:</label>
-      <pre>{JSON.stringify(expanded, null, 2)}</pre>
-      <label>Row Selection State:</label>
-      <pre>{JSON.stringify(table.getState().rowSelection, null, 2)}</pre>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+      <div></div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }
@@ -263,8 +295,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -273,39 +305,70 @@ function Filter({
   const columnFilterValue = column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <input
+    <div className="filter-row">
+      <DebouncedInput
         type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
-            e.target.value,
+        value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
+        onChange={(value) =>
+          column.setFilterValue((old: [number, number] | undefined) => [
+            value,
             old?.[1],
           ])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
-      <input
+      <DebouncedInput
         type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
-        onChange={e =>
-          column.setFilterValue((old: [number, number]) => [
+        value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
+        onChange={(value) =>
+          column.setFilterValue((old: [number, number] | undefined) => [
             old?.[0],
-            e.target.value,
+            value,
           ])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
-    <input
+    <DebouncedInput
       type="text"
       value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="filter-select"
+    />
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value)
+        debouncedOnChange(e.target.value)
+      }}
     />
   )
 }
@@ -321,13 +384,13 @@ function IndeterminateCheckbox({
     if (typeof indeterminate === 'boolean') {
       ref.current.indeterminate = !rest.checked && indeterminate
     }
-  }, [ref, indeterminate])
+  }, [ref, indeterminate, rest.checked])
 
   return (
     <input
       type="checkbox"
       ref={ref}
-      className={className + ' cursor-pointer'}
+      className={className + ' sortable-header'}
       {...rest}
     />
   )
@@ -339,5 +402,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

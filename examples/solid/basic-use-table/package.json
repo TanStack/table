@@ -1,0 +1,26 @@
+{
+  "name": "tanstack-solid-table-example-basic-use-table",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vite": "^8.2.1",
+    "vite-plugin-solid": "^2.11.14"
+  },
+  "dependencies": {
+    "@tanstack/solid-devtools": "^0.8.10",
+    "@tanstack/solid-table": "^9.1.2",
+    "@tanstack/solid-table-devtools": "^9.2.0",
+    "solid-js": "^1.9.14"
+  }
+}

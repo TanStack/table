@@ -1,54 +1,70 @@
 import { customElement } from 'lit/decorators.js'
-import { html, LitElement, PropertyValueMap } from 'lit'
+import { LitElement, PropertyValueMap, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  SortingFn,
-  type SortingState,
+  FlexRender,
   TableController,
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
+  tableFeatures,
 } from '@tanstack/lit-table'
+import { Person, makeData } from './makeData'
+import type { SortFn } from '@tanstack/lit-table'
 
-import { makeData, Person } from './makeData'
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
+})
 
-const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortFn<typeof features, Person> = (
+  rowA,
+  rowB,
+  _columnId,
+) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
-    //this column will sort in ascending order by default since it is a string column
+    cell: (info) => info.getValue(),
+    // this column will sort in ascending order by default since it is a string column
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
-    sortUndefined: 'last', //force undefined values to the end
-    sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
+    sortUndefined: 'last', // force undefined values to the end
+    sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
   },
   {
     accessorKey: 'age',
     header: () => 'Age',
-    //this column will sort in descending order by default since it is a number column
+    // this column will sort in descending order by default since it is a number column
   },
   {
     accessorKey: 'visits',
     header: () => html`<span>Visits</span>`,
-    sortUndefined: 'last', //force undefined values to the end
+    sortUndefined: 'last', // force undefined values to the end
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    sortingFn: sortStatusFn, //use our custom sorting function for this enum column
+    sortFn: sortStatusFn, // use our custom sorting function for this enum column
   },
   {
     accessorKey: 'progress',
@@ -58,7 +74,7 @@ const columns: ColumnDef<Person>[] = [
   {
     accessorKey: 'rank',
     header: 'Rank',
-    invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
+    invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
   },
   {
     accessorKey: 'createdAt',
@@ -67,20 +83,17 @@ const columns: ColumnDef<Person>[] = [
   },
 ]
 
-const data: Person[] = makeData(1000)
+const data: Array<Person> = makeData(1_000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private _sorting: SortingState = []
+  private _multiplier = 1
 
   @state()
-  private _multiplier: number = 1
+  private _data: Array<Person> = new Array<Person>()
 
-  @state()
-  private _data: Person[] = new Array<Person>()
-
-  private tableController = new TableController<Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   constructor() {
     super()
@@ -88,11 +101,11 @@ class LitTableExample extends LitElement {
   }
 
   protected willUpdate(
-    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>,
   ): void {
     super.willUpdate(_changedProperties)
     if (_changedProperties.has('_multiplier')) {
-      const newData: Person[] = data.map(d => {
+      const newData: Array<Person> = data.map((d) => {
         const p: Person = {
           ...d,
           visits: d.visits ? d.visits * this._multiplier : undefined,
@@ -104,31 +117,40 @@ class LitTableExample extends LitElement {
     }
   }
   protected render() {
-    const table = this.tableController.table({
-      columns,
-      data: this._data,
-      state: {
-        sorting: this._sorting,
+    const table = this.tableController.table(
+      {
+        features,
+        columns,
+        data: this._data,
       },
-      onSortingChange: updaterOrValue => {
-        if (typeof updaterOrValue === 'function') {
-          this._sorting = updaterOrValue(this._sorting)
-        } else {
-          this._sorting = updaterOrValue
-        }
-      },
-      getSortedRowModel: getSortedRowModel(),
-      getCoreRowModel: getCoreRowModel(),
-    })
+      (state) => ({ sorting: state.sorting }),
+    )
 
     return html`
+      <div>
+        <button
+          @click=${() => {
+            this._data = makeData(1_000)
+          }}
+        >
+          Regenerate Data
+        </button>
+        <button
+          @click=${() => {
+            this._data = makeData(1_000_000)
+          }}
+        >
+          Stress Test (1M rows)
+        </button>
+      </div>
       <input
         type="number"
         min="1"
         max="100"
         id="multiplier"
         @change="${(e: Event) => {
-          const inputElement = (e as CustomEvent).target as HTMLInputElement
+          const inputElement = (e as CustomEvent).target as
+            HTMLInputElement | undefined
           if (inputElement) {
             this._multiplier = +inputElement.value
             this.requestUpdate('_multiplier')
@@ -139,40 +161,47 @@ class LitTableExample extends LitElement {
         <thead>
           ${repeat(
             table.getHeaderGroups(),
-            headerGroup => headerGroup.id,
-            headerGroup => html`
+            (headerGroup) => headerGroup.id,
+            (headerGroup) => html`
               <tr>
                 ${headerGroup.headers.map(
-                  header => html`
+                  (header) => html`
                     <th colspan="${header.colSpan}">
-                      ${header.isPlaceholder
-                        ? null
-                        : html`<div
-                            title=${header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === 'asc'
-                                ? 'Sort ascending'
-                                : header.column.getNextSortingOrder() === 'desc'
-                                  ? 'Sort descending'
-                                  : 'Clear sort'
-                              : undefined}
-                            @click="${header.column.getToggleSortingHandler()}"
-                            style="cursor: ${header.column.getCanSort()
-                              ? 'pointer'
-                              : 'not-allowed'}"
-                          >
-                            ${flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                            ${{ asc: ' 🔼', desc: ' 🔽' }[
-                              header.column.getIsSorted() as string
-                            ] ?? null}
-                          </div>`}
+                      ${
+                        header.isPlaceholder
+                          ? null
+                          : html`<div
+                              title=${
+                                header.column.getCanSort()
+                                  ? header.column.getNextSortingOrder() ===
+                                    'asc'
+                                    ? 'Sort ascending'
+                                    : header.column.getNextSortingOrder() ===
+                                        'desc'
+                                      ? 'Sort descending'
+                                      : 'Clear sort'
+                                  : undefined
+                              }
+                              @click="${header.column.getToggleSortingHandler()}"
+                              style="cursor: ${
+                                header.column.getCanSort()
+                                  ? 'pointer'
+                                  : 'not-allowed'
+                              }"
+                            >
+                              ${FlexRender({ header })}
+                              ${
+                                { asc: ' 🔼', desc: ' 🔽' }[
+                                  header.column.getIsSorted() as string
+                                ] ?? null
+                              }
+                            </div>`
+                      }
                     </th>
-                  `
+                  `,
                 )}
               </tr>
-            `
+            `,
           )}
         </thead>
         <tbody>
@@ -180,26 +209,18 @@ class LitTableExample extends LitElement {
             .getRowModel()
             .rows.slice(0, 10)
             .map(
-              row => html`
+              (row) => html`
                 <tr>
                   ${row
-                    .getVisibleCells()
-                    .map(
-                      cell => html`
-                        <td>
-                          ${flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      `
-                    )}
+                    .getAllCells()
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
-              `
+              `,
             )}
         </tbody>
       </table>
-      <pre>${JSON.stringify(this._sorting, null, 2)}</pre>
+      <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;
@@ -209,7 +230,6 @@ class LitTableExample extends LitElement {
 
         table {
           border: 1px solid lightgray;
-          border-collapse: collapse;
         }
 
         tbody {
@@ -228,6 +248,210 @@ class LitTableExample extends LitElement {
 
         tfoot th {
           font-weight: normal;
+        }
+
+        /* Demo layout helpers for the plain example UI. */
+        .demo-root {
+          padding: 0.5rem;
+        }
+        .spacer-xs {
+          height: 0.25rem;
+        }
+        .spacer-sm {
+          height: 0.5rem;
+        }
+        .spacer-md {
+          height: 1rem;
+        }
+        .controls,
+        .button-row,
+        .inline-controls,
+        .pin-actions,
+        .filter-row,
+        .form-actions {
+          display: flex;
+          align-items: center;
+        }
+        .button-row {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        .controls {
+          gap: 0.5rem;
+        }
+        .inline-controls,
+        .pin-actions {
+          gap: 0.25rem;
+        }
+        .pin-actions {
+          justify-content: center;
+        }
+        .filter-row {
+          gap: 0.5rem;
+        }
+        .form-actions {
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        .split-tables {
+          display: flex;
+          gap: 1rem;
+        }
+        .table-row-group {
+          display: flex;
+        }
+        .split-gap {
+          gap: 1rem;
+        }
+        .vertical-options {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: center;
+        }
+        .column-toggle-panel {
+          display: inline-block;
+          border: 1px solid #000;
+          border-radius: 0.25rem;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+        }
+        .column-toggle-panel-header {
+          border-bottom: 1px solid #000;
+          padding: 0 0.25rem;
+        }
+        .column-toggle-row,
+        .selection-cell {
+          padding: 0 0.25rem;
+        }
+        .selection-cell {
+          display: block;
+        }
+        .demo-button,
+        .pin-button,
+        .compact-input,
+        .filter-input,
+        .filter-select,
+        .page-size-input,
+        .text-input,
+        .number-input,
+        .wide-action-button,
+        .primary-action,
+        .secondary-action,
+        .success-action {
+          border: 1px solid currentColor;
+          border-radius: 0.25rem;
+        }
+        .demo-button {
+          padding: 0.5rem;
+        }
+        .demo-button-sm {
+          padding: 0.25rem;
+        }
+        .demo-button-spaced {
+          margin-bottom: 0.5rem;
+        }
+        .pin-button {
+          padding: 0 0.5rem;
+        }
+        .outlined-table {
+          border: 2px solid #000;
+        }
+        .outlined-control {
+          border-color: #000;
+        }
+        .nowrap {
+          white-space: nowrap;
+        }
+        .demo-note {
+          margin-bottom: 0.5rem;
+          font-size: 0.875rem;
+        }
+        .section-title {
+          font-size: 1.25rem;
+        }
+        .scroll-container {
+          overflow-x: auto;
+        }
+        .page-size-input {
+          width: 4rem;
+          padding: 0.25rem;
+        }
+        .number-input {
+          width: 5rem;
+          padding: 0 0.25rem;
+        }
+        .filter-input,
+        .filter-select {
+          width: 6rem;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+        }
+        .filter-select {
+          width: 9rem;
+        }
+        .text-input {
+          width: 100%;
+          padding: 0 0.25rem;
+        }
+        .compact-input {
+          padding: 0 0.25rem;
+        }
+        .wide-action-button {
+          width: 16rem;
+        }
+        .summary-panel {
+          border: 1px solid currentColor;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+          padding: 0.5rem;
+        }
+        .sortable-header,
+        .sortable {
+          cursor: pointer;
+          user-select: none;
+        }
+        .primary-action,
+        .success-action,
+        .secondary-action {
+          color: #fff;
+        }
+        .primary-action {
+          background: #3b82f6;
+        }
+        .success-action {
+          background: #22c55e;
+        }
+        .secondary-action {
+          background: #6b7280;
+        }
+        .submit-button:disabled {
+          opacity: 0.5;
+        }
+        .error-text {
+          color: #ef4444;
+          font-size: 0.75rem;
+        }
+        .success-text {
+          color: #16a34a;
+        }
+        .warning-text {
+          color: #ca8a04;
+        }
+        .muted-text {
+          color: #9ca3af;
+        }
+        .label-offset {
+          margin-left: 0.5rem;
+        }
+        .cell-padding {
+          padding: 0.25rem;
+        }
+        .table-spacer {
+          margin-bottom: 0.5rem;
+        }
+        .centered-button-row {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.5rem;
         }
       </style>
     `

@@ -1,0 +1,413 @@
+import {
+  columnFilteringFeature,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createTable,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowPinningFeature,
+  tableFeatures,
+} from '@tanstack/solid-table'
+import { For, Show, createMemo, createSignal } from 'solid-js'
+import { makeData } from './makeData'
+import type {
+  Column,
+  ExpandedState,
+  Row,
+  RowPinningState,
+  SolidTable,
+  Table,
+} from '@tanstack/solid-table'
+import type { Person } from './makeData'
+
+const features = tableFeatures({
+  rowPinningFeature,
+  rowExpandingFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+})
+
+function App() {
+  const [rowPinning, setRowPinning] = createSignal<RowPinningState>({
+    top: [],
+    bottom: [],
+  })
+  const [expanded, setExpanded] = createSignal<ExpandedState>({})
+
+  const [keepPinnedRows, setKeepPinnedRows] = createSignal(true)
+  const [includeLeafRows, setIncludeLeafRows] = createSignal(true)
+  const [includeParentRows, setIncludeParentRows] = createSignal(false)
+  const [copyPinnedRows, setCopyPinnedRows] = createSignal(false)
+
+  const [data, setData] = createSignal(makeData(1_000, 2, 2))
+  const refreshData = () => setData(makeData(1_000, 2, 2))
+  const stressTest = () => setData(makeData(200_000, 2, 2))
+
+  const columns = createMemo(() => [
+    {
+      id: 'pin',
+      header: () => 'Pin',
+      cell: ({ row }: { row: Row<typeof features, Person> }) =>
+        row.getIsPinned() ? (
+          <button
+            onClick={() =>
+              row.pin(false, includeLeafRows(), includeParentRows())
+            }
+          >
+            ❌
+          </button>
+        ) : (
+          <div style={{ display: 'flex', gap: '4px' }}>
+            <button
+              onClick={() =>
+                row.pin('top', includeLeafRows(), includeParentRows())
+              }
+            >
+              ⬆️
+            </button>
+            <button
+              onClick={() =>
+                row.pin('bottom', includeLeafRows(), includeParentRows())
+              }
+            >
+              ⬇️
+            </button>
+          </div>
+        ),
+    },
+    {
+      accessorKey: 'firstName',
+      header: ({ table }: { table: Table<typeof features, Person> }) => (
+        <>
+          <button onClick={table.getToggleAllRowsExpandedHandler()}>
+            {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+          </button>{' '}
+          First Name
+        </>
+      ),
+      cell: ({
+        row,
+        getValue,
+      }: {
+        row: Row<typeof features, Person>
+        getValue: () => unknown
+      }) => (
+        <div style={{ 'padding-left': `${row.depth * 2}rem` }}>
+          {row.getCanExpand() ? (
+            <button
+              onClick={row.getToggleExpandedHandler()}
+              style={{ cursor: 'pointer' }}
+            >
+              {row.getIsExpanded() ? '👇' : '👉'}
+            </button>
+          ) : (
+            '🔵'
+          )}{' '}
+          {getValue() as string}
+        </div>
+      ),
+      footer: (props: any) => props.column.id,
+    },
+    {
+      accessorFn: (row: Person) => row.lastName,
+      id: 'lastName',
+      cell: (info: any) => info.getValue(),
+      header: () => <span>Last Name</span>,
+    },
+    { accessorKey: 'age', header: () => 'Age', size: 50 },
+    { accessorKey: 'visits', header: () => <span>Visits</span>, size: 50 },
+    { accessorKey: 'status', header: 'Status' },
+    { accessorKey: 'progress', header: 'Profile Progress', size: 80 },
+  ])
+
+  const table = createTable({
+    features,
+    get columns() {
+      return columns()
+    },
+    get data() {
+      return data()
+    },
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+      // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+    },
+    get state() {
+      return {
+        expanded: expanded(),
+        rowPinning: rowPinning(),
+      }
+    },
+    onExpandedChange: setExpanded,
+    onRowPinningChange: setRowPinning,
+    getSubRows: (row) => row.subRows,
+    get keepPinnedRows() {
+      return keepPinnedRows()
+    },
+    // atoms: { rowPinning: rowPinningAtom }, // preferred: own pinning state with an external atom
+    // enableRowPinning: row => row.original.age > 18, // allow pinning only for matching rows; default true
+    debugTable: true,
+    debugAll: true,
+  })
+
+  return (
+    <div class="app">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+      </div>
+      <div class="demo-root container">
+        <div class="spacer-sm" />
+        <table>
+          <thead>
+            <For each={table.getHeaderGroups()}>
+              {(headerGroup) => (
+                <tr>
+                  <For each={headerGroup.headers}>
+                    {(header) => (
+                      <th colSpan={header.colSpan}>
+                        <Show when={!header.isPlaceholder}>
+                          <>
+                            <table.FlexRender header={header} />
+                            <Show when={header.column.getCanFilter()}>
+                              <div>
+                                <Filter column={header.column} table={table} />
+                              </div>
+                            </Show>
+                          </>
+                        </Show>
+                      </th>
+                    )}
+                  </For>
+                </tr>
+              )}
+            </For>
+          </thead>
+          <tbody>
+            <For each={table.getTopRows()}>
+              {(row) => <PinnedRow row={row} table={table} />}
+            </For>
+            <For
+              each={
+                copyPinnedRows()
+                  ? table.getRowModel().rows
+                  : table.getCenterRows()
+              }
+            >
+              {(row) => (
+                <tr>
+                  <For each={row.getAllCells()}>
+                    {(cell) => (
+                      <td>
+                        <table.FlexRender cell={cell} />
+                      </td>
+                    )}
+                  </For>
+                </tr>
+              )}
+            </For>
+            <For each={table.getBottomRows()}>
+              {(row) => <PinnedRow row={row} table={table} />}
+            </For>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="spacer-sm" />
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+        >
+          {'>>'}
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            max={table.getPageCount()}
+            value={table.atoms.pagination.get().pageIndex + 1}
+            onInput={(e) => {
+              const page = e.currentTarget.value
+                ? Number(e.currentTarget.value) - 1
+                : 0
+              table.setPageIndex(page)
+            }}
+            class="page-size-input"
+          />
+        </span>
+        <select
+          value={table.atoms.pagination.get().pageSize}
+          onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
+        >
+          <For each={[10, 20, 30, 40, 50]}>
+            {(pageSize) => <option value={pageSize}>Show {pageSize}</option>}
+          </For>
+        </select>
+      </div>
+      <div class="spacer-sm" />
+      <hr />
+      <br />
+      <div class="vertical-options">
+        <div>
+          <input
+            type="checkbox"
+            checked={keepPinnedRows()}
+            onChange={() => setKeepPinnedRows(!keepPinnedRows())}
+          />
+          <label class="label-offset">
+            Keep/Persist Pinned Rows across Pagination and Filtering
+          </label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={includeLeafRows()}
+            onChange={() => setIncludeLeafRows(!includeLeafRows())}
+          />
+          <label class="label-offset">
+            Include Leaf Rows When Pinning Parent
+          </label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={includeParentRows()}
+            onChange={() => setIncludeParentRows(!includeParentRows())}
+          />
+          <label class="label-offset">
+            Include Parent Rows When Pinning Child
+          </label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={copyPinnedRows()}
+            onChange={() => setCopyPinnedRows(!copyPinnedRows())}
+          />
+          <label class="label-offset">
+            Duplicate/Keep Pinned Rows in main table
+          </label>
+        </div>
+      </div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
+    </div>
+  )
+}
+
+function PinnedRow(props: {
+  row: Row<typeof features, Person>
+  table: SolidTable<typeof features, Person>
+}) {
+  return (
+    <tr
+      style={{
+        'background-color': 'lightblue',
+        position: 'sticky',
+        top:
+          props.row.getIsPinned() === 'top'
+            ? `${props.row.getPinnedIndex() * 26 + 48}px`
+            : undefined,
+        bottom:
+          props.row.getIsPinned() === 'bottom'
+            ? `${(props.table.getBottomRows().length - 1 - props.row.getPinnedIndex()) * 26}px`
+            : undefined,
+      }}
+    >
+      <For each={props.row.getAllCells()}>
+        {(cell) => (
+          <td>
+            <props.table.FlexRender cell={cell} />
+          </td>
+        )}
+      </For>
+    </tr>
+  )
+}
+
+function Filter({
+  column,
+  table,
+}: {
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
+}) {
+  const firstValue = table
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
+
+  return typeof firstValue === 'number' ? (
+    <div class="filter-row">
+      <input
+        type="number"
+        value={((column.getFilterValue() as any)?.[0] ?? '') as string}
+        onInput={(e) =>
+          column.setFilterValue((old: any) => [e.currentTarget.value, old?.[1]])
+        }
+        placeholder="Min"
+        class="filter-input"
+      />
+      <input
+        type="number"
+        value={((column.getFilterValue() as any)?.[1] ?? '') as string}
+        onInput={(e) =>
+          column.setFilterValue((old: any) => [old?.[0], e.currentTarget.value])
+        }
+        placeholder="Max"
+        class="filter-input"
+      />
+    </div>
+  ) : (
+    <input
+      type="text"
+      value={(column.getFilterValue() ?? '') as string}
+      onInput={(e) => column.setFilterValue(e.currentTarget.value)}
+      placeholder="Search..."
+      class="filter-select"
+    />
+  )
+}
+
+export default App

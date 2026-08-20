@@ -1,0 +1,56 @@
+<div class="demo-root">
+  <p class="demo-note">
+    Columns, sort fns, filter fns, and filter components are all derived from the data type of each
+    field, not from a hard-coded column definition.
+  </p>
+  <div class="button-row">
+    <button class="demo-button demo-button-sm" (click)="refreshData()">Regenerate Data</button>
+    <button class="demo-button demo-button-sm" (click)="stressTest()">Stress Test (1M rows)</button>
+  </div>
+  <div class="spacer-sm"></div>
+
+  <div class="scroll-container">
+    <table>
+      <thead>
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+              <th [attr.colSpan]="header.colSpan">
+                @if (!header.isPlaceholder) {
+                  <div
+                    [class.sortable-header]="header.column.getCanSort()"
+                    (click)="header.column.getToggleSortingHandler()?.($event)"
+                    [title]="header.column.getCanSort() ? 'Toggle sorting' : ''"
+                  >
+                    <ng-container *flexRenderHeader="header; let headerCell">{{
+                      headerCell
+                    }}</ng-container>
+                    {{ sortIndicator(header.column.getIsSorted()) }}
+                  </div>
+
+                  @if (header.column.getCanFilter()) {
+                    <app-table-filter [column]="header.column" [table]="table" />
+                  }
+                }
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of table.getRowModel().rows.slice(0, 15); track row.id) {
+          <tr>
+            @for (cell of row.getAllCells(); track cell.id) {
+              <td>
+                <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="spacer-sm"></div>
+  <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
+</div>

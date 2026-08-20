@@ -1,0 +1,31 @@
+{
+  "name": "tanstack-preact-table-example-with-tanstack-form",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/preact-devtools": "^0.10.10",
+    "@tanstack/preact-form": "^1.30.5",
+    "@tanstack/preact-pacer": "^0.23.0",
+    "@tanstack/preact-pacer-devtools": "0.7.0",
+    "@tanstack/preact-table": "^9.1.2",
+    "@tanstack/preact-table-devtools": "^9.2.0",
+    "@tanstack/react-form-devtools": "^0.2.34",
+    "preact": "^10.29.8",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
+  }
+}

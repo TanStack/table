@@ -1,17 +1,35 @@
-import { customElement, property, state } from 'lit/decorators.js'
-import { html, LitElement } from 'lit'
+import { customElement, state } from 'lit/decorators.js'
+import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
+  FlexRender,
   TableController,
+  columnFilteringFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  tableFeatures,
 } from '@tanstack/lit-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/lit-table'
+import type { Person } from './makeData'
 
-const columns: ColumnDef<Person, any>[] = [
+const features = tableFeatures({
+  rowSelectionFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+})
+
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'select',
     header: ({ table }) => html`
@@ -25,7 +43,9 @@ const columns: ColumnDef<Person, any>[] = [
     cell: ({ row }) => html`
       <input
         type="checkbox"
-        @change="${row.getToggleSelectedHandler()}"
+        @click="${row.getToggleSelectedHandler({
+          // selectChildren: false
+        })}"
         .checked="${row.getIsSelected()}"
         ?disabled="${!row.getCanSelect()}"
         .indeterminate="${row.getIsSomeSelected()}"
@@ -34,19 +54,19 @@ const columns: ColumnDef<Person, any>[] = [
   },
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
   },
   {
-    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     id: 'fullName',
     header: 'Full Name',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: 'age',
@@ -66,63 +86,76 @@ const columns: ColumnDef<Person, any>[] = [
   },
 ]
 
-const data = makeData(50_000)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<Person>(this)
-
   @state()
-  private _rowSelection: Record<string, boolean> = {}
+  private _data: Array<Person> = makeData(50_000)
 
-  protected render(): unknown {
-    const table = this.tableController.table({
-      data,
-      columns,
-      filterFns: {},
-      state: {
-        rowSelection: this._rowSelection,
+  private tableController = new TableController<typeof features, Person>(this)
+
+  protected render() {
+    const table = this.tableController.table(
+      {
+        features,
+        data: this._data,
+        columns,
+        enableRowSelection: true,
+        // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
+        // initialState: { rowSelection: { '0': true } }, // select rows on first render
+        // atoms: { rowSelection: rowSelectionAtom }, // preferred: own selection state with an external atom
+        // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
+        // onRowSelectionChange: setRowSelection,
+        // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+        // enableRowRangeSelection: false, // disable Shift-click range selection; default true
+        // enableSubRowSelection: false, // do not select a parent's subrows with it; default true
+        // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
+        debugTable: true,
       },
-      enableRowSelection: true,
-      onRowSelectionChange: updaterOrValue => {
-        if (typeof updaterOrValue === 'function') {
-          this._rowSelection = updaterOrValue(this._rowSelection)
-        } else {
-          this._rowSelection = updaterOrValue
-        }
-      },
-      getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      debugTable: true,
-    })
+      (state) => ({
+        rowSelection: state.rowSelection,
+        pagination: state.pagination,
+      }),
+    )
 
     return html`
+      <div>
+        <button
+          @click=${() => {
+            this._data = makeData(50_000)
+          }}
+        >
+          Regenerate Data
+        </button>
+        <button
+          @click=${() => {
+            this._data = makeData(1_000_000)
+          }}
+        >
+          Stress Test (1M rows)
+        </button>
+      </div>
       <table>
         <thead>
           ${repeat(
             table.getHeaderGroups(),
-            headerGroup => headerGroup.id,
-            headerGroup => html`
+            (headerGroup) => headerGroup.id,
+            (headerGroup) => html`
               <tr>
                 ${repeat(
                   headerGroup.headers,
-                  header => header.id,
-                  header => html`
+                  (header) => header.id,
+                  (header) => html`
                     <th colspan="${header.colSpan}">
-                      ${header.isPlaceholder
-                        ? null
-                        : html`<div>
-                            ${flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                          </div>`}
+                      ${
+                        header.isPlaceholder
+                          ? null
+                          : html`<div>${FlexRender({ header })}</div>`
+                      }
                     </th>
-                  `
+                  `,
                 )}
               </tr>
-            `
+            `,
           )}
         </thead>
         <tbody>
@@ -130,22 +163,13 @@ class LitTableExample extends LitElement {
             .getRowModel()
             .rows.slice(0, 10)
             .map(
-              row => html`
+              (row) => html`
                 <tr>
                   ${row
-                    .getVisibleCells()
-                    .map(
-                      cell => html`
-                        <td>
-                          ${flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      `
-                    )}
+                    .getAllCells()
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
-              `
+              `,
             )}
         </tbody>
       </table>
@@ -169,16 +193,16 @@ class LitTableExample extends LitElement {
           >
         </button>
         <button
-          @click=${() => table.setPageIndex(table.getPageCount() - 1)}
-          ?disabled="${!table.getCanNextPage()}"
+          @click=${() => table.lastPage()}
+          ?disabled="${!table.getCanLastPage()}"
         >
           >>
         </button>
         <span style="display: flex;gap:2px">
           <span>Page</span>
           <strong>
-            ${table.getState().pagination.pageIndex + 1} of
-            ${table.getPageCount()}
+            ${(table.state.pagination.pageIndex + 1).toLocaleString()} of
+            ${table.getPageCount().toLocaleString()}
           </strong>
         </span>
       </div>
@@ -191,7 +215,6 @@ class LitTableExample extends LitElement {
 
         table {
           border: 1px solid lightgray;
-          border-collapse: collapse;
         }
 
         tbody {
@@ -216,6 +239,210 @@ class LitTableExample extends LitElement {
           display: flex;
           gap: 10px;
           padding: 4px 0;
+        }
+
+        /* Demo layout helpers for the plain example UI. */
+        .demo-root {
+          padding: 0.5rem;
+        }
+        .spacer-xs {
+          height: 0.25rem;
+        }
+        .spacer-sm {
+          height: 0.5rem;
+        }
+        .spacer-md {
+          height: 1rem;
+        }
+        .controls,
+        .button-row,
+        .inline-controls,
+        .pin-actions,
+        .filter-row,
+        .form-actions {
+          display: flex;
+          align-items: center;
+        }
+        .button-row {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        .controls {
+          gap: 0.5rem;
+        }
+        .inline-controls,
+        .pin-actions {
+          gap: 0.25rem;
+        }
+        .pin-actions {
+          justify-content: center;
+        }
+        .filter-row {
+          gap: 0.5rem;
+        }
+        .form-actions {
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        .split-tables {
+          display: flex;
+          gap: 1rem;
+        }
+        .table-row-group {
+          display: flex;
+        }
+        .split-gap {
+          gap: 1rem;
+        }
+        .vertical-options {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: center;
+        }
+        .column-toggle-panel {
+          display: inline-block;
+          border: 1px solid #000;
+          border-radius: 0.25rem;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+        }
+        .column-toggle-panel-header {
+          border-bottom: 1px solid #000;
+          padding: 0 0.25rem;
+        }
+        .column-toggle-row,
+        .selection-cell {
+          padding: 0 0.25rem;
+        }
+        .selection-cell {
+          display: block;
+        }
+        .demo-button,
+        .pin-button,
+        .compact-input,
+        .filter-input,
+        .filter-select,
+        .page-size-input,
+        .text-input,
+        .number-input,
+        .wide-action-button,
+        .primary-action,
+        .secondary-action,
+        .success-action {
+          border: 1px solid currentColor;
+          border-radius: 0.25rem;
+        }
+        .demo-button {
+          padding: 0.5rem;
+        }
+        .demo-button-sm {
+          padding: 0.25rem;
+        }
+        .demo-button-spaced {
+          margin-bottom: 0.5rem;
+        }
+        .pin-button {
+          padding: 0 0.5rem;
+        }
+        .outlined-table {
+          border: 2px solid #000;
+        }
+        .outlined-control {
+          border-color: #000;
+        }
+        .nowrap {
+          white-space: nowrap;
+        }
+        .demo-note {
+          margin-bottom: 0.5rem;
+          font-size: 0.875rem;
+        }
+        .section-title {
+          font-size: 1.25rem;
+        }
+        .scroll-container {
+          overflow-x: auto;
+        }
+        .page-size-input {
+          width: 4rem;
+          padding: 0.25rem;
+        }
+        .number-input {
+          width: 5rem;
+          padding: 0 0.25rem;
+        }
+        .filter-input,
+        .filter-select {
+          width: 6rem;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+        }
+        .filter-select {
+          width: 9rem;
+        }
+        .text-input {
+          width: 100%;
+          padding: 0 0.25rem;
+        }
+        .compact-input {
+          padding: 0 0.25rem;
+        }
+        .wide-action-button {
+          width: 16rem;
+        }
+        .summary-panel {
+          border: 1px solid currentColor;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+          padding: 0.5rem;
+        }
+        .sortable-header,
+        .sortable {
+          cursor: pointer;
+          user-select: none;
+        }
+        .primary-action,
+        .success-action,
+        .secondary-action {
+          color: #fff;
+        }
+        .primary-action {
+          background: #3b82f6;
+        }
+        .success-action {
+          background: #22c55e;
+        }
+        .secondary-action {
+          background: #6b7280;
+        }
+        .submit-button:disabled {
+          opacity: 0.5;
+        }
+        .error-text {
+          color: #ef4444;
+          font-size: 0.75rem;
+        }
+        .success-text {
+          color: #16a34a;
+        }
+        .warning-text {
+          color: #ca8a04;
+        }
+        .muted-text {
+          color: #9ca3af;
+        }
+        .label-offset {
+          margin-left: 0.5rem;
+        }
+        .cell-padding {
+          padding: 0.25rem;
+        }
+        .table-spacer {
+          margin-bottom: 0.5rem;
+        }
+        .centered-button-row {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.5rem;
         }
       </style>
     `

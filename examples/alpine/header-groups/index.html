@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Header Groups</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1k rows)</button>
+      </div>
+      <div class="spacer-md"></div>
+      <!-- The panels wrap into a grid whenever the viewport is wide enough. -->
+      <div class="example-grid">
+        <section class="example-panel">
+          <h2 class="section-title">Basic Header Groups</h2>
+          <table>
+            <thead>
+              <template
+                x-for="headerGroup in basicTable.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <span x-html="FlexRender({ header })"></span>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template
+                x-for="row in basicTable.getRowModel().rows"
+                :key="row.id"
+              >
+                <tr>
+                  <template x-for="cell in row.getAllCells()" :key="cell.id">
+                    <td x-html="FlexRender({ cell })"></td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+            <tfoot>
+              <template
+                x-for="footerGroup in basicFooterGroups()"
+                :key="footerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in footerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ footer: header })"></span>
+                      </template>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </tfoot>
+          </table>
+        </section>
+
+        <section class="example-panel">
+          <h2 class="section-title">Nested Header Groups</h2>
+          <table>
+            <thead>
+              <template
+                x-for="headerGroup in nestedTable.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <span x-html="FlexRender({ header })"></span>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template
+                x-for="row in nestedTable.getRowModel().rows"
+                :key="row.id"
+              >
+                <tr>
+                  <template x-for="cell in row.getAllCells()" :key="cell.id">
+                    <td x-html="FlexRender({ cell })"></td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="example-panel">
+          <h2 class="section-title">Placeholder Headers</h2>
+          <table>
+            <thead>
+              <template
+                x-for="headerGroup in table.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template x-for="row in table.getRowModel().rows" :key="row.id">
+                <tr>
+                  <template x-for="cell in row.getAllCells()" :key="cell.id">
+                    <td x-html="FlexRender({ cell })"></td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+            <tfoot>
+              <template
+                x-for="footerGroup in table.getFooterGroups()"
+                :key="footerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in footerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ footer: header })"></span>
+                      </template>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </tfoot>
+          </table>
+        </section>
+
+        <section class="example-panel">
+          <h2 class="section-title">Header Row Spanning</h2>
+          <table>
+            <thead>
+              <template
+                x-for="headerGroup in unevenTable.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers.filter((header) => header.rowSpan !== 0)"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan" :rowspan="header.rowSpan">
+                      <span x-html="FlexRender({ header })"></span>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template
+                x-for="row in unevenTable.getRowModel().rows"
+                :key="row.id"
+              >
+                <tr>
+                  <template x-for="cell in row.getAllCells()" :key="cell.id">
+                    <td x-html="FlexRender({ cell })"></td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

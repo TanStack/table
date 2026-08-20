@@ -2,259 +2,357 @@
 title: Table State (Svelte) Guide
 ---
 
+## Examples
+
+Want to skip to the implementation? Check out these examples:
+
+- [Basic createTable](../examples/basic-create-table)
+- [Basic External Atoms](../examples/basic-external-atoms)
+- [Basic External State](../examples/basic-external-state)
+- [With TanStack Query](../examples/with-tanstack-query)
+
 ## Table State (Svelte) Guide
 
-TanStack Table has a simple underlying internal state management system to store and manage the state of the table. It also lets you selectively pull out any state that you need to manage in your own state management. This guide will walk you through the different ways in which you can interact with and manage the state of the table.
+> **If you boil TanStack Table down to one sentence: TanStack Table is a large state-management coordinator for table states.**
+
+Understanding this guide is fundamental to understanding how TanStack Table works and how to interact with it for the best results.
+
+### Do you need to Manage External State?
+
+You usually do NOT need to manage table state yourself. If you pass nothing to `initialState`, `atoms`, `state`, or any of the `on[State]Change` table options, TanStack Table will manage its own state internally.
+
+There will be situations where you need to customize how you interact with the internal table state, or even hoist it into your own scopes. TanStack Table lets you read or own the state slices that matter to your app. This guide explains how table state works in Svelte, how native rune tracking applies to table reads, and when to use external atoms or external state.
+
+### State in v9
+
+TanStack Table v9 overhauled state management around TanStack Store. For Svelte 5, the adapter supplies a bridge between TanStack Store dependency tracking and Svelte runes.
+
+A table instance has three state surfaces:
+
+- `table.baseAtoms` are the internal writable TanStack Store atoms created from the resolved initial state.
+- `table.atoms` are readonly derived atoms exposed per registered state slice.
+- `table.store` is a readonly flat TanStack Store derived by combining all registered `table.atoms`.
+
+Readonly table atoms bridge their Store dependencies into Svelte `$derived` values. The table options store is rune-backed so table APIs also see reactive options such as `data`, `columns`, and controlled state before Svelte updates the DOM.
+
+As a result, table APIs, atom `.get()` calls, and `table.store.get()` participate in Svelte dependency tracking when they run in a template, `$derived`, `$derived.by`, or `$effect`. Svelte does not need a separate table-level selector API.
+
+### Feature-based State
+
+State slices are only created for the features registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+
+```ts
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
+
+const table = createTable({
+  features,
+  columns,
+  get data() {
+    return data
+  },
+})
+
+table.atoms.pagination.get()
+table.atoms.sorting.get()
+
+// table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
+```
+
+If `features` does not include a feature, its state is not available in `table.atoms`, `table.store.get()`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
-You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
+There are two questions to consider when reading table state:
 
-```jsx
-const options = writable({
-  columns,
-  data,
-  //...
-})
+- Do you need one state slice or the complete state?
+- Is the read happening inside a Svelte tracked context?
 
-const table = createSvelteTable(options)
+Prefer `table.atoms.<slice>.get()` for narrow reads. Use `table.store.get()` for full-state debug output or when a computation intentionally depends on every registered state slice.
 
-console.log(table.getState()) //access the entire internal state
-console.log(table.getState().rowSelection) //access just the row selection state
-```
+#### Reading State
 
-### Custom Initial State
-
-If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
-
-```jsx
-const options = writable({
-  columns,
-  data,
-  initialState: {
-    columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
-    columnVisibility: {
-      id: false //hide the id column by default
-    },
-    expanded: true, //expand all rows by default
-    sorting: [
-      {
-        id: 'age',
-        desc: true //sort by age in descending order by default
-      }
-    ]
-  },
-  //...
-})
-
-const table = createSvelteTable(options)
-```
-
-> **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
-
-### Controlled State
-
-If you need easy access to the table state in other areas of your application, TanStack Table makes it easy to control and manage any or all of the table state in your own state management system. You can do this by passing in your own state and state management functions to the `state` and `on[State]Change` table options.
-
-#### Individual Controlled State
-
-You can control just the state that you need easy access to. You do NOT have to control all of the table state if you do not need to. It is recommended to only control the state that you need on a case-by-case basis.
-
-In order to control a particular state, you need to both pass in the corresponding `state` value and the `on[State]Change` function to the table instance.
-
-Let's take filtering, sorting, and pagination as an example in a "manual" server-side data fetching scenario. You can store the filtering, sorting, and pagination state in your own state management, but leave out any other state like column order, column visibility, etc. if your API does not care about those values.
+Read a specific state slice from its atom:
 
 ```ts
-let sorting = [
-  {
-    id: 'age',
-    desc: true, //sort by age in descending order by default
-  },
-]
-const setSorting = updater => {
-  if (updater instanceof Function) {
-    sorting = updater(sorting)
-  } else {
-    sorting = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      sorting,
-    },
-  }))
-}
-
-let columnFilters = [] //no default filters
-const setColumnFilters = updater => {
-  if (updater instanceof Function) {
-    columnFilters = updater(columnFilters)
-  } else {
-    columnFilters = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      columnFilters,
-    },
-  }))
-}
-
-let pagination = { pageIndex: 0, pageSize: 15 } //default pagination
-const setPagination = updater => {
-  if (updater instanceof Function) {
-    pagination = updater(pagination)
-  } else {
-    pagination = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      pagination,
-    },
-  }))
-}
-
-//Use our controlled state values to fetch data
-const tableQuery = createQuery({
-  queryKey: ['users', columnFilters, sorting, pagination],
-  queryFn: () => fetchUsers(columnFilters, sorting, pagination),
-  //...
-})
-
-const options = writable({
-  columns,
-  data: tableQuery.data,
-  //...
-  state: {
-    columnFilters, //pass controlled state back to the table (overrides internal state)
-    sorting,
-    pagination
-  },
-  onColumnFiltersChange: setColumnFilters, //hoist columnFilters state into our own state management
-  onSortingChange: setSorting,
-  onPaginationChange: setPagination,
-})
-
-const table = createSvelteTable(options)
-//...
+const pagination = table.atoms.pagination.get()
+const sorting = table.atoms.sorting.get()
 ```
 
-#### Fully Controlled State
+Read the current flat state from the store:
 
-Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a svelte tree, like `columnSizingInfo` state`, might cause bad performance issues.
+```ts
+const tableState = table.store.get()
+const pagination = table.store.get().pagination
+```
 
-A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use the `table.setOptions` API in a special way as shown below.
+Outside a tracked Svelte scope, these are current-value snapshots. Inside a template, `$derived`, `$derived.by`, or `$effect`, the same calls register reactive dependencies.
 
-```jsx
-//create a table instance with default state values
-const options = writable({
-  columns,
-  data,
-  //... Note: `state` values are NOT passed in yet
+TanStack Store also exposes the equivalent `table.store.state` snapshot property. This guide uses `.get()` consistently so slice and full-store reads have the same explicit shape and match the other signal-based table adapters.
+
+#### Reading Reactive State with Svelte
+
+Use native runes to name or project reactive table values:
+
+```svelte
+<script lang="ts">
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data
+    },
+  })
+
+  const pagination = $derived(table.atoms.pagination.get())
+  const pageIndex = $derived(table.atoms.pagination.get().pageIndex)
+  const rows = $derived(table.getRowModel().rows)
+  const tableStateJson = $derived(JSON.stringify(table.store.get(), null, 2))
+</script>
+```
+
+`$derived` replaces the old adapter selector for projections. Svelte only notifies consumers of a derived primitive when that projected value changes.
+
+Atom and table API reads can also be used directly in markup:
+
+```svelte
+<span>
+  Page {table.atoms.pagination.get().pageIndex + 1} of
+  {table.getPageCount()}
+</span>
+```
+
+An effect should read only the slices that trigger its side effect:
+
+```ts
+$effect(() => {
+  const sorting = table.atoms.sorting.get()
+  persistSorting(sorting)
 })
-const table = createSvelteTable(options)
+```
 
-let state = {
-  ...table.initialState, //populate the initial state with all of the default state values from the table instance
-  pagination: {
-    pageIndex: 0,
-    pageSize: 15 //optionally customize the initial pagination state.
-  }
-}
-const setState = updater => {
-  if (updater instanceof Function) {
-    state = updater(state)
-  } else {
-    state = updater
-  }
-  options.update(old => ({
-    ...old,
-    state,
-  }))
-}
+Avoid reading `table.store.get()` in an effect that only needs one slice. A full-store read correctly re-runs for every table state change, which is broader than most effects need.
 
-//Use the table.setOptions API to merge our fully controlled state onto the table instance
-table.setOptions(prev => ({
-  ...prev, //preserve any other options that we have set up above
-  state, //our fully controlled state overrides the internal state
-  onStateChange: setState //any state changes will be pushed up to our own state management
+### Setting Table State
+
+You should almost never need to set table state directly. TanStack Table features expose dedicated APIs for interacting with their state, and those APIs are the safest way to make changes.
+
+```ts
+table.nextPage()
+table.previousPage()
+table.setPageIndex(0)
+table.setPageSize(25)
+```
+
+Use APIs like `table.setSorting(...)`, `table.setColumnFilters(...)`, `column.toggleVisibility()`, or `row.toggleSelected()` instead of manually editing the underlying state object.
+
+If you only care about setting starting values, use `initialState`. If you want to reset a state slice to its initial value, use that feature's reset API.
+
+If you really need to write an internally owned state slice directly, the low-level write surface is its base atom:
+
+```ts
+table.baseAtoms.pagination.set((old) => ({
+  ...old,
+  pageIndex: 0,
 }))
 ```
 
-### On State Change Callbacks
+Direct base-atom writes should be rare. If a slice is owned by an external atom passed through `atoms`, write to that external atom instead; `table.atoms.pagination` will read from the external atom rather than the internal base atom.
 
-So far, we have seen the `on[State]Change` and `onStateChange` table options work to "hoist" the table state changes into our own state management. However, there are a few things about these using these options that you should be aware of.
+### Custom Initial State
 
-#### 1. **State Change Callbacks MUST have their corresponding state value in the `state` option**.
+If you only need to customize the starting value for some table state, use `initialState`. You still do not need to manage that state yourself.
 
-Specifying an `on[State]Change` callback tells the table instance that this will be a controlled state. If you do not specify the corresponding `state` value, that state will be "frozen" with its initial value.
+`initialState` only applies to registered state slices. It creates the table's initial state and is used by reset APIs such as `table.resetSorting()` and `table.resetPagination()`. Changing the `initialState` object later does not reset table state.
 
 ```ts
-let sorting = []
-const setSorting = updater => {
-  if (updater instanceof Function) {
-    sorting = updater(sorting)
-  } else {
-    sorting = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      sorting,
-    },
-  }))
-}
-//...
-const options = writable({
+const table = createTable({
+  features,
   columns,
-  data,
-  //...
-  state: {
-    sorting, //required because we are using `onSortingChange`
+  get data() {
+    return data
   },
-  onSortingChange: setSorting, //makes the `state.sorting` controlled
+  initialState: {
+    sorting: [
+      {
+        id: 'age',
+        desc: true,
+      },
+    ],
+    pagination: {
+      pageIndex: 0,
+      pageSize: 25,
+    },
+  },
 })
-const table = createSvelteTable(options)
 ```
 
-#### 2. **Updaters can either be raw values or callback functions**.
+> [!NOTE]
+> Do not provide the same state slice in multiple ownership places unless you intentionally want one to win. For a slice like `pagination`, prefer exactly one of `initialState.pagination`, `atoms.pagination`, or `state.pagination` as the source of truth. External atoms take precedence over external `state`; external `state` syncs into the table's internal base atom.
 
-The `on[State]Change` and `onStateChange` callbacks work exactly like the `setState` functions in React. The updater values can either be a new state value or a callback function that takes the previous state value and returns the new state value.
+#### Resetting to Initial State
 
-What implications does this have? It means that if you want to add in some extra logic in any of the `on[State]Change` callbacks, you can do so, but you need to check whether or not the new incoming updater value is a function or value.
+Feature reset APIs reset to `table.initialState` by default. Many reset APIs also accept `true` to reset to that feature's blank/default state:
 
-This is why you see the `if (updater instanceof Function)` check in the `setState` functions in the examples above.
+```ts
+table.resetSorting()
+table.resetPagination()
+table.resetPagination(true)
+```
+
+Slice reset APIs such as `resetPagination()` update through that feature's state updater and can update an externally owned atom. The core `table.reset()` API resets internal base atoms, so do not use it as the primary way to reset state owned by external atoms.
+
+### Controlled State
+
+If your application should own a table state slice, Svelte `$state` plus `state` and `on[State]Change` is the native default. Use external TanStack Store atoms when the state must also be shared as raw atoms outside the table.
+
+#### Svelte-owned State
+
+Use `$state` values with getter-backed `state` entries and matching per-slice callbacks:
+
+```svelte
+<script lang="ts">
+  import type { PaginationState, SortingState } from '@tanstack/svelte-table'
+
+  let sorting: SortingState = $state([])
+  let pagination: PaginationState = $state({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data
+    },
+    state: {
+      get sorting() {
+        return sorting
+      },
+      get pagination() {
+        return pagination
+      },
+    },
+    onSortingChange: (updater) => {
+      sorting = updater instanceof Function ? updater(sorting) : updater
+    },
+    onPaginationChange: (updater) => {
+      pagination = updater instanceof Function ? updater(pagination) : updater
+    },
+  })
+</script>
+```
+
+#### `createTableState`
+
+`createTableState` removes a little of the controlled-state boilerplate. For better or worse, it resembles a small React `useState` hook: it returns a getter and a setter, and the setter accepts either a value or a functional TanStack Table updater.
+
+```ts
+import {
+  createTable,
+  createTableState,
+  type PaginationState,
+} from '@tanstack/svelte-table'
+
+const [pagination, setPagination] = createTableState<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const table = createTable({
+  features,
+  columns,
+  state: {
+    get pagination() {
+      return pagination()
+    },
+  },
+  onPaginationChange: setPagination,
+})
+```
+
+Call `pagination()` to read the current value. The getter keeps the `$state` value reactive, while `setPagination` can be passed directly to `onPaginationChange` without repeating the `updater instanceof Function` handling.
+
+If you provide an `on[State]Change` callback, also provide the corresponding value in `state`. The v8-style global `onStateChange` callback is gone in v9.
+
+#### External Atoms
+
+Use external atoms when the app should own and share one or more table state slices as TanStack Store atoms. Create stable writable atoms with `createAtom` and pass them through `atoms`.
+
+```svelte
+<script lang="ts">
+  import { createAtom, useSelector } from '@tanstack/svelte-store'
+  import type { PaginationState } from '@tanstack/svelte-table'
+
+  const paginationAtom = createAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  // Only needed when code outside the table consumes the raw atom.
+  const sharedPagination = useSelector(paginationAtom)
+
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return dataQuery.data?.rows ?? []
+    },
+    get rowCount() {
+      return dataQuery.data?.rowCount
+    },
+    atoms: {
+      pagination: paginationAtom,
+    },
+    manualPagination: true,
+  })
+
+  // Inside table-driven UI, this is already rune-aware.
+  const tablePagination = $derived(table.atoms.pagination.get())
+</script>
+```
+
+`@tanstack/svelte-store` is only a direct app dependency when the app creates or consumes raw external atoms. When using the `atoms` option for a slice, you do not need the matching `on[State]Change` option.
+
+If you truly need an imperative listener for every table state change, subscribe to `table.store` directly and clean up the subscription:
+
+```ts
+const subscription = table.store.subscribe((state) => {
+  persistTableState(state)
+})
+
+onDestroy(() => subscription.unsubscribe())
+```
 
 ### State Types
 
-All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
+Most complex states in TanStack Table have their own TypeScript types that you can import and use.
 
 ```ts
-import { createSvelteTable, type SortingState, type Updater } from '@tanstack/svelte-table'
-//...
-let sorting: SortingState[] = [
+import {
+  createTable,
+  type PaginationState,
+  type RowSelectionState,
+  type SortingState,
+  type TableState,
+} from '@tanstack/svelte-table'
+
+let sorting: SortingState = $state([
   {
-    id: 'age', //you should get autocomplete for the `id` and `desc` properties
+    id: 'age',
     desc: true,
-  }
-]
-const setSorting = (updater: Updater<SortingState>)  => {
-  if (updater instanceof Function) {
-    sorting = updater(sorting)
-  } else {
-    sorting = updater
-  }
-  options.update(old => ({
-    ...old,
-    state: {
-      ...old.state,
-      sorting,
-    },
-  }))
-}
+  },
+])
+```
+
+`TableState<typeof features>` is inferred from the features registered on that table:
+
+```ts
+type MyTableState = TableState<typeof features>
 ```

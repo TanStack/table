@@ -1,75 +1,43 @@
 import {
-  flexRender,
-  getCoreRowModel,
-  VisibilityState,
-  ColumnDef,
-  createSolidTable,
+  FlexRender,
+  columnVisibilityFeature,
+  createTable,
+  tableFeatures,
 } from '@tanstack/solid-table'
-import { createSignal, For, Show } from 'solid-js'
+import { For, Show, createSignal } from 'solid-js'
+import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/solid-table'
+import type { Person } from './makeData'
 
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
+const features = tableFeatures({ columnVisibilityFeature })
 
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
-
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -77,17 +45,17 @@ const defaultColumns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -96,30 +64,33 @@ const defaultColumns: ColumnDef<Person>[] = [
 ]
 
 function App() {
-  const [data, setData] = createSignal(defaultData)
-  const [columnVisibility, setColumnVisibility] = createSignal<VisibilityState>(
-    {}
-  )
-  const rerender = () => setData(defaultData)
+  const [data, setData] = createSignal(makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
-  const table = createSolidTable({
+  const table = createTable({
+    features,
     get data() {
       return data()
     },
     columns: defaultColumns,
-    state: {
-      get columnVisibility() {
-        return columnVisibility()
-      },
-    },
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
+    // initialState: { columnVisibility: { visits: false } }, // hide columns on first render
+    // atoms: { columnVisibility: columnVisibilityAtom }, // preferred: own visibility state with an external atom
+    // state: { columnVisibility }, // classic controlled state; pair with onColumnVisibilityChange
+    // onColumnVisibilityChange: setColumnVisibility,
+    // enableHiding: false, // prevent every column from being hidden; default true
+    debugTable: true,
   })
 
   return (
-    <div class="p-2">
-      <div class="inline-block border border-black shadow rounded">
-        <div class="px-1 border-b border-black">
+    <div class="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
+      </div>
+      <div class="spacer-md" />
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
           <label>
             <input
               checked={table.getIsAllColumnsVisible()}
@@ -130,8 +101,8 @@ function App() {
           </label>
         </div>
         <For each={table.getAllLeafColumns()}>
-          {column => (
-            <div class="px-1">
+          {(column) => (
+            <div class="column-toggle-row">
               <label>
                 <input
                   checked={column.getIsVisible()}
@@ -144,20 +115,17 @@ function App() {
           )}
         </For>
       </div>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
-            {headerGroup => (
+            {(headerGroup) => (
               <tr>
                 <For each={headerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        <FlexRender header={header} />
                       </Show>
                     </th>
                   )}
@@ -168,15 +136,12 @@ function App() {
         </thead>
         <tbody>
           <For each={table.getRowModel().rows}>
-            {row => (
+            {(row) => (
               <tr>
                 <For each={row.getVisibleCells()}>
-                  {cell => (
+                  {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -186,16 +151,13 @@ function App() {
         </tbody>
         <tfoot>
           <For each={table.getFooterGroups()}>
-            {footerGroup => (
+            {(footerGroup) => (
               <tr>
                 <For each={footerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
-                        {flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext()
-                        )}
+                        <FlexRender footer={header} />
                       </Show>
                     </th>
                   )}
@@ -205,12 +167,10 @@ function App() {
           </For>
         </tfoot>
       </table>
-      <div class="h-4" />
-      <button onClick={() => rerender()} class="border p-2">
-        Rerender
-      </button>
-      <div class="h-4" />
-      <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
+      <div class="spacer-md" />
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

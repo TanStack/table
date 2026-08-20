@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/table-core",
-  "version": "8.21.3",
+  "version": "9.1.2",
   "description": "Headless UI for building powerful tables & datagrids for TS/JS.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,38 +18,45 @@
     "react",
     "vue",
     "solid",
+    "svelte",
+    "lit",
+    "angular",
     "table",
     "table-core",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
-  "type": "commonjs",
-  "module": "build/lib/index.esm.js",
-  "main": "build/lib/index.js",
-  "types": "build/lib/index.d.ts",
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js"
-    },
+    ".": "./dist/index.js",
+    "./experimental-worker-plugin": "./dist/experimental-worker-plugin.js",
+    "./flex-render": "./dist/flex-render.js",
+    "./reactivity": "./dist/reactivity.js",
+    "./static-functions": "./dist/static-functions.js",
+    "./store-reactivity-bindings": "./dist/store-reactivity-bindings.js",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=20"
   },
   "files": [
-    "build/lib/*",
-    "build/umd/*",
-    "src"
+    "dist",
+    "skills"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
+    "clean": "rimraf ./build && rimraf ./dist",
+    "lint:fix": "eslint ./src --fix",
+    "test:eslint": "eslint ./src",
+    "test:coverage": "vitest run --coverage",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
-    "test:types": "tsc --noEmit",
-    "build": "pnpm build:rollup && pnpm build:types",
-    "build:rollup": "rollup --config rollup.config.mjs",
-    "build:types": "tsc --emitDeclarationOnly"
+    "test:types": "tsc && tsc -p tests/tsconfig.declaration-emit.json",
+    "test:build": "publint --strict",
+    "build": "tsdown && node ../../scripts/rewrite-table-core-dts.mjs"
+  },
+  "dependencies": {
+    "@tanstack/store": "^0.11.1"
   }
 }

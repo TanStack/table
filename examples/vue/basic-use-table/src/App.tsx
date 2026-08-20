@@ -1,0 +1,158 @@
+import { defineComponent, ref } from 'vue'
+import {
+  FlexRender,
+  createColumnHelper,
+  tableFeatures,
+  useTable,
+} from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
+import type { Cell, Header, HeaderGroup, Row } from '@tanstack/vue-table'
+
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  status: string
+  progress: number
+}
+
+const defaultData: Array<Person> = [
+  {
+    firstName: 'tanner',
+    lastName: 'linsley',
+    age: 24,
+    visits: 100,
+    status: 'In Relationship',
+    progress: 50,
+  },
+  {
+    firstName: 'tandy',
+    lastName: 'miller',
+    age: 40,
+    visits: 40,
+    status: 'Single',
+    progress: 80,
+  },
+  {
+    firstName: 'joe',
+    lastName: 'dirte',
+    age: 45,
+    visits: 20,
+    status: 'Complicated',
+    progress: 10,
+  },
+  {
+    firstName: 'kevin',
+    lastName: 'vandy',
+    age: 12,
+    visits: 100,
+    status: 'Single',
+    progress: 70,
+  },
+]
+
+const features = tableFeatures({})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    header: () => <span>Last Name</span>,
+    cell: (info) => <i>{info.getValue()}</i>,
+  }),
+  columnHelper.accessor((row) => Number(row.age), {
+    id: 'age',
+    header: () => 'Age',
+    cell: (info) => info.renderValue(),
+  }),
+  columnHelper.accessor('visits', {
+    header: () => <span>Visits</span>,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+  }),
+])
+
+export default defineComponent({
+  name: 'BasicUseTableExample',
+  setup() {
+    const data = ref([...defaultData])
+
+    const table = useTable({
+      key: 'basic-use-table', // needed for devtools
+      debugTable: true,
+      features,
+      columns,
+      get data() {
+        return data.value
+      },
+    })
+
+    useTanStackTableDevtools(table)
+
+    return () => (
+      <div class="demo-root">
+        <table>
+          <thead>
+            {table
+              .getHeaderGroups()
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(
+                    (header: Header<typeof features, Person, unknown>) => (
+                      <th key={header.id}>
+                        {header.isPlaceholder ? null : (
+                          <FlexRender header={header} />
+                        )}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              ))}
+          </thead>
+          <tbody>
+            {table
+              .getRowModel()
+              .rows.map((row: Row<typeof features, Person>) => (
+                <tr key={row.id}>
+                  {row
+                    .getAllCells()
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
+                      <td key={cell.id}>
+                        <FlexRender cell={cell} />
+                      </td>
+                    ))}
+                </tr>
+              ))}
+          </tbody>
+          <tfoot>
+            {table
+              .getFooterGroups()
+              .map((footerGroup: HeaderGroup<typeof features, Person>) => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map(
+                    (header: Header<typeof features, Person, unknown>) => (
+                      <th key={header.id}>
+                        {header.isPlaceholder ? null : (
+                          <FlexRender footer={header} />
+                        )}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              ))}
+          </tfoot>
+        </table>
+      </div>
+    )
+  },
+})

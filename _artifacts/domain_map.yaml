@@ -1,0 +1,1728 @@
+library:
+  name: '@tanstack/table'
+  version: '9.1.2'
+  repository: 'https://github.com/TanStack/table'
+  homepage: 'https://tanstack.com/table'
+  description: 'Headless, framework-agnostic data-grid state and row-processing primitives with tree-shakeable v9 features and framework adapters.'
+  primary_framework: 'framework-agnostic'
+  monorepo: true
+  package_version_overrides:
+    '@tanstack/angular-table': '9.2.1'
+    '@tanstack/angular-table-devtools': '9.2.0'
+    '@tanstack/preact-table-devtools': '9.2.0'
+    '@tanstack/react-table-devtools': '9.2.0'
+    '@tanstack/solid-table-devtools': '9.2.0'
+    '@tanstack/table-devtools': '9.2.0'
+    '@tanstack/vue-table-devtools': '9.2.0'
+
+meta:
+  generated_by: '@tanstack/intent scaffold domain discovery'
+  date: '2026-08-01'
+  status: reviewed
+  maintainer_review_pending: false
+  phase_4_date: '2026-07-10'
+  release_voice: 'Treat v9 as stable guidance while recording the exact prerelease package version in skill metadata.'
+
+scope:
+  goals:
+    - 'Route agents to the correct package and skill, then correct common foot-guns and misconceptions.'
+    - 'Use docs and examples for intended workflows, and direct exact API discovery to installed package declarations (dist/**/*.d.ts).'
+    - 'Teach headless rendering, feature registration, row-model ownership, framework state, and v8-to-v9 changes as foundations.'
+  included:
+    - 'All 18 public workspace packages.'
+    - 'All 17 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
+    - 'Renderer-owned CSS edge cases for sticky positioning, column widths, resizing, layout, and virtualization.'
+  excluded:
+    - 'Component-library-specific integrations such as shadcn, Material UI, Mantine, and equivalent design systems.'
+    - 'Worker row models and experimental worker guidance.'
+    - 'A dedicated performance skill; performance guidance is placed where the relevant state, row model, or virtualization decision is made.'
+    - 'A promoted useLegacyTable workflow; it may only be identified as a deprecated temporary stopgap when encountered.'
+
+validation_contract:
+  - 'Every generated skill must pass Intent validation and exact package-version synchronization.'
+  - 'Load-bearing TypeScript examples marked with skill-snippet:check must compile against workspace source and their package tsconfig.'
+  - 'Content checks reject malformed Markdown tables, invented package imports, feature-gated APIs without their feature, unstable empty-array data getters, and adapter-specific corrected foot-guns.'
+  - 'Wrong/Correct pairs are reserved for code where Wrong actually misbehaves; valid defaults and supported alternatives must use decision-oriented prose instead.'
+  - 'Virtual integration patterns must follow the maintained adapter guide/example rather than borrowing another framework adapter API.'
+  - 'Release automation updates skill and artifact version metadata after package versions are calculated and before packages publish.'
+
+migration_depth_contract:
+  exception: 'Migration skills are intentionally comprehensive rather than bare-bones. Each adapter migration skill must stand alone and list every breaking change in its maintained v8-to-v9 guide, even when the same change also appears in the table-core migration skill.'
+  required_coverage:
+    - 'Framework package and construction entrypoint changes, including framework-version prerequisites.'
+    - 'Logical start/end column-pinning rename and the full old-to-new API mapping.'
+    - 'Prototype-bound row, cell, column, and header methods; object-spread/Object.keys/JSON implications.'
+    - 'Required tableFeatures registration, stockFeatures audit guidance, all 16 feature imports, and feature-gated state/APIs.'
+    - 'Core row model removal plus every get*RowModel to create*RowModel feature-slot mapping.'
+    - 'filterFns, sortFns, aggregationFns, and filterMeta registry-slot migration.'
+    - 'Adapter state access, selectors/subscriptions, controlled slices, external atoms, precedence, and onStateChange removal.'
+    - 'createColumnHelper TFeatures and columns() inference changes.'
+    - 'Framework rendering helper/component/directive changes.'
+    - 'tableOptions and createTableHook composability.'
+    - 'enablePinning split, columnSizing/columnResizing split and state/API renames.'
+    - 'Sorting option/API/type/built-in registry renames.'
+    - 'Removed underscore-prefixed internal APIs and public row API replacements.'
+    - 'Row-selection some-selected semantic changes and correct indeterminate checks.'
+    - 'TFeatures generic changes, StockFeatures typing, meta typing, function-registry augmentation replacement, and RowData restriction.'
+    - 'A final exhaustive migration checklist suitable for auditing an existing codebase.'
+
+table_state_depth_contract:
+  exception: 'Framework table-state skills are foundational and intentionally richer than ordinary feature skills. Preserve the guide mental model and adapter-specific reactivity; do not reduce them to a few controlled-state snippets.'
+  required_coverage:
+    - 'Table as a state coordinator and internal state as the default ownership choice.'
+    - 'Feature-gated state slices and the relationship between registered features, options, APIs, atoms, and inferred types.'
+    - 'The distinct baseAtoms, atoms, store, and adapter-selected state surfaces.'
+    - 'Current snapshot reads versus framework-reactive subscriptions or tracked reads.'
+    - 'Exactly one owner per slice: internal state, initialState, external atoms, or state plus on[State]Change.'
+    - 'External-atom precedence, controlled-state synchronization, updater-function handling, and global onStateChange removal.'
+    - 'Feature methods as the preferred write surface, baseAtoms as a low-level escape hatch, and external-atom writes when externally owned.'
+    - 'initialState timing, feature reset behavior, reset-to-default arguments, and core reset limitations with external atoms.'
+    - 'Feature-specific state types and TableState<typeof features> inference.'
+    - 'Adapter-specific selectors, subscriptions, compiler/reactivity boundaries, and option synchronization.'
+
+stable_model_input_contract:
+  rule: 'Every skill example must keep data and columns references stable between meaningful changes. Never recommend inline map/filter/slice chains, makeColumns calls, or fresh fallback arrays in repeatedly evaluated table options.'
+  accepted_patterns:
+    - 'Module or component-lifetime constants for static data and columns.'
+    - 'Framework memo/computed primitives for derived data, keyed to the actual derivation inputs.'
+    - 'Stable state, signal, ref, rune, resource, or Query result references for changing data.'
+    - 'A module-level stable empty fallback instead of data ?? [] in React-like render paths or reactive option initializers.'
+
+custom_feature_depth_contract:
+  exception: 'The custom-features skill must enumerate the complete extension surface in one authoritative example. Do not pair a minimal density example with separate map/API examples or add a later misconception that merely explains their relationship.'
+  required_feature_maps:
+    - 'TableState_FeatureMap'
+    - 'TableOptions_FeatureMap<TFeatures, TData>'
+    - 'Table_FeatureMap<TFeatures, TData>'
+    - 'ColumnDef_FeatureMap<TFeatures, TData, TValue>'
+    - 'Column_FeatureMap<TFeatures, TData>'
+    - 'Row_FeatureMap<TFeatures, TData>'
+    - 'Cell_FeatureMap'
+    - 'Header_FeatureMap'
+    - 'RowModelFns_FeatureMap<TFeatures, TData>'
+    - 'CachedRowModels_FeatureMap<TFeatures, TData>'
+  required_api_installation:
+    - 'assignTableAPIs inside constructTableAPIs for the singleton table.'
+    - 'assignPrototypeAPIs inside assignColumnPrototype for shared column methods.'
+    - 'assignPrototypeAPIs inside assignRowPrototype for shared row methods.'
+    - 'assignPrototypeAPIs inside assignCellPrototype for shared cell methods.'
+    - 'assignPrototypeAPIs inside assignHeaderPrototype for shared header methods.'
+    - 'initColumnInstanceData and initRowInstanceData for per-instance mutable data rather than shared methods.'
+    - 'The table_/column_/row_/cell_/header_ static-name prefixes, self argument difference, optional memoDeps, and absence of per-object assign*APIs utilities.'
+
+api_discovery_policy:
+  rule: 'For exact exports, option types, state shapes, and instance APIs, inspect dist declarations (.d.ts) in the installed package before inventing an API or relying on memory.'
+  adapter_entrypoint: 'node_modules/@tanstack/<framework>-table/dist/index.d.ts'
+  core_entrypoint: 'node_modules/@tanstack/table-core/dist/index.d.ts'
+  feature_source: 'node_modules/@tanstack/table-core/dist/features/<feature>/'
+  ember_entrypoint: 'node_modules/@tanstack/ember-table/declarations/index.d.ts'
+  angular_entrypoint: 'node_modules/@tanstack/angular-table/dist/types/'
+  octane_entrypoint: 'node_modules/@tanstack/octane-table/src/index.d.ts'
+  fallback: 'If declarations are unavailable, resolve the installed package root and inspect published types; do not open package src/ or substitute v8 / another adapter API.'
+
+coverage:
+  ignored_packages:
+    - 'tanstack-solid-table-example-basic-app-table'
+    - 'tanstack-solid-table-example-basic-dynamic-columns'
+    - 'tanstack-solid-table-example-basic-external-atoms'
+    - 'tanstack-solid-table-example-basic-external-state'
+    - 'tanstack-solid-table-example-basic-use-table'
+    - 'tanstack-solid-table-example-header-groups'
+    - 'tanstack-solid-table-example-column-ordering'
+    - 'tanstack-solid-table-example-column-pinning'
+    - 'tanstack-solid-table-example-column-pinning-split'
+    - 'tanstack-solid-table-example-column-pinning-sticky'
+    - 'tanstack-solid-table-example-column-resizing'
+    - 'tanstack-solid-table-example-column-resizing-performant'
+    - 'tanstack-solid-table-example-column-sizing'
+    - 'tanstack-solid-table-example-column-visibility'
+    - 'tanstack-solid-table-example-composable-tables'
+    - 'tanstack-solid-table-example-expanding'
+    - 'tanstack-solid-table-example-filters'
+    - 'tanstack-solid-table-example-filters-faceted'
+    - 'tanstack-solid-table-example-filters-fuzzy'
+    - 'tanstack-solid-table-example-grouping'
+    - 'tanstack-solid-table-example-kitchen-sink'
+    - 'tanstack-solid-table-example-pagination'
+    - 'tanstack-solid-table-example-row-pinning'
+    - 'tanstack-solid-table-example-row-selection'
+    - 'tanstack-solid-table-example-sorting'
+    - 'tanstack-solid-table-example-sub-components'
+    - 'tanstack-solid-table-example-virtualized-columns'
+    - 'tanstack-solid-table-example-virtualized-infinite-scrolling'
+    - 'tanstack-solid-table-example-virtualized-rows'
+    - 'tanstack-solid-table-example-with-tanstack-form'
+    - 'tanstack-solid-table-example-with-tanstack-query'
+    - 'tanstack-solid-table-example-with-tanstack-router'
+
+domains:
+  - slug: foundations
+    name: 'Foundations and migration'
+    description: 'Headless philosophy, feature registration, client/server ownership, TypeScript inference, API discovery, custom features, and v8 migration.'
+  - slug: feature-plugins
+    name: 'Feature plugins'
+    description: 'The 17 stock optional features, their prerequisites, state, row-model participation, and UI responsibilities.'
+  - slug: framework-adapters
+    name: 'Framework adapters'
+    description: 'Per-framework setup, reactive table state, v8 migration, reusable createTableHook patterns, and supported Query/Virtual composition.'
+  - slug: observability
+    name: 'Devtools'
+    description: 'Framework-neutral and adapter-specific Devtools registration, keys, production exports, and connection failures.'
+  - slug: utilities
+    name: 'Utilities'
+    description: 'Fuzzy ranking and comparison behavior shipped by match-sorter-utils.'
+
+tensions:
+  - name: 'Explicit tree-shaking vs kitchen-sink convenience'
+    skills: ['core', 'table-features', 'getting-started', 'migrate-v8-to-v9']
+    agent_risk: 'Agents reach for stockFeatures or a kitchen-sink example as the default and silently erase the main v9 bundle-size benefit.'
+  - name: 'Client-side processing vs server-owned processing'
+    skills:
+      [
+        'client-vs-server',
+        'column-filtering',
+        'global-filtering',
+        'grouping',
+        'sorting',
+        'pagination',
+        'with-tanstack-query',
+      ]
+    agent_risk: 'Agents enable manual flags but still expect Table row models to transform the data, or mix server and client stages without defining the boundary.'
+  - name: 'Simple whole-table subscriptions vs fine-grained reactive state'
+    skills: ['table-state', 'create-table-hook', 'with-tanstack-virtual']
+    agent_risk: 'Agents either over-optimize small tables or hide state reads behind stable objects so framework compilers and memoization miss updates.'
+  - name: 'Reactive options vs stable model inputs'
+    skills:
+      [
+        'core',
+        'client-vs-server',
+        'getting-started',
+        'table-state',
+        'with-tanstack-query',
+      ]
+    agent_risk: 'Agents derive data with map/filter/slice or recreate columns inside render/options callbacks, invalidating row and column models on unrelated updates or causing adapter render loops.'
+  - name: 'Headless flexibility vs renderer-owned correctness'
+    skills:
+      [
+        'core',
+        'column-pinning',
+        'column-sizing',
+        'column-resizing',
+        'with-tanstack-virtual',
+      ]
+    agent_risk: 'Agents expect feature state to supply semantic markup or CSS and blame Table for sticky, width, accessibility, or layout behavior owned by their renderer.'
+
+skills:
+  - slug: core
+    package: '@tanstack/table-core'
+    domain: foundations
+    type: core
+    purpose: 'Establish the headless mental model, core row model, markup ownership, stable inputs, and feature-driven table architecture.'
+    sources:
+      [
+        'TanStack/table:docs/overview.md',
+        'TanStack/table:docs/guide/tables.md',
+        'TanStack/table:docs/guide/data.md',
+        'TanStack/table:packages/table-core/src/index.ts',
+      ]
+    failure_modes:
+      - 'Treating Table as a component or design system instead of rendering semantic markup, styles, and accessibility in userland.'
+      - 'Recreating data or columns on every reactive pass and causing repeated row-model work or render loops.'
+      - 'Destructuring v9 row, cell, header, or column prototype methods and losing their instance this binding.'
+
+  - slug: table-features
+    package: '@tanstack/table-core'
+    domain: foundations
+    type: core
+    purpose: 'Register only the features, row-model factories, and function registries a table actually uses.'
+    sources:
+      [
+        'TanStack/table:docs/guide/row-models.md',
+        'TanStack/table:packages/table-core/src/types/TableFeatures.ts',
+        'TanStack/table:packages/table-core/src/features/stockFeatures.ts',
+        'TanStack/table:packages/table-core/src/core/table/constructTable.ts',
+      ]
+    failure_modes:
+      - 'Calling a feature API without registering its feature, so its state slice and runtime API do not exist.'
+      - 'Registering a row-model or function-registry slot without its prerequisite feature, or placing prerequisites after dependent slots.'
+      - 'Defaulting to stockFeatures for new tables and bundling every optional feature instead of preserving v9 tree-shaking.'
+
+  - slug: client-vs-server
+    package: '@tanstack/table-core'
+    domain: foundations
+    type: core
+    purpose: 'Choose which filtering, grouping, sorting, expanding, and pagination stages Table owns and which a backend owns.'
+    sources:
+      [
+        'TanStack/table:docs/guide/row-models.md',
+        'TanStack/table:packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts',
+        'TanStack/table:examples/react/with-tanstack-query',
+      ]
+    failure_modes:
+      - 'Assuming manualPagination, manualSorting, manualFiltering, manualGrouping, or manualExpanding performs server work; each flag only bypasses that client row-model stage.'
+      - 'Passing a full dataset while manual pagination is enabled and expecting Table to slice it, or passing one page while a client row model expects the full dataset.'
+      - 'Mixing client and server stages without defining their order, producing sorting or filtering that only applies to the currently loaded page.'
+
+  - slug: typescript
+    package: '@tanstack/table-core'
+    domain: foundations
+    type: core
+    purpose: 'Preserve userland inference with columnHelper, meta helpers, tableOptions, and feature-derived types instead of manually threading generics.'
+    sources:
+      [
+        'TanStack/table:docs/guide/helpers.md',
+        'TanStack/table:docs/guide/column-defs.md',
+        'TanStack/table:docs/guide/table-and-column-meta.md',
+        'TanStack/table:packages/table-core/src/helpers',
+      ]
+    failure_modes:
+      - 'Annotating heterogeneous helper-built columns as ColumnDef<TData, unknown>[] and erasing each accessor value type.'
+      - 'Manually supplying deep Table feature generics rather than deriving them from typeof features or letting helpers infer them.'
+      - 'Using v8 global declaration merging for per-table meta when v9 tableMeta, columnMeta, filterMeta, and meta helpers can scope the types.'
+
+  - slug: api-not-found
+    package: '@tanstack/table-core'
+    domain: foundations
+    type: core
+    purpose: 'Diagnose missing exports, options, state, and instance methods before inventing replacement code.'
+    sources:
+      [
+        'TanStack/table:packages/table-core/src/index.ts',
+        'TanStack/table:packages/table-core/src/types/TableFeatures.ts',
+        'TanStack/table:docs/framework/react/guide/migrating.md',
+      ]
+    failure_modes:
+      - 'Searching v8 docs or recalling v7 APIs instead of checking the installed v9 package src and exact package version.'
+      - 'Assuming an API was removed when its feature was simply omitted from tableFeatures.'
+      - 'Using object spread, Object.keys, or JSON serialization to discover v9 prototype methods and concluding those methods do not exist.'
+
+  - slug: custom-features
+    package: '@tanstack/table-core'
+    domain: foundations
+    type: core
+    purpose: 'Extend Table through every v9 FeatureMap and table/column/row/cell/header API lifecycle surface only when built-in options, meta, and APIs are insufficient.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/custom-features.md',
+        'TanStack/table:packages/table-core/src/types',
+        'TanStack/table:packages/table-core/src/types/TableFeatures.ts',
+        'TanStack/table:packages/table-core/src/utils.ts',
+        'TanStack/table:packages/table-core/src/features',
+        'TanStack/table:examples/react/custom-plugin',
+      ]
+    failure_modes:
+      - 'Building a custom feature for behavior already covered by column meta, table meta, or a built-in feature API.'
+      - 'Adding types without registering matching initial state, default options, state updaters, and prototype/table APIs in the feature lifecycle.'
+      - 'Mutating table instances ad hoc instead of registering a stable feature in tableFeatures, losing type inference and composition.'
+      - 'Assuming the density example exhausts the extension surface and overlooking column-def, column, row, cell, header, or advanced row-model FeatureMaps.'
+      - 'Looking for nonexistent assignColumnAPIs/assignRowAPIs helpers instead of using assignPrototypeAPIs inside the matching TableFeature prototype hook.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/table-core'
+    domain: foundations
+    type: migration
+    purpose: 'Route framework-specific migration while enforcing the shared v9 feature, row-model, instance-method, naming, and type changes.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/migrating.md',
+        'TanStack/table:docs/framework/preact/guide/migrating.md',
+        'TanStack/table:docs/framework/solid/guide/migrating.md',
+        'TanStack/table:docs/framework/svelte/guide/migrating.md',
+        'TanStack/table:docs/framework/vue/guide/migrating.md',
+        'TanStack/table:docs/framework/angular/guide/migrating.md',
+        'TanStack/table:docs/framework/lit/guide/migrating.md',
+        'TanStack/table:packages/table-core/src/index.ts',
+        'TanStack/table:packages/table-core/src/types/TableFeatures.ts',
+        'TanStack/table:packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts',
+        'TanStack/table:packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts',
+        'TanStack/table:packages/react-table/src/legacy.ts',
+      ]
+    failure_modes:
+      - 'Promoting deprecated useLegacyTable as the migration target instead of a temporary stopgap for code already using it.'
+      - 'Leaving v8 getFilteredRowModel/getSortedRowModel/getPaginationRowModel table options in place instead of v9 create*RowModel slots on tableFeatures.'
+      - 'Missing shared breaking changes such as prototype-bound instance methods, sortFn naming, feature-gated APIs, or logical start/end pinning.'
+
+  - slug: column-faceting
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Derive filter option counts and numeric ranges from the correct faceted row model.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/column-faceting.md',
+        'TanStack/table:packages/table-core/src/features/column-faceting',
+        'TanStack/table:examples/react/filters-faceted',
+      ]
+    failure_modes:
+      - 'Registering columnFacetingFeature but omitting the facetedRowModel, facetedUniqueValues, or facetedMinMaxValues slot needed by the API being called.'
+      - 'Expecting a column facet to include that column own active filter; the faceted row model intentionally applies the other filters and excludes its own.'
+      - 'Computing large server-owned facet sets from the currently loaded client page and presenting incomplete counts as global results.'
+
+  - slug: column-filtering
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Configure column filters, filter functions, metadata, nested-row direction, and client/manual ownership.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/column-filtering.md',
+        'TanStack/table:packages/table-core/src/features/column-filtering',
+        'TanStack/table:examples/react/filters',
+      ]
+    failure_modes:
+      - 'Setting manualFiltering and still expecting createFilteredRowModel to transform data; manual mode returns the pre-filtered model.'
+      - 'Using accessor values that are objects or renderer output with built-in filter functions that expect comparable primitive values.'
+      - 'Providing controlled columnFilters plus onColumnFiltersChange without applying both value and updater-function forms to the external source.'
+
+  - slug: grouping
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Group rows, aggregate cells, and reason about grouped rows in expansion and pagination.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/grouping.md',
+        'TanStack/table:packages/table-core/src/features/column-grouping',
+        'TanStack/table:examples/react/grouping',
+      ]
+    failure_modes:
+      - 'Registering groupedRowModel or aggregationFns without columnGroupingFeature, or expecting grouping state alone to process rows.'
+      - 'Assuming pageSize counts only leaf data rows; group headers are rows in the model and affect built-in pagination.'
+      - 'Rendering every grouped cell as a normal value instead of handling grouped, placeholder, and aggregated cell states.'
+
+  - slug: column-ordering
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Control leaf-column order while respecting pinning, visibility, and grouped-column precedence.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/column-ordering.md',
+        'TanStack/table:packages/table-core/src/features/column-ordering',
+        'TanStack/table:examples/react/column-dnd',
+      ]
+    failure_modes:
+      - 'Treating columnOrder as the final rendered order while pinning regions and groupedColumnMode also reorder columns.'
+      - 'Using headers, labels, or array indexes as drag identifiers instead of stable leaf column IDs.'
+      - 'Mutating the columnOrder array in place so the state owner does not observe a new value.'
+
+  - slug: column-pinning
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Partition columns into logical start, center, and end regions and implement sticky layout correctly.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/column-pinning.md',
+        'TanStack/table:packages/table-core/src/features/column-pinning',
+        'TanStack/table:examples/react/column-pinning-sticky',
+      ]
+    failure_modes:
+      - 'Using v8 or early-beta left/right state and APIs instead of v9 logical start/end names, especially in RTL layouts.'
+      - 'Expecting pinning state to apply position: sticky, offsets, z-index, backgrounds, or overflow CSS automatically.'
+      - 'Allowing rendered widths to diverge from column.getSize, producing gaps or overlaps between adjacent pinned columns.'
+
+  - slug: column-resizing
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Wire resize gestures and resize state onto the numeric sizing model without avoidable render cost.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/column-resizing.md',
+        'TanStack/table:packages/table-core/src/features/column-resizing',
+        'TanStack/table:examples/react/column-resizing-performant',
+      ]
+    failure_modes:
+      - 'Registering columnResizingFeature without its columnSizingFeature prerequisite.'
+      - 'Displaying a resize handle without attaching header.getResizeHandler to the correct pointer or touch events.'
+      - 'Reading getSize repeatedly in every cell during onChange resizing instead of caching sizes or using CSS variables for large tables.'
+
+  - slug: column-sizing
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Use numeric min, max, and current sizes as state inputs to a renderer-owned CSS layout.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/column-sizing.md',
+        'TanStack/table:packages/table-core/src/features/column-sizing',
+        'TanStack/table:examples/react/column-sizing',
+      ]
+    failure_modes:
+      - 'Expecting the numeric sizing state to set DOM widths without applying it to th/td descendants, grid tracks, or flex styles.'
+      - 'Forcing auto or percentage strings through a number API instead of choosing and implementing an appropriate CSS layout strategy.'
+      - 'Forgetting the default size and rendered content can disagree, which also corrupts pinning offsets and total-size calculations.'
+
+  - slug: column-visibility
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Hide leaf columns while rendering only visibility-aware header, column, and cell collections.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/column-visibility.md',
+        'TanStack/table:packages/table-core/src/features/column-visibility',
+        'TanStack/table:examples/react/column-visibility',
+      ]
+    failure_modes:
+      - 'Updating columnVisibility but rendering getAllLeafColumns or row.getAllCells, so hidden columns remain in the DOM.'
+      - 'Treating absent map entries as hidden; only an explicit false hides a column.'
+      - 'Expecting enableHiding to hide a column when it only controls whether the user or API may hide it.'
+
+  - slug: global-filtering
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Apply one filter across eligible columns with explicit column eligibility and client/manual ownership.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/global-filtering.md',
+        'TanStack/table:packages/table-core/src/features/global-filtering',
+        'TanStack/table:examples/react/filters',
+      ]
+    failure_modes:
+      - 'Registering globalFilteringFeature without columnFilteringFeature and a filtered row-model stage when client processing is expected.'
+      - 'Assuming every column participates; the default eligibility checks the first core row value and only accepts strings or numbers.'
+      - 'Using manualFiltering while updating globalFilter state but never sending that value to the server query.'
+
+  - slug: expanding
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Expand hierarchical subrows or custom detail panels and place expansion correctly relative to pagination.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/expanding.md',
+        'TanStack/table:packages/table-core/src/features/row-expanding',
+        'TanStack/table:examples/react/expanding',
+      ]
+    failure_modes:
+      - 'Expecting nested data to expand without getSubRows, or expecting a custom detail panel without getRowCanExpand and renderer markup.'
+      - 'Updating expanded state but never rendering subrows or the custom expanded UI because Table is headless.'
+      - 'Assuming paginateExpandedRows changes grouping or flattens visual descendants; it only controls the expanded-row pagination stage.'
+
+  - slug: pagination
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Configure client slicing or manual pages, counts, navigation limits, and automatic page-index resets.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/pagination.md',
+        'TanStack/table:packages/table-core/src/features/row-pagination',
+        'TanStack/table:examples/react/pagination',
+      ]
+    failure_modes:
+      - 'Enabling manualPagination and passing all rows while expecting Table to slice them; manual data must already represent the intended page.'
+      - 'Omitting rowCount or pageCount for server pagination and then trusting next-page or last-page availability.'
+      - 'Misdiagnosing pageIndex jumping to zero as failed controlled state when autoResetPageIndex is reacting to client-side data or row-model changes.'
+
+  - slug: row-pinning
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Separate top, center, and bottom rows with stable IDs and explicit rendering/sticky behavior.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/row-pinning.md',
+        'TanStack/table:packages/table-core/src/features/row-pinning',
+        'TanStack/table:examples/react/row-pinning',
+      ]
+    failure_modes:
+      - 'Using index-derived row IDs for persistent pinning while sorting, filtering, pagination, or data insertion changes indexes.'
+      - 'Expecting row pinning to add sticky CSS or render top/center/bottom collections in the correct order automatically.'
+      - 'Ignoring keepPinnedRows, so pinned rows remain visible outside the center row model when the desired product behavior was to filter or paginate them away.'
+
+  - slug: cell-selection
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Maintain spreadsheet-style rectangular selections as ordered include/exclude operations anchored to row and column ids, resolving them into disjoint positive regions across sorting, filtering, pagination, and column layout changes.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/cell-selection.md',
+        'TanStack/table:packages/table-core/src/features/cell-selection',
+        'TanStack/table:examples/react/cell-selection',
+      ]
+    failure_modes:
+      - 'Expecting cellSelection to be a per-cell map or a list of final positive regions; it is an ordered log of two-corner include/exclude operations, and derived bounds may split one stored range into several regions.'
+      - 'Reordering, deduplicating, or serializing only the corners of controlled cellSelection state and thereby changing or losing subtraction semantics.'
+      - 'Using additive when the intended operation is explicit subtraction; selectCellRange mode is replace, include, or exclude, while additive is only a deprecated include alias.'
+      - 'Assuming Ctrl/Cmd always adds a range; a modified interaction excludes when it starts on a selected cell and includes when it starts on an unselected cell.'
+      - 'Binding only the mousedown handler and expecting drag selection, or reimplementing mouseup even though the start handler owns its own document listener.'
+      - 'Drawing the selection outline with borders on a border-collapse table, which changes row heights as cells become selected.'
+      - 'Re-rendering every cell on each drag update instead of subscribing per row to table.atoms.cellSelection.'
+
+  - slug: cell-spanning
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Merge adjacent body cells into row- and column-spanning cells derived from the rendered row model, with covered cells reporting a span of 0 that renderers must skip.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/cell-spanning.md',
+        'TanStack/table:packages/table-core/src/features/cell-spanning',
+        'TanStack/table:examples/react/cell-spanning',
+      ]
+    failure_modes:
+      - 'Rendering a covered cell with rowSpan={0} instead of skipping it; HTML rowspan="0" means span to the end of the row group, so the cell merges down the entire tbody.'
+      - 'Expecting spanning to sort or group rows; it merges adjacent equal values only, so unsorted data renders no merges at all.'
+      - 'Precomputing spans from the source data array, which survives sorting, filtering, and page changes and produces ragged rows.'
+      - 'Assuming a run continues across a page or pinned-section boundary; runs are clipped to the rendered rows of each section.'
+      - 'Pre-expanding stored selection corners to cover merges; selection bounds already expand at derivation time when both features are registered, and pre-expanded corners go stale when sorting or paging changes the merges.'
+
+  - slug: row-selection
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Maintain selection IDs across current, filtered, grouped, and manually paginated data.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/row-selection.md',
+        'TanStack/table:packages/table-core/src/features/row-selection',
+        'TanStack/table:examples/react/row-selection',
+      ]
+    failure_modes:
+      - 'Assuming selection mutates application data or is automatically deleted when rows disappear; rowSelection is independent ID state.'
+      - 'Using default index IDs for server pagination or mutable data instead of a stable getRowId.'
+      - 'Treating getSelectedRowModel as a database-wide selection lookup under manual pagination even though only loaded rows can appear in a row model.'
+
+  - slug: sorting
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Configure single/multi sorting, comparison functions, undefined placement, removal cycles, and client/manual ownership.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/sorting.md',
+        'TanStack/table:packages/table-core/src/features/row-sorting',
+        'TanStack/table:examples/react/sorting',
+      ]
+    failure_modes:
+      - 'Setting manualSorting and expecting createSortedRowModel to reorder rows; manual mode trusts incoming data.'
+      - 'Writing a custom sortFn that applies ascending/descending direction itself even though Table reverses the comparator result for descending order.'
+      - 'Assuming undefined values, multi-sort gestures, and sort-removal cycles match product expectations without configuring sortUndefined and multi-sort options.'
+
+  - slug: getting-started
+    package: '@tanstack/react-table'
+    domain: framework-adapters
+    type: framework
+    framework: react
+    purpose: 'Create and render a headless v9 React table with useTable and explicit features.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/migrating.md',
+        'TanStack/table:examples/react/basic-use-table',
+        'TanStack/table:packages/react-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Copying a v8 useReactTable/getCoreRowModel setup instead of the v9 useTable plus tableFeatures shape.'
+      - 'Expecting useTable to render markup or styles rather than mapping headers, rows, and cells with FlexRender or flexRender.'
+      - 'Creating features, columns, or fallback data inside render without stable references.'
+
+  - slug: table-state
+    package: '@tanstack/react-table'
+    domain: framework-adapters
+    type: framework
+    framework: react
+    purpose: 'Read, subscribe to, control, and optimize React table state with selectors, Subscribe, and external atoms.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/table-state.md',
+        'TanStack/table:docs/framework/react/guide/react-compiler.md',
+        'TanStack/table:examples/react/basic-subscribe',
+        'TanStack/table:packages/react-table/src/Subscribe.ts',
+        'TanStack/table:packages/react-table/src/useTable.ts',
+      ]
+    failure_modes:
+      - 'Reading table.atoms.x.get or table.store.state during render and assuming that snapshot read subscribes React to future changes.'
+      - 'Providing onSliceChange without state.slice, or failing to apply updater-function values when React owns the slice.'
+      - 'Hiding builder-method state reads in compiler-memoized children without a Subscribe boundary, or adding fine-grained Subscribe everywhere before measuring.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/react-table'
+    domain: framework-adapters
+    type: migration
+    framework: react
+    purpose: 'Migrate React from useReactTable to the native v9 feature, state, rendering, helper, and composable APIs.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/migrating.md',
+        'TanStack/table:packages/react-table/src/index.ts',
+        'TanStack/table:packages/react-table/src/legacy.ts',
+        'TanStack/table:examples/react/basic-use-table',
+      ]
+    failure_modes:
+      - 'Using useLegacyTable as the finished migration rather than converting to useTable and explicit features.'
+      - 'Keeping the removed global onStateChange or v8 row-model options instead of per-slice control and tableFeatures slots.'
+      - 'Missing React-specific FlexRender/Subscribe changes while only applying the core feature renames.'
+
+  - slug: create-table-hook
+    package: '@tanstack/react-table'
+    domain: framework-adapters
+    type: framework
+    framework: react
+    purpose: 'Create a typed app-level React table hook with shared features, options, helpers, components, and contexts.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/composable-tables.md',
+        'TanStack/table:docs/framework/react/guide/table-context.md',
+        'TanStack/table:examples/react/composable-tables',
+        'TanStack/table:packages/react-table/src/createTableHook.tsx',
+        'TanStack/table:packages/react-table/src/createTableHookContexts.tsx',
+      ]
+    failure_modes:
+      - 'Using createTableHook for a one-off table or registering a full component system when only shared features/defaults are needed.'
+      - 'Prop-drilling table, cell, and header values through registered components instead of using the typed context hooks returned by the same factory.'
+      - 'Creating contexts inside a render path or introducing circular imports between the hook module and registered components, causing HMR or remount failures.'
+
+  - slug: with-tanstack-query
+    package: '@tanstack/react-table'
+    domain: framework-adapters
+    type: integration
+    framework: react
+    purpose: 'Use Query as the server-data source while Table owns data-grid state and explicit manual row-model boundaries.'
+    sources:
+      [
+        'TanStack/table:examples/react/with-tanstack-query',
+        'TanStack/table:examples/react/virtualized-infinite-scrolling',
+        'TanStack/table:docs/framework/react/guide/pagination.md',
+      ]
+    failure_modes:
+      - 'Putting server response data into a second unsynchronized React state layer instead of deriving Table data from the query result.'
+      - 'Omitting pagination, sorting, or filter state from the query key and showing cached data for the wrong table state.'
+      - 'Enabling manual processing without passing server counts, resetting invalid pages, or preserving previous data intentionally.'
+
+  - slug: with-tanstack-virtual
+    package: '@tanstack/react-table'
+    domain: framework-adapters
+    type: integration
+    framework: react
+    purpose: 'Virtualize React rows or columns as a rendering concern layered over the final Table row model.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/virtualization.md',
+        'TanStack/table:examples/react/virtualized-rows',
+        'TanStack/table:examples/react/virtualized-columns',
+        'TanStack/table:examples/react/virtualized-infinite-scrolling',
+      ]
+    failure_modes:
+      - 'Treating Virtual as a Table feature or row model instead of virtualizing table.getRowModel().rows in the renderer.'
+      - 'Measuring rows against the wrong scroll element or omitting stable keys and data-index values for dynamic measurement.'
+      - 'Combining semantic table layout, sticky headers/columns, transforms, and dynamic heights without copying the example CSS positioning contract.'
+
+  - slug: getting-started
+    package: '@tanstack/preact-table'
+    domain: framework-adapters
+    type: framework
+    framework: preact
+    purpose: 'Create and render a native Preact v9 table without relying on the React adapter through preact/compat.'
+    sources:
+      [
+        'TanStack/table:docs/framework/preact/guide/migrating.md',
+        'TanStack/table:examples/preact/basic-use-table',
+        'TanStack/table:packages/preact-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Importing @tanstack/react-table through preact/compat instead of the native @tanstack/preact-table v9 adapter.'
+      - 'Copying useReactTable or React-only rendering assumptions instead of Preact useTable and its exported helpers.'
+      - 'Recreating stable features, columns, or data on each render and causing unnecessary option and row-model work.'
+
+  - slug: table-state
+    package: '@tanstack/preact-table'
+    domain: framework-adapters
+    type: framework
+    framework: preact
+    purpose: 'Use selected table.state, Preact subscriptions, controlled slices, and external atoms correctly.'
+    sources:
+      [
+        'TanStack/table:docs/framework/preact/guide/table-state.md',
+        'TanStack/table:examples/preact/basic-subscribe',
+        'TanStack/table:packages/preact-table/src/useTable.ts',
+      ]
+    failure_modes:
+      - 'Reading atom/store snapshots in render as though they create Preact subscriptions.'
+      - 'Pairing an onSliceChange callback with no controlled state.slice value or ignoring updater-function inputs.'
+      - 'Narrowing the useTable selector so far that rendered builder APIs depend on unselected state, or optimizing before a real render problem exists.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/preact-table'
+    domain: framework-adapters
+    type: migration
+    framework: preact
+    purpose: 'Move a v8 React-adapter/preact-compat table onto the native v9 Preact adapter and architecture.'
+    sources:
+      [
+        'TanStack/table:docs/framework/preact/guide/migrating.md',
+        'TanStack/table:packages/preact-table/src/index.ts',
+        'TanStack/table:examples/preact/basic-use-table',
+      ]
+    failure_modes:
+      - 'Treating Preact as a simple hook rename while leaving the React package and compat aliases in place.'
+      - 'Keeping v8 get*RowModel options and globally included features instead of explicit tableFeatures slots.'
+      - 'Missing prototype-method, state, helper, pinning, and sorting renames shared by every v9 adapter.'
+
+  - slug: create-table-hook
+    package: '@tanstack/preact-table'
+    domain: framework-adapters
+    type: framework
+    framework: preact
+    purpose: 'Build a typed reusable Preact table hook and optional component/context registry.'
+    sources:
+      [
+        'TanStack/table:docs/framework/preact/guide/composable-tables.md',
+        'TanStack/table:docs/framework/preact/guide/table-context.md',
+        'TanStack/table:examples/preact/composable-tables',
+        'TanStack/table:packages/preact-table/src/createTableHook.tsx',
+        'TanStack/table:packages/preact-table/src/createTableHookContexts.tsx',
+      ]
+    failure_modes:
+      - 'Using the app hook for one table when standalone useTable is clearer.'
+      - 'Importing context hooks from a different factory or reading them outside the matching AppTable/AppCell/AppHeader provider.'
+      - 'Prop-drilling stable table instances through memoized components and expecting context consumers to update without the factory wrappers/subscriptions.'
+
+  - slug: with-tanstack-query
+    package: '@tanstack/preact-table'
+    domain: framework-adapters
+    type: integration
+    framework: preact
+    purpose: 'Drive manually processed Preact table data from TanStack Query and table state.'
+    sources:
+      [
+        'TanStack/table:examples/preact/with-tanstack-query',
+        'TanStack/table:docs/framework/preact/guide/pagination.md',
+      ]
+    failure_modes:
+      - 'Copying React Query hook names or React state glue instead of the Preact Query example.'
+      - 'Leaving table state out of the query key or query function request.'
+      - 'Expecting manual pagination/filtering/sorting flags to fetch or transform server data.'
+
+  - slug: with-tanstack-virtual
+    package: '@tanstack/preact-table'
+    domain: framework-adapters
+    type: integration
+    framework: preact
+    purpose: 'Apply Preact Virtual rendering to Table rows or columns using the adapter virtualization guide.'
+    sources:
+      [
+        'TanStack/table:docs/framework/preact/guide/virtualization.md',
+        'TanStack/table:packages/preact-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Copying React-only component/hook details instead of using the Preact Virtual API exported for the installed versions.'
+      - 'Virtualizing raw input data instead of the final filtered, sorted, expanded, and paginated row model.'
+      - 'Assuming Table supplies scroll containers, measurements, spacer geometry, sticky CSS, or overscan defaults.'
+
+  - slug: getting-started
+    package: '@tanstack/solid-table'
+    domain: framework-adapters
+    type: framework
+    framework: solid
+    purpose: 'Create a Solid v9 table with createTable, reactive getters, and JSX rendering.'
+    sources:
+      [
+        'TanStack/table:docs/framework/solid/guide/migrating.md',
+        'TanStack/table:examples/solid/basic-use-table',
+        'TanStack/table:packages/solid-table/src/index.tsx',
+      ]
+    failure_modes:
+      - 'Using the v8 createSolidTable entrypoint or a React hook instead of v9 createTable.'
+      - 'Reading a signal once and passing its snapshot as data instead of a getter/reactive option when updates are expected.'
+      - 'Expecting Table to render DOM or CSS rather than iterating row/header APIs in Solid JSX.'
+
+  - slug: table-state
+    package: '@tanstack/solid-table'
+    domain: framework-adapters
+    type: framework
+    framework: solid
+    purpose: 'Use Solid-backed table atoms inside tracked scopes and choose native signals or external atoms for ownership.'
+    sources:
+      [
+        'TanStack/table:docs/framework/solid/guide/table-state.md',
+        'TanStack/table:examples/solid/basic-external-state',
+        'TanStack/table:packages/solid-table/src/createTable.ts',
+      ]
+    failure_modes:
+      - 'Reading table atoms outside JSX, createMemo, createEffect, or another tracked scope and expecting later changes to rerun code.'
+      - 'Calling a state updater with a Solid setter assumption without resolving Table value-or-updater semantics.'
+      - 'Adding React-style broad rerender workarounds instead of relying on Solid narrow atom reads and computations.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/solid-table'
+    domain: framework-adapters
+    type: migration
+    framework: solid
+    purpose: 'Migrate createSolidTable code to v9 createTable, explicit features, atom-backed state, and new helpers.'
+    sources:
+      [
+        'TanStack/table:docs/framework/solid/guide/migrating.md',
+        'TanStack/table:packages/solid-table/src/index.tsx',
+        'TanStack/table:examples/solid/basic-use-table',
+      ]
+    failure_modes:
+      - 'Renaming the entrypoint but retaining v8 row-model options outside tableFeatures.'
+      - 'Forcing React selector patterns into Solid instead of using signal-tracked table atom reads.'
+      - 'Missing shared v9 changes to instance method binding, feature APIs, meta helpers, sorting, and pinning.'
+
+  - slug: create-table-hook
+    package: '@tanstack/solid-table'
+    domain: framework-adapters
+    type: framework
+    framework: solid
+    purpose: 'Create a shared Solid createAppTable and typed helper/component registry without losing reactivity.'
+    sources:
+      [
+        'TanStack/table:docs/framework/solid/guide/composable-tables.md',
+        'TanStack/table:examples/solid/composable-tables',
+        'TanStack/table:packages/solid-table/src/createTableHook.tsx',
+      ]
+    failure_modes:
+      - 'Using createTableHook for a one-off table instead of standalone createTable.'
+      - 'Passing snapshots where createAppTable needs reactive getters or signals for per-table data and state.'
+      - 'Reading context values outside registered App wrappers or prop-drilling the table when returned context hooks express the shared boundary.'
+
+  - slug: with-tanstack-query
+    package: '@tanstack/solid-table'
+    domain: framework-adapters
+    type: integration
+    framework: solid
+    purpose: 'Compose Solid Query resources with manually processed Table state and reactive query inputs.'
+    sources:
+      [
+        'TanStack/table:examples/solid/with-tanstack-query',
+        'TanStack/table:docs/framework/solid/guide/pagination.md',
+      ]
+    failure_modes:
+      - 'Passing signal snapshots into the query key so sorting, filtering, or pagination changes are not tracked.'
+      - 'Copying React Query hook/state patterns instead of Solid Query reactive option getters.'
+      - 'Using manual Table flags without returning already processed server data and counts.'
+
+  - slug: with-tanstack-virtual
+    package: '@tanstack/solid-table'
+    domain: framework-adapters
+    type: integration
+    framework: solid
+    purpose: 'Virtualize Solid Table rows/columns and infinite server data while preserving reactive measurements.'
+    sources:
+      [
+        'TanStack/table:docs/framework/solid/guide/virtualization.md',
+        'TanStack/table:examples/solid/virtualized-rows',
+        'TanStack/table:examples/solid/virtualized-columns',
+        'TanStack/table:examples/solid/virtualized-infinite-scrolling',
+      ]
+    failure_modes:
+      - 'Creating the virtualizer from a non-reactive row count or wrong scroll element.'
+      - 'Virtualizing raw data rather than the current Table row model.'
+      - 'Applying transforms, dynamic measurements, sticky regions, or grid/flex widths inconsistently with the rendered layout.'
+
+  - slug: getting-started
+    package: '@tanstack/svelte-table'
+    domain: framework-adapters
+    type: framework
+    framework: svelte
+    purpose: 'Create a Svelte 5 table with createTable, rune-backed option getters, FlexRender, and headless markup.'
+    sources:
+      [
+        'TanStack/table:docs/framework/svelte/guide/migrating.md',
+        'TanStack/table:examples/svelte/basic-create-table',
+        'TanStack/table:packages/svelte-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Using the v8 createSvelteTable/store API or pre-Svelte-5 syntax instead of v9 createTable and runes.'
+      - 'Passing a one-time data snapshot where a getter is needed for current rune state.'
+      - 'Expecting render helpers to initialize interactive markup or provide table CSS automatically.'
+
+  - slug: table-state
+    package: '@tanstack/svelte-table'
+    domain: framework-adapters
+    type: framework
+    framework: svelte
+    purpose: 'Use rune-aware table atoms and stores, native $derived projections, controlled $state or createTableState slices, and external atoms without broad invalidation or snapshot mismatches.'
+    sources:
+      [
+        'TanStack/table:docs/framework/svelte/guide/table-state.md',
+        'TanStack/table:docs/framework/svelte/guide/pagination.md',
+        'TanStack/table:examples/svelte/basic-external-state',
+        'TanStack/table:packages/svelte-table/src/createTable.svelte.ts',
+        'TanStack/table:packages/svelte-table/src/createTableState.svelte.ts',
+      ]
+    failure_modes:
+      - 'Keeping the removed beta.58 createTable/createAppTable selector argument, selected table.state property, subscribeTable helper, or SubscribeSource type after beta.59.'
+      - 'Reading atom or store snapshots outside a tracked Svelte scope and expecting the read itself to keep a consumer reactive.'
+      - 'Reading table.store.get() in an effect that only needs one atom slice, causing unrelated state changes to rerun the effect.'
+      - 'Pairing onSliceChange with a controlled state slice that is not actually written back with value-or-updater semantics.'
+      - 'Blaming pagination reactivity when autoResetPageIndex immediately overwrites an externally requested page.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/svelte-table'
+    domain: framework-adapters
+    type: migration
+    framework: svelte
+    purpose: 'Move Svelte 4/v8 store-oriented tables to the Svelte 5 v9 adapter, explicit features, and rune-backed state.'
+    sources:
+      [
+        'TanStack/table:docs/framework/svelte/guide/migrating.md',
+        'TanStack/table:packages/svelte-table/src/index.ts',
+        'TanStack/table:examples/svelte/basic-create-table',
+      ]
+    failure_modes:
+      - 'Attempting the v9 adapter migration without first adopting Svelte 5-compatible component and reactivity syntax.'
+      - 'Keeping readable-store assumptions or v8 row-model table options after switching to createTable.'
+      - 'Keeping beta.58 creation selectors, table.state, subscribeTable, or their removed selected-state generic parameters after beta.59.'
+      - 'Missing shared v9 prototype, feature, helper, sorting, and logical-pinning changes.'
+
+  - slug: create-table-hook
+    package: '@tanstack/svelte-table'
+    domain: framework-adapters
+    type: framework
+    framework: svelte
+    purpose: 'Define a reusable Svelte createAppTable, typed column helper, and optional component/context registry.'
+    sources:
+      [
+        'TanStack/table:docs/framework/svelte/guide/composable-tables.md',
+        'TanStack/table:examples/svelte/composable-tables',
+        'TanStack/table:packages/svelte-table/src/createTableHook.svelte.ts',
+      ]
+    failure_modes:
+      - 'Reimplementing createAppTable around the framework-agnostic core instead of using the shipped rune-capable createTableHook implementation.'
+      - 'Passing $state snapshots instead of getters to createAppTable, freezing data or controlled state.'
+      - 'Prop-drilling contexts through registered components instead of consuming the typed hooks under matching App wrappers.'
+
+  - slug: with-tanstack-query
+    package: '@tanstack/svelte-table'
+    domain: framework-adapters
+    type: integration
+    framework: svelte
+    purpose: 'Connect Svelte Query data and query keys to manual Table processing state.'
+    sources:
+      [
+        'TanStack/table:examples/svelte/with-tanstack-query',
+        'TanStack/table:docs/framework/svelte/guide/pagination.md',
+      ]
+    failure_modes:
+      - 'Building a query from non-reactive snapshots so page, sort, or filter changes do not refetch.'
+      - 'Duplicating query data into unsynchronized $state rather than exposing the query result to Table through a getter.'
+      - 'Expecting manual Table flags to execute network requests or server transformations.'
+
+  - slug: with-tanstack-virtual
+    package: '@tanstack/svelte-table'
+    domain: framework-adapters
+    type: integration
+    framework: svelte
+    purpose: 'Render Svelte Table row/column models through Svelte Virtual with stable measurement and layout.'
+    sources:
+      [
+        'TanStack/table:docs/framework/svelte/guide/virtualization.md',
+        'TanStack/table:examples/svelte/virtualized-rows',
+        'TanStack/table:examples/svelte/virtualized-columns',
+        'TanStack/table:examples/svelte/virtualized-infinite-scrolling',
+      ]
+    failure_modes:
+      - 'Using a stale row count or scroll element instead of reactive values available to the virtualizer.'
+      - 'Virtualizing source data rather than the final Table row model.'
+      - 'Combining absolute positioning, transforms, sticky regions, and semantic table layout without the required CSS geometry.'
+
+  - slug: getting-started
+    package: '@tanstack/vue-table'
+    domain: framework-adapters
+    type: framework
+    framework: vue
+    purpose: 'Create a Vue v9 table with useTable, reactive options, and template/render helpers.'
+    sources:
+      [
+        'TanStack/table:docs/framework/vue/guide/migrating.md',
+        'TanStack/table:examples/vue/basic-use-table',
+        'TanStack/table:packages/vue-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Using v8 useVueTable or React hook names instead of the installed v9 Vue entrypoint.'
+      - 'Destructuring reactive refs/options into snapshots before passing them to useTable.'
+      - 'Expecting Table to provide a Vue table component or component-library styling.'
+
+  - slug: table-state
+    package: '@tanstack/vue-table'
+    domain: framework-adapters
+    type: framework
+    framework: vue
+    purpose: 'Read Vue-backed table atoms in tracked contexts and control slices with refs, computed values, or external atoms.'
+    sources:
+      [
+        'TanStack/table:docs/framework/vue/guide/table-state.md',
+        'TanStack/table:examples/vue/basic-external-state',
+        'TanStack/table:packages/vue-table/src/useTable.ts',
+      ]
+    failure_modes:
+      - 'Reading an atom snapshot outside a template, computed, watch, or other tracked context and expecting it to update consumers.'
+      - 'Passing a ref value snapshot rather than the ref/computed/getter shape supported by reactive table options.'
+      - 'Ignoring value-or-updater callback semantics when synchronizing controlled refs.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/vue-table'
+    domain: framework-adapters
+    type: migration
+    framework: vue
+    purpose: 'Migrate Vue v8 table construction, row models, state, helpers, and rendering to v9.'
+    sources:
+      [
+        'TanStack/table:docs/framework/vue/guide/migrating.md',
+        'TanStack/table:packages/vue-table/src/index.ts',
+        'TanStack/table:examples/vue/basic-use-table',
+      ]
+    failure_modes:
+      - 'Changing the hook name while retaining v8 row-model options and implicit all-feature behavior.'
+      - 'Flattening refs/computed inputs during migration and losing Vue reactivity.'
+      - 'Missing shared v9 changes to prototype methods, per-table meta, sortFn names, and start/end pinning.'
+
+  - slug: create-table-hook
+    package: '@tanstack/vue-table'
+    domain: framework-adapters
+    type: framework
+    framework: vue
+    purpose: 'Create a reusable Vue useAppTable and typed component/context registry while avoiding circular inference.'
+    sources:
+      [
+        'TanStack/table:docs/framework/vue/guide/composable-tables.md',
+        'TanStack/table:examples/vue/composable-tables',
+        'TanStack/table:packages/vue-table/src/createTableHook.ts',
+      ]
+    failure_modes:
+      - 'Using createTableHook for one table or registering reusable UI components before the app has shared conventions.'
+      - 'Creating a circular inference/import chain between the hook module and registered components instead of exporting explicit context-hook types.'
+      - 'Passing Vue JSX children as slots when table.Subscribe expects an explicit children prop.'
+
+  - slug: with-tanstack-query
+    package: '@tanstack/vue-table'
+    domain: framework-adapters
+    type: integration
+    framework: vue
+    purpose: 'Drive Vue Query keys and server requests from reactive Table state with explicit manual stages.'
+    sources:
+      [
+        'TanStack/table:examples/vue/with-tanstack-query',
+        'TanStack/table:docs/framework/vue/guide/pagination.md',
+      ]
+    failure_modes:
+      - 'Unwrapping refs before constructing the query key so table-state changes are not dependencies.'
+      - 'Mirroring query data into an unnecessary second ref and allowing the two sources to drift.'
+      - 'Omitting server counts or expecting manual Table modes to process the returned page.'
+
+  - slug: with-tanstack-virtual
+    package: '@tanstack/vue-table'
+    domain: framework-adapters
+    type: integration
+    framework: vue
+    purpose: 'Layer Vue Virtual rendering over the current Table row/column model and its CSS layout.'
+    sources:
+      [
+        'TanStack/table:docs/framework/vue/guide/virtualization.md',
+        'TanStack/table:examples/vue/virtualized-rows',
+        'TanStack/table:examples/vue/virtualized-columns',
+        'TanStack/table:examples/vue/virtualized-infinite-scrolling',
+      ]
+    failure_modes:
+      - 'Passing non-reactive counts or scroll targets to the virtualizer.'
+      - 'Virtualizing raw query/data arrays rather than the current Table model.'
+      - 'Assuming virtualization supplies column sizes, sticky CSS, semantic markup, or dynamic-row measurement automatically.'
+
+  - slug: getting-started
+    package: '@tanstack/angular-table'
+    domain: framework-adapters
+    type: framework
+    framework: angular
+    purpose: 'Create an Angular v9 table with injectTable, stable options, signals, and FlexRender directives.'
+    sources:
+      [
+        'TanStack/table:docs/framework/angular/guide/migrating.md',
+        'TanStack/table:docs/framework/angular/guide/rendering.md',
+        'TanStack/table:examples/angular/basic-inject-table',
+        'TanStack/table:packages/angular-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Calling injectTable outside a valid Angular injection context.'
+      - 'Allocating columns or features inside the signal-tracked options initializer so every signal change rebuilds static inputs.'
+      - 'Treating render functions as Angular components or bypassing the documented structural directives and context injection rules.'
+
+  - slug: table-state
+    package: '@tanstack/angular-table'
+    domain: framework-adapters
+    type: framework
+    framework: angular
+    purpose: 'Use Angular-signal-backed table atoms, computed selectors, controlled signals, and external Store atoms correctly.'
+    sources:
+      [
+        'TanStack/table:docs/framework/angular/guide/table-state.md',
+        'TanStack/table:examples/angular/basic-external-state',
+        'TanStack/table:packages/angular-table/src/injectTable.ts',
+      ]
+    failure_modes:
+      - 'Wrapping every atom read in computed just to make it reactive even though table atoms already read Angular signals.'
+      - 'Reading controlled signals in injectTable and overlooking that each write reruns the initializer and setOptions.'
+      - 'Assigning updater functions directly to signals instead of resolving Table value-or-updater callbacks.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/angular-table'
+    domain: framework-adapters
+    type: migration
+    framework: angular
+    purpose: 'Migrate createAngularTable code to injectTable, v9 features, signal-backed state, and current rendering directives.'
+    sources:
+      [
+        'TanStack/table:docs/framework/angular/guide/migrating.md',
+        'TanStack/table:packages/angular-table/src/index.ts',
+        'TanStack/table:examples/angular/basic-inject-table',
+      ]
+    failure_modes:
+      - 'Renaming createAngularTable to injectTable without moving construction into an injection context.'
+      - 'Retaining v8 get*RowModel options or unstable values inside the reactive initializer.'
+      - 'Missing FlexRender directive, prototype-method, helper, sorting, and logical-pinning changes.'
+
+  - slug: create-table-hook
+    package: '@tanstack/angular-table'
+    domain: framework-adapters
+    type: framework
+    framework: angular
+    purpose: 'Create a typed injectAppTable abstraction with shared features, defaults, components, and DI context.'
+    sources:
+      [
+        'TanStack/table:docs/framework/angular/guide/composable-tables.md',
+        'TanStack/table:examples/angular/composable-tables',
+        'TanStack/table:packages/angular-table/src/helpers/createTableHook.ts',
+      ]
+    failure_modes:
+      - 'Calling injectAppTable or returned context injectors outside Angular injection context.'
+      - 'Prop-drilling table/cell/header values into registered components instead of using the returned typed injection helpers.'
+      - 'Treating arbitrary render values as Angular components and passing them to flexRenderComponent.'
+
+  - slug: with-tanstack-query
+    package: '@tanstack/angular-table'
+    domain: framework-adapters
+    type: integration
+    framework: angular
+    purpose: 'Connect Angular Query to signal-owned Table state and manual server processing.'
+    sources:
+      [
+        'TanStack/table:examples/angular/with-tanstack-query',
+        'TanStack/table:docs/framework/angular/guide/table-state.md',
+        'TanStack/table:docs/framework/angular/guide/pagination.md',
+      ]
+    failure_modes:
+      - 'Reading query-key signals outside a reactive query options function and preventing refetches.'
+      - 'Duplicating query data into another signal without a defined editing/cache ownership model.'
+      - 'Expecting manual Table flags to fetch data or omitting row/page counts required for navigation.'
+
+  - slug: with-tanstack-virtual
+    package: '@tanstack/angular-table'
+    domain: framework-adapters
+    type: integration
+    framework: angular
+    purpose: 'Render Angular Table models through Angular Virtual with correct signals, measurements, and infinite fetching.'
+    sources:
+      [
+        'TanStack/table:docs/framework/angular/guide/virtualization.md',
+        'TanStack/table:examples/angular/virtualized-rows',
+        'TanStack/table:examples/angular/virtualized-columns',
+        'TanStack/table:examples/angular/virtualized-infinite-scrolling',
+      ]
+    failure_modes:
+      - 'Constructing the virtualizer outside required Angular injection/reactive context or from stale counts.'
+      - 'Virtualizing input data rather than the current Table row model.'
+      - 'Combining measured rows, transforms, sticky regions, and grid/flex sizing without the example layout contract.'
+
+  - slug: getting-started
+    package: '@tanstack/lit-table'
+    domain: framework-adapters
+    type: framework
+    framework: lit
+    purpose: 'Create and render a v9 Lit table through TableController and reactive host updates.'
+    sources:
+      [
+        'TanStack/table:docs/framework/lit/guide/migrating.md',
+        'TanStack/table:examples/lit/basic-table-controller',
+        'TanStack/table:packages/lit-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Using the v8 TableController constructor-with-options thunk instead of passing options to controller.table in render.'
+      - 'Constructing a new controller or selector on every render rather than keeping stable host fields.'
+      - 'Expecting TableController to supply semantic table markup, CSS, or a component library.'
+
+  - slug: table-state
+    package: '@tanstack/lit-table'
+    domain: framework-adapters
+    type: framework
+    framework: lit
+    purpose: 'Use TableController-selected table.state, stable subscriptions, controlled properties, and external atoms.'
+    sources:
+      [
+        'TanStack/table:docs/framework/lit/guide/table-state.md',
+        'TanStack/table:examples/lit/basic-external-state',
+        'TanStack/table:packages/lit-table/src/TableController.ts',
+      ]
+    failure_modes:
+      - 'Reading store snapshots imperatively and assuming the host is subscribed to a custom derived value not selected or subscribed.'
+      - 'Creating selector functions inside render and causing avoidable subscription/update churn.'
+      - 'Providing onSliceChange without reflecting the controlled state.slice back into the next controller.table options.'
+
+  - slug: migrate-v8-to-v9
+    package: '@tanstack/lit-table'
+    domain: framework-adapters
+    type: migration
+    framework: lit
+    purpose: 'Migrate Lit v8 controller construction, row models, state, helpers, and rendering to v9.'
+    sources:
+      [
+        'TanStack/table:docs/framework/lit/guide/migrating.md',
+        'TanStack/table:packages/lit-table/src/index.ts',
+        'TanStack/table:examples/lit/basic-table-controller',
+      ]
+    failure_modes:
+      - 'Passing the options thunk to the v9 TableController constructor instead of controller.table during render.'
+      - 'Keeping v8 get*RowModel table options rather than v9 tableFeatures slots.'
+      - 'Missing shared v9 prototype-method, meta-helper, sorting, and start/end pinning changes.'
+
+  - slug: create-table-hook
+    package: '@tanstack/lit-table'
+    domain: framework-adapters
+    type: framework
+    framework: lit
+    purpose: 'Create a reusable Lit app-table controller/helper layer and consume table context from custom elements.'
+    sources:
+      [
+        'TanStack/table:docs/framework/lit/guide/composable-tables.md',
+        'TanStack/table:examples/lit/composable-tables',
+        'TanStack/table:packages/lit-table/src/createTableHook.ts',
+      ]
+    failure_modes:
+      - 'Calling useAppTable without the Lit host or recreating the backing controller every update.'
+      - 'Assuming Lit tableComponents work exactly like JSX adapter registries; table-level controls may be custom elements using useTableContext.'
+      - 'Prop-drilling a stable table through custom elements instead of consuming the nearest typed app-table context.'
+
+  - slug: with-tanstack-virtual
+    package: '@tanstack/lit-table'
+    domain: framework-adapters
+    type: integration
+    framework: lit
+    purpose: 'Layer Lit Virtual rendering and measurement over the current Table model.'
+    sources:
+      [
+        'TanStack/table:docs/framework/lit/guide/virtualization.md',
+        'TanStack/table:examples/lit/virtualized-rows',
+        'TanStack/table:examples/lit/virtualized-columns',
+        'TanStack/table:examples/lit/virtualized-infinite-scrolling',
+      ]
+    failure_modes:
+      - 'Creating a virtualizer/controller with the wrong host lifecycle or a stale item count.'
+      - 'Virtualizing raw input data instead of table.getRowModel().rows.'
+      - 'Assuming Virtual or Table owns absolute positioning, measurement attributes, sticky CSS, or column widths.'
+
+  - slug: getting-started
+    package: '@tanstack/octane-table'
+    domain: framework-adapters
+    type: framework
+    framework: octane
+    purpose: 'Create and render an Octane v9 table with application-authored TSRX, stable inputs, keyed lists, and component-scoped render helpers.'
+    sources:
+      [
+        'TanStack/table:docs/framework/octane/quick-start.md',
+        'TanStack/table:examples/octane/basic-use-table',
+        'TanStack/table:packages/octane-table/src/index.ts',
+        'TanStack/table:packages/octane-table/src/useTable.tsrx',
+      ]
+    failure_modes:
+      - 'Importing another framework adapter or translating React component-return semantics directly instead of using Octane TSRX component bodies.'
+      - 'Invoking FlexRender or other component-scoped helpers as plain functions instead of rendering them as components.'
+      - 'Recreating stable features, columns, or data on each render and causing unnecessary option and row-model work.'
+
+  - slug: table-state
+    package: '@tanstack/octane-table'
+    domain: framework-adapters
+    type: framework
+    framework: octane
+    purpose: 'Use selected table.state, component-scoped Subscribe islands, controlled slices, and synchronous Octane Store atom ownership with commit-safe publication.'
+    sources:
+      [
+        'TanStack/table:docs/framework/octane/guide/table-state.md',
+        'TanStack/table:examples/octane/basic-subscribe',
+        'TanStack/table:examples/octane/basic-external-atoms',
+        'TanStack/table:packages/octane-table/src/useTable.tsrx',
+        'TanStack/table:packages/octane-table/src/Subscribe.tsrx',
+      ]
+    failure_modes:
+      - 'Reading atom/store snapshots in render as though they establish an Octane subscription.'
+      - 'Calling table.Subscribe as a normal function and sharing compiler slots instead of mounting an independent component scope.'
+      - 'Expecting controlled options.state to publish during render, or mixing it with an external atom that has ownership precedence.'
+
+  - slug: create-table-hook
+    package: '@tanstack/octane-table'
+    domain: framework-adapters
+    type: framework
+    framework: octane
+    purpose: 'Build a typed reusable Octane table hook with stable App wrappers, registered components, and default or isolated contexts.'
+    sources:
+      [
+        'TanStack/table:docs/framework/octane/guide/composable-tables.md',
+        'TanStack/table:docs/framework/octane/guide/table-context.md',
+        'TanStack/table:examples/octane/composable-tables',
+        'TanStack/table:packages/octane-table/src/createTableHook.tsrx',
+        'TanStack/table:packages/octane-table/src/createTableHookContexts.ts',
+      ]
+    failure_modes:
+      - 'Using the app hook for one table when standalone useTable is clearer.'
+      - 'Reading a factory context outside its matching AppTable/AppCell/AppHeader provider or invoking a wrapper as a plain function.'
+      - 'Creating the factory in render and destabilizing wrapper, context, and registered-component identities.'
+
+  - slug: getting-started
+    package: '@tanstack/ember-table'
+    domain: framework-adapters
+    type: framework
+    framework: ember
+    purpose: 'Create an Ember v9 table through the tracked useTable options thunk and render it with Glimmer-native FlexRender components.'
+    sources:
+      [
+        'TanStack/table:docs/framework/ember/quick-start.md',
+        'TanStack/table:examples/ember/basic-table',
+        'TanStack/table:packages/ember-table/src/index.ts',
+        'TanStack/table:packages/ember-table/src/use-table.ts',
+        'TanStack/table:packages/ember-table/src/FlexRender.gts',
+      ]
+    failure_modes:
+      - 'Passing an options object instead of a thunk, or failing to read tracked data inside that thunk.'
+      - 'Passing extracted v9 prototype methods through Ember templates without preserving their receiver.'
+      - 'Recreating features, columns, or derived data whenever tracked options rerun.'
+
+  - slug: table-state
+    package: '@tanstack/ember-table'
+    domain: framework-adapters
+    type: framework
+    framework: ember
+    purpose: 'Use Glimmer-tracked table reads and own slices internally, through Ember atoms, or through tracked controlled state.'
+    sources:
+      [
+        'TanStack/table:docs/framework/ember/guide/table-state.md',
+        'TanStack/table:examples/ember/basic-external-atoms',
+        'TanStack/table:examples/ember/basic-external-state',
+        'TanStack/table:packages/ember-table/src/use-table.ts',
+        'TanStack/table:packages/ember-table/src/reactivity.ts',
+        'TanStack/table:packages/ember-table/src/signal.ts',
+      ]
+    failure_modes:
+      - 'Inventing table.Subscribe or using the intentionally no-op table.store.subscribe instead of Glimmer-tracked reads.'
+      - 'Using removed table.getState() rather than table.store.state or a slice atom.'
+      - 'Mixing atoms and state ownership, omitting updater resolution, or trying to replace construct-time atoms after table creation.'
+
+  - slug: create-table-hook
+    package: '@tanstack/ember-table'
+    domain: framework-adapters
+    type: framework
+    framework: ember
+    purpose: 'Share Ember table features, row-model slots, defaults, and inferred column helpers without inventing a component registry.'
+    sources:
+      [
+        'TanStack/table:docs/framework/ember/guide/composable-tables.md',
+        'TanStack/table:examples/ember/basic-app-table',
+        'TanStack/table:packages/ember-table/src/create-table-hook.ts',
+      ]
+    failure_modes:
+      - 'Expecting AppTable/AppCell/context registries that the Ember factory does not implement.'
+      - 'Passing features at each createAppTable call or recreating the app hook in tracked scope.'
+      - 'Putting shared mutable state in factory defaults instead of keeping state ownership per table.'
+
+  - slug: getting-started
+    package: '@tanstack/alpine-table'
+    domain: framework-adapters
+    type: framework
+    framework: alpine
+    purpose: 'Create an Alpine v9 table and render reactive headless markup through Alpine bindings.'
+    sources:
+      [
+        'TanStack/table:docs/framework/alpine/guide/table-state.md',
+        'TanStack/table:examples/alpine/basic-create-table',
+        'TanStack/table:packages/alpine-table/src/index.ts',
+      ]
+    failure_modes:
+      - 'Copying a React/Vue hook API instead of Alpine createTable and its reactive proxy.'
+      - 'Expecting x-html output to initialize nested Alpine directives; interactive controls must exist as real markup/bindings.'
+      - 'Expecting the adapter to provide semantic markup, styling, or component-library integration.'
+
+  - slug: table-state
+    package: '@tanstack/alpine-table'
+    domain: framework-adapters
+    type: framework
+    framework: alpine
+    purpose: 'Use automatically reactive Alpine table reads and own controlled slices through Alpine.reactive or external atoms.'
+    sources:
+      [
+        'TanStack/table:docs/framework/alpine/guide/table-state.md',
+        'TanStack/table:examples/alpine/basic-create-table',
+        'TanStack/table:packages/alpine-table/src/createTable.ts',
+      ]
+    failure_modes:
+      - 'Adding a nonexistent table.Subscribe abstraction instead of reading APIs directly in Alpine bindings.'
+      - 'Passing controlled snapshots instead of getters over Alpine.reactive state.'
+      - 'Ignoring value-or-updater semantics in onSliceChange callbacks or combining state and atoms for the same slice without understanding atom precedence.'
+
+  - slug: create-table-hook
+    package: '@tanstack/alpine-table'
+    domain: framework-adapters
+    type: framework
+    framework: alpine
+    purpose: 'Share Alpine table features, options, and typed column helpers without inventing a component registry.'
+    sources:
+      [
+        'TanStack/table:docs/framework/alpine/guide/composable-tables.md',
+        'TanStack/table:examples/alpine/basic-app-table',
+        'TanStack/table:packages/alpine-table/src/createTableHook.ts',
+      ]
+    failure_modes:
+      - 'Expecting React-style registered cell/header/table components from an Alpine hook that intentionally only shares features and defaults.'
+      - 'Using createTableHook for a single table where standalone createTable is clearer.'
+      - 'Embedding interactive Alpine directives in x-html strings instead of using real markup or Alpine.bind bundles.'
+
+  - slug: devtools
+    package: '@tanstack/table-devtools'
+    domain: observability
+    type: integration
+    purpose: 'Register core table targets and inspect state, options, rows, columns, and feature coverage.'
+    sources:
+      [
+        'TanStack/table:docs/devtools.md',
+        'TanStack/table:packages/table-devtools/src/index.ts',
+        'TanStack/table:packages/table-devtools/src/tableTarget.ts',
+        'TanStack/table:packages/table-devtools/src/production.ts',
+      ]
+    failure_modes:
+      - 'Registering a table with no non-empty options.key; registration is skipped and Devtools reports no connected table.'
+      - 'Reusing one key for different live tables and replacing the target unexpectedly.'
+      - 'Importing the development-gated entrypoint while expecting full Devtools behavior in production.'
+
+  - slug: devtools
+    package: '@tanstack/react-table-devtools'
+    domain: observability
+    type: integration
+    framework: react
+    purpose: 'Connect and render React Table Devtools with stable table identity and development gating.'
+    sources:
+      [
+        'TanStack/table:docs/devtools.md',
+        'TanStack/table:packages/react-table-devtools/src/index.ts',
+        'TanStack/table:packages/react-table-devtools/src/useTanStackTableDevtools.ts',
+      ]
+    failure_modes:
+      - 'Omitting table options.key and seeing a rendered panel with no registered table.'
+      - 'Calling registration conditionally or with unstable table identity instead of using the adapter hook/component lifecycle.'
+      - 'Assuming the default entrypoint stays functional outside development rather than using or intentionally avoiding the production export.'
+
+  - slug: devtools
+    package: '@tanstack/preact-table-devtools'
+    domain: observability
+    type: integration
+    framework: preact
+    purpose: 'Connect Preact tables to the Devtools target registry and render the native Preact panel.'
+    sources:
+      [
+        'TanStack/table:docs/devtools.md',
+        'TanStack/table:packages/preact-table-devtools/src/index.ts',
+        'TanStack/table:packages/preact-table-devtools/src/useTanStackTableDevtools.ts',
+      ]
+    failure_modes:
+      - 'Copying React Devtools imports instead of the Preact package API.'
+      - 'Omitting a stable options.key or failing to clean up/re-register when the table changes.'
+      - 'Expecting development-gated exports to inspect tables in a production build.'
+
+  - slug: devtools
+    package: '@tanstack/solid-table-devtools'
+    domain: observability
+    type: integration
+    framework: solid
+    purpose: 'Connect Solid tables to Devtools with reactive registration and the correct development/production exports.'
+    sources:
+      [
+        'TanStack/table:docs/devtools.md',
+        'TanStack/table:packages/solid-table-devtools/src/index.ts',
+        'TanStack/table:packages/solid-table-devtools/src/useTanStackTableDevtools.ts',
+      ]
+    failure_modes:
+      - 'Passing a stale table snapshot to registration rather than evaluating it in the intended Solid reactive owner.'
+      - 'Omitting options.key and silently failing target registration after the logged warning.'
+      - 'Importing the no-op development-gated component/plugin in production and expecting a panel.'
+
+  - slug: devtools
+    package: '@tanstack/vue-table-devtools'
+    domain: observability
+    type: integration
+    framework: vue
+    purpose: 'Connect Vue table refs to Devtools and preserve reactive target cleanup.'
+    sources:
+      [
+        'TanStack/table:docs/devtools.md',
+        'TanStack/table:packages/vue-table-devtools/src/index.ts',
+        'TanStack/table:packages/vue-table-devtools/src/useTanStackTableDevtools.ts',
+      ]
+    failure_modes:
+      - 'Unwrapping a table ref once and preventing registration from following later table changes.'
+      - 'Omitting the table key or reusing it across simultaneous tables.'
+      - 'Expecting the development-gated default entrypoint to remain active in production.'
+
+  - slug: devtools
+    package: '@tanstack/angular-table-devtools'
+    domain: observability
+    type: integration
+    framework: angular
+    purpose: 'Register Angular signal-provided tables with Devtools inside injection context.'
+    sources:
+      [
+        'TanStack/table:docs/devtools.md',
+        'TanStack/table:packages/angular-table-devtools/src/index.ts',
+        'TanStack/table:packages/angular-table-devtools/src/injectTanStackTableDevtools.ts',
+      ]
+    failure_modes:
+      - 'Calling injectTanStackTableDevtools outside Angular injection context.'
+      - 'Omitting options.key or returning an undefined table without understanding registration is intentionally disabled.'
+      - 'Expecting Angular isDevMode-gated exports to render full Devtools in production.'
+
+  - slug: fuzzy-ranking
+    package: '@tanstack/match-sorter-utils'
+    domain: utilities
+    type: core
+    purpose: 'Rank items, filter on passed, and compare stored ranking metadata without conflating fuzzy matching with Table itself.'
+    sources:
+      [
+        'TanStack/table:packages/match-sorter-utils/src/index.ts',
+        'TanStack/table:docs/framework/react/guide/fuzzy-filtering.md',
+        'TanStack/table:examples/react/filters-fuzzy',
+      ]
+    failure_modes:
+      - 'Using the numeric rank as a boolean instead of checking RankingInfo.passed against the configured threshold.'
+      - 'Calling rankItem again during sorting instead of storing RankingInfo as filter metadata and comparing it with compareItems.'
+      - 'Assuming accessors return arbitrary values; matching prepares string values and accessor configuration controls thresholds and ranking bounds.'
+
+cross_references:
+  - from: 'core'
+    to: 'table-features'
+    reason: 'Every non-core API and state slice depends on feature registration.'
+  - from: 'table-features'
+    to: 'api-not-found'
+    reason: 'A missing feature is the first diagnostic for a missing v9 API.'
+  - from: 'client-vs-server'
+    to:
+      [
+        'column-filtering',
+        'global-filtering',
+        'grouping',
+        'sorting',
+        'expanding',
+        'pagination',
+      ]
+    reason: 'Manual flags bypass the matching client row-model stages.'
+  - from: 'typescript'
+    to: ['table-features', 'create-table-hook']
+    reason: 'Feature and app-hook factories are the main sources of inferred v9 userland types.'
+  - from: 'column-faceting'
+    to: ['column-filtering', 'global-filtering']
+    reason: 'Facet values depend on active filter context and eligible columns.'
+  - from: 'grouping'
+    to: ['expanding', 'pagination']
+    reason: 'Grouped rows are expanded row trees and count as rows during pagination.'
+  - from: 'column-pinning'
+    to: ['column-sizing', 'column-resizing']
+    reason: 'Sticky offsets are computed from the numeric column sizing model.'
+  - from: 'pagination'
+    to: ['row-selection', 'with-tanstack-query']
+    reason: 'Manual pages change which selected IDs have loaded Row objects and usually drive a query key.'
+  - from: 'table-state'
+    to: ['create-table-hook', 'with-tanstack-query', 'with-tanstack-virtual']
+    reason: 'Reusable components and integrations must read state through the adapter reactive model.'
+  - from: 'migrate-v8-to-v9'
+    to: ['table-features', 'table-state', 'typescript', 'api-not-found']
+    reason: 'Migration problems span architecture, state, types, and renamed/gated APIs.'
+
+issue_evidence:
+  - cluster: 'Feature and API discovery'
+    references: ['discussion/5834', 'issue/6212', 'issue/6311']
+    finding: 'V9 modularity, renamed registries, and type-gated APIs make installed-source lookup and feature registration essential.'
+  - cluster: 'Composable tables and context'
+    references: ['issue/6348', 'issue/6323', 'issue/6199', 'issue/2344']
+    finding: 'Circular imports, context identity, and remount/stale-input failures justify dedicated createTableHook skills.'
+  - cluster: 'Framework state and compiler reactivity'
+    references:
+      ['issue/6224', 'issue/6236', 'issue/6374', 'issue/6117', 'issue/5903']
+    finding: 'Snapshot reads, controlled updater semantics, auto resets, and compiler-hidden method reads are recurring silent failures.'
+  - cluster: 'Manual row models'
+    references:
+      [
+        'issue/4917',
+        'issue/5110',
+        'issue/4771',
+        'issue/5850',
+        'discussion/3552',
+        'discussion/5137',
+      ]
+    finding: 'Users routinely expect manual flags to process rows or assume off-page rows remain available as Row objects.'
+  - cluster: 'TypeScript inference'
+    references:
+      [
+        'issue/4241',
+        'issue/4382',
+        'issue/4387',
+        'discussion/4195',
+        'discussion/4220',
+      ]
+    finding: 'Manual ColumnDef annotations and deep generics erase TValue inference or overload TypeScript; v9 helpers should lead.'
+  - cluster: 'Renderer-owned layout'
+    references:
+      [
+        'issue/5783',
+        'issue/5986',
+        'discussion/4179',
+        'discussion/4439',
+        'discussion/3259',
+      ]
+    finding: 'Pinning, width, alignment, RTL, and responsive behavior require explicit renderer CSS and stable sizing inputs.'
+
+documentation_read:
+  narrative_docs: 'All 187 narrative Markdown documents were inventoried by title, headings, and admonitions; foundational, feature, state, migration, composable, and virtualization guides were deep-read.'
+  generated_references: 'All 828 generated reference documents were inventoried for exports and API categories; exact API truth is delegated to installed dist declarations (.d.ts) in skills.'
+  examples: 'All 277 example directories were inventoried; basic, state, composable, Query, Virtual, feature, and Devtools-relevant examples were sampled or deep-read by skill.'
+  source: 'All public package entrypoints, tableFeatures prerequisites, core construction/state precedence, all 16 feature implementations/defaults, createTableHook implementations, Devtools registration, and match-sorter-utils source were inspected.'
+  community: 'Recent v9 issues plus recurring high-signal issues and GitHub discussions were reviewed for failure modes and misconceptions.'
+
+open_gaps:
+  - skill: 'table-features'
+    question: 'Should stockFeatures be framed only as a migration/kitchen-sink convenience, or also as an acceptable default for small applications unconcerned with bundle size?'
+    status: resolved
+    decision: 'Explicit features are the default; stockFeatures is migration and kitchen-sink convenience.'
+  - skill: 'client-vs-server'
+    question: 'Should mixed pipelines such as server filtering/sorting plus client pagination be presented neutrally, or discouraged unless all required rows are loaded?'
+    status: resolved
+    decision: 'Mixed pipelines are valid, but skills must name the owner and available dataset for every stage.'
+  - skill: 'create-table-hook'
+    question: 'Should createTableHook be recommended as the standard app-level abstraction once an application has multiple tables, with standalone table creation reserved for one-offs?'
+    status: resolved
+    decision: 'Recommend createTableHook for recurring app conventions and standalone creation for one-offs.'
+  - skill: 'create-table-hook'
+    question: 'How strongly should context/injection be preferred over prop drilling when registered components need the table, cell, or header?'
+    status: resolved
+    decision: 'Prefer the typed context or injection helpers returned by the same factory inside registered components.'
+  - skill: 'migrate-v8-to-v9'
+    question: 'Should useLegacyTable be omitted unless it already appears in user code, or included as a clearly deprecated emergency bridge in a Common Mistakes note?'
+    status: resolved
+    decision: 'Mention it only when encountered and identify it as a deprecated temporary bridge, never the migration target.'
+  - skill: 'with-tanstack-virtual'
+    question: 'Should the skills cover only the maintained examples, or also mention unsupported combinations such as drag-and-drop plus virtualization as user-owned composition?'
+    status: resolved
+    decision: 'Teach maintained examples; briefly label unsupported combinations as user-owned composition without prescribing an unmaintained recipe.'
+  - skill: 'devtools'
+    question: 'Should production entrypoints be taught as supported production inspection, or should normal guidance keep Devtools development-only?'
+    status: resolved
+    decision: 'Keep normal guidance development-only; explain production entrypoints only when explicitly requested.'
+
+maintainer_interview:
+  phase_2_completed: true
+  phase_2_summary:
+    - 'Primary journeys are first table setup, adding a feature, v8-to-v9 migration, server-data decisions, and performance debugging.'
+    - 'Table is headless and compatible with component libraries/design systems, but no library-specific skills are in scope.'
+    - 'Feature skills should be short, edge-case-first, and route exact API discovery to installed dist declarations (.d.ts).'
+    - 'Framework state guides, createTableHook, Query, and Virtual require dedicated adapter guidance where source exists.'
+    - 'Worker row models are excluded and useLegacyTable must not be promoted.'
+  phase_4_completed: true
+  phase_4_answers_accepted: true

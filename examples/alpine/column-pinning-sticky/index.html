@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Column Pinning (Sticky)</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
+          <label>
+            <input
+              type="checkbox"
+              :checked="table.getIsAllColumnsVisible()"
+              @change="table.getToggleAllColumnsVisibilityHandler()($event)"
+            />
+            Toggle All
+          </label>
+        </div>
+        <template x-for="column in table.getAllLeafColumns()" :key="column.id">
+          <div class="column-toggle-row">
+            <label>
+              <input
+                type="checkbox"
+                :checked="column.getIsVisible()"
+                @change="column.getToggleVisibilityHandler()($event)"
+              />
+              <span x-text="column.id"></span>
+            </label>
+          </div>
+        </template>
+      </div>
+      <div class="spacer-md"></div>
+      <div class="button-row">
+        <button class="demo-button demo-button-sm" @click="refreshData()">
+          Regenerate Data
+        </button>
+        <button class="demo-button demo-button-sm" @click="stressTest()">
+          Stress Test (1k rows)
+        </button>
+        <button class="demo-button demo-button-sm" @click="randomizeColumns()">
+          Shuffle Columns
+        </button>
+      </div>
+      <div class="spacer-md"></div>
+      <div class="table-container">
+        <table :style="`width: ${table.getCenterTotalSize()}px`">
+          <thead>
+            <template
+              x-for="headerGroup in table.getHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <tr>
+                <template
+                  x-for="header in headerGroup.headers"
+                  :key="header.id"
+                >
+                  <th
+                    :colspan="header.colSpan"
+                    :style="getCommonPinningStyles(header.column)"
+                  >
+                    <div class="nowrap">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                      <span
+                        x-text="header.column.getIndex(header.column.getIsPinned() || 'center')"
+                      ></span>
+                    </div>
+                    <template
+                      x-if="!header.isPlaceholder && header.column.getCanPin()"
+                    >
+                      <div class="pin-actions">
+                        <button
+                          x-show="header.column.getIsPinned() !== 'start'"
+                          class="pin-button"
+                          @click="header.column.pin('start')"
+                        >
+                          &lt;=
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned()"
+                          class="pin-button"
+                          @click="header.column.pin(false)"
+                        >
+                          X
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned() !== 'end'"
+                          class="pin-button"
+                          @click="header.column.pin('end')"
+                        >
+                          =&gt;
+                        </button>
+                      </div>
+                    </template>
+                    <div
+                      @dblclick="header.column.resetSize()"
+                      @mousedown="header.getResizeHandler()($event)"
+                      @touchstart="header.getResizeHandler()($event)"
+                      class="resizer"
+                      :class="header.column.getIsResizing() ? 'isResizing' : ''"
+                    ></div>
+                  </th>
+                </template>
+              </tr>
+            </template>
+          </thead>
+          <tbody>
+            <template x-for="row in table.getRowModel().rows" :key="row.id">
+              <tr>
+                <template x-for="cell in row.getVisibleCells()" :key="cell.id">
+                  <td :style="getCommonPinningStyles(cell.column)">
+                    <span x-html="FlexRender({ cell })"></span>
+                  </td>
+                </template>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <div class="spacer-md"></div>
+      <pre
+        data-testid="table-state"
+        x-text="JSON.stringify(table.store.get(), null, 2)"
+      ></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "tanstack-lit-table-example-row-pinning",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/lit-table": "^9.1.2",
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.3",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
+  }
+}

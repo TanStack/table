@@ -1,65 +1,78 @@
 <script lang="ts">
-  import { writable } from 'svelte/store'
+  import type { ColumnDef } from '@tanstack/svelte-table'
   import {
-    createSvelteTable,
-    getCoreRowModel,
-    getSortedRowModel,
-    flexRender,
+    FlexRender,
+    createTable,
+    renderComponent,
   } from '@tanstack/svelte-table'
-  import type {
-    ColumnDef,
-    OnChangeFn,
-    SortingState,
-    TableOptions,
-  } from '@tanstack/svelte-table'
-  import { makeData, type Person } from './makeData'
+  import Header from './Header.svelte'
   import './index.css'
+  import { makeData, type Person } from './makeData'
+  import { features } from './tableHelper.svelte'
 
-  const columns: ColumnDef<Person>[] = [
+  const columns: ColumnDef<typeof features, Person>[] = [
+    {
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    },
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          header: ({ header }) => renderComponent(Header, { header }),
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
-          header: () => 'Last Name',
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          header: ({ header }) =>
+            renderComponent(Header, { label: 'Last Name', header }),
+          footer: (props) => props.column.id,
+        },
+        {
+          accessorKey: 'email',
+          header: ({ header }) =>
+            renderComponent(Header, { label: 'Email', header }),
+          sortFn: 'alphanumeric',
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
-          header: () => 'Age',
-          footer: props => props.column.id,
+          header: ({ header }) =>
+            renderComponent(Header, { label: 'Age', header }),
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
           columns: [
             {
               accessorKey: 'visits',
-              header: () => 'Visits',
-              footer: props => props.column.id,
+              header: ({ header }) =>
+                renderComponent(Header, { label: 'Visits', header }),
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
-              header: 'Status',
-              footer: props => props.column.id,
+              header: ({ header }) =>
+                renderComponent(Header, { label: 'Status', header }),
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
-              header: 'Profile Progress',
-              footer: props => props.column.id,
+              header: ({ header }) =>
+                renderComponent(Header, { label: 'Progress', header }),
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -67,81 +80,50 @@
     },
   ]
 
-  const data = makeData(100_000)
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
-  let sorting: SortingState = []
-
-  const setSorting: OnChangeFn<SortingState> = updater => {
-    if (updater instanceof Function) {
-      sorting = updater(sorting)
-    } else {
-      sorting = updater
-    }
-    options.update(old => ({
-      ...old,
-      state: {
-        ...old.state,
-        sorting,
+  const table = createTable(
+    {
+      features,
+      get data() {
+        return data
       },
-    }))
-  }
-
-  const options = writable<TableOptions<Person>>({
-    data,
-    columns,
-    state: {
-      sorting,
+      columns,
+      // initialState: { sorting: [{ id: 'firstName', desc: false }] }, // set the initial sort once
+      // atoms: { sorting: sortingAtom }, // preferred: own sorting state with an external atom
+      // state: { sorting }, // classic controlled state; pair with onSortingChange
+      // onSortingChange: setSorting,
+      // enableSorting: false, // disable sorting for every column; default true
+      // sortDescFirst: true, // start every sort cycle with descending order; inferred by column data by default
+      // enableSortingRemoval: false, // keep a sorted column sorted when toggling; default true
+      // enableMultiSort: false, // disable Shift-click multi-sorting; default true
+      // enableMultiRemove: false, // prevent a multi-sort toggle from removing a sorted column; default true
+      // isMultiSortEvent: () => true, // make every sort interaction a multi-sort; default requires Shift
+      // maxMultiSortColCount: 3, // limit multi-sorting to three columns; default Infinity
+      // manualSorting: true, // pass data that is already sorted, for example from a server
+      // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
+      debugTable: true,
     },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
-  })
-
-  const refreshData = () => {
-    console.info('refresh')
-    options.update(prev => ({
-      ...prev,
-      data: makeData(100_000),
-    }))
-  }
-
-  const rerender = () => {
-    options.update(options => ({
-      ...options,
-      data,
-    }))
-  }
-
-  const table = createSvelteTable(options)
+  )
 </script>
 
-<div class="p-2">
-  <div class="h-2" />
+<div class="demo-root">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
+  </div>
+  <div class="spacer-sm"></div>
   <table>
     <thead>
-      {#each $table.getHeaderGroups() as headerGroup}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
-          {#each headerGroup.headers as header}
+          {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <div
-                  class:cursor-pointer={header.column.getCanSort()}
-                  class:select-none={header.column.getCanSort()}
-                  on:click={header.column.getToggleSortingHandler()}
-                >
-                  <svelte:component
-                    this={flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  />
-                  {#if header.column.getIsSorted().toString() === 'asc'}
-                    🔼
-                  {:else if header.column.getIsSorted().toString() === 'desc'}
-                    🔽
-                  {/if}
-                </div>
+                <FlexRender header={header} />
               {/if}
             </th>
           {/each}
@@ -149,30 +131,23 @@
       {/each}
     </thead>
     <tbody>
-      {#each $table.getRowModel().rows.slice(0, 10) as row}
+      {#each table.getRowModel().rows.slice(0, 10) as row (row.id)}
         <tr>
-          {#each row.getVisibleCells() as cell}
+          {#each row.getAllCells() as cell (cell.id)}
             <td>
-              <svelte:component
-                this={flexRender(cell.column.columnDef.cell, cell.getContext())}
-              />
+              <FlexRender cell={cell} />
             </td>
           {/each}
         </tr>
       {/each}
     </tbody>
     <tfoot>
-      {#each $table.getFooterGroups() as footerGroup}
+      {#each table.getFooterGroups() as footerGroup (footerGroup.id)}
         <tr>
-          {#each footerGroup.headers as header}
+          {#each footerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.footer,
-                    header.getContext()
-                  )}
-                />
+                <FlexRender footer={header} />
               {/if}
             </th>
           {/each}
@@ -180,12 +155,7 @@
       {/each}
     </tfoot>
   </table>
-  <div>{$table.getRowModel().rows.length} Rows</div>
-  <div>
-    <button on:click={() => rerender()}>Force Rerender</button>
-  </div>
-  <div>
-    <button on:click={() => refreshData()}>Refresh Data</button>
-  </div>
-  <pre>{JSON.stringify($table.getState().sorting, null, 2)}</pre>
+  <div>{table.getRowModel().rows.length.toLocaleString()
+  } Rows</div>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

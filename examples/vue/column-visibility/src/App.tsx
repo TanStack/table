@@ -1,0 +1,196 @@
+import { defineComponent, ref } from 'vue'
+import {
+  FlexRender,
+  columnVisibilityFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/vue-table'
+import { makeData } from './makeData'
+import type {
+  Cell,
+  Column,
+  ColumnDef,
+  Header,
+  HeaderGroup,
+  Row,
+} from '@tanstack/vue-table'
+import type { Person } from './makeData'
+
+const features = tableFeatures({ columnVisibilityFeature })
+
+const columns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    header: 'Name',
+    footer: (props) => props.column.id,
+    columns: [
+      {
+        accessorKey: 'firstName',
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorFn: (row) => row.lastName,
+        id: 'lastName',
+        cell: (info) => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: (props) => props.column.id,
+      },
+    ],
+  },
+  {
+    header: 'Info',
+    footer: (props) => props.column.id,
+    columns: [
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        footer: (props) => props.column.id,
+      },
+      {
+        header: 'More Info',
+        columns: [
+          {
+            accessorKey: 'visits',
+            header: () => <span>Visits</span>,
+            footer: (props) => props.column.id,
+          },
+          {
+            accessorKey: 'status',
+            header: 'Status',
+            footer: (props) => props.column.id,
+          },
+          {
+            accessorKey: 'progress',
+            header: 'Profile Progress',
+            footer: (props) => props.column.id,
+          },
+        ],
+      },
+    ],
+  },
+]
+
+export default defineComponent({
+  name: 'ColumnVisibilityExample',
+  setup() {
+    const data = ref(makeData(20))
+
+    const refreshData = () => {
+      data.value = makeData(20)
+    }
+
+    const stressTest = () => {
+      data.value = makeData(1_000)
+    }
+
+    const table = useTable({
+      features,
+      columns,
+      get data() {
+        return data.value
+      },
+      // initialState: { columnVisibility: { visits: false } }, // hide columns on first render
+      // atoms: { columnVisibility: columnVisibilityAtom }, // preferred: own visibility state with an external atom
+      // state: { columnVisibility }, // classic controlled state; pair with onColumnVisibilityChange
+      // onColumnVisibilityChange: setColumnVisibility,
+      // enableHiding: false, // prevent every column from being hidden; default true
+      debugTable: true,
+    })
+
+    return () => (
+      <div class="demo-root">
+        <div class="button-row">
+          <button class="demo-button" onClick={refreshData}>
+            Regenerate Data
+          </button>
+          <button class="demo-button" onClick={stressTest}>
+            Stress Test (1k rows)
+          </button>
+        </div>
+        <div class="spacer-md" />
+        <div class="column-toggle-panel">
+          <div class="column-toggle-panel-header">
+            <label>
+              <input
+                checked={table.getIsAllColumnsVisible()}
+                onChange={table.getToggleAllColumnsVisibilityHandler()}
+                type="checkbox"
+              />{' '}
+              Toggle All
+            </label>
+          </div>
+          {table
+            .getAllLeafColumns()
+            .map((column: Column<typeof features, Person>) => (
+              <div class="column-toggle-row" key={column.id}>
+                <label>
+                  <input
+                    checked={column.getIsVisible()}
+                    onChange={column.getToggleVisibilityHandler()}
+                    type="checkbox"
+                  />{' '}
+                  {column.id}
+                </label>
+              </div>
+            ))}
+        </div>
+        <div class="spacer-md" />
+        <table>
+          <thead>
+            {table
+              .getHeaderGroups()
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(
+                    (header: Header<typeof features, Person, unknown>) => (
+                      <th key={header.id} colspan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <FlexRender header={header} />
+                        )}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              ))}
+          </thead>
+          <tbody>
+            {table
+              .getRowModel()
+              .rows.map((row: Row<typeof features, Person>) => (
+                <tr key={row.id}>
+                  {row
+                    .getVisibleCells()
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
+                      <td key={cell.id}>
+                        <FlexRender cell={cell} />
+                      </td>
+                    ))}
+                </tr>
+              ))}
+          </tbody>
+          <tfoot>
+            {table
+              .getFooterGroups()
+              .map((footerGroup: HeaderGroup<typeof features, Person>) => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map(
+                    (header: Header<typeof features, Person, unknown>) => (
+                      <th key={header.id} colspan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <FlexRender footer={header} />
+                        )}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              ))}
+          </tfoot>
+        </table>
+        <div class="spacer-md" />
+        <pre data-testid="table-state">
+          {JSON.stringify(table.store.get(), null, 2)}
+        </pre>
+      </div>
+    )
+  },
+})

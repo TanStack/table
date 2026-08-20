@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Aggregation</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <h1>Aggregation without grouping</h1>
+      <p>
+        Amount uses a scalar <code>sum</code>. Score runs count, mean, and range
+        together and returns a keyed object.
+      </p>
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <label
+          >Category filter:
+          <input
+            :value="table.getColumn('category')?.getFilterValue() ?? ''"
+            @input="table.getColumn('category')?.setFilterValue($event.target.value)"
+        /></label>
+        <label
+          >Total rows:
+          <select x-model="rowSource">
+            <option value="filtered">Filtered rows</option>
+            <option value="all">All rows</option>
+            <option value="page">Visible page</option>
+            <option value="selected">Filtered selected rows</option>
+            <option value="custom">First three core rows</option>
+          </select></label
+        >
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="header.column.id === 'select'">
+                    <input
+                      type="checkbox"
+                      :checked="table.getIsAllPageRowsSelected()"
+                      @change="table.toggleAllPageRowsSelected()"
+                    />
+                  </template>
+                  <template
+                    x-if="header.column.id !== 'select' && !header.isPlaceholder"
+                  >
+                    <div x-html="FlexRender({ header })"></div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td :class="cell.column.id === 'amount' ? 'numeric' : ''">
+                  <template x-if="cell.column.id === 'select'"
+                    ><input
+                      type="checkbox"
+                      :checked="row.getIsSelected()"
+                      @change="row.toggleSelected()"
+                  /></template>
+                  <template x-if="cell.column.id !== 'select'"
+                    ><span x-html="FlexRender({ cell })"></span
+                  ></template>
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+        <tfoot>
+          <template
+            x-for="footerGroup in table.getFooterGroups()"
+            :key="footerGroup.id"
+          >
+            <tr>
+              <template x-for="header in footerGroup.headers" :key="header.id">
+                <th
+                  :colspan="header.colSpan"
+                  x-html="header.isPlaceholder ? '' : FlexRender({ footer: header })"
+                ></th>
+              </template>
+            </tr>
+          </template>
+        </tfoot>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.firstPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.nextPage()"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.lastPage()"
+          :disabled="!table.getCanLastPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.atoms.pagination.get().pageIndex + 1"
+            @input="goToPage($event.target.value)"
+            class="page-size-input"
+          />
+        </span>
+        <select
+          :value="table.atoms.pagination.get().pageSize"
+          @change="table.setPageSize(Number($event.target.value))"
+        >
+          <template x-for="pageSize in pageSizes" :key="pageSize">
+            <option
+              :value="pageSize"
+              x-text="'Show ' + pageSize"
+              :selected="pageSize === table.atoms.pagination.get().pageSize"
+            ></option>
+          </template>
+        </select>
+      </div>
+      <div>
+        Showing
+        <span x-text="table.getRowModel().rows.length.toLocaleString()"></span>
+        of
+        <span x-text="table.getRowCount().toLocaleString()"></span> Rows
+      </div>
+      <pre
+        data-testid="table-state"
+        x-text="JSON.stringify(table.store.get(), null, 2)"
+      ></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

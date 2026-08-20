@@ -1,0 +1,243 @@
+import {
+  columnFilteringFeature,
+  columnGroupingFeature,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  createTableHook,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_text,
+} from '@tanstack/solid-table'
+import { For, createSignal } from 'solid-js'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+
+const { createAppTable, createAppColumnHelper } = createTableHook({
+  features: {
+    columnFilteringFeature,
+    columnGroupingFeature,
+    rowExpandingFeature,
+    rowPaginationFeature,
+    rowSortingFeature,
+    expandedRowModel: createExpandedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    groupedRowModel: createGroupedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
+  },
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+    /**
+     * override the value used for row grouping
+     * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+     */
+    getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    header: () => <span>Last Name</span>,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+  }),
+  columnHelper.accessor('visits', {
+    header: () => <span>Visits</span>,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    cell: ({ getValue }) => Math.round(getValue<number>() * 100) / 100 + '%',
+  }),
+])
+
+function App() {
+  const [data, setData] = createSignal(makeData(10_000))
+  const refreshData = () => setData(makeData(10_000))
+  const stressTest = () => setData(makeData(1_000_000))
+
+  const table = createAppTable({
+    columns,
+    get data() {
+      return data()
+    },
+    // initialState: { grouping: ['status'] }, // group by a column on first render
+    // atoms: { grouping: groupingAtom }, // preferred: own grouping state with an external atom
+    // state: { grouping }, // classic controlled state; pair with onGroupingChange
+    // onGroupingChange: setGrouping,
+    // enableGrouping: false, // disable grouping for every column; default true
+    // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
+    // manualGrouping: true, // pass rows that are already grouped, for example from a server
+    debugTable: true,
+  })
+
+  return (
+    <div class="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+      </div>
+      <div class="spacer-sm" />
+      <table>
+        <thead>
+          <For each={table.getHeaderGroups()}>
+            {(headerGroup) => (
+              <tr>
+                <For each={headerGroup.headers}>
+                  {(header) => (
+                    <th colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <div>
+                          {header.column.getCanGroup() ? (
+                            <button
+                              onClick={header.column.getToggleGroupingHandler()}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              {header.column.getIsGrouped()
+                                ? `🛑(${header.column.getGroupedIndex()}) `
+                                : '👊 '}
+                            </button>
+                          ) : null}{' '}
+                          <table.FlexRender header={header} />
+                        </div>
+                      )}
+                    </th>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
+        </thead>
+        <tbody>
+          <For each={table.getRowModel().rows}>
+            {(row) => (
+              <tr>
+                <For each={row.getAllCells()}>
+                  {(cell) => (
+                    <td
+                      style={{
+                        background: cell.getIsGrouped()
+                          ? '#0aff0082'
+                          : cell.getIsPlaceholder()
+                            ? '#ff000042'
+                            : 'white',
+                      }}
+                    >
+                      {cell.getIsGrouped() ? (
+                        <>
+                          <button
+                            onClick={row.getToggleExpandedHandler()}
+                            style={{
+                              cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                            }}
+                          >
+                            {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                            <table.FlexRender cell={cell} /> (
+                            {row.subRows.length.toLocaleString()})
+                          </button>
+                        </>
+                      ) : cell.getIsPlaceholder() ? null : row.getIsGrouped() ? null : (
+                        <table.FlexRender cell={cell} />
+                      )}
+                    </td>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
+        </tbody>
+      </table>
+      <div class="spacer-sm" />
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+        >
+          {'>>'}
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            max={table.getPageCount()}
+            value={table.atoms.pagination.get().pageIndex + 1}
+            onInput={(e) => {
+              const page = e.currentTarget.value
+                ? Number(e.currentTarget.value) - 1
+                : 0
+              table.setPageIndex(page)
+            }}
+            class="page-size-input"
+          />
+        </span>
+        <select
+          value={table.atoms.pagination.get().pageSize}
+          onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
+        >
+          <For each={[10, 20, 30, 40, 50]}>
+            {(pageSize) => <option value={pageSize}>Show {pageSize}</option>}
+          </For>
+        </select>
+      </div>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
+    </div>
+  )
+}
+
+export default App

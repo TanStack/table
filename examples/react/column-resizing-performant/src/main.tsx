@@ -1,252 +1,241 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
 import {
-  useReactTable,
-  getCoreRowModel,
-  ColumnDef,
-  flexRender,
-  Table,
+  columnResizingFeature,
+  columnSizingFeature,
+  createColumnHelper,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
+import type { Table } from '@tanstack/react-table'
+import type { Person } from './makeData'
+import './index.css'
 
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
+/**
+ * This example implements column resizing with NO React re-renders!
+ * Instead, we subscribe to the table store OUTSIDE of React and write CSS variables
+ */
 
-const defaultColumns: ColumnDef<Person>[] = [
-  {
+const features = tableFeatures({ columnResizingFeature, columnSizingFeature })
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
-    footer: props => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName,
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
-      },
-    ],
-  },
-  {
+        footer: (props) => props.column.id,
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
-    footer: props => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'visits',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor('visits', {
         header: () => <span>Visits</span>,
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'status',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor('status', {
         header: 'Status',
-        footer: props => props.column.id,
-      },
-      {
-        accessorKey: 'progress',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor('progress', {
         header: 'Profile Progress',
-        footer: props => props.column.id,
-      },
-    ],
-  },
-]
+        footer: (props) => props.column.id,
+      }),
+    ]),
+  }),
+])
 
 function App() {
-  const [data, _setData] = React.useState(() => makeData(200))
-  const [columns] = React.useState<typeof defaultColumns>(() => [
-    ...defaultColumns,
-  ])
+  const [data, setData] = React.useState(() => makeData(200))
+  const refreshData = () => setData(makeData(200))
+  const stressTest = () => setData(makeData(5_000))
 
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  const table = useReactTable({
-    data,
-    columns,
-    defaultColumn: {
-      minSize: 60,
-      maxSize: 800,
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      defaultColumn: {
+        minSize: 60,
+        maxSize: 800,
+      },
+      columnResizeMode: 'onChange',
+      // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
+      // atoms: { columnResizing: columnResizingAtom }, // preferred: own transient resize state with an external atom
+      // state: { columnResizing }, // classic controlled state; pair with onColumnResizingChange
+      // onColumnResizingChange: setColumnResizing,
+      // columnResizeDirection: 'rtl', // calculate resize offsets right-to-left; default 'ltr'
+      // enableColumnResizing: false, // disable resizing for every column; default true
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
     },
-    columnResizeMode: 'onChange',
-    getCoreRowModel: getCoreRowModel(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  })
+    () => ({}), // subscribe to nothing instead of re-rendering on every internal state change
+  )
+
+  const tableRef = React.useRef<HTMLTableElement>(null)
 
   /**
-   * Instead of calling `column.getSize()` on every render for every header
-   * and especially every data cell (very expensive),
-   * we will calculate all column sizes at once at the root table level in a useMemo
-   * and pass the column sizes down as CSS variables to the <table> element.
+   * Instead of re-rendering React on every resize tick, we subscribe to the
+   * table store OUTSIDE of React and write the column size CSS variables
+   * directly onto the <table> element. Header and data cells reference the
+   * variables, so the browser updates widths with zero React work per tick.
+   * (The core resize handler already coalesces pointer events to one state
+   * update per animation frame.)
    */
-  const columnSizeVars = React.useMemo(() => {
-    const headers = table.getFlatHeaders()
-    const colSizes: { [key: string]: number } = {}
-    for (let i = 0; i < headers.length; i++) {
-      const header = headers[i]!
-      colSizes[`--header-${header.id}-size`] = header.getSize()
-      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
+  React.useLayoutEffect(() => {
+    const writeColumnSizeVars = () => {
+      const tableEl = tableRef.current
+      if (!tableEl) return
+      for (const header of table.getFlatHeaders()) {
+        tableEl.style.setProperty(
+          `--header-${header.id}-size`,
+          String(header.getSize()),
+        )
+        tableEl.style.setProperty(
+          `--col-${header.column.id}-size`,
+          String(header.column.getSize()),
+        )
+      }
+      tableEl.style.width = `${table.getTotalSize()}px`
     }
-    return colSizes
-  }, [table.getState().columnSizingInfo, table.getState().columnSizing])
-
-  //demo purposes
-  const [enableMemo, setEnableMemo] = React.useState(true)
+    writeColumnSizeVars() // initial paint
+    const { unsubscribe } =
+      table.atoms.columnSizing.subscribe(writeColumnSizeVars)
+    return () => unsubscribe()
+  }, [])
 
   return (
-    <div className="p-2">
-      <i>
-        This example has artificially slow cell renders to simulate complex
-        usage
-      </i>
-      <div className="h-4" />
-      <label>
-        Memoize Table Body:{' '}
-        <input
-          type="checkbox"
-          checked={enableMemo}
-          onChange={() => setEnableMemo(!enableMemo)}
-        />
-      </label>
-      <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
-        Rerender
-      </button>
-      <pre style={{ minHeight: '10rem' }}>
-        {JSON.stringify(
-          {
-            columnSizing: table.getState().columnSizing,
-          },
-          null,
-          2
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()} className="demo-button">
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} className="demo-button">
+          Stress Test (5k rows)
+        </button>
+      </div>
+      <div className="spacer-md" />
+      <div className="spacer-md" />
+      {/* Only this little island re-renders per resize tick */}
+      <table.Subscribe selector={(state) => state}>
+        {(state) => (
+          <pre style={{ height: '10rem', overflow: 'auto' }}>
+            {JSON.stringify(state, null, 2)}
+          </pre>
         )}
-      </pre>
-      <div className="h-4" />({data.length} rows)
-      <div className="overflow-x-auto">
-        {/* Here in the <table> equivalent element (surrounds all table head and data cells), we will define our CSS variables for column sizes */}
-        <div
-          {...{
-            className: 'divTable',
-            style: {
-              ...columnSizeVars, //Define column sizes on the <table> element
-              width: table.getTotalSize(),
-            },
-          }}
-        >
-          <div className="thead">
-            {table.getHeaderGroups().map(headerGroup => (
-              <div
-                {...{
-                  key: headerGroup.id,
-                  className: 'tr',
-                }}
+      </table.Subscribe>
+      <div className="spacer-md" />({data.length.toLocaleString()} rows)
+      <div className="scroll-container">
+        {/* This example is using semantic table tags, but also CSS Grid/Flexbox layout for more absolute column widths */}
+        <table ref={tableRef} style={{ display: 'grid' }}>
+          <thead style={{ display: 'grid' }}>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr
+                key={headerGroup.id}
+                style={{ display: 'flex', width: '100%', height: 30 }}
               >
-                {headerGroup.headers.map(header => (
-                  <div
-                    {...{
-                      key: header.id,
-                      className: 'th',
-                      style: {
-                        width: `calc(var(--header-${header?.id}-size) * 1px)`,
-                      },
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{
+                      display: 'flex',
+                      flexShrink: 0,
+                      width: `calc(var(--header-${header.id}-size) * 1px)`, // use CSS variable so not dependent on React re-rendering
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    <div
-                      {...{
-                        onDoubleClick: () => header.column.resetSize(),
-                        onMouseDown: header.getResizeHandler(),
-                        onTouchStart: header.getResizeHandler(),
-                        className: `resizer ${
-                          header.column.getIsResizing() ? 'isResizing' : ''
-                        }`,
-                      }}
-                    />
-                  </div>
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
+                    {/* Each resizer subscribes to just its own "am I being
+                        resized?" boolean, so a drag re-renders exactly one
+                        of these islands at drag start and end */}
+                    <table.Subscribe
+                      selector={(state) =>
+                        state.columnResizing.isResizingColumn ===
+                        header.column.id
+                      }
+                    >
+                      {(isResizing) => (
+                        <div
+                          onDoubleClick={() => header.column.resetSize()}
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          className={`resizer ${isResizing ? 'isResizing' : ''}`}
+                        />
+                      )}
+                    </table.Subscribe>
+                  </th>
                 ))}
-              </div>
+              </tr>
             ))}
-          </div>
-          {/* When resizing any column we will render this special memoized version of our table body */}
-          {table.getState().columnSizingInfo.isResizingColumn && enableMemo ? (
-            <MemoizedTableBody table={table} />
-          ) : (
-            <TableBody table={table} />
-          )}
-        </div>
+          </thead>
+          {/* No memoization needed: the root subscribes to no table state,
+              so the body only re-renders when `data` itself changes */}
+          <TableBody table={table} />
+        </table>
       </div>
     </div>
   )
 }
 
-//un-memoized normal table body component - see memoized version below
-function TableBody({ table }: { table: Table<Person> }) {
+interface TableBodyProps {
+  table: Table<typeof features, Person>
+}
+
+function TableBody({ table }: TableBodyProps) {
   return (
-    <div
-      {...{
-        className: 'tbody',
-      }}
-    >
-      {table.getRowModel().rows.map(row => (
-        <div
-          {...{
-            key: row.id,
-            className: 'tr',
+    <tbody style={{ display: 'grid' }}>
+      {table.getRowModel().rows.map((row) => (
+        <tr
+          key={row.id}
+          style={{
+            display: 'flex',
+            width: '100%',
+            height: 30,
+            // Offscreen rows skip style recalc and layout entirely, so a live
+            // column resize only lays out the rows actually on screen.
+            contentVisibility: 'auto',
+            containIntrinsicHeight: 'auto 30px',
           }}
         >
-          {row.getVisibleCells().map(cell => {
-            //simulate expensive render
-            for (let i = 0; i < 10000; i++) {
-              Math.random()
-            }
-
+          {row.getAllCells().map((cell) => {
             return (
-              <div
-                {...{
-                  key: cell.id,
-                  className: 'td',
-                  style: {
-                    width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                  },
+              <td
+                key={cell.id}
+                style={{
+                  display: 'flex',
+                  flexShrink: 0,
+                  width: `calc(var(--col-${cell.column.id}-size) * 1px)`, // use CSS variable so not dependent on React re-rendering
                 }}
               >
                 {cell.renderValue<any>()}
-              </div>
+              </td>
             )
           })}
-        </div>
+        </tr>
       ))}
-    </div>
+    </tbody>
   )
 }
-
-//special memoized wrapper for our table body that we will use during column resizing
-export const MemoizedTableBody = React.memo(
-  TableBody,
-  (prev, next) => prev.table.options.data === next.table.options.data
-) as typeof TableBody
 
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
@@ -254,5 +243,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

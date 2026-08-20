@@ -1,0 +1,13 @@
+{
+  "extends": "@ember/app-tsconfig",
+  "compilerOptions": {
+    "lib": ["ES2025", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "types": [
+      "ember-source/types",
+      "@embroider/core/virtual",
+      "vite/client",
+      "@glint/ember-tsc/types"
+    ]
+  }
+}

@@ -1,0 +1,199 @@
+@import 'tailwindcss' source('../');
+
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #18181b;
+  --muted: #71717a;
+  --border: #e4e4e7;
+  --surface: #ffffff;
+  --surface-subtle: #f4f4f5;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.table-shell {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+}
+
+.table-scroll {
+  overflow: auto;
+}
+
+.react-aria-Table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  table-layout: fixed;
+}
+
+.react-aria-Column,
+.react-aria-Cell {
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.react-aria-Column {
+  background: var(--surface-subtle);
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.react-aria-Row[data-hovered] {
+  background: #f8fafc;
+}
+
+.react-aria-Row[data-selected] {
+  background: #eff6ff;
+}
+
+.sort-icon {
+  color: var(--muted);
+  font-size: 0.75rem;
+  transition: transform 120ms ease;
+}
+
+.sort-icon.is-desc {
+  transform: rotate(180deg);
+}
+
+.react-aria-Button {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--surface);
+  padding: 0.375rem 0.75rem;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  outline: none;
+}
+
+.react-aria-Button[data-hovered] {
+  background: var(--surface-subtle);
+}
+
+.react-aria-Button[data-pressed],
+.react-aria-Button.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.react-aria-Button[data-disabled] {
+  opacity: 0.45;
+}
+
+.react-aria-Button[data-focused] {
+  box-shadow: 0 0 0 2px rgb(37 99 235 / 0.3);
+}
+
+.react-aria-field .react-aria-Input,
+.react-aria-Select .react-aria-Button {
+  width: 100%;
+}
+
+.react-aria-Input {
+  width: 100%;
+  min-height: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--surface);
+  padding: 0.375rem 0.75rem;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.react-aria-Input[data-focused] {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgb(37 99 235 / 0.2);
+}
+
+.react-aria-Popover {
+  min-width: var(--trigger-width);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgb(15 23 42 / 0.14);
+}
+
+.react-aria-ListBox {
+  display: grid;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  outline: none;
+}
+
+.react-aria-ListBoxItem {
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.625rem;
+  outline: none;
+}
+
+.react-aria-ListBoxItem[data-hovered],
+.react-aria-ListBoxItem[data-focused] {
+  background: var(--surface-subtle);
+}
+
+.react-aria-ListBoxItem[data-selected] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.table-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border);
+  padding: 0.75rem;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.page-ellipsis {
+  color: var(--muted);
+  padding-inline: 0.25rem;
+}
+
+@media (min-width: 1024px) {
+  .table-footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

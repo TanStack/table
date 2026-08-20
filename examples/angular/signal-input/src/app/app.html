@@ -1,0 +1,14 @@
+<div class="demo-root">
+  <button (click)="refreshData()" class="demo-button demo-button-spaced">Regenerate Data</button>
+  <button (click)="stressTest()" class="demo-button demo-button-spaced">
+    Stress Test (1M rows)
+  </button>
+  <div class="spacer-sm"></div>
+  <app-person-table [data]="data()" [(pagination)]="pagination" />
+
+  <div>
+    <button class="demo-button demo-button-spaced" (click)="previousPage()">Previous page</button>
+
+    <button class="demo-button demo-button-spaced" (click)="nextPage()">Next page</button>
+  </div>
+</div>

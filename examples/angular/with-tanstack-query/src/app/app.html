@@ -1,0 +1,241 @@
+<main class="demo-root">
+  <section class="query-example" data-testid="use-query-example">
+    <h1>injectQuery</h1>
+    <p>Page-index pagination with a known total row count.</p>
+    <div>
+      <input
+        aria-label="Search injectQuery data"
+        [value]="offsetGlobalFilter()"
+        (input)="offsetTable.setGlobalFilter($any($event.currentTarget).value)"
+        class="summary-panel"
+        placeholder="Search all columns..."
+      />
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          @for (headerGroup of offsetTable.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th [attr.colSpan]="header.colSpan">
+                  @if (!header.isPlaceholder) {
+                    <div
+                      [class.sortable-header]="header.column.getCanSort()"
+                      (click)="header.column.getToggleSortingHandler()?.($event)"
+                    >
+                      <ng-container *flexRenderHeader="header; let headerCell">{{
+                        headerCell
+                      }}</ng-container>
+                      @if (header.column.getIsSorted() === 'asc') {
+                        🔼
+                      }
+                      @if (header.column.getIsSorted() === 'desc') {
+                        🔽
+                      }
+                    </div>
+                  }
+                </th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (row of offsetTable.getRowModel().rows; track row.id) {
+            <tr>
+              @for (cell of row.getAllCells(); track cell.id) {
+                <td>
+                  <ng-container *flexRenderCell="cell; let renderCell">{{
+                    renderCell
+                  }}</ng-container>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          (click)="offsetTable.firstPage()"
+          [disabled]="!offsetTable.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          (click)="offsetTable.previousPage()"
+          [disabled]="!offsetTable.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          (click)="offsetTable.nextPage()"
+          [disabled]="!offsetTable.getCanNextPage()"
+        >
+          &gt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          (click)="offsetTable.lastPage()"
+          [disabled]="!offsetTable.getCanLastPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls"
+          ><span>Page</span
+          ><strong data-testid="offset-page-number"
+            >{{ (offsetPagination().pageIndex + 1).toLocaleString() }} of
+            {{ offsetTable.getPageCount().toLocaleString() }}</strong
+          ></span
+        >
+        <span class="inline-controls"
+          >| Go to page:<input
+            aria-label="Go to injectQuery page"
+            type="number"
+            min="1"
+            [max]="offsetTable.getPageCount()"
+            [value]="offsetPagination().pageIndex + 1"
+            (input)="onOffsetPageInputChange($event)"
+            class="page-size-input"
+        /></span>
+        <select
+          aria-label="Rows per page"
+          [value]="offsetPagination().pageSize"
+          (change)="onOffsetPageSizeChange($event)"
+        >
+          @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+            <option [value]="pageSize">Show {{ pageSize }}</option>
+          }
+          <option [value]="allRows">Show All</option>
+        </select>
+        @if (offsetDataQuery.isFetching()) {
+          Loading...
+        }
+      </div>
+      <div data-testid="offset-status">
+        Showing {{ offsetTable.getRowModel().rows.length.toLocaleString() }} of
+        {{ (offsetDataQuery.data()?.rowCount ?? 0).toLocaleString() }} rows
+      </div>
+      <pre data-testid="use-query-table-state">{{ offsetTable.store.get() | json }}</pre>
+    </div>
+  </section>
+  <section class="query-example" data-testid="use-infinite-query-example">
+    <h1>injectInfiniteQuery</h1>
+    <p>
+      Cursor pagination with an unknown total. Each next cursor is the last row ID from the current
+      page.
+    </p>
+    <div>
+      <input
+        aria-label="Search injectInfiniteQuery data"
+        [value]="cursorGlobalFilter()"
+        (input)="cursorTable.setGlobalFilter($any($event.currentTarget).value)"
+        class="summary-panel"
+        placeholder="Search all columns..."
+      />
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          @for (headerGroup of cursorTable.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th [attr.colSpan]="header.colSpan">
+                  @if (!header.isPlaceholder) {
+                    <div
+                      [class.sortable-header]="header.column.getCanSort()"
+                      (click)="header.column.getToggleSortingHandler()?.($event)"
+                    >
+                      <ng-container *flexRenderHeader="header; let headerCell">{{
+                        headerCell
+                      }}</ng-container>
+                      @if (header.column.getIsSorted() === 'asc') {
+                        🔼
+                      }
+                      @if (header.column.getIsSorted() === 'desc') {
+                        🔽
+                      }
+                    </div>
+                  }
+                </th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (row of cursorTable.getRowModel().rows; track row.id) {
+            <tr>
+              @for (cell of row.getAllCells(); track cell.id) {
+                <td>
+                  <ng-container *flexRenderCell="cell; let renderCell">{{
+                    renderCell
+                  }}</ng-container>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          (click)="cursorTable.firstPage()"
+          [disabled]="!cursorTable.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          (click)="cursorTable.previousPage()"
+          [disabled]="!cursorTable.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          (click)="goToNextCursorPage()"
+          [disabled]="!canNextCursorPage() || cursorDataQuery.isFetchingNextPage()"
+        >
+          &gt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          (click)="cursorTable.lastPage()"
+          [disabled]="!cursorTable.getCanLastPage()"
+          title="The last page is unavailable when the page count is unknown"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls"
+          ><span>Page</span
+          ><strong data-testid="cursor-page-number">{{
+            (cursorPagination().pageIndex + 1).toLocaleString()
+          }}</strong></span
+        >
+        <select
+          aria-label="Rows per page"
+          [value]="cursorPagination().pageSize"
+          (change)="onCursorPageSizeChange($event)"
+        >
+          @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+            <option [value]="pageSize">Show {{ pageSize }}</option>
+          }
+          <option [value]="allRows">Show All</option>
+        </select>
+        @if (cursorDataQuery.isFetching()) {
+          Loading...
+        }
+      </div>
+      <div data-testid="cursor-status">
+        Showing {{ cursorTable.getRowModel().rows.length.toLocaleString() }} rows.
+        {{
+          currentCursorPage()?.nextCursor === undefined
+            ? 'No next cursor'
+            : 'Next cursor: ' + currentCursorPage()?.nextCursor
+        }}
+      </div>
+      <pre data-testid="use-infinite-query-table-state">{{ cursorTable.store.get() | json }}</pre>
+    </div>
+  </section>
+</main>

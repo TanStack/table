@@ -1,29 +1,57 @@
 <script setup lang="ts">
 import './index.css'
-import { computed, ref, h } from 'vue'
+import { computed, h, ref } from 'vue'
 import {
-  type ColumnDef,
   FlexRender,
-  useVueTable,
-  getCoreRowModel,
-  getSortedRowModel,
+  columnSizingFeature,
+  createSortedRowModel,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
 import { useVirtualizer } from '@tanstack/vue-virtual'
+import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
+import { makeData } from './makeData'
+import type { ColumnDef, Row } from '@tanstack/vue-table'
+import type { ComponentPublicInstance } from 'vue'
+import type { Person } from './makeData'
 
-import { makeData, type Person } from './makeData'
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
+})
 
 const search = ref('')
 
-const data = ref<Person[]>(makeData(50_000))
+const data = ref<Array<Person>>(makeData(50_000))
 
-const filteredData = computed<Person[]>(() => {
+function refreshData() {
+  data.value = makeData(50_000)
+}
+
+function stressTest() {
+  data.value = makeData(1_000_000)
+}
+
+const filteredData = computed<Array<Person>>(() => {
   const searchValue = search.value.toLowerCase()
 
   // If no search value is present, return all data
   if (!searchValue) return data.value
 
-  return data.value.filter(row => {
-    return Object.values(row).some(value => {
+  return data.value.filter((row) => {
+    return Object.values(row).some((value) => {
       if (value instanceof Date) {
         return value.toLocaleString().toLowerCase().includes(searchValue)
       }
@@ -33,7 +61,7 @@ const filteredData = computed<Person[]>(() => {
   })
 })
 
-let searchTimeout: NodeJS.Timeout
+let searchTimeout: ReturnType<typeof setTimeout>
 function handleDebounceSearch(ev: Event) {
   if (searchTimeout) {
     clearTimeout(searchTimeout)
@@ -44,19 +72,25 @@ function handleDebounceSearch(ev: Event) {
   }, 300)
 }
 
-const columns = computed<ColumnDef<Person>[]>(() => [
+const columns = computed<Array<ColumnDef<typeof features, Person>>>(() => [
+  {
+    id: 'select',
+    header: '',
+    cell: '',
+    size: 40,
+  },
   {
     accessorKey: 'id',
     header: 'ID',
   },
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => h('span', 'Last Name'),
   },
   {
@@ -78,29 +112,35 @@ const columns = computed<ColumnDef<Person>[]>(() => [
   {
     accessorKey: 'createdAt',
     header: 'Created At',
-    cell: info => info.getValue<Date>().toLocaleString(),
+    cell: (info) => info.getValue<Date>().toLocaleString(),
   },
 ])
 
-const table = useVueTable({
+const table = useTable({
+  features,
   get data() {
     return filteredData.value
   },
   columns: columns.value,
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
+  getRowId: (row: Person) => String(row.id),
   debugTable: false,
 })
 
+function toggleSelected(row: Row<typeof features, Person>, event: Event) {
+  row.getToggleSelectedHandler({
+    // selectChildren: false
+  })(event)
+}
+
 const rows = computed(() => table.getRowModel().rows)
 
-//The virtualizer needs to know the scrollable container element
+// The virtualizer needs to know the scrollable container element
 const tableContainerRef = ref<HTMLDivElement | null>(null)
 
 const rowVirtualizerOptions = computed(() => {
   return {
     count: rows.value.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.value,
     overscan: 5,
   }
@@ -111,31 +151,37 @@ const rowVirtualizer = useVirtualizer(rowVirtualizerOptions)
 const virtualRows = computed(() => rowVirtualizer.value.getVirtualItems())
 const totalSize = computed(() => rowVirtualizer.value.getTotalSize())
 
-function measureElement(el?: Element) {
-  if (!el) {
+function measureElement(el: Element | ComponentPublicInstance | null) {
+  if (!el || !(el instanceof Element)) {
     return
   }
 
   rowVirtualizer.value.measureElement(el)
-
-  return undefined
 }
 </script>
 
 <template>
   <div>
-    <p class="text-center">
-      For tables, the basis for the offset of the translate css function is from
+    <p class="centered-text">
+      For tables, the basis for the offset of the translate CSS function is from
       the row's initial position itself. Because of this, we need to calculate
-      the translateY pixel count different and base it off the the index.
+      the translateY pixel count differently and base it off the index.
     </p>
-    <h1 class="text-3xl font-bold text-center">Virtualized Rows</h1>
+    <h1 class="virtualized-title">Virtualized Rows</h1>
+    <p>Hold Shift while selecting rows to select or deselect a range.</p>
+    <p>{{ table.getSelectedRowIds().length.toLocaleString() }} rows selected</p>
+    <div class="centered-button-row" style="margin-bottom: 8px">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
+        Stress Test (1M rows)
+      </button>
+    </div>
     <div style="margin: 0 auto; width: min-content">
       <input
         :modelValue="search"
         @input="handleDebounceSearch"
         placeholder="Search"
-        class="p-2"
+        class="demo-root"
       />
       {{ rows.length.toLocaleString() }} results
     </div>
@@ -150,7 +196,7 @@ function measureElement(el?: Element) {
     }"
   >
     <div :style="{ height: `${totalSize}px` }">
-      <!-- Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights -->
+      <!-- Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights -->
       <table :style="{ display: 'grid' }">
         <thead
           :style="{
@@ -171,17 +217,20 @@ function measureElement(el?: Element) {
               :colspan="header.colSpan"
               :style="{ width: `${header.getSize()}px` }"
             >
+              <IndeterminateCheckbox
+                v-if="header.column.id === 'select'"
+                :checked="table.getIsAllRowsSelected()"
+                :indeterminate="table.getIsSomeRowsSelected()"
+                :onChange="table.getToggleAllRowsSelectedHandler()"
+              />
               <div
-                v-if="!header.isPlaceholder"
+                v-else-if="!header.isPlaceholder"
                 :class="{
-                  'cursor-pointer select-none': header.column.getCanSort(),
+                  'sortable-header': header.column.getCanSort(),
                 }"
-                @click="e => header.column.getToggleSortingHandler()?.(e)"
+                @click="(e) => header.column.getToggleSortingHandler()?.(e)"
               >
-                <FlexRender
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+                <FlexRender :header="header" />
                 <span v-if="header.column.getIsSorted() === 'asc'"> 🔼</span>
                 <span v-if="header.column.getIsSorted() === 'desc'"> 🔽</span>
               </div>
@@ -210,17 +259,21 @@ function measureElement(el?: Element) {
             }"
           >
             <td
-              v-for="cell in rows[vRow.index].getVisibleCells()"
+              v-for="cell in rows[vRow.index].getAllCells()"
               :key="cell.id"
               :style="{
                 display: 'flex',
                 width: `${cell.column.getSize()}px`,
               }"
             >
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
+              <IndeterminateCheckbox
+                v-if="cell.column.id === 'select'"
+                :checked="rows[vRow.index].getIsSelected()"
+                :disabled="!rows[vRow.index].getCanSelect()"
+                :indeterminate="rows[vRow.index].getIsSomeSelected()"
+                :onClick="(event) => toggleSelected(rows[vRow.index], event)"
               />
+              <FlexRender v-else :cell="cell" />
             </td>
           </tr>
         </tbody>

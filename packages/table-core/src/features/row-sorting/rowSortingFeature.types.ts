@@ -1,0 +1,301 @@
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
+import type { BuiltInSortFn } from './sortFns'
+import type {
+  OnChangeFn,
+  RowData,
+  TransformDataValueFn,
+  Updater,
+} from '../../types/type-utils'
+import type { IsAny, TableFeatures } from '../../types/TableFeatures'
+import type { Row } from '../../types/Row'
+
+export type SortDirection = 'asc' | 'desc'
+
+export interface ColumnSort {
+  desc: boolean
+  id: string
+}
+
+export type SortingState = Array<ColumnSort>
+
+export interface TableState_RowSorting {
+  sorting: SortingState
+}
+
+export interface RowModelFns_RowSorting<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  sortFns: Record<string, SortFn<TFeatures, TData>>
+}
+
+export interface SortFns {}
+
+export interface SortFn<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  (
+    rowA: Row<TFeatures, TData>,
+    rowB: Row<TFeatures, TData>,
+    columnId: string,
+  ): number
+  /**
+   * Normalizes each row's value before the two sides are compared. Only
+   * honored by sorting functions built with `constructSortFn` (including all
+   * built-in sorting functions).
+   */
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The definition object accepted by `constructSortFn`.
+ *
+ * `sort` is a value-level comparator: it receives both rows' (resolved) data
+ * values instead of the whole rows, so normalization concerns stay in
+ * `resolveDataValue`.
+ */
+export interface SortFnDef<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  sort: (
+    dataValueA: any,
+    dataValueB: any,
+    rowA: Row<TFeatures, TData>,
+    rowB: Row<TFeatures, TData>,
+    columnId: string,
+  ) => number
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The shape returned by `constructSortFn`: a `SortFn` with its definition
+ * attached, so variants can be built by spreading it into another
+ * `constructSortFn` call.
+ *
+ * The call signature is generic so a created sorting function can be used
+ * with any table's rows, regardless of the feature set it was defined
+ * against.
+ */
+export interface CreatedSortFn<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> extends SortFnDef<TFeatures, TData> {
+  <TRowFeatures extends TableFeatures, TRowData extends RowData>(
+    rowA: Row<TRowFeatures, TRowData>,
+    rowB: Row<TRowFeatures, TRowData>,
+    columnId: string,
+  ): number
+}
+
+export type CustomSortFns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Record<string, SortFn<TFeatures, TData>>
+
+/**
+ * Resolves the valid string names for `columnDef.sortFn` for a feature set.
+ *
+ * When the features object declares a `sortFns` registry
+ * (`tableFeatures({ ..., sortFns })`), its keys are the only valid names; a
+ * name is only assignable if a sorting function is actually registered for it.
+ * Otherwise this falls back to the global declaration-merged `SortFns`
+ * interface.
+ */
+export type ExtractSortFnKeys<TFeatures extends TableFeatures> =
+  IsAny<TFeatures> extends true
+    ? keyof SortFns | BuiltInSortFn
+    : TFeatures extends { sortFns: infer TSortFns extends object }
+      ? Extract<keyof TSortFns, string>
+      : keyof SortFns
+
+export type SortFnOption<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = 'auto' | ExtractSortFnKeys<TFeatures> | SortFn<TFeatures, TData>
+
+export interface ColumnDef_RowSorting<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  /**
+   * Enables/Disables multi-sorting for this column.
+   */
+  enableMultiSort?: boolean
+  /**
+   * Enables/Disables sorting for this column.
+   */
+  enableSorting?: boolean
+  /**
+   * Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, e.g. a ranking (1st, 2nd, 3rd) or golf-like scoring
+   */
+  invertSorting?: boolean
+  /**
+   * Set to `true` for sorting toggles on this column to start in the descending direction.
+   */
+  sortDescFirst?: boolean
+  /**
+   * The sorting function to use with this column.
+   * - A `string` referencing a built-in sorting function
+   * - A custom sorting function
+   */
+  sortFn?: SortFnOption<TFeatures, TData>
+  /**
+   * The priority of undefined values when sorting this column.
+   * - `false`
+   *   - Undefined values will be passed to the sorting function like any other value with no special handling; the sorting function is responsible for handling them
+   * - `-1`
+   *   - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
+   * - `1`
+   *   - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
+   * - `'first'`
+   *   - Undefined values will be pushed to the beginning of the list regardless of sort direction
+   * - `'last'`
+   *   - Undefined values will be pushed to the end of the list regardless of sort direction
+   */
+  sortUndefined?: false | -1 | 1 | 'first' | 'last'
+}
+
+export interface Column_RowSorting<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  /**
+   * Removes this column from the table's sorting state
+   */
+  clearSorting: () => void
+  /**
+   * Returns a sort direction automatically inferred based on the columns values.
+   */
+  getAutoSortDir: () => SortDirection
+  /**
+   * Returns a sorting function automatically inferred based on the columns values.
+   */
+  getAutoSortFn: () => SortFn<TFeatures, TData>
+  /**
+   * Returns whether this column can be multi-sorted.
+   */
+  getCanMultiSort: () => boolean
+  /**
+   * Returns whether this column can be sorted.
+   */
+  getCanSort: () => boolean
+  /**
+   * Returns the first direction that should be used when sorting this column.
+   */
+  getFirstSortDir: () => SortDirection
+  /**
+   * Reads this column's current sort direction, or `false` when unsorted.
+   */
+  getIsSorted: () => false | SortDirection
+  /**
+   * Returns the next sorting order. Pass `multi` to resolve the order for a
+   * multi-sort toggle, where `enableMultiRemove` governs whether the cycle can
+   * remove the sort.
+   */
+  getNextSortingOrder: (multi?: boolean) => SortDirection | false
+  /**
+   * Finds this column's position in the ordered sorting state.
+   */
+  getSortIndex: () => number
+  /**
+   * Returns the resolved sorting function to be used for this column
+   */
+  getSortFn: () => SortFn<TFeatures, TData>
+  /**
+   * Creates a header/control handler that toggles this column's sorting state.
+   */
+  getToggleSortingHandler: () => undefined | ((event: unknown) => void)
+  /**
+   * Toggles this column's sorting state. If `desc` is provided, it will force the sort direction to that value. If `isMulti` is provided, it will additively multi-sort the column (or toggle it if it is already sorted).
+   */
+  toggleSorting: (desc?: boolean, isMulti?: boolean) => void
+}
+
+export interface TableOptions_RowSorting {
+  /**
+   * Resets sorting to its initial state when the `data` option changes.
+   *
+   * This is disabled by default. `autoResetAll` overrides this option when it
+   * is explicitly set.
+   */
+  autoResetSorting?: boolean
+  /**
+   * Allows multi-sort toggles to remove a column from sorting state.
+   */
+  enableMultiRemove?: boolean
+  /**
+   * Enables/Disables multi-sorting for the table.
+   */
+  enableMultiSort?: boolean
+  /**
+   * Enables/Disables sorting for the table.
+   */
+  enableSorting?: boolean
+  /**
+   * Enables/Disables the ability to remove sorting for the table.
+   * - If `true` then changing sort order will cycle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
+   * - If `false` then changing sort order will cycle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
+   */
+  enableSortingRemoval?: boolean
+  /**
+   * Pass a custom function that will be used to determine if a multi-sort event should be triggered. It is passed the event from the sort toggle handler and should return `true` if the event should trigger a multi-sort.
+   */
+  isMultiSortEvent?: (e: unknown) => boolean
+  /**
+   * Enables manual sorting for the table. If this is `true`, you will be expected to sort your data before it is passed to the table. This is useful if you are doing server-side sorting.
+   */
+  manualSorting?: boolean
+  /**
+   * Set a maximum number of columns that can be multi-sorted.
+   */
+  maxMultiSortColCount?: number
+  /**
+   * Called with an updater when sorting state changes. Pair this with
+   * `state.sorting` when using external state; external atoms can own the slice
+   * without this callback.
+   */
+  onSortingChange?: OnChangeFn<SortingState>
+  /**
+   * If `true`, all sorts will default to descending as their first toggle state.
+   */
+  sortDescFirst?: boolean
+}
+
+export interface Table_RowSorting<
+  in out _TFeatures extends TableFeatures,
+  in out _TData extends RowData,
+> {
+  /**
+   * Resets `sorting` to `initialState.sorting`.
+   *
+   * Pass `true` to ignore initial state and reset to `[]`.
+   */
+  resetSorting: (defaultState?: boolean) => void
+  /**
+   * Updates sorting state with a next ordered array or updater function.
+   */
+  setSorting: (updater: Updater<SortingState>) => void
+}
+
+export interface Table_RowModels_Sorted<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  /**
+   * Reads the row model immediately before sorting.
+   */
+  getPreSortedRowModel: () => RowModel<TFeatures, TData>
+  /**
+   * Resolves the row model after sorting has been applied.
+   */
+  getSortedRowModel: () => RowModel<TFeatures, TData>
+}
+
+export interface CachedRowModel_Sorted<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  sortedRowModel: () => RowModel<TFeatures, TData>
+}

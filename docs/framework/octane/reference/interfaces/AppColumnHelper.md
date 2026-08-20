@@ -1,0 +1,142 @@
+---
+id: AppColumnHelper
+title: AppColumnHelper
+---
+
+# Interface: AppColumnHelper\<TFeatures, TData, TCellComponents, THeaderComponents\>
+
+Defined in: [types.ts:455](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L455)
+
+Enhanced column helper with pre-bound components in cell/header/footer
+contexts. This enables TypeScript to know about the registered components
+when defining columns.
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* `TableFeatures`
+
+### TData
+
+`TData` *extends* `RowData`
+
+### TCellComponents
+
+`TCellComponents` *extends* `Record`\<`string`, [`TableComponentType`](../type-aliases/TableComponentType.md)\>
+
+### THeaderComponents
+
+`THeaderComponents` *extends* `Record`\<`string`, [`TableComponentType`](../type-aliases/TableComponentType.md)\>
+
+## Properties
+
+### accessor()
+
+```ts
+accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
+```
+
+Defined in: [types.ts:465](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L465)
+
+Creates a data column definition with an accessor key or function.
+The cell, header, and footer contexts include pre-bound components.
+
+#### Type Parameters
+
+##### TAccessor
+
+`TAccessor` *extends* `string` \| `AccessorFn`\<`TData`\>
+
+##### TValue
+
+`TValue` *extends* `unknown`
+
+#### Parameters
+
+##### accessor
+
+`TAccessor`
+
+##### column
+
+`TAccessor` *extends* `AccessorFn`\<`TData`\> ? `Omit`\<`IdentifiedColumnDef`\<`TFeatures`, `TData`, `TValue`\>, `"footer"` \| `"header"` \| `"cell"`\> & `object` & `object` : [`AppColumnDefBase`](../type-aliases/AppColumnDefBase.md)\<`TFeatures`, `TData`, `TValue`, `TCellComponents`, `THeaderComponents`\>
+
+#### Returns
+
+`TAccessor` *extends* `AccessorFn`\<`TData`\> ? `AccessorFnColumnDef`\<`TFeatures`, `TData`, `TValue`\> : `AccessorKeyColumnDef`\<`TFeatures`, `TData`, `TValue`\>
+
+***
+
+### columns()
+
+```ts
+columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns[]];
+```
+
+Defined in: [types.ts:499](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L499)
+
+Wraps an array of column definitions to preserve each column's individual
+TValue type.
+
+#### Type Parameters
+
+##### TColumns
+
+`TColumns` *extends* readonly `ColumnDef`\<`TFeatures`, `TData`, `any`\>[]
+
+#### Parameters
+
+##### columns
+
+\[`...TColumns[]`\]
+
+#### Returns
+
+`ColumnDef`\<`TFeatures`, `TData`, `any`\>[] & \[`...TColumns[]`\]
+
+***
+
+### display()
+
+```ts
+display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
+```
+
+Defined in: [types.ts:507](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L507)
+
+Creates a display column definition for non-data columns.
+The cell, header, and footer contexts include pre-bound components.
+
+#### Parameters
+
+##### column
+
+[`AppDisplayColumnDef`](../type-aliases/AppDisplayColumnDef.md)\<`TFeatures`, `TData`, `TCellComponents`, `THeaderComponents`\>
+
+#### Returns
+
+`DisplayColumnDef`\<`TFeatures`, `TData`, `unknown`\>
+
+***
+
+### group()
+
+```ts
+group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
+```
+
+Defined in: [types.ts:520](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L520)
+
+Creates a group column definition with nested child columns.
+The cell, header, and footer contexts include pre-bound components.
+
+#### Parameters
+
+##### column
+
+[`AppGroupColumnDef`](../type-aliases/AppGroupColumnDef.md)\<`TFeatures`, `TData`, `TCellComponents`, `THeaderComponents`\>
+
+#### Returns
+
+`GroupColumnDef`\<`TFeatures`, `TData`, `unknown`\>

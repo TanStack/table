@@ -1,4 +1,4 @@
-name: ci
+name: Release
 
 on:
   push:
@@ -12,31 +12,35 @@ env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 permissions:
-  contents: write
-  id-token: write
-  pull-requests: write
+  contents: read
 
 jobs:
   release:
     name: Release
     if: github.repository_owner == 'TanStack'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Start Nx Agents
         run: npx nx-cloud start-ci-run --distribute-on=".nx/workflows/dynamic-changesets.yaml"
       - name: Setup Tools
-        uses: tanstack/config/.github/setup@main
+        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
       - name: Run Tests
-        run: pnpm run test:ci --parallel=3
+        run: pnpm run test:ci --parallel=4
       - name: Stop Nx Agents
         if: ${{ always() }}
         run: npx nx-cloud stop-all-agents
       - name: Run Changesets (version or publish)
-        uses: changesets/action@v1.5.3
+        id: changesets
+        uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1.8.0
         with:
           version: pnpm run changeset:version
           publish: pnpm run changeset:publish
@@ -44,4 +48,29 @@ jobs:
           title: 'ci: Version Packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Comment on PRs about release
+        if: steps.changesets.outputs.published == 'true'
+        uses: TanStack/config/.github/comment-on-release@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+        with:
+          published-packages: ${{ steps.changesets.outputs.publishedPackages }}
+
+  audit:
+    name: Audit
+    needs: release
+    if: github.repository_owner == 'TanStack' && contains(fromJSON('["main","alpha","beta"]'), github.ref_name)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Tools
+        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+      - name: Build Packages
+        run: pnpm run build:all
+      - name: Install Playwright Browsers
+        run: pnpm run test:e2e:install
+      - name: Run E2E Tests
+        run: pnpm run test:e2e

@@ -1,10 +1,14 @@
+**/.nx/
 **/.nx/cache
 **/.svelte-kit
 **/build
 **/coverage
 **/dist
-**/docs
+**/reference
 **/old-examples
+**/examples/**/*.svelte
+**/test-results
 pnpm-lock.yaml
+docs/config.json
 
 .angular

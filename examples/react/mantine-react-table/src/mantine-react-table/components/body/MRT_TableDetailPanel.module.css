@@ -1,0 +1,35 @@
+.root {
+  display: table-row;
+  width: 100%;
+  background-color: var(--mrt-base-background-color);
+}
+
+.root-grid {
+  display: flex;
+}
+
+.root-virtual-row {
+  position: absolute;
+  top: var(--mrt-parent-row-height);
+  transform: translateY(var(--mrt-virtual-row-start));
+  transition: none;
+  z-index: 1;
+}
+
+.inner {
+  display: table-cell;
+  transition: all 150ms ease-in-out;
+  width: var(--mrt-inner-width);
+}
+
+.inner-grid {
+  display: flex;
+}
+
+.inner-expanded {
+  border-bottom: 1px solid var(--_table-border-color);
+}
+
+.inner-virtual {
+  transition: none;
+}

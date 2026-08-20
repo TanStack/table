@@ -1,49 +1,53 @@
 <script lang="ts">
-  import { writable } from 'svelte/store'
-  import {
-    getCoreRowModel,
-    createSvelteTable,
-    getSortedRowModel,
-    flexRender,
-  } from '@tanstack/svelte-table'
+  import { faker } from '@faker-js/faker'
   import type {
     ColumnDef,
     ColumnOrderState,
-    OnChangeFn,
-    TableOptions,
-    VisibilityState,
+    ColumnVisibilityState,
   } from '@tanstack/svelte-table'
-  import { makeData, type Person } from './makeData'
-  import { faker } from '@faker-js/faker'
+  import {
+    columnOrderingFeature,
+    columnVisibilityFeature,
+    FlexRender,
+    createTable,
+    createTableState,
+    tableFeatures,
+  } from '@tanstack/svelte-table'
   import './index.css'
+  import { makeData, type Person } from './makeData'
 
-  const columns: ColumnDef<Person>[] = [
+  const features = tableFeatures({
+    columnOrderingFeature,
+    columnVisibilityFeature,
+  })
+
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => 'Last Name',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => 'Age',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -51,17 +55,17 @@
             {
               accessorKey: 'visits',
               header: () => 'Visits',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -69,91 +73,66 @@
     },
   ]
 
-  const data = makeData(5000)
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
-  let columnOrder: ColumnOrderState = []
-  let columnVisibility: VisibilityState = {}
-
-  const setColumnOrder: OnChangeFn<ColumnOrderState> = updater => {
-    if (updater instanceof Function) {
-      columnOrder = updater(columnOrder)
-    } else {
-      columnOrder = updater
-    }
-    options.update(old => ({
-      ...old,
-      state: {
-        ...old.state,
-        columnOrder,
-      },
-    }))
-  }
-
-  const setColumnVisibility: OnChangeFn<VisibilityState> = updater => {
-    if (updater instanceof Function) {
-      columnVisibility = updater(columnVisibility)
-    } else {
-      columnVisibility = updater
-    }
-    options.update(old => ({
-      ...old,
-      state: {
-        ...old.state,
-        columnVisibility,
-      },
-    }))
-  }
-
-  const options = writable<TableOptions<Person>>({
-    data,
-    columns,
-    state: {
-      columnOrder,
-      columnVisibility,
-    },
-    onColumnOrderChange: setColumnOrder,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
-  })
+  const [columnOrder, setColumnOrder] = createTableState<ColumnOrderState>([])
+  const [columnVisibility, setColumnVisibility] =
+    createTableState<ColumnVisibilityState>({})
 
   const randomizeColumns = () => {
-    $table.setColumnOrder(_updater =>
-      faker.helpers.shuffle($table.getAllLeafColumns().map(d => d.id))
+    table.setColumnOrder((_updater) =>
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
-  const regenerate = () => {
-    options.update(options => ({
-      ...options,
-      data: makeData(5000),
-    }))
-  }
-
-  const table = createSvelteTable(options)
+  const table = createTable({
+    features,
+    get data() {
+      return data
+    },
+    columns,
+    state: {
+      get columnOrder() {
+        return columnOrder()
+      },
+      get columnVisibility() {
+        return columnVisibility()
+      },
+    },
+    onColumnOrderChange: setColumnOrder,
+    onColumnVisibilityChange: setColumnVisibility,
+    // initialState: { columnOrder: ['lastName', 'firstName'] }, // set column order on first render
+    // atoms: { columnOrder: columnOrderAtom }, // preferred: own ordering state with an external atom
+    debugTable: true,
+  })
 </script>
 
-<div class="p-2">
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+<div class="demo-root">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
+  </div>
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
-          checked={$table.getIsAllColumnsVisible()}
-          on:change={e => {
-            console.info($table.getToggleAllColumnsVisibilityHandler()(e))
+          checked={table.getIsAllColumnsVisible()}
+          onchange={(e) => {
+            console.info(table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"
         />{' '}
         Toggle All
       </label>
     </div>
-    {#each $table.getAllLeafColumns() as column}
-      <div class="px-1">
+    {#each table.getAllLeafColumns() as column}
+      <div class="column-toggle-row">
         <label>
           <input
             checked={column.getIsVisible()}
-            on:change={column.getToggleVisibilityHandler()}
+            onchange={column.getToggleVisibilityHandler()}
             type="checkbox"
           />{' '}
           {column.id}
@@ -161,29 +140,22 @@
       </div>
     {/each}
   </div>
-  <div class="h-4" />
-  <div class="flex flex-wrap gap-2">
-    <button on:click={() => regenerate()} class="border p-1">
-      Regenerate
-    </button>
-    <button on:click={() => randomizeColumns()} class="border p-1">
+  <div class="spacer-md"></div>
+  <div class="button-row">
+    <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>
   </div>
-  <div class="h-4" />
-  <table class="border-2 border-black">
+  <div class="spacer-md"></div>
+  <table class="outlined-table">
     <thead>
-      {#each $table.getHeaderGroups() as headerGroup}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
-          {#each headerGroup.headers as header}
+          {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <svelte:component
-                  this={flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                />
+                <FlexRender header={header} />
               {/if}
             </th>
           {/each}
@@ -191,18 +163,17 @@
       {/each}
     </thead>
     <tbody>
-      {#each $table.getCoreRowModel().rows.slice(0, 20) as row}
+      {#each table.getCoreRowModel().rows.slice(0, 20) as row (row.id)}
         <tr>
-          {#each row.getVisibleCells() as cell}
+          {#each row.getVisibleCells() as cell (cell.id)}
             <td>
-              <svelte:component
-                this={flexRender(cell.column.columnDef.cell, cell.getContext())}
-              />
+              <FlexRender cell={cell} />
             </td>
           {/each}
         </tr>
       {/each}
     </tbody>
   </table>
-  <pre>{JSON.stringify($table.getState().columnOrder, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)
+  }</pre>
 </div>

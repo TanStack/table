@@ -1,0 +1,107 @@
+.root {
+  --resize-thickness: 2px;
+
+  background-clip: padding-box;
+  text-align: var(--mrt-cell-align, left);
+  overflow: hidden;
+  position: relative;
+  transition: padding 150ms ease-in-out;
+
+  &[data-dragging-column] {
+    z-index: 2;
+    border-left: var(--drag-thickness) dashed
+      var(--mrt-dragging-drag-border-color);
+    border-right: var(--drag-thickness) dashed
+      var(--mrt-dragging-drag-border-color);
+    &[data-last-row] {
+      border-bottom: var(--drag-thickness) dashed
+        var(--mrt-dragging-drag-border-color);
+    }
+  }
+
+  &[data-hovered-column-target] {
+    opacity: 0.5;
+    border-left: var(--hover-thickness) dashed
+      var(--mrt-dragging-hovered-border-color);
+    border-right: var(--hover-thickness) dashed
+      var(--mrt-dragging-hovered-border-color);
+    &[data-last-row] {
+      border-bottom: var(--hover-thickness) dashed
+        var(--mrt-dragging-hovered-border-color);
+    }
+  }
+
+  &[data-resizing='ltr'] {
+    border-right: var(--resize-thickness) solid
+      var(--mrt-resize-column-border-color);
+  }
+
+  &[data-resizing='rtl'] {
+    border-left: var(--resize-thickness) solid
+      var(--mrt-resize-column-border-color);
+  }
+
+  &:hover {
+    outline-offset: -1px;
+    text-overflow: clip;
+  }
+}
+
+.root-grid {
+  align-items: center;
+  justify-content: var(--mrt-cell-align, flex-start);
+  display: flex;
+}
+
+.root-virtualized {
+  transition: none;
+}
+
+.root-data-col {
+  text-overflow: ellipsis;
+}
+
+.root-nowrap {
+  white-space: nowrap;
+}
+
+.root-cursor-pointer {
+  cursor: pointer;
+}
+
+.root-editable-hover {
+  @mixin hover {
+    outline: 1px solid var(--mantine-color-gray-7);
+  }
+}
+
+.root-cell-hover-reveal {
+  overflow: visible;
+}
+
+.cell-hover-reveal {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: var(--mrt-cell-align);
+}
+
+.cell-hover-reveal.overflowing:hover {
+  overflow: visible;
+  white-space: normal;
+  position: absolute;
+  z-index: 2;
+  padding: var(--table-vertical-spacing)
+    var(--table-horizontal-spacing, var(--mantine-spacing-xs));
+  background-color: var(--mrt-base-background-color);
+  box-shadow: var(--mantine-shadow-sm);
+  border: 1px solid var(--mantine-primary-color-filled);
+  text-indent: -1px;
+  width: max-content;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

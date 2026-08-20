@@ -1,0 +1,150 @@
+html {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+table {
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+tbody {
+  border-bottom: 1px solid lightgray;
+}
+
+th {
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+td {
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+tfoot {
+  color: gray;
+}
+
+tfoot th {
+  font-weight: normal;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Demo layout helpers for the plain example UI. */
+.demo-root {
+  padding: 0.5rem;
+}
+
+.spacer-xs {
+  height: 0.25rem;
+}
+
+.spacer-sm {
+  height: 0.5rem;
+}
+
+.spacer-md {
+  height: 1rem;
+}
+
+.controls,
+.button-row,
+.inline-controls,
+.filter-row,
+.page-controls {
+  display: flex;
+  align-items: center;
+}
+
+.button-row {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.controls,
+.page-controls {
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.inline-controls {
+  gap: 0.25rem;
+}
+
+.filter-row {
+  gap: 0.5rem;
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.column-toggle-panel {
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+}
+
+.column-toggle-panel-header {
+  border-bottom: 1px solid #000;
+  padding: 0 0.25rem;
+}
+
+.column-toggle-row {
+  padding: 0 0.25rem;
+}
+
+.demo-button,
+.page-size-input,
+.filter-input {
+  border: 1px solid currentColor;
+  border-radius: 0.25rem;
+}
+
+.demo-button {
+  padding: 0.5rem;
+}
+
+.demo-button-sm {
+  padding: 0.25rem;
+}
+
+.page-size-input {
+  width: 4rem;
+  padding: 0.25rem;
+}
+
+.filter-input {
+  width: 6rem;
+}
+.facet-options {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-weight: normal;
+}
+.facet-options label {
+  display: flex;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.count {
+  margin-left: auto;
+  color: gray;
+}

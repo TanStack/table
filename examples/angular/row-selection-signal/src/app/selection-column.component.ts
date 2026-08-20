@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core'
-import { Row, Table } from '@tanstack/angular-table'
+import type { Row, RowData, Table } from '@tanstack/angular-table'
+import type { features } from './app.component'
 
 @Component({
   template: `
@@ -11,21 +12,21 @@ import { Row, Table } from '@tanstack/angular-table'
     />
   `,
   host: {
-    class: 'px-1 block',
+    class: 'selection-cell',
   },
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadSelectionComponent<T> {
+export class TableHeadSelectionComponent<T extends RowData> {
   // Your component should also reflect the fields you use as props in flexRenderer directive.
   // Define the fields as input you want to use in your component
   // ie. In this case, you are passing HeaderContext object as props in flexRenderer directive.
   // You can define and use the table field, which is defined in HeaderContext.
   // Please take note that only signal based input is supported.
 
-  //column = input.required<Column<T, unknown>>()
-  //header = input.required<Header<T, unknown>>()
-  table = input.required<Table<T>>()
+  // column = input.required<Column<T, unknown>>()
+  // header = input.required<Header<T, unknown>>()
+  table = input.required<Table<typeof features, T>>()
 }
 
 @Component({
@@ -33,15 +34,15 @@ export class TableHeadSelectionComponent<T> {
     <input
       type="checkbox"
       [checked]="row().getIsSelected()"
-      (change)="row().getToggleSelectedHandler()($event)"
+      (click)="row().getToggleSelectedHandler()($event)"
     />
   `,
   host: {
-    class: 'px-1 block',
+    class: 'selection-cell',
   },
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowSelectionComponent<T> {
-  row = input.required<Row<T>>()
+export class TableRowSelectionComponent<T extends RowData> {
+  row = input.required<Row<typeof features, T>>()
 }

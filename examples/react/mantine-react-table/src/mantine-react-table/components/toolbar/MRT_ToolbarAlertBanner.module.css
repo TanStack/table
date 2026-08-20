@@ -1,0 +1,37 @@
+.alert {
+  border-radius: 0;
+  font-size: 1rem;
+  left: 0;
+  position: relative;
+  padding: rem(8px);
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.alert-stacked {
+  margin-bottom: 0;
+}
+
+.alert-bottom {
+  margin-bottom: -16px;
+}
+
+.alert-badge {
+  margin-left: 1ch;
+}
+
+.toolbar-alert {
+  gap: var(--mantine-spacing-sm);
+  padding: 8px 16px;
+  &.head-overlay {
+    padding: 2px;
+    &:global(.xl) {
+      padding: 16px;
+    }
+    &:global(.md) {
+      padding: 8px;
+    }
+  }
+}

@@ -1,138 +1,122 @@
 import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
-  useReactTable,
-  getCoreRowModel,
-  getExpandedRowModel,
-  ColumnDef,
-  flexRender,
-  Row,
+  createColumnHelper,
+  createExpandedRowModel,
+  rowExpandingFeature,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type {
+  ColumnDef,
+  Row,
+  RowData,
+  TableFeatures,
+} from '@tanstack/react-table'
+import type { Person } from './makeData'
 
-const columns: ColumnDef<Person>[] = [
-  {
-    header: 'Name',
-    footer: props => props.column.id,
-    columns: [
-      {
-        id: 'expander',
-        header: () => null,
-        cell: ({ row }) => {
-          return row.getCanExpand() ? (
-            <button
-              {...{
-                onClick: row.getToggleExpandedHandler(),
-                style: { cursor: 'pointer' },
-              }}
-            >
-              {row.getIsExpanded() ? '👇' : '👉'}
-            </button>
-          ) : (
-            '🔵'
-          )
-        },
-      },
-      {
-        accessorKey: 'firstName',
-        header: 'First Name',
-        cell: ({ row, getValue }) => (
-          <div
-            style={{
-              // Since rows are flattened by default,
-              // we can use the row.depth property
-              // and paddingLeft to visually indicate the depth
-              // of the row
-              paddingLeft: `${row.depth * 2}rem`,
-            }}
-          >
-            {getValue<string>()}
-          </div>
-        ),
-        footer: props => props.column.id,
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
-      },
-    ],
-  },
-  {
-    header: 'Info',
-    footer: props => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: props => props.column.id,
-      },
-      {
-        header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
-            header: () => <span>Visits</span>,
-            footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'status',
-            header: 'Status',
-            footer: props => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
-            header: 'Profile Progress',
-            footer: props => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
-type TableProps<TData> = {
-  data: TData[]
-  columns: ColumnDef<TData>[]
-  renderSubComponent: (props: { row: Row<TData> }) => React.ReactElement
-  getRowCanExpand: (row: Row<TData>) => boolean
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'expander',
+    header: () => null,
+    cell: ({ row }) => {
+      return row.getCanExpand() ? (
+        <button
+          onClick={row.getToggleExpandedHandler()}
+          style={{ cursor: 'pointer' }}
+        >
+          {row.getIsExpanded() ? '👇' : '👉'}
+        </button>
+      ) : (
+        '🔵'
+      )
+    },
+  }),
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: ({ row, getValue }) => (
+      <div
+        style={{
+          paddingLeft: `${row.depth * 2}rem`,
+        }}
+      >
+        {getValue<string>()}
+      </div>
+    ),
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => <span>Last Name</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => <span>Visits</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
+
+type TableProps<TFeatures extends TableFeatures, TData extends RowData> = {
+  data: Array<TData>
+  columns: Array<ColumnDef<TFeatures, TData>>
+  renderSubComponent: (props: {
+    row: Row<TFeatures, TData>
+  }) => React.ReactElement
+  getRowCanExpand: (row: Row<TFeatures, TData>) => boolean
 }
 
 function Table({
-  data,
   columns,
-  renderSubComponent,
+  data,
   getRowCanExpand,
-}: TableProps<Person>): JSX.Element {
-  const table = useReactTable<Person>({
-    data,
-    columns,
-    getRowCanExpand,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-  })
+  renderSubComponent,
+}: TableProps<typeof features, Person>): React.JSX.Element {
+  const table = useTable(
+    {
+      debugTable: true,
+      features,
+      columns,
+      data,
+      getRowCanExpand,
+    },
+    (state) => state, // default selector
+  )
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
+    <div className="demo-root">
+      <div className="spacer-sm" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        <table.FlexRender header={header} />
                       </div>
                     )}
                   </th>
@@ -142,18 +126,15 @@ function Table({
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <Fragment key={row.id}>
                 <tr>
                   {/* first row is a normal row */}
-                  {row.getVisibleCells().map(cell => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        <table.FlexRender cell={cell} />
                       </td>
                     )
                   })}
@@ -161,7 +142,7 @@ function Table({
                 {row.getIsExpanded() && (
                   <tr>
                     {/* 2nd row is a custom 1 cell row */}
-                    <td colSpan={row.getVisibleCells().length}>
+                    <td colSpan={row.getAllCells().length}>
                       {renderSubComponent({ row })}
                     </td>
                   </tr>
@@ -171,13 +152,13 @@ function Table({
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div>{table.getRowModel().rows.length} Rows</div>
+      <div className="spacer-sm" />
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
     </div>
   )
 }
 
-const renderSubComponent = ({ row }: { row: Row<Person> }) => {
+const renderSubComponent = ({ row }: { row: Row<typeof features, Person> }) => {
   return (
     <pre style={{ fontSize: '10px' }}>
       <code>{JSON.stringify(row.original, null, 2)}</code>
@@ -186,15 +167,27 @@ const renderSubComponent = ({ row }: { row: Row<Person> }) => {
 }
 
 function App() {
-  const [data] = React.useState(() => makeData(10))
+  const [data, setData] = React.useState(() => makeData(10))
+  const refreshData = () => setData(makeData(10))
+  const stressTest = () => setData(makeData(1_000))
 
   return (
-    <Table
-      data={data}
-      columns={columns}
-      getRowCanExpand={() => true}
-      renderSubComponent={renderSubComponent}
-    />
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()} className="demo-button">
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} className="demo-button">
+          Stress Test (1k rows)
+        </button>
+      </div>
+      <Table
+        columns={columns}
+        data={data}
+        getRowCanExpand={() => true}
+        renderSubComponent={renderSubComponent}
+      />
+    </div>
   )
 }
 
@@ -204,5 +197,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

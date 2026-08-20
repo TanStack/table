@@ -1,0 +1,42 @@
+{
+  "name": "tanstack-react-table-example-mantine-react-table",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
+    "test:types": "tsc"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@mantine/core": "^9.5.1",
+    "@mantine/dates": "^9.5.1",
+    "@mantine/hooks": "^9.5.1",
+    "@tabler/icons-react": "^3.46.0",
+    "@tanstack/match-sorter-utils": "^9.1.2",
+    "@tanstack/react-store": "^0.11.1",
+    "@tanstack/react-table": "^9.1.2",
+    "@tanstack/react-virtual": "^3.14.9",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.21",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "postcss": "^8.5.26",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
+  }
+}

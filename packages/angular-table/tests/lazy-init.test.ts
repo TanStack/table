@@ -2,37 +2,41 @@ import { describe, expect, test, vi } from 'vitest'
 import {
   ChangeDetectionStrategy,
   Component,
-  type WritableSignal,
   computed,
   effect,
   input,
   signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { lazyInit } from '../src/lazy-signal-initializer'
+import { lazyInit } from '../src/lazySignalInitializer'
 import { flushQueue, setFixtureSignalInputs } from './test-utils'
+import type { WritableSignal } from '@angular/core'
 
 describe('lazyInit', () => {
-  test('should init lazily in next tick when not accessing manually', async () => {
+  test('should init lazily in next tick when not accessing manually', () => {
     const mockFn = vi.fn()
 
     TestBed.runInInjectionContext(() => {
-      lazyInit(() => {
+      const proxy = lazyInit(() => {
         mockFn()
         return {
           data: signal(true),
         }
       })
+
+      expect(mockFn).not.toHaveBeenCalled()
+      expect(proxy.initialized).toEqual(false)
+      expect(proxy.rawValue).toBeNullable()
+
+      TestBed.tick()
+
+      expect(proxy.initialized).toEqual(true)
+      expect(proxy.rawValue).not.toBeNullable()
+      expect(mockFn).toHaveBeenCalled()
     })
-
-    expect(mockFn).not.toHaveBeenCalled()
-
-    await new Promise(setImmediate)
-
-    expect(mockFn).toHaveBeenCalled()
   })
 
-  test('should init eagerly accessing manually', async () => {
+  test('should init eagerly accessing manually', () => {
     const mockFn = vi.fn()
 
     TestBed.runInInjectionContext(() => {
@@ -43,7 +47,7 @@ describe('lazyInit', () => {
         }
       })
 
-      lazySignal.data()
+      lazySignal.value.data()
     })
 
     expect(mockFn).toHaveBeenCalled()
@@ -51,7 +55,7 @@ describe('lazyInit', () => {
 
   test('should init lazily and only once', async () => {
     const initCallFn = vi.fn()
-    const registerDataValue = vi.fn<[number]>()
+    const registerDataValue = vi.fn<(arg0: number) => void>()
 
     let value!: { data: WritableSignal<number> }
     const outerSignal = signal(0)
@@ -63,14 +67,14 @@ describe('lazyInit', () => {
         void outerSignal()
 
         return { data: signal(0) }
-      })
+      }).value
 
       effect(() => registerDataValue(value.data()))
     })
 
     value.data()
 
-    await flushQueue()
+    TestBed.tick()
 
     expect(outerSignal).toBeDefined()
 
@@ -84,7 +88,7 @@ describe('lazyInit', () => {
     await flushQueue()
 
     expect(initCallFn).toHaveBeenCalledTimes(1)
-    expect(registerDataValue).toHaveBeenCalledTimes(2)
+    expect(registerDataValue).toHaveBeenCalledTimes(1)
   })
 
   test('should support required signal input', async () => {
@@ -102,23 +106,22 @@ describe('lazyInit', () => {
         return {
           data: computed(() => this.title()),
         }
-      })
+      }).value
     }
 
     const fixture = TestBed.createComponent(Test)
-
     setFixtureSignalInputs(fixture, { title: 'newValue' })
-    expect(fixture.debugElement.nativeElement.textContent).toBe('0 - newValue')
+    expect(fixture.debugElement.nativeElement.textContent).toBe('1 - newValue')
     await flushQueue()
 
     setFixtureSignalInputs(fixture, { title: 'updatedValue' })
     expect(fixture.debugElement.nativeElement.textContent).toBe(
-      '1 - updatedValue'
+      '1 - updatedValue',
     )
 
     setFixtureSignalInputs(fixture, { title: 'newUpdatedValue' })
     expect(fixture.debugElement.nativeElement.textContent).toBe(
-      '1 - newUpdatedValue'
+      '1 - newUpdatedValue',
     )
   })
 })

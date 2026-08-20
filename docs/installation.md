@@ -4,78 +4,65 @@ title: Installation
 
 Before we dig in to the API, let's get you set up!
 
-Install your table adapter as a dependency using your favorite npm package manager.
+Install your table adapter as a dependency using your preferred package manager:
 
-_Only install ONE of the following packages:_
+<!-- ::start:tabs variant="package-managers" -->
 
-## React Table
+react: @tanstack/react-table
+preact: @tanstack/preact-table
+octane: @tanstack/octane-table
+vue: @tanstack/vue-table
+solid: @tanstack/solid-table
+svelte: @tanstack/svelte-table
+angular: @tanstack/angular-table
+ember: @tanstack/ember-table
+lit: @tanstack/lit-table
+alpine: @tanstack/alpine-table
 
-```bash
-npm install @tanstack/react-table
-```
+<!-- ::end:tabs -->
 
-The `@tanstack/react-table` package works with React 16.8, React 17, React 18, and React 19.
+<!-- ::start:framework -->
 
-> NOTE: Even though the react adapter works with React 19, it may not work with the new React Compiler that's coming out along-side React 19. This may be fixed in future TanStack Table updates.
+# React
 
-## Vue Table
+The `@tanstack/react-table` package works with React 18 or newer.
 
-```bash
-npm install @tanstack/vue-table
-```
+# Preact
 
-The `@tanstack/vue-table` package works with Vue 3.
+The `@tanstack/preact-table` package works with Preact 10 or newer.
 
-## Solid Table
+# Octane
 
-```bash
-npm install @tanstack/solid-table
-```
+The `@tanstack/octane-table` package works with Octane 0.1.21. It publishes authored TypeScript and TSRX, so your application must use Octane's compiler integration (for example, the Octane Vite plugin) to compile the package for its current target and mode.
 
-The `@tanstack/solid-table` package works with Solid-JS 1
+# Vue
 
-## Svelte Table
+The `@tanstack/vue-table` package works with Vue 3.2 or newer.
 
-```bash
-npm install @tanstack/svelte-table
-```
+# Solid
 
-The `@tanstack/svelte-table` package works with Svelte 3 and Svelte 4.
+The `@tanstack/solid-table` package works with Solid 1.3 or newer.
 
-> NOTE: There is not a built-in Svelte 5 adapter yet, but you can still use TanStack Table with Svelte 5 by installing the `@tanstack/table-core` package and using a custom adapter from the community. See this [PR](https://github.com/TanStack/table/pull/5403) for inspiration.
+# Svelte
 
-## Qwik Table
+The `@tanstack/svelte-table` package works with Svelte 5 (it is built on runes). For Svelte 3/4 support, use TanStack Table v8.
 
-```bash
-npm install @tanstack/qwik-table
-```
+# Angular
 
-The `@tanstack/qwik-table` package works with Qwik 1.
+The `@tanstack/angular-table` package works with Angular 19 or newer. The Angular adapter is built on Angular Signals.
 
-> NOTE: There will be a "breaking change" release in the near future to support Qwik 2. This will be released as a minor version bump, but will be documented. Qwik 2 itself will have no breaking changes, but its name on the npm registry will change, and require different peer dependencies.
+# Ember
 
-> NOTE: The current qwik adapter only works with CSR. More improvements may not be available until a future table version.
+The `@tanstack/ember-table` package is a v2 addon that works with Ember 5.8 or newer (Embroider or ember-auto-import v2). It is built on Glimmer's tracking system and supports `.gts`/`.gjs` template tag components and Glint.
 
-## Angular Table
+# Lit
 
-```bash
-npm install @tanstack/angular-table
-```
+The `@tanstack/lit-table` package works with Lit 3 (3.1.3 or newer) and also requires `@lit/context` as a peer dependency.
 
-The `@tanstack/angular-table` package works with Angular 17. The Angular adapter uses a new Angular Signal implementation.
+# Alpine
 
-## Lit Table
+The `@tanstack/alpine-table` package works with Alpine 3.
 
-```bash
-npm install @tanstack/lit-table
-```
-
-The `@tanstack/lit-table` package works with Lit 3.
-
-## Table Core (no framework)
-
-```bash
-npm install @tanstack/table-core
-```
+<!-- ::end:framework -->
 
 Don't see your favorite framework (or favorite version of your framework) listed? You can always just use the `@tanstack/table-core` package and build your own adapter in your own codebase. Usually, only a thin wrapper is needed to manage state and rendering for your specific framework. Browse the [source code](https://github.com/TanStack/table/tree/main/packages) of all of the other adapters to see how they work.

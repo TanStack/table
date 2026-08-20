@@ -4,12 +4,8 @@ import {
   input,
   output,
 } from '@angular/core'
-import {
-  type HeaderContext,
-  injectFlexRenderContext,
-  type Table,
-  CellContext,
-} from '@tanstack/angular-table'
+import { injectFlexRenderContext } from '@tanstack/angular-table'
+import type { CellContext, RowData } from '@tanstack/angular-table'
 
 @Component({
   standalone: true,
@@ -20,7 +16,7 @@ import {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpanderCell<T> {
+export class ExpanderCell {
   readonly expanded = input.required<boolean>()
 
   readonly click = output<MouseEvent>()
@@ -42,8 +38,8 @@ export class ExpanderCell<T> {
     }
   `,
 })
-export class ExpandableCell<T> {
-  readonly context = injectFlexRenderContext<CellContext<T, unknown>>()
+export class ExpandableCell<T extends RowData> {
+  readonly context = injectFlexRenderContext<CellContext<{}, T, unknown>>()
 
   get row() {
     return this.context.row

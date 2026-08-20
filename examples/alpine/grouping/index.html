@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Grouping</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div class="inline-controls">
+                      <!-- group toggle button -->
+                      <template x-if="header.column.getCanGroup()">
+                        <button
+                          style="cursor: pointer"
+                          @click="header.column.getToggleGroupingHandler()($event)"
+                          x-text="header.column.getIsGrouped() ? '🛑(' + header.column.getGroupedIndex() + ') ' : '👊 '"
+                        ></button>
+                      </template>
+                      <span x-html="FlexRender({ header })"></span>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td :style="'background: ' + cellBackground(cell)">
+                  <!-- grouped cell: expander + value + count -->
+                  <template x-if="cell.getIsGrouped()">
+                    <button
+                      @click="cell.row.getToggleExpandedHandler()($event)"
+                      :style="'cursor: ' + (cell.row.getCanExpand() ? 'pointer' : 'normal')"
+                    >
+                      <span
+                        x-text="cell.row.getIsExpanded() ? '👇' : '👉'"
+                      ></span>
+                      <span x-html="FlexRender({ cell })"></span>
+                      <span
+                        x-text="'(' + cell.row.subRows.length.toLocaleString() + ')'"
+                      ></span>
+                    </button>
+                  </template>
+                  <!-- placeholder cell: nothing -->
+                  <template x-if="cell.getIsPlaceholder()">
+                    <span></span>
+                  </template>
+                  <!-- normal cell -->
+                  <template
+                    x-if="!cell.getIsGrouped() && !cell.row.getIsGrouped() && !cell.getIsPlaceholder()"
+                  >
+                    <span x-html="FlexRender({ cell })"></span>
+                  </template>
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="page-controls">
+        <button
+          @click="table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button @click="table.nextPage()" :disabled="!table.getCanNextPage()">
+          &gt;
+        </button>
+        <button @click="table.lastPage()" :disabled="!table.getCanLastPage()">
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          Page
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.atoms.pagination.get().pageIndex + 1"
+            @input="goToPage($event.target.value)"
+            class="page-size-input"
+          />
+        </span>
+        <select
+          :value="table.atoms.pagination.get().pageSize"
+          @change="table.setPageSize(Number($event.target.value))"
+        >
+          <template x-for="pageSize in [10, 20, 30, 40, 50]" :key="pageSize">
+            <option :value="pageSize" x-text="'Show ' + pageSize"></option>
+          </template>
+        </select>
+      </div>
+      <div>
+        <span x-text="table.getRowModel().rows.length.toLocaleString()"></span>
+        Rows
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

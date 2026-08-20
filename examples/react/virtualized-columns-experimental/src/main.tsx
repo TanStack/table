@@ -2,49 +2,94 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  FlexRender,
+  Subscribe,
+  columnResizingFeature,
+  columnSizingFeature,
+  createColumnHelper,
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_text,
+  useTable,
+} from '@tanstack/react-table'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { makeColumns, makeData } from './makeData'
+import type {
   Cell,
-  ColumnDef,
   Header,
   HeaderGroup,
+  ReactTable,
   Row,
-  Table,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
 } from '@tanstack/react-table'
-import { useVirtualizer, Virtualizer } from '@tanstack/react-virtual'
-import { makeColumns, makeData, Person } from './makeData'
+import type { Virtualizer } from '@tanstack/react-virtual'
+import type { Person } from './makeData'
+
+const features = {
+  columnResizingFeature,
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
+}
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+const makeTableColumns = (columnCount: number) =>
+  columnHelper.columns(
+    makeColumns(columnCount).map((column) =>
+      columnHelper.accessor(column.accessorKey, {
+        header: column.header,
+        size: column.size,
+      }),
+    ),
+  )
 
 // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
 function App() {
-  const columns = React.useMemo<ColumnDef<Person>[]>(
-    () => makeColumns(1_000),
-    []
+  const [columns, setColumns] = React.useState(() =>
+    makeTableColumns(DEFAULT_COLUMN_COUNT),
   )
 
-  const [data, setData] = React.useState(() => makeData(1_000, columns))
+  const [data, setData] = React.useState(() =>
+    makeData(DEFAULT_ROW_COUNT, columns),
+  )
 
   const refreshData = React.useCallback(() => {
-    setData(makeData(1_000, columns))
+    const nextColumns = makeTableColumns(DEFAULT_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(DEFAULT_ROW_COUNT, nextColumns))
+  }, [])
+
+  const stressTestRows = React.useCallback(() => {
+    setData(makeData(STRESS_ROW_COUNT, columns))
   }, [columns])
 
-  // refresh data every 5 seconds
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      refreshData()
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [refreshData])
+  const stressTestColumns = React.useCallback(() => {
+    const nextColumns = makeTableColumns(STRESS_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(data.length, nextColumns))
+  }, [data.length])
 
   // The table does not live in the same scope as the virtualizers
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
-  })
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      columnResizeMode: 'onChange',
+      debugTable: true,
+    },
+    (state) => state, // default selector
+  )
 
   return (
     <div className="app">
@@ -57,33 +102,37 @@ function App() {
       ) : null}
       <div>({columns.length.toLocaleString()} columns)</div>
       <div>({data.length.toLocaleString()} rows)</div>
-      <button onClick={refreshData}>Refresh Data</button>
+      <div>
+        <button onClick={refreshData}>Regenerate Data</button>
+        <button onClick={stressTestRows}>Stress Test (10k rows)</button>
+        <button onClick={stressTestColumns}>Stress Test (10k columns)</button>
+      </div>
       <TableContainer table={table} />
     </div>
   )
 }
 
 interface TableContainerProps {
-  table: Table<Person>
+  table: ReactTable<typeof features, Person>
 }
 
 function TableContainer({ table }: TableContainerProps) {
-  const visibleColumns = table.getVisibleLeafColumns()
+  const visibleColumns = table.getAllLeafColumns()
 
-  //The virtualizers need to know the scrollable container element
+  // The virtualizers need to know the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  //we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
+  // we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
   const columnVirtualizer = useVirtualizer<
     HTMLDivElement,
     HTMLTableCellElement
   >({
     count: visibleColumns.length,
-    estimateSize: index => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
+    estimateSize: (index) => visibleColumns[index].getSize(), // estimate width of each column for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
-    overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
-    onChange: instance => {
+    overscan: 3, // how many columns to render on each side off screen each way (adjust this for performance)
+    onChange: (instance) => {
       // requestAnimationFrame(() => {
       const virtualColumns = instance.getVirtualItems()
       // different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
@@ -94,33 +143,47 @@ function TableContainer({ table }: TableContainerProps) {
 
       tableContainerRef.current?.style.setProperty(
         '--virtual-padding-left',
-        `${virtualPaddingLeft}px`
+        `${virtualPaddingLeft}px`,
       )
       tableContainerRef.current?.style.setProperty(
         '--virtual-padding-right',
-        `${virtualPaddingRight}px`
+        `${virtualPaddingRight}px`,
       )
       // })
     },
   })
+
+  // re-measure virtual column widths when a column is resized so the
+  // virtualizer's scroll math stays in sync with the rendered widths
+  const columnSizing = table.state.columnSizing
+  React.useEffect(() => {
+    columnVirtualizer.measure()
+  }, [columnVirtualizer, columnSizing])
+
+  const virtualColumnIndexes = columnVirtualizer.getVirtualIndexes()
 
   return (
     <div
       className="container"
       ref={tableContainerRef}
       style={{
-        overflow: 'auto', //our scrollable table container
-        position: 'relative', //needed for sticky header
-        height: '800px', //should be a fixed height
+        overflow: 'auto', // our scrollable table container
+        position: 'relative', // needed for sticky header
+        height: '800px', // should be a fixed height
       }}
     >
-      {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
+      {/* Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights */}
       <table style={{ display: 'grid' }}>
-        <TableHead table={table} columnVirtualizer={columnVirtualizer} />
+        <TableHead
+          table={table}
+          columnVirtualizer={columnVirtualizer}
+          virtualColumnIndexes={virtualColumnIndexes}
+        />
         <TableBody
           columnVirtualizer={columnVirtualizer}
           table={table}
           tableContainerRef={tableContainerRef}
+          virtualColumnIndexes={virtualColumnIndexes}
         />
       </table>
     </div>
@@ -129,24 +192,31 @@ function TableContainer({ table }: TableContainerProps) {
 
 interface TableHeadProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: Table<Person>
+  table: ReactTable<typeof features, Person>
+  virtualColumnIndexes: Array<number>
 }
 
-function TableHead({ table, columnVirtualizer }: TableHeadProps) {
+function TableHead({
+  table,
+  columnVirtualizer,
+  virtualColumnIndexes,
+}: TableHeadProps) {
   return (
     <thead
       style={{
         display: 'grid',
+        height: '34px',
         position: 'sticky',
         top: 0,
         zIndex: 1,
       }}
     >
-      {table.getHeaderGroups().map(headerGroup => (
+      {table.getHeaderGroups().map((headerGroup) => (
         <TableHeadRow
           columnVirtualizer={columnVirtualizer}
           key={headerGroup.id}
           headerGroup={headerGroup}
+          virtualColumnIndexes={virtualColumnIndexes}
         />
       ))}
     </thead>
@@ -155,17 +225,23 @@ function TableHead({ table, columnVirtualizer }: TableHeadProps) {
 
 interface TableHeadRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  headerGroup: HeaderGroup<Person>
+  headerGroup: HeaderGroup<typeof features, Person>
+  virtualColumnIndexes: Array<number>
 }
 
-function TableHeadRow({ columnVirtualizer, headerGroup }: TableHeadRowProps) {
-  const virtualColumnIndexes = columnVirtualizer.getVirtualIndexes()
-
+function TableHeadRow({
+  columnVirtualizer,
+  headerGroup,
+  virtualColumnIndexes,
+}: TableHeadRowProps) {
   return (
-    <tr key={headerGroup.id} style={{ display: 'flex', width: '100%' }}>
+    <tr
+      key={headerGroup.id}
+      style={{ display: 'flex', height: '34px', width: '100%' }}
+    >
       {/* fake empty column to the left for virtualization scroll padding */}
       <th className="left-column-spacer" />
-      {virtualColumnIndexes.map(virtualColumnIndex => {
+      {virtualColumnIndexes.map((virtualColumnIndex) => {
         const header = headerGroup.headers[virtualColumnIndex]
         return (
           <TableHeadCellMemo
@@ -183,7 +259,7 @@ function TableHeadRow({ columnVirtualizer, headerGroup }: TableHeadRowProps) {
 
 interface TableHeadCellProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  header: Header<Person, unknown>
+  header: Header<typeof features, Person, unknown>
 }
 
 function TableHeadCell({
@@ -191,68 +267,97 @@ function TableHeadCell({
   header,
 }: TableHeadCellProps) {
   return (
-    <th
-      key={header.id}
-      style={{
-        display: 'flex',
-        width: header.getSize(),
-      }}
+    <Subscribe
+      source={header.table.store}
+      selector={(state) => [
+        state.columnSizing[header.column.id],
+        state.columnResizing.isResizingColumn === header.column.id,
+        state.sorting.find((sort) => sort.id === header.column.id)?.desc,
+      ]}
     >
-      <div
-        {...{
-          className: header.column.getCanSort()
-            ? 'cursor-pointer select-none'
-            : '',
-          onClick: header.column.getToggleSortingHandler(),
-        }}
-      >
-        {flexRender(header.column.columnDef.header, header.getContext())}
-        {{
-          asc: ' 🔼',
-          desc: ' 🔽',
-        }[header.column.getIsSorted() as string] ?? null}
-      </div>
-    </th>
+      {() => (
+        <th
+          key={header.id}
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            height: '34px',
+            position: 'relative', // needed for absolute positioning of the resizer
+            width: header.getSize(),
+          }}
+        >
+          <div
+            className={header.column.getCanSort() ? 'sortable-header' : ''}
+            onClick={header.column.getToggleSortingHandler()}
+            title={
+              header.column.getCanSort()
+                ? header.column.getNextSortingOrder() === 'asc'
+                  ? 'Sort ascending'
+                  : header.column.getNextSortingOrder() === 'desc'
+                    ? 'Sort descending'
+                    : 'Clear sort'
+                : undefined
+            }
+          >
+            <FlexRender header={header} />
+            {{
+              asc: ' 🔼',
+              desc: ' 🔽',
+            }[header.column.getIsSorted() as string] ?? null}
+          </div>
+          <div
+            onDoubleClick={() => header.column.resetSize()}
+            onMouseDown={header.getResizeHandler()}
+            onTouchStart={header.getResizeHandler()}
+            className={`resizer ${
+              header.column.getIsResizing() ? 'isResizing' : ''
+            }`}
+          />
+        </th>
+      )}
+    </Subscribe>
   )
 }
 
 const TableHeadCellMemo = React.memo(
   TableHeadCell,
-  (_prev, next) => next.columnVirtualizer.isScrolling
+  (_prev, next) => next.columnVirtualizer.isScrolling,
 ) as typeof TableHeadCell
 
 interface TableBodyProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: Table<Person>
-  tableContainerRef: React.RefObject<HTMLDivElement>
+  table: ReactTable<typeof features, Person>
+  tableContainerRef: React.RefObject<HTMLDivElement | null>
+  virtualColumnIndexes: Array<number>
 }
 
 function TableBody({
   columnVirtualizer,
   table,
   tableContainerRef,
+  virtualColumnIndexes,
 }: TableBodyProps) {
   const tableBodyRef = React.useRef<HTMLTableSectionElement>(null)
   const rowRefsMap = React.useRef<Map<number, HTMLTableRowElement>>(new Map())
 
   const { rows } = table.getRowModel()
 
-  //dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
+  // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
   const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element.getBoundingClientRect().height
         : undefined,
     overscan: 5,
-    onChange: instance => {
+    onChange: (instance) => {
       // requestAnimationFrame(() => {
       tableBodyRef.current!.style.height = `${instance.getTotalSize()}px`
-      instance.getVirtualItems().forEach(virtualRow => {
+      instance.getVirtualItems().forEach((virtualRow) => {
         const rowRef = rowRefsMap.current.get(virtualRow.index)
         if (!rowRef) return
         rowRef.style.transform = `translateY(${virtualRow.start}px)`
@@ -263,7 +368,7 @@ function TableBody({
 
   React.useLayoutEffect(() => {
     rowVirtualizer.measure()
-  }, [table.getState()])
+  }, [table.state])
 
   const virtualRowIndexes = rowVirtualizer.getVirtualIndexes()
 
@@ -272,20 +377,21 @@ function TableBody({
       ref={tableBodyRef}
       style={{
         display: 'grid',
-        position: 'relative', //needed for absolute positioning of rows
+        position: 'relative', // needed for absolute positioning of rows
       }}
     >
-      {virtualRowIndexes.map(virtualRowIndex => {
-        const row = rows[virtualRowIndex] as Row<Person>
+      {virtualRowIndexes.map((virtualRowIndex) => {
+        const row = rows[virtualRowIndex]
 
         return (
           <TableBodyRow
             columnVirtualizer={columnVirtualizer}
             key={row.id}
             row={row}
-            rowVirtualizer={rowVirtualizer}
-            virtualRowIndex={virtualRowIndex}
             rowRefsMap={rowRefsMap}
+            rowVirtualizer={rowVirtualizer}
+            virtualColumnIndexes={virtualColumnIndexes}
+            virtualRowIndex={virtualRowIndex}
           />
         )
       })}
@@ -295,31 +401,32 @@ function TableBody({
 
 interface TableBodyRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  row: Row<Person>
+  row: Row<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
+  virtualColumnIndexes: Array<number>
   virtualRowIndex: number
-  rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
+  rowRefsMap: React.RefObject<Map<number, HTMLTableRowElement>>
 }
 
 function TableBodyRow({
   columnVirtualizer,
   row,
   rowVirtualizer,
+  virtualColumnIndexes,
   virtualRowIndex,
   rowRefsMap,
 }: TableBodyRowProps) {
-  const visibleCells = row.getVisibleCells()
-  const virtualColumnIndexes = columnVirtualizer.getVirtualIndexes()
+  const visibleCells = row.getAllCells()
 
   return (
     <tr
-      data-index={virtualRowIndex} //needed for dynamic row height measurement
-      ref={node => {
-        if (node) {
+      data-index={virtualRowIndex} // needed for dynamic row height measurement
+      ref={(node) => {
+        if (node && typeof virtualRowIndex !== 'undefined') {
           rowVirtualizer.measureElement(node)
           rowRefsMap.current.set(virtualRowIndex, node)
         }
-      }} //measure dynamic row height
+      }} // measure dynamic row height
       key={row.id}
       style={{
         display: 'flex',
@@ -329,7 +436,7 @@ function TableBodyRow({
     >
       {/* fake empty column to the left for virtualization scroll padding */}
       <td className="left-column-spacer" />
-      {virtualColumnIndexes.map(virtualColumnIndex => {
+      {virtualColumnIndexes.map((virtualColumnIndex) => {
         const cell = visibleCells[virtualColumnIndex]
         return (
           <TableBodyCellMemo
@@ -352,7 +459,7 @@ function TableBodyRow({
 // )
 
 interface TableBodyCellProps {
-  cell: Cell<Person, unknown>
+  cell: Cell<typeof features, Person, unknown>
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
 }
 
@@ -361,21 +468,28 @@ function TableBodyCell({
   columnVirtualizer: _columnVirtualizer,
 }: TableBodyCellProps) {
   return (
-    <td
-      key={cell.id}
-      style={{
-        display: 'flex',
-        width: cell.column.getSize(),
-      }}
+    <Subscribe
+      source={cell.table.atoms.columnSizing}
+      selector={(columnSizing) => columnSizing[cell.column.id]}
     >
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </td>
+      {() => (
+        <td
+          key={cell.id}
+          style={{
+            display: 'flex',
+            width: cell.column.getSize(),
+          }}
+        >
+          <FlexRender cell={cell} />
+        </td>
+      )}
+    </Subscribe>
   )
 }
 
 const TableBodyCellMemo = React.memo(
   TableBodyCell,
-  (_prev, next) => next.columnVirtualizer.isScrolling
+  (_prev, next) => next.columnVirtualizer.isScrolling,
 ) as typeof TableBodyCell
 
 const rootElement = document.getElementById('root')
@@ -385,5 +499,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

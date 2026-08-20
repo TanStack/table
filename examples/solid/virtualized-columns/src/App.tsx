@@ -1,0 +1,381 @@
+import {
+  FlexRender,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createSortedRowModel,
+  createTable,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/solid-table'
+import { createVirtualizer } from '@tanstack/solid-virtual'
+import { For, createEffect, createSignal } from 'solid-js'
+import { makeColumns, makeData } from './makeData'
+import type {
+  Cell,
+  Header,
+  HeaderGroup,
+  Row,
+  SolidTable,
+} from '@tanstack/solid-table'
+import type { VirtualItem, Virtualizer } from '@tanstack/solid-virtual'
+import type { Person } from './makeData'
+
+const features = tableFeatures({
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
+
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+function App() {
+  const [columns, setColumns] = createSignal(makeColumns(DEFAULT_COLUMN_COUNT))
+  const [data, setData] = createSignal(makeData(DEFAULT_ROW_COUNT, columns()))
+
+  const refreshData = () => {
+    const nextColumns = makeColumns(DEFAULT_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(DEFAULT_ROW_COUNT, nextColumns))
+  }
+
+  const stressTestRows = () => {
+    setData(makeData(STRESS_ROW_COUNT, columns()))
+  }
+
+  const stressTestColumns = () => {
+    const nextColumns = makeColumns(STRESS_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(data().length, nextColumns))
+  }
+
+  const table = createTable({
+    features,
+    get columns() {
+      return columns()
+    },
+    get data() {
+      return data()
+    },
+    columnResizeMode: 'onChange',
+    debugTable: true,
+  })
+
+  return (
+    <div class="app">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTestRows()}>Stress Test (10k rows)</button>
+        <button onClick={() => stressTestColumns()}>
+          Stress Test (10k columns)
+        </button>
+      </div>
+      <div>({columns().length.toLocaleString()} columns)</div>
+      <div>({data().length.toLocaleString()} rows)</div>
+      <TableContainer table={table} />
+    </div>
+  )
+}
+
+// Important: Keep both virtualizers and the scroll container ref in the same component.
+// The ref must be undefined when createVirtualizer runs (before JSX return),
+// so that onMount can set up scroll observers after the element is in the DOM.
+function TableContainer(props: { table: SolidTable<typeof features, Person> }) {
+  const visibleColumns = () => props.table.getVisibleLeafColumns()
+  const rows = () => props.table.getRowModel().rows
+
+  let tableContainerRef: HTMLDivElement | undefined
+
+  // We are using a slightly different virtualization strategy for columns (compared to virtual rows)
+  // in order to support dynamic row heights.
+  const columnVirtualizer = createVirtualizer<
+    HTMLDivElement,
+    HTMLTableCellElement
+  >({
+    get count() {
+      return visibleColumns().length
+    },
+    estimateSize: (index) => visibleColumns()[index].getSize(), // estimate width of each column for accurate scrollbar dragging
+    getScrollElement: () => tableContainerRef ?? null,
+    horizontal: true,
+    overscan: 3, // how many columns to render on each side off screen (adjust this for performance)
+  })
+
+  // re-measure virtual column widths when a column is resized so the
+  // virtualizer's scroll math stays in sync with the rendered widths
+  createEffect(() => {
+    void props.table.atoms.columnSizing?.get()
+    columnVirtualizer.measure()
+  })
+
+  // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without `measureElement`
+  const rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLTableRowElement>(
+    {
+      get count() {
+        return rows().length
+      },
+      estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
+      getScrollElement: () => tableContainerRef ?? null,
+      // measure dynamic row height, except in firefox because it measures table border height incorrectly
+      measureElement:
+        typeof window !== 'undefined' &&
+        navigator.userAgent.indexOf('Firefox') === -1
+          ? (element) => element.getBoundingClientRect().height
+          : undefined,
+      overscan: 5,
+    },
+  )
+
+  // Different virtualization strategy for columns - instead of absolute and translateY,
+  // we add empty columns to the left and right
+  const virtualPaddingLeft = () => {
+    const vcs = columnVirtualizer.getVirtualItems()
+    return vcs.length ? (vcs[0]?.start ?? 0) : undefined
+  }
+
+  const virtualPaddingRight = () => {
+    const vcs = columnVirtualizer.getVirtualItems()
+    if (!vcs.length) return undefined
+    return columnVirtualizer.getTotalSize() - (vcs[vcs.length - 1]?.end ?? 0)
+  }
+
+  return (
+    <div
+      class="container"
+      ref={tableContainerRef}
+      style={{
+        overflow: 'auto',
+        position: 'relative',
+        height: '800px',
+      }}
+    >
+      {/* Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights */}
+      <table style={{ display: 'grid' }}>
+        <TableHead
+          columnVirtualizer={columnVirtualizer}
+          table={props.table}
+          virtualPaddingLeft={virtualPaddingLeft()}
+          virtualPaddingRight={virtualPaddingRight()}
+        />
+        <TableBody
+          columnVirtualizer={columnVirtualizer}
+          rowVirtualizer={rowVirtualizer}
+          rows={rows}
+          table={props.table}
+          virtualPaddingLeft={virtualPaddingLeft()}
+          virtualPaddingRight={virtualPaddingRight()}
+        />
+      </table>
+    </div>
+  )
+}
+
+function TableHead(props: {
+  columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
+  table: SolidTable<typeof features, Person>
+  virtualPaddingLeft: number | undefined
+  virtualPaddingRight: number | undefined
+}) {
+  return (
+    <thead
+      style={{
+        display: 'grid',
+        position: 'sticky',
+        top: '0px',
+        'z-index': 1,
+      }}
+    >
+      <For each={props.table.getHeaderGroups()}>
+        {(headerGroup) => (
+          <TableHeadRow
+            columnVirtualizer={props.columnVirtualizer}
+            headerGroup={headerGroup}
+            virtualPaddingLeft={props.virtualPaddingLeft}
+            virtualPaddingRight={props.virtualPaddingRight}
+            table={props.table}
+          />
+        )}
+      </For>
+    </thead>
+  )
+}
+
+function TableHeadRow(props: {
+  columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
+  headerGroup: HeaderGroup<typeof features, Person>
+  virtualPaddingLeft: number | undefined
+  virtualPaddingRight: number | undefined
+  table: SolidTable<typeof features, Person>
+}) {
+  const virtualColumns = () => props.columnVirtualizer.getVirtualItems()
+  return (
+    <tr style={{ display: 'flex', width: '100%' }}>
+      {props.virtualPaddingLeft ? (
+        // fake empty column to the left for virtualization scroll padding
+        <th
+          style={{ display: 'flex', width: `${props.virtualPaddingLeft}px` }}
+        />
+      ) : null}
+      <For each={virtualColumns()}>
+        {(virtualColumn) => (
+          // pass an accessor instead of a plain value - For's callback is
+          // non-tracking, so a captured header would go stale when columns change
+          <TableHeadCell
+            header={() => props.headerGroup.headers[virtualColumn.index]}
+            table={props.table}
+          />
+        )}
+      </For>
+      {props.virtualPaddingRight ? (
+        // fake empty column to the right for virtualization scroll padding
+        <th
+          style={{ display: 'flex', width: `${props.virtualPaddingRight}px` }}
+        />
+      ) : null}
+    </tr>
+  )
+}
+
+function TableHeadCell(props: {
+  header: () => Header<typeof features, Person, unknown>
+  table: SolidTable<typeof features, Person>
+}) {
+  return (
+    <th
+      style={{
+        display: 'flex',
+        position: 'relative', // needed for absolute positioning of the resizer
+        width: `${props.header().getSize()}px`,
+      }}
+    >
+      <div
+        class={props.header().column.getCanSort() ? 'sortable-header' : ''}
+        onClick={props.header().column.getToggleSortingHandler()}
+      >
+        <FlexRender header={props.header()} />
+        {(
+          {
+            asc: ' 🔼',
+            desc: ' 🔽',
+          } as Record<string, string>
+        )[props.header().column.getIsSorted() as string] ?? null}
+      </div>
+      <div
+        onDblClick={() => props.header().column.resetSize()}
+        onMouseDown={props.header().getResizeHandler()}
+        onTouchStart={props.header().getResizeHandler()}
+        class={`resizer ${props.header().column.getIsResizing() ? 'isResizing' : ''}`}
+      />
+    </th>
+  )
+}
+
+function TableBody(props: {
+  columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
+  rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
+  rows: () => Array<Row<typeof features, Person>>
+  table: SolidTable<typeof features, Person>
+  virtualPaddingLeft: number | undefined
+  virtualPaddingRight: number | undefined
+}) {
+  const virtualRows = () => props.rowVirtualizer.getVirtualItems()
+
+  return (
+    <tbody
+      style={{
+        display: 'grid',
+        height: `${props.rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+        position: 'relative', // needed for absolute positioning of rows
+      }}
+    >
+      <For each={virtualRows()}>
+        {(virtualRow) => (
+          // pass an accessor instead of a plain value - For's callback is
+          // non-tracking, so a captured row would go stale when data changes
+          <TableBodyRow
+            columnVirtualizer={props.columnVirtualizer}
+            row={() => props.rows()[virtualRow.index]}
+            rowVirtualizer={props.rowVirtualizer}
+            virtualPaddingLeft={props.virtualPaddingLeft}
+            virtualPaddingRight={props.virtualPaddingRight}
+            virtualRow={virtualRow}
+            table={props.table}
+          />
+        )}
+      </For>
+    </tbody>
+  )
+}
+
+function TableBodyRow(props: {
+  columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
+  row: () => Row<typeof features, Person>
+  rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
+  virtualPaddingLeft: number | undefined
+  virtualPaddingRight: number | undefined
+  virtualRow: VirtualItem
+  table: SolidTable<typeof features, Person>
+}) {
+  const visibleCells = () => props.row().getVisibleCells()
+  const virtualColumns = () => props.columnVirtualizer.getVirtualItems()
+  return (
+    <tr
+      data-index={props.virtualRow.index} // needed for dynamic row height measurement
+      ref={(node) => props.rowVirtualizer.measureElement(node)} // measure dynamic row height
+      style={{
+        display: 'flex',
+        position: 'absolute',
+        transform: `translateY(${props.virtualRow.start}px)`, // this should always be a `style` as it changes on scroll
+        width: '100%',
+      }}
+    >
+      {props.virtualPaddingLeft ? (
+        // fake empty column to the left for virtualization scroll padding
+        <td
+          style={{ display: 'flex', width: `${props.virtualPaddingLeft}px` }}
+        />
+      ) : null}
+      <For each={virtualColumns()}>
+        {(vc) => (
+          // pass an accessor instead of a plain value - For's callback is
+          // non-tracking, so a captured cell would go stale when data changes
+          <TableBodyCell
+            cell={() => visibleCells()[vc.index]}
+            table={props.table}
+          />
+        )}
+      </For>
+      {props.virtualPaddingRight ? (
+        // fake empty column to the right for virtualization scroll padding
+        <td
+          style={{ display: 'flex', width: `${props.virtualPaddingRight}px` }}
+        />
+      ) : null}
+    </tr>
+  )
+}
+
+function TableBodyCell(props: {
+  cell: () => Cell<typeof features, Person, unknown>
+  table: SolidTable<typeof features, Person>
+}) {
+  return (
+    <td
+      style={{
+        display: 'flex',
+        width: `${props.cell().column.getSize()}px`,
+      }}
+    >
+      <FlexRender cell={props.cell()} />
+    </td>
+  )
+}
+
+export default App

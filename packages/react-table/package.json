@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/react-table",
-  "version": "8.21.3",
+  "version": "9.1.2",
   "description": "Headless UI for building powerful tables & datagrids for React.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,47 +18,52 @@
     "react",
     "table",
     "react-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
-  "type": "commonjs",
-  "module": "build/lib/index.esm.js",
-  "main": "build/lib/index.js",
-  "types": "build/lib/index.d.ts",
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js"
-    },
+    ".": "./dist/index.js",
+    "./experimental-worker-plugin": "./dist/experimental-worker-plugin.js",
+    "./flex-render": "./dist/flex-render.js",
+    "./legacy": "./dist/legacy.js",
+    "./static-functions": "./dist/static-functions.js",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=20"
   },
   "files": [
-    "build/lib/*",
-    "build/umd/*",
-    "src"
+    "dist",
+    "skills"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
-    "test:lib": "vitest",
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
     "test:lib:dev": "pnpm test:lib --watch",
-    "test:types": "tsc --noEmit",
-    "build": "pnpm build:rollup && pnpm build:types",
-    "build:rollup": "rollup --config rollup.config.mjs",
-    "build:types": "tsc --emitDeclarationOnly"
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
   },
   "dependencies": {
+    "@tanstack/react-store": "^0.11.1",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^18.3.3",
-    "react": "^18.3.1"
+    "@eslint-react/eslint-plugin": "^5.18.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": ">=18"
   }
 }

@@ -1,0 +1,29 @@
+---
+id: getFacetedRowModel
+title: getFacetedRowModel
+---
+
+# ~~Function: getFacetedRowModel()~~
+
+```ts
+function getFacetedRowModel<TData>(): FacetedRowModelFactory<TData>;
+```
+
+Defined in: [react-table/src/useLegacyTable.ts:115](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L115)
+
+## Type Parameters
+
+### TData
+
+`TData` *extends* `RowData`
+
+## Returns
+
+[`FacetedRowModelFactory`](../type-aliases/FacetedRowModelFactory.md)\<`TData`\>
+
+## Deprecated
+
+Use `createFacetedRowModel()` with the new `useTable` hook instead.
+
+This is a stub function for v8 API compatibility with `useLegacyTable`.
+It acts as a marker to enable the faceted row model.

@@ -1,21 +1,25 @@
 {
-  "name": "tanstack-lit-table-virtualized-rows",
+  "name": "tanstack-lit-table-example-virtualized-rows",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
-    "@tanstack/lit-table": "^8.21.3",
-    "@tanstack/lit-virtual": "^3.8.3",
-    "lit": "^3.1.4"
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/lit-table": "^9.1.2",
+    "@tanstack/lit-virtual": "^3.13.36",
+    "lit": "^3.3.3"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^5.0.7",
-    "typescript": "5.4.5",
-    "vite": "^5.3.2"
+    "@rollup/plugin-replace": "^6.0.3",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
   }
 }

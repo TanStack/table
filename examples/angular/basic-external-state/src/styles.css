@@ -1,0 +1,60 @@
+html {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+table {
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+tbody {
+  border-bottom: 1px solid lightgray;
+}
+
+th,
+td {
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+.demo-root {
+  padding: 0.5rem;
+}
+
+.spacer-sm {
+  height: 0.5rem;
+}
+
+.spacer-md {
+  height: 1rem;
+}
+
+.controls,
+.inline-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.demo-button {
+  border: 1px solid currentColor;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.demo-button-sm {
+  padding: 0.25rem;
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.page-size-input {
+  width: 4rem;
+  padding: 0.25rem;
+}

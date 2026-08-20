@@ -1,0 +1,20 @@
+import { Component, input } from '@angular/core'
+import { JsonPipe } from '@angular/common'
+import type { Row } from '@tanstack/angular-table'
+import type { features } from '../app'
+import type { Person } from '../makeData'
+
+@Component({
+  selector: 'app-sub',
+  template: `
+    <pre [style.font-size.px]="10" class="code-block">
+    <code>
+      {{ row().original | json }}
+    </code>
+  </pre>
+  `,
+  imports: [JsonPipe],
+})
+export class SubComponent {
+  readonly row = input.required<Row<typeof features, Person>>()
+}

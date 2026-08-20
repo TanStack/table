@@ -29,17 +29,19 @@ Before proceeding with development, ensure you match one of the following criter
 
 - Fork this repository, we prefer the `feat-*` branch name style
 - Ensure you have `pnpm` installed
-- Install projects dependencies and linkages by running `pnpm install`
+- Install the project's dependencies and linkages by running `pnpm install`
 - Auto-build and auto-test files as you edit by running `pnpm dev`
 - Implement your changes and tests
 - To run examples, follow their individual directions. Usually this includes:
-  - Installing dependencies with `pnpm install` (from the root directory of the workspace)
-  - Starting the dev server with `pnpm start` (from the example directory)
+  - cd into the example directory
+  - Do NOT install dependencies again or do any linking. Nx already handles this for you. Only run install from the project root.
+  - Starting the dev server with `pnpm dev` or `pnpm start` (from the example directory)
 - To test in your own projects:
   - Build/watch for changes with `pnpm build`/`pnpm dev`
 - Document your changes in the appropriate documentation website markdown pages
+- Create a changeset (changelog entry) for your changes by running `pnpm changeset`
 - Commit your work and open a pull request
-- Submit PR for review
+- Submit the PR for review
 
 ## Adding a new example
 

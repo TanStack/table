@@ -1,0 +1,20 @@
+.root {
+  display: flex;
+  z-index: 2;
+  gap: var(--mantine-spacing-lg);
+  align-items: center;
+  justify-content: space-between;
+  padding-right: var(--mantine-spacing-sm);
+  padding-left: var(--mantine-spacing-sm);
+  padding-top: var(--mantine-spacing-xs);
+  padding-bottom: var(--mantine-spacing-xs);
+  .pagesize {
+    input {
+      width: calc(5rem * var(--mantine-scale));
+    }
+  }
+}
+
+.with-top-margin {
+  margin-top: 3rem;
+}

@@ -1,0 +1,70 @@
+{
+  "name": "@tanstack/octane-table",
+  "version": "9.1.2",
+  "description": "Headless UI for building powerful tables & datagrids for Octane.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/octane-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "octane",
+    "table",
+    "octane-table",
+    "datagrid",
+    "tanstack-intent"
+  ],
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./experimental-worker-plugin": "./src/experimental-worker-plugin.ts",
+    "./flex-render": "./src/flex-render.ts",
+    "./static-functions": "./src/static-functions.ts",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "src",
+    "skills",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src --ext .ts --ignore-pattern src/index.d.ts",
+    "test:lib": "vitest --passWithNoTests && vitest --config vitest.ssr.config.ts --passWithNoTests",
+    "test:lib:client": "vitest --passWithNoTests",
+    "test:lib:ssr": "vitest --config vitest.ssr.config.ts --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib:client --watch",
+    "test:types": "tsrx-tsc --noEmit",
+    "test:build": "publint --strict",
+    "build": "tsrx-tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/octane-store": "^0.12.2",
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@tsrx/typescript-plugin": "^0.3.118",
+    "octane": "0.1.36",
+    "typescript": "6.0.3"
+  },
+  "peerDependencies": {
+    "octane": "0.1.21"
+  }
+}

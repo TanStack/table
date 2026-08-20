@@ -1,79 +1,26 @@
-import { computed, type Signal, signal } from '@angular/core'
-import {
-  RowData,
-  TableOptions,
-  TableOptionsResolved,
-  TableState,
-  createTable,
-  type Table,
-} from '@tanstack/table-core'
-import { lazyInit } from './lazy-signal-initializer'
-import { proxifyTable } from './proxy'
+import { FlexRenderCell } from './helpers/flexRenderCell'
+import { FlexRenderDirective } from './flexRender'
 
 export * from '@tanstack/table-core'
 
-export {
-  type FlexRenderContent,
-  FlexRenderDirective,
-  FlexRenderDirective as FlexRender,
-  injectFlexRenderContext,
-  type FlexRenderComponentProps,
-} from './flex-render'
+export * from './flexRender'
+export * from './injectTable'
+export * from './flex-render/flexRenderComponent'
 
-export {
-  FlexRenderComponent,
-  flexRenderComponent,
-} from './flex-render/flex-render-component'
+export * from './helpers/cell'
+export * from './helpers/header'
+export * from './helpers/table'
+export * from './helpers/createTableHook'
+export * from './helpers/flexRenderCell'
 
-export function createAngularTable<TData extends RowData>(
-  options: () => TableOptions<TData>
-): Table<TData> & Signal<Table<TData>> {
-  return lazyInit(() => {
-    const resolvedOptions = {
-      state: {},
-      onStateChange: () => {},
-      renderFallbackValue: null,
-      ...options(),
-    }
+/**
+ * Constant helper to import FlexRender directives.
+ *
+ * You should prefer to use this constant over importing the directives separately,
+ * as it ensures you always have the correct set of directives over library updates.
+ *
+ * @see {@link FlexRenderDirective} and {@link FlexRenderCell} for more details on the directives included in this export.
+ */
+export const FlexRender = [FlexRenderDirective, FlexRenderCell] as const
 
-    const table = createTable(resolvedOptions)
-
-    // By default, manage table state here using the table's initial state
-    const state = signal<TableState>(table.initialState)
-
-    // Compose table options using computed.
-    // This is to allow `tableSignal` to listen and set table option
-    const updatedOptions = computed<TableOptionsResolved<TData>>(() => {
-      // listen to table state changed
-      const tableState = state()
-      // listen to input options changed
-      const tableOptions = options()
-      return {
-        ...table.options,
-        ...resolvedOptions,
-        ...tableOptions,
-        state: { ...tableState, ...tableOptions.state },
-        onStateChange: updater => {
-          const value =
-            updater instanceof Function ? updater(tableState) : updater
-          state.set(value)
-          resolvedOptions.onStateChange?.(updater)
-        },
-      }
-    })
-
-    // convert table instance to signal for proxify to listen to any table state and options changes
-    const tableSignal = computed(
-      () => {
-        table.setOptions(updatedOptions())
-        return table
-      },
-      {
-        equal: () => false,
-      }
-    )
-
-    // proxify Table instance to provide ability for consumer to listen to any table state changes
-    return proxifyTable(tableSignal)
-  })
-}
+export { shallow } from '@tanstack/angular-store'

@@ -2,10 +2,12 @@ name: PR
 
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'media/**'
-      - '**/*.md'
+    paths:
+      - '**'
+      - '!docs/**'
+      - '!media/**'
+      - '!**/*.md'
+      - '.changeset/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -23,33 +25,64 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Start Nx Agents
         run: npx nx-cloud start-ci-run --distribute-on=".nx/workflows/dynamic-changesets.yaml"
       - name: Setup Tools
-        uses: tanstack/config/.github/setup@main
+        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
       - name: Get base and head commits for `nx affected`
-        uses: nrwl/nx-set-shas@v4.3.3
+        uses: nrwl/nx-set-shas@3e9ad7370203c1e93d109be57f3b72eb0eb511b1 # v4.4.0
         with:
           main-branch-name: main
       - name: Run Checks
-        run: pnpm run test:pr --parallel=3
+        run: pnpm run test:pr --parallel=4
       - name: Stop Nx Agents
         if: ${{ always() }}
         run: npx nx-cloud stop-all-agents
+  coverage:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+      - name: Setup Tools
+        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+      - name: Collect Coverage
+        run: pnpm --filter "@tanstack/table-core" test:coverage
+      - name: Write Coverage Summary
+        run: node scripts/coverage-summary.mjs packages/table-core/coverage/coverage-summary.json "table-core Coverage" >> "$GITHUB_STEP_SUMMARY"
   preview:
     name: Preview
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Setup Tools
-        uses: tanstack/config/.github/setup@main
+        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
       - name: Build Packages
         run: pnpm run build:all
       - name: Publish Previews
         run: pnpx pkg-pr-new publish --pnpm --compact './packages/*' --template './examples/*/*'
+  version-preview:
+    name: Version Preview
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
+      - name: Setup Tools
+        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+      - name: Changeset Preview
+        uses: TanStack/config/.github/changeset-preview@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main

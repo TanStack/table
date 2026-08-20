@@ -1,89 +1,107 @@
-import type { ComponentType, ComponentProps } from 'svelte'
-import {
-  SvelteComponent,
-  claim_component,
-  create_component,
-  destroy_component,
-  init,
-  mount_component,
-  noop,
-  safe_not_equal,
-  transition_in,
-  transition_out,
-  create_ssr_component,
-  validate_component,
-} from 'svelte/internal'
+import type { Component, ComponentProps, Snippet } from 'svelte'
 
-function create_fragment(ctx: any, Comp: any, props: any) {
-  let c: any
-  let current: any
-  c = new Comp({ props, $$inline: true })
-
-  return {
-    c() {
-      create_component(c.$$.fragment)
-    },
-    l(nodes: any) {
-      claim_component(c.$$.fragment, nodes)
-    },
-    m(target: any, anchor: any) {
-      // @ts-ignore
-      mount_component(c, target, anchor)
-      current = true
-    },
-    p: noop,
-    i(local: any) {
-      if (current) return
-      transition_in(c.$$.fragment, local)
-      current = true
-    },
-    o(local: any) {
-      transition_out(c.$$.fragment, local)
-      current = false
-    },
-    d(detaching: any) {
-      destroy_component(c, detaching)
-    },
-  }
+/**
+ * A helper class to make it easy to identify Svelte components in
+ * `columnDef.cell` and `columnDef.header` properties.
+ *
+ * > NOTE: This class should only be used internally by the adapter. If you're
+ * reading this and you don't know what this is for, you probably don't need it.
+ *
+ * @example
+ * ```svelte
+ * {@const result = content(context as any)}
+ * {#if result instanceof RenderComponentConfig}
+ *   {@const { component: Component, props } = result}
+ *   <Component {...props} />
+ * {/if}
+ * ```
+ * */
+export class RenderComponentConfig<TComponent extends Component> {
+  constructor(
+    public component: TComponent,
+    public props?: ComponentProps<TComponent> | Record<string, never>,
+  ) {}
 }
 
-function renderClient<T>(
-  Comp: T,
-  props: T extends ComponentType<infer C> ? ComponentProps<C> : any
-) {
-  return class WrapperComp extends SvelteComponent {
-    constructor(options: any) {
-      super()
-      init(
-        this,
-        options,
-        null,
-        (ctx: any) => create_fragment(ctx, Comp, props),
-        safe_not_equal,
-        {},
-        undefined
-      )
-    }
-  } as ComponentType
+/**
+ * A helper class to make it easy to identify Svelte Snippets in `columnDef.cell` and `columnDef.header` properties.
+ *
+ * > NOTE: This class should only be used internally by the adapter. If you're
+ * reading this and you don't know what this is for, you probably don't need it.
+ *
+ * @example
+ * ```svelte
+ * {@const result = content(context as any)}
+ * {#if result instanceof RenderSnippetConfig}
+ *   {@const { snippet, params } = result}
+ *   {@render snippet(params)}
+ * {/if}
+ * ```
+ * */
+export class RenderSnippetConfig<TProps> {
+  constructor(
+    public snippet: Snippet<[TProps]>,
+    public params?: TProps,
+  ) {}
 }
 
-function renderServer<T>(
-  Comp: T,
-  props: T extends ComponentType<infer C> ? ComponentProps<C> : any
-) {
-  const WrapperComp = create_ssr_component(
-    ($$result: any, $$props: any, $$bindings: any, slots: any) => {
-      return `${validate_component(Comp, 'TableComponent').$$render(
-        $$result,
-        props,
-        {},
-        {}
-      )}`
-    }
-  )
+/**
+ * Wraps a Svelte component so it can be returned from a column definition
+ * renderer such as `cell`, `header`, or `footer`.
+ *
+ * This is only to be used with Svelte Components - use `renderSnippet` for Svelte Snippets.
+ *
+ * @param component A Svelte component
+ * @param props The props to pass to `component`
+ * @returns A `RenderComponentConfig` object that helps svelte-table know how to render the header/cell component.
+ * @example
+ * ```ts
+ * // +page.svelte
+ * const defaultColumns = [
+ *   columnHelper.accessor('name', {
+ *     header: header => renderComponent(SortHeader, { label: 'Name', header }),
+ *   }),
+ *   columnHelper.accessor('state', {
+ *     header: header => renderComponent(SortHeader, { label: 'State', header }),
+ *   }),
+ * ]
+ * ```
+ * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
+ */
+export const renderComponent = <
+  TComponent extends Component<any>,
+  TProps extends ComponentProps<TComponent>,
+>(
+  component: TComponent,
+  props?: TProps,
+) => new RenderComponentConfig(component, props)
 
-  return WrapperComp as unknown as ComponentType
-}
-
-export const renderComponent =
-  typeof window === 'undefined' ? renderServer : renderClient
+/**
+ * Wraps a Svelte snippet so it can be returned from a column definition
+ * renderer such as `cell`, `header`, or `footer`.
+ *
+ * *The snippet must only take one parameter.*
+ *
+ * This is only to be used with Snippets - use `renderComponent` for Svelte Components.
+ *
+ * @param snippet The snippet to render.
+ * @param params The single parameter object passed to the snippet.
+ * @returns A `RenderSnippetConfig` consumed by the Svelte `FlexRender` component.
+ * @example
+ * ```ts
+ * // +page.svelte
+ * const defaultColumns = [
+ *   columnHelper.accessor('name', {
+ *     cell: cell => renderSnippet(nameSnippet, { name: cell.row.name }),
+ *   }),
+ *   columnHelper.accessor('state', {
+ *     cell: cell => renderSnippet(stateSnippet, { state: cell.row.state }),
+ *   }),
+ * ]
+ * ```
+ * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
+ */
+export const renderSnippet = <TProps>(
+  snippet: Snippet<[TProps]>,
+  params?: TProps,
+) => new RenderSnippetConfig(snippet, params)

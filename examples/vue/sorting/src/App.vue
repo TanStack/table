@@ -1,105 +1,108 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  getCoreRowModel,
-  useVueTable,
-  SortingState,
   createColumnHelper,
-  getSortedRowModel,
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 
-const columnHelper = createColumnHelper<Person>()
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
+})
 
-const columns = [
-  columnHelper.group({
-    header: 'Name',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      }),
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-      columnHelper.accessor(row => row.lastName, {
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => h('span', 'Last Name'),
-        footer: props => props.column.id,
-      }),
-    ],
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
   }),
-
-  columnHelper.group({
-    header: 'Info',
-    footer: props => props.column.id,
-
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: props => props.column.id,
-      }),
-
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => h('span', 'Visits'),
-            footer: props => props.column.id,
-          }),
-
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: props => props.column.id,
-          }),
-
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-
-      columnHelper.accessor('createdAt', {
-        header: 'Created At',
-      }),
-    ],
+  columnHelper.accessor('firstName', {
+    cell: (info) => info.getValue(),
+    footer: (props) => props.column.id,
   }),
-]
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => h('span', 'Last Name'),
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('email', {
+    header: 'Email',
+    sortFn: 'alphanumeric',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => h('span', 'Visits'),
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
 
-const data = ref(makeData(10000))
+const data = ref(makeData(1_000))
 
-const rerender = () => {
-  data.value = makeData(10000)
+const refreshData = () => {
+  data.value = makeData(1_000)
 }
 
-const sorting = ref<SortingState>([])
+const stressTest = () => {
+  data.value = makeData(1_000_000)
+}
 
-const table = useVueTable({
-  get data() {
-    return data.value
-  },
+const table = useTable({
+  features,
+  data,
   columns,
-  state: {
-    get sorting() {
-      return sorting.value
-    },
-  },
-  onSortingChange: updaterOrValue => {
-    sorting.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(sorting.value)
-        : updaterOrValue
-  },
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
+  // initialState: { sorting: [{ id: 'firstName', desc: false }] }, // set the initial sort once
+  // atoms: { sorting: sortingAtom }, // preferred: own sorting state with an external atom
+  // state: { sorting }, // classic controlled state; pair with onSortingChange
+  // onSortingChange: setSorting,
+  // enableSorting: false, // disable sorting for every column; default true
+  // sortDescFirst: true, // start every sort cycle with descending order; inferred by column data by default
+  // enableSortingRemoval: false, // keep a sorted column sorted when toggling; default true
+  // enableMultiSort: false, // disable Shift-click multi-sorting; default true
+  // enableMultiRemove: false, // prevent a multi-sort toggle from removing a sorted column; default true
+  // isMultiSortEvent: () => true, // make every sort interaction a multi-sort; default requires Shift
+  // maxMultiSortColCount: 3, // limit multi-sorting to three columns; default Infinity
+  // manualSorting: true, // pass data that is already sorted, for example from a server
+  // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
   debugTable: true,
 })
 </script>
 
 <template>
-  <div class="p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
+        Stress Test (1M rows)
+      </button>
+    </div>
+    <div class="spacer-md" />
     <table>
       <thead>
         <tr
@@ -110,16 +113,11 @@ const table = useVueTable({
             v-for="header in headerGroup.headers"
             :key="header.id"
             :colSpan="header.colSpan"
-            :class="
-              header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-            "
+            :class="header.column.getCanSort() ? 'sortable-header' : ''"
             @click="header.column.getToggleSortingHandler()?.($event)"
           >
             <template v-if="!header.isPlaceholder">
-              <FlexRender
-                :render="header.column.columnDef.header"
-                :props="header.getContext()"
-              />
+              <FlexRender :header="header" />
 
               {{
                 { asc: ' 🔼', desc: ' 🔽' }[
@@ -133,11 +131,8 @@ const table = useVueTable({
 
       <tbody>
         <tr v-for="row in table.getRowModel().rows.slice(0, 10)" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <FlexRender
-              :render="cell.column.columnDef.cell"
-              :props="cell.getContext()"
-            />
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
+            <FlexRender :cell="cell" />
           </td>
         </tr>
       </tbody>
@@ -152,23 +147,19 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
-            />
+            <FlexRender v-if="!header.isPlaceholder" :footer="header" />
           </th>
         </tr>
       </tfoot>
     </table>
 
-    <div class="h-4"></div>
+    <div class="spacer-md"></div>
 
-    <div>{{ table.getRowModel().rows.length }} Rows</div>
+    <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
 
-    <button @click="rerender" class="border p-2">Rerender</button>
-
-    <pre>{{ JSON.stringify(sorting, null, 2) }}</pre>
+    <pre data-testid="table-state">{{
+      JSON.stringify(table.store.get(), null, 2)
+    }}</pre>
   </div>
 </template>
 
@@ -179,6 +170,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

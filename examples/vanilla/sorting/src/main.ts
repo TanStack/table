@@ -1,42 +1,71 @@
 import './index.css'
-
 import {
-  type SortingFn,
+  constructTable,
   createColumnHelper,
-  getCoreRowModel,
-  getSortedRowModel,
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
+  tableFeatures,
 } from '@tanstack/table-core'
+import { FlexRender } from '@tanstack/table-core/flex-render'
+import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
+import { makeData } from './makeData'
+import type { SortFn } from '@tanstack/table-core'
+import type { Person } from './makeData'
 
-import { makeData, Person } from './makeData'
-import { flexRender, useTable } from './useTable'
+let data = makeData(1_000)
 
-const data = makeData(1000)
+const features = tableFeatures({
+  rowSortingFeature,
+  coreReactivityFeature: storeReactivityBindings(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
+})
 
 // Custom sorting logic for one of our enum columns
-const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortFn<typeof features, Person> = (
+  rowA,
+  rowB,
+  _columnId,
+) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const columns = [
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  }),
   columnHelper.accessor('firstName', {
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     // This column will sort in ascending order by default since it is a string column
   }),
-  columnHelper.accessor(row => row.lastName, {
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => `<i>${info.getValue()}</i>`,
+    cell: (info) => `<i>${info.getValue()}</i>`,
     header: () => '<span>Last Name</span>',
     sortUndefined: 'last', // Force undefined values to the end
     sortDescFirst: false, // First sort order will be ascending (nullable values can mess up auto detection of sort order)
   }),
+  columnHelper.accessor('email', {
+    header: 'Email',
+    sortFn: 'alphanumeric',
+  }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    cell: info => info.renderValue(),
+    cell: (info) => info.renderValue(),
     // This column will sort in descending order by default since it is a number column
   }),
   columnHelper.accessor('visits', {
@@ -45,7 +74,7 @@ const columns = [
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    sortingFn: sortStatusFn, // Use our custom sorting function for this enum column
+    sortFn: sortStatusFn, // Use our custom sorting function for this enum column
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
@@ -58,34 +87,59 @@ const columns = [
   columnHelper.accessor('createdAt', {
     header: 'Created At',
   }),
-]
+])
 
 const renderTable = () => {
+  // Create buttons container
+  const buttonsDiv = document.createElement('div')
+
+  const regenerateBtn = document.createElement('button')
+  regenerateBtn.textContent = 'Regenerate Data'
+  regenerateBtn.addEventListener('click', () => {
+    data = makeData(1_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+    renderTable()
+  })
+
+  const stressTestBtn = document.createElement('button')
+  stressTestBtn.textContent = 'Stress Test (1M rows)'
+  stressTestBtn.addEventListener('click', () => {
+    data = makeData(1_000_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+    renderTable()
+  })
+
+  buttonsDiv.appendChild(regenerateBtn)
+  buttonsDiv.appendChild(stressTestBtn)
+
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
   const tbodyElement = document.createElement('tbody')
 
-  tableElement.classList.add('mb-2')
+  tableElement.classList.add('table-spacer')
 
   tableElement.appendChild(theadElement)
   tableElement.appendChild(tbodyElement)
 
   // Render table headers
-  table.getHeaderGroups().forEach(headerGroup => {
+  table.getHeaderGroups().forEach((headerGroup) => {
     const trElement = document.createElement('tr')
-    headerGroup.headers.forEach(header => {
+    headerGroup.headers.forEach((header) => {
       const thElement = document.createElement('th')
       thElement.colSpan = header.colSpan
       const divElement = document.createElement('div')
       divElement.classList.add(
         'w-36',
-        ...(header.column.getCanSort() ? ['cursor-pointer', 'select-none'] : [])
+        ...(header.column.getCanSort()
+          ? ['sortable-header', 'sortable-header']
+          : []),
       )
-      ;(divElement.onclick = e => header.column.getToggleSortingHandler()?.(e)),
+      ;((divElement.onclick = (e) =>
+        header.column.getToggleSortingHandler()?.(e)),
         (divElement.innerHTML = header.isPlaceholder
           ? ''
-          : flexRender(header.column.columnDef.header, header.getContext()))
+          : String(FlexRender({ header }) ?? '')))
       divElement.innerHTML +=
         {
           asc: ' 🔼',
@@ -101,14 +155,11 @@ const renderTable = () => {
   table
     .getRowModel()
     .rows.slice(0, 10)
-    .forEach(row => {
+    .forEach((row) => {
       const trElement = document.createElement('tr')
-      row.getVisibleCells().forEach(cell => {
+      row.getAllCells().forEach((cell) => {
         const tdElement = document.createElement('td')
-        tdElement.innerHTML = flexRender(
-          cell.column.columnDef.cell,
-          cell.getContext()
-        )
+        tdElement.innerHTML = String(FlexRender({ cell }) ?? '')
         trElement.appendChild(tdElement)
       })
       tbodyElement.appendChild(trElement)
@@ -118,25 +169,40 @@ const renderTable = () => {
   const stateInfoElement = document.createElement('pre')
   stateInfoElement.textContent = JSON.stringify(
     {
-      sorting: table.getState().sorting,
+      sorting: table.store.state.sorting,
     },
     null,
-    2
+    2,
   )
 
   // Clear previous content and append new content
   const wrapperElement = document.getElementById('wrapper') as HTMLDivElement
   wrapperElement.innerHTML = ''
+  wrapperElement.appendChild(buttonsDiv)
   wrapperElement.appendChild(tableElement)
   wrapperElement.appendChild(stateInfoElement)
 }
 
-const table = useTable<Person>({
+const table = constructTable({
+  features,
   data,
   columns,
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
-  onStateChange: () => renderTable(),
+  // initialState: { sorting: [{ id: 'firstName', desc: false }] }, // set the initial sort once
+  // atoms: { sorting: sortingAtom }, // preferred: own sorting state with an external atom
+  // state: { sorting }, // classic controlled state; pair with onSortingChange
+  // onSortingChange: setSorting,
+  // enableSorting: false, // disable sorting for every column; default true
+  // sortDescFirst: true, // start every sort cycle with descending order; inferred by column data by default
+  // enableSortingRemoval: false, // keep a sorted column sorted when toggling; default true
+  // enableMultiSort: false, // disable Shift-click multi-sorting; default true
+  // enableMultiRemove: false, // prevent a multi-sort toggle from removing a sorted column; default true
+  // isMultiSortEvent: () => true, // make every sort interaction a multi-sort; default requires Shift
+  // maxMultiSortColCount: 3, // limit multi-sorting to three columns; default Infinity
+  // manualSorting: true, // pass data that is already sorted, for example from a server
+  // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
+  debugTable: true,
 })
+
+table.store.subscribe(() => renderTable())
 
 renderTable()

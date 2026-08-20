@@ -1,27 +1,42 @@
-import React, { CSSProperties } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-
+import {
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
+import { faker } from '@faker-js/faker'
+import { makeData } from './makeData'
+import type { Column } from '@tanstack/react-table'
+import type { CSSProperties } from 'react'
+import type { Person } from './makeData'
 import './index.css'
 
-import {
-  Column,
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
-import { faker } from '@faker-js/faker'
+const features = tableFeatures({
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+})
 
-//These are the important styles to make sticky column pinning work!
-//Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
-//View the index.css file for more needed styles such as border-collapse: separate
-const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
+const columnHelper = createColumnHelper<typeof features, Person>()
+// These are the important styles to make sticky column pinning work!
+// Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
+// View the index.css file for more needed styles such as border-collapse: collapse
+const getCommonPinningStyles = (
+  column: Column<typeof features, Person>,
+): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left')
+    isPinned === 'start' && column.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'right' && column.getIsFirstColumn('right')
+    isPinned === 'end' && column.getIsFirstColumn('end')
 
   return {
     boxShadow: isLastLeftPinnedColumn
@@ -29,8 +44,10 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
       : isFirstRightPinnedColumn
         ? '4px 0 4px -4px gray inset'
         : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    insetInlineStart:
+      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    insetInlineEnd:
+      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
     width: column.getSize(),
@@ -38,100 +55,99 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
   }
 }
 
-const defaultColumns: ColumnDef<Person>[] = [
-  {
-    accessorKey: 'firstName',
+const defaultColumns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     id: 'firstName',
     header: 'First Name',
-    cell: info => info.getValue(),
-    footer: props => props.column.id,
+    cell: (info) => info.getValue(),
+    footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorFn: row => row.lastName,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => <span>Last Name</span>,
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'age',
+  }),
+  columnHelper.accessor('age', {
     id: 'age',
     header: 'Age',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     id: 'visits',
     header: 'Visits',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     id: 'status',
     header: 'Status',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     id: 'progress',
     header: 'Profile Progress',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
-  },
-]
+  }),
+])
 
 function App() {
-  const [data, setData] = React.useState(() => makeData(30))
+  const [data, setData] = React.useState(() => makeData(20))
   const [columns] = React.useState(() => [...defaultColumns])
 
-  const rerender = () => setData(() => makeData(30))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-    columnResizeMode: 'onChange',
-  })
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      columnResizeMode: 'onChange',
+      // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+      // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+      // state: { columnPinning }, // classic controlled state; pair with onColumnPinningChange
+      // onColumnPinningChange: setColumnPinning,
+      // enableColumnPinning: false, // disable pinning for every column; default true
+      debugColumnVisibilityFeature: true,
+      debugColumnPinningFeature: true,
+      debugColumnSizingFeature: true,
+    },
+    (state) => state, // default selector
+  )
 
   const randomizeColumns = () => {
     table.setColumnOrder(
-      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
   return (
-    <div className="p-2">
-      <div className="inline-block border border-black shadow rounded">
-        <div className="px-1 border-b border-black">
+    <div className="demo-root">
+      <div className="column-toggle-panel">
+        <div className="column-toggle-panel-header">
           <label>
             <input
-              {...{
-                type: 'checkbox',
-                checked: table.getIsAllColumnsVisible(),
-                onChange: table.getToggleAllColumnsVisibilityHandler(),
-              }}
+              type="checkbox"
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
             />{' '}
             Toggle All
           </label>
         </div>
-        {table.getAllLeafColumns().map(column => {
+        {table.getAllLeafColumns().map((column) => {
           return (
-            <div key={column.id} className="px-1">
+            <div key={column.id} className="column-toggle-row">
               <label>
                 <input
-                  {...{
-                    type: 'checkbox',
-                    checked: column.getIsVisible(),
-                    onChange: column.getToggleVisibilityHandler(),
-                  }}
+                  type="checkbox"
+                  checked={column.getIsVisible()}
+                  onChange={column.getToggleVisibilityHandler()}
                 />{' '}
                 {column.id}
               </label>
@@ -139,16 +155,28 @@ function App() {
           )
         })}
       </div>
-      <div className="h-4" />
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => rerender()} className="border p-1">
-          Regenerate
+      <div className="spacer-md" />
+      <div className="button-row">
+        <button
+          onClick={() => refreshData()}
+          className="demo-button demo-button-sm"
+        >
+          Regenerate Data
         </button>
-        <button onClick={() => randomizeColumns()} className="border p-1">
+        <button
+          onClick={() => stressTest()}
+          className="demo-button demo-button-sm"
+        >
+          Stress Test (1k rows)
+        </button>
+        <button
+          onClick={() => randomizeColumns()}
+          className="demo-button demo-button-sm"
+        >
           Shuffle Columns
         </button>
       </div>
-      <div className="h-4" />
+      <div className="spacer-md" />
       <div className="table-container">
         <table
           style={{
@@ -156,35 +184,34 @@ function App() {
           }}
         >
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   const { column } = header
 
                   return (
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
-                      //IMPORTANT: This is where the magic happens!
+                      // IMPORTANT: This is where the magic happens!
                       style={{ ...getCommonPinningStyles(column) }}
                     >
-                      <div className="whitespace-nowrap">
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}{' '}
+                      <div className="nowrap">
+                        {header.isPlaceholder ? null : (
+                          <>
+                            <table.FlexRender header={header} />{' '}
+                          </>
+                        )}
                         {/* Demo getIndex behavior */}
                         {column.getIndex(column.getIsPinned() || 'center')}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
-                        <div className="flex gap-1 justify-center">
-                          {header.column.getIsPinned() !== 'left' ? (
+                        <div className="pin-actions">
+                          {header.column.getIsPinned() !== 'start' ? (
                             <button
-                              className="border rounded px-2"
+                              className="pin-button"
                               onClick={() => {
-                                header.column.pin('left')
+                                header.column.pin('start')
                               }}
                             >
                               {'<='}
@@ -192,7 +219,7 @@ function App() {
                           ) : null}
                           {header.column.getIsPinned() ? (
                             <button
-                              className="border rounded px-2"
+                              className="pin-button"
                               onClick={() => {
                                 header.column.pin(false)
                               }}
@@ -200,11 +227,11 @@ function App() {
                               X
                             </button>
                           ) : null}
-                          {header.column.getIsPinned() !== 'right' ? (
+                          {header.column.getIsPinned() !== 'end' ? (
                             <button
-                              className="border rounded px-2"
+                              className="pin-button"
                               onClick={() => {
-                                header.column.pin('right')
+                                header.column.pin('end')
                               }}
                             >
                               {'=>'}
@@ -213,14 +240,12 @@ function App() {
                         </div>
                       )}
                       <div
-                        {...{
-                          onDoubleClick: () => header.column.resetSize(),
-                          onMouseDown: header.getResizeHandler(),
-                          onTouchStart: header.getResizeHandler(),
-                          className: `resizer ${
-                            header.column.getIsResizing() ? 'isResizing' : ''
-                          }`,
-                        }}
+                        onDoubleClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          header.column.getIsResizing() ? 'isResizing' : ''
+                        }`}
                       />
                     </th>
                   )
@@ -229,20 +254,17 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   const { column } = cell
                   return (
                     <td
                       key={cell.id}
-                      //IMPORTANT: This is where the magic happens!
+                      // IMPORTANT: This is where the magic happens!
                       style={{ ...getCommonPinningStyles(column) }}
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}
@@ -251,7 +273,9 @@ function App() {
           </tbody>
         </table>
       </div>
-      <pre>{JSON.stringify(table.getState().columnPinning, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }
@@ -262,5 +286,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

@@ -1,0 +1,267 @@
+import { faker } from '@faker-js/faker'
+import {
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createTable,
+  tableFeatures,
+} from '@tanstack/solid-table'
+import { For, createSignal } from 'solid-js'
+import { makeData } from './makeData'
+import type { Column } from '@tanstack/solid-table'
+import type { JSX } from 'solid-js'
+import type { Person } from './makeData'
+
+const features = tableFeatures({
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+})
+
+const getCommonPinningStyles = (
+  column: Column<typeof features, Person>,
+): JSX.CSSProperties => {
+  const isPinned = column.getIsPinned()
+  const isLastLeftPinnedColumn =
+    isPinned === 'start' && column.getIsLastColumn('start')
+  const isFirstRightPinnedColumn =
+    isPinned === 'end' && column.getIsFirstColumn('end')
+
+  return {
+    'box-shadow': isLastLeftPinnedColumn
+      ? '-4px 0 4px -4px gray inset'
+      : isFirstRightPinnedColumn
+        ? '4px 0 4px -4px gray inset'
+        : undefined,
+    'inset-inline-start':
+      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    'inset-inline-end':
+      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
+    opacity: isPinned ? 0.95 : 1,
+    position: isPinned ? 'sticky' : 'relative',
+    width: `${column.getSize()}px`,
+    'z-index': isPinned ? 1 : 0,
+  }
+}
+
+const defaultColumns = [
+  {
+    accessorKey: 'firstName',
+    id: 'firstName',
+    header: 'First Name',
+    cell: (info: any) => info.getValue(),
+    footer: (props: any) => props.column.id,
+    size: 180,
+  },
+  {
+    accessorFn: (row: Person) => row.lastName,
+    id: 'lastName',
+    cell: (info: any) => info.getValue(),
+    header: () => <span>Last Name</span>,
+    footer: (props: any) => props.column.id,
+    size: 180,
+  },
+  {
+    accessorKey: 'age',
+    id: 'age',
+    header: 'Age',
+    footer: (props: any) => props.column.id,
+    size: 180,
+  },
+  {
+    accessorKey: 'visits',
+    id: 'visits',
+    header: 'Visits',
+    footer: (props: any) => props.column.id,
+    size: 180,
+  },
+  {
+    accessorKey: 'status',
+    id: 'status',
+    header: 'Status',
+    footer: (props: any) => props.column.id,
+    size: 180,
+  },
+  {
+    accessorKey: 'progress',
+    id: 'progress',
+    header: 'Profile Progress',
+    footer: (props: any) => props.column.id,
+    size: 180,
+  },
+]
+
+function App() {
+  const [data, setData] = createSignal(makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
+
+  const table = createTable({
+    features,
+    columns: defaultColumns,
+    get data() {
+      return data()
+    },
+    columnResizeMode: 'onChange',
+    // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+    // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+    // state: { columnPinning }, // classic controlled state; pair with onColumnPinningChange
+    // onColumnPinningChange: setColumnPinning,
+    // enableColumnPinning: false, // disable pinning for every column; default true
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
+
+  const randomizeColumns = () => {
+    table.setColumnOrder(
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
+    )
+  }
+
+  return (
+    <div class="demo-root">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
+          <label>
+            <input
+              type="checkbox"
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
+            />{' '}
+            Toggle All
+          </label>
+        </div>
+        <For each={table.getAllLeafColumns()}>
+          {(column) => (
+            <div class="column-toggle-row">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={column.getIsVisible()}
+                  onChange={column.getToggleVisibilityHandler()}
+                />{' '}
+                {column.id}
+              </label>
+            </div>
+          )}
+        </For>
+      </div>
+      <div class="spacer-md" />
+      <div class="button-row">
+        <button
+          onClick={() => refreshData()}
+          class="demo-button demo-button-sm"
+        >
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} class="demo-button demo-button-sm">
+          Stress Test (1k rows)
+        </button>
+        <button
+          onClick={() => randomizeColumns()}
+          class="demo-button demo-button-sm"
+        >
+          Shuffle Columns
+        </button>
+      </div>
+      <div class="spacer-md" />
+      <div class="table-container">
+        <table style={{ width: `${table.getTotalSize()}px` }}>
+          <thead>
+            <For each={table.getHeaderGroups()}>
+              {(headerGroup) => (
+                <tr>
+                  <For each={headerGroup.headers}>
+                    {(header) => {
+                      const { column } = header
+                      return (
+                        <th
+                          colSpan={header.colSpan}
+                          style={{ ...getCommonPinningStyles(column) }}
+                        >
+                          <div class="nowrap">
+                            {header.isPlaceholder ? null : (
+                              <>
+                                <table.FlexRender header={header} />{' '}
+                              </>
+                            )}
+                            {column.getIndex(column.getIsPinned() || 'center')}
+                          </div>
+                          {!header.isPlaceholder &&
+                            header.column.getCanPin() && (
+                              <div class="pin-actions">
+                                {header.column.getIsPinned() !== 'start' ? (
+                                  <button
+                                    class="pin-button"
+                                    onClick={() => header.column.pin('start')}
+                                  >
+                                    {'<='}
+                                  </button>
+                                ) : null}
+                                {header.column.getIsPinned() ? (
+                                  <button
+                                    class="pin-button"
+                                    onClick={() => header.column.pin(false)}
+                                  >
+                                    X
+                                  </button>
+                                ) : null}
+                                {header.column.getIsPinned() !== 'end' ? (
+                                  <button
+                                    class="pin-button"
+                                    onClick={() => header.column.pin('end')}
+                                  >
+                                    {'=>'}
+                                  </button>
+                                ) : null}
+                              </div>
+                            )}
+                          <div
+                            onDblClick={() => header.column.resetSize()}
+                            onMouseDown={header.getResizeHandler()}
+                            onTouchStart={header.getResizeHandler()}
+                            class={`resizer ${
+                              header.column.getIsResizing() ? 'isResizing' : ''
+                            }`}
+                          />
+                        </th>
+                      )
+                    }}
+                  </For>
+                </tr>
+              )}
+            </For>
+          </thead>
+          <tbody>
+            <For each={table.getRowModel().rows}>
+              {(row) => (
+                <tr>
+                  <For each={row.getVisibleCells()}>
+                    {(cell) => {
+                      const { column } = cell
+                      return (
+                        <td style={{ ...getCommonPinningStyles(column) }}>
+                          <table.FlexRender cell={cell} />
+                        </td>
+                      )
+                    }}
+                  </For>
+                </tr>
+              )}
+            </For>
+          </tbody>
+        </table>
+      </div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
+    </div>
+  )
+}
+
+export default App

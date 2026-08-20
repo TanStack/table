@@ -1,0 +1,24 @@
+{
+  "name": "tanstack-preact-table-example-expanding",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/preact-table": "^9.1.2",
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "typescript": "6.0.3",
+    "vite": "^8.2.1"
+  }
+}

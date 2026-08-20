@@ -1,0 +1,369 @@
+import { defineComponent, ref, watchEffect } from 'vue'
+import {
+  FlexRender,
+  columnFilteringFeature,
+  createColumnHelper,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
+} from '@tanstack/vue-table'
+import { makeData } from './makeData'
+import type {
+  Cell,
+  Column,
+  Header,
+  HeaderGroup,
+  Row,
+  Table,
+} from '@tanstack/vue-table'
+import type { Person } from './makeData'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const IndeterminateCheckbox = defineComponent({
+  name: 'IndeterminateCheckbox',
+  props: {
+    checked: Boolean,
+    indeterminate: Boolean,
+    onChange: Function,
+    onClick: Function,
+    className: String,
+  },
+  setup(props) {
+    const inputRef = ref<HTMLInputElement | null>(null)
+
+    watchEffect(() => {
+      if (inputRef.value) {
+        inputRef.value.indeterminate = !props.checked && !!props.indeterminate
+      }
+    })
+
+    return () => (
+      <input
+        ref={inputRef}
+        type="checkbox"
+        class={`${props.className ?? ''} sortable-header`}
+        checked={props.checked}
+        onChange={props.onChange as any}
+        onClick={props.onClick as any}
+      />
+    )
+  },
+})
+
+function renderFilter(
+  column: Column<typeof features, Person>,
+  table: Table<typeof features, Person>,
+) {
+  const firstValue = table
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
+
+  const columnFilterValue = column.getFilterValue()
+
+  if (typeof firstValue === 'number') {
+    return (
+      <div class="filter-row">
+        <input
+          type="number"
+          value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
+          onInput={(event: Event) =>
+            column.setFilterValue((old: [number, number] | undefined) => {
+              const target = event.currentTarget as HTMLInputElement
+              return [target.value, old?.[1]]
+            })
+          }
+          placeholder="Min"
+          class="filter-input"
+        />
+        <input
+          type="number"
+          value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
+          onInput={(event: Event) =>
+            column.setFilterValue((old: [number, number] | undefined) => {
+              const target = event.currentTarget as HTMLInputElement
+              return [old?.[0], target.value]
+            })
+          }
+          placeholder="Max"
+          class="filter-input"
+        />
+      </div>
+    )
+  }
+
+  return (
+    <input
+      type="text"
+      value={columnFilterValue ?? ''}
+      onInput={(event: Event) =>
+        column.setFilterValue((event.currentTarget as HTMLInputElement).value)
+      }
+      placeholder="Search..."
+      class="filter-select"
+    />
+  )
+}
+
+export default defineComponent({
+  name: 'ExpandingExample',
+  setup() {
+    const data = ref(makeData(100, 5, 3))
+    const refreshData = () => {
+      data.value = makeData(100, 5, 3)
+    }
+    const stressTest = () => {
+      data.value = makeData(10_000, 5, 3)
+    }
+
+    const columns = columnHelper.columns([
+      columnHelper.display({
+        id: 'rowNumber',
+        header: '#',
+        cell: ({ row }) => row.getDisplayIndex() + 1,
+      }),
+      columnHelper.accessor('firstName', {
+        header: ({ table }) => (
+          <>
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />{' '}
+            <button onClick={table.getToggleAllRowsExpandedHandler()}>
+              {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+            </button>{' '}
+            First Name
+          </>
+        ),
+        cell: ({ row, getValue }) => (
+          <div style={{ paddingLeft: `${row.depth * 2}rem` }}>
+            <div>
+              <IndeterminateCheckbox
+                checked={
+                  row.getIsSelected() ||
+                  (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+                }
+                indeterminate={row.getIsSomeSelected()}
+                onClick={row.getToggleSelectedHandler({
+                  // selectChildren: false
+                })}
+              />{' '}
+              {row.getCanExpand() ? (
+                <button
+                  onClick={row.getToggleExpandedHandler()}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {row.getIsExpanded() ? '👇' : '👉'}
+                </button>
+              ) : (
+                '🔵'
+              )}{' '}
+              {getValue<string>()}
+            </div>
+          </div>
+        ),
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        cell: (info) => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor('age', {
+        header: () => 'Age',
+        footer: (props) => props.column.id,
+        filterFn: 'between',
+      }),
+      columnHelper.accessor('visits', {
+        header: () => <span>Visits</span>,
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor('progress', {
+        header: 'Profile Progress',
+        footer: (props) => props.column.id,
+      }),
+    ])
+
+    const table = useTable({
+      features,
+      columns,
+      get data() {
+        return data.value
+      },
+      getSubRows: (row: Person) => row.subRows, // tell the table where nested rows live
+      // enableRowSelection: row => row.original.age > 18, // enable selection conditionally; default true
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableSubRowSelection: false, // disable sub-row selection; default true
+      // enableRowRangeSelection: false, // disable shift-click range selection; default true
+      // initialState: { expanded: { '0': true } }, // expand rows on first render
+      // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
+      // state: { expanded }, // classic controlled state; pair with onExpandedChange
+      // onExpandedChange: setExpanded,
+      // enableExpanding: false, // disable expanding for every row; default true
+      // getRowCanExpand: row => row.original.subRows?.length > 0, // override which rows can expand
+      // getIsRowExpanded: row => row.id === '0', // override whether a row is expanded
+      // manualExpanding: true, // pass data that is already expanded, for example from a server
+      // paginateExpandedRows: false, // keep expanded children on their parent page; default true
+      // autoResetExpanded: false, // keep expanded rows after page-altering changes; default true
+      // autoResetAll: false, // turn off every feature's automatic reset, including expansion
+      // enableFilters: false, // disable all column and global filtering; default true
+      // enableColumnFilters: false, // disable per-column filters; default true
+      // filterFromLeafRows: true, // with filtering, keep parents whose descendants match
+      // maxLeafRowFilterDepth: 0, // with filtering, only filter root rows
+      // manualFiltering: true, // pass data that is already filtered, for example from a server
+      debugTable: true,
+    })
+
+    return () => (
+      <div class="demo-root">
+        <div class="button-row">
+          <button class="demo-button" onClick={refreshData}>
+            Regenerate Data
+          </button>
+          <button class="demo-button" onClick={stressTest}>
+            Stress Test (10k rows)
+          </button>
+        </div>
+        <div class="spacer-sm" />
+        <table>
+          <thead>
+            {table
+              .getHeaderGroups()
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(
+                    (header: Header<typeof features, Person, unknown>) => (
+                      <th key={header.id} colspan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <div>
+                            <FlexRender header={header} />
+                            {header.column.getCanFilter() ? (
+                              <div>{renderFilter(header.column, table)}</div>
+                            ) : null}
+                          </div>
+                        )}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              ))}
+          </thead>
+          <tbody>
+            {table
+              .getRowModel()
+              .rows.map((row: Row<typeof features, Person>) => (
+                <tr key={row.id}>
+                  {row
+                    .getAllCells()
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
+                      <td key={cell.id}>
+                        <FlexRender cell={cell} />
+                      </td>
+                    ))}
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <div class="spacer-sm" />
+        <div class="controls">
+          <button
+            class="demo-button demo-button-sm"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<<'}
+          </button>
+          <button
+            class="demo-button demo-button-sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<'}
+          </button>
+          <button
+            class="demo-button demo-button-sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>'}
+          </button>
+          <button
+            class="demo-button demo-button-sm"
+            onClick={() => table.lastPage()}
+            disabled={!table.getCanLastPage()}
+          >
+            {'>>'}
+          </button>
+          <span class="inline-controls">
+            <div>Page</div>
+            <strong>
+              {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
+              {table.getPageCount().toLocaleString()}
+            </strong>
+          </span>
+          <span class="inline-controls">
+            | Go to page:
+            <input
+              type="number"
+              min="1"
+              max={table.getPageCount()}
+              value={table.atoms.pagination.get().pageIndex + 1}
+              onInput={(event: Event) => {
+                const target = event.currentTarget as HTMLInputElement
+                const page = target.value ? Number(target.value) - 1 : 0
+                table.setPageIndex(page)
+              }}
+              class="page-size-input"
+            />
+          </span>
+          <select
+            value={table.atoms.pagination.get().pageSize}
+            onChange={(event: Event) => {
+              const target = event.currentTarget as HTMLSelectElement
+              table.setPageSize(Number(target.value))
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+        <pre data-testid="table-state">
+          {JSON.stringify(table.store.get(), null, 2)}
+        </pre>
+      </div>
+    )
+  },
+})

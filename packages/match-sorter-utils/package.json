@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/match-sorter-utils",
-  "version": "8.19.4",
+  "version": "9.1.2",
   "description": "A fork of match-sorter with separated filtering and sorting phases",
   "contributors": [
     "Kent C. Dodds",
@@ -24,37 +24,30 @@
     "utils",
     "split",
     "separate",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
-  "type": "commonjs",
-  "module": "build/lib/index.esm.js",
-  "main": "build/lib/index.js",
-  "types": "build/lib/index.d.ts",
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./build/lib/index.d.ts",
-      "import": "./build/lib/index.mjs",
-      "default": "./build/lib/index.js"
-    },
+    ".": "./dist/index.js",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=12"
+    "node": ">=20"
   },
   "files": [
-    "build/lib/*",
-    "build/umd/*",
-    "src"
+    "dist",
+    "skills"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
+    "clean": "rimraf ./build && rimraf ./dist",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
-    "test:types": "tsc --noEmit",
-    "build": "pnpm build:rollup && pnpm build:types",
-    "build:rollup": "rollup --config rollup.config.mjs",
-    "build:types": "tsc --emitDeclarationOnly"
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
   },
   "dependencies": {
     "remove-accents": "0.5.0"

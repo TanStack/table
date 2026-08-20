@@ -1,118 +1,144 @@
 <script setup lang="tsx">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import {
   FlexRender,
-  getCoreRowModel,
-  useVueTable,
+  useTable,
   createColumnHelper,
-  RowSelectionState,
+  tableFeatures,
+  rowSelectionFeature,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
-
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
 import { makeData, Person } from './makeData'
 
-const columnHelper = createColumnHelper<Person>()
+const features = tableFeatures({
+  rowSelectionFeature,
+})
 
-const columns = [
-  {
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.display({
     id: 'select',
-    header: ({ table }: { table: any }) => {
+    header: ({ table }) => {
       return (
         <IndeterminateCheckbox
           checked={table.getIsAllRowsSelected()}
           indeterminate={table.getIsSomeRowsSelected()}
           onChange={table.getToggleAllRowsSelectedHandler()}
         ></IndeterminateCheckbox>
-      )
+      ) as any
     },
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       return (
-        <div className="px-1">
+        // @ts-ignore
+        <div className="column-toggle-row">
           <IndeterminateCheckbox
             checked={row.getIsSelected()}
             disabled={!row.getCanSelect()}
-            onChange={row.getToggleSelectedHandler()}
+            indeterminate={row.getIsSomeSelected()}
+            onClick={row.getToggleSelectedHandler({
+              // selectChildren: false
+            })}
           ></IndeterminateCheckbox>
+          {/* @ts-ignore */}
         </div>
-      )
+      ) as any
     },
-  },
+  }),
   columnHelper.group({
     header: 'Name',
-    footer: props => props.column.id,
-    columns: [
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       }),
-      columnHelper.accessor(row => row.lastName, {
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => 'Last Name',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
-    ],
+    ]),
   }),
   columnHelper.group({
     header: 'Info',
-    footer: props => props.column.id,
-    columns: [
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
       columnHelper.accessor('age', {
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
-        columns: [
+        columns: columnHelper.columns([
           columnHelper.accessor('visits', {
             header: () => 'Visits',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('status', {
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('progress', {
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
-        ],
+        ]),
       }),
-    ],
+    ]),
   }),
-]
+])
 
-const data = ref(makeData(10))
-const rowSelection = ref<RowSelectionState>({})
+const data = ref(makeData(20))
+const enableRowSelection = ref(true)
 
-const rerender = () => {
-  data.value = makeData(10)
+const refreshData = () => {
+  data.value = makeData(20)
 }
 
-const table = useVueTable({
-  get data() {
-    return data.value
-  },
+const stressTest = () => {
+  data.value = makeData(1_000)
+}
+
+const toggleRowSelection = () => {
+  enableRowSelection.value = !enableRowSelection.value
+}
+
+const table = useTable({
+  key: 'row-selection', // needed for devtools
+  features,
+  data,
   columns,
-  state: {
-    get rowSelection() {
-      return rowSelection.value
-    },
+  // enable row selection for all rows
+  get enableRowSelection() {
+    return enableRowSelection.value
   },
-  enableRowSelection: true, //enable row selection for all rows
-  // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-  onRowSelectionChange: updateOrValue => {
-    rowSelection.value =
-      typeof updateOrValue === 'function'
-        ? updateOrValue(rowSelection.value)
-        : updateOrValue
-  },
-  getCoreRowModel: getCoreRowModel(),
+  // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
+  // initialState: { rowSelection: { '0': true } }, // select rows on first render
+  // atoms: { rowSelection: rowSelectionAtom }, // preferred: own selection state with an external atom
+  // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
+  // onRowSelectionChange: setRowSelection,
+  // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+  // enableRowRangeSelection: false, // disable Shift-click range selection; default true
+  // enableSubRowSelection: false, // do not select a parent's subrows with it; default true
+  // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
+  debugTable: true,
 })
+
+useTanStackTableDevtools(table)
 </script>
 
 <template>
-  <div class="p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
+        Stress Test (1k rows)
+      </button>
+    </div>
+    <div class="spacer-md" />
     <table>
       <thead>
         <tr
@@ -124,40 +150,45 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
-            />
+            <FlexRender v-if="!header.isPlaceholder" :header="header" />
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <FlexRender
-              :render="cell.column.columnDef.cell"
-              :props="cell.getContext()"
-            />
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
+            <FlexRender :cell="cell" />
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td className="p-1">
+          <td className="cell-padding">
             <IndeterminateCheckbox
               :checked="table.getIsAllPageRowsSelected()"
               :indeterminate="table.getIsSomePageRowsSelected()"
               :onChange="table.getToggleAllPageRowsSelectedHandler()"
             />
           </td>
-          <td :colSpan="20">Page Rows {{ table.getRowModel().rows.length }}</td>
+          <td :colSpan="20">
+            Page Rows ({{ table.getRowModel().rows.length.toLocaleString() }})
+          </td>
         </tr>
       </tfoot>
     </table>
-    <div class="h-4" />
-    <button @click="rerender" class="border p-2">Rerender</button>
+    <div>
+      {{ Object.keys(table.atoms.rowSelection.get()).length.toLocaleString() }}
+      of {{ table.getRowModel().rows.length.toLocaleString() }} Total Rows
+      Selected
+    </div>
+    <div class="spacer-md" />
+    <button @click="toggleRowSelection" class="demo-button">
+      {{ enableRowSelection ? 'Disable' : 'Enable' }} Row Selection
+    </button>
   </div>
+  <pre data-testid="table-state">{{
+    JSON.stringify(table.store.get(), null, 2)
+  }}</pre>
 </template>
 
 <style>
@@ -167,6 +198,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

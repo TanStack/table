@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Column Sizing</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <table :style="'width:' + table.getCenterTotalSize() + 'px'">
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th
+                  :colspan="header.colSpan"
+                  :style="'width:' + header.getSize() + 'px'"
+                >
+                  <span x-html="FlexRender({ header })"></span>
+                  <template x-if="!header.isPlaceholder">
+                    <div
+                      class="resizer ltr"
+                      :class="header.column.getIsResizing() ? 'is-resizing' : ''"
+                      @dblclick="header.column.resetSize()"
+                      @mousedown="header.getResizeHandler()($event)"
+                      @touchstart="header.getResizeHandler()($event)"
+                    ></div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template
+            x-for="row in table.getRowModel().rows.slice(0, 10)"
+            :key="row.id"
+          >
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-md"></div>
+      <pre
+        data-testid="table-state"
+        x-text="JSON.stringify(table.store.get(), null, 2)"
+      ></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

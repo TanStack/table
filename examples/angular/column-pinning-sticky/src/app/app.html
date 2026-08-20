@@ -1,0 +1,110 @@
+<div class="demo-root">
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
+      <label>
+        <input
+          type="checkbox"
+          [checked]="table.getIsAllColumnsVisible()"
+          (change)="table.getToggleAllColumnsVisibilityHandler()($event)"
+        />
+        Toggle All
+      </label>
+    </div>
+
+    @for (column of table.getAllLeafColumns(); track column.id) {
+      <div class="column-toggle-row">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="column.getIsVisible()"
+            (change)="column.getToggleVisibilityHandler()($event)"
+          />
+          {{ column.id }}
+        </label>
+      </div>
+    }
+  </div>
+
+  <div class="spacer-md"></div>
+
+  <div class="button-row">
+    <button (click)="refreshData()" class="demo-button demo-button-sm">Regenerate Data</button>
+    <button (click)="stressTest()" class="demo-button demo-button-sm">Stress Test (1k rows)</button>
+    <button (click)="randomizeColumns()" class="demo-button demo-button-sm">Shuffle Columns</button>
+  </div>
+  <div class="spacer-md"></div>
+
+  <div class="table-container">
+    <table [style.width.px]="table.getTotalSize()">
+      <thead>
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+              <!-- IMPORTANT: This is where the magic happens! -->
+              <th [attr.colSpan]="header.colSpan" [style]="getCommonPinningStyles(header.column)">
+                <div class="nowrap">
+                  @if (!header.isPlaceholder) {
+                    <ng-container
+                      *flexRender="
+                        header.column.columnDef.header;
+                        props: header.getContext();
+                        let headerValue
+                      "
+                    >
+                      {{ headerValue }}
+                    </ng-container>
+                  }
+                  <!-- Demo getIndex behavior -->
+                  {{ header.column.getIndex(header.column.getIsPinned() || 'center') }}
+                </div>
+
+                @if (!header.isPlaceholder && header.column.getCanPin()) {
+                  <div class="pin-actions">
+                    @if (header.column.getIsPinned() !== 'start') {
+                      <button class="pin-button" (click)="header.column.pin('start')"><=</button>
+                    }
+
+                    @if (header.column.getIsPinned()) {
+                      <button class="pin-button" (click)="header.column.pin(false)">X</button>
+                    }
+
+                    @if (header.column.getIsPinned() !== 'end') {
+                      <button class="pin-button" (click)="header.column.pin('end')">=></button>
+                    }
+                  </div>
+                }
+
+                <!-- Resize column -->
+                <div
+                  class="resizer"
+                  [class.isResizing]="header.column.getIsResizing()"
+                  (dblclick)="header.column.resetSize()"
+                  (mousedown)="header.getResizeHandler()($event)"
+                  (touchstart)="header.getResizeHandler()($event)"
+                ></div>
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of table.getRowModel().rows; track row.id) {
+          <tr>
+            @for (cell of row.getVisibleCells(); track cell.id) {
+              <td [style]="getCommonPinningStyles(cell.column)">
+                <ng-container
+                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cellValue"
+                >
+                  {{ cellValue }}
+                </ng-container>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="spacer-md"></div>
+<pre data-testid="table-state">{{ stringifiedState() }}</pre>

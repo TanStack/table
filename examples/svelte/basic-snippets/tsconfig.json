@@ -1,0 +1,22 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "tests/e2e",
+    "../basic-snippets/src/**/*.ts",
+    "../basic-snippets/src/**/*.js",
+    "../basic-snippets/src/**/*.d.ts",
+    "../basic-snippets/src/**/*.svelte",
+    "../vite-env.d.ts",
+    "vite.config.js",
+    "vite.config.ts"
+  ]
+}

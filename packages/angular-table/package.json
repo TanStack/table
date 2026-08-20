@@ -1,12 +1,12 @@
 {
   "name": "@tanstack/angular-table",
-  "version": "8.21.3",
+  "version": "9.2.1",
   "description": "Headless UI for building powerful tables & datagrids for Angular.",
   "author": "Tanner Linsley",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TanStack/table.git",
+    "url": "git+https://github.com/TanStack/table.git",
     "directory": "packages/angular-table"
   },
   "homepage": "https://tanstack.com/table",
@@ -18,52 +18,68 @@
     "angular",
     "table",
     "angular-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
-  "module": "build/lib/esm2022/index.mjs",
-  "types": "build/lib/index.d.ts",
+  "module": "dist/fesm2022/tanstack-angular-table.mjs",
+  "types": "dist/types/tanstack-angular-table.d.ts",
   "exports": {
     ".": {
-      "types": "./build/lib/index.d.ts",
-      "esm": "./build/lib/esm2022/index.mjs",
-      "esm2022": "./build/lib/esm2022/index.mjs",
-      "default": "./build/lib/fesm2022/tanstack-angular-table.mjs"
+      "types": "./dist/types/tanstack-angular-table.d.ts",
+      "default": "./dist/fesm2022/tanstack-angular-table.mjs"
+    },
+    "./static-functions": {
+      "types": "./dist/types/tanstack-angular-table-static-functions.d.ts",
+      "default": "./dist/fesm2022/tanstack-angular-table-static-functions.mjs"
+    },
+    "./experimental-worker-plugin": {
+      "types": "./dist/types/tanstack-angular-table-experimental-worker-plugin.d.ts",
+      "default": "./dist/fesm2022/tanstack-angular-table-experimental-worker-plugin.mjs"
+    },
+    "./flex-render": {
+      "types": "./dist/types/tanstack-angular-table.d.ts",
+      "default": "./dist/fesm2022/tanstack-angular-table.mjs"
     },
     "./package.json": {
       "default": "./package.json"
     }
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=20"
   },
   "files": [
-    "build/lib/*",
-    "src"
+    "dist",
+    "static-functions",
+    "skills"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
-    "test:types": "tsc --noEmit && vitest --typecheck",
+    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json && find dist -name '*.map' -delete",
+    "build:types": "tsc --emitDeclarationOnly",
+    "bench:flex-render": "vitest bench --run tests/flex-render/flex-render.bench.ts",
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:build": "publint --strict",
+    "test:eslint": "eslint ./src",
     "test:lib": "vitest",
     "test:lib:dev": "vitest --watch",
-    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./build/lib/package.json"
+    "test:types": "tsc && vitest --typecheck"
   },
   "dependencies": {
+    "@tanstack/angular-store": "^0.11.1",
     "@tanstack/table-core": "workspace:*",
-    "tslib": "^2.6.2"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^1.11.0",
-    "@analogjs/vitest-angular": "^1.11.0",
-    "@angular/core": "^17.3.9",
-    "@angular/platform-browser": "^17.3.9",
-    "@angular/platform-browser-dynamic": "^17.3.9",
-    "ng-packagr": "^17.3.0",
-    "typescript": "5.4.5",
-    "vitest": "^1.6.0"
+    "@analogjs/vite-plugin-angular": "^2.7.0",
+    "@analogjs/vitest-angular": "^2.7.0",
+    "@angular/compiler": "^22.1.1",
+    "@angular/core": "^22.1.1",
+    "@angular/platform-browser": "^22.1.1",
+    "ng-packagr": "^22.1.1",
+    "typescript": "6.0.3"
   },
   "peerDependencies": {
-    "@angular/core": ">=17"
+    "@angular/core": ">=19"
   },
   "sideEffects": false
 }

@@ -1,92 +1,93 @@
 <script setup lang="ts">
 import {
-  type ColumnOrderState,
   FlexRender,
-  getCoreRowModel,
-  useVueTable,
-  type Column,
+  columnOrderingFeature,
+  columnVisibilityFeature,
   createColumnHelper,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
-
-import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Column } from '@tanstack/vue-table'
 
-const columnHelper = createColumnHelper<Person>()
+const features = tableFeatures({
+  columnOrderingFeature,
+  columnVisibilityFeature,
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const data = ref(makeData(20))
-const columns = ref([
-  columnHelper.group({
-    header: 'Name',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
-      }),
-      columnHelper.accessor(row => row.lastName, {
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => 'Last Name',
-        footer: props => props.column.id,
-      }),
-    ],
-  }),
-  columnHelper.group({
-    header: 'Info',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: props => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-    ],
-  }),
-])
 
-const columnVisibility = ref({})
-const columnOrder = ref<ColumnOrderState>([])
+const columns = ref(
+  columnHelper.columns([
+    columnHelper.group({
+      header: 'Name',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.group({
+          header: 'More Info',
+          columns: columnHelper.columns([
+            columnHelper.accessor('visits', {
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('status', {
+              header: 'Status',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('progress', {
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+            }),
+          ]),
+        }),
+      ]),
+    }),
+  ]),
+)
 
-const rerender = () => (data.value = makeData(20))
+const refreshData = () => {
+  data.value = makeData(20)
+}
 
-const table = useVueTable({
-  get data() {
-    return data.value
-  },
+const stressTest = () => {
+  data.value = makeData(1_000)
+}
+
+const table = useTable({
+  features,
+  data,
   get columns() {
     return columns.value
   },
-  state: {
-    get columnVisibility() {
-      return columnVisibility.value
-    },
-    get columnOrder() {
-      return columnOrder.value
-    },
-  },
-
-  onColumnOrderChange: order => {
-    columnOrder.value =
-      order instanceof Function ? order(columnOrder.value) : order
-  },
-  getCoreRowModel: getCoreRowModel(),
+  // initialState: { columnOrder: ['lastName', 'firstName'] }, // set column order on first render
+  // atoms: { columnOrder: columnOrderAtom }, // preferred: own ordering state with an external atom
+  // state: { columnOrder }, // classic controlled state; pair with onColumnOrderChange
+  // onColumnOrderChange: setColumnOrder,
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,
@@ -94,28 +95,34 @@ const table = useVueTable({
 
 const randomizeColumns = () => {
   table.setColumnOrder(
-    faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+    faker.helpers.shuffle(
+      table
+        .getAllLeafColumns()
+        .map((column: Column<typeof features, Person>) => column.id),
+    ),
   )
 }
 
-function toggleColumnVisibility(column: Column<any, any>) {
-  columnVisibility.value = {
-    ...columnVisibility.value,
+function toggleColumnVisibility(column: Column<typeof features, Person>) {
+  table.setColumnVisibility({
+    ...table.atoms.columnVisibility.get(),
     [column.id]: !column.getIsVisible(),
-  }
+  })
 }
 
 function toggleAllColumnsVisibility() {
-  table.getAllLeafColumns().forEach(column => {
-    toggleColumnVisibility(column)
-  })
+  table
+    .getAllLeafColumns()
+    .forEach((column: Column<typeof features, Person>) => {
+      toggleColumnVisibility(column)
+    })
 }
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="inline-block border border-black shadow rounded">
-      <div class="px-1 border-b border-black">
+  <div class="demo-root">
+    <div class="column-toggle-panel">
+      <div class="column-toggle-panel-header">
         <label>
           <input
             type="checkbox"
@@ -128,7 +135,7 @@ function toggleAllColumnsVisibility() {
       <div
         v-for="column in table.getAllLeafColumns()"
         :key="column.id"
-        class="px-1"
+        class="column-toggle-row"
       >
         <label>
           <input
@@ -141,14 +148,19 @@ function toggleAllColumnsVisibility() {
         </label>
       </div>
     </div>
-    <div class="h-4" />
-    <div class="flex flex-wrap gap-2">
-      <button @click="rerender" class="border p-1">Regenerate</button>
-      <button @click="randomizeColumns" class="border p-1">
+    <div class="spacer-md" />
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button demo-button-sm">
+        Regenerate Data
+      </button>
+      <button @click="stressTest" class="demo-button demo-button-sm">
+        Stress Test (1k rows)
+      </button>
+      <button @click="randomizeColumns" class="demo-button demo-button-sm">
         Shuffle Columns
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
 
     <table>
       <thead>
@@ -161,21 +173,14 @@ function toggleAllColumnsVisibility() {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
-            />
+            <FlexRender v-if="!header.isPlaceholder" :header="header" />
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <FlexRender
-              :render="cell.column.columnDef.cell"
-              :props="cell.getContext()"
-            />
+            <FlexRender :cell="cell" />
           </td>
         </tr>
       </tbody>
@@ -189,16 +194,14 @@ function toggleAllColumnsVisibility() {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
-            />
+            <FlexRender v-if="!header.isPlaceholder" :footer="header" />
           </th>
         </tr>
       </tfoot>
     </table>
-    <pre>{{ JSON.stringify(table.getState().columnOrder, null, 2) }}</pre>
+    <pre data-testid="table-state">{{
+      JSON.stringify(table.store.get(), null, 2)
+    }}</pre>
   </div>
 </template>
 
@@ -212,8 +215,9 @@ body {
 }
 
 table {
-  border: 1px solid lightgray;
+  border-spacing: 0;
   border-collapse: collapse;
+  border: 1px solid lightgray;
 }
 
 tbody {

@@ -1,50 +1,24 @@
 <script setup lang="ts">
 import {
-  FlexRender,
-  createColumnHelper,
-  getCoreRowModel,
-  getExpandedRowModel,
-  useVueTable,
-  type ExpandedState,
-  type Row,
+  createExpandedRowModel,
+  createTableHook,
+  rowExpandingFeature,
 } from '@tanstack/vue-table'
 import { Text, h, ref } from 'vue'
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
+import { makeData } from './makeData'
+import type { Row } from '@tanstack/vue-table'
+import type { Person } from './makeData'
+
+const { appFeatures, createAppColumnHelper, useAppTable } = createTableHook({
+  features: {
+    rowExpandingFeature,
+    expandedRowModel: createExpandedRowModel(),
   },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
-const columnHelper = createColumnHelper<Person>()
-function renderExpanded(row: Row<Person>) {
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+function renderExpanded(row: Row<typeof appFeatures, Person>) {
   if (!row.getCanExpand()) {
     return h(Text, '🔵')
   }
@@ -54,87 +28,71 @@ function renderExpanded(row: Row<Person>) {
       onClick: row.getToggleExpandedHandler(),
       style: { cursor: 'pointer' },
     },
-    row.getIsExpanded() ? '👇' : '👉'
+    row.getIsExpanded() ? '👇' : '👉',
   )
 }
-const columns = [
-  columnHelper.group({
-    header: 'Name',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.display({
-        id: 'expander',
-        header: () => null,
-        cell: ({ row }) => renderExpanded(row),
-      }),
-      columnHelper.accessor('firstName', {
-        footer: props => props.column.id,
-      }),
-      columnHelper.accessor(row => row.lastName, {
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => 'Last Name',
-        footer: props => props.column.id,
-      }),
-    ],
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'expander',
+    header: () => null,
+    cell: ({ row }) => renderExpanded(row),
   }),
-  columnHelper.group({
-    header: 'Info',
-    footer: props => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: props => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: props => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: props => props.column.id,
-          }),
-        ],
-      }),
-    ],
+  columnHelper.accessor('firstName', {
+    footer: (props) => props.column.id,
   }),
-]
-const data = ref(defaultData)
-const expanded = ref<ExpandedState>({})
-const rerender = () => {
-  data.value = defaultData
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => 'Last Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => 'Visits',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
+
+const data = ref(makeData(10))
+
+const refreshData = () => {
+  data.value = makeData(10)
 }
-const table = useVueTable({
-  get data() {
-    return data.value
-  },
-  state: {
-    get expanded() {
-      return expanded.value
-    },
-  },
+
+const stressTest = () => {
+  data.value = makeData(1_000)
+}
+
+const table = useAppTable({
+  debugTable: true,
+  // features and row models are already defined in the createTableHook call
+  data,
   columns,
   getRowCanExpand: () => true,
-  getCoreRowModel: getCoreRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
-  onExpandedChange: updaterOrValue => {
-    expanded.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(expanded.value)
-        : updaterOrValue
-  },
 })
 </script>
 
 <template>
-  <div class="p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
+        Stress Test (1k rows)
+      </button>
+    </div>
+    <div class="spacer-md" />
     <table>
       <thead>
         <tr
@@ -146,10 +104,10 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :header="header"
             />
           </th>
         </tr>
@@ -157,11 +115,8 @@ const table = useVueTable({
       <tbody>
         <template v-for="row in table.getRowModel().rows" :key="row.id">
           <tr>
-            <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+            <td v-for="cell in row.getAllCells()" :key="cell.id">
+              <component :is="table.FlexRender" :cell="cell" />
             </td>
           </tr>
           <tr v-if="row.getIsExpanded()">
@@ -183,17 +138,16 @@ const table = useVueTable({
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :footer="header"
             />
           </th>
         </tr>
       </tfoot>
     </table>
-    <div class="h-4" />
-    <button @click="rerender" class="border p-2">Rerender</button>
+    <div class="spacer-md" />
   </div>
 </template>
 
@@ -203,6 +157,8 @@ html {
   font-size: 14px;
 }
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 tbody {

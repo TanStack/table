@@ -7,14 +7,15 @@ package-lock.json
 yarn.lock
 
 # builds
-types
 build
 dist
 lib
+!examples/**/src/lib/
 es
 artifacts
 .rpt2_cache
 coverage
+test-results
 *.tgz
 
 # misc
@@ -49,9 +50,18 @@ yarn.lock
 *.tsbuildinfo
 *.tsbuildinfo
 
+.svelte-kit
 .nx/cache
 .nx/workspace-data
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 .angular
+
+.nx/polygraph
+.claude/*
+.cursor/*
+
+Agents.md
+.agents/*
+terminalOutput

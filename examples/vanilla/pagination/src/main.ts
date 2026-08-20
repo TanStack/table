@@ -1,80 +1,107 @@
 import './index.css'
 
 import {
+  constructTable,
   createColumnHelper,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  createPaginatedRowModel,
+  rowPaginationFeature,
+  tableFeatures,
 } from '@tanstack/table-core'
+import { FlexRender } from '@tanstack/table-core/flex-render'
+import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Table } from '@tanstack/table-core'
 
-import { makeData, Person } from './makeData'
-import { flexRender, useTable } from './useTable'
+let data = makeData(200_000)
 
-const data = makeData(100000)
+const features = tableFeatures({
+  rowPaginationFeature,
+  coreReactivityFeature: storeReactivityBindings(),
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const columns = [
-  columnHelper.accessor('firstName', {
-    cell: info => info.getValue(),
-    footer: info => info.column.id,
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
   }),
-  columnHelper.accessor(row => row.lastName, {
+  columnHelper.accessor('firstName', {
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => `<i>${info.getValue()}</i>`,
+    cell: (info) => `<i>${info.getValue()}</i>`,
     header: () => '<span>Last Name</span>',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    cell: info => info.renderValue(),
-    footer: info => info.column.id,
+    cell: (info) => info.renderValue(),
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('visits', {
     header: () => '<span>Visits</span>',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
-]
+])
 
-const renderTable = () => {
+const renderTable = (table: Table<typeof features, Person>) => {
+  // Create buttons container
+  const buttonsDiv = document.createElement('div')
+
+  const regenerateBtn = document.createElement('button')
+  regenerateBtn.textContent = 'Regenerate Data'
+  regenerateBtn.addEventListener('click', () => {
+    data = makeData(1_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+    renderTable(table)
+  })
+
+  const stressTestBtn = document.createElement('button')
+  stressTestBtn.textContent = 'Stress Test (1M rows)'
+  stressTestBtn.addEventListener('click', () => {
+    data = makeData(1_000_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+    renderTable(table)
+  })
+
+  buttonsDiv.appendChild(regenerateBtn)
+  buttonsDiv.appendChild(stressTestBtn)
+
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
   const tbodyElement = document.createElement('tbody')
 
-  tableElement.classList.add('mb-2')
+  tableElement.classList.add('table-spacer')
 
   tableElement.appendChild(theadElement)
   tableElement.appendChild(tbodyElement)
 
   // Render table headers
-  table.getHeaderGroups().forEach(headerGroup => {
+  table.getHeaderGroups().forEach((headerGroup) => {
     const trElement = document.createElement('tr')
-    headerGroup.headers.forEach(header => {
+    headerGroup.headers.forEach((header) => {
       const thElement = document.createElement('th')
       thElement.colSpan = header.colSpan
       const divElement = document.createElement('div')
-      divElement.classList.add(
-        'w-36',
-        ...(header.column.getCanSort() ? ['cursor-pointer', 'select-none'] : [])
-      )
-      ;(divElement.onclick = e => header.column.getToggleSortingHandler()?.(e)),
-        (divElement.innerHTML = header.isPlaceholder
-          ? ''
-          : flexRender(header.column.columnDef.header, header.getContext()))
-      divElement.innerHTML +=
-        {
-          asc: ' 🔼',
-          desc: ' 🔽',
-        }[header.column.getIsSorted() as string] ?? ''
+      divElement.classList.add('w-36')
+      divElement.innerHTML = header.isPlaceholder
+        ? ''
+        : String(FlexRender({ header }) ?? '')
       thElement.appendChild(divElement)
       trElement.appendChild(thElement)
     })
@@ -82,14 +109,11 @@ const renderTable = () => {
   })
 
   // Render table rows
-  table.getRowModel().rows.forEach(row => {
+  table.getRowModel().rows.forEach((row) => {
     const trElement = document.createElement('tr')
-    row.getVisibleCells().forEach(cell => {
+    row.getAllCells().forEach((cell) => {
       const tdElement = document.createElement('td')
-      tdElement.innerHTML = flexRender(
-        cell.column.columnDef.cell,
-        cell.getContext()
-      )
+      tdElement.innerHTML = String(FlexRender({ cell }) ?? '')
       trElement.appendChild(tdElement)
     })
     tbodyElement.appendChild(trElement)
@@ -97,11 +121,11 @@ const renderTable = () => {
 
   // Render pagination
   const paginationElement = document.createElement('div')
-  paginationElement.classList.add('flex', 'items-center', 'gap-2')
+  paginationElement.classList.add('table-row-group', 'controls', 'controls')
 
   // Render pagination first page button
   const firstPageButton = document.createElement('button')
-  firstPageButton.classList.add('border', 'rounded', 'p-1')
+  firstPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
   firstPageButton.disabled = !table.getCanPreviousPage()
   firstPageButton.innerHTML = '<<'
   firstPageButton.onclick = () => table.firstPage()
@@ -109,7 +133,7 @@ const renderTable = () => {
 
   // Render pagination previous page button
   const prevPageButton = document.createElement('button')
-  prevPageButton.classList.add('border', 'rounded', 'p-1')
+  prevPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
   prevPageButton.disabled = !table.getCanPreviousPage()
   prevPageButton.innerHTML = '<'
   prevPageButton.onclick = () => table.previousPage()
@@ -117,7 +141,7 @@ const renderTable = () => {
 
   // Render pagination next page button
   const nextPageButton = document.createElement('button')
-  nextPageButton.classList.add('border', 'rounded', 'p-1')
+  nextPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
   nextPageButton.disabled = !table.getCanNextPage()
   nextPageButton.innerHTML = '>'
   nextPageButton.onclick = () => table.nextPage()
@@ -125,31 +149,46 @@ const renderTable = () => {
 
   // Render pagination last page button
   const lastPageButton = document.createElement('button')
-  lastPageButton.classList.add('border', 'rounded', 'p-1')
-  lastPageButton.disabled = !table.getCanNextPage()
+  lastPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
+  lastPageButton.disabled = !table.getCanLastPage()
   lastPageButton.innerHTML = '>>'
   lastPageButton.onclick = () => table.lastPage()
   paginationElement.appendChild(lastPageButton)
 
   // Render pagination info
   const paginationInfoElement = document.createElement('span')
-  paginationInfoElement.classList.add('flex', 'items-center', 'gap-1')
-  paginationInfoElement.innerHTML = `<div>Page</div><strong>${table.getState().pagination.pageIndex + 1} of ${table.getPageCount().toLocaleString()}</strong>`
+  paginationInfoElement.classList.add(
+    'table-row-group',
+    'controls',
+    'inline-controls',
+  )
+  paginationInfoElement.innerHTML = `<div>Page</div><strong>${(
+    table.store.state.pagination.pageIndex + 1
+  ).toLocaleString()} of ${table.getPageCount().toLocaleString()}</strong>`
   paginationElement.appendChild(paginationInfoElement)
 
   // Render pagination set page
   const paginationPageElement = document.createElement('span')
-  paginationPageElement.classList.add('flex', 'items-center', 'gap-1')
+  paginationPageElement.classList.add(
+    'table-row-group',
+    'controls',
+    'inline-controls',
+  )
   paginationPageElement.textContent = '| Go to page:'
   const paginationPageInput = document.createElement('input')
   paginationPageInput.type = 'number'
   paginationPageInput.min = String(1)
   paginationPageInput.max = String(table.getPageCount())
   paginationPageInput.defaultValue = String(
-    table.getState().pagination.pageIndex + 1
+    table.store.state.pagination.pageIndex + 1,
   )
-  paginationPageInput.classList.add('border', 'p-1', 'rounded', 'w-16')
-  paginationPageInput.oninput = e => {
+  paginationPageInput.classList.add(
+    'demo-button',
+    'cell-padding',
+    'demo-button',
+    'page-size-input',
+  )
+  paginationPageInput.oninput = (e) => {
     const target = e.target as HTMLInputElement
     const page = target.value ? Number(target.value) - 1 : 0
     table.setPageIndex(page)
@@ -157,18 +196,18 @@ const renderTable = () => {
   paginationPageElement.appendChild(paginationPageInput)
   paginationElement.appendChild(paginationPageElement)
 
-  // Render pagiantion page size
+  // Render pagination page size
   const paginationPageSizeSelect = document.createElement('select')
-  paginationPageSizeSelect.value = String(table.getState().pagination.pageSize)
-  paginationPageSizeSelect.onchange = e => {
+  paginationPageSizeSelect.value = String(table.store.state.pagination.pageSize)
+  paginationPageSizeSelect.onchange = (e) => {
     const target = e.target as HTMLSelectElement
     table.setPageSize(Number(target.value))
   }
-  ;[10, 20, 30, 40, 50].map(pageSize => {
+  ;[10, 20, 30, 40, 50, Infinity].map((pageSize) => {
     const option = document.createElement('option')
     option.value = String(pageSize)
-    option.selected = table.getState().pagination.pageSize === pageSize
-    option.textContent = `Show ${pageSize}`
+    option.selected = table.store.state.pagination.pageSize === pageSize
+    option.textContent = `Show ${pageSize === Infinity ? 'All' : pageSize}`
     paginationPageSizeSelect.appendChild(option)
   })
   paginationElement.appendChild(paginationPageSizeSelect)
@@ -177,39 +216,42 @@ const renderTable = () => {
   const stateInfoElement = document.createElement('pre')
   stateInfoElement.textContent = JSON.stringify(
     {
-      pagination: table.getState().pagination,
-      sorting: table.getState().sorting,
+      pagination: table.store.state.pagination,
     },
     null,
-    2
+    2,
   )
 
   // Clear previous content and append new content
   const wrapperElement = document.getElementById('wrapper') as HTMLDivElement
   wrapperElement.innerHTML = ''
+  wrapperElement.appendChild(buttonsDiv)
   wrapperElement.appendChild(tableElement)
   wrapperElement.appendChild(paginationElement)
   wrapperElement.appendChild(stateInfoElement)
 }
 
-const table = useTable<Person>({
+const table = constructTable({
+  features,
   data,
   columns,
   initialState: {
     pagination: {
+      pageIndex: 0,
       pageSize: 10,
     },
-    sorting: [
-      {
-        id: 'lastName',
-        desc: false,
-      },
-    ],
   },
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
-  getSortedRowModel: getSortedRowModel(),
-  onStateChange: () => renderTable(),
+  // atoms: { pagination: paginationAtom }, // preferred: own pagination state with an external atom
+  // state: { pagination }, // classic controlled state; pair with onPaginationChange
+  // onPaginationChange: setPagination,
+  // autoResetPageIndex: false, // keep the current page after page-altering changes; default true
+  // autoResetAll: false, // turn off every feature's automatic reset, including page index
+  // manualPagination: true, // pass data that is already paginated, for example from a server
+  // pageCount: 10, // total pages for manual pagination; use -1 when unknown
+  // rowCount: 1_000, // total rows for manual pagination; pageCount is calculated from this and pageSize
+  debugTable: true,
 })
 
-renderTable()
+table.store.subscribe(() => renderTable(table))
+
+renderTable(table)

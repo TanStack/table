@@ -1,0 +1,93 @@
+import { tableMemo } from '../../utils'
+import { expandRows } from '../row-expanding/createExpandedRowModel'
+import { getDefaultPaginationState } from './rowPaginationFeature.utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
+import type { Table, Table_Internal } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { RowData } from '../../types/type-utils'
+
+/**
+ * Creates a memoized paginated row model factory.
+ *
+ * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ */
+export function createPaginatedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+  return (_table) => {
+    const table = _table as unknown as Table_Internal<TFeatures, TData>
+    return tableMemo({
+      feature: 'rowPaginationFeature',
+      table,
+      fnName: 'table.getPaginatedRowModel',
+      memoDeps: () => [
+        table.getPrePaginatedRowModel(),
+        table.atoms.pagination?.get(),
+        !table.options.paginateExpandedRows
+          ? table.atoms.expanded?.get()
+          : undefined,
+      ],
+      fn: () => _createPaginatedRowModel(table),
+    })
+  }
+}
+
+function _createPaginatedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const prePaginatedRowModel = table.getPrePaginatedRowModel()
+  const pagination = table.atoms.pagination?.get()
+
+  if (!prePaginatedRowModel.rows.length) {
+    return prePaginatedRowModel
+  }
+
+  const { pageSize, pageIndex } = pagination ?? getDefaultPaginationState()
+  const { rows, flatRows, rowsById } = prePaginatedRowModel
+  let paginatedRows = rows
+
+  if (pageSize !== Infinity || pageIndex !== 0) {
+    const pageStart = pageSize * pageIndex
+    const pageEnd = pageStart + pageSize
+
+    paginatedRows = rows.slice(pageStart, pageEnd)
+  }
+
+  let paginatedRowModel: RowModel<TFeatures, TData>
+
+  if (!table.options.paginateExpandedRows) {
+    paginatedRowModel = expandRows({
+      rows: paginatedRows,
+      flatRows,
+      rowsById,
+    })
+  } else {
+    paginatedRowModel = {
+      rows: paginatedRows,
+      flatRows,
+      rowsById,
+    }
+  }
+
+  paginatedRowModel.flatRows = []
+
+  // The page rows can contain expanded sub-rows inline alongside their
+  // parents, so track seen ids to keep each row unique in flatRows.
+  const seenFlatRows = new Set<string>()
+
+  const handleRow = (row: Row<TFeatures, TData>) => {
+    if (seenFlatRows.has(row.id)) return
+    seenFlatRows.add(row.id)
+    paginatedRowModel.flatRows.push(row)
+    if (row.subRows.length) {
+      row.subRows.forEach(handleRow)
+    }
+  }
+
+  paginatedRowModel.rows.forEach(handleRow)
+
+  return paginatedRowModel
+}

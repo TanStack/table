@@ -1,0 +1,123 @@
+{
+  "name": "@tanstack/ember-table",
+  "version": "9.1.2",
+  "description": "Headless UI for building powerful tables & datagrids for Ember.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/ember-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "ember",
+    "ember-addon",
+    "table",
+    "ember-table",
+    "datagrid",
+    "tanstack-intent"
+  ],
+  "type": "module",
+  "imports": {
+    "#src/*": "./src/*"
+  },
+  "exports": {
+    ".": {
+      "types": "./declarations/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./static-functions": {
+      "types": "./declarations/static-functions.d.ts",
+      "default": "./dist/static-functions.js"
+    },
+    "./flex-render": {
+      "types": "./declarations/flex-render.d.ts",
+      "default": "./dist/flex-render.js"
+    },
+    "./experimental-worker-plugin": {
+      "types": "./declarations/experimental-worker-plugin.d.ts",
+      "default": "./dist/experimental-worker-plugin.js"
+    },
+    "./addon-main.js": "./addon-main.cjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "addon-main.cjs",
+    "declarations",
+    "dist",
+    "skills"
+  ],
+  "scripts": {
+    "build": "rollup --config",
+    "clean": "rimraf ./dist ./declarations ./dist-tests",
+    "prepack": "rollup --config",
+    "start": "vite dev",
+    "test:build": "publint --strict",
+    "test:eslint": "eslint . --cache",
+    "test:lib": "vite build --mode=development --out-dir dist-tests && testem --file testem.cjs ci --port 0",
+    "test:types": "ember-tsc --noEmit"
+  },
+  "dependencies": {
+    "@embroider/addon-shim": "^1.10.3",
+    "@tanstack/store": "^0.11.1",
+    "@tanstack/table-core": "workspace:*",
+    "decorator-transforms": "2.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.7",
+    "@babel/plugin-transform-typescript": "7.29.7",
+    "@ember/app-tsconfig": "2.0.0",
+    "@ember/library-tsconfig": "^2.0.0",
+    "@ember/test-helpers": "^5.4.3",
+    "@embroider/addon-dev": "^8.3.1",
+    "@embroider/core": "4.6.3",
+    "@embroider/macros": "1.20.6",
+    "@embroider/vite": "^1.7.9",
+    "@eslint/js": "^10.0.1",
+    "@glimmer/component": "2.1.1",
+    "@glint/ember-tsc": "1.10.0",
+    "@glint/template": "1.8.0",
+    "@glint/tsserver-plugin": "2.7.0",
+    "@rollup/plugin-babel": "7.1.0",
+    "@types/qunit": "^2.19.14",
+    "babel-plugin-ember-template-compilation": "4.0.0",
+    "ember-qunit": "^9.1.0",
+    "ember-source": "7.2.0",
+    "ember-strict-application-resolver": "0.1.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-ember": "^13.5.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "globals": "^17.11.0",
+    "qunit": "^2.26.0",
+    "qunit-dom": "^3.6.0",
+    "rollup": "^4.62.4",
+    "testem": "^3.20.1",
+    "typescript-eslint": "^8.67.0"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon",
+    "main": "addon-main.cjs"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/declarations"
+        ]
+      }
+    }
+  }
+}

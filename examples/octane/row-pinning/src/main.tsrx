@@ -1,0 +1,444 @@
+import { useMemo, useState } from 'octane'
+import { createRoot } from 'octane'
+import {
+  columnFilteringFeature,
+  columnSizingFeature,
+  createColumnHelper,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowPinningFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/octane-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type {
+  Column,
+  ExpandedState,
+  OctaneTable,
+  Row,
+  RowPinningState,
+} from '@tanstack/octane-table'
+import './index.css'
+
+const features = tableFeatures({
+  rowPinningFeature,
+  rowExpandingFeature,
+  columnFilteringFeature,
+  columnSizingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+function App() @{
+  // table states
+  const [rowPinning, setRowPinning] = useState<RowPinningState>({
+    top: [],
+    bottom: [],
+  })
+  const [expanded, setExpanded] = useState<ExpandedState>({})
+
+  // demo states
+  const [keepPinnedRows, setKeepPinnedRows] = useState(true)
+  const [includeLeafRows, setIncludeLeafRows] = useState(true)
+  const [includeParentRows, setIncludeParentRows] = useState(false)
+  const [copyPinnedRows, setCopyPinnedRows] = useState(false)
+
+  const columns = useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'pin',
+          header: () => 'Pin',
+          cell: ({ row }) =>
+            row.getIsPinned() ? (
+              <button
+                onClick={() =>
+                  row.pin(false, includeLeafRows, includeParentRows)
+                }
+              >
+                {'❌'}
+              </button>
+            ) : (
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <button
+                  onClick={() =>
+                    row.pin('top', includeLeafRows, includeParentRows)
+                  }
+                >
+                  {'⬆️'}
+                </button>
+                <button
+                  onClick={() =>
+                    row.pin('bottom', includeLeafRows, includeParentRows)
+                  }
+                >
+                  {'⬇️'}
+                </button>
+              </div>
+            ),
+        }),
+        columnHelper.accessor('firstName', {
+          header: ({ table }) => (
+            <>
+              <button onClick={table.getToggleAllRowsExpandedHandler()}>
+                {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+              </button>{' '}
+              First Name
+            </>
+          ),
+          cell: ({ row, getValue }) => (
+            <div
+              style={{
+                // Since rows are flattened by default,
+                // we can use the row.depth property
+                // and paddingLeft to visually indicate the depth
+                // of the row
+                paddingLeft: `${row.depth * 2}rem`,
+              }}
+            >
+              <>
+                {row.getCanExpand() ? (
+                  <button
+                    onClick={row.getToggleExpandedHandler()}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {row.getIsExpanded() ? '👇' : '👉'}
+                  </button>
+                ) : (
+                  '🔵'
+                )}{' '}
+                {getValue()}
+              </>
+            </div>
+          ),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          size: 50,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          size: 50,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          size: 80,
+        }),
+      ]),
+    [includeLeafRows, includeParentRows],
+  )
+
+  const [data, setData] = useState(() => makeData(1_000, 2, 2))
+  const refreshData = () => setData(() => makeData(1_000, 2, 2))
+  const stressTest = () => setData(() => makeData(200_000, 2, 2))
+
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      initialState: {
+        pagination: { pageSize: 20, pageIndex: 0 },
+        // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+      },
+      state: {
+        expanded,
+        rowPinning,
+      },
+      onExpandedChange: setExpanded,
+      onRowPinningChange: setRowPinning,
+      getSubRows: (row) => row.subRows,
+      keepPinnedRows,
+      // atoms: { rowPinning: rowPinningAtom }, // preferred: own pinning state with an external atom
+      // enableRowPinning: row => row.original.age > 18, // allow pinning only for matching rows; default true
+      debugTable: true,
+      debugAll: true,
+    },
+    (state) => state, // default selector
+  )
+
+  <div className="app">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+      </div>
+      <div className="demo-root container">
+        <div className="spacer-sm" />
+        <table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <>
+                          <table.FlexRender header={header} />
+                          {header.column.getCanFilter() ? (
+                            <div>
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </>
+                      )}
+                    </th>
+                  )
+                })}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getTopRows().map((row) => (
+              <PinnedRow key={row.id} row={row} table={table} />
+            ))}
+            {(copyPinnedRows
+              ? table.getRowModel().rows
+              : table.getCenterRows()
+            ).map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getAllCells().map((cell) => {
+                    return (
+                      <td key={cell.id}>
+                        <table.FlexRender cell={cell} />
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+            {table.getBottomRows().map((row) => (
+              <PinnedRow key={row.id} row={row} table={table} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="spacer-sm" />
+      <div className="controls">
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span className="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            max={table.getPageCount()}
+            value={table.state.pagination.pageIndex + 1}
+            onInput={(e) => {
+              const page = (e.target as HTMLInputElement).value
+                ? Number((e.target as HTMLInputElement).value) - 1
+                : 0
+              table.setPageIndex(page)
+            }}
+            className="page-size-input"
+          />
+        </span>
+        <select
+          value={table.state.pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number((e.target as HTMLSelectElement).value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="spacer-sm" />
+      <hr />
+      <br />
+      <div className="vertical-options">
+        <div>
+          <input
+            type="checkbox"
+            checked={keepPinnedRows}
+            onChange={() => setKeepPinnedRows(!keepPinnedRows)}
+          />
+          <label className="label-offset">
+            Keep/Persist Pinned Rows across Pagination and Filtering
+          </label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={includeLeafRows}
+            onChange={() => setIncludeLeafRows(!includeLeafRows)}
+          />
+          <label className="label-offset">
+            Include Leaf Rows When Pinning Parent
+          </label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={includeParentRows}
+            onChange={() => setIncludeParentRows(!includeParentRows)}
+          />
+          <label className="label-offset">
+            Include Parent Rows When Pinning Child
+          </label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={copyPinnedRows}
+            onChange={() => setCopyPinnedRows(!copyPinnedRows)}
+          />
+          <label className="label-offset">
+            Duplicate/Keep Pinned Rows in main table
+          </label>
+        </div>
+      </div>
+      <div></div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
+    </div>
+}
+
+function PinnedRow({
+  row,
+  table,
+}: {
+  row: Row<typeof features, Person>
+  table: OctaneTable<typeof features, Person>
+}) @{
+  <tr
+      style={{
+        backgroundColor: 'lightblue',
+        position: 'sticky',
+        top:
+          row.getIsPinned() === 'top'
+            ? `${row.getPinnedIndex() * 26 + 48}px`
+            : undefined,
+        bottom:
+          row.getIsPinned() === 'bottom'
+            ? `${
+                (table.getBottomRows().length - 1 - row.getPinnedIndex()) * 26
+              }px`
+            : undefined,
+      }}
+    >
+      {row.getAllCells().map((cell) => {
+        return (
+          <td key={cell.id}>
+            <table.FlexRender cell={cell} />
+          </td>
+        )
+      })}
+    </tr>
+}
+
+function Filter({
+  column,
+  table,
+}: {
+  column: Column<typeof features, Person>
+  table: OctaneTable<typeof features, Person>
+}) {
+  const firstValue = table
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)
+
+  return typeof firstValue === 'number' ? (
+    <div className="filter-row">
+      <input
+        type="number"
+        value={((column.getFilterValue() as any)?.[0] ?? '') as string}
+        onInput={(e) =>
+          column.setFilterValue((old: any) => [
+            (e.target as HTMLInputElement).value,
+            old?.[1],
+          ])
+        }
+        placeholder={`Min`}
+        className="filter-input"
+      />
+      <input
+        type="number"
+        value={((column.getFilterValue() as any)?.[1] ?? '') as string}
+        onInput={(e) =>
+          column.setFilterValue((old: any) => [
+            old?.[0],
+            (e.target as HTMLInputElement).value,
+          ])
+        }
+        placeholder={`Max`}
+        className="filter-input"
+      />
+    </div>
+  ) : (
+    <input
+      type="text"
+      value={(column.getFilterValue() ?? '') as string}
+      onInput={(e) =>
+        column.setFilterValue((e.target as HTMLInputElement).value)
+      }
+      placeholder={`Search...`}
+      className="filter-select"
+    />
+  )
+}
+
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
+
+createRoot(rootElement).render(App)

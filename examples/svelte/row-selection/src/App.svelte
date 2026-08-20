@@ -1,0 +1,343 @@
+<script lang="ts">
+  import {
+    columnFilteringFeature,
+    createFilteredRowModel,
+    createPaginatedRowModel,
+    createTable,
+    filterFn_includesString,
+    filterFn_inNumberRange,
+    FlexRender,
+    globalFilteringFeature,
+    rowPaginationFeature,
+    rowSelectionFeature,
+    tableFeatures,
+  } from '@tanstack/svelte-table'
+  import { makeData } from './makeData'
+  import type { Person } from './makeData'
+  import type {
+    Column,
+    ColumnDef,
+    SvelteTable,
+  } from '@tanstack/svelte-table'
+  import './index.css'
+
+  const features = tableFeatures({
+    rowPaginationFeature,
+    rowSelectionFeature,
+    columnFilteringFeature,
+    globalFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
+  })
+
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
+
+  // Svelte action to set indeterminate property on checkbox inputs
+  function setIndeterminate(node: HTMLInputElement, value: boolean) {
+    node.indeterminate = value
+    return {
+      update(newValue: boolean) {
+        node.indeterminate = newValue
+      },
+    }
+  }
+
+  // Create table with selector to track specific state
+  const table = createTable(
+    {
+      features,
+      get data() {
+        return data
+      },
+      columns: [
+        {
+          id: 'select',
+          header: () => 'select',
+          cell: ({ row }) => row.getIsSelected(),
+        },
+        {
+          header: 'Name',
+          footer: (props) => props.column.id,
+          columns: [
+            {
+              accessorKey: 'firstName',
+              cell: (info) => info.getValue(),
+              footer: (props) => props.column.id,
+            },
+            {
+              accessorFn: (row) => row.lastName,
+              id: 'lastName',
+              cell: (info) => info.getValue(),
+              header: () => 'Last Name',
+              footer: (props) => props.column.id,
+            },
+          ],
+        },
+        {
+          header: 'Info',
+          footer: (props) => props.column.id,
+          columns: [
+            {
+              accessorKey: 'age',
+              header: () => 'Age',
+              footer: (props) => props.column.id,
+            },
+            {
+              header: 'More Info',
+              columns: [
+                {
+                  accessorKey: 'visits',
+                  header: () => 'Visits',
+                  footer: (props) => props.column.id,
+                },
+                {
+                  accessorKey: 'status',
+                  header: 'Status',
+                  footer: (props) => props.column.id,
+                },
+                {
+                  accessorKey: 'progress',
+                  header: 'Profile Progress',
+                  footer: (props) => props.column.id,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      getRowId: (row) => row.id,
+      enableRowSelection: true,
+      // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
+      // initialState: { rowSelection: { '0': true } }, // select rows on first render
+      // atoms: { rowSelection: rowSelectionAtom }, // preferred: own selection state with an external atom
+      // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
+      // onRowSelectionChange: setRowSelection,
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableRowRangeSelection: false, // disable Shift-click range selection; default true
+      // enableSubRowSelection: false, // do not select a parent's subrows with it; default true
+      // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
+      debugTable: true,
+    },
+  )
+  const pagination = $derived(table.atoms.pagination.get())
+  const globalFilter = $derived(table.atoms.globalFilter.get())
+  const rowSelection = $derived(table.atoms.rowSelection.get())
+</script>
+
+<div class="demo-root">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
+  </div>
+  <div>
+    <input
+      value={globalFilter ?? ''}
+      oninput={(e) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
+      class="summary-panel"
+      placeholder="Search all columns..."
+    />
+  </div>
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
+        <tr>
+          {#each headerGroup.headers as header (header.id)}
+            <th colSpan={header.colSpan}>
+              {#if !header.isPlaceholder}
+                {#if header.id === 'select'}
+                  <input
+                    type="checkbox"
+                    checked={table.getIsAllRowsSelected()}
+                    use:setIndeterminate={!table.getIsAllRowsSelected() && table.getIsSomeRowsSelected()}
+                    onchange={table.getToggleAllRowsSelectedHandler()}
+                    class="sortable-header"
+                  />
+                {:else}
+                  <FlexRender header={header} />
+                {/if}
+                {#if header.column.getCanFilter()}
+                  <div>
+                    {@render Filter(header.column, table)}
+                  </div>
+                {/if}
+              {/if}
+            </th>
+          {/each}
+        </tr>
+      {/each}
+    </thead>
+    <tbody>
+      {#each table.getRowModel().rows as row (row.id)}
+        <tr>
+          {#each row.getAllCells() as cell (cell.id)}
+            <td>
+              {#if cell.column.id === 'select'}
+                <input
+                  type="checkbox"
+                  checked={row.getIsSelected()}
+                  disabled={!row.getCanSelect()}
+                  use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
+                  onclick={row.getToggleSelectedHandler({
+                    // selectChildren: false
+                  })}
+                  class="sortable-header"
+                />
+              {:else}
+                <FlexRender cell={cell} />
+              {/if}
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td class="cell-padding">
+          <input
+            type="checkbox"
+            checked={table.getIsAllPageRowsSelected()}
+            use:setIndeterminate={!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected()}
+            onchange={table.getToggleAllPageRowsSelectedHandler()}
+            class="sortable-header"
+          />
+        </td>
+        <td colSpan={20}>Page Rows ({table.getRowModel().rows.length.toLocaleString()})</td>
+      </tr>
+    </tfoot>
+  </table>
+  <div class="spacer-sm"></div>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.setPageIndex(0)
+      }
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.previousPage()}
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.nextPage()}
+      disabled={!table.getCanNextPage()}
+    >
+      {'>'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.lastPage()}
+      disabled={!table.getCanLastPage()}
+    >
+      {'>>'}
+    </button>
+    <span class="inline-controls">
+      <div>Page</div>
+      <strong>
+        {(pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
+      </strong>
+    </span>
+    <span class="inline-controls">
+      | Go to page:
+      <input
+        type="number"
+        min="1"
+        max={table.getPageCount()}
+        value={pagination.pageIndex + 1}
+        oninput={(e) => {
+          const page = (e.target as HTMLInputElement).value ? Number((e.target as HTMLInputElement).value) - 1 : 0
+          table.setPageIndex(page)
+        }}
+        class="page-size-input"
+      />
+    </span>
+    <select
+      value={pagination.pageSize}
+      onchange={(e) => {
+        table.setPageSize(Number((e.target as HTMLSelectElement).value))
+      }}
+    >
+      {#each [10, 20, 30, 40, 50] as pageSize}
+        <option value={pageSize}>Show {pageSize}</option>
+      {/each}
+    </select>
+  </div>
+  <br />
+  <div>
+    {Object.keys(rowSelection).length.toLocaleString()} of{' '}
+    {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total Rows Selected
+  </div>
+  <hr />
+  <br />
+  <div>
+    <button
+      class="demo-button demo-button-spaced"
+      onclick={() =>
+        console.info(
+          'table.getSelectedRowModel().flatRows',
+          table.getSelectedRowModel().flatRows,
+        )
+      }
+    >
+      Log table.getSelectedRowModel().flatRows
+    </button>
+  </div>
+  <div>
+    <strong>Row Selection State:</strong>
+    <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)
+    }</pre>
+  </div>
+</div>
+
+{#snippet Filter(
+  column: Column<typeof features, Person>,
+  table: SvelteTable<typeof features, Person>,
+)}
+  {@const firstValue = table
+    .getPreFilteredRowModel()
+    .flatRows[0]?.getValue(column.id)}
+
+  {#if typeof firstValue === 'number'}
+    <div class="filter-row">
+      <input
+        type="number"
+        value={((column.getFilterValue() as any)?.[0] ?? '') as string}
+        oninput={(e) =>
+          column.setFilterValue((old: any) => [(e.target as HTMLInputElement).value, old?.[1]])
+        }
+        placeholder={`Min`}
+        class="filter-input"
+      />
+      <input
+        type="number"
+        value={((column.getFilterValue() as any)?.[1] ?? '') as string}
+        oninput={(e) =>
+          column.setFilterValue((old: any) => [old?.[0], (e.target as HTMLInputElement).value])
+        }
+        placeholder={`Max`}
+        class="filter-input"
+      />
+    </div>
+  {:else}
+    <input
+      type="text"
+      value={(column.getFilterValue() ?? '') as string}
+      oninput={(e) => column.setFilterValue((e.target as HTMLInputElement).value)}
+      placeholder={`Search...`}
+      class="filter-select"
+    />
+  {/if}
+{/snippet}

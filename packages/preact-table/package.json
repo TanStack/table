@@ -1,0 +1,63 @@
+{
+  "name": "@tanstack/preact-table",
+  "version": "9.1.2",
+  "description": "Headless UI for building powerful tables & datagrids for Preact.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/preact-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "preact",
+    "table",
+    "preact-table",
+    "datagrid",
+    "tanstack-intent"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./experimental-worker-plugin": "./dist/experimental-worker-plugin.js",
+    "./flex-render": "./dist/flex-render.js",
+    "./static-functions": "./dist/static-functions.js",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "skills"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
+  },
+  "dependencies": {
+    "@tanstack/preact-store": "^0.13.2",
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "@testing-library/preact": "^3.2.4",
+    "preact": "^10.29.8",
+    "preact-render-to-string": "^6.7.0"
+  },
+  "peerDependencies": {
+    "preact": ">=10"
+  }
+}

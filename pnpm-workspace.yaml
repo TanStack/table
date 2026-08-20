@@ -1,10 +1,59 @@
 packages:
-  - 'packages/*'
-  - 'examples/angular/*'
-  - 'examples/lit/*'
-  - 'examples/qwik/*'
-  - 'examples/react/*'
-  - 'examples/solid/*'
-  - 'examples/svelte/*'
-  - 'examples/vanilla/*'
-  - 'examples/vue/*'
+  - examples/**/*
+  - packages/*
+
+overrides:
+  '@internationalized/date': '3.12.3'
+  '@tanstack/alpine-table': 'workspace:*'
+  '@tanstack/angular-table-devtools': 'workspace:*'
+  '@tanstack/angular-table': 'workspace:*'
+  '@tanstack/ember-table': 'workspace:*'
+  '@tanstack/lit-table': 'workspace:*'
+  '@tanstack/match-sorter-utils': 'workspace:*'
+  '@tanstack/octane-table': 'workspace:*'
+  '@tanstack/preact-table-devtools': 'workspace:*'
+  '@tanstack/preact-table': 'workspace:*'
+  '@tanstack/react-table-devtools': 'workspace:*'
+  '@tanstack/react-table': 'workspace:*'
+  '@tanstack/solid-table-devtools': 'workspace:*'
+  '@tanstack/solid-table': 'workspace:*'
+  '@tanstack/svelte-table': 'workspace:*'
+  '@tanstack/table-core': 'workspace:*'
+  '@tanstack/table-devtools': 'workspace:*'
+  '@tanstack/vue-table-devtools': 'workspace:*'
+  '@tanstack/vue-table': 'workspace:*'
+
+packageExtensions:
+  '@analogjs/vite-plugin-angular':
+    peerDependencies:
+      '@angular/compiler': '^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0 || ^22.0.0'
+    peerDependenciesMeta:
+      '@angular/compiler':
+        optional: true
+
+allowBuilds:
+  # root dependency
+  nx: true
+  unrs-resolver: false # not directly required for build
+  esbuild: true
+
+  # @angular/build
+  '@parcel/watcher': false # optional dep of @angular/build
+  lmdb: false # optional dep of @angular/build
+  msgpackr-extract: false # optional dep of @angular/build
+
+  # @tanstack/vue-store
+  vue-demi: false # only required for vue 2 support
+  core-js-pure: false
+
+cleanupUnusedCatalogs: true
+minimumReleaseAge: 1440
+
+linkWorkspacePackages: true
+preferWorkspacePackages: true
+blockExoticSubdeps: true
+trustPolicy: 'no-downgrade'
+trustPolicyExclude:
+  - ember-modifier@4.3.0
+  - chokidar@4.0.3
+  - semver@5.7.2 || 6.3.1

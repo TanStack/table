@@ -1,0 +1,260 @@
+import { useMemo, useState } from 'octane'
+import { createRoot } from 'octane'
+import './index.css'
+import {
+  columnFilteringFeature,
+  columnGroupingFeature,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  createTableHook,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_text,
+} from '@tanstack/octane-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+
+// this example happens to use the createTableHook pattern, but it is not required
+const { useAppTable, createAppColumnHelper } = createTableHook({
+  features: {
+    columnFilteringFeature,
+    columnGroupingFeature,
+    rowExpandingFeature,
+    rowPaginationFeature,
+    rowSortingFeature,
+    expandedRowModel: createExpandedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    groupedRowModel: createGroupedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
+  },
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+function App() @{
+  const columns = useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          header: 'First Name',
+          cell: (info) => info.getValue(),
+          /**
+           * override the value used for row grouping
+           * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+           */
+          getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          header: () => <span>Last Name</span>,
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          cell: ({ getValue }) =>
+            Math.round(getValue<number>() * 100) / 100 + '%',
+        }),
+      ]),
+    [],
+  )
+
+  const [data, setData] = useState(() => makeData(10_000))
+  const refreshData = () => setData(() => makeData(10_000))
+  const stressTest = () => setData(() => makeData(1_000_000))
+
+  const table = useAppTable(
+    {
+      columns,
+      data,
+      // initialState: { grouping: ['status'] }, // group by a column on first render
+      // atoms: { grouping: groupingAtom }, // preferred: own grouping state with an external atom
+      // state: { grouping }, // classic controlled state; pair with onGroupingChange
+      // onGroupingChange: setGrouping,
+      // enableGrouping: false, // disable grouping for every column; default true
+      // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
+      // manualGrouping: true, // pass rows that are already grouped, for example from a server
+      debugTable: true,
+    },
+    (state) => state, // default selector
+  )
+
+  <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+      </div>
+      <div className="spacer-sm" />
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div>
+                        {header.column.getCanGroup() ? (
+                          // If the header can be grouped, let's add a toggle
+                          <button
+                            onClick={header.column.getToggleGroupingHandler()}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {header.column.getIsGrouped()
+                              ? `🛑(${header.column.getGroupedIndex()}) `
+                              : `👊 `}
+                          </button>
+                        ) : null}{' '}
+                        <table.FlexRender header={header} />
+                      </div>
+                    )}
+                  </th>
+                )
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr key={row.id}>
+                {row.getAllCells().map((cell) => {
+                  return (
+                    <td
+                      key={cell.id}
+                      style={{
+                        background: cell.getIsGrouped()
+                          ? '#0aff0082'
+                          : cell.getIsPlaceholder()
+                            ? '#ff000042'
+                            : 'white',
+                      }}
+                    >
+                      {cell.getIsGrouped() ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <button
+                            onClick={row.getToggleExpandedHandler()}
+                            style={{
+                              cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                            }}
+                          >
+                            {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                            <table.FlexRender cell={cell} />
+                            {` (${row.subRows.length.toLocaleString()})`}
+                          </button>
+                        </>
+                      ) : cell.getIsPlaceholder() ? null : row.getIsGrouped() ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        <table.FlexRender cell={cell} />
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+      <div className="spacer-sm" />
+      <div className="controls">
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span className="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            max={table.getPageCount()}
+            value={table.state.pagination.pageIndex + 1}
+            onInput={(e) => {
+              const page = (e.target as HTMLInputElement).value
+                ? Number((e.target as HTMLInputElement).value) - 1
+                : 0
+              table.setPageIndex(page)
+            }}
+            className="page-size-input"
+          />
+        </span>
+        <select
+          value={table.state.pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number((e.target as HTMLSelectElement).value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>{String(table.getRowModel().rows.length.toLocaleString())} Rows</div>
+      <div></div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
+    </div>
+}
+
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
+
+createRoot(rootElement).render(App)

@@ -1,0 +1,10 @@
+.root {
+  width: 100%;
+  display: table-row;
+  &.layout-mode-grid {
+    display: flex;
+  }
+  background-color: light-dark(var(--light-bg-color), var(--dark-bg-color));
+  border-top: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}

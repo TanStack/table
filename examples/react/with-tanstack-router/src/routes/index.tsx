@@ -1,0 +1,81 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
+import { useMemo } from 'react'
+import { fetchUsers } from '../api/user'
+import Table, {
+  DEFAULT_PAGE_INDEX,
+  DEFAULT_PAGE_SIZE,
+} from '../components/table'
+import { useFilters } from '../hooks/useFilters'
+import { sortByToState, stateToSortBy } from '../utils/tableSortMapper'
+import { USER_COLUMNS } from '../utils/userColumns'
+import type { UserFilters } from '../api/user'
+
+export const Route = createFileRoute('/')({
+  component: UsersPage,
+  validateSearch: () => ({}) as UserFilters,
+})
+
+function UsersPage() {
+  const { filters, resetFilters, setFilters } = useFilters(Route.fullPath)
+
+  const { data } = useQuery({
+    queryKey: ['users', filters],
+    queryFn: () => fetchUsers(filters),
+    placeholderData: keepPreviousData,
+  })
+
+  const paginationState = {
+    pageIndex: filters.pageIndex ?? DEFAULT_PAGE_INDEX,
+    pageSize: filters.pageSize ?? DEFAULT_PAGE_SIZE,
+  }
+  const sortingState = sortByToState(filters.sortBy)
+  const columns = useMemo(() => USER_COLUMNS, [])
+
+  return (
+    <div className="router-root">
+      <h1 className="page-title">TanStack Table + Query + Router</h1>
+      <Table
+        data={data?.result ?? []}
+        columns={columns}
+        pagination={paginationState}
+        paginationOptions={{
+          onPaginationChange: (pagination) => {
+            setFilters(
+              typeof pagination === 'function'
+                ? pagination(paginationState)
+                : pagination,
+            )
+          },
+          rowCount: data?.rowCount,
+        }}
+        filters={filters}
+        onFilterChange={(filters) =>
+          setFilters({ ...filters, pageIndex: DEFAULT_PAGE_INDEX })
+        }
+        sorting={sortingState}
+        onSortingChange={(updaterOrValue) => {
+          const newSortingState =
+            typeof updaterOrValue === 'function'
+              ? updaterOrValue(sortingState)
+              : updaterOrValue
+          return setFilters({
+            sortBy: stateToSortBy(newSortingState),
+            pageIndex: DEFAULT_PAGE_INDEX,
+          })
+        }}
+      />
+      <div className="controls">
+        {data?.rowCount?.toLocaleString()} users found
+        <button
+          className="demo-button demo-button-sm disabled-button"
+          onClick={resetFilters}
+          disabled={Object.keys(filters).length === 0}
+        >
+          Reset Filters
+        </button>
+      </div>
+      <pre>{JSON.stringify(filters, null, 2)}</pre>
+    </div>
+  )
+}

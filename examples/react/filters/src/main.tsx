@@ -1,134 +1,150 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
-  RowData,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  columnFilteringFeature,
+  createColumnHelper,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  filterFn_equalsString,
+  filterFn_inDateRange,
+  filterFn_inNumberRange,
+  filterFn_includesString,
+  metaHelper,
+  rowPaginationFeature,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
+import { makeData } from './makeData'
+import type { Column } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
-import { makeData, Person } from './makeData'
-
-declare module '@tanstack/react-table' {
-  //allows us to define custom properties for our columns
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select' | 'dateRange'
 }
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    inDateRange: filterFn_inDateRange,
+    equalsString: filterFn_equalsString,
+  },
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
+
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'rowNumber',
+          header: '#',
+          cell: ({ row }) => row.getDisplayIndex() + 1,
+        }),
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          // enableColumnFilter: false, // disable filtering for this column
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+        }),
+        columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
+          id: 'fullName',
+          header: 'Full Name',
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          filterFn: 'equalsString', // filterFn string to pick from filterFns
+          meta: {
+            filterVariant: 'select',
+          },
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          meta: {
+            filterVariant: 'range',
+          },
+          filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+          // you could also write your own custom filter function here
+        }),
+        columnHelper.accessor('birthDate', {
+          header: 'Birth Date',
+          // A locale-independent date format keeps the demo (and its tests) stable
+          cell: (info) => info.getValue().toISOString().slice(0, 10),
+          filterFn: 'inDateRange', // accepts Date objects, timestamps, or parseable date strings
+          meta: {
+            filterVariant: 'dateRange',
+          },
+        }),
+      ]),
+    [],
   )
 
-  const columns = React.useMemo<ColumnDef<Person, any>[]>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: info => info.getValue(),
-      },
-      {
-        accessorFn: row => row.lastName,
-        id: 'lastName',
-        cell: info => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorFn: row => `${row.firstName} ${row.lastName}`,
-        id: 'fullName',
-        header: 'Full Name',
-        cell: info => info.getValue(),
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        meta: {
-          filterVariant: 'select',
-        },
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-    ],
-    []
-  )
+  const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
+  const refreshData = () => setData(makeData(5_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
-  const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
-  const refreshData = () => setData(_old => makeData(50_000)) //stress test
-
-  const table = useReactTable({
-    data,
-    columns,
-    filterFns: {},
-    state: {
-      columnFilters,
+  const table = useTable(
+    {
+      features,
+      columns,
+      data,
+      // initialState: { columnFilters: [{ id: 'firstName', value: 'Jane' }] }, // set filters once
+      // atoms: { columnFilters: columnFiltersAtom }, // preferred: own column filters with an external atom
+      // state: { columnFilters }, // classic controlled state; pair with onColumnFiltersChange
+      // onColumnFiltersChange: setColumnFilters,
+      // enableFilters: false, // disable all column and global filtering; default true
+      // enableColumnFilters: false, // disable per-column filters; default true
+      // filterFromLeafRows: true, // keep parents whose descendants match; default filters from parents down
+      // maxLeafRowFilterDepth: 1, // only filter through this nested-row depth; default 100
+      // manualFiltering: true, // pass data that is already filtered, for example from a server
+      debugTable: true,
+      debugColumns: true,
     },
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client side filtering
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  })
+    (state) => state, // default selector
+  )
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+      </div>
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <>
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: ' 🔼',
-                            desc: ' 🔽',
-                          }[header.column.getIsSorted() as string] ?? null}
+                        <div>
+                          <table.FlexRender header={header} />
                         </div>
                         {header.column.getCanFilter() ? (
                           <div>
@@ -144,16 +160,13 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}
@@ -162,120 +175,153 @@ function App() {
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
+          className="demo-button demo-button-sm"
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
+          className="demo-button demo-button-sm"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanLastPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            value={table.state.pagination.pageIndex + 1}
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
-          onChange={e => {
+          value={table.state.pagination.pageSize}
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
           ))}
         </select>
       </div>
-      <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
       <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
+        {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <pre>
-        {JSON.stringify(
-          { columnFilters: table.getState().columnFilters },
-          null,
-          2
-        )}
+      <div></div>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
       </pre>
     </div>
   )
 }
 
-function Filter({ column }: { column: Column<any, unknown> }) {
+function Filter({
+  column,
+}: {
+  column: Column<typeof features, Person, unknown>
+}) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
 
-  return filterVariant === 'range' ? (
+  return filterVariant === 'dateRange' ? (
     <div>
-      <div className="flex space-x-2">
+      <div className="filter-row">
+        <DebouncedInput
+          type="date"
+          aria-label={`${column.id} min`}
+          value={(columnFilterValue as [string, string] | undefined)?.[0] ?? ''}
+          onChange={(value) =>
+            column.setFilterValue((old: [string, string] | undefined) => [
+              value,
+              old?.[1],
+            ])
+          }
+          className="filter-input"
+        />
+        <DebouncedInput
+          type="date"
+          aria-label={`${column.id} max`}
+          value={(columnFilterValue as [string, string] | undefined)?.[1] ?? ''}
+          onChange={(value) =>
+            column.setFilterValue((old: [string, string] | undefined) => [
+              old?.[0],
+              value,
+            ])
+          }
+          className="filter-input"
+        />
+      </div>
+      <div className="spacer-xs" />
+    </div>
+  ) : filterVariant === 'range' ? (
+    <div>
+      <div className="filter-row">
         {/* See faceted column filters example for min max values functionality */}
         <DebouncedInput
           type="number"
-          value={(columnFilterValue as [number, number])?.[0] ?? ''}
-          onChange={value =>
-            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
+          value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
+          onChange={(value) =>
+            column.setFilterValue((old: [number, number] | undefined) => [
+              value,
+              old?.[1],
+            ])
           }
           placeholder={`Min`}
-          className="w-24 border shadow rounded"
+          className="filter-input"
         />
         <DebouncedInput
           type="number"
-          value={(columnFilterValue as [number, number])?.[1] ?? ''}
-          onChange={value =>
-            column.setFilterValue((old: [number, number]) => [old?.[0], value])
+          value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
+          onChange={(value) =>
+            column.setFilterValue((old: [number, number] | undefined) => [
+              old?.[0],
+              value,
+            ])
           }
           placeholder={`Max`}
-          className="w-24 border shadow rounded"
+          className="filter-input"
         />
       </div>
-      <div className="h-1" />
+      <div className="spacer-xs" />
     </div>
   ) : filterVariant === 'select' ? (
     <select
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(e) => column.setFilterValue(e.target.value)}
       value={columnFilterValue?.toString()}
     >
       {/* See faceted column filters example for dynamic select options */}
@@ -286,8 +332,8 @@ function Filter({ column }: { column: Column<any, unknown> }) {
     </select>
   ) : (
     <DebouncedInput
-      className="w-36 border shadow rounded"
-      onChange={value => column.setFilterValue(value)}
+      className="filter-select"
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       type="text"
       value={(columnFilterValue ?? '') as string}
@@ -313,16 +359,17 @@ function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
 
   return (
-    <input {...props} value={value} onChange={e => setValue(e.target.value)} />
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value)
+        debouncedOnChange(e.target.value)
+      }}
+    />
   )
 }
 
@@ -332,5 +379,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

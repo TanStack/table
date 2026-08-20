@@ -1,0 +1,80 @@
+import { Component, signal } from '@angular/core'
+import {
+  FlexRender,
+  createColumnHelper,
+  createPaginatedRowModel,
+  injectTable,
+  isFunction,
+  rowPaginationFeature,
+  tableFeatures,
+} from '@tanstack/angular-table'
+import { densityPlugin } from './density/density-feature'
+import { makeData } from './makeData'
+import type { DensityState } from './density/density-feature'
+import type { Person } from './makeData'
+
+const features = tableFeatures({
+  rowPaginationFeature,
+  densityPlugin, // pass in our plugin just like any other stock feature
+  paginatedRowModel: createPaginatedRowModel(),
+})
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    cell: (info) => info.getValue(),
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => 'Last Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => 'Visits',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
+
+@Component({
+  selector: 'app-root',
+  imports: [FlexRender],
+  templateUrl: './app.html',
+  styleUrl: './app.css',
+})
+export class App {
+  readonly data = signal(makeData(20))
+  readonly density = signal<DensityState>('md')
+
+  readonly table = injectTable(() => ({
+    features,
+    columns,
+    data: this.data(),
+    debugTable: true,
+    state: {
+      // passing the density state to the table, TS is still happy :)
+      density: this.density(),
+    },
+    // using the new onDensityChange option, TS is still happy :)
+    onDensityChange: (updater) =>
+      isFunction(updater)
+        ? this.density.update(updater)
+        : this.density.set(updater),
+  }))
+
+  refreshData = () => this.data.set(makeData(20))
+  stressTest = () => this.data.set(makeData(1_000_000))
+}

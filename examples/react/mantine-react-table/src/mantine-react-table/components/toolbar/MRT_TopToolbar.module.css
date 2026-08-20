@@ -1,0 +1,24 @@
+.root {
+  background-color: var(--mrt-base-background-color);
+  position: relative;
+}
+
+.root-fullscreen {
+  position: sticky !important;
+  top: 0;
+}
+
+.actions-container {
+  align-items: flex-start;
+  box-sizing: border-box;
+  justify-content: space-between;
+  padding: rem(8px);
+  right: 0;
+  top: 0;
+  width: 100%;
+  position: absolute;
+}
+
+.actions-container-stack-alert {
+  position: relative !important;
+}
