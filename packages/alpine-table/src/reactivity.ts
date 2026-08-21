@@ -13,6 +13,9 @@ import type {
 export function alpineReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    // All state/options writes flow through the table's patched
+    // atoms/optionsStore, so the memo epoch fast path is safe here.
+    supportsWriteEpoch: true,
     wrapExternalAtoms: false,
     addSubscription: () => {
       throw new Error(

@@ -217,7 +217,12 @@ export function table_setOptions<
   if (table.optionsStore) {
     table.optionsStore.set(() => mergedOptions)
   } else {
+    // Options are an input to memoized APIs; a plain assignment bypasses the
+    // epoch-bumping atom writes, so bump here (after the write, matching the
+    // patched-atom ordering). The optionsStore branch bumps through its
+    // patched `set`.
     table.options = mergedOptions
+    table._epoch++
   }
   if (options?.syncExternalState !== false) {
     table_publishExternalState(table, mergedOptions.state ?? null)

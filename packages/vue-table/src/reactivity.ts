@@ -64,6 +64,9 @@ export function vueReactivity(): TableReactivityBindings {
 
   return {
     createOptionsStore: true,
+    // All state/options writes flow through the table's patched
+    // atoms/optionsStore, so the memo epoch fast path is safe here.
+    supportsWriteEpoch: true,
     wrapExternalAtoms: true,
     addSubscription: (subscription) => {
       subscriptions.add(subscription)
