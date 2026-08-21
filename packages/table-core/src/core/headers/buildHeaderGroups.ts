@@ -139,6 +139,7 @@ function constructHeaderGroup<
       pendingParentHeaders.push(header)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- required by the TS version compatibility matrix
     headerGroup.headers.push(headerToGroup as Header<TFeatures, TData, unknown>)
     headerToGroup.headerGroup = headerGroup
   }

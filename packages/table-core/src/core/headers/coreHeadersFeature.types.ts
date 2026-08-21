@@ -54,6 +54,12 @@ export interface Header_CoreProperties<
   TValue extends CellData = CellData,
 > {
   /**
+   * Holder for lazily created memoized API state. Declared at construction so
+   * creating a memo never changes the header's hidden class.
+   * @internal
+   */
+  _memos?: Record<string, (...args: Array<any>) => any>
+  /**
    * The col-span for the header.
    */
   colSpan: number

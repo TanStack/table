@@ -3,6 +3,7 @@ import {
   skipFirstRun,
   tableMemo,
 } from '../../utils'
+import { constructRow } from '../../core/rows/constructRow'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -172,8 +173,19 @@ function _createSortedRowModel<
         const sortedSubRows = sortData(row.subRows)
 
         if (sortedSubRows.changed) {
-          // Preserve prototype chain so methods like getValue() remain accessible
-          const cloned = Object.create(Object.getPrototypeOf(row))
+          // Rebuild through constructRow so the clone declares its own
+          // properties in the canonical order (same hidden class as every
+          // other row), then copy instance values from the source row. Value
+          // caches are shared with the source by reference, as before.
+          const cloned = constructRow(
+            table,
+            row.id,
+            row.original,
+            row.index,
+            row.depth,
+            undefined,
+            row.parentId,
+          )
           copyInstancePropertiesWithoutMemos(cloned, row)
           cloned.subRows = sortedSubRows.rows
           sortedData[i] = cloned

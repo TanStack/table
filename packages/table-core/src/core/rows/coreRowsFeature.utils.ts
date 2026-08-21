@@ -109,8 +109,13 @@ export function row_getUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, columnId: string) {
-  if (hasOwn(row._uniqueValuesCache, columnId)) {
-    return row._uniqueValuesCache[columnId]
+  // Allocated on first use: only faceting/grouping paths read unique values,
+  // so most rows never pay for the map. The slot itself is declared at
+  // construction, keeping this a value write.
+  const uniqueValuesCache = (row._uniqueValuesCache ??= makeObjectMap())
+
+  if (hasOwn(uniqueValuesCache, columnId)) {
+    return uniqueValuesCache[columnId]
   }
 
   const column = row.table.getColumn(columnId)
@@ -120,16 +125,16 @@ export function row_getUniqueValues<
   }
 
   if (!column.columnDef.getUniqueValues) {
-    row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
-    return row._uniqueValuesCache[columnId]
+    uniqueValuesCache[columnId] = [row.getValue(columnId)]
+    return uniqueValuesCache[columnId]
   }
 
-  row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
+  uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
     row.original,
     row.index,
   )
 
-  return row._uniqueValuesCache[columnId]
+  return uniqueValuesCache[columnId]
 }
 
 /**
