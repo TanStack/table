@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import {
   callMemoOrStaticFn,
   cloneState,
@@ -6,6 +6,7 @@ import {
   flattenBy,
   functionalUpdate,
   getFunctionNameInfo,
+  isDevelopmentEnv,
   isFunction,
   tableMemo,
 } from '../../src/utils'
@@ -51,6 +52,27 @@ describe('tableMemo', () => {
     expect(memoized(1)).toBe(1)
     expect(schedule).toHaveBeenCalledTimes(1)
     expect(onAfterUpdate).toHaveBeenCalledTimes(1)
+  })
+
+  test('does not throw when the process global is not defined', () => {
+    vi.stubGlobal('process', undefined)
+
+    const memoized = tableMemo({
+      table: {
+        options: {},
+        _reactivity: {
+          schedule: (fn: () => void) => fn(),
+          untrack: (fn: () => void) => fn(),
+        },
+      } as any,
+      fnName: 'table.getValue',
+      fn: (value?: number) => value ?? 0,
+      memoDeps: (value?: number) => [value],
+    })
+
+    expect(() => memoized(1)).not.toThrow()
+
+    vi.unstubAllGlobals()
   })
 })
 
@@ -162,6 +184,32 @@ describe('getFunctionNameInfo', () => {
       fnKey: 'getSize',
       fnName: 'column.getSize',
     })
+  })
+})
+
+describe('isDevelopmentEnv', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
+  })
+
+  test('is true when NODE_ENV is "development"', () => {
+    vi.stubEnv('NODE_ENV', 'development')
+
+    expect(isDevelopmentEnv()).toBe(true)
+  })
+
+  test('is false when NODE_ENV is not "development"', () => {
+    vi.stubEnv('NODE_ENV', 'production')
+
+    expect(isDevelopmentEnv()).toBe(false)
+  })
+
+  test('is false, not throwing, when the process global is not defined', () => {
+    vi.stubGlobal('process', undefined)
+
+    expect(() => isDevelopmentEnv()).not.toThrow()
+    expect(isDevelopmentEnv()).toBe(false)
   })
 })
 

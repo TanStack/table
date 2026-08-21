@@ -1,5 +1,5 @@
 import { filterFn_includesString } from '../column-filtering/filterFns'
-import { cloneState, isFunction } from '../../utils'
+import { cloneState, isDevelopmentEnv, isFunction } from '../../utils'
 import type { Column_Internal } from '../../types/Column'
 import type { FilterFn } from '../column-filtering/columnFilteringFeature.types'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -74,11 +74,7 @@ export function table_getGlobalFilterFn<
       ? table_getGlobalAutoFilterFn()
       : filterFns?.[globalFilterFn as string]
 
-  if (
-    process.env.NODE_ENV === 'development' &&
-    !filterFn &&
-    globalFilterFn != null
-  ) {
+  if (isDevelopmentEnv() && !filterFn && globalFilterFn != null) {
     console.warn(`globalFilterFn '${String(globalFilterFn)}' is not registered`)
   }
 

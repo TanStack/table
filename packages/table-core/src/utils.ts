@@ -90,6 +90,21 @@ export function hasOwn(obj: object, key: PropertyKey): boolean {
 }
 
 /**
+ * Reports whether the library should run its development-only debug and
+ * validation logic.
+ *
+ * Guards the `process` global so this is safe to call in environments with
+ * no bundler or Node.js runtime (e.g. an ESM build loaded directly via an
+ * import map), where a raw `process.env.NODE_ENV` read throws a
+ * `ReferenceError`.
+ */
+export function isDevelopmentEnv(): boolean {
+  return (
+    typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
+  )
+}
+
+/**
  * Creates a table state updater for a single state slice.
  *
  * The updater writes through the table base atom for the slice and supports both value and functional updater forms.
@@ -272,7 +287,7 @@ export function tableMemo<
   let debug: boolean | undefined
   let debugCache: boolean | undefined
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevelopmentEnv()) {
     const { debugAll } = table.options
     const { parentName } = getFunctionNameInfo(fnName, '.')
 
@@ -333,44 +348,43 @@ export function tableMemo<
     schedule(() => untrack(() => onAfterUpdate()))
   }
 
-  const debugOptions =
-    process.env.NODE_ENV === 'development'
-      ? {
-          onBeforeCompare: () => {
-            if (debugCache) {
-              beforeCompareTime = performance.now()
+  const debugOptions = isDevelopmentEnv()
+    ? {
+        onBeforeCompare: () => {
+          if (debugCache) {
+            beforeCompareTime = performance.now()
+          }
+        },
+        onAfterCompare: (depsChanged: boolean) => {
+          if (debugCache) {
+            afterCompareTime = performance.now()
+            const compareTime =
+              Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
+            if (!depsChanged) {
+              logTime(compareTime, depsChanged)
             }
-          },
-          onAfterCompare: (depsChanged: boolean) => {
-            if (debugCache) {
-              afterCompareTime = performance.now()
-              const compareTime =
-                Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
-              if (!depsChanged) {
-                logTime(compareTime, depsChanged)
-              }
-            }
-          },
-          onBeforeUpdate: () => {
-            if (debug) {
-              startCalcTime = performance.now()
-            }
-          },
-          onAfterUpdate: () => {
-            if (debug) {
-              endCalcTime = performance.now()
-              const executionTime =
-                Math.round((endCalcTime - startCalcTime) * 100) / 100
-              logTime(executionTime, true)
-            }
-            onAfterUpdateHandler()
-          },
-        }
-      : {
-          onAfterUpdate: () => {
-            onAfterUpdateHandler()
-          },
-        }
+          }
+        },
+        onBeforeUpdate: () => {
+          if (debug) {
+            startCalcTime = performance.now()
+          }
+        },
+        onAfterUpdate: () => {
+          if (debug) {
+            endCalcTime = performance.now()
+            const executionTime =
+              Math.round((endCalcTime - startCalcTime) * 100) / 100
+            logTime(executionTime, true)
+          }
+          onAfterUpdateHandler()
+        },
+      }
+    : {
+        onAfterUpdate: () => {
+          onAfterUpdateHandler()
+        },
+      }
 
   return memo({
     ...memoOptions,
