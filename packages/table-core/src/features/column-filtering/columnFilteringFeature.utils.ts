@@ -1,4 +1,9 @@
-import { cloneState, functionalUpdate, isFunction } from '../../utils'
+import {
+  cloneState,
+  functionalUpdate,
+  isDevelopmentEnv,
+  isFunction,
+} from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -80,7 +85,7 @@ export function column_getAutoFilterFn<
 
   const filterFn = filterFns?.[filterFnName]
 
-  if (process.env.NODE_ENV === 'development' && !filterFn) {
+  if (isDevelopmentEnv() && !filterFn) {
     console.warn(
       `filterFn '${filterFnName}' (auto) for column '${column.id}' is not registered`,
     )
@@ -118,7 +123,7 @@ export function column_getFilterFn<
       : filterFns?.[column.columnDef.filterFn as string]
 
   if (
-    process.env.NODE_ENV === 'development' &&
+    isDevelopmentEnv() &&
     !filterFn &&
     column.columnDef.filterFn !== 'auto' // the auto picker warns on its own
   ) {

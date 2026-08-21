@@ -1,4 +1,4 @@
-import { hasOwn, makeObjectMap } from '../../utils'
+import { hasOwn, isDevelopmentEnv, makeObjectMap } from '../../utils'
 import type { Cell } from '../../types/Cell'
 import type { Column, Column_Internal } from '../../types/Column'
 import type { Row } from '../../types/Row'
@@ -48,7 +48,7 @@ function isAggregationFnDescriptor(
 }
 
 function warn(message: string) {
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevelopmentEnv()) {
     console.warn(message)
   }
 }

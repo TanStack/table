@@ -1,4 +1,4 @@
-import { cloneState, isFunction } from '../../utils'
+import { cloneState, isDevelopmentEnv, isFunction } from '../../utils'
 import { reSplitAlphaNumeric, sortFn_basic } from './sortFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -144,7 +144,7 @@ export function column_getAutoSortFn<
     let sortFn = sortFns?.[sortFnName]
 
     if (!sortFn) {
-      if (process.env.NODE_ENV === 'development') {
+      if (isDevelopmentEnv()) {
         console.warn(
           `sortFn '${sortFnName}' (auto) for column '${column.id}' is not registered`,
         )
@@ -228,7 +228,7 @@ export function column_getSortFn<
 
   const sortFn = sortFns?.[column.columnDef.sortFn as string]
 
-  if (process.env.NODE_ENV === 'development' && !sortFn) {
+  if (isDevelopmentEnv() && !sortFn) {
     console.warn(
       `sortFn '${String(column.columnDef.sortFn)}' for column '${column.id}' is not registered`,
     )
