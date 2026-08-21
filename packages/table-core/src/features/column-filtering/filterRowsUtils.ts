@@ -65,20 +65,25 @@ function filterRowModelFromLeafs<
       newRow.columnFilters = row.columnFilters
 
       if (row.subRows.length && depth < maxDepth) {
+        // Descendants are filtered first, so in the flat list a parent must
+        // be inserted before its surviving children (pre-order) to match the
+        // readable `rows` tree and the core/sorted/paginated row models.
+        const flatIndex = newFilteredFlatRows.length
+
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
         row = newRow
 
         if (filterRow(row) && !newRow.subRows.length) {
+          newFilteredFlatRows.splice(flatIndex, 0, row)
           filteredRows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
           continue
         }
 
         if (filterRow(row) || newRow.subRows.length) {
+          newFilteredFlatRows.splice(flatIndex, 0, row)
           filteredRows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
           continue
         }
       } else {
@@ -127,6 +132,11 @@ function filterRowModelFromRoot<
       const pass = filterRow(row)
 
       if (pass) {
+        // Take this row's slot before descending, so a parent stays ahead of
+        // its own sub-rows in flatRows (pre-order).
+        const flatIndex = newFilteredFlatRows.length
+        newFilteredFlatRows.push(row)
+
         if (row.subRows.length && depth < maxDepth) {
           const newRow = constructRow(
             table,
@@ -139,10 +149,10 @@ function filterRowModelFromRoot<
           )
           newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
           row = newRow
+          newFilteredFlatRows[flatIndex] = row
         }
 
         filteredRows.push(row)
-        newFilteredFlatRows.push(row)
         newFilteredRowsById[row.id] = row
 
         // When maxLeafRowFilterDepth stops the recursion, the kept row's
