@@ -99,7 +99,10 @@ export const getDefaultColumnFilterFn = <TData extends MRT_RowData>(
   columnDef: MRT_ColumnDef<TData>,
 ): MRT_FilterOption => {
   const { filterVariant } = columnDef
-  if (filterVariant === 'multi-select') return 'arrIncludesSome'
+  // v9's arrIncludesSome requires an ARRAY cell value (v8 also matched strings via
+  // String#includes), so it filters out every row on scalar columns. arrHas
+  // ("scalar value equals at least one filter value") is the multi-select semantic.
+  if (filterVariant === 'multi-select') return 'arrHas'
   if (filterVariant?.includes('range')) return 'betweenInclusive'
   if (['checkbox', 'date', 'select'].includes(filterVariant || ''))
     return 'equals'
