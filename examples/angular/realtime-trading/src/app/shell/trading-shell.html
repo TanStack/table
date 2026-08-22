@@ -1,0 +1,20 @@
+<main class="trading-terminal" [class.is-sidebar-collapsed]="!sidebarOpen()">
+  <div class="shell-header">
+    <app-shell-header [sidebarOpen]="sidebarOpen()" (sidebarToggle)="toggleSidebar()" />
+
+    @if (devMode) {
+      <aside class="development-warning">
+        DEV BUILD — use the production configuration before recording results.
+      </aside>
+    }
+  </div>
+
+  <section class="market-panel" aria-label="Live synthetic quotes">
+    <ng-content />
+  </section>
+
+  <app-market-statusbar />
+  <div class="sidebar-slot">
+    <app-configurator />
+  </div>
+</main>

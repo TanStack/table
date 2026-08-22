@@ -1,0 +1,177 @@
+<aside id="benchmark-configurator" class="configurator" aria-label="Benchmark configurator">
+  <header>
+    <span>CONFIGURATOR</span>
+    <small>RUN PARAMETERS</small>
+  </header>
+
+  <app-metrics-strip />
+
+  <section class="config-section" aria-labelledby="feed-settings">
+    <h2 id="feed-settings">FEED</h2>
+    <button class="primary-action" type="button" data-testid="feed-toggle" (click)="feed.toggle()">
+      {{ feed.running() ? 'PAUSE FEED' : 'START FEED' }}
+    </button>
+
+    <label class="field">
+      <span>Instruments (rows)</span>
+      <select
+        data-testid="instrument-count-select"
+        [value]="feed.instrumentCount()"
+        (change)="setRowCount($event)"
+      >
+        @for (option of options.instrumentCounts; track option.value) {
+          <option [value]="option.value" [selected]="option.value === feed.instrumentCount()">
+            {{ option.label }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <label class="field rate-field">
+      <span>
+        Synthetic quote workload
+        <strong data-testid="target-sample-rate">
+          {{ formatRate(feed.targetTicksPerSecond()) }} samples/s
+        </strong>
+      </span>
+      <input
+        data-testid="target-rate-slider"
+        type="range"
+        min="0"
+        [max]="sampleRateOptions.length - 1"
+        step="1"
+        list="worker-sample-rate-steps"
+        [value]="sampleRateIndex(feed.targetTicksPerSecond())"
+        [attr.aria-valuetext]="
+          formatRate(feed.targetTicksPerSecond()) + ' synthetic quote samples per second'
+        "
+        (input)="setTargetRate($event)"
+      />
+      <datalist id="worker-sample-rate-steps">
+        @for (option of sampleRateOptions; track option.value) {
+          <option [value]="$index" [label]="option.label"></option>
+        }
+      </datalist>
+      <small>
+        Fixed worker-side workload levels, from 100 to 100K samples/s. Samples are coalesced; this
+        is not the message delivery rate.
+      </small>
+    </label>
+
+    <label class="field">
+      <span>Worker delivery interval</span>
+      <select
+        data-testid="publish-interval-select"
+        [value]="feed.publishIntervalMs()"
+        (change)="setPublishInterval($event)"
+      >
+        @for (option of options.workerDeliveryIntervals; track option.value) {
+          <option [value]="option.value" [selected]="option.value === feed.publishIntervalMs()">
+            {{ option.label }}
+          </option>
+        }
+      </select>
+      <small> The worker posts one coalesced update message at this target cadence. </small>
+    </label>
+  </section>
+
+  <section class="config-section" aria-labelledby="render-settings">
+    <h2 id="render-settings">RENDER PATH</h2>
+    <label class="toggle-field">
+      <input
+        data-testid="table-worker-toggle"
+        type="checkbox"
+        [checked]="controller.tableWorkerEnabled()"
+        (change)="setTableWorkerEnabled($event)"
+      />
+      <span>
+        Worker row model (v9 only)
+        <small>offloads the filtered row-model stage to a dedicated worker</small>
+      </span>
+    </label>
+
+    <label class="field" data-testid="virtual-scroll-mode">
+      <span>Row rendering</span>
+      <select
+        data-testid="virtual-scroll-select"
+        [value]="controller.virtualScrollMode()"
+        [disabled]="controller.virtualScrollForced()"
+        (change)="setVirtualScrollMode($event)"
+      >
+        @for (option of options.rowRenderingModes; track option.value) {
+          <option
+            [value]="option.value"
+            [selected]="option.value === controller.virtualScrollMode()"
+          >
+            {{ option.label }}
+          </option>
+        }
+      </select>
+      <small>
+        @if (controller.virtualScrollForced()) {
+          TanStack Virtual is required and locked at 1,500 or more rows.
+        } @else {
+          Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and
+          remains selectable.
+        }
+      </small>
+    </label>
+
+    <label class="toggle-field">
+      <input
+        type="checkbox"
+        [checked]="controller.rendererMode() === 'swap'"
+        (change)="setRendererMode($event)"
+      />
+      <span>
+        Swap Tick component A ↔ B
+        <small>destroy and recreate when direction changes</small>
+      </span>
+    </label>
+
+    <label class="toggle-field">
+      <input
+        type="checkbox"
+        [checked]="feed.updateSparklines()"
+        (change)="setSparklineUpdates($event)"
+      />
+      <span>
+        Update intraday charts
+        <small>sample rolling prices independently for every instrument</small>
+      </span>
+    </label>
+
+    <label class="field">
+      <span>Intraday chart sampling</span>
+      <select
+        data-testid="sparkline-sample-interval-select"
+        [value]="feed.sparklineSampleIntervalMs()"
+        (change)="setSparklineSampleInterval($event)"
+      >
+        @for (option of options.intradaySamplingIntervals; track option.value) {
+          <option
+            [value]="option.value"
+            [selected]="option.value === feed.sparklineSampleIntervalMs()"
+          >
+            {{ option.label }}
+          </option>
+        }
+      </select>
+      <small>
+        How often each row adds a point to its sparkline. Quote generation and worker delivery are
+        unaffected.
+      </small>
+    </label>
+  </section>
+
+  <section class="config-section" aria-labelledby="stress-actions">
+    <h2 id="stress-actions">STRESS ACTIONS</h2>
+    <div class="action-grid">
+      <button type="button" (click)="feed.runBurst()">RUN 25K BURST</button>
+      <button type="button" (click)="controller.resetMarket()">RESET SESSION</button>
+    </div>
+  </section>
+
+  <app-diagnostics />
+  <app-selected-instrument />
+</aside>

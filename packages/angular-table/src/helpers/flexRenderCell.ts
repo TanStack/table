@@ -130,12 +130,9 @@ export class FlexRenderCell<
   readonly #viewContainerRef = inject(ViewContainerRef)
 
   constructor() {
-    const content = computed(() => this.#renderData()[0])
-    const props = computed(() => this.#renderData()[1])
-
     const renderer = new FlexViewRenderer<TFeatures, TData, TValue, any>({
-      content: content,
-      props: props,
+      content: () => this.#renderData()[0],
+      props: () => this.#renderData()[1],
       injector: () => this.#injector,
       templateRef: this.#templateRef,
       viewContainerRef: this.#viewContainerRef,

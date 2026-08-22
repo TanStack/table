@@ -1,0 +1,25 @@
+{
+  "name": "tanstack-alpine-table-example-realtime-trading",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "dependencies": {
+    "@tanstack/alpine-table": "9.1.2",
+    "@tanstack/store": "^0.11.0",
+    "@tanstack/virtual-core": "^3.13.35",
+    "alpinejs": "^3.15.12"
+  },
+  "devDependencies": {
+    "@types/alpinejs": "^3.13.11",
+    "typescript": "6.0.3",
+    "vite": "^8.2.0"
+  }
+}

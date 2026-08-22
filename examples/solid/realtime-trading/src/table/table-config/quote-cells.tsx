@@ -1,0 +1,245 @@
+import { createMemo, onCleanup, onMount } from 'solid-js'
+import type {
+  DepthCellProps,
+  MoveCellProps,
+  PercentChangeCellProps,
+  PriceCellProps,
+  QuoteAgeCellProps,
+  SparklineCellProps,
+  SpreadCellProps,
+} from './quote-cell-props'
+
+const compactNumber = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+})
+
+export const quoteCellLifecycle = {
+  created: 0,
+  destroyed: 0,
+}
+
+export const quoteCellRendererNames = [
+  'Market',
+  'Name',
+  'Symbol',
+  'Last',
+  'Change',
+  'ChangePercent',
+  'Bid',
+  'BidVolume',
+  'Ask',
+  'AskVolume',
+  'Open',
+  'High',
+  'Low',
+  'Intraday',
+] as const
+
+export const quoteComponentNames = [
+  'PriceCell',
+  'StableMoveCell',
+  'UpMoveCell',
+  'DownMoveCell',
+  'PercentChangeCell',
+  'SpreadCell',
+  'DepthCell',
+  'QuoteAgeCell',
+  'SparklineCell',
+] as const
+
+export type QuoteCellRendererName = (typeof quoteCellRendererNames)[number]
+export type QuoteComponentName = (typeof quoteComponentNames)[number]
+
+const createCounterMap = <Name extends string>(
+  names: ReadonlyArray<Name>,
+): Record<Name, number> =>
+  Object.fromEntries(names.map((name) => [name, 0])) as Record<Name, number>
+
+export const quoteRenderDiagnostics = {
+  cellRendererCalls: 0,
+  componentRenderCalls: 0,
+  cellRendererCallsByName: createCounterMap(quoteCellRendererNames),
+  componentRenderCallsByName: createCounterMap(quoteComponentNames),
+}
+
+export function recordCellRender<T>(
+  name: QuoteCellRendererName,
+  value: () => T,
+): T {
+  quoteRenderDiagnostics.cellRendererCalls++
+  quoteRenderDiagnostics.cellRendererCallsByName[name]++
+  return value()
+}
+
+function trackLifecycle(componentName: QuoteComponentName): void {
+  quoteRenderDiagnostics.componentRenderCalls++
+  quoteRenderDiagnostics.componentRenderCallsByName[componentName]++
+  onMount(() => {
+    quoteCellLifecycle.created++
+  })
+  onCleanup(() => {
+    quoteCellLifecycle.destroyed++
+  })
+}
+
+export function PriceCell(props: PriceCellProps) {
+  trackLifecycle('PriceCell')
+  return (
+    <button
+      class="price-button"
+      classList={{
+        'quote-up': props.move >= 0,
+        'quote-down': props.move < 0,
+      }}
+      onClick={props.onSelect}
+    >
+      {props.price.toFixed(2)}
+    </button>
+  )
+}
+
+export function StableMoveCell(props: MoveCellProps) {
+  trackLifecycle('StableMoveCell')
+  return (
+    <span
+      class="move-cell"
+      classList={{
+        'quote-up': props.move >= 0,
+        'quote-down': props.move < 0,
+      }}
+    >
+      {formatSigned(props.move)}
+    </span>
+  )
+}
+
+export function UpMoveCell(props: MoveCellProps) {
+  trackLifecycle('UpMoveCell')
+  return <span class="move-cell quote-up">▲ {formatSigned(props.move)}</span>
+}
+
+export function DownMoveCell(props: MoveCellProps) {
+  trackLifecycle('DownMoveCell')
+  return <span class="move-cell quote-down">▼ {formatSigned(props.move)}</span>
+}
+
+export function PercentChangeCell(props: PercentChangeCellProps) {
+  trackLifecycle('PercentChangeCell')
+  return (
+    <span
+      class="percent-change-cell"
+      classList={{
+        'quote-up': props.value >= 0,
+        'quote-down': props.value < 0,
+      }}
+    >
+      {props.value >= 0 ? '+' : ''}
+      {props.value.toFixed(2)}%
+    </span>
+  )
+}
+
+export function SpreadCell(props: SpreadCellProps) {
+  trackLifecycle('SpreadCell')
+  const spread = createMemo(() => Math.max(0, props.ask - props.bid))
+  const basisPoints = createMemo(() => {
+    const midpoint = (props.bid + props.ask) / 2
+    return midpoint === 0 ? 0 : (spread() / midpoint) * 10_000
+  })
+
+  return (
+    <span class="spread-cell" classList={{ 'spread-wide': basisPoints() >= 4 }}>
+      {spread().toFixed(2)}
+      <small>{basisPoints().toFixed(1)} bp</small>
+    </span>
+  )
+}
+
+export function DepthCell(props: DepthCellProps) {
+  trackLifecycle('DepthCell')
+  const bidShare = createMemo(() => {
+    const total = props.bidSize + props.askSize
+    return total === 0 ? 50 : (props.bidSize / total) * 100
+  })
+
+  return (
+    <div
+      class="depth-cell"
+      title={`Bid ${props.bidSize} / Ask ${props.askSize}`}
+    >
+      <span class="depth-bid" style={{ width: `${bidShare()}%` }} />
+      <span class="depth-ask" style={{ width: `${100 - bidShare()}%` }} />
+      <span class="depth-values">
+        <span>{compactNumber.format(props.bidSize)}</span>
+        <span>{compactNumber.format(props.askSize)}</span>
+      </span>
+    </div>
+  )
+}
+
+export function QuoteAgeCell(props: QuoteAgeCellProps) {
+  trackLifecycle('QuoteAgeCell')
+  return (
+    <span
+      class="quote-age"
+      classList={{
+        'quote-age-warm': props.ageMs >= 500,
+        'quote-age-stale': props.ageMs >= 1_500,
+      }}
+    >
+      {props.ageMs < 1_000
+        ? `${Math.round(props.ageMs)} ms`
+        : `${(props.ageMs / 1_000).toFixed(1)} s`}
+    </span>
+  )
+}
+
+export function SparklineCell(props: SparklineCellProps) {
+  trackLifecycle('SparklineCell')
+  const rising = createMemo(
+    () => (props.values.at(-1) ?? 0) >= (props.values[0] ?? 0),
+  )
+  const points = createMemo(() => {
+    const { min, max } = findRange(props.values)
+    const range = max - min || 1
+    const denominator = Math.max(1, props.values.length - 1)
+    return props.values
+      .map((value, index) => {
+        const x = (index / denominator) * 100
+        const y = 22 - ((value - min) / range) * 20
+        return `${x.toFixed(1)},${y.toFixed(1)}`
+      })
+      .join(' ')
+  })
+
+  return (
+    <svg
+      class="sparkline"
+      classList={{ 'quote-up': rising(), 'quote-down': !rising() }}
+      viewBox="0 0 100 24"
+      preserveAspectRatio="none"
+    >
+      <polyline points={points()} />
+    </svg>
+  )
+}
+
+function formatSigned(value: number): string {
+  return `${value >= 0 ? '+' : ''}${value.toFixed(2)}`
+}
+
+function findRange(values: ReadonlyArray<number>): {
+  min: number
+  max: number
+} {
+  const first = values[0] ?? 0
+  return values.reduce(
+    (range, value) => {
+      range.min = Math.min(range.min, value)
+      range.max = Math.max(range.max, value)
+      return range
+    },
+    { min: first, max: first },
+  )
+}

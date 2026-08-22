@@ -1,0 +1,136 @@
+@switch (virtualScrollMode()) {
+  @case ('tanstack') {
+    <div
+      #tanStackScrollContainer
+      class="table-scroll is-virtualized"
+      tabindex="0"
+      (keydown)="interactions.navigateCells(table, $event)"
+      [attr.data-table-worker-pending]="workerPending()"
+      [attr.data-table-worker-compute-ms]="workerComputeMs()"
+    >
+      <table
+        [appTradingGridSelection]="table"
+        [interactions]="interactions"
+        (symbolSelected)="symbolSelected.emit($event)"
+        class="trading-data-grid virtual-table"
+        data-testid="trading-table"
+        role="grid"
+        aria-multiselectable="true"
+        [style]="tableStyle()"
+      >
+        <thead>
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th
+                  [appTradingHeaderCell]="header"
+                  [table]="table"
+                  [interactions]="interactions"
+                ></th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody
+          appTradingTableBenchmark
+          class="virtual-table-body"
+          [style.height.px]="tableHeight()"
+        >
+          @for (virtualRow of virtualization.tanStackVirtualRows(); track virtualRow.key) {
+            @if (rows()[virtualRow.index]; as row) {
+              <tr
+                class="virtual-table-row"
+                [style.transform]="'translateY(' + virtualRow.start + 'px)'"
+                [attr.data-virtual-index]="virtualRow.index"
+                [attr.data-symbol]="row.original.symbol"
+                [attr.data-row-id]="row.original.id"
+                [attr.data-symbol-selected]="
+                  selectedSymbol() === row.original.symbol ? 'true' : null
+                "
+                [attr.aria-selected]="row.getIsSelected()"
+              >
+                @for (cell of row.getVisibleCells(); track cell.id) {
+                  <td [appTradingGridCell]="cell">
+                    <ng-container *flexRenderCell="cell; let renderCell">
+                      {{ renderCell }}
+                    </ng-container>
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @default {
+    <div
+      #tanStackScrollContainer
+      class="table-scroll"
+      tabindex="0"
+      (keydown)="interactions.navigateCells(table, $event)"
+      [attr.data-table-worker-pending]="workerPending()"
+      [attr.data-table-worker-compute-ms]="workerComputeMs()"
+    >
+      <table
+        [appTradingGridSelection]="table"
+        [interactions]="interactions"
+        (symbolSelected)="symbolSelected.emit($event)"
+        class="trading-data-grid"
+        data-testid="trading-table"
+        role="grid"
+        aria-multiselectable="true"
+        [style]="tableStyle()"
+      >
+        <thead>
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th
+                  [appTradingHeaderCell]="header"
+                  [table]="table"
+                  [interactions]="interactions"
+                ></th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody appTradingTableBenchmark>
+          @for (row of rows(); track row.id) {
+            <tr
+              [attr.data-symbol]="row.original.symbol"
+              [attr.data-row-id]="row.original.id"
+              [attr.data-symbol-selected]="selectedSymbol() === row.original.symbol ? 'true' : null"
+              [attr.title]="row.original.company"
+              [attr.aria-selected]="row.getIsSelected()"
+            >
+              @for (cell of row.getVisibleCells(); track cell.id) {
+                <td [appTradingGridCell]="cell">
+                  <ng-container *flexRenderCell="cell; let renderCell">
+                    {{ renderCell }}
+                  </ng-container>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+@if (virtualScrollMode() !== 'none') {
+  <footer class="virtual-scroll-footer" data-testid="virtual-scroll-footer">
+    <span>
+      TanStack · Total · {{ rows().length }} rows ·
+      {{ table.getVisibleLeafColumns().length }} columns
+    </span>
+    @if (virtualization.visibleRange(); as visibleRange) {
+      <span data-testid="visible-row-range">
+        Current · rows {{ visibleRange.start }}..{{ visibleRange.end }}
+      </span>
+    } @else {
+      <span data-testid="visible-row-range">Current · rows —</span>
+    }
+  </footer>
+}
