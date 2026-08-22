@@ -495,6 +495,26 @@ describe('createGroupedRowModel manualGrouping', () => {
   })
 })
 
+describe('createGroupedRowModel flatRows ordering', () => {
+  it('should list each group row before its own descendants in flatRows', () => {
+    const data: Array<TestRow> = [
+      { status: 'a', firstName: 'one' },
+      { status: 'a', firstName: 'two' },
+      { status: 'b', firstName: 'three' },
+    ]
+    const table = makeTable(data, ['status'])
+    const rowModel = table.getGroupedRowModel()
+
+    expect(rowModel.flatRows.map((row) => row.id)).toEqual([
+      'status:a',
+      '0',
+      '1',
+      'status:b',
+      '2',
+    ])
+  })
+})
+
 describe('createGroupedRowModel rowsById', () => {
   it('should contain group row ids and leaf ids exactly once', () => {
     const data: Array<TestRow> = [

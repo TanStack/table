@@ -107,17 +107,8 @@ function _createGroupedRowModel<
       return rows.map((row) => {
         row.depth = depth
 
-        // Every row is pushed into flatRows/rowsById exactly once, by its
-        // parent frame: rows returned here are pushed by the caller (the
-        // parent group's loop or the root loop), so only descendants below
-        // the terminal depth are pushed here.
         if (row.subRows.length) {
           row.subRows = groupUpRecursively(row.subRows, depth + 1, row.id)
-          for (let i = 0; i < row.subRows.length; i++) {
-            const subRow = row.subRows[i]!
-            groupedFlatRows.push(subRow)
-            groupedRowsById[subRow.id] = subRow
-          }
         }
 
         return row
@@ -206,11 +197,6 @@ function _createGroupedRowModel<
           },
         })
 
-        subRows.forEach((subRow) => {
-          groupedFlatRows.push(subRow)
-          groupedRowsById[subRow.id] = subRow
-        })
-
         return row
       },
     )
@@ -220,15 +206,29 @@ function _createGroupedRowModel<
 
   const groupedRows = groupUpRecursively(rowModel.rows, 0)
 
-  groupedRows.forEach((subRow) => {
-    groupedFlatRows.push(subRow)
-    groupedRowsById[subRow.id] = subRow
-  })
+  pushGroupedRowsParentFirst(groupedRows, groupedFlatRows, groupedRowsById)
 
   return {
     rows: groupedRows,
     flatRows: groupedFlatRows,
     rowsById: groupedRowsById,
+  }
+}
+
+function pushGroupedRowsParentFirst<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rows: Array<Row<TFeatures, TData>>,
+  flatRows: Array<Row<TFeatures, TData>>,
+  rowsById: Record<string, Row<TFeatures, TData>>,
+): void {
+  for (const row of rows) {
+    flatRows.push(row)
+    rowsById[row.id] = row
+    if (row.subRows.length) {
+      pushGroupedRowsParentFirst(row.subRows, flatRows, rowsById)
+    }
   }
 }
 

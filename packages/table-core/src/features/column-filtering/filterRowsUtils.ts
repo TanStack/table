@@ -27,6 +27,21 @@ export function filterRows<
   return filterRowModelFromRoot(rows, filterRowImpl, table)
 }
 
+function pushRowsParentFirst<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rows: Array<Row<TFeatures, TData>>,
+  flatRows: Array<Row<TFeatures, TData>>,
+): void {
+  for (const row of rows) {
+    flatRows.push(row)
+    if (row.subRows.length) {
+      pushRowsParentFirst(row.subRows, flatRows)
+    }
+  }
+}
+
 function filterRowModelFromLeafs<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -37,7 +52,6 @@ function filterRowModelFromLeafs<
   ) => Array<Row<TFeatures, TData>> | undefined,
   table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
-  const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById = makeObjectMap<Row<TFeatures, TData>>()
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
@@ -71,14 +85,12 @@ function filterRowModelFromLeafs<
         if (filterRow(row) && !newRow.subRows.length) {
           filteredRows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
           continue
         }
 
         if (filterRow(row) || newRow.subRows.length) {
           filteredRows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
           continue
         }
       } else {
@@ -86,7 +98,6 @@ function filterRowModelFromLeafs<
         if (filterRow(row)) {
           filteredRows.push(row)
           newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
         }
       }
     }
@@ -94,8 +105,12 @@ function filterRowModelFromLeafs<
     return filteredRows
   }
 
+  const rows = recurseFilterRows(rowsToFilter)
+  const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
+  pushRowsParentFirst(rows, newFilteredFlatRows)
+
   return {
-    rows: recurseFilterRows(rowsToFilter),
+    rows,
     flatRows: newFilteredFlatRows,
     rowsById: newFilteredRowsById,
   }
@@ -109,7 +124,6 @@ function filterRowModelFromRoot<
   filterRow: (row: Row<TFeatures, TData>) => any,
   table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
-  const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById = makeObjectMap<Row<TFeatures, TData>>()
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
@@ -142,20 +156,15 @@ function filterRowModelFromRoot<
         }
 
         filteredRows.push(row)
-        newFilteredFlatRows.push(row)
         newFilteredRowsById[row.id] = row
 
         // When maxLeafRowFilterDepth stops the recursion, the kept row's
         // subtree stays visible through row.subRows, so those descendants
-        // must still enter flatRows and rowsById to keep the flat
-        // representation (and anything derived from it, like facet counts)
-        // consistent with the visible tree
+        // must still enter rowsById to keep the flat representation (and
+        // anything derived from it, like facet counts) consistent with the
+        // visible tree.
         if (row.subRows.length && depth >= maxDepth) {
-          addSubRowsToFlatArrays(
-            row.subRows,
-            newFilteredFlatRows,
-            newFilteredRowsById,
-          )
+          addSubRowsToRowsById(row.subRows, newFilteredRowsById)
         }
       }
     }
@@ -163,26 +172,28 @@ function filterRowModelFromRoot<
     return filteredRows
   }
 
+  const rows = recurseFilterRows(rowsToFilter)
+  const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
+  pushRowsParentFirst(rows, newFilteredFlatRows)
+
   return {
-    rows: recurseFilterRows(rowsToFilter),
+    rows,
     flatRows: newFilteredFlatRows,
     rowsById: newFilteredRowsById,
   }
 }
 
-function addSubRowsToFlatArrays<
+function addSubRowsToRowsById<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   subRows: Array<Row<TFeatures, TData>>,
-  flatRows: Array<Row<TFeatures, TData>>,
   rowsById: Record<string, Row<TFeatures, TData>>,
 ): void {
   for (const subRow of subRows) {
-    flatRows.push(subRow)
     rowsById[subRow.id] = subRow
     if (subRow.subRows.length) {
-      addSubRowsToFlatArrays(subRow.subRows, flatRows, rowsById)
+      addSubRowsToRowsById(subRow.subRows, rowsById)
     }
   }
 }

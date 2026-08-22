@@ -323,14 +323,11 @@ describe('createFilteredRowModel', () => {
       const table = makeNestedTable({ maxLeafRowFilterDepth: 1 })
       const model = table.getFilteredRowModel()
 
-      // Depth-1 children are still filtered (drop-a2 removed), while the
-      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows. The
-      // pre-existing flatRows order pushes recursed children before their
-      // parent.
+      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows.
       expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
         'keep-a1',
         'drop-a1a',
-        'keep-a',
         'keep-c',
         'keep-d',
       ])
@@ -714,6 +711,47 @@ describe('createFilteredRowModel', () => {
       })
 
       expect(table.getFilteredRowModel()).toBe(table.getPreFilteredRowModel())
+    })
+  })
+
+  describe('flatRows ordering', () => {
+    it('should list each parent before its own sub-rows in flatRows', () => {
+      const table = constructTable({
+        features,
+        columns: [
+          {
+            accessorKey: 'name',
+            id: 'name',
+            filterFn: () => true,
+          },
+        ],
+        data: [
+          {
+            name: 'a',
+            subRows: [{ name: 'a1' }, { name: 'a2' }],
+          },
+          {
+            name: 'b',
+            subRows: [{ name: 'b1' }],
+          },
+        ],
+        getSubRows: (row) => row.subRows,
+        initialState: {
+          columnFilters: [{ id: 'name', value: 'filtered' }],
+        },
+      })
+
+      expect(table.getCoreRowModel().flatRows.map((row) => row.id)).toEqual([
+        '0',
+        '0.0',
+        '0.1',
+        '1',
+        '1.0',
+      ])
+
+      expect(
+        table.getFilteredRowModel().flatRows.map((row) => row.id),
+      ).toEqual(['0', '0.0', '0.1', '1', '1.0'])
     })
   })
 })

@@ -2,6 +2,7 @@ import type { Cell } from './types/Cell'
 import type { Header } from './types/Header'
 import type { TableFeatures } from './types/TableFeatures'
 import type { CellData, RowData } from './types/type-utils'
+import { formatAggregatedCellValue } from './features/row-aggregation/rowAggregationFeature.utils'
 
 /**
  * Renders a static value or render function with the provided props.
@@ -70,7 +71,13 @@ export function FlexRender<
     }
     if (groupingCell.getIsAggregated?.()) {
       return flexRender(
-        groupingDef.aggregatedCell ?? def.cell,
+        groupingDef.aggregatedCell ??
+          def.cell ??
+          ((context) =>
+            formatAggregatedCellValue(
+              context.getValue(),
+              context.column.columnDef.aggregationFn,
+            )),
         cell.getContext(),
       )
     }

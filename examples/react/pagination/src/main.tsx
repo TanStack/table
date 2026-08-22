@@ -86,6 +86,9 @@ function MyTable({
       features,
       columns,
       data,
+      // Stable row ids are required when `manualPagination` passes only the
+      // current page of rows (for example from a server or TanStack Query).
+      getRowId: (row) => row.id,
       // initialState: { pagination: { pageIndex: 1, pageSize: 20 } }, // set the initial page once
       // atoms: { pagination: paginationAtom }, // preferred: own pagination state with an external atom
       // state: { pagination }, // classic controlled state; pair with onPaginationChange

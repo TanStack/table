@@ -4,7 +4,6 @@ import {
   column_getAggregationFns,
   column_getAggregationValue,
   column_getAutoAggregationFn,
-  formatAggregatedCellValue,
 } from './rowAggregationFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 
@@ -13,8 +12,6 @@ import type { TableFeature } from '../../types/TableFeatures'
  */
 export const rowAggregationFeature: TableFeature = {
   getDefaultColumnDef: () => ({
-    aggregatedCell: ({ column, getValue }: any) =>
-      formatAggregatedCellValue(getValue(), column.columnDef.aggregationFn),
     aggregationFn: 'auto',
     maxAggregationDepth: 0,
   }),
