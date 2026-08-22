@@ -65,6 +65,11 @@ export function renderPhaseReactivity(
 
   return {
     createOptionsStore: false,
+    // Options are plain data re-synchronized through `table_setOptions`
+    // during render (which bumps the epoch before any read of the new
+    // render), and all state writes flow through the patched base atoms, so
+    // the memo epoch fast path is safe for render-phase adapters.
+    supportsWriteEpoch: true,
     wrapExternalAtoms: false,
     addSubscription: () => {
       throw new Error(

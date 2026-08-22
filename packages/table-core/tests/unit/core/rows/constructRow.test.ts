@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { constructTable } from '../../../../src'
 import { constructRow } from '../../../../src/core/rows/constructRow'
+import { table_setOptions } from '../../../../src/static-functions'
 import { testFeatures } from '../../../fixtures/features'
 import type { Row } from '../../../../src/types/Row'
 
@@ -85,6 +86,11 @@ describe('constructRow', () => {
     expect(firstLeafRows).toEqual([leafA, leafB])
 
     parent.subRows = [leafB, leafA]
+
+    // Memoized APIs revalidate once per table write epoch. Row models only
+    // mutate subRows inside epoch-advancing writes; a manual structural
+    // mutation surfaces after the next table write.
+    table_setOptions(table, (options) => options)
 
     const nextLeafRows = parent.getLeafRows()
     expect(nextLeafRows).not.toBe(firstLeafRows)

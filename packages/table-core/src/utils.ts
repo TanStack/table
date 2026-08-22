@@ -316,6 +316,12 @@ export function flattenBy<TNode>(
 }
 
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
+  /**
+   * Write-epoch source (the table). When provided and the epoch has not
+   * moved since this memo last validated (for the same depArgs identity),
+   * the cached result is returned without running `memoDeps`.
+   */
+  epochSource?: { _epoch?: number }
   fn: (...args: NoInfer<TDeps>) => TResult
   memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
   onAfterCompare?: (depsChanged: boolean) => void
@@ -330,6 +336,7 @@ interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
  * The memo recomputes only when its dependency tuple changes and can emit debug timing information.
  */
 export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
+  epochSource,
   fn,
   memoDeps,
   onAfterCompare,
@@ -341,8 +348,28 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
 ) => TResult) => {
   let deps: Array<any> | undefined = []
   let result: TResult | undefined
+  let lastValidatedEpoch: number | undefined = -1
+  let lastDepArgs: TDepArgs | undefined
 
   const memoizedFn = (depArgs?: TDepArgs): TResult => {
+    // Epoch fast path: no table write since this memo last validated means
+    // no dependency can have changed, so skip the dependency check entirely
+    // (it may cascade through other memoized APIs and allocates a deps
+    // array). The epoch is captured before validating so a bump landing
+    // during a recompute forces revalidation on the next call. Sources
+    // without an epoch (mock tables in tests) always validate.
+    let epoch: number | undefined
+    if (epochSource) {
+      epoch = epochSource._epoch
+      if (
+        epoch === lastValidatedEpoch &&
+        depArgs === lastDepArgs &&
+        epoch !== undefined
+      ) {
+        return result!
+      }
+    }
+
     onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
     let depsChanged = !newDeps || newDeps.length !== deps?.length
@@ -355,6 +382,11 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
       }
     }
     onAfterCompare?.(depsChanged)
+
+    if (epochSource) {
+      lastValidatedEpoch = epoch
+      lastDepArgs = depArgs
+    }
 
     if (!depsChanged) {
       return result!
@@ -541,6 +573,9 @@ export function tableMemo<
   return memo({
     ...memoOptions,
     ...debugOptions,
+    // The epoch fast path is opt-in per reactivity binding; see
+    // TableReactivityBindings.supportsWriteEpoch.
+    epochSource: table._reactivity.supportsWriteEpoch ? table : undefined,
   })
 }
 
