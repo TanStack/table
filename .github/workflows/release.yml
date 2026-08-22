@@ -40,7 +40,7 @@ jobs:
         run: npx nx-cloud stop-all-agents
       - name: Run Changesets (version or publish)
         id: changesets
-        uses: changesets/action@fdf536a68c4154480c89b42547f8102cf0d8bc47 # v2.1.1
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
           version-script: pnpm run changeset:version
           publish-script: pnpm run changeset:publish
