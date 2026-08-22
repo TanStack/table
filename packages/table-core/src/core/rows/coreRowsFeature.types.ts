@@ -23,7 +23,24 @@ export interface Row_CoreProperties<
    * @internal
    */
   _displayIndexCache: number
-  _uniqueValuesCache: Record<string, unknown>
+  /**
+   * Dedicated memo slot for the render-hot `getAllCells` API. Declared at
+   * construction so creating the memo never changes the row's hidden class.
+   * @internal
+   */
+  _memoGetAllCells?: (...args: Array<any>) => any
+  /**
+   * Dedicated memo slot for the `getAllCellsByColumnId` API.
+   * @internal
+   */
+  _memoGetAllCellsByColumnId?: (...args: Array<any>) => any
+  /**
+   * Holder for lazily created memoized API state. Declared at construction so
+   * creating a memo never changes the row's hidden class.
+   * @internal
+   */
+  _memos?: Record<string, (...args: Array<any>) => any>
+  _uniqueValuesCache?: Record<string, unknown>
   _valuesCache: Record<string, unknown>
   /**
    * The depth of the row (if nested or grouped) relative to the root row array.

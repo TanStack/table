@@ -60,6 +60,12 @@ export const rowPinningFeature: TableFeature = {
     })
   },
 
+  initRowInstanceData: (row) => {
+    // Declared up front so marking a row with its pinned region never
+    // changes its hidden class.
+    ;(row as any).position = undefined
+  },
+
   constructTableAPIs: (table) => {
     assignTableAPIs('rowPinningFeature', table, {
       table_setRowPinning: {

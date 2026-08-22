@@ -51,7 +51,9 @@ export function constructHeader<
     TValue
   >
 
-  // Only assign instance-specific properties
+  // Only assign instance-specific properties. `_memos` is declared up front
+  // so memoized API calls never change the header's hidden class.
+  header._memos = undefined
   header.colSpan = 0
   header.column = column
   header.depth = options.depth

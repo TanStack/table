@@ -1,5 +1,5 @@
 import { constructRow } from '../core/rows/constructRow'
-import { hasOwn } from '../utils'
+import { makeObjectMap } from '../utils'
 import type { RowModel } from '../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../types/Table'
 import type { TableFeatures } from '../types/TableFeatures'
@@ -106,14 +106,25 @@ export function rebuildRowModel<
         parentId,
       )
       const aggregates = node.aggregates
-      Object.assign(row, {
-        groupingColumnId: node.groupingColumnId,
-        groupingValue: node.groupingValue,
-        subRows,
-        leafRows,
-        getValue: (columnId: string) =>
-          hasOwn(aggregates, columnId) ? aggregates[columnId] : undefined,
-      })
+      // Value writes to properties declared by the grouping feature's
+      // initRowInstanceData; synthetic group rows keep the shared row shape.
+      row.groupingColumnId = node.groupingColumnId
+      row.groupingValue = node.groupingValue
+      row.subRows = subRows
+      row.leafRows = leafRows
+      row._groupedRows = leafRows
+      // Pre-seed both value caches with the worker-computed aggregates so the
+      // grouping-aware prototype `getValue` serves them without recomputing:
+      // grouping-column reads check _valuesCache, aggregated reads check
+      // _aggregationValuesCache.
+      const aggregationValuesCache = makeObjectMap()
+      const aggregateKeys = Object.keys(aggregates)
+      for (let k = 0; k < aggregateKeys.length; k++) {
+        const key = aggregateKeys[k]!
+        row._valuesCache[key] = aggregates[key]
+        aggregationValuesCache[key] = aggregates[key]
+      }
+      row._aggregationValuesCache = aggregationValuesCache
 
       if (flattenParentsFirst) {
         flatRows[flatIndex] = row

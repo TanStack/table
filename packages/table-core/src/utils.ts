@@ -51,8 +51,8 @@ export function cloneState<T>(value: T): T {
 }
 
 /**
- * Copies prototype-instance own properties without carrying over lazy memo
- * closures or the per-row cell cache, both of which are bound to the source
+ * Copies prototype-instance own properties without carrying over the memo
+ * holder or the per-row cell cache, both of which are bound to the source
  * instance (cached cells reference the source row).
  */
 export function copyInstancePropertiesWithoutMemos<
@@ -64,7 +64,8 @@ export function copyInstancePropertiesWithoutMemos<
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]!
-    if (!key.startsWith('_memo_') && key !== '_cellsCache') {
+    // `_memo` covers the `_memos` holder and dedicated `_memo<Name>` slots.
+    if (!key.startsWith('_memo') && key !== '_cellsCache') {
       targetRecord[key] = source[key]
     }
   }
@@ -80,6 +81,38 @@ export function copyInstancePropertiesWithoutMemos<
  */
 export function makeObjectMap<TValue = unknown>(): Record<string, TValue> {
   return Object.create(null) as Record<string, TValue>
+}
+
+/**
+ * Rewrites every own property of a throwaway instance with a different value
+ * of a compatible kind.
+ *
+ * Called once per table on a discarded instance right after its shared shape
+ * is created, this pre-marks each declared field as mutable in the engine.
+ * Without it, fields that hold the same value on every instance (the
+ * `undefined`-declared slots) are assumed constant by V8, and the first real
+ * write (a grouped row's `groupingColumnId`, a memo slot, a pinned
+ * `position`) deoptimizes every function that embedded that assumption; one
+ * wave per field per table.
+ */
+export function warmInstanceShape(instance: Record<string, unknown>): void {
+  const keys = Object.keys(instance)
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]!
+    // Custom features may declare read-only or accessor instance data; those
+    // fields cannot be rewritten (and accessor reads could have side effects).
+    const descriptor = Object.getOwnPropertyDescriptor(instance, key)
+    if (!descriptor?.writable) continue
+    const value = instance[key]
+    instance[key] =
+      typeof value === 'number'
+        ? value + 1
+        : typeof value === 'string'
+          ? `${value}~`
+          : value === undefined
+            ? null
+            : makeObjectMap()
+  }
 }
 
 /**
@@ -569,6 +602,15 @@ export function assignTableAPIs<
 export interface PrototypeAPI<_TDeps extends ReadonlyArray<any>, _TDepArgs> {
   fn: (self: any, ...args: any) => any
   memoDeps?: (self: any, depArgs?: any) => [...any] | undefined
+  /**
+   * Own-property slot name for this API's memo state, for render-hot APIs
+   * where the `_memos` holder's per-call dictionary lookup is measurable.
+   * The declaring feature must pre-declare the slot as `undefined` at
+   * construction (in the constructor's fixed property list for core features,
+   * or in `init*InstanceData` for plugins) so first calls stay shape-neutral.
+   * Slot names must start with `_memo` so instance-copy helpers skip them.
+   */
+  memoSlot?: `_memo${string}`
 }
 
 export type PrototypeAPIObject<
@@ -580,8 +622,9 @@ export type PrototypeAPIObject<
  * Assigns API methods to a prototype object for memory-efficient method sharing.
  * All instances created with this prototype will share the same method references.
  *
- * For memoized methods, the memo state is lazily created and stored on each instance.
- * This provides the best of both worlds: shared method code + per-instance caching.
+ * For memoized methods, the memo state is lazily created and stored in the
+ * instance's pre-declared `_memos` holder. This provides shared method code +
+ * per-instance caching without hidden-class transitions after construction.
  */
 export function assignPrototypeAPIs<
   TFeatures extends TableFeatures,
@@ -594,28 +637,40 @@ export function assignPrototypeAPIs<
   table: Table_Internal<TFeatures, TData>,
   apis: PrototypeAPIObject<TDeps, NoInfer<TDepArgs>>,
 ): void {
-  for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {
+  for (const [staticFnName, { fn, memoDeps, memoSlot }] of Object.entries(
+    apis,
+  )) {
     const { fnKey, fnName } = getFunctionNameInfo(staticFnName)
 
     if (memoDeps) {
-      // For memoized methods, create a function that lazily initializes
-      // the memo on first access and stores it on the instance
-      const memoKey = `_memo_${fnKey}`
+      const makeMemo = (self: any) =>
+        tableMemo({
+          memoDeps: (depArgs) => memoDeps(self, depArgs),
+          fn: (...deps) => fn(self, ...deps),
+          fnName,
+          objectId: self.id,
+          table,
+          feature,
+        })
 
-      prototype[fnKey] = function (this: any, ...args: Array<any>) {
-        // Lazily create memo on first access for this instance
-        if (!this[memoKey]) {
-          const self = this
-          this[memoKey] = tableMemo({
-            memoDeps: (depArgs) => memoDeps(self, depArgs),
-            fn: (...deps) => fn(self, ...deps),
-            fnName,
-            objectId: self.id,
-            table,
-            feature,
-          })
+      // Memoized methods keep their memo state in pre-declared instance
+      // storage, so first calls never add own properties (adding one would
+      // fork the instance's hidden class). Memo closures themselves are still
+      // created lazily; untouched instances only pay for the declared slots.
+      if (memoSlot) {
+        // Render-hot APIs read the memo from a dedicated own slot, keeping
+        // the per-call load monomorphic.
+        prototype[fnKey] = function (this: any, ...args: Array<any>) {
+          const memoizedFn = this[memoSlot] ?? (this[memoSlot] = makeMemo(this))
+          return memoizedFn(...args)
         }
-        return this[memoKey](...args)
+      } else {
+        prototype[fnKey] = function (this: any, ...args: Array<any>) {
+          const memos = (this._memos ??=
+            makeObjectMap<(...fnArgs: Array<any>) => any>())
+          const memoizedFn = memos[fnKey] ?? (memos[fnKey] = makeMemo(this))
+          return memoizedFn(...args)
+        }
       }
     } else {
       // Non-memoized methods just call the static function with `this`
