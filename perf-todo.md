@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 74
-- **Source findings:** 74
+- **Entries:** 73
+- **Source findings:** 73
 - **Cross-cutting sweeps:** 0
 - 2026-07-03: #102 (C9) completed and moved to perf-done.md.
 - 2026-07-07: #68 (A4) completed and moved to perf-done.md.
@@ -16,6 +16,7 @@ Entries are sorted by adjusted effectiveness score descending.
 - 2026-07-07: #85 (A6) completed and moved to perf-done.md.
 - 2026-07-07: #92 (C11) completed and moved to perf-done.md.
 - 2026-07-29: #65 (F1) completed and moved to perf-done.md after the Svelte selector layer was removed.
+- 2026-08-25: #29 completed and moved to perf-done.md with the filtered-row pre-order fix.
 
 ## Score 8
 
@@ -1448,32 +1449,6 @@ Today's dep is `table.options.data`. If a consumer recreates the options object 
 **Risk:** Medium — surface change. Not strictly required, but a foundational correctness sharpening.
 
 **2026-07-01 audit note:** Verified during the fresh audit: rows are NOT rebuilt on `columns` changes — `createCoreRowModel` memoDeps are `[table.options.data]` only, so rows survive column-def swaps. That gates any column-keyed per-row cache (see #92 / C11, which requires a WeakMap for exactly this reason), and it means `row._valuesCache` (keyed by column id) survives column-def swaps too; staleness is avoided today only because accessor results are keyed by id and accessorFns rarely change per id. Keep as an observation.
-
----
-
-## 29. `filterRowModelFromLeafs` duplicates predicate work — Score: 4
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `src/features/column-filtering/filterRowsUtils.ts:43–101`
-**Category:** `micro`
-
-`filterRow(row)` is called twice in some branches. Cache the boolean and the `hasVisibleSubRows` flag, branch once.
-
-**Scale impact** (duplicate `filterRow` invocations saved — dimension: rows in subtree-bearing branches per filter pass):
-
-| Rows in subtree-bearing branches | Before (`filterRow` calls) | After  | Saved  |
-| -------------------------------- | -------------------------- | ------ | ------ |
-| 10                               | 20                         | 10     | 10     |
-| 100                              | 200                        | 100    | 100    |
-| 1,000                            | 2,000                      | 1,000  | 1,000  |
-| 10,000                           | 20,000                     | 10,000 | 10,000 |
-
-**Risk:** Logic is subtle; needs unit-test coverage when refactored.
-
-**2026-07-01 audit (B6, score 4 — verified simplification):** The from-leafs branch calls `filterRow(row)` (an O(F) tag scan) twice per passing branch row, and the first of two identical-bodied branches is provably subsumed by the second (`(A && !B)` implies `(A || B)`). Fix: single `if (newRow.subRows.length || filterRow(row))` — checking subRows first also skips the predicate entirely for parents kept alive by children. Boolean-identical simplification, verified airtight; opt-in `filterFromLeafRows` path only.
-**Verification:** Verified (2026-07-01 audit); boolean equivalence proven.
 
 ---
 

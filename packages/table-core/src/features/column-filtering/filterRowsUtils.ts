@@ -51,7 +51,7 @@ function filterRowModelFromLeafs<
       Partial<Row_ColumnFiltering<TFeatures, TData>> = []
 
     // Filter from children up first
-    for (let row of rowsToFilter) {
+    for (const row of rowsToFilter) {
       const newRow = constructRow(
         table,
         row.id,
@@ -63,30 +63,18 @@ function filterRowModelFromLeafs<
       ) as Row<TFeatures, TData> &
         Partial<Row_ColumnFiltering<TFeatures, TData>>
       newRow.columnFilters = row.columnFilters
+      newRow.columnFiltersMeta = row.columnFiltersMeta
 
       if (row.subRows.length && depth < maxDepth) {
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
-        row = newRow
 
-        if (filterRow(row) && !newRow.subRows.length) {
-          filteredRows.push(row)
-          newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
-          continue
-        }
-
-        if (filterRow(row) || newRow.subRows.length) {
-          filteredRows.push(row)
-          newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
-          continue
+        if (newRow.subRows.length || filterRow(newRow)) {
+          filteredRows.push(newRow)
         }
       } else {
-        row = newRow
-        if (filterRow(row)) {
-          filteredRows.push(row)
-          newFilteredRowsById[row.id] = row
-          newFilteredFlatRows.push(row)
+        if (filterRow(newRow)) {
+          newRow.subRows = row.subRows
+          filteredRows.push(newRow)
         }
       }
     }
@@ -94,8 +82,11 @@ function filterRowModelFromLeafs<
     return filteredRows
   }
 
+  const rows = recurseFilterRows(rowsToFilter)
+  addSubRowsToFlatArrays(rows, newFilteredFlatRows, newFilteredRowsById)
+
   return {
-    rows: recurseFilterRows(rowsToFilter),
+    rows,
     flatRows: newFilteredFlatRows,
     rowsById: newFilteredRowsById,
   }
@@ -123,7 +114,7 @@ function filterRowModelFromRoot<
     const filteredRows: Array<Row<TFeatures, TData>> = []
 
     // Apply the filter to any subRows
-    for (let row of rowsToFilter) {
+    for (const row of rowsToFilter) {
       const pass = filterRow(row)
 
       if (pass) {
@@ -136,26 +127,35 @@ function filterRowModelFromRoot<
             row.depth,
             undefined,
             row.parentId,
-          )
+          ) as Row<TFeatures, TData> &
+            Partial<Row_ColumnFiltering<TFeatures, TData>>
+          const filterData = row as Row<TFeatures, TData> &
+            Partial<Row_ColumnFiltering<TFeatures, TData>>
+          newRow.columnFilters = filterData.columnFilters
+          newRow.columnFiltersMeta = filterData.columnFiltersMeta
+
+          filteredRows.push(newRow)
+          newFilteredFlatRows.push(newRow)
+          newFilteredRowsById[newRow.id] = newRow
+
           newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
-          row = newRow
-        }
+        } else {
+          filteredRows.push(row)
+          newFilteredFlatRows.push(row)
+          newFilteredRowsById[row.id] = row
 
-        filteredRows.push(row)
-        newFilteredFlatRows.push(row)
-        newFilteredRowsById[row.id] = row
-
-        // When maxLeafRowFilterDepth stops the recursion, the kept row's
-        // subtree stays visible through row.subRows, so those descendants
-        // must still enter flatRows and rowsById to keep the flat
-        // representation (and anything derived from it, like facet counts)
-        // consistent with the visible tree
-        if (row.subRows.length && depth >= maxDepth) {
-          addSubRowsToFlatArrays(
-            row.subRows,
-            newFilteredFlatRows,
-            newFilteredRowsById,
-          )
+          // When maxLeafRowFilterDepth stops the recursion, the kept row's
+          // subtree stays visible through row.subRows, so those descendants
+          // must still enter flatRows and rowsById to keep the flat
+          // representation (and anything derived from it, like facet counts)
+          // consistent with the visible tree
+          if (row.subRows.length && depth >= maxDepth) {
+            addSubRowsToFlatArrays(
+              row.subRows,
+              newFilteredFlatRows,
+              newFilteredRowsById,
+            )
+          }
         }
       }
     }

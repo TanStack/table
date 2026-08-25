@@ -147,8 +147,10 @@ export function initTableWorker<
       stages[stage] = serializeRowModel(
         model,
         coreIndexById,
+        table.getCoreRowModel().flatRows,
         aggregateColumnIds,
         transfer,
+        stage,
       )
     }
 

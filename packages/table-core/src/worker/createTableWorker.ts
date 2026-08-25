@@ -4,6 +4,7 @@ import {
   tableWorkerPipeline,
   tableWorkerStageStateDeps,
 } from './tableWorkerProtocol'
+import { applyFilterDataToCoreRows } from './rebuildRowModel'
 import type { Table_Internal } from '../types/Table'
 import type { TableFeature } from '../types/TableFeatures'
 import type { TableWorkerDataPayload } from './rebuildRowModel'
@@ -236,6 +237,9 @@ function handleResult(
     [TableWorkerStage, TableWorkerStagePayload]
   >) {
     if (payload.kind === 'unchanged') continue
+    if (stage === 'filtered') {
+      applyFilterDataToCoreRows(table.getCoreRowModel().flatRows, payload)
+    }
     bridge.results[stage] = payload
     bridge.stageVersions[stage] = (bridge.stageVersions[stage] ?? 0) + 1
     anyChanged = true
