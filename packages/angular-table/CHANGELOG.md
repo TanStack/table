@@ -1,5 +1,11 @@
 # @tanstack/angular-table
 
+## 9.2.2
+
+### Patch Changes
+
+- [#6560](https://github.com/TanStack/table/pull/6560) [`adfc6c5`](https://github.com/TanStack/table/commit/adfc6c5adf2995a0485c37ad2032855f86926c4a) - Simplify lazy initialization for injected table instances
+
 ## 9.2.1
 
 ### Patch Changes
