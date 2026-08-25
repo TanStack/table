@@ -78,7 +78,8 @@ export function rebuildRowModel<
   // filtered model never touches them. Without this distinction a filtered
   // rebuild could zero depths assigned by a grouped/sorted tree rebuild.
   const resetDepths = stage !== 'filtered'
-  const flattenParentsFirst = stage === 'filtered' || stage === 'sorted'
+  const flattenParentsFirst =
+    stage === 'filtered' || stage === 'grouped' || stage === 'sorted'
 
   if (payload.kind === 'flat') {
     const { indices } = payload
@@ -206,6 +207,24 @@ export function rebuildRowModel<
   }
 
   const rows = rebuildRows(payload.children, 0, undefined)
+
+  if (stage === 'expanded') {
+    // Expanded rows are serialized inline as well as beneath their parents.
+    // Rebuild flatRows from the finished tree so each row appears once and
+    // parents retain their pipeline-wide preorder contract.
+    flatRows.length = 0
+    const seen = new Set<string>()
+    const flattenRows = (nestedRows: Array<any>) => {
+      for (let i = 0; i < nestedRows.length; i++) {
+        const row = nestedRows[i]
+        if (seen.has(row.id)) continue
+        seen.add(row.id)
+        flatRows.push(row)
+        flattenRows(row.subRows)
+      }
+    }
+    flattenRows(rows)
+  }
 
   return { rows, flatRows, rowsById }
 }

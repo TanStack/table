@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
-  rowAggregationFeature,
   aggregationFns,
   columnGroupingFeature,
   constructTable,
   createGroupedRowModel,
+  rowAggregationFeature,
 } from '../../../../src'
 import { testFeatures } from '../../../fixtures/features'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
@@ -67,6 +67,15 @@ describe('createGroupedRowModel flatRows contain every row exactly once', () => 
     expect(rowModel.flatRows.length).toBe(7)
     expectUniqueFlatRowIds(rowModel)
     expect(Object.keys(rowModel.rowsById).length).toBe(7)
+    expect(rowModel.flatRows.map((row) => row.id)).toEqual([
+      'status:a',
+      '0',
+      '1',
+      '2',
+      'status:b',
+      '3',
+      '4',
+    ])
   })
 
   it('two-level grouping over flat data', () => {
@@ -89,6 +98,17 @@ describe('createGroupedRowModel flatRows contain every row exactly once', () => 
     expect(ids.has('status:a>firstName:x')).toBe(true)
     expect(ids.has('status:a>firstName:y')).toBe(true)
     expect(ids.has('status:b>firstName:x')).toBe(true)
+    expect(rowModel.flatRows.map((row) => row.id)).toEqual([
+      'status:a',
+      'status:a>firstName:x',
+      '0',
+      '1',
+      'status:a>firstName:y',
+      '2',
+      'status:b',
+      'status:b>firstName:x',
+      '3',
+    ])
   })
 
   it('single-level grouping over tree data keeps descendants below the terminal depth exactly once', () => {
@@ -124,6 +144,24 @@ describe('createGroupedRowModel flatRows contain every row exactly once', () => 
     expect(rowModel.rowsById['0']!.depth).toBe(1)
     expect(rowModel.rowsById['0.0']!.depth).toBe(2)
     expect(rowModel.rowsById['0.0.0']!.depth).toBe(3)
+    expect(rowModel.flatRows.map((row) => row.id)).toEqual([
+      'status:single',
+      '0',
+      '0.0',
+      '0.0.0',
+      '0.0.1',
+      '0.1',
+      '0.1.0',
+      '0.1.1',
+      'status:complicated',
+      '1',
+      '1.0',
+      '1.0.0',
+      '1.0.1',
+      '1.1',
+      '1.1.0',
+      '1.1.1',
+    ])
   })
 
   it('groups rows with undefined grouping values exactly once', () => {
