@@ -55,7 +55,7 @@ medians under `warmups: 0` — measurement noise (see N5). The two real non-wins
 **Implementation note:** Fixed 2026-07-03 with the exactly-once push scheme described below: the
 terminal-branch push (:86–87) was removed and replaced with a post-recursion push of the
 reassigned `row.subRows` (covers descendants below terminal depth); the parent-group and root
-loops are unchanged, so every row is pushed by its parent (or the root loop) exactly once.
+loops were unchanged, so every row was pushed by its parent (or the root loop) exactly once.
 Design review verified the scheme for single/multi-level grouping, flat and tree data, undefined
 grouping values, AND a bonus instance the original finding missed: grouping on only-nonexistent
 column ids (`existingGrouping.length === 0` after filtering) reached the terminal branch at depth
@@ -66,10 +66,17 @@ in-repo consumer reads that order; the sorted model already emits postorder), an
 forwards grouped flatRows by reference) — correct, flagged for the release note. Regression
 coverage in `tests/implementation/features/column-grouping/createGroupedRowModel.test.ts`
 (single-level flat 12→7, two-level flat 13→9, tree-below-terminal 18→16, undefined grouping
-values 8→5, nonexistent-column grouping 6→3 flatRows; all with duplicate-id checks). The
+values 8→5, nonexistent-column grouping 6→3 flatRows; all with duplicate-id checks). A
+2026-08-25 follow-up changed terminal rows to push before descending and synthetic group rows to
+reserve their flat-array position before their descendants are built. This removes accepted
+delta (a): group rows and tree data now appear before their descendants, matching core,
+filtered, sorted, and paginated `flatRows`, without adding another traversal. Exact single-level,
+multi-level, tree-data, and worker round-trip ordering tests cover the corrected contract. The
+worker expanded-stage rebuild also deduplicates and restores preorder so the corrected grouping
+order survives the downstream pipeline. Accepted delta (b), the exactly-once row count, remains. The
 benchmark comparison layer gained a known-delta allowlist annotating the intentional v8↔v9
 `outputFlatRows` mismatch for grouping scenarios.
-**Location:** `packages/table-core/src/features/column-grouping/createGroupedRowModel.ts:86–87` (terminal-branch push) and `:179–182` (parent group's subRows push); v8 has the identical double-push in `table-v8/packages/table-core/src/utils/getGroupedRowModel.ts`
+**Location:** `packages/table-core/src/features/column-grouping/createGroupedRowModel.ts`; v8 has the identical double-push in `table-v8/packages/table-core/src/utils/getGroupedRowModel.ts`
 **Category:** `bug`, `allocation`, `big-o`
 
 **Benchmark evidence:** for R=400,000 flat rows grouped into 20 groups, `outputFlatRowsMedian`

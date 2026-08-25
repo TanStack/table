@@ -4,12 +4,14 @@ import {
   columnFilteringFeature,
   columnGroupingFeature,
   constructTable,
+  createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
   rowAggregationFeature,
+  rowExpandingFeature,
   rowSortingFeature,
   sortFns,
 } from '../../../src'
@@ -44,7 +46,9 @@ const features = testFeatures({
   columnFilteringFeature,
   columnGroupingFeature,
   globalFilteringFeature,
+  rowExpandingFeature,
   rowSortingFeature,
+  expandedRowModel: createExpandedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   groupedRowModel: createGroupedRowModel(),
   sortedRowModel: createSortedRowModel(),
@@ -268,6 +272,7 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     expect(payload.kind).toBe('tree')
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
     expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+    expect(rebuilt.flatRows[0]).toBe(rebuilt.rows[0])
     expect(ids(rebuilt.rows[0]!.subRows)).toEqual(ids(model.rows[0]!.subRows))
     expect(ids(rebuilt.rows[0]!.subRows[0]!.subRows)).toEqual(
       ids(model.rows[0]!.subRows[0]!.subRows),
@@ -507,6 +512,9 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const firstLeaf = firstSubGroup.subRows[0]!
     expect(firstLeaf.depth).toBe(2)
     expect(firstLeaf.parentId).toBe(firstSubGroup.id)
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+    expect(rebuilt.flatRows[0]).toBe(firstGroup)
+    expect(rebuilt.flatRows[1]).toBe(firstSubGroup)
   })
 
   it('round-trips parent-first sorted flatRows through nested groups', () => {
@@ -520,6 +528,19 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const { rebuilt } = roundTrip(workerTable, mainTable, model, 'sorted')
 
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+  })
+
+  it('round-trips parent-first expanded flatRows through groups', () => {
+    const data = makeData(12)
+    const workerTable = makeTable(data)
+    const mainTable = makeTable(data)
+    workerTable.baseAtoms.grouping.set(['status'])
+    workerTable.baseAtoms.expanded.set(true)
+
+    const model = workerTable.getExpandedRowModel()
+    const { rebuilt } = roundTrip(workerTable, mainTable, model, 'expanded')
+
     expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
   })
 
