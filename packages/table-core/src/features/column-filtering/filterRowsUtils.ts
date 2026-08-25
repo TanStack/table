@@ -63,11 +63,12 @@ function filterRowModelFromLeafs<
       ) as Row<TFeatures, TData> &
         Partial<Row_ColumnFiltering<TFeatures, TData>>
       newRow.columnFilters = row.columnFilters
+      newRow.columnFiltersMeta = row.columnFiltersMeta
 
       if (row.subRows.length && depth < maxDepth) {
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
 
-        if (filterRow(newRow) || newRow.subRows.length) {
+        if (newRow.subRows.length || filterRow(newRow)) {
           filteredRows.push(newRow)
         }
       } else {
@@ -127,10 +128,10 @@ function filterRowModelFromRoot<
             row.parentId,
           ) as Row<TFeatures, TData> &
             Partial<Row_ColumnFiltering<TFeatures, TData>>
-          newRow.columnFilters = (
-            row as Row<TFeatures, TData> &
-              Partial<Row_ColumnFiltering<TFeatures, TData>>
-          ).columnFilters
+          const filterData = row as Row<TFeatures, TData> &
+            Partial<Row_ColumnFiltering<TFeatures, TData>>
+          newRow.columnFilters = filterData.columnFilters
+          newRow.columnFiltersMeta = filterData.columnFiltersMeta
 
           filteredRows.push(newRow)
           newFilteredFlatRows.push(newRow)

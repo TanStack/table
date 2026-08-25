@@ -7,6 +7,7 @@ import {
   globalFilteringFeature,
 } from '../../../../src'
 import { testFeatures } from '../../../fixtures/features'
+import { filterRows } from '../../../../src/features/column-filtering/filterRowsUtils'
 import type { ColumnDef, FilterFn } from '../../../../src'
 
 interface TestRow {
@@ -280,6 +281,32 @@ describe('createFilteredRowModel', () => {
       expect(rowNames(keepA.subRows)).toEqual(['keep-a1'])
       expect(keepA.subRows[0]!.subRows).toEqual([])
     })
+
+    it('should skip the parent predicate when matching descendants retain it', () => {
+      const table = makeNestedTable({
+        filterFromLeafRows: true,
+        data: [
+          { name: 'drop-parent', subRows: [{ name: 'keep-child' }] },
+          { name: 'keep-parent', subRows: [{ name: 'drop-child' }] },
+        ],
+      })
+      const predicate = vi.fn((row: { original: NestedRow }) =>
+        row.original.name.includes('keep'),
+      )
+
+      const model = filterRows(
+        table.getCoreRowModel().rows,
+        predicate as any,
+        table as any,
+      )
+
+      expect(rowNames(model.rows)).toEqual(['drop-parent', 'keep-parent'])
+      expect(predicate.mock.calls.map(([row]) => row.original.name)).toEqual([
+        'keep-child',
+        'drop-child',
+        'keep-parent',
+      ])
+    })
   })
 
   describe('maxLeafRowFilterDepth', () => {
@@ -521,6 +548,54 @@ describe('createFilteredRowModel', () => {
       expect(preRows[0]!.columnFiltersMeta.name).toEqual({ globalHit: 'keep' })
       expect(preRows[1]!.columnFiltersMeta.name).toEqual({ globalHit: 'drop' })
     })
+
+    for (const filterFromLeafRows of [false, true]) {
+      it(`should preserve filter flags and metadata on nested ${
+        filterFromLeafRows ? 'leaf-first' : 'root-first'
+      } clones`, () => {
+        const metaFilterFn: FilterFn<typeof features, NestedRow> = (
+          row,
+          columnId,
+          filterValue,
+          addMeta,
+        ) => {
+          const value = row.getValue<string>(columnId)
+          addMeta?.({ inspected: value })
+          return value.includes(filterValue as string)
+        }
+        const table = constructTable<typeof features, NestedRow>({
+          features,
+          columns: [
+            { accessorKey: 'name', id: 'name', filterFn: metaFilterFn },
+          ],
+          data: [
+            {
+              name: 'keep-parent',
+              subRows: [{ name: 'keep-child' }],
+            },
+          ],
+          getSubRows: (row) => row.subRows,
+          filterFromLeafRows,
+          initialState: {
+            columnFilters: [{ id: 'name', value: 'keep' }],
+          },
+        })
+
+        const model = table.getFilteredRowModel()
+        const preRowsById = table.getPreFilteredRowModel().rowsById
+
+        for (const row of model.flatRows) {
+          const preRow = preRowsById[row.id]!
+          expect(row.columnFilters).toBe(preRow.columnFilters)
+          expect(row.columnFiltersMeta).toBe(preRow.columnFiltersMeta)
+          expect(row.columnFilters.name).toBe(true)
+          expect(row.columnFiltersMeta.name).toEqual({
+            inspected: row.original.name,
+          })
+          expect(model.rowsById[row.id]).toBe(row)
+        }
+      })
+    }
   })
 
   describe('row.columnFilters flags', () => {
