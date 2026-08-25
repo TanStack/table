@@ -73,6 +73,7 @@ function filterRowModelFromLeafs<
         }
       } else {
         if (filterRow(newRow)) {
+          newRow.subRows = row.subRows
           filteredRows.push(newRow)
         }
       }

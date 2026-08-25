@@ -2482,7 +2482,7 @@ Swap `.map()` and `for...of` for indexed loops. Called for every row in the row 
 **Status:** `[x]` done
 **Implementation note:** Collapsed the two overlapping branch predicates into one `newRow.subRows.length || filterRow(newRow)` check while restructuring filtered `flatRows` into parent-first order. The child-first short circuit also avoids the tag scan entirely for parents retained by matching descendants. Added nested leaf-first filtering coverage that exercises matching parents, retained non-matching ancestors, pre-order flattening, row identity, and preserved filter metadata.
 
-**Location:** `src/features/column-filtering/filterRowsUtils.ts:43–101`
+**Location:** `packages/table-core/src/features/column-filtering/filterRowsUtils.ts:43–101`
 **Category:** `micro`
 
 `filterRow(row)` is called twice in some branches. Cache the boolean and the `hasVisibleSubRows` flag, branch once.
@@ -2496,9 +2496,9 @@ Swap `.map()` and `for...of` for indexed loops. Called for every row in the row 
 | 1,000                            | 2,000                      | 1,000  | 1,000  |
 | 10,000                           | 20,000                     | 10,000 | 10,000 |
 
-**Risk:** Logic is subtle; needs unit-test coverage when refactored.
+**Risk:** Logic is subtle; focused regression coverage now verifies parent-first flattening, retained ancestors, filter metadata, and unfiltered descendants at the maximum leaf-filter depth.
 
-**2026-07-01 audit (B6, score 4 — verified simplification):** The from-leafs branch calls `filterRow(row)` (an O(F) tag scan) twice per passing branch row, and the first of two identical-bodied branches is provably subsumed by the second (`(A && !B)` implies `(A || B)`). Fix: single `if (newRow.subRows.length || filterRow(row))` — checking subRows first also skips the predicate entirely for parents kept alive by children. Boolean-identical simplification, verified airtight; opt-in `filterFromLeafRows` path only.
+**2026-07-01 audit (B6, score 4 — verified simplification):** The from-leafs branch calls `filterRow(newRow)` (an O(F) tag scan) twice per passing branch row, and the first of two identical-bodied branches is provably subsumed by the second (`(A && !B)` implies `(A || B)`). Fix: single `if (newRow.subRows.length || filterRow(newRow))` — checking subRows first also skips the predicate entirely for parents kept alive by children. Boolean-identical simplification, verified airtight; opt-in `filterFromLeafRows` path only.
 **Verification:** Verified (2026-07-01 audit); boolean equivalence proven.
 
 ---

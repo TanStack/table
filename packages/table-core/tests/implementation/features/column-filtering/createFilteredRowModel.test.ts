@@ -328,11 +328,25 @@ describe('createFilteredRowModel', () => {
         filterFromLeafRows: true,
         maxLeafRowFilterDepth: 0,
       })
-      const { rows } = table.getFilteredRowModel()
+      const model = table.getFilteredRowModel()
 
       // drop-b is dropped even though keep-b1 matches, because descendants
-      // are never consulted at depth 0
-      expect(rowNames(rows)).toEqual(['keep-a', 'keep-c', 'keep-d'])
+      // are never consulted at depth 0. Descendants of matching roots remain
+      // visible without being filtered.
+      expect(rowNames(model.rows)).toEqual(['keep-a', 'keep-c', 'keep-d'])
+      expect(rowNames(model.rows[0]!.subRows)).toEqual(['keep-a1', 'drop-a2'])
+      expect(rowNames(model.rows[0]!.subRows[0]!.subRows)).toEqual(['drop-a1a'])
+      expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
+        'keep-a1',
+        'drop-a1a',
+        'drop-a2',
+        'keep-c',
+        'keep-d',
+        'drop-d1',
+      ])
+      const descendant = model.rows[0]!.subRows[0]!
+      expect(model.rowsById[descendant.id]).toBe(descendant)
     })
 
     it('should include unfiltered descendants of kept rows in flatRows and rowsById (from root, depth 0)', () => {

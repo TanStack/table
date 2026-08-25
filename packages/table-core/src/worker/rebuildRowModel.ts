@@ -18,6 +18,30 @@ function applyFilterData(row: any, filterData?: TableWorkerFilterData) {
   }
 }
 
+export function applyFilterDataToCoreRows(
+  coreFlatRows: Array<any>,
+  payload: TableWorkerDataPayload,
+) {
+  if (payload.kind === 'flat') {
+    if (!payload.filterData) return
+    for (let i = 0; i < payload.indices.length; i++) {
+      applyFilterData(coreFlatRows[payload.indices[i]!], payload.filterData[i])
+    }
+    return
+  }
+
+  const applyToNodes = (nodes: Array<TableWorkerRowNode>) => {
+    for (const node of nodes) {
+      if (typeof node === 'number') continue
+      if (!('groupingColumnId' in node)) {
+        applyFilterData(coreFlatRows[node.index], node.filterData)
+      }
+      applyToNodes(node.children)
+    }
+  }
+  applyToNodes(payload.children)
+}
+
 /** Payloads that carry data; `unchanged` never reaches the rebuilder. */
 export type TableWorkerDataPayload = Exclude<
   TableWorkerStagePayload,
