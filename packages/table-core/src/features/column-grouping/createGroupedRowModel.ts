@@ -104,17 +104,11 @@ function _createGroupedRowModel<
       return rows.map((row) => {
         row.depth = depth
 
-        // Every row is pushed into flatRows/rowsById exactly once, by its
-        // parent frame: rows returned here are pushed by the caller (the
-        // parent group's loop or the root loop), so only descendants below
-        // the terminal depth are pushed here.
+        groupedFlatRows.push(row)
+        groupedRowsById[row.id] = row
+
         if (row.subRows.length) {
           row.subRows = groupUpRecursively(row.subRows, depth + 1, row.id)
-          for (let i = 0; i < row.subRows.length; i++) {
-            const subRow = row.subRows[i]!
-            groupedFlatRows.push(subRow)
-            groupedRowsById[subRow.id] = subRow
-          }
         }
 
         return row
@@ -131,6 +125,10 @@ function _createGroupedRowModel<
       ([groupingValue, groupedRows], index) => {
         let id = `${columnId}:${groupingValue}`
         id = parentId ? `${parentId}>${id}` : id
+
+        // Reserve this group's position before its descendants are built.
+        const flatIndex = groupedFlatRows.length
+        groupedFlatRows.push(undefined as unknown as Row<TFeatures, TData>)
 
         // First, Recurse to group sub rows before aggregation
         const subRows = groupUpRecursively(groupedRows, depth + 1, id)
@@ -168,10 +166,8 @@ function _createGroupedRowModel<
         row.leafRows = leafRows
         row._groupedRows = groupedRows
 
-        subRows.forEach((subRow) => {
-          groupedFlatRows.push(subRow)
-          groupedRowsById[subRow.id] = subRow
-        })
+        groupedFlatRows[flatIndex] = row
+        groupedRowsById[id] = row
 
         return row
       },
@@ -181,11 +177,6 @@ function _createGroupedRowModel<
   }
 
   const groupedRows = groupUpRecursively(rowModel.rows, 0)
-
-  groupedRows.forEach((subRow) => {
-    groupedFlatRows.push(subRow)
-    groupedRowsById[subRow.id] = subRow
-  })
 
   return {
     rows: groupedRows,
