@@ -1,5 +1,12 @@
 # @tanstack/solid-table
 
+## 9.2.3
+
+### Patch Changes
+
+- Updated dependencies [[`468f267`](https://github.com/TanStack/table/commit/468f26768d6f7e31010e14c3363b54696cb6a1eb), [`3b94648`](https://github.com/TanStack/table/commit/3b946481795b53a53d6d823cea0ab3e368befec7)]:
+  - @tanstack/table-core@9.2.3
+
 ## 9.1.2
 
 ### Patch Changes

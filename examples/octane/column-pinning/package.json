@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
-    "@tanstack/octane-table": "^9.1.2",
+    "@tanstack/octane-table": "^9.2.3",
     "octane": "0.1.36"
   },
   "devDependencies": {

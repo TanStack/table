@@ -5,7 +5,7 @@ description: >
 metadata:
   type: core
   library: '@tanstack/table-core'
-  library_version: '9.1.2'
+  library_version: '9.2.3'
 sources:
   - 'TanStack/table:docs/overview.md'
   - 'TanStack/table:docs/guide/tables.md'

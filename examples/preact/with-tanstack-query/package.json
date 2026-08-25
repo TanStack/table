@@ -16,7 +16,7 @@
     "@tanstack/preact-devtools": "^0.10.10",
     "@tanstack/preact-query": "^5.101.4",
     "@tanstack/preact-query-devtools": "^5.101.4",
-    "@tanstack/preact-table": "^9.1.2",
+    "@tanstack/preact-table": "^9.2.3",
     "@tanstack/preact-table-devtools": "^9.2.0",
     "preact": "^10.29.8"
   },
