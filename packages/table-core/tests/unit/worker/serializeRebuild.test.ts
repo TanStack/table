@@ -25,6 +25,7 @@ type Person = {
   age: number
   visits: number
   status: 'single' | 'complicated' | 'relationship'
+  subRows?: Array<Person>
 }
 
 const STATUSES = ['single', 'complicated', 'relationship'] as const
@@ -62,11 +63,20 @@ const columns: Array<ColumnDef<typeof features, Person, any>> = [
 // Columns with an explicit aggregation, mirroring initTableWorker's selection.
 const aggregateColumnIds = ['age', 'visits']
 
-function makeTable(data: Array<Person>): Table<typeof features, Person> {
+function makeTable(
+  data: Array<Person>,
+  options?: {
+    filterFromLeafRows?: boolean
+    maxLeafRowFilterDepth?: number
+  },
+): Table<typeof features, Person> {
   return constructTable({
     data,
     columns,
     features,
+    getSubRows: (row) => row.subRows,
+    filterFromLeafRows: options?.filterFromLeafRows,
+    maxLeafRowFilterDepth: options?.maxLeafRowFilterDepth,
   })
 }
 
@@ -90,8 +100,10 @@ function roundTrip(
   const payload = serializeRowModel(
     model,
     coreIndexMap(workerTable),
+    workerTable.getCoreRowModel().flatRows,
     aggregateColumnIds,
     transfer,
+    stage,
   )
   if (payload.kind === 'unchanged') {
     throw new Error('expected a data payload, got "unchanged"')
@@ -136,6 +148,7 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     workerTable.baseAtoms.columnFilters.set([{ id: 'status', value: 'single' }])
 
     const model = workerTable.getFilteredRowModel()
+    model.rows[0]!.columnFiltersMeta.status = { rank: 1 }
     const { payload, rebuilt } = roundTrip(
       workerTable,
       mainTable,
@@ -148,6 +161,217 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     expect(model.rows.length).toBeLessThan(data.length)
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
     expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+    expect(rebuilt.rows[0]!.columnFilters).toEqual(model.rows[0]!.columnFilters)
+    expect(rebuilt.rows[0]!.columnFiltersMeta).toEqual(
+      model.rows[0]!.columnFiltersMeta,
+    )
+  })
+
+  it('does not restore children removed from a matching filtered parent', () => {
+    const data: Array<Person> = [
+      {
+        firstName: 'kept-parent',
+        age: 40,
+        visits: 1,
+        status: 'single',
+        subRows: [
+          {
+            firstName: 'dropped-child',
+            age: 20,
+            visits: 2,
+            status: 'complicated',
+          },
+        ],
+      },
+    ]
+    const workerTable = makeTable(data)
+    const mainTable = makeTable(data)
+    workerTable.baseAtoms.columnFilters.set([{ id: 'status', value: 'single' }])
+
+    const model = workerTable.getFilteredRowModel()
+    const { payload, rebuilt } = roundTrip(
+      workerTable,
+      mainTable,
+      model,
+      'filtered',
+    )
+
+    expect(payload.kind).toBe('tree')
+    expect(rebuilt.rows).toHaveLength(1)
+    expect(rebuilt.rows[0]!.subRows).toEqual([])
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+  })
+
+  it('round-trips a parent-first hierarchical filtered model from roots', () => {
+    const data: Array<Person> = [
+      {
+        firstName: 'kept-parent',
+        age: 40,
+        visits: 1,
+        status: 'single',
+        subRows: [
+          {
+            firstName: 'kept-child',
+            age: 20,
+            visits: 2,
+            status: 'single',
+            subRows: [
+              {
+                firstName: 'kept-grandchild',
+                age: 5,
+                visits: 3,
+                status: 'single',
+              },
+              {
+                firstName: 'dropped-grandchild',
+                age: 6,
+                visits: 4,
+                status: 'complicated',
+              },
+            ],
+          },
+          {
+            firstName: 'dropped-child',
+            age: 21,
+            visits: 5,
+            status: 'complicated',
+          },
+        ],
+      },
+      {
+        firstName: 'dropped-parent',
+        age: 41,
+        visits: 6,
+        status: 'complicated',
+        subRows: [
+          {
+            firstName: 'unreachable-match',
+            age: 22,
+            visits: 7,
+            status: 'single',
+          },
+        ],
+      },
+    ]
+    const workerTable = makeTable(data)
+    const mainTable = makeTable(data)
+    workerTable.baseAtoms.columnFilters.set([{ id: 'status', value: 'single' }])
+
+    const model = workerTable.getFilteredRowModel()
+    const { payload, rebuilt } = roundTrip(
+      workerTable,
+      mainTable,
+      model,
+      'filtered',
+    )
+
+    expect(payload.kind).toBe('tree')
+    expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+    expect(ids(rebuilt.rows[0]!.subRows)).toEqual(ids(model.rows[0]!.subRows))
+    expect(ids(rebuilt.rows[0]!.subRows[0]!.subRows)).toEqual(
+      ids(model.rows[0]!.subRows[0]!.subRows),
+    )
+    expect(rebuilt.rows[0]).not.toBe(mainTable.getCoreRowModel().rows[0])
+    for (const row of rebuilt.flatRows) {
+      expect(rebuilt.rowsById[row.id]).toBe(row)
+    }
+  })
+
+  it('round-trips a parent-first hierarchical filtered model from leaves', () => {
+    const data: Array<Person> = [
+      {
+        firstName: 'retained-parent',
+        age: 40,
+        visits: 1,
+        status: 'complicated',
+        subRows: [
+          {
+            firstName: 'retained-child',
+            age: 20,
+            visits: 2,
+            status: 'complicated',
+            subRows: [
+              {
+                firstName: 'matching-grandchild',
+                age: 5,
+                visits: 3,
+                status: 'single',
+              },
+            ],
+          },
+          {
+            firstName: 'matching-child',
+            age: 21,
+            visits: 4,
+            status: 'single',
+          },
+        ],
+      },
+    ]
+    const options = { filterFromLeafRows: true }
+    const workerTable = makeTable(data, options)
+    const mainTable = makeTable(data, options)
+    workerTable.baseAtoms.columnFilters.set([{ id: 'status', value: 'single' }])
+
+    const model = workerTable.getFilteredRowModel()
+    const { rebuilt } = roundTrip(workerTable, mainTable, model, 'filtered')
+
+    expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+    expect(ids(rebuilt.rows[0]!.subRows)).toEqual(ids(model.rows[0]!.subRows))
+    expect(ids(rebuilt.rows[0]!.subRows[0]!.subRows)).toEqual(
+      ids(model.rows[0]!.subRows[0]!.subRows),
+    )
+    for (const row of rebuilt.flatRows) {
+      expect(rebuilt.rowsById[row.id]).toBe(row)
+    }
+    expect(rebuilt.rows[0]).not.toBe(mainTable.getCoreRowModel().rows[0])
+    expect(rebuilt.rows[0]!.subRows[0]).not.toBe(
+      mainTable.getCoreRowModel().rows[0]!.subRows[0],
+    )
+  })
+
+  it('round-trips unfiltered descendants kept past max filter depth', () => {
+    const data: Array<Person> = [
+      {
+        firstName: 'kept-parent',
+        age: 40,
+        visits: 1,
+        status: 'single',
+        subRows: [
+          {
+            firstName: 'unfiltered-child',
+            age: 20,
+            visits: 2,
+            status: 'complicated',
+            subRows: [
+              {
+                firstName: 'unfiltered-grandchild',
+                age: 5,
+                visits: 3,
+                status: 'relationship',
+              },
+            ],
+          },
+        ],
+      },
+    ]
+    const options = { maxLeafRowFilterDepth: 0 }
+    const workerTable = makeTable(data, options)
+    const mainTable = makeTable(data, options)
+    workerTable.baseAtoms.columnFilters.set([{ id: 'status', value: 'single' }])
+
+    const model = workerTable.getFilteredRowModel()
+    const { rebuilt } = roundTrip(workerTable, mainTable, model, 'filtered')
+
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+    expect(ids(rebuilt.rows[0]!.subRows[0]!.subRows)).toEqual(
+      ids(model.rows[0]!.subRows[0]!.subRows),
+    )
+    for (const row of rebuilt.flatRows) {
+      expect(rebuilt.rowsById[row.id]).toBe(row)
+    }
   })
 
   it('round-trips a grouped model as a tree with aggregates', () => {
@@ -222,6 +446,48 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     for (let i = 0; i < model.rows.length; i++) {
       expect(ids(rebuilt.rows[i]!.subRows)).toEqual(ids(model.rows[i]!.subRows))
     }
+  })
+
+  it('round-trips a parent-first sorted hierarchy of data rows', () => {
+    const data: Array<Person> = [
+      {
+        firstName: 'parent',
+        age: 40,
+        visits: 0,
+        status: 'single',
+        subRows: [
+          {
+            firstName: 'later-child',
+            age: 20,
+            visits: 2,
+            status: 'single',
+          },
+          {
+            firstName: 'earlier-child',
+            age: 21,
+            visits: 1,
+            status: 'single',
+          },
+        ],
+      },
+    ]
+    const workerTable = makeTable(data)
+    const mainTable = makeTable(data)
+    workerTable.baseAtoms.sorting.set([{ id: 'visits', desc: false }])
+
+    const model = workerTable.getSortedRowModel()
+    const { payload, rebuilt } = roundTrip(
+      workerTable,
+      mainTable,
+      model,
+      'sorted',
+    )
+
+    expect(payload.kind).toBe('tree')
+    expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
+    expect(ids(rebuilt.flatRows)).toEqual(ids(model.flatRows))
+    expect(ids(rebuilt.rows[0]!.subRows)).toEqual(ids(model.rows[0]!.subRows))
+    expect(rebuilt.rowsById[rebuilt.rows[0]!.id]).toBe(rebuilt.rows[0])
   })
 
   it('round-trips multi-column grouping (nested tree)', () => {

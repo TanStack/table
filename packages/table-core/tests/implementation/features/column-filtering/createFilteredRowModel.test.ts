@@ -7,6 +7,7 @@ import {
   globalFilteringFeature,
 } from '../../../../src'
 import { testFeatures } from '../../../fixtures/features'
+import { filterRows } from '../../../../src/features/column-filtering/filterRowsUtils'
 import type { ColumnDef, FilterFn } from '../../../../src'
 
 interface TestRow {
@@ -188,11 +189,11 @@ describe('createFilteredRowModel', () => {
       expect(rowNames(model.flatRows)).not.toContain('keep-b1')
     })
 
-    it('should include cloned rows and exclude dropped rows in flatRows and rowsById', () => {
+    it('should include cloned rows and exclude dropped rows in flatRows and rowsById in pre-order', () => {
       const table = makeNestedTable()
       const model = table.getFilteredRowModel()
 
-      expect(rowNames(model.flatRows).sort()).toEqual([
+      expect(rowNames(model.flatRows)).toEqual([
         'keep-a',
         'keep-a1',
         'keep-c',
@@ -220,6 +221,20 @@ describe('createFilteredRowModel', () => {
 
       const dropB = rows[1]!
       expect(rowNames(dropB.subRows)).toEqual(['keep-b1'])
+    })
+
+    it('should flatten rows in pre-order with each parent ahead of its sub-rows', () => {
+      const table = makeNestedTable({ filterFromLeafRows: true })
+      const { flatRows } = table.getFilteredRowModel()
+
+      expect(rowNames(flatRows)).toEqual([
+        'keep-a',
+        'keep-a1',
+        'drop-b',
+        'keep-b1',
+        'keep-c',
+        'keep-d',
+      ])
     })
 
     it('should keep a matching parent that has no matching children', () => {
@@ -254,11 +269,7 @@ describe('createFilteredRowModel', () => {
       expect(rowNames(rows)).toEqual(['drop-x'])
       expect(rowNames(rows[0]!.subRows)).toEqual(['drop-x1'])
       expect(rowNames(rows[0]!.subRows[0]!.subRows)).toEqual(['keep-x1a'])
-      expect(rowNames(flatRows).sort()).toEqual([
-        'drop-x',
-        'drop-x1',
-        'keep-x1a',
-      ])
+      expect(rowNames(flatRows)).toEqual(['drop-x', 'drop-x1', 'keep-x1a'])
     })
 
     it('should prune matching subRows from a matching parent while filtering', () => {
@@ -269,6 +280,32 @@ describe('createFilteredRowModel', () => {
 
       expect(rowNames(keepA.subRows)).toEqual(['keep-a1'])
       expect(keepA.subRows[0]!.subRows).toEqual([])
+    })
+
+    it('should skip the parent predicate when matching descendants retain it', () => {
+      const table = makeNestedTable({
+        filterFromLeafRows: true,
+        data: [
+          { name: 'drop-parent', subRows: [{ name: 'keep-child' }] },
+          { name: 'keep-parent', subRows: [{ name: 'drop-child' }] },
+        ],
+      })
+      const predicate = vi.fn((row: { original: NestedRow }) =>
+        row.original.name.includes('keep'),
+      )
+
+      const model = filterRows(
+        table.getCoreRowModel().rows,
+        predicate as any,
+        table as any,
+      )
+
+      expect(rowNames(model.rows)).toEqual(['drop-parent', 'keep-parent'])
+      expect(predicate.mock.calls.map(([row]) => row.original.name)).toEqual([
+        'keep-child',
+        'drop-child',
+        'keep-parent',
+      ])
     })
   })
 
@@ -291,11 +328,25 @@ describe('createFilteredRowModel', () => {
         filterFromLeafRows: true,
         maxLeafRowFilterDepth: 0,
       })
-      const { rows } = table.getFilteredRowModel()
+      const model = table.getFilteredRowModel()
 
       // drop-b is dropped even though keep-b1 matches, because descendants
-      // are never consulted at depth 0
-      expect(rowNames(rows)).toEqual(['keep-a', 'keep-c', 'keep-d'])
+      // are never consulted at depth 0. Descendants of matching roots remain
+      // visible without being filtered.
+      expect(rowNames(model.rows)).toEqual(['keep-a', 'keep-c', 'keep-d'])
+      expect(rowNames(model.rows[0]!.subRows)).toEqual(['keep-a1', 'drop-a2'])
+      expect(rowNames(model.rows[0]!.subRows[0]!.subRows)).toEqual(['drop-a1a'])
+      expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
+        'keep-a1',
+        'drop-a1a',
+        'drop-a2',
+        'keep-c',
+        'keep-d',
+        'drop-d1',
+      ])
+      const descendant = model.rows[0]!.subRows[0]!
+      expect(model.rowsById[descendant.id]).toBe(descendant)
     })
 
     it('should include unfiltered descendants of kept rows in flatRows and rowsById (from root, depth 0)', () => {
@@ -324,13 +375,12 @@ describe('createFilteredRowModel', () => {
       const model = table.getFilteredRowModel()
 
       // Depth-1 children are still filtered (drop-a2 removed), while the
-      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows. The
-      // pre-existing flatRows order pushes recursed children before their
-      // parent.
+      // depth-2 subtree of keep-a1 is kept as-is and joins flatRows in
+      // pre-order traversal (parent before children).
       expect(rowNames(model.flatRows)).toEqual([
+        'keep-a',
         'keep-a1',
         'drop-a1a',
-        'keep-a',
         'keep-c',
         'keep-d',
       ])
@@ -512,6 +562,54 @@ describe('createFilteredRowModel', () => {
       expect(preRows[0]!.columnFiltersMeta.name).toEqual({ globalHit: 'keep' })
       expect(preRows[1]!.columnFiltersMeta.name).toEqual({ globalHit: 'drop' })
     })
+
+    for (const filterFromLeafRows of [false, true]) {
+      it(`should preserve filter flags and metadata on nested ${
+        filterFromLeafRows ? 'leaf-first' : 'root-first'
+      } clones`, () => {
+        const metaFilterFn: FilterFn<typeof features, NestedRow> = (
+          row,
+          columnId,
+          filterValue,
+          addMeta,
+        ) => {
+          const value = row.getValue<string>(columnId)
+          addMeta?.({ inspected: value })
+          return value.includes(filterValue as string)
+        }
+        const table = constructTable<typeof features, NestedRow>({
+          features,
+          columns: [
+            { accessorKey: 'name', id: 'name', filterFn: metaFilterFn },
+          ],
+          data: [
+            {
+              name: 'keep-parent',
+              subRows: [{ name: 'keep-child' }],
+            },
+          ],
+          getSubRows: (row) => row.subRows,
+          filterFromLeafRows,
+          initialState: {
+            columnFilters: [{ id: 'name', value: 'keep' }],
+          },
+        })
+
+        const model = table.getFilteredRowModel()
+        const preRowsById = table.getPreFilteredRowModel().rowsById
+
+        for (const row of model.flatRows) {
+          const preRow = preRowsById[row.id]!
+          expect(row.columnFilters).toBe(preRow.columnFilters)
+          expect(row.columnFiltersMeta).toBe(preRow.columnFiltersMeta)
+          expect(row.columnFilters.name).toBe(true)
+          expect(row.columnFiltersMeta.name).toEqual({
+            inspected: row.original.name,
+          })
+          expect(model.rowsById[row.id]).toBe(row)
+        }
+      })
+    }
   })
 
   describe('row.columnFilters flags', () => {
@@ -714,6 +812,68 @@ describe('createFilteredRowModel', () => {
       })
 
       expect(table.getFilteredRowModel()).toBe(table.getPreFilteredRowModel())
+    })
+  })
+
+  describe('pre-order flatRows traversal', () => {
+    const complexNestedData: Array<NestedRow> = [
+      {
+        name: 'parent-1',
+        subRows: [
+          {
+            name: 'child-1.1',
+            subRows: [
+              { name: 'grandchild-1.1.1' },
+              { name: 'grandchild-1.1.2' },
+            ],
+          },
+          { name: 'child-1.2' },
+        ],
+      },
+      {
+        name: 'parent-2',
+        subRows: [{ name: 'child-2.1' }],
+      },
+    ]
+
+    it('flattens rows depth-first with each parent preceding its sub-rows (root filtering)', () => {
+      const table = constructTable<typeof features, NestedRow>({
+        features,
+        columns: nestedColumns,
+        data: complexNestedData,
+        getSubRows: (row) => row.subRows,
+        initialState: {
+          columnFilters: [{ id: 'name', value: '1' }],
+        },
+      })
+
+      expect(rowNames(table.getFilteredRowModel().flatRows)).toEqual([
+        'parent-1',
+        'child-1.1',
+        'grandchild-1.1.1',
+        'grandchild-1.1.2',
+        'child-1.2',
+      ])
+    })
+
+    it('flattens rows depth-first with each parent preceding its sub-rows (leaf filtering)', () => {
+      const table = constructTable<typeof features, NestedRow>({
+        features,
+        columns: nestedColumns,
+        data: complexNestedData,
+        getSubRows: (row) => row.subRows,
+        filterFromLeafRows: true,
+        initialState: {
+          columnFilters: [{ id: 'name', value: '.2' }],
+        },
+      })
+
+      expect(rowNames(table.getFilteredRowModel().flatRows)).toEqual([
+        'parent-1',
+        'child-1.1',
+        'grandchild-1.1.2',
+        'child-1.2',
+      ])
     })
   })
 })

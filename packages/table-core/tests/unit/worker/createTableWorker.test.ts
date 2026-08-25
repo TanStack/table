@@ -234,6 +234,45 @@ describe('createTableWorker bridge', () => {
     expect(modelB).toBe(modelA)
   })
 
+  it('applies filtered metadata before rebuilding a downstream stage', () => {
+    const tableWorker = createTableWorker({
+      createWorker: () => new (globalThis as any).Worker(),
+    })
+    const table = makeTable(tableWorker)
+    table.baseAtoms.columnFilters.set([{ id: 'firstName', value: 'person' }])
+
+    // Request only the downstream getter. Its fallback initializes the
+    // upstream filtered stage while the first request is in flight.
+    table.getSortedRowModel()
+    const worker = FakeWorker.instances[0]!
+    worker.emitResult({
+      stages: { sorted: { kind: 'flat', indices: reversedIndices(8) } },
+    })
+
+    const filterData = data.map((_, index) => ({
+      columnFilters: { firstName: true },
+      columnFiltersMeta: { firstName: { rank: index } },
+    }))
+    worker.emitResult({
+      stages: {
+        filtered: {
+          kind: 'flat',
+          indices: Uint32Array.from({ length: 8 }, (_, index) => index),
+          filterData,
+        },
+        // Downstream payloads deliberately remain metadata-free.
+        sorted: { kind: 'flat', indices: reversedIndices(8) },
+      },
+    })
+
+    const sorted = table.getSortedRowModel()
+    expect(sorted.rows[0]!.id).toBe('7')
+    expect(sorted.rows[0]!.columnFilters).toEqual({ firstName: true })
+    expect(sorted.rows[0]!.columnFiltersMeta).toEqual({
+      firstName: { rank: 7 },
+    })
+  })
+
   it('clears pending and stops posting after a worker error', async () => {
     const tableWorker = createTableWorker({
       createWorker: () => new (globalThis as any).Worker(),

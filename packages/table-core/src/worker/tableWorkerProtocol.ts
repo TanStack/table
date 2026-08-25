@@ -29,11 +29,25 @@ export const tableWorkerStageStateDeps: Record<
   expanded: ['expanded'],
 }
 
+export interface TableWorkerFilterData {
+  columnFilters: Record<string, boolean>
+  columnFiltersMeta: Record<string, unknown>
+}
+
 /**
- * A serialized synthetic (group) row. Leaf rows serialize as their position in
- * `options.data`; group rows carry what `constructRow` + the grouped row model
- * need to rebuild them, plus eagerly computed aggregate values so no
- * aggregation runs on the main thread.
+ * A serialized data branch whose row-model hierarchy must be preserved. True
+ * leaf rows still serialize as a bare core-row index.
+ */
+export interface TableWorkerDataNode {
+  index: number
+  children: Array<TableWorkerRowNode>
+  filterData?: TableWorkerFilterData
+}
+
+/**
+ * A serialized synthetic (group) row. Group rows carry what `constructRow` +
+ * the grouped row model need to rebuild them, plus eagerly computed aggregate
+ * values so no aggregation ever runs on the main thread.
  */
 export interface TableWorkerGroupNode {
   id: string
@@ -44,7 +58,8 @@ export interface TableWorkerGroupNode {
   children: Array<TableWorkerRowNode>
 }
 
-export type TableWorkerRowNode = number | TableWorkerGroupNode
+export type TableWorkerRowNode =
+  number | TableWorkerDataNode | TableWorkerGroupNode
 
 /**
  * A stage result. Flat models (every row is a data row) travel as a
@@ -58,7 +73,11 @@ export type TableWorkerRowNode = number | TableWorkerGroupNode
  * its previous result and skips the rebuild entirely.
  */
 export type TableWorkerStagePayload =
-  | { kind: 'flat'; indices: Uint32Array }
+  | {
+      kind: 'flat'
+      indices: Uint32Array
+      filterData?: Array<TableWorkerFilterData>
+    }
   | { kind: 'tree'; children: Array<TableWorkerRowNode> }
   | { kind: 'unchanged' }
 

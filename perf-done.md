@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 59
-- **Source findings:** 57
+- **Entries:** 60
+- **Source findings:** 58
 - **Cross-cutting sweeps:** 2
 - 2026-07-03: #102 (C9) moved here from perf-todo.md after the row-model benchmark confirmed and the fix landed.
 - 2026-07-07: #68 (A4) moved here from perf-todo.md after implementation.
@@ -16,6 +16,7 @@ Entries are sorted by adjusted effectiveness score descending.
 - 2026-07-07: #85 (A6) moved here from perf-todo.md after implementation.
 - 2026-07-07: #92 (C11) moved here from perf-todo.md after implementation.
 - 2026-07-29: #65 (F1) moved here from perf-todo.md after the Svelte selector layer was removed.
+- 2026-08-25: #29 moved here from perf-todo.md with the filtered-row pre-order fix.
 
 ## Score 9
 
@@ -60,7 +61,7 @@ if (!filterableIds.length) {
 
 **Big-O:** O(R) → O(1) for the excluded-own-filter-only case: ~100k iterations + ~100k object-map insertions + 2 array allocations avoided per keystroke per faceted column (~10-30ms at 100k rows). Verified bonus: `getFacetedUniqueValues`/`getFacetedMinMaxValues` memoDeps key on `.flatRows` identity, so the stable `preRowModel` reference also converts the downstream O(R) facet-map rebuild into a memo hit per keystroke.
 
-**Risk:** Returns `preRowModel` by reference instead of a fresh model with identical contents; same referential behavior as the existing empty-filter branch. For hierarchical data there is a flatRows-order note: the current all-pass `filterRows` emits child-before-parent flatRows while `preRowModel` is parent-first, so facet `Map` insertion order can shift (content identical; the existing no-filter branch already returns parent-first, so precedent exists). The early return never reads tags, so B17's ordering constraint does not apply.
+**Risk:** Returns `preRowModel` by reference instead of a fresh model with identical contents; same referential behavior as the existing empty-filter branch. PR #6568 later aligned hierarchical `filterRows` with the parent-first order already used by `preRowModel`, removing the former facet `Map` insertion-order delta. The early return never reads tags, so B17's ordering constraint does not apply.
 **Verification:** CONFIRMED, raised 8 → 9; verifier added the downstream facet-map memo-hit win and the hierarchical flatRows-order note.
 
 ---
@@ -2473,6 +2474,32 @@ Swap `.map()` and `for...of` for indexed loops. Called for every row in the row 
 | 10,000 × 100 = 1,000,000 | 1,000,000                                    | 0                      | 1,000,000               |
 
 **Risk:** None.
+
+---
+
+## 29. `filterRowModelFromLeafs` duplicates predicate work — Score: 4
+
+**Status:** `[x]` done
+**Implementation note:** Collapsed the two overlapping branch predicates into one `newRow.subRows.length || filterRow(newRow)` check while restructuring filtered `flatRows` into parent-first order. The child-first short circuit also avoids the tag scan entirely for parents retained by matching descendants. Added nested leaf-first filtering coverage that exercises matching parents, retained non-matching ancestors, pre-order flattening, row identity, and preserved filter metadata.
+
+**Location:** `packages/table-core/src/features/column-filtering/filterRowsUtils.ts:43–101`
+**Category:** `micro`
+
+`filterRow(row)` is called twice in some branches. Cache the boolean and the `hasVisibleSubRows` flag, branch once.
+
+**Scale impact** (duplicate `filterRow` invocations saved — dimension: rows in subtree-bearing branches per filter pass):
+
+| Rows in subtree-bearing branches | Before (`filterRow` calls) | After  | Saved  |
+| -------------------------------- | -------------------------- | ------ | ------ |
+| 10                               | 20                         | 10     | 10     |
+| 100                              | 200                        | 100    | 100    |
+| 1,000                            | 2,000                      | 1,000  | 1,000  |
+| 10,000                           | 20,000                     | 10,000 | 10,000 |
+
+**Risk:** Logic is subtle; focused regression coverage now verifies parent-first flattening, retained ancestors, filter metadata, and unfiltered descendants at the maximum leaf-filter depth.
+
+**2026-07-01 audit (B6, score 4 — verified simplification):** The from-leafs branch calls `filterRow(newRow)` (an O(F) tag scan) twice per passing branch row, and the first of two identical-bodied branches is provably subsumed by the second (`(A && !B)` implies `(A || B)`). Fix: single `if (newRow.subRows.length || filterRow(newRow))` — checking subRows first also skips the predicate entirely for parents kept alive by children. Boolean-identical simplification, verified airtight; opt-in `filterFromLeafRows` path only.
+**Verification:** Verified (2026-07-01 audit); boolean equivalence proven.
 
 ---
 
