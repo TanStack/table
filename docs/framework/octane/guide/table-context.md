@@ -61,7 +61,7 @@ export const {
 
 `createTableHookContexts` is also useful on its own, separately from `createTableHook`, for avoiding prop drilling. The `column`, `row`, `cell`, and `header` instances are **stable references**. You can place any of them on a context and read it deep in a subtree, and because the reference does not change when table state changes, the context value stays the same and consumers will not re-render from state changes.
 
-Reach for `createTableHookContexts` instead of hand-rolling `createContext`: it hands you a context plus a matching `TFeatures`-typed hook, so you do not have to retype the value or write the `useContext` guard yourself. (See [Scoped Contexts With createTableHookContexts](#scoped-contexts-with-createtablehookcontexts) below for the other use of this util, passing the contexts into `createTableHook`.)
+Reach for `createTableHookContexts` instead of hand-rolling `createContext`. It hands you a context plus a matching `TFeatures`-typed hook, so you do not have to retype the value or write the `useContext` guard yourself. (See [Scoped Contexts With createTableHookContexts](#scoped-contexts-with-createtablehookcontexts) below for the other use of this util, passing the contexts into `createTableHook`.)
 
 ```tsx
 // cell-slot-context.ts
@@ -85,7 +85,7 @@ function DeeplyNestedCellUI() @{
 > [!IMPORTANT]
 > That stability is exactly why state-dependent method reads go stale. A memoized component that reads something like `header.column.getIsSorted()`, `cell.row.getIsSelected()`, or `cell.getValue()` off a context-provided instance will not re-render when that state changes on its own. Wrap reactive reads in `Subscribe` (or `useSelector`) so they re-run on the state they depend on. See the [table state guide](./table-state) for `Subscribe` and selector patterns.
 
-The `table` object is the exception. `useTable` returns a fresh `table` reference on every state change, so that JSX which depends on it re-evaluates. It is therefore **not** a stable context value: providing the table through your own context re-renders consumers whenever the providing component re-renders. If you want a stable handle to pass down, provide `table.store` or a specific atom such as `table.atoms.rowSelection` (these are stable) and read them with `Subscribe` / `useSelector`, or keep the table in a ref.
+The `table` object is the exception. `useTable` returns a fresh `table` reference on every state change, so that JSX which depends on it re-evaluates. It is therefore **not** a stable context value. Providing the table through your own context re-renders consumers whenever the providing component re-renders. If you want a stable handle to pass down, provide `table.store` or a specific atom such as `table.atoms.rowSelection` (these are stable) and read them with `Subscribe` / `useSelector`, or keep the table in a ref.
 
 ## The Default Shared Context
 

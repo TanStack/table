@@ -1,5 +1,4 @@
 import {
-  DestroyRef,
   Injector,
   NgZone,
   assertInInjectionContext,
@@ -9,7 +8,7 @@ import {
   untracked,
 } from '@angular/core'
 import { constructTable } from '@tanstack/table-core'
-import { lazyInit } from './lazySignalInitializer'
+import { injectLazyInit } from './injectLazyInit'
 import { angularReactivity } from './reactivity'
 import type {
   RowData,
@@ -97,47 +96,38 @@ export function injectTable<
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
   const ngZone = inject(NgZone)
-  const destroyRef = inject(DestroyRef)
   const options = computed(() => optionsFactory())
   const coreReactivityFeature = angularReactivity(injector)
 
   const lazyTable = ngZone.runOutsideAngular(() =>
-    lazyInit(() => {
-      const currentOptions = options()
-      const features = {
-        coreReactivityFeature,
-        ...currentOptions.features,
-      } satisfies TableFeatures
-      return constructTable<TFeatures, TData>({
-        ...currentOptions,
-        features,
-      })
-    }),
+    injectLazyInit(
+      () => {
+        const currentOptions = options()
+        const features = {
+          coreReactivityFeature,
+          ...currentOptions.features,
+        } satisfies TableFeatures
+        return constructTable<TFeatures, TData>({
+          ...currentOptions,
+          features,
+        })
+      },
+      (table) => table._reactivity.unmount?.(),
+    ),
   )
 
-  destroyRef.onDestroy(() => {
-    if (lazyTable.initialized) {
-      lazyTable.value._reactivity.unmount?.()
-    }
-  })
-
-  let previousOptions: TableOptions<TFeatures, TData> | undefined = undefined
   effect(
     () => {
       const currentOptions = options()
-      // rawValue will be always valued here due to internal lazyInit effect
-      const tableInstance = lazyTable.rawValue
-      if (previousOptions === currentOptions) return
       untracked(() =>
-        tableInstance.setOptions((previous) => ({
+        lazyTable.setOptions((previous) => ({
           ...previous,
           ...currentOptions,
         })),
       )
-      previousOptions = currentOptions
     },
     { injector, debugName: 'tableOptionsUpdate' },
   )
 
-  return lazyTable.value
+  return lazyTable
 }

@@ -56,7 +56,7 @@ Octane, Lit, Svelte, Alpine, and vanilla do not currently ship dedicated table d
 
 ## The Required `key` Table Option
 
-The devtools identify each table by the `key` table option. Registration requires it: if you register a table without a `key`, the devtools log an error (`Missing table key. Add a 'key' option to your table to use devtools.`) and skip the table entirely.
+The devtools identify each table by the `key` table option. Registration requires it. If you register a table without a `key`, the devtools log an error (`Missing table key. Add a 'key' option to your table to use devtools.`) and skip the table entirely.
 
 ```ts
 const table = useTable({

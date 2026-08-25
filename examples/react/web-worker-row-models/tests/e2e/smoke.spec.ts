@@ -53,7 +53,6 @@ async function openExample(page: Page) {
     )
   } catch {
     const diagnostics = await page.evaluate(() => ({
-      console: (window as any).__consoleLog,
       readyState: document.readyState,
       scripts: Array.from(document.scripts).map((script) => ({
         src: script.src,

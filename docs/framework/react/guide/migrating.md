@@ -10,17 +10,17 @@ TanStack Table V9 delivers major performance improvements, hundreds of bug fixes
 
 - **Lower memory usage**: The core architecture now shares more behavior across table objects, with some large-table scenarios seeing up to 90% memory savings.
 - **Faster client-side row models**: Sorting, filtering, and aggregation paths have improved algorithms and memoization, with many scenarios seeing up to 40-70% speed improvements.
-- **Better column resizing performance**: Column resizing also gets significant performance improvements from the same architectural and memoization work.
+- **Better column resizing performance**: The same architectural and memoization work also speeds up column resizing.
 
 ### 2. State Management Overhaul (Backward Compatible)
 
-- **React Compiler compatibility**: The state system is built on [TanStack Store](https://tanstack.com/store), giving the table a reactive foundation that works correctly under the React Compiler. See the [React Compiler Guide](./react-compiler).
+- **React Compiler compatibility**: The state system is built on [TanStack Store](https://tanstack.com/store), so the table now works correctly under the React Compiler. See the [React Compiler Guide](./react-compiler).
 - **Fine-grained subscriptions**: State slices can be read independently through `table.atoms`, `table.store`, `table.state`, selectors, or `table.Subscribe`.
 - **External state or atoms**: You can still use `state` plus `on[State]Change`, or own individual slices with writable atoms via the new `atoms` option.
 
 ### 3. Type-Safety Improvements
 
-- **New and revamped type helpers**: New type helpers help define columns, custom filters, sorts, aggregations, column and table meta, shared table options and components, and more!
+- **New and revamped type helpers**: There are helpers for defining columns, custom filters, sorts, aggregations, column and table meta, shared table options and components, and more!
 - **Per-table meta types**: `tableMeta`, `columnMeta`, and `filterMeta` slots let you type meta for a specific table instead of globally augmenting shared interfaces. **No more global declaration merging required!**
 - **Feature-gated APIs**: APIs only exist when their feature is registered, and `tableFeatures()` validates feature prerequisites at the type level.
 
@@ -64,7 +64,7 @@ The main change is **how you define a table** with the `useTable` hook, specific
 
 ## Quick Legacy Migration
 
-Need to migrate incrementally? We are providing a temporary shortcut with the `useLegacyTable` hook. It accepts the Table V8-style API while using Table V9 under the hood. **This is deprecated** and intended only as a temporary migration aid. It includes all features by default, resulting in a larger bundle size than you even got with Table V8.
+Need to migrate incrementally? We are providing a temporary shortcut with the `useLegacyTable` hook. It accepts the Table V8-style API while using Table V9 under the hood. **This is deprecated** and intended only as a temporary migration aid. It includes all features by default, so your bundle will be even larger than it was with Table V8.
 
 Legacy APIs live in a separate export. Import core utilities from `@tanstack/react-table` and legacy-specific APIs from `@tanstack/react-table/legacy`:
 
@@ -236,7 +236,7 @@ const table = useTable({
 
 #### Prefer Individual Fn Imports Over Full Registries
 
-The `filterFns`, `sortFns`, and `aggregationFns` registry exports are now deprecated in favor of importing individual `filterFn_*`, `sortFn_*`, and `aggregationFn_*` functions and registering only the ones you use (or passing functions directly in column definitions with no registration at all). The full registries still work, but spreading them puts every built-in function in your bundle. Keep in mind that string names, including the default `'auto'`, only resolve functions you have registered.
+The `filterFns`, `sortFns`, and `aggregationFns` registry exports are now deprecated in favor of importing individual `filterFn_*`, `sortFn_*`, and `aggregationFn_*` functions and registering only the ones you use (or passing functions directly in column definitions with no registration at all). The full registries still work, but spreading them puts every built-in function in your bundle. String names, including the default `'auto'`, only resolve functions you have registered.
 
 ```tsx
 // Before: registers every built-in function
@@ -802,7 +802,7 @@ const table = useTable({
 
 ### Composing Partial Options
 
-`tableOptions()` allows you to omit certain required fields (like `data`, `columns`, or `features`) when creating partial configurations:
+`tableOptions()` lets you omit required fields (like `data`, `columns`, or `features`) when creating partial configurations:
 
 ```tsx
 // Row model factories and fns registries are registered on the features object
@@ -1197,4 +1197,4 @@ Check out these examples to see Table V9 patterns in action:
 - [Filters](../examples/filters) - Filtering with the new API
 - [Sorting](../examples/sorting) - Sorting with the new API
 - [Composable Tables](../examples/composable-tables) - Advanced `createTableHook` patterns
-- [Kitchen Sink](../examples/kitchen-sink) - A comprehensive example of all features
+- [Kitchen Sink](../examples/kitchen-sink) - An example combining all features

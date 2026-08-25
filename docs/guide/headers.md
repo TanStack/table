@@ -87,7 +87,7 @@ Since the `header` column option you defined can be either a string, JSX, or a f
 
 ### Header Row Spanning
 
-If your column tree is uneven (some leaf columns are nested deeper than others), each shallow leaf column produces a chain of placeholder headers above its real header. The placeholder at the top of the chain reports the chain's full `rowSpan`, and every header it covers reports a `rowSpan` of 0. To merge those header cells vertically, skip headers with a `rowSpan` of 0 and render everything else with the `rowSpan` attribute. Note that this replaces the usual `header.isPlaceholder` check: the spanning placeholder renders its column's header content instead of an empty cell.
+If your column tree is uneven (some leaf columns are nested deeper than others), each shallow leaf column produces a chain of placeholder headers above its real header. The placeholder at the top of the chain reports the chain's full `rowSpan`, and every header it covers reports a `rowSpan` of 0. To merge those header cells vertically, skip headers with a `rowSpan` of 0 and render everything else with the `rowSpan` attribute. Note that this replaces the usual `header.isPlaceholder` check. The spanning placeholder renders its column's header content instead of an empty cell.
 
 ```jsx
 {

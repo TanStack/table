@@ -455,7 +455,7 @@ Unlike the v8-style declaration merging described below, this scoping is **per-t
 
 ### How the Type-Only Slots Work
 
-The `tableMeta` and `columnMeta` keys are _phantom_ entries: only their TypeScript types matter. At runtime, the value is an empty object that gets stripped from the table's registered features, so it is never treated as a real feature. The actual meta _values_ are still passed where they always were: the `meta` table option and the `meta` property on column definitions.
+The `tableMeta` and `columnMeta` keys are _phantom_ entries. Only their TypeScript types matter. At runtime, the value is an empty object that gets stripped from the table's registered features, so it is never treated as a real feature. The actual meta _values_ are still passed where they always were: the `meta` table option and the `meta` property on column definitions.
 
 `metaHelper<MyMeta>()` simply returns `{}` cast to your meta type. You can write the cast yourself instead:
 
@@ -467,7 +467,7 @@ const features = tableFeatures({
 })
 ```
 
-Both forms are equivalent. Prefer `metaHelper`: it reads as type-only at a glance, and it avoids false positives from the `@typescript-eslint/no-unnecessary-type-assertion` lint rule, which flags the `{} as` form when your meta type has only optional properties (and whose auto-fix would silently erase your meta type).
+Both forms are equivalent. Prefer `metaHelper`. It reads as type-only at a glance, and it avoids false positives from the `@typescript-eslint/no-unnecessary-type-assertion` lint rule, which flags the `{} as` form when your meta type has only optional properties (and whose auto-fix would silently erase your meta type).
 
 ## Filter Meta (`filterMeta` Slot)
 
@@ -545,7 +545,7 @@ const features = tableFeatures({
 > [!NOTE]
 > the `filterFns` and `sortFns` slots above register only the functions this table uses. The full built-in registries (`filterFns`, `sortFns`, `aggregationFns` exported from the package) can still be spread into these slots, but they are deprecated because they put every built-in function in your bundle. Import individual functions such as `sortFn_alphanumeric` instead, or pass functions directly in your column definitions.
 
-Now `columnFiltersMeta` on every row is typed as `FuzzyFilterMeta` for tables built from this `features` object. The `filterMeta` slot is, like `tableMeta` and `columnMeta`, a phantom type-only entry: `metaHelper<FuzzyFilterMeta>()` returns `{}` at runtime and is stripped from the registered features.
+Now `columnFiltersMeta` on every row is typed as `FuzzyFilterMeta` for tables built from this `features` object. The `filterMeta` slot is, like `tableMeta` and `columnMeta`, a phantom type-only entry. `metaHelper<FuzzyFilterMeta>()` returns `{}` at runtime and is stripped from the registered features.
 
 See the [React filters-fuzzy example](../framework/react/examples/filters-fuzzy) for a complete, runnable implementation.
 

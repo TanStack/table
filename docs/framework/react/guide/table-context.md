@@ -61,7 +61,7 @@ export const {
 
 `createTableHookContexts` is also useful on its own, separately from `createTableHook`, for avoiding prop drilling. The `column`, `row`, `cell`, and `header` instances are **stable references** (the same stability TanStack Table relies on for React Compiler memoization). You can place any of them on a context and read it deep in a subtree, and because the reference does not change when table state changes, the context value stays the same and consumers will not re-render from state changes.
 
-Reach for `createTableHookContexts` instead of hand-rolling `createContext`: it hands you a context plus a matching `TFeatures`-typed hook, so you do not have to retype the value or write the `useContext` guard yourself. (See [Scoped Contexts With createTableHookContexts](#scoped-contexts-with-createtablehookcontexts) below for the other use of this util, passing the contexts into `createTableHook`.)
+Reach for `createTableHookContexts` instead of hand-rolling `createContext`. It hands you a context plus a matching `TFeatures`-typed hook, so you do not have to retype the value or write the `useContext` guard yourself. (See [Scoped Contexts With createTableHookContexts](#scoped-contexts-with-createtablehookcontexts) below for the other use of this util, passing the contexts into `createTableHook`.)
 
 ```tsx
 // cell-slot-context.ts
@@ -87,7 +87,7 @@ function DeeplyNestedCellUI() {
 > [!IMPORTANT]
 > That stability is exactly why state-dependent method reads go stale. A component that reads something like `header.column.getIsSorted()`, `cell.row.getIsSelected()`, or `cell.getValue()` off a context-provided instance will not re-render when that state changes on its own. Wrap those method reads in a `Subscribe` render callback, or render directly from a value selected with `useSelector`, so the UI has an explicit reactive dependency. See [Use Subscribe in Nested Components](./react-compiler#use-subscribe-in-nested-components).
 
-The `table` object is the exception. `useTable` returns a fresh React-facing `table` reference whenever its selected state changes, which is intentional so that React Compiler invalidates JSX that depends on it. With the default selector that means every registered table-state change; a narrower selector only changes it for the selected updates. It is therefore **not** a stable context value: providing the table through your own context re-renders consumers whenever the providing component re-renders with a new wrapper. If you want a stable handle to pass down, provide `table.store` or a specific atom such as `table.atoms.rowSelection` (these are stable) and read them with `Subscribe` / `useSelector`, or keep the core table in a ref.
+The `table` object is the exception. `useTable` returns a fresh React-facing `table` reference whenever its selected state changes, which is intentional so that React Compiler invalidates JSX that depends on it. With the default selector that means every registered table-state change; a narrower selector only changes it for the selected updates. It is therefore **not** a stable context value. Providing the table through your own context re-renders consumers whenever the providing component re-renders with a new wrapper. If you want a stable handle to pass down, provide `table.store` or a specific atom such as `table.atoms.rowSelection` (these are stable) and read them with `Subscribe` / `useSelector`, or keep the core table in a ref.
 
 ## The Default Shared Context
 

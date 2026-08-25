@@ -4,7 +4,7 @@ library:
   repository: 'https://github.com/TanStack/table'
   description: 'Headless data-grid state and row processing with tree-shakeable v9 features and framework adapters.'
   package_version_overrides:
-    '@tanstack/angular-table': '9.1.3'
+    '@tanstack/angular-table': '9.2.2'
     '@tanstack/angular-table-devtools': '9.2.0'
     '@tanstack/preact-table-devtools': '9.2.0'
     '@tanstack/react-table-devtools': '9.2.0'

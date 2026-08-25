@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these Angular examples:
 
 ### Fuzzy Filtering Setup
 
-Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. Additionally, if using client-side fuzzy filtering and sorting, you also need to set up `filteredRowModel` and `sortedRowModel` after their associated features because row model slots are type-checked.
+Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. If you use client-side fuzzy filtering and sorting, also set up `filteredRowModel` and `sortedRowModel` after their features, since row model slots are type-checked.
 
 ```ts
 import { signal } from '@angular/core'
@@ -67,7 +67,7 @@ Fuzzy filtering is mostly used with global filtering, but you can also apply it 
 
 > [!NOTE]
 > You will need to install the `@tanstack/match-sorter-utils` library to use fuzzy filtering.
-> TanStack Match Sorter Utils is a fork of [match-sorter](https://github.com/kentcdodds/match-sorter) by Kent C. Dodds. It was forked in order to work better with TanStack Table's row by row filtering approach.
+> TanStack Match Sorter Utils is a fork of [match-sorter](https://github.com/kentcdodds/match-sorter) by Kent C. Dodds. It was forked to work better with TanStack Table's row by row filtering approach.
 
 Using the match-sorter libraries is optional, but the TanStack Match Sorter Utils library provides a great way to both fuzzy filter and sort by the rank information it returns, so that rows can be sorted by their closest matches to the search query.
 

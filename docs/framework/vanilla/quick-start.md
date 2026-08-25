@@ -191,7 +191,7 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 
 ## Where to Go Next
 
-**Table state.** In v9, table state is backed by TanStack Store atoms. When you use `@tanstack/table-core` directly, you decide when to read state, subscribe to state, and redraw your UI. You usually do not need to manage state yourself: set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state). It is the foundational guide for vanilla usage.
+**Table state.** In v9, table state is backed by TanStack Store atoms. When you use `@tanstack/table-core` directly, you decide when to read state, subscribe to state, and redraw your UI. You usually do not need to manage state yourself. Set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state). It is the foundational guide for vanilla usage.
 
 **Feature examples.** Browse runnable vanilla examples such as [Pagination](./examples/pagination) and [Sorting](./examples/sorting) to see complete DOM rendering setups.
 

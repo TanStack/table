@@ -5,7 +5,7 @@ title: Using useLegacyTable for Incremental Migration
 The `useLegacyTable` hook provides a compatibility layer that accepts the v8-style API while using v9 under the hood. This is useful for teams that need to migrate incrementally or have large codebases where a full migration isn't immediately practical.
 
 > [!WARNING]
-> `useLegacyTable` is **deprecated** and intended only as a temporary migration aid. It includes all features by default, resulting in a larger bundle size compared to the tree-shakeable v9 API. Plan to migrate to `useTable` for better performance and smaller bundles.
+> `useLegacyTable` is **deprecated** and intended only as a temporary migration aid. It includes all features by default, so the bundle is larger than with the tree-shakeable v9 API. Plan to migrate to `useTable` for better performance and smaller bundles.
 
 ## When to Use `useLegacyTable`
 

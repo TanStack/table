@@ -169,7 +169,7 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 
 ## Where to Go Next
 
-**Table state.** In v9, table state is backed by TanStack Store atoms. You usually do not need to manage it yourself: set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state). It is the foundational guide for everything else.
+**Table state.** In v9, table state is backed by TanStack Store atoms. You usually do not need to manage it yourself. Set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state). It is the foundational guide for everything else.
 
 **Feature guides.** Each feature has its own guide, such as [Column Filtering](./guide/column-filtering), [Pagination](./guide/pagination), [Row Selection](./guide/row-selection), and [Column Visibility](./guide/column-visibility).
 

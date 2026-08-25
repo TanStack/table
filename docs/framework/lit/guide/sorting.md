@@ -11,7 +11,7 @@ Want to skip to the implementation? Check out these Lit examples:
 
 ### Sorting Setup
 
-Here's how you set up your table to use sorting features. Adding the sorting feature enables the related APIs. Additionally, if using client-side sorting, you also need to set up `sortedRowModel` after its associated feature because row model slots are type-checked.
+Here's how you set up your table to use sorting features. Adding the sorting feature enables the related APIs. If you use client-side sorting, also set up `sortedRowModel` after its feature, since row model slots are type-checked.
 
 ```ts
 import { LitElement, html } from 'lit'
@@ -344,7 +344,7 @@ Sorting functions support an optional "hanging" property:
 
 - `sortFn.resolveDataValue` - normalizes each row's value before the two sides are compared. It is honored by every sorting function built with the `constructSortFn` helper, which includes all built-in sorting functions.
 
-The `constructSortFn` helper builds a sorting function from a value-level comparator (`sort`) plus that optional resolver. Keeping the comparison in `sort` and the normalization in `resolveDataValue` means a variant of an existing sorting function only has to swap the resolver: the definition is attached to the returned function, so you can spread any sorting function built with `constructSortFn` and override only what differs.
+The `constructSortFn` helper builds a sorting function from a value-level comparator (`sort`) plus that optional resolver. Keeping the comparison in `sort` and the normalization in `resolveDataValue` means a variant of an existing sorting function only has to swap the resolver. The definition is attached to the returned function, so you can spread any sorting function built with `constructSortFn` and override only what differs.
 
 For example, a version of `alphanumeric` that ignores diacritics, so that "Éric Bernard" sorts next to "Eric Brandon" instead of after "Zak O'Sullivan":
 

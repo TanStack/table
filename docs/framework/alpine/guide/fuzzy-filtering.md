@@ -12,7 +12,7 @@ Read your reactive inputs such as `data` through a getter (for example backing t
 
 ### Fuzzy Filtering Setup
 
-Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. Additionally, if using client-side fuzzy filtering and sorting, you also need to set up `filteredRowModel` and `sortedRowModel` after their associated features because row model slots are type-checked.
+Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. If you use client-side fuzzy filtering and sorting, also set up `filteredRowModel` and `sortedRowModel` after their features, since row model slots are type-checked.
 
 ```ts
 import {
@@ -59,7 +59,7 @@ Fuzzy filtering is mostly used with global filtering, but you can also apply it 
 
 > [!NOTE]
 > You will need to install the `@tanstack/match-sorter-utils` library to use fuzzy filtering.
-> TanStack Match Sorter Utils is a fork of [match-sorter](https://github.com/kentcdodds/match-sorter) by Kent C. Dodds. It was forked in order to work better with TanStack Table's row by row filtering approach.
+> TanStack Match Sorter Utils is a fork of [match-sorter](https://github.com/kentcdodds/match-sorter) by Kent C. Dodds. It was forked to work better with TanStack Table's row by row filtering approach.
 
 ```bash
 npm install @tanstack/match-sorter-utils

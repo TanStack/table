@@ -127,7 +127,7 @@ A few things to note:
 
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
 - The core row model is always included automatically. Feature row models (sorting, filtering, pagination) are registered as slots directly on the `tableFeatures({...})` call when you need them.
-- The `get data()` getter keeps the table reactive: when `local.data` is reassigned, the table sees the new data. Passing `data: local.data` would capture a one-time snapshot.
+- The `get data()` getter keeps the table reactive. When `local.data` is reassigned, the table sees the new data. Passing `data: local.data` would capture a one-time snapshot.
 - `FlexRender` is also attached to the instance as `table.FlexRender`, so you can write `x-html="table.FlexRender({ cell })"` instead of exposing the top-level helper.
 
 See the full [Basic createTable example](./examples/basic-create-table) for a runnable version with more columns and a footer.
@@ -188,7 +188,7 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 
 ## Where to Go Next
 
-**Table state.** In v9, table state is backed by TanStack Store atoms, which the adapter makes reactive in Alpine. You usually do not need to manage it yourself: set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When you need to read a state slice in your markup, use `table.atoms.<slice>.get()` (for example `table.atoms.pagination.get().pageIndex`) or `table.store.get()` for the whole state. There is no state selector, because the table instance is already reactive. The [Table State Guide](./guide/table-state.md) is the foundational guide for everything else.
+**Table state.** In v9, table state is backed by TanStack Store atoms, which the adapter makes reactive in Alpine. You usually do not need to manage it yourself. Set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When you need to read a state slice in your markup, use `table.atoms.<slice>.get()` (for example `table.atoms.pagination.get().pageIndex`) or `table.store.get()` for the whole state. There is no state selector, because the table instance is already reactive. The [Table State Guide](./guide/table-state.md) is the foundational guide for everything else.
 
 **Feature examples.** Each feature has a runnable example, such as [Column Filters](./examples/filters), [Pagination](./examples/pagination), [Row Selection](./examples/row-selection), and [Column Visibility](./examples/column-visibility).
 

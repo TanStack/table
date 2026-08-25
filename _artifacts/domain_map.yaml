@@ -7,7 +7,7 @@ library:
   primary_framework: 'framework-agnostic'
   monorepo: true
   package_version_overrides:
-    '@tanstack/angular-table': '9.1.3'
+    '@tanstack/angular-table': '9.2.2'
     '@tanstack/angular-table-devtools': '9.2.0'
     '@tanstack/preact-table-devtools': '9.2.0'
     '@tanstack/react-table-devtools': '9.2.0'

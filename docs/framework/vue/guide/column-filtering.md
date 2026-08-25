@@ -15,7 +15,7 @@ Vue refs can be passed directly where the adapter expects reactive table options
 
 ### Column Filtering Setup
 
-Here's how you set up your table to use column filtering features. Adding the column filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
+Here's how you set up your table to use column filtering features. Adding the column filtering feature enables the related APIs. If you use client-side filtering, also set up `filteredRowModel` after its feature, since row model slots are type-checked.
 
 ```ts
 import {
@@ -345,7 +345,7 @@ const startsWithFilterFn = constructFilterFn({
 })
 ```
 
-Keeping the comparison in `filter` and the normalization in the resolvers pays off when you need a variant of an existing filter function: the definition is attached to the returned function, so you can spread any filter function built with `constructFilterFn` and override only what differs. For example, a version of `includesString` that also ignores diacritics (so a search for "eric" matches "Éric"):
+Keeping the comparison in `filter` and the normalization in the resolvers pays off when you need a variant of an existing filter function. The definition is attached to the returned function, so you can spread any filter function built with `constructFilterFn` and override only what differs. For example, a version of `includesString` that also ignores diacritics (so a search for "eric" matches "Éric"):
 
 ```ts
 const normalize = (value: unknown) =>

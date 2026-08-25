@@ -11,7 +11,7 @@ Want to skip to the implementation? Check out these Lit examples:
 
 ### Faceting Setup
 
-Here's how you set up your table to use faceting features. Adding the faceting feature enables the related APIs. Additionally, if using client-side faceting, you also need to set up `filteredRowModel` and `facetedRowModel` after their associated features because row model slots are type-checked.
+Here's how you set up your table to use faceting features. Adding the faceting feature enables the related APIs. If you use client-side faceting, also set up `filteredRowModel` and `facetedRowModel` after their features, since row model slots are type-checked.
 
 ```ts
 import { LitElement, html } from 'lit'

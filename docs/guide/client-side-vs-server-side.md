@@ -47,7 +47,7 @@ Client-side processing is usually the simplest approach. This is where you let T
 
 You might be tempted to rule out client-side processing based on what you think is a large dataset, but tables with just a few thousand rows are often practical in the browser. TanStack Table examples stress-test much larger datasets. In fact, we stress-test all TanStack Table features with 1 million rows client-side and expect usable performance. Actual performance depends on the number of columns, the size and shape of each row, the work performed by accessors and feature functions, and the devices your users have. Test with representative data and target hardware.
 
-Older versions of TanStack Table used to start running into memory issues at about 1 million rows, but thanks to our [Object Prototypes Refactor](https://tanstack.com//blog/tanstack-table-v9-memory-performance) we can now claim to support up to 15 million rows client-side with ease. Is loading 15 million rows practical for your use-case? Probably not! But we hope you know that TanStack Table should give you headroom many client-side rows.
+Older versions of TanStack Table used to start running into memory issues at about 1 million rows, but thanks to our [Object Prototypes Refactor](https://tanstack.com//blog/tanstack-table-v9-memory-performance) we can now claim to support up to 15 million rows client-side with ease. Is loading 15 million rows practical for your use-case? Probably not! But we hope you know that TanStack Table should give you headroom for many client-side rows.
 
 Server-side processing is usually a better fit when:
 
@@ -76,9 +76,9 @@ As a rule, when the server owns pagination, it should also own any filtering, gr
 
 Facets need the same consideration. Facet counts calculated from a server-provided page describe only that page. Calculate facets on the server when they need to represent the full filtered dataset.
 
-## What “Manual” Means
+## What "Manual" Means
 
-TanStack Table calls server-side data processing “manual” because the table does not perform that transformation. A `manual*` option does not fetch or transform data. It tells the table to use the data you provide as already processed for that feature.
+TanStack Table calls server-side data processing "manual" because the table does not perform that transformation. A `manual*` option does not fetch or transform data. It tells the table to use the data you provide as already processed for that feature.
 
 | Operation                   | Manual option       | Client-side row model or implementation |
 | --------------------------- | ------------------- | --------------------------------------- |
@@ -177,7 +177,7 @@ TanStack Table is a synchronous table state manager. Its client-side row models 
 
 There are countless valid ways to design a backend and the contract between a frontend and backend: REST query parameters, GraphQL inputs, RPC calls, SQL builders, database SDKs, streaming responses, and more. A built-in server row model would have to impose opinions about those choices. TanStack Table deliberately leaves that boundary to your application so it can work with any backend stack or API design.
 
-In practice, [TanStack Query](https://tanstack.com/query/latest) serves as the client-side coordinator for server-side row processing. Your own fetching layer can fill the same role. It observes the controlled table state, sends that state through your API contract, caches the result, and gives the returned rows back to the table. For example, a React integration can pass every server-owned state value to both the query key and query function:
+In practice, [TanStack Query](https://tanstack.com/query/latest) is the client-side coordinator for server-side row processing. Your own fetching layer can fill the same role. It observes the controlled table state, sends that state through your API contract, caches the result, and gives the returned rows back to the table. For example, a React integration can pass every server-owned state value to both the query key and query function:
 
 #### Page-Index Pagination with `useQuery`
 

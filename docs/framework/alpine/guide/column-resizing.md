@@ -39,7 +39,7 @@ const table = createTable({
 
 ## Column Resizing (Alpine) Guide
 
-TanStack Table provides built-in column resizing state and APIs that allow you to easily implement column resizing in your table UI with a variety of options for UX and performance.
+TanStack Table provides built-in column resizing state and APIs for implementing column resizing in your table UI with a variety of options for UX and performance.
 
 Column resizing builds on column sizing. If you only need to define starting, minimum, or maximum widths, see the [Column Sizing Guide](./column-sizing).
 

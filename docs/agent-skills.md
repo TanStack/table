@@ -15,11 +15,11 @@ keywords:
   - AGENTS.md
 ---
 
-You're building with TanStack Table and using an AI coding agent—Claude Code, Cursor, GitHub Copilot, Codex, or similar. The agent keeps suggesting v8 APIs such as `useReactTable`, configures row models without explicit features, or renders with adapter patterns that no longer match v9. By the end of this guide, your agent will load TanStack Table's bundled skills automatically whenever you work on table code—and those skills will stay in sync with whichever TanStack Table version your project installs.
+You're building with TanStack Table and using an AI coding agent such as Claude Code, Cursor, GitHub Copilot, or Codex. The agent keeps suggesting v8 APIs such as `useReactTable`, configures row models without explicit features, or renders with adapter patterns that no longer match v9. By the end of this guide, your agent will load TanStack Table's bundled skills automatically whenever you work on table code, and those skills will stay in sync with whichever TanStack Table version your project installs.
 
 ## What are Agent Skills?
 
-Agent Skills are markdown documents (`SKILL.md`) that ship inside npm packages and tell AI coding agents how to use a library correctly—which functions to use, which patterns to avoid, and when to reach for a particular feature. The format is an open standard supported by Claude Code, Cursor, GitHub Copilot, Codex, and others.
+Agent Skills are markdown documents (`SKILL.md`) that ship inside npm packages and tell AI coding agents how to use a library correctly: which functions to use, which patterns to avoid, and when to reach for a particular feature. The format is an open standard supported by Claude Code, Cursor, GitHub Copilot, Codex, and others.
 
 TanStack Table publishes skills inside its packages so the guidance travels with `npm update` instead of being pinned in a model's training data or copied into an agent configuration file manually.
 
@@ -58,9 +58,9 @@ The CLI writes lightweight skill-loading guidance into your agent's config file.
 
 By default the guidance lands in `AGENTS.md`. The CLI can also update:
 
-- `CLAUDE.md`—Claude Code
-- `.cursorrules`—Cursor
-- `.github/copilot-instructions.md`—GitHub Copilot
+- `CLAUDE.md` for Claude Code
+- `.cursorrules` for Cursor
+- `.github/copilot-instructions.md` for GitHub Copilot
 
 ## Step 3: Review the Generated Guidance
 
@@ -96,7 +96,7 @@ If you prefer explicit task-to-skill entries, run `npx @tanstack/intent@latest i
 
 ## Step 4: Confirm It's Wired Up
 
-Open a fresh session in your coding agent and ask it to build something with TanStack Table—for example: _"Build a sortable, paginated React table with TanStack Table v9."_
+Open a fresh session in your coding agent and ask it to build something with TanStack Table, for example: _"Build a sortable, paginated React table with TanStack Table v9."_
 
 You should see:
 
@@ -110,7 +110,7 @@ If the agent still falls back to v8 patterns, reopen its config file and confirm
 
 ## Keeping Skills Current
 
-Skills are versioned with each package. When you update your TanStack Table packages, the `SKILL.md` files under `node_modules` update with them—no CLI rerun is needed. If you use explicit mappings, rerun `npx @tanstack/intent@latest install --map` after adding another intent-enabled package, such as a Table devtools adapter, or when you want to refresh the mappings.
+Skills are versioned with each package. When you update your TanStack Table packages, the `SKILL.md` files under `node_modules` update with them. No CLI rerun is needed. If you use explicit mappings, rerun `npx @tanstack/intent@latest install --map` after adding another intent-enabled package, such as a Table devtools adapter, or when you want to refresh the mappings.
 
 ## Using Skills Without the CLI
 
@@ -125,5 +125,5 @@ The CLI is recommended because it discovers installed packages automatically and
 
 ## Learn More
 
-- [TanStack Intent documentation](https://tanstack.com/intent/latest/docs/overview)—the CLI's full reference, including `scaffold`, `validate`, and CI setup for library maintainers.
-- [Agent Skills registry](https://tanstack.com/intent/registry)—browse other intent-enabled packages.
+- [TanStack Intent documentation](https://tanstack.com/intent/latest/docs/overview), the CLI's full reference, including `scaffold`, `validate`, and CI setup for library maintainers.
+- [Agent Skills registry](https://tanstack.com/intent/registry), where you can browse other intent-enabled packages.
