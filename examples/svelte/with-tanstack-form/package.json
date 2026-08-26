@@ -24,7 +24,7 @@
     "@tanstack/form-core": "^1.33.5",
     "@tanstack/svelte-devtools": "^0.1.3",
     "@tanstack/svelte-form": "^1.33.5",
-    "@tanstack/svelte-table": "^9.1.2",
+    "@tanstack/svelte-table": "^9.2.3",
     "@tanstack/table-devtools": "^9.2.0",
     "zod": "^4.4.3"
   }

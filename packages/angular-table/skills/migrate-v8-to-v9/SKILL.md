@@ -6,7 +6,7 @@ metadata:
   type: lifecycle
   library: '@tanstack/angular-table'
   framework: angular
-  library_version: '9.2.2'
+  library_version: '9.2.3'
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'
   - getting-started
