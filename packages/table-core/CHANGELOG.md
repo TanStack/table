@@ -1,5 +1,13 @@
 # @tanstack/table-core
 
+## 9.2.3
+
+### Patch Changes
+
+- [#6568](https://github.com/TanStack/table/pull/6568) [`468f267`](https://github.com/TanStack/table/commit/468f26768d6f7e31010e14c3363b54696cb6a1eb) - Fix hierarchical filtered row models so `flatRows` lists parents before descendants in both filtering modes, preserves filter metadata on cloned rows, and round-trips nested data correctly through worker-backed row models.
+
+- [#6576](https://github.com/TanStack/table/pull/6576) [`3b94648`](https://github.com/TanStack/table/commit/3b946481795b53a53d6d823cea0ab3e368befec7) - Emit grouped and downstream worker `flatRows` in parent-first preorder.
+
 ## 9.1.2
 
 ### Patch Changes

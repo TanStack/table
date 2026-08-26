@@ -27,7 +27,7 @@
     "@tanstack/solid-query-devtools": "^5.101.4",
     "@tanstack/solid-router": "^1.170.25",
     "@tanstack/solid-router-devtools": "^1.167.1",
-    "@tanstack/solid-table": "^9.1.2",
+    "@tanstack/solid-table": "^9.2.3",
     "@tanstack/solid-table-devtools": "^9.2.0",
     "solid-js": "^1.9.14"
   }

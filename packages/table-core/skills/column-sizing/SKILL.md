@@ -3,7 +3,7 @@ name: column-sizing
 description: >
   Use columnSizingFeature numeric size, minSize, maxSize, getSize, getStart, getAfter, and total-size APIs in table, grid, or flex CSS. Load for auto or percentage misconceptions and sizing/pinning layout mismatch.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.2' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.2.3' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/framework/react/guide/column-sizing.md'

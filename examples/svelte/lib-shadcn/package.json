@@ -17,7 +17,7 @@
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/pacer": "^0.22.0",
-    "@tanstack/svelte-table": "^9.1.2",
+    "@tanstack/svelte-table": "^9.2.3",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^26.2.0",
     "bits-ui": "^2.18.1",

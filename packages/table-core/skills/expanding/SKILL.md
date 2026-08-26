@@ -3,7 +3,7 @@ name: expanding
 description: >
   Expand hierarchical subrows or custom detail panels with rowExpandingFeature, expandedRowModel, getSubRows, getRowCanExpand, manualExpanding, and paginateExpandedRows. Load when expansion state changes but no UI appears.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.2' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.2.3' }
 requires: ['core', 'table-features', 'client-vs-server']
 sources:
   - 'TanStack/table:docs/framework/react/guide/expanding.md'

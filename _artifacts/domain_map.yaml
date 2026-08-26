@@ -1,14 +1,13 @@
 library:
   name: '@tanstack/table'
-  version: '9.1.2'
+  version: '9.2.3'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing primitives with tree-shakeable v9 features and framework adapters.'
   primary_framework: 'framework-agnostic'
   monorepo: true
   package_version_overrides:
-    '@tanstack/angular-table': '9.2.2'
-    '@tanstack/angular-table-devtools': '9.2.0'
+    '@tanstack/match-sorter-utils': '9.1.2'
     '@tanstack/preact-table-devtools': '9.2.0'
     '@tanstack/react-table-devtools': '9.2.0'
     '@tanstack/solid-table-devtools': '9.2.0'
