@@ -1,4 +1,4 @@
-import { useStoreValue } from '../use-store-value'
+import { useSelector } from '@tanstack/octane-store'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
 
@@ -6,8 +6,8 @@ export function SelectedInstrument(props: {
   controller: TradingBenchmarkController
   feed: MarketFeedController
 }) @{
-  const quotes = useStoreValue(props.feed.quotes)
-  const symbol = useStoreValue(props.controller.renderAtoms.selectedSymbol)
+  const quotes = useSelector(props.feed.quotes)
+  const symbol = useSelector(props.controller.renderAtoms.selectedSymbol)
   const quote = props.feed.getQuoteBySymbol(quotes, symbol)
   <section className="config-section selected-instrument" data-testid="selected-instrument">
     <h2>SELECTED INSTRUMENT</h2>

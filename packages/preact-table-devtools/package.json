@@ -48,7 +48,7 @@
     "skills"
   ],
   "dependencies": {
-    "@tanstack/devtools-utils": "^0.6.0",
+    "@tanstack/devtools-utils": "^0.7.0",
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {

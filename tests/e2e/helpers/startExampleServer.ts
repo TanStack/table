@@ -69,9 +69,27 @@ export async function startExampleServer(exampleDir: string) {
 }
 
 async function startSpawnedViteServer(exampleDir: string) {
+  const maxAttempts = 5
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      return await listenOnSpawnedVitePort(exampleDir)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      if (!message.includes('already in use') || attempt === maxAttempts - 1) {
+        throw error
+      }
+    }
+  }
+
+  throw new Error(`Failed to start Vite server for ${exampleDir}`)
+}
+
+async function listenOnSpawnedVitePort(exampleDir: string) {
   // Random high port: `vite dev` has no port-0 support, and parallel test
-  // workers must not collide.
-  const port = 4100 + Math.floor(Math.random() * 2000)
+  // workers must not collide. Avoid the 4100-6099 range so we do not land on
+  // macOS services such as port 6000.
+  const port = 18000 + Math.floor(Math.random() * 2000)
   const child = spawn(
     'pnpm',
     [

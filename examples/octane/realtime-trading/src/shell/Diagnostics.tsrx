@@ -1,4 +1,4 @@
-import { useStoreValue } from '../use-store-value'
+import { useSelector } from '@tanstack/octane-store'
 import type { NamedInvocationRate } from '../benchmark/benchmark-monitor'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
 
@@ -11,7 +11,7 @@ const invocations = (values: ReadonlyArray<NamedInvocationRate>): string => {
 }
 
 export function Diagnostics({ controller }: { controller: TradingBenchmarkController }) @{
-  const state = useStoreValue(controller.store)
+  const state = useSelector(controller.store)
   const metrics = state.metrics
   const items = [
     ['Mounted cells', integer.format(state.mountedCells), ''],

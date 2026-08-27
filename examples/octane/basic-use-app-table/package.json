@@ -17,6 +17,6 @@
   "devDependencies": {
     "@tsrx/typescript-plugin": "^0.3.118",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

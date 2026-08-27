@@ -11,7 +11,7 @@ an exchange or network-latency simulation.
 pnpm --dir examples/preact/realtime-trading dev
 ```
 
-Open `http://localhost:7780`.
+Open `http://localhost:7777`.
 
 ```bash
 pnpm --dir examples/preact/realtime-trading test:types

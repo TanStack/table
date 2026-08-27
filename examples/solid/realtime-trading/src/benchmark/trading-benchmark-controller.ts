@@ -88,6 +88,7 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
 
   const resetViewState = (): void => {
     setSelectedSymbol(null)
+    setRequestedVirtualScrollMode('auto')
   }
 
   const actions = {

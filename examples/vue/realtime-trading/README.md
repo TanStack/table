@@ -11,7 +11,7 @@ repeatable UI stress workload, not an exchange or network benchmark.
 pnpm --dir examples/vue/realtime-trading dev
 ```
 
-Open `http://localhost:7781`.
+Open `http://localhost:7777`.
 
 ```bash
 pnpm --dir examples/vue/realtime-trading test:types

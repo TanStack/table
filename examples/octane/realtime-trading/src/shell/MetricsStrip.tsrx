@@ -1,11 +1,11 @@
-import { useStoreValue } from '../use-store-value'
+import { useSelector } from '@tanstack/octane-store'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
 
 const rate = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
 const ms = (value: number): string => `${value.toFixed(2)} ms`
 
 export function MetricsStrip({ controller }: { controller: TradingBenchmarkController }) @{
-  const state = useStoreValue(controller.store)
+  const state = useSelector(controller.store)
   const metrics = state.metrics
   const items = [
     ['FRAME RATE (EST.)', metrics.rafCallbacksPerSecond.toFixed(1), 'rAF callbacks/s · rolling 1 s', 'frame-rate'],

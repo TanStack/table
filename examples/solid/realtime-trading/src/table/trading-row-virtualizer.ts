@@ -35,16 +35,15 @@ export function createTradingRowVirtualization(
   })
   const virtualRows = virtualizer.getVirtualItems
   const visibleRange = createMemo(() => {
-    void virtualRows()
+    const items = virtualRows()
     const rowCount = options.rows().length
-    const range = virtualizer.range
-    if (!options.enabled() || rowCount === 0 || range === null) return null
+    if (!options.enabled() || rowCount === 0 || items.length === 0) return null
 
     const lastRowIndex = rowCount - 1
-    const start = Math.min(range.startIndex, lastRowIndex)
+    const start = Math.min(items[0]!.index, lastRowIndex)
     return {
       start,
-      end: Math.min(Math.max(start, range.endIndex), lastRowIndex),
+      end: Math.min(items[items.length - 1]!.index, lastRowIndex),
     }
   })
   const bodyHeight = createMemo(() =>

@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   server: {
-    port: 7780,
+    port: 7777,
     allowedHosts: true,
   },
   plugins: [preact()],

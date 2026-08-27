@@ -1,4 +1,4 @@
-import { batch, createAtom, createStore } from '@tanstack/store'
+import { batch, createAtom, createStore } from '@tanstack/octane-store'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import { FORCED_VIRTUALIZATION_ROW_COUNT } from '../table/trading-row-virtualizer'
 import {
@@ -57,6 +57,7 @@ export class TradingBenchmarkController {
     this.actions = {
       resetViewState: () => {
         this.renderAtoms.selectedSymbol.set(null)
+        this.#patch({ requestedVirtualScrollMode: 'auto' })
       },
       setRendererMode: (mode) => {
         this.renderAtoms.rendererMode.set(mode)

@@ -1,6 +1,6 @@
 import { feedSampleRateAt, feedSampleRateIndex, feedSampleRateOptions } from '../feed/feed-sample-rates'
 import { FORCED_VIRTUALIZATION_ROW_COUNT, resolveVirtualScrollMode } from '../table/trading-row-virtualizer'
-import { useStoreSelector, useStoreValue } from '../use-store-value'
+import { useSelector } from '@tanstack/octane-store'
 import { configuratorOptions } from './configurator-options'
 import { Diagnostics } from './Diagnostics.tsrx'
 import { MetricsStrip } from './MetricsStrip.tsrx'
@@ -16,20 +16,20 @@ export function Configurator(props: {
   controller: TradingBenchmarkController
   feed: MarketFeedController
 }) @{
-  const running = useStoreValue(props.feed.running)
-  const instrumentCount = useStoreValue(props.feed.instrumentCount)
-  const targetTicksPerSecond = useStoreValue(props.feed.targetTicksPerSecond)
-  const publishIntervalMs = useStoreValue(props.feed.publishIntervalMs)
-  const updateSparklines = useStoreValue(props.feed.updateSparklines)
-  const sparklineSampleIntervalMs = useStoreValue(
+  const running = useSelector(props.feed.running)
+  const instrumentCount = useSelector(props.feed.instrumentCount)
+  const targetTicksPerSecond = useSelector(props.feed.targetTicksPerSecond)
+  const publishIntervalMs = useSelector(props.feed.publishIntervalMs)
+  const updateSparklines = useSelector(props.feed.updateSparklines)
+  const sparklineSampleIntervalMs = useSelector(
     props.feed.sparklineSampleIntervalMs,
   )
-  const requestedVirtualScrollMode = useStoreSelector(
+  const requestedVirtualScrollMode = useSelector(
     props.controller.store,
     selectRequestedVirtualScrollMode,
-    Object.is,
+    { compare: Object.is },
   )
-  const rendererMode = useStoreValue(props.controller.renderAtoms.rendererMode)
+  const rendererMode = useSelector(props.controller.renderAtoms.rendererMode)
   const forced = instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
   const virtualMode = resolveVirtualScrollMode(
     requestedVirtualScrollMode,
@@ -71,6 +71,7 @@ export function Configurator(props: {
           max={feedSampleRateOptions.length - 1}
           step="1"
           value={feedSampleRateIndex(targetTicksPerSecond)}
+          onInput={(event) => props.feed.actions.setTargetRate(feedSampleRateAt(number(event)))}
           onChange={(event) => props.feed.actions.setTargetRate(feedSampleRateAt(number(event)))}
         />
         <small>Fixed worker-side workload levels. Samples are coalesced; this is not the message delivery rate.</small>

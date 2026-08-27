@@ -122,6 +122,7 @@ export class Configurator extends ControllerElement {
             max=${feedSampleRateOptions.length - 1}
             step="1"
             .value=${String(feedSampleRateIndex(feedState.targetTicksPerSecond))}
+            @input=${(event: Event) => this.feed.actions.setTargetRate(feedSampleRateAt(number(event)))}
             @change=${(event: Event) => this.feed.actions.setTargetRate(feedSampleRateAt(number(event)))}
           /><small
             >Fixed worker-side workload levels. Samples are coalesced; this is

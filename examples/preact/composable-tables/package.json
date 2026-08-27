@@ -12,8 +12,8 @@
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.5.0",
-    "@tanstack/preact-devtools": "^0.10.10",
+    "@faker-js/faker": "^10.6.0",
+    "@tanstack/preact-devtools": "^0.10.12",
     "@tanstack/preact-store": "^0.13.2",
     "@tanstack/preact-table": "^9.2.3",
     "@tanstack/preact-table-devtools": "^9.2.0",
@@ -22,6 +22,6 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

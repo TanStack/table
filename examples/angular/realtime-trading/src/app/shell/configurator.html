@@ -86,7 +86,13 @@
       />
       <span>
         Worker row model (v9 only)
-        <small>offloads the filtered row-model stage to a dedicated worker</small>
+        <small>
+          {{
+            controller.tableWorkerEnabled()
+              ? 'ROW MODEL WORKER ON'
+              : 'offloads the filtered row-model stage to a dedicated worker'
+          }}
+        </small>
       </span>
     </label>
 

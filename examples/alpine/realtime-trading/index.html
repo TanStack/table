@@ -168,19 +168,20 @@
             </tbody>
           </table>
         </div>
-        <footer
-          x-show="virtualMode() === 'tanstack'"
-          class="virtual-scroll-footer"
-          data-testid="virtual-scroll-footer"
-        >
-          <span
-            x-text="`TanStack · Total · ${rows().length} rows · ${table.getVisibleLeafColumns().length} columns`"
-          ></span
-          ><span
-            data-testid="visible-row-range"
-            x-text="visibleRangeText()"
-          ></span>
-        </footer>
+        <template x-if="virtualMode() === 'tanstack'">
+          <footer
+            class="virtual-scroll-footer"
+            data-testid="virtual-scroll-footer"
+          >
+            <span
+              x-text="`TanStack · Total · ${rows().length} rows · ${table.getVisibleLeafColumns().length} columns`"
+            ></span
+            ><span
+              data-testid="visible-row-range"
+              x-text="visibleRangeText()"
+            ></span>
+          </footer>
+        </template>
       </section>
       <footer class="market-statusbar">
         <span
@@ -240,13 +241,17 @@
               ><span>Instruments (rows)</span
               ><select
                 data-testid="instrument-count-select"
-                :value="local.feed.instrumentCount"
+                :value="String(local.feed.instrumentCount)"
                 @change="setInstrumentCount($event)"
               >
                 <template
                   x-for="option in configuratorOptions.instrumentCounts"
                   :key="option.value"
-                  ><option :value="option.value" x-text="option.label"></option
+                  ><option
+                    :value="String(option.value)"
+                    :selected="option.value == local.feed.instrumentCount"
+                    x-text="option.label"
+                  ></option
                 ></template></select
             ></label>
             <label class="field rate-field"
@@ -263,6 +268,7 @@
                 :max="feedSampleRateOptions.length - 1"
                 step="1"
                 :value="sampleRateIndex()"
+                @input="setSampleRate($event)"
                 @change="setSampleRate($event)"
               /><small
                 >Fixed worker-side workload levels. Samples are coalesced; this
@@ -299,7 +305,11 @@
                 <template
                   x-for="option in configuratorOptions.rowRenderingModes"
                   :key="option.value"
-                  ><option :value="option.value" x-text="option.label"></option
+                  ><option
+                    :value="option.value"
+                    :selected="option.value === virtualMode()"
+                    x-text="option.label"
+                  ></option
                 ></template></select
               ><small
                 x-text="local.feed.instrumentCount >= 1500 ? 'TanStack Virtual is required and locked at 1,500 or more rows.' : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'"

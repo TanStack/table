@@ -11,7 +11,7 @@ stress workload rather than an exchange/network simulator.
 pnpm --dir examples/octane/realtime-trading dev
 ```
 
-Open `http://localhost:7786`.
+Open `http://localhost:7777`.
 
 ```bash
 pnpm --dir examples/octane/realtime-trading test:types
@@ -32,12 +32,11 @@ Use a production build for representative measurements.
 | `src/shell/`              | Separate TSRX header, metrics, configurator, diagnostics, selected-instrument, status, and shell components. |
 | `src/table/table-config/` | Grouped columns and custom TSRX quote components.                                                            |
 | `src/table/`              | Octane Table view/setup, interactions, pointer hook, column layout, and Virtual Core hook.                   |
-| `src/use-store-value.ts`  | Small Octane hooks that subscribe to an atom, a whole store, or a compared selector slice.                   |
 | `src/main.tsrx`           | Creates controllers and renders the shell composition root.                                                  |
 
 `MarketFeedController` owns feed/worker state. `TradingBenchmarkController`
 observes it and owns diagnostic/view state. The shell receives stable controller
-objects; individual components call `useStoreSelector` or `useStoreValue` for
+objects; individual components call `useSelector` from `@tanstack/octane-store` for
 the values they need. Quotes, feed status, row count, workload, delivery, and
 chart controls are direct independent atoms. The table subscribes to `quotes`
 and `instrumentCount`, so a configurator/status update cannot invalidate table

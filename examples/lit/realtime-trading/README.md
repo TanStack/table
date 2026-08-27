@@ -11,7 +11,7 @@ repeatable rendering workload, not an exchange or network benchmark.
 pnpm --dir examples/lit/realtime-trading dev
 ```
 
-Open `http://localhost:7783`.
+Open `http://localhost:7777`.
 
 ```bash
 pnpm --dir examples/lit/realtime-trading test:types

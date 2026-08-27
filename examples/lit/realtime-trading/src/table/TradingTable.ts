@@ -219,6 +219,7 @@ export class TradingTable extends ControllerElement {
       enabled: virtualMode === 'tanstack',
       getItemKey: (index) => rows[index]?.id ?? index,
     })
+    virtualizer._willUpdate()
     const virtualRows = virtualizer.getVirtualItems()
     this.controller.actions.setRenderedRowCount(
       virtualMode === 'tanstack' ? virtualRows.length : rows.length,

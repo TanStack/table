@@ -136,6 +136,7 @@ export default class Configurator extends Component<Signature> {
             max={{subtract this.feedSampleRateOptions.length 1}}
             step='1'
             value={{this.sampleRateIndex}}
+            {{on 'input' this.setSampleRate}}
             {{on 'change' this.setSampleRate}}
           />
           <small>Fixed worker-side workload levels. Samples are coalesced; this

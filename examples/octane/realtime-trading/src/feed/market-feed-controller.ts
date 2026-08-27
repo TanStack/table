@@ -1,4 +1,4 @@
-import { batch, createAtom } from '@tanstack/store'
+import { batch, createAtom } from '@tanstack/octane-store'
 import { normalizeFeedSampleRate } from './feed-sample-rates'
 import { initialMarketFeedConfig } from './market-feed-config'
 import { applyMarketUpdates, hydrateMarketQuotes } from './market-data'

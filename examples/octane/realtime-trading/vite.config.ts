@@ -3,7 +3,7 @@ import { octane } from 'octane/compiler/vite'
 
 export default defineConfig({
   server: {
-    port: 7786,
+    port: 7777,
     allowedHosts: true,
   },
   plugins: [octane()],

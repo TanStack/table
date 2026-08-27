@@ -57,6 +57,7 @@ export class TradingBenchmarkController {
     this.actions = {
       resetViewState: () => {
         this.renderAtoms.selectedSymbol.set(null)
+        this.#patch({ requestedVirtualScrollMode: 'auto' })
       },
       setRendererMode: (mode) => {
         this.renderAtoms.rendererMode.set(mode)

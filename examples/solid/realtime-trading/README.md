@@ -11,7 +11,7 @@ repeatable UI workload, not an exchange or network benchmark.
 pnpm --dir examples/solid/realtime-trading dev
 ```
 
-Open `http://localhost:7779`.
+Open `http://localhost:7777`.
 
 ```bash
 pnpm --dir examples/solid/realtime-trading test:types

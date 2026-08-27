@@ -269,6 +269,9 @@ const Configurator = defineComponent({
               max={feedSampleRateOptions.length - 1}
               step={1}
               value={feedSampleRateIndex(feed.targetTicksPerSecond.value)}
+              onInput={(event) =>
+                feed.actions.setTargetRate(feedSampleRateAt(numberValue(event)))
+              }
               onChange={(event) =>
                 feed.actions.setTargetRate(feedSampleRateAt(numberValue(event)))
               }

@@ -38,14 +38,14 @@
     "@babel/runtime": "7.29.7",
     "@ember/app-tsconfig": "2.0.0",
     "@embroider/core": "4.6.3",
-    "@glint/ember-tsc": "1.10.0",
+    "@glint/ember-tsc": "1.11.0",
     "@glint/template": "1.8.0",
-    "@glint/tsserver-plugin": "2.7.0",
+    "@glint/tsserver-plugin": "2.7.3",
     "@nullvoxpopuli/ember-vite": "1.1.0",
     "@rollup/plugin-babel": "7.1.0",
     "babel-plugin-ember-template-compilation": "4.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   },
   "engines": {
     "node": ">= 24"

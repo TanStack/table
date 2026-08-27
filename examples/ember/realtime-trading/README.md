@@ -11,7 +11,7 @@ repeatable rendering stress workload, not an exchange or network benchmark.
 pnpm --dir examples/ember/realtime-trading dev
 ```
 
-Open `http://localhost:7785`.
+Open `http://localhost:7777`.
 
 ```bash
 pnpm --dir examples/ember/realtime-trading test:types

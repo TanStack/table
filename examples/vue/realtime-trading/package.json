@@ -12,16 +12,16 @@
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@tanstack/vue-table": "9.1.2",
-    "@tanstack/vue-virtual": "^3.13.35",
-    "vue": "^3.5.40"
+    "@tanstack/vue-table": "^9.2.3",
+    "@tanstack/vue-virtual": "^3.13.36",
+    "vue": "^3.5.41"
   },
   "devDependencies": {
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
     "typescript": "6.0.3",
-    "vite": "^8.2.0",
-    "vue-tsc": "^3.3.5"
+    "vite": "^8.2.2",
+    "vue-tsc": "^3.3.11"
   }
 }

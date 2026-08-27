@@ -11,7 +11,7 @@ repeatable rendering workload rather than an exchange/network simulator.
 pnpm --dir examples/svelte/realtime-trading dev
 ```
 
-Open `http://localhost:7782`.
+Open `http://localhost:7777`.
 
 ```bash
 pnpm --dir examples/svelte/realtime-trading test:types

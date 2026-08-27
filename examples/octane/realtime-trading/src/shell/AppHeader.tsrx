@@ -1,4 +1,4 @@
-import { useStoreValue } from '../use-store-value'
+import { useSelector } from '@tanstack/octane-store'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 
 export function AppHeader(props: {
@@ -6,8 +6,8 @@ export function AppHeader(props: {
   sidebarOpen: boolean
   toggleSidebar: () => void
 }) @{
-  const workerReady = useStoreValue(props.feed.workerReady)
-  const running = useStoreValue(props.feed.running)
+  const workerReady = useSelector(props.feed.workerReady)
+  const running = useSelector(props.feed.running)
   const status = !workerReady ? 'FEED CONNECTING' : running ? 'FEED LIVE' : 'FEED PAUSED'
   <header className="app-bar">
     <div className="brand"><strong>MARKET MONITOR</strong></div>

@@ -1,4 +1,4 @@
-import { shallowEqual, useStoreSelector } from '../use-store-value'
+import { shallow, useSelector } from '@tanstack/octane-store'
 import type { TradingBenchmarkController, TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
 
 const integer = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
@@ -10,10 +10,10 @@ const selectStatusbarState = (state: TradingBenchmarkState) => ({
 })
 
 export function MarketStatusbar({ controller }: { controller: TradingBenchmarkController }) @{
-  const state = useStoreSelector(
+  const state = useSelector(
     controller.store,
     selectStatusbarState,
-    shallowEqual,
+    { compare: shallow },
   )
   <footer className="market-statusbar">
     <span>MESSAGE SAMPLES <strong>{integer.format(state.lastBatchSize)}</strong></span>

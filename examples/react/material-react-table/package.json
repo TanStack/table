@@ -14,15 +14,15 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@mui/icons-material": "^9.3.1",
     "@mui/material": "^9.3.1",
-    "@mui/x-date-pickers": "^9.11.0",
+    "@mui/x-date-pickers": "^9.12.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
     "@tanstack/react-pacer": "^0.23.0",
     "@tanstack/react-store": "^0.11.1",
     "@tanstack/react-table": "^9.2.3",
-    "@tanstack/react-virtual": "^3.14.9",
+    "@tanstack/react-virtual": "^3.14.10",
     "highlight-words": "^2.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
@@ -31,10 +31,10 @@
     "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

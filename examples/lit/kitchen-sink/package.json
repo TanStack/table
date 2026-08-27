@@ -12,7 +12,7 @@
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@tanstack/lit-table": "^9.2.3",
     "@tanstack/match-sorter-utils": "^9.1.2",
     "lit": "^3.3.3"
@@ -20,6 +20,6 @@
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.3",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

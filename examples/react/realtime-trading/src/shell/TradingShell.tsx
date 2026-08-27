@@ -229,6 +229,9 @@ function Configurator() {
             aria-valuetext={`${formatRate(
               targetTicksPerSecond,
             )} synthetic quote samples per second`}
+            onInput={(event) =>
+              setTargetRate(feedSampleRateAt(Number(event.currentTarget.value)))
+            }
             onChange={(event) =>
               setTargetRate(feedSampleRateAt(Number(event.currentTarget.value)))
             }

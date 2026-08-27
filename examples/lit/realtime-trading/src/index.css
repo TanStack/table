@@ -283,6 +283,14 @@ trading-metrics-strip {
   background: var(--surface-table);
 }
 
+trading-data-table {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
 .virtual-scroll-footer {
   display: flex;
   flex: 0 0 auto;

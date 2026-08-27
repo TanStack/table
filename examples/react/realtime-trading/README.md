@@ -16,7 +16,7 @@ rendering benchmark, not an exchange or network simulator.
 pnpm --dir examples/react/realtime-trading dev
 ```
 
-Open `http://localhost:7778`.
+Open `http://localhost:7777`.
 
 For React commit timings, use the profiling production build:
 

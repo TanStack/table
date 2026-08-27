@@ -1,6 +1,10 @@
 import path from 'node:path'
 import { expect, test } from '@playwright/test'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
+import {
+  setRangeValue,
+  scrollTradingTable,
+} from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
 const exampleDir = path.resolve()
@@ -66,10 +70,7 @@ test('runs the Lit realtime trading workload', async ({ page }) => {
     await expect(page.getByTestId('visible-row-range')).toHaveText(
       /^\s*Current · rows 0\.\.\d+\s*$/,
     )
-    await table.locator('..').evaluate((element) => {
-      element.scrollTop = 2_000
-      element.dispatchEvent(new Event('scroll'))
-    })
+    await scrollTradingTable(page, 2_000)
     await expect
       .poll(async () =>
         Number(
@@ -111,15 +112,15 @@ test('runs the Lit realtime trading workload', async ({ page }) => {
     await expect(targetRateSlider).toHaveAttribute('max', '9')
     await expect(targetRateSlider).toHaveAttribute('step', '1')
     await expect(targetRateSlider).toHaveValue('6')
-    await targetRateSlider.fill('7')
+    await setRangeValue(targetRateSlider, '7')
     await expect(page.getByTestId('target-sample-rate')).toContainText(
       '25K samples/s',
     )
-    await targetRateSlider.fill('8')
+    await setRangeValue(targetRateSlider, '8')
     await expect(page.getByTestId('target-sample-rate')).toContainText(
       '50K samples/s',
     )
-    await targetRateSlider.fill('6')
+    await setRangeValue(targetRateSlider, '6')
 
     const sparklineInterval = page.getByTestId(
       'sparkline-sample-interval-select',

@@ -12,15 +12,15 @@
     "test:types": "tsc --noEmit"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@tanstack/solid-hotkeys": "^0.10.0",
     "@tanstack/solid-table": "^9.2.3",
-    "@tanstack/solid-virtual": "^3.13.36",
-    "solid-js": "^1.9.14"
+    "@tanstack/solid-virtual": "^3.13.37",
+    "solid-js": "^1.9.15"
   },
   "devDependencies": {
     "typescript": "6.0.3",
-    "vite": "^8.2.1",
+    "vite": "^8.2.2",
     "vite-plugin-solid": "^2.11.14"
   }
 }

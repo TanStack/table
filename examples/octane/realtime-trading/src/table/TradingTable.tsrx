@@ -9,7 +9,7 @@ import {
   useTable,
 } from '@tanstack/octane-table'
 import { startTableBenchmark } from '../benchmark/table-benchmark'
-import { useStoreSelector, useStoreValue } from '../use-store-value'
+import { useSelector } from '@tanstack/octane-store'
 import { createTradingColumns, readMeasuredRows } from './table-config/trading-columns.tsrx'
 import { handleCellNavigation, reorderColumnIds, sortAriaValue, sortIndicator } from './table-interactions'
 import { TRADING_ROW_HEIGHT, TRADING_ROW_OVERSCAN, resolveVirtualScrollMode, useVirtualizer } from './trading-row-virtualizer'
@@ -36,15 +36,15 @@ interface TradingTableProps {
 }
 
 export function TradingTable({ controller, feed }: TradingTableProps) @{
-  const quotes = useStoreValue(feed.quotes)
-  const instrumentCount = useStoreValue(feed.instrumentCount)
-  const requestedVirtualScrollMode = useStoreSelector(
+  const quotes = useSelector(feed.quotes)
+  const instrumentCount = useSelector(feed.instrumentCount)
+  const requestedVirtualScrollMode = useSelector(
     controller.store,
     selectRequestedVirtualScrollMode,
-    Object.is,
+    { compare: Object.is },
   )
-  const rendererMode = useStoreValue(controller.renderAtoms.rendererMode)
-  const selectedSymbol = useStoreValue(controller.renderAtoms.selectedSymbol)
+  const rendererMode = useSelector(controller.renderAtoms.rendererMode)
+  const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
   const columns = useMemo(
     () => createTradingColumns<typeof features>(controller, rendererMode),
     [controller, rendererMode],

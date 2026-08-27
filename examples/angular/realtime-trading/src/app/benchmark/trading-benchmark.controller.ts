@@ -117,6 +117,7 @@ export class TradingBenchmarkController {
 
   resetViewState(): void {
     this.selectedSymbol.set(null)
+    this.requestedVirtualScrollMode.set('auto')
   }
 
   resetMarket(): void {

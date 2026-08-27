@@ -12,13 +12,13 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-pacer": "^0.23.0",
     "@tanstack/react-table": "^9.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.31.0",
+    "lucide-react": "^1.34.0",
     "radix-ui": "^1.6.7",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -30,10 +30,10 @@
     "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

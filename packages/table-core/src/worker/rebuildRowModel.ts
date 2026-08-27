@@ -83,15 +83,16 @@ export function rebuildRowModel<
 
   if (payload.kind === 'flat') {
     const { indices } = payload
-    const rows = new Array(indices.length)
+    const rows: Array<any> = []
     for (let i = 0; i < indices.length; i++) {
-      const row: any = core.flatRows[indices[i]!]!
+      const row: any = core.flatRows[indices[i]!]
+      if (!row) continue
       if (resetDepths) {
         row.depth = 0
         row.parentId = undefined
       }
       applyFilterData(row, payload.filterData?.[i])
-      rows[i] = row
+      rows.push(row)
     }
     return { rows, flatRows: rows, rowsById: core.rowsById }
   }
@@ -110,7 +111,8 @@ export function rebuildRowModel<
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i]!
       if (typeof node === 'number') {
-        const row: any = core.flatRows[node]!
+        const row: any = core.flatRows[node]
+        if (!row) continue
         row.depth = depth
         row.parentId = parentId
         flatRows.push(row)
@@ -119,7 +121,8 @@ export function rebuildRowModel<
       }
 
       if (!('groupingColumnId' in node)) {
-        const coreRow: any = core.flatRows[node.index]!
+        const coreRow: any = core.flatRows[node.index]
+        if (!coreRow) continue
         const flatIndex = flattenParentsFirst ? flatRows.length : -1
         if (flattenParentsFirst) {
           flatRows.push(undefined)
@@ -203,7 +206,7 @@ export function rebuildRowModel<
       rowsById[node.id] = row
       rows[i] = row
     }
-    return rows
+    return rows.filter((row) => row != null)
   }
 
   const rows = rebuildRows(payload.children, 0, undefined)

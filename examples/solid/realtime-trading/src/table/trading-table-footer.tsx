@@ -10,6 +10,12 @@ export interface TradingTableFooterProps {
   virtualization: TradingRowVirtualization
 }
 
+function visibleRangeLabel(virtualization: TradingRowVirtualization): string {
+  const items = virtualization.virtualRows()
+  if (items.length === 0) return 'Current · rows —'
+  return `Current · rows ${items[0]!.index}..${items[items.length - 1]!.index}`
+}
+
 export function TradingTableFooter(props: TradingTableFooterProps) {
   return (
     <Show when={props.virtualized()}>
@@ -19,12 +25,7 @@ export function TradingTableFooter(props: TradingTableFooterProps) {
           {props.table.getVisibleLeafColumns().length} columns
         </span>
         <span data-testid="visible-row-range">
-          <Show
-            when={props.virtualization.visibleRange()}
-            fallback={'Current · rows —'}
-          >
-            {(range) => `Current · rows ${range().start}..${range().end}`}
-          </Show>
+          {visibleRangeLabel(props.virtualization)}
         </span>
       </footer>
     </Show>
