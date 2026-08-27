@@ -6,7 +6,7 @@ metadata:
   type: composition
   library: '@tanstack/svelte-table'
   framework: svelte
-  library_version: '9.1.2'
+  library_version: '9.2.3'
 requires:
   - '@tanstack/table-core#client-vs-server'
   - getting-started

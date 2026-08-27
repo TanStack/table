@@ -3,7 +3,7 @@ name: global-filtering
 description: >
   Apply globalFilter across eligible columns with globalFilteringFeature, columnFilteringFeature, filteredRowModel, globalFilterFn, and manual server filtering. Load when columns unexpectedly participate or a global filter changes state without changing rows.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.1.2' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.2.3' }
 requires: ['core', 'table-features', 'client-vs-server', 'column-filtering']
 sources:
   - 'TanStack/table:docs/framework/react/guide/global-filtering.md'

@@ -1,6 +1,8 @@
 import type { RowModel } from '../core/row-models/coreRowModelsFeature.types'
 import type {
+  TableWorkerFilterData,
   TableWorkerRowNode,
+  TableWorkerStage,
   TableWorkerStagePayload,
 } from './tableWorkerProtocol'
 
@@ -14,14 +16,36 @@ function isCloneSafe(value: unknown): boolean {
 function serializeRows(
   rows: Array<any>,
   coreIndexById: Record<string, number>,
+  coreFlatRows: Array<any>,
   aggregateColumnIds: Array<string>,
+  stage: TableWorkerStage,
 ): Array<TableWorkerRowNode> {
   const nodes = new Array<TableWorkerRowNode>(rows.length)
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]
     if (row.groupingColumnId == null) {
-      // Data row: its position in `options.data` is all the main thread needs.
-      nodes[i] = coreIndexById[row.id]!
+      const index = coreIndexById[row.id]!
+      const coreRow = coreFlatRows[index]!
+      // A true leaf needs only its core-row position. Branch rows must carry
+      // their row-model children because filtering and sorting can replace or
+      // reorder (or remove all of) the core subtree. Filtered rows also carry
+      // the flags and metadata computed by the worker.
+      nodes[i] =
+        stage === 'filtered' || row.subRows.length || coreRow.subRows.length
+          ? {
+              index,
+              children: serializeRows(
+                row.subRows,
+                coreIndexById,
+                coreFlatRows,
+                aggregateColumnIds,
+                stage,
+              ),
+              ...(stage === 'filtered'
+                ? { filterData: serializeFilterData(row) }
+                : {}),
+            }
+          : index
       continue
     }
     // Synthetic group row: compute aggregates eagerly (the expensive per-group
@@ -50,7 +74,13 @@ function serializeRows(
       groupingValue: row.groupingValue,
       index: row.index,
       aggregates,
-      children: serializeRows(row.subRows, coreIndexById, aggregateColumnIds),
+      children: serializeRows(
+        row.subRows,
+        coreIndexById,
+        coreFlatRows,
+        aggregateColumnIds,
+        stage,
+      ),
     }
   }
   return nodes
@@ -59,22 +89,51 @@ function serializeRows(
 export function serializeRowModel(
   model: RowModel<any, any>,
   coreIndexById: Record<string, number>,
+  coreFlatRows: Array<any>,
   aggregateColumnIds: Array<string>,
   transfer: Array<Transferable>,
+  stage: TableWorkerStage,
 ): TableWorkerStagePayload {
   // Flat fast path: no synthetic rows anywhere (flatRows === rows for flat
   // data). A Uint32Array permutation transfers at zero-copy cost.
-  if (model.flatRows.length === model.rows.length) {
+  const canUseFlatPayload =
+    model.flatRows.length === model.rows.length &&
+    model.rows.every((row) => {
+      const coreRow = coreFlatRows[coreIndexById[row.id]!]!
+      return row.groupingColumnId == null && !coreRow.subRows.length
+    })
+
+  if (canUseFlatPayload) {
     const indices = new Uint32Array(model.rows.length)
+    const filterData =
+      stage === 'filtered'
+        ? new Array<TableWorkerFilterData>(model.rows.length)
+        : undefined
     for (let i = 0; i < indices.length; i++) {
       indices[i] = coreIndexById[model.rows[i]!.id]!
+      if (filterData) {
+        filterData[i] = serializeFilterData(model.rows[i]!)
+      }
     }
     transfer.push(indices.buffer)
-    return { kind: 'flat', indices }
+    return { kind: 'flat', indices, filterData }
   }
 
   return {
     kind: 'tree',
-    children: serializeRows(model.rows, coreIndexById, aggregateColumnIds),
+    children: serializeRows(
+      model.rows,
+      coreIndexById,
+      coreFlatRows,
+      aggregateColumnIds,
+      stage,
+    ),
+  }
+}
+
+function serializeFilterData(row: any): TableWorkerFilterData {
+  return {
+    columnFilters: row.columnFilters,
+    columnFiltersMeta: row.columnFiltersMeta,
   }
 }

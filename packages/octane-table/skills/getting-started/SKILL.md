@@ -6,7 +6,7 @@ metadata:
   {
     type: framework,
     library: '@tanstack/octane-table',
-    library_version: '9.1.2',
+    library_version: '9.2.3',
     framework: octane,
   }
 requires: ['@tanstack/table-core#core', '@tanstack/table-core#table-features']
