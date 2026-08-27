@@ -19,6 +19,9 @@ import type { TableReactivityBindings } from './core/reactivity/coreReactivityFe
 export function storeReactivityBindings(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    // All writes flow through the table's patched atoms/optionsStore, so the
+    // memo epoch fast path is safe here.
+    supportsWriteEpoch: true,
     wrapExternalAtoms: false,
     addSubscription: () => {
       throw new Error(

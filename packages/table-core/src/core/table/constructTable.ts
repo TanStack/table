@@ -62,6 +62,7 @@ export function constructTable<
   const table = {
     _cellInstanceInitFns: [],
     _columnInstanceInitFns: [],
+    _epoch: 0,
     _features: { ...coreFeatures, ...features },
     _headerGroupInstanceInitFns: [],
     _headerInstanceInitFns: [],
@@ -72,6 +73,30 @@ export function constructTable<
     atoms: {},
     baseAtoms: {},
   } as unknown as Table_Internal<TFeatures, TData>
+
+  // Every state/options write surface bumps the table's write epoch
+  // synchronously, at the exact point the new value is resolved: after the
+  // user updater runs (updater reads still see the pre-write epoch, so they
+  // cannot cache post-write results early) and immediately before the store
+  // assigns and notifies (synchronous listeners see the new value AND the
+  // new epoch together, so already-validated memos revalidate for them).
+  // Bumping before or after `set` instead leaves a window where epoch and
+  // value disagree for code running inside the write.
+  function bumpEpochOnSet<TAtom extends { set: (updaterOrValue: any) => any }>(
+    atom: TAtom,
+  ): TAtom {
+    const originalSet = atom.set.bind(atom)
+    atom.set = (updaterOrValue: any) =>
+      originalSet((old: any) => {
+        const next =
+          typeof updaterOrValue === 'function'
+            ? updaterOrValue(old)
+            : updaterOrValue
+        table._epoch++
+        return next
+      })
+    return atom
+  }
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
 
@@ -84,9 +109,11 @@ export function constructTable<
   if (_reactivity.wrapExternalAtoms && mergedOptions.atoms) {
     for (const [atomKey, _atom] of Object.entries(mergedOptions.atoms)) {
       const atom = _atom as Atom<any>
-      const wrappedAtom = _reactivity.createWritableAtom(atom.get(), {
-        debugName: `externalAtom/${atomKey}`,
-      })
+      const wrappedAtom = bumpEpochOnSet(
+        _reactivity.createWritableAtom(atom.get(), {
+          debugName: `externalAtom/${atomKey}`,
+        }),
+      )
       ;(mergedOptions.atoms as any)[atomKey] = wrappedAtom
       // Two-way syncing between the original atom and the wrapped one.
       let syncExternal = false
@@ -102,13 +129,26 @@ export function constructTable<
       _reactivity.addSubscription(syncAtomToWrappedSub)
       _reactivity.addSubscription(syncWrappedToAtomSub)
     }
+  } else if (mergedOptions.atoms) {
+    // Unwrapped external atoms are read directly by the derived state atoms;
+    // their writes must still advance the epoch. Patch their `set` in place
+    // (bindings without subscription tracking cannot register a listener).
+    for (const _atom of Object.values(mergedOptions.atoms)) {
+      const atom = _atom as Atom<any>
+      if (typeof atom.set === 'function') {
+        bumpEpochOnSet(atom)
+      }
+    }
   }
 
   if (_reactivity.createOptionsStore) {
     // @ts-ignore - direct set
-    table.optionsStore = _reactivity.createWritableAtom<
-      TableOptions<TFeatures, TData>
-    >(mergedOptions, { debugName: 'table/optionsStore' })
+    table.optionsStore = bumpEpochOnSet(
+      _reactivity.createWritableAtom<TableOptions<TFeatures, TData>>(
+        mergedOptions,
+        { debugName: 'table/optionsStore' },
+      ),
+    )
     Object.defineProperty(table, 'options', {
       configurable: true,
       enumerable: true,
@@ -134,11 +174,10 @@ export function constructTable<
 
   for (let i = 0; i < stateKeys.length; i++) {
     const key = stateKeys[i]!
-    table.baseAtoms[key] = _reactivity.createWritableAtom(
-      table.initialState[key],
-      {
+    table.baseAtoms[key] = bumpEpochOnSet(
+      _reactivity.createWritableAtom(table.initialState[key], {
         debugName: `table/baseAtoms/${key}`,
-      },
+      }),
     ) as any
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {

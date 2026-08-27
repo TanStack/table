@@ -21,6 +21,17 @@ export interface TableAtomOptions<T> extends AtomOptions<T> {
  */
 export interface TableReactivityBindings {
   createOptionsStore: boolean
+  /**
+   * Opt-in to the memoized-API write-epoch fast path. Only set this after
+   * verifying that every state/options write path in the binding advances
+   * `table._epoch` before the next memoized read: writes through the
+   * patched base atoms/optionsStore qualify automatically, but bindings
+   * that stage state in framework reactivity (live options getters,
+   * post-render option-sync effects) can let reads observe new state before
+   * the epoch moves, which would serve stale memo results. Bindings without
+   * this flag keep the plain per-call dependency check.
+   */
+  supportsWriteEpoch?: boolean
   wrapExternalAtoms: boolean
   /**
    * Invalidates readonly atoms whose compute reads non-reactive inputs (plain

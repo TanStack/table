@@ -171,6 +171,14 @@ export interface Table_CoreProperties<
    */
   _cellConstructor?: new (...args: Array<any>) => object
   /**
+   * Monotonic write epoch. Bumped synchronously on every table state,
+   * options, or external-atom write. Memoized APIs use it as a fast path:
+   * when the epoch has not moved since a memo last validated, its cached
+   * result is returned without re-running the dependency check.
+   * @internal
+   */
+  _epoch: number
+  /**
    * Prototype cache for Cell objects - shared by all cells in this table
    */
   _cellPrototype?: object
