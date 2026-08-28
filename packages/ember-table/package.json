@@ -80,12 +80,12 @@
     "@embroider/addon-dev": "^8.3.1",
     "@embroider/core": "4.6.3",
     "@embroider/macros": "1.20.6",
-    "@embroider/vite": "^1.7.9",
+    "@embroider/vite": "^1.7.10",
     "@eslint/js": "^10.0.1",
     "@glimmer/component": "2.1.1",
-    "@glint/ember-tsc": "1.10.0",
+    "@glint/ember-tsc": "1.11.0",
     "@glint/template": "1.8.0",
-    "@glint/tsserver-plugin": "2.7.0",
+    "@glint/tsserver-plugin": "2.7.3",
     "@rollup/plugin-babel": "7.1.0",
     "@types/qunit": "^2.19.14",
     "babel-plugin-ember-template-compilation": "4.0.0",
@@ -98,9 +98,9 @@
     "globals": "^17.11.0",
     "qunit": "^2.26.0",
     "qunit-dom": "^3.6.0",
-    "rollup": "^4.62.4",
+    "rollup": "^4.63.0",
     "testem": "^3.20.1",
-    "typescript-eslint": "^8.67.0"
+    "typescript-eslint": "^8.68.0"
   },
   "ember": {
     "edition": "octane"

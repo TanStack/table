@@ -1,0 +1,25 @@
+{
+  "name": "tanstack-preact-table-example-realtime-trading",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "dependencies": {
+    "@tanstack/preact-store": "^0.13.2",
+    "@tanstack/preact-table": "^9.2.3",
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
+    "typescript": "6.0.3",
+    "vite": "^8.2.2"
+  }
+}

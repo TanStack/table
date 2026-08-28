@@ -1,0 +1,53 @@
+@if (!header().isPlaceholder) {
+  @if (isGroup()) {
+    <ng-container *flexRenderHeader="header(); let headerCell">
+      {{ headerCell }}
+    </ng-container>
+  } @else {
+    <div
+      class="leaf-header-content"
+      (dragover)="interactions().dragOverColumn($event, header().column.id)"
+      (drop)="dropColumn($event)"
+    >
+      <button
+        type="button"
+        class="column-drag-handle"
+        draggable="true"
+        [attr.aria-label]="'Move ' + header().column.id + ' column'"
+        (dragstart)="startColumnDrag($event)"
+        (dragend)="interactions().endColumnDrag()"
+      >
+        ⋮⋮
+      </button>
+      <button
+        type="button"
+        class="sort-header-button"
+        [class.is-sortable]="header().column.getCanSort()"
+        [disabled]="!header().column.getCanSort()"
+        (click)="header().column.getToggleSortingHandler()?.($event)"
+      >
+        <span class="header-label">
+          <ng-container *flexRenderHeader="header(); let headerCell">
+            {{ headerCell }}
+          </ng-container>
+        </span>
+        @if (header().column.getCanSort()) {
+          <span class="sort-indicator" [class.is-active]="sorted()" aria-hidden="true">
+            {{ interactions().sortIndicator(sorted()) }}
+          </span>
+        }
+      </button>
+    </div>
+    @if (header().column.getCanResize()) {
+      <div
+        class="column-resize-handle"
+        [class.is-resizing]="header().column.getIsResizing()"
+        role="separator"
+        aria-orientation="vertical"
+        (dblclick)="header().column.resetSize()"
+        (mousedown)="header().getResizeHandler()($event)"
+        (touchstart)="header().getResizeHandler()($event)"
+      ></div>
+    }
+  }
+}

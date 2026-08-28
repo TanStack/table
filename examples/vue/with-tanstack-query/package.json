@@ -10,9 +10,9 @@
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
-    "@tanstack/vue-devtools": "^0.2.24",
+    "@tanstack/vue-devtools": "^0.2.26",
     "@tanstack/vue-query": "^5.101.4",
     "@tanstack/vue-query-devtools": "^6.1.38",
     "@tanstack/vue-table": "^9.2.3",
@@ -20,11 +20,12 @@
     "vue": "^3.5.41"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
     "typescript": "6.0.3",
-    "vite": "^8.2.1",
-    "vue-tsc": "^3.3.9"
+    "vite": "^8.2.2",
+    "vue-tsc": "^3.3.11"
   }
 }

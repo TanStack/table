@@ -43,10 +43,13 @@ export async function startExampleServer(exampleDir: string) {
     throw new Error(`Failed to find a Vite app for ${exampleDir}`)
   }
 
+  const playwrightViteMode = (process.env as Record<string, string | undefined>)
+    .PLAYWRIGHT_VITE_MODE
   const server = await createServer({
     root: exampleDir,
     configFile: configFile ?? false,
     logLevel: 'error',
+    ...(playwrightViteMode ? { mode: playwrightViteMode } : {}),
     server: {
       host: '127.0.0.1',
       port: 0,
@@ -69,9 +72,27 @@ export async function startExampleServer(exampleDir: string) {
 }
 
 async function startSpawnedViteServer(exampleDir: string) {
+  const maxAttempts = 5
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      return await listenOnSpawnedVitePort(exampleDir)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      if (!message.includes('already in use') || attempt === maxAttempts - 1) {
+        throw error
+      }
+    }
+  }
+
+  throw new Error(`Failed to start Vite server for ${exampleDir}`)
+}
+
+async function listenOnSpawnedVitePort(exampleDir: string) {
   // Random high port: `vite dev` has no port-0 support, and parallel test
-  // workers must not collide.
-  const port = 4100 + Math.floor(Math.random() * 2000)
+  // workers must not collide. Avoid the 4100-6099 range so we do not land on
+  // macOS services such as port 6000.
+  const port = 18000 + Math.floor(Math.random() * 2000)
   const child = spawn(
     'pnpm',
     [
@@ -105,7 +126,7 @@ async function startSpawnedViteServer(exampleDir: string) {
           `Timed out starting Vite server for ${exampleDir}\n${output}`,
         ),
       )
-    }, 60_000)
+    }, 90_000)
 
     const handleOutput = (chunk: Buffer) => {
       output += chunk.toString()
@@ -185,7 +206,7 @@ async function startAngularExampleServer(exampleDir: string) {
           `Timed out starting Angular server for ${exampleDir}\n${output}`,
         ),
       )
-    }, 60_000)
+    }, 90_000)
 
     const handleOutput = (chunk: Buffer) => {
       output += chunk.toString()

@@ -53,11 +53,11 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^5.18.1",
+    "@eslint-react/eslint-plugin": "^5.18.6",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.1.1",
     "react": "^19.2.8",

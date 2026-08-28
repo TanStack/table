@@ -16,13 +16,13 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
-    "@tanstack/react-devtools": "^0.10.10",
+    "@tanstack/react-devtools": "^0.10.12",
     "@tanstack/react-hotkeys": "^0.10.0",
     "@tanstack/react-pacer": "^0.23.0",
-    "@tanstack/react-router": "^1.170.27",
-    "@tanstack/react-start": "^1.168.44",
+    "@tanstack/react-router": "^1.170.32",
+    "@tanstack/react-start": "^1.168.49",
     "@tanstack/react-store": "^0.11.1",
     "@tanstack/react-table": "^9.2.3",
     "@tanstack/react-table-devtools": "^9.2.0",
@@ -30,13 +30,14 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

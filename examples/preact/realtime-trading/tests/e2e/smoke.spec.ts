@@ -1,0 +1,94 @@
+import path from 'node:path'
+import { expect, test } from '@playwright/test'
+import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
+import {
+  setRangeValue,
+  pausedFeedUrl,
+} from '../../../../../tests/e2e/helpers/setRangeValue'
+import type { Page } from '@playwright/test'
+
+const exampleDir = path.resolve()
+
+function collectPageErrors(page: Page) {
+  const errors: Array<string> = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text())
+  })
+  return errors
+}
+
+test('runs the Preact realtime trading workload', async ({ page }) => {
+  const server = await startExampleServer(exampleDir)
+  const errors = collectPageErrors(page)
+
+  try {
+    await page.goto(pausedFeedUrl(server.url))
+
+    const table = page.getByTestId('trading-table')
+    const instrumentCount = page.getByTestId('instrument-count-select')
+    await expect(table).toBeVisible()
+    await expect(instrumentCount).toHaveValue('100')
+    await expect(page.locator('.brand')).toHaveText('MARKET MONITOR')
+    await expect(table.locator('tbody tr')).toHaveCount(100)
+    await expect(table.locator('tbody')).toHaveCSS('user-select', 'none')
+    await expect(table.locator('tbody tr').first()).toHaveCSS(
+      'content-visibility',
+      'auto',
+    )
+    await expect(table.locator('thead tr')).toHaveCount(2)
+    await expect(table.locator('thead tr').last().locator('th')).toHaveCount(14)
+    await expect(table.locator('thead')).not.toContainText('Identity')
+    await expect(table.locator('thead')).not.toContainText('Market Data')
+    await expect(table.locator('thead')).toContainText('Market')
+    await expect(table.locator('thead')).toContainText('Bid Vol')
+    await expect(table.locator('thead')).toContainText('Intraday')
+    const selectedRow = table.locator('tbody tr').first()
+    const selectedSymbol = await selectedRow.getAttribute('data-symbol')
+    await selectedRow.locator('td').nth(1).click()
+    await expect(page.getByTestId('selected-instrument')).toContainText(
+      selectedSymbol ?? '',
+    )
+    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
+    await expect(instrumentCount.locator('option[value="150"]')).toHaveCount(1)
+    await expect(instrumentCount.locator('option[value="350"]')).toHaveCount(1)
+    await expect(instrumentCount.locator('option[value="750"]')).toHaveCount(1)
+
+    const targetRateSlider = page.getByTestId('target-rate-slider')
+    await expect(targetRateSlider).toHaveAttribute('min', '0')
+    await expect(targetRateSlider).toHaveAttribute('max', '9')
+    await expect(targetRateSlider).toHaveAttribute('step', '1')
+    await expect(targetRateSlider).toHaveValue('6')
+    await setRangeValue(targetRateSlider, '7')
+    await expect(page.getByTestId('target-sample-rate')).toContainText(
+      '25K samples/s',
+    )
+    await setRangeValue(targetRateSlider, '8')
+    await expect(page.getByTestId('target-sample-rate')).toContainText(
+      '50K samples/s',
+    )
+    await setRangeValue(targetRateSlider, '6')
+
+    const sparklineInterval = page.getByTestId(
+      'sparkline-sample-interval-select',
+    )
+    await expect(sparklineInterval).toHaveValue('16')
+    await sparklineInterval.selectOption('100')
+    await expect(sparklineInterval).toHaveValue('100')
+    await sparklineInterval.selectOption('16')
+
+    const publishInterval = page.getByTestId('publish-interval-select')
+    await expect(publishInterval.locator('option[value="500"]')).toHaveCount(1)
+    await expect(publishInterval.locator('option[value="1000"]')).toHaveCount(1)
+
+    expect(
+      await page.evaluate(
+        () => performance.getEntriesByName('tanstack-row-model').length > 0,
+      ),
+    ).toBe(true)
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

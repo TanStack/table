@@ -1,0 +1,25 @@
+{
+  "name": "tanstack-octane-table-example-realtime-trading",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "tsrx-tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "dependencies": {
+    "@tanstack/octane-store": "^0.12.2",
+    "@tanstack/octane-table": "^9.2.3",
+    "octane": "0.1.36"
+  },
+  "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
+    "@tsrx/typescript-plugin": "^0.3.118",
+    "typescript": "6.0.3",
+    "vite": "^8.2.2"
+  }
+}

@@ -11,14 +11,15 @@
     "test:types": "tsrx-tsc --noEmit"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
     "@tanstack/octane-table": "^9.2.3",
     "octane": "0.1.36"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@tsrx/typescript-plugin": "^0.3.118",
     "typescript": "6.0.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.2"
   }
 }

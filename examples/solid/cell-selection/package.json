@@ -13,16 +13,17 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "typescript": "6.0.3",
-    "vite": "^8.2.1",
+    "vite": "^8.2.2",
     "vite-plugin-solid": "^2.11.14"
   },
   "dependencies": {
-    "@tanstack/solid-devtools": "^0.8.10",
+    "@tanstack/solid-devtools": "^0.8.12",
     "@tanstack/solid-hotkeys": "^0.10.0",
     "@tanstack/solid-table": "^9.2.3",
     "@tanstack/solid-table-devtools": "^9.2.0",
-    "solid-js": "^1.9.14"
+    "solid-js": "^1.9.15"
   }
 }

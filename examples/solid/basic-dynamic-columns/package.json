@@ -13,14 +13,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "typescript": "6.0.3",
-    "vite": "^8.2.1",
+    "vite": "^8.2.2",
     "vite-plugin-solid": "^2.11.14"
   },
   "dependencies": {
     "@tanstack/solid-pacer": "^0.22.0",
     "@tanstack/solid-table": "^9.2.3",
-    "solid-js": "^1.9.14"
+    "solid-js": "^1.9.15"
   }
 }

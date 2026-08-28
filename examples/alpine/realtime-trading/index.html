@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table · Realtime Trading</title>
+  </head>
+  <body>
+    <main
+      x-data="tradingApp"
+      x-init="init"
+      @alpine:destroy="destroy"
+      class="trading-terminal"
+      :class="{ 'is-sidebar-collapsed': !local.sidebarOpen }"
+    >
+      <div class="shell-header">
+        <header class="app-bar">
+          <div class="brand"><strong>MARKET MONITOR</strong></div>
+          <div class="header-actions">
+            <span
+              class="feed-status"
+              :class="{ 'is-running': local.feed.workerReady && local.feed.running }"
+              data-testid="feed-status"
+              ><span class="status-dot" aria-hidden="true"></span
+              ><span x-text="feedStatus()"></span></span
+            ><button
+              class="sidebar-toggle"
+              type="button"
+              :aria-expanded="local.sidebarOpen"
+              aria-controls="benchmark-configurator"
+              :aria-label="local.sidebarOpen ? 'Close configurator' : 'Open configurator'"
+              @click="toggleSidebar()"
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <rect x="2.5" y="3" width="15" height="14" rx="1.5"></rect>
+                <path d="M12.5 3v14"></path>
+              </svg>
+            </button>
+          </div>
+        </header>
+        <aside class="development-warning">
+          DEV BUILD — use the production build before recording results.
+        </aside>
+      </div>
+      <section class="market-panel" aria-label="Live synthetic quotes">
+        <div x-ref="scroll" class="table-scroll" data-trading-table>
+          <table
+            x-ref="table"
+            class="trading-data-grid"
+            data-testid="trading-table"
+            role="grid"
+            aria-multiselectable="true"
+            tabindex="0"
+            @keydown="onGridKeyDown($event)"
+          >
+            <thead>
+              <template
+                x-for="headerGroup in table.getHeaderGroups()"
+                :key="headerGroup.id"
+                ><tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                    ><th
+                      :colspan="header.colSpan"
+                      :style="`width:calc(var(--header-${header.id}-size) * 1px)`"
+                      :aria-sort="header.subHeaders.length === 0 ? sortAriaValue(header.column.getIsSorted()) : null"
+                      :class="{ 'column-group-header': header.subHeaders.length > 0, 'numeric-header': header.subHeaders.length === 0 && !isTextColumn(header.column.id) }"
+                    >
+                      <template
+                        x-if="!header.isPlaceholder && header.subHeaders.length === 0"
+                        ><div>
+                          <div
+                            class="leaf-header-content"
+                            @dragover="dragOver(header, $event)"
+                            @drop="drop(header, $event)"
+                          >
+                            <button
+                              type="button"
+                              class="column-drag-handle"
+                              draggable="true"
+                              :aria-label="`Move ${header.column.id} column`"
+                              @dragstart="dragStart(header, $event)"
+                              @dragend="clearDrag()"
+                            >
+                              ⋮⋮</button
+                            ><button
+                              type="button"
+                              class="sort-header-button"
+                              :class="{ 'is-sortable': header.column.getCanSort() }"
+                              :disabled="!header.column.getCanSort()"
+                              @click="header.column.getToggleSortingHandler()($event)"
+                            >
+                              <span
+                                class="header-label"
+                                x-html="FlexRender({ header })"
+                              ></span
+                              ><span
+                                x-show="header.column.getCanSort()"
+                                class="sort-indicator"
+                                :class="{ 'is-active': header.column.getIsSorted() }"
+                                aria-hidden="true"
+                                x-text="sortIndicator(header.column.getIsSorted())"
+                              ></span>
+                            </button>
+                          </div>
+                          <div
+                            x-show="header.column.getCanResize()"
+                            class="column-resize-handle"
+                            :class="{ 'is-resizing': header.column.getIsResizing() }"
+                            role="separator"
+                            aria-orientation="vertical"
+                            @dblclick="header.column.resetSize()"
+                            @mousedown="header.getResizeHandler()($event)"
+                            @touchstart="header.getResizeHandler()($event)"
+                          ></div></div
+                      ></template>
+                      <template
+                        x-if="!header.isPlaceholder && header.subHeaders.length > 0"
+                        ><span x-html="FlexRender({ header })"></span
+                      ></template></th
+                  ></template></tr
+              ></template>
+            </thead>
+            <tbody
+              :data-source-row-count="local.feed.quotes.length"
+              @mousedown="onBodyMouseDown($event)"
+              @pointerover="onBodyPointerOver($event)"
+              @mouseleave="resetPointer()"
+              @click="onBodyClick($event)"
+            >
+              <template
+                x-for="row in renderRows()"
+                :key="`${local.quotesVersion}:${row.id}`"
+                ><tr
+                  :data-symbol="row.original.symbol"
+                  :data-row-id="row.original.id"
+                  :data-symbol-selected="local.selectedSymbol === row.original.symbol ? 'true' : null"
+                  :title="row.original.company"
+                  :aria-selected="row.getIsSelected()"
+                >
+                  <template x-for="cell in row.getVisibleCells()" :key="cell.id"
+                    ><td
+                      :style="`width:calc(var(--col-${cell.column.id}-size) * 1px)`"
+                      :data-column-id="cell.column.id"
+                      :data-cell-focused="cell.getIsFocused() ? 'true' : null"
+                      :data-selection-top="cell.getSelectionEdges().top ? 'true' : null"
+                      :data-selection-right="cell.getSelectionEdges().right ? 'true' : null"
+                      :data-selection-bottom="cell.getSelectionEdges().bottom ? 'true' : null"
+                      :data-selection-left="cell.getSelectionEdges().left ? 'true' : null"
+                      :aria-selected="cell.getIsSelected()"
+                      :tabindex="cell.getTabIndex()"
+                      x-effect="applyCellMarkup($el, FlexRender({ cell }))"
+                    ></td
+                  ></template></tr
+              ></template>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <footer class="market-statusbar">
+        <span
+          >MESSAGE SAMPLES
+          <strong
+            x-text="formatInteger(local.benchmark.metrics.lastBatchSize)"
+          ></strong></span
+        ><span
+          >CHANGED ROWS
+          <strong
+            x-text="formatInteger(local.benchmark.metrics.lastUpdateCount)"
+          ></strong></span
+        ><span
+          >HOSTS
+          <strong
+            x-text="formatInteger(local.benchmark.mountedCells)"
+          ></strong></span
+        ><span
+          >COMPONENTS
+          <strong
+            x-text="formatInteger(local.benchmark.liveComponents)"
+          ></strong
+        ></span>
+      </footer>
+      <div class="sidebar-slot">
+        <aside
+          x-show="local.sidebarOpen"
+          id="benchmark-configurator"
+          class="configurator"
+          aria-label="Benchmark configurator"
+        >
+          <header>
+            <span>CONFIGURATOR</span><small>RUN PARAMETERS</small>
+          </header>
+          <section class="metrics-strip" aria-labelledby="live-health">
+            <h2 id="live-health">LIVE HEALTH</h2>
+            <template x-for="item in metricItems()" :key="item[0]"
+              ><article>
+                <span x-text="item[0]"></span
+                ><strong
+                  :data-testid="item[3] || null"
+                  x-text="item[1]"
+                ></strong
+                ><small x-text="item[2]"></small></article
+            ></template>
+          </section>
+          <section class="config-section" aria-labelledby="feed-settings">
+            <h2 id="feed-settings">FEED</h2>
+            <button
+              class="primary-action"
+              type="button"
+              data-testid="feed-toggle"
+              @click="feed.actions.toggle()"
+              x-text="local.feed.running ? 'PAUSE FEED' : 'START FEED'"
+            ></button>
+            <label class="field"
+              ><span>Instruments (rows)</span
+              ><select
+                data-testid="instrument-count-select"
+                :value="String(local.feed.instrumentCount)"
+                @change="setInstrumentCount($event)"
+              >
+                <template
+                  x-for="option in configuratorOptions.instrumentCounts"
+                  :key="option.value"
+                  ><option
+                    :value="String(option.value)"
+                    :selected="option.value == local.feed.instrumentCount"
+                    x-text="option.label"
+                  ></option
+                ></template></select
+            ></label>
+            <label class="field rate-field"
+              ><span
+                >Synthetic quote workload
+                <strong
+                  data-testid="target-sample-rate"
+                  x-text="`${formatRate(local.feed.targetTicksPerSecond)} samples/s`"
+                ></strong></span
+              ><input
+                data-testid="target-rate-slider"
+                type="range"
+                min="0"
+                :max="feedSampleRateOptions.length - 1"
+                step="1"
+                :value="sampleRateIndex()"
+                @input="setSampleRate($event)"
+                @change="setSampleRate($event)"
+              /><small
+                >Fixed worker-side workload levels. Samples are coalesced; this
+                is not the message delivery rate.</small
+              ></label
+            >
+            <label class="field"
+              ><span>Worker delivery interval</span
+              ><select
+                data-testid="publish-interval-select"
+                :value="local.feed.publishIntervalMs"
+                @change="setPublishInterval($event)"
+              >
+                <template
+                  x-for="option in configuratorOptions.workerDeliveryIntervals"
+                  :key="option.value"
+                  ><option :value="option.value" x-text="option.label"></option
+                ></template></select
+              ><small
+                >One coalesced worker message at this target cadence.</small
+              ></label
+            >
+          </section>
+          <section class="config-section" aria-labelledby="render-settings">
+            <h2 id="render-settings">RENDER PATH</h2>
+            <label class="toggle-field"
+              ><input
+                type="checkbox"
+                :checked="local.rendererMode === 'swap'"
+                @change="setRendererMode($event)"
+              /><span
+                >Swap Tick component A ↔ B<small
+                  >destroy and recreate when direction changes</small
+                ></span
+              ></label
+            >
+            <label class="toggle-field"
+              ><input
+                type="checkbox"
+                :checked="local.feed.updateSparklines"
+                @change="setSparklineUpdates($event)"
+              /><span
+                >Update intraday charts<small
+                  >sample rolling prices independently</small
+                ></span
+              ></label
+            >
+            <label class="field"
+              ><span>Intraday chart sampling</span
+              ><select
+                data-testid="sparkline-sample-interval-select"
+                :value="local.feed.sparklineSampleIntervalMs"
+                @change="setSparklineInterval($event)"
+              >
+                <template
+                  x-for="option in configuratorOptions.intradaySamplingIntervals"
+                  :key="option.value"
+                  ><option :value="option.value" x-text="option.label"></option
+                ></template></select
+            ></label>
+          </section>
+          <section class="config-section" aria-labelledby="stress-actions">
+            <h2 id="stress-actions">STRESS ACTIONS</h2>
+            <div class="action-grid">
+              <button type="button" @click="feed.actions.runBurst()">
+                RUN 25K BURST</button
+              ><button type="button" @click="controller.actions.resetMarket()">
+                RESET SESSION
+              </button>
+            </div>
+          </section>
+          <section
+            class="config-section diagnostics"
+            aria-labelledby="diagnostics"
+          >
+            <h2 id="diagnostics">DIAGNOSTICS</h2>
+            <dl>
+              <template x-for="item in diagnostics()" :key="item[0]"
+                ><div>
+                  <dt x-text="item[0]"></dt>
+                  <dd :data-testid="item[2] || null" x-text="item[1]"></dd></div
+              ></template>
+            </dl>
+          </section>
+          <section
+            class="config-section selected-instrument"
+            data-testid="selected-instrument"
+          >
+            <h2>SELECTED INSTRUMENT</h2>
+            <template x-if="selectedQuote()"
+              ><div x-data="{ get quote() { return selectedQuote() } }">
+                <div class="selection">
+                  <div>
+                    <strong x-text="quote.symbol"></strong
+                    ><span x-text="quote.company"></span>
+                  </div>
+                  <small x-text="quote.venue"></small>
+                </div>
+                <dl>
+                  <div>
+                    <dt>Last</dt>
+                    <dd x-text="quote.price.toFixed(2)"></dd>
+                  </div>
+                  <div>
+                    <dt>Bid / ask</dt>
+                    <dd
+                      x-text="`${quote.bid.toFixed(2)} / ${quote.ask.toFixed(2)}`"
+                    ></dd>
+                  </div>
+                </dl></div
+            ></template>
+            <p x-show="!selectedQuote()">
+              Click or begin a cell selection in any row to inspect its
+              instrument.
+            </p>
+          </section>
+        </aside>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
