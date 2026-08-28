@@ -1,4 +1,4 @@
-import { flexRenderComponent } from '@tanstack/ember-table'
+import { createColumnHelper, flexRenderComponent } from '@tanstack/ember-table'
 import {
   DownMoveCell,
   PercentChangeCell,
@@ -8,10 +8,9 @@ import {
   UpMoveCell,
   recordCellRender,
 } from './quote-cells.gts'
-import type { ColumnDef } from '@tanstack/ember-table'
+import { tradingFeatures } from '../trading-features'
 import type { MarketQuote } from '../../feed/market-data'
 import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
-import type { tradingFeatures } from '../trading-features'
 
 export type RendererMode = 'stable' | 'swap'
 export interface CoreTableState {
@@ -23,49 +22,44 @@ const compact = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const columnHelper = createColumnHelper<typeof tradingFeatures, MarketQuote>()
 
 export function createTradingColumns(
   controller: TradingBenchmarkController,
   rendererMode: RendererMode,
-): Array<ColumnDef<typeof tradingFeatures, MarketQuote>> {
-  return [
-    {
+) {
+  return columnHelper.columns([
+    columnHelper.group({
       id: 'instrument',
       header: 'Instrument',
-      columns: [
-        {
+      columns: columnHelper.columns([
+        columnHelper.accessor('venue', {
           id: 'market',
           header: 'Market',
           size: 72,
-          accessorFn: (row) => row.venue,
-          cell: ({ row }) => recordCellRender('Market', row.original.venue),
-        },
-        {
+          cell: (info) => recordCellRender('Market', info.getValue()),
+        }),
+        columnHelper.accessor('company', {
           id: 'name',
           header: 'Name',
           size: 180,
-          accessorFn: (row) => row.company,
-          cell: ({ row }) => recordCellRender('Name', row.original.company),
-        },
-        {
-          id: 'symbol',
+          cell: (info) => recordCellRender('Name', info.getValue()),
+        }),
+        columnHelper.accessor('symbol', {
           header: 'Symbol',
           size: 92,
-          accessorFn: (row) => row.symbol,
           filterFn: 'includesString',
-          cell: ({ row }) => recordCellRender('Symbol', row.original.symbol),
-        },
-      ],
-    },
-    {
+          cell: (info) => recordCellRender('Symbol', info.getValue()),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'priceAndChange',
       header: 'Price & Change',
-      columns: [
-        {
-          id: 'price',
+      columns: columnHelper.columns([
+        columnHelper.accessor('price', {
           header: 'Price',
           size: 96,
-          accessorFn: (row) => row.price,
           sortFn: 'basic',
           cell: () =>
             recordCellRender(
@@ -74,118 +68,96 @@ export function createTradingColumns(
                 selectSymbol: controller.actions.selectSymbol,
               }),
             ),
-        },
-        {
+        }),
+        columnHelper.accessor(getDayChange, {
           id: 'change',
           header: 'Chg',
           size: 94,
-          accessorFn: getDayChange,
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'Change',
               rendererMode === 'stable'
                 ? flexRenderComponent(StableMoveCell)
-                : getDayChange(row.original) >= 0
+                : info.getValue() >= 0
                   ? flexRenderComponent(UpMoveCell)
                   : flexRenderComponent(DownMoveCell),
             ),
-        },
-        {
+        }),
+        columnHelper.accessor(getDayChangePercent, {
           id: 'changePercent',
           header: 'Chg%',
           size: 90,
-          accessorFn: getDayChangePercent,
           cell: () =>
             recordCellRender(
               'ChangePercent',
               flexRenderComponent(PercentChangeCell),
             ),
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'orderBook',
       header: 'Order Book',
-      columns: [
-        {
-          id: 'bid',
+      columns: columnHelper.columns([
+        columnHelper.accessor('bid', {
           header: 'Bid',
           size: 90,
-          accessorFn: (row) => row.bid,
-          cell: ({ row }) =>
-            recordCellRender('Bid', row.original.bid.toFixed(2)),
-        },
-        {
-          id: 'bidSize',
+          cell: (info) => recordCellRender('Bid', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('bidSize', {
           header: 'Bid Vol',
           size: 100,
-          accessorFn: (row) => row.bidSize,
-          cell: ({ row }) =>
-            recordCellRender('BidVolume', compact.format(row.original.bidSize)),
-        },
-        {
-          id: 'ask',
+          cell: (info) =>
+            recordCellRender('BidVolume', compact.format(info.getValue())),
+        }),
+        columnHelper.accessor('ask', {
           header: 'Ask',
           size: 90,
-          accessorFn: (row) => row.ask,
-          cell: ({ row }) =>
-            recordCellRender('Ask', row.original.ask.toFixed(2)),
-        },
-        {
-          id: 'askSize',
+          cell: (info) => recordCellRender('Ask', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('askSize', {
           header: 'Ask Vol',
           size: 100,
-          accessorFn: (row) => row.askSize,
-          cell: ({ row }) =>
-            recordCellRender('AskVolume', compact.format(row.original.askSize)),
-        },
-      ],
-    },
-    {
+          cell: (info) =>
+            recordCellRender('AskVolume', compact.format(info.getValue())),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'session',
       header: 'Session',
-      columns: [
-        {
-          id: 'open',
+      columns: columnHelper.columns([
+        columnHelper.accessor('open', {
           header: 'Open',
           size: 90,
-          accessorFn: (row) => row.open,
-          cell: ({ row }) =>
-            recordCellRender('Open', row.original.open.toFixed(2)),
-        },
-        {
-          id: 'high',
+          cell: (info) => recordCellRender('Open', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('high', {
           header: 'High',
           size: 90,
-          accessorFn: (row) => row.high,
-          cell: ({ row }) =>
-            recordCellRender('High', row.original.high.toFixed(2)),
-        },
-        {
-          id: 'low',
+          cell: (info) => recordCellRender('High', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('low', {
           header: 'Low',
           size: 90,
-          accessorFn: (row) => row.low,
-          cell: ({ row }) =>
-            recordCellRender('Low', row.original.low.toFixed(2)),
-        },
-      ],
-    },
-    {
+          cell: (info) => recordCellRender('Low', info.getValue().toFixed(2)),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'chart',
       header: 'Chart',
-      columns: [
-        {
-          id: 'history',
+      columns: columnHelper.columns([
+        columnHelper.accessor('history', {
           header: 'Intraday',
           size: 150,
           enableSorting: false,
           cell: () =>
             recordCellRender('Intraday', flexRenderComponent(SparklineCell)),
-        },
-      ],
-    },
-  ]
+        }),
+      ]),
+    }),
+  ])
 }
 
 export const rowModelDiagnostics = {

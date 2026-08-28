@@ -1,15 +1,6 @@
 import Alpine from 'alpinejs'
 import { shallow } from '@tanstack/store'
-import {
-  FlexRender,
-  createFilteredRowModel,
-  createSortedRowModel,
-  createTable,
-  filterFn_includesString,
-  sortFn_basic,
-  stockFeatures,
-  tableFeatures,
-} from '@tanstack/alpine-table'
+import { FlexRender, createTable } from '@tanstack/alpine-table'
 import { TradingBenchmarkController } from './benchmark/trading-benchmark-controller'
 import { MarketFeedController } from './feed/market-feed-controller'
 import {
@@ -22,6 +13,7 @@ import {
   createTradingColumns,
   readMeasuredRows,
 } from './table/table-config/trading-columns'
+import { tradingFeatures } from './table/trading-features'
 import {
   TradingGridPointerController,
   handleCellNavigation,
@@ -34,14 +26,7 @@ import './index.css'
 import type { AlpineTable } from '@tanstack/alpine-table'
 import type { MarketQuote } from './feed/market-data'
 
-const features = tableFeatures({
-  ...stockFeatures,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
-  sortFns: { basic: sortFn_basic },
-})
-type Table = AlpineTable<typeof features, MarketQuote>
+type Table = AlpineTable<typeof tradingFeatures, MarketQuote>
 const integer = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
 const rate = new Intl.NumberFormat('en-US', {
   notation: 'compact',
@@ -93,13 +78,11 @@ Alpine.data('tradingApp', () => {
     tableVersion: 0,
     quotesVersion: 0,
   })
-  const columns = createTradingColumns<typeof features>(
-    () => local.rendererMode,
-  )
+  const columns = createTradingColumns(() => local.rendererMode)
   const table = createTable(
     {
       key: 'alpine-realtime-trading',
-      features,
+      features: tradingFeatures,
       columns,
       get data() {
         return local.feed.quotes

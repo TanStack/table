@@ -1,13 +1,4 @@
-import {
-  FlexRender,
-  createFilteredRowModel,
-  createSortedRowModel,
-  filterFn_includesString,
-  sortFn_basic,
-  stockFeatures,
-  tableFeatures,
-  useTable,
-} from '@tanstack/preact-table'
+import { FlexRender, useTable } from '@tanstack/preact-table'
 import { useSelector } from '@tanstack/preact-store'
 import { useLayoutEffect, useRef, useState } from 'preact/hooks'
 import { useTableBenchmark } from '../benchmark/use-table-benchmark'
@@ -20,6 +11,7 @@ import {
   readMeasuredRows,
   tradingColumns,
 } from './table-config/trading-table-config'
+import { tradingFeatures } from './trading-features'
 import {
   TradingGridPointerController,
   handleCellNavigation,
@@ -42,14 +34,6 @@ export type {
   CoreTableState,
   RendererMode,
 } from './table-config/trading-table-config'
-
-const features = tableFeatures({
-  ...stockFeatures,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
-  sortFns: { basic: sortFn_basic },
-})
 
 export function TradingTable() {
   const controller = useTradingShellController()
@@ -332,7 +316,7 @@ function useTradingTable(props: { quotes: Array<MarketQuote> }) {
   return useTable(
     {
       key: 'preact-realtime-trading',
-      features,
+      features: tradingFeatures,
       columns: tradingColumns,
       data: props.quotes,
       getRowId: (row) => row.id,

@@ -1,29 +1,14 @@
 import { useLayoutEffect, useMemo, useRef } from 'octane'
-import {
-  createFilteredRowModel,
-  createSortedRowModel,
-  filterFn_includesString,
-  sortFn_basic,
-  stockFeatures,
-  tableFeatures,
-  useTable,
-} from '@tanstack/octane-table'
+import { useTable } from '@tanstack/octane-table'
 import { startTableBenchmark } from '../benchmark/table-benchmark'
 import { useSelector } from '@tanstack/octane-store'
 import { createTradingColumns, readMeasuredRows } from './table-config/trading-columns.tsrx'
+import { tradingFeatures } from './trading-features'
 import { handleCellNavigation, reorderColumnIds, sortAriaValue, sortIndicator } from './table-interactions'
 import { useTradingGridPointer } from './use-trading-grid-pointer'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { MarketQuote } from '../feed/market-data'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
-
-const features = tableFeatures({
-  ...stockFeatures,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
-  sortFns: { basic: sortFn_basic },
-})
 
 interface TradingTableProps {
   controller: TradingBenchmarkController
@@ -35,12 +20,12 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
   const rendererMode = useSelector(controller.renderAtoms.rendererMode)
   const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
   const columns = useMemo(
-    () => createTradingColumns<typeof features>(controller, rendererMode),
+    () => createTradingColumns(controller, rendererMode),
     [controller, rendererMode],
   )
   const table = useTable(
     {
-      features,
+      features: tradingFeatures,
       columns,
       data: quotes,
       getRowId: (row: MarketQuote) => row.id,

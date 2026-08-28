@@ -1,4 +1,8 @@
-import { flexRenderComponent } from '@tanstack/angular-table'
+import {
+  createColumnHelper,
+  flexRenderComponent,
+} from '@tanstack/angular-table'
+import { tradingFeatures } from '../trading-features'
 import {
   DownMoveCell,
   PercentChangeCell,
@@ -7,7 +11,6 @@ import {
   StableMoveCell,
   UpMoveCell,
 } from './quote-cells'
-import type { ColumnDef, TableFeatures } from '@tanstack/angular-table'
 import type { MarketQuote } from '../../feed/market-data'
 import type { TradingColumnState } from './trading-column-types'
 
@@ -15,64 +18,56 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const columnHelper = createColumnHelper<typeof tradingFeatures, MarketQuote>()
 
-export function createTradingColumns(
-  state: TradingColumnState,
-): Array<ColumnDef<TableFeatures, MarketQuote, unknown>> {
-  return [
-    {
+export function createTradingColumns(state: TradingColumnState) {
+  return columnHelper.columns([
+    columnHelper.group({
       id: 'instrument',
       header: 'Instrument',
-      columns: [
-        {
+      columns: columnHelper.columns([
+        columnHelper.accessor('venue', {
           id: 'market',
           header: 'Market',
           size: 72,
-          accessorFn: (row) => row.venue,
-          cell: ({ row }) => row.original.venue,
-        },
-        {
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor('company', {
           id: 'name',
           header: 'Name',
           size: 180,
-          accessorFn: (row) => row.company,
-          cell: ({ row }) => row.original.company,
-        },
-        {
-          id: 'symbol',
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor('symbol', {
           header: 'Symbol',
           size: 92,
-          accessorFn: (row) => row.symbol,
-          cell: ({ row }) => row.original.symbol,
-        },
-      ],
-    },
-    {
+          cell: (info) => info.getValue(),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'priceAndChange',
       header: 'Price & Change',
-      columns: [
-        {
-          id: 'price',
+      columns: columnHelper.columns([
+        columnHelper.accessor('price', {
           header: 'Price',
           size: 96,
-          accessorFn: (row) => row.price,
-          cell: ({ row }) => {
-            const change = getDayChange(row.original)
+          cell: (info) => {
+            const change = getDayChange(info.row.original)
             return flexRenderComponent(PriceCell, {
-              inputs: { price: row.original.price, move: change },
+              inputs: { price: info.getValue(), move: change },
               outputs: {
-                select: () => state.selectSymbol(row.original.symbol),
+                select: () => state.selectSymbol(info.row.original.symbol),
               },
             })
           },
-        },
-        {
+        }),
+        columnHelper.accessor((row) => getDayChange(row), {
           id: 'change',
           header: 'Chg',
           size: 94,
-          accessorFn: (row) => getDayChange(row),
-          cell: ({ row }) => {
-            const move = getDayChange(row.original)
+          cell: (info) => {
+            const move = info.getValue()
             if (state.rendererMode() === 'stable') {
               return flexRenderComponent(StableMoveCell, {
                 inputs: { move },
@@ -82,97 +77,81 @@ export function createTradingColumns(
               inputs: { move },
             })
           },
-        },
-        {
+        }),
+        columnHelper.accessor((row) => getDayChangePercent(row), {
           id: 'changePercent',
           header: 'Chg%',
           size: 90,
-          accessorFn: (row) => getDayChangePercent(row),
-          cell: ({ row }) =>
+          cell: (info) =>
             flexRenderComponent(PercentChangeCell, {
-              inputs: { value: getDayChangePercent(row.original) },
+              inputs: { value: info.getValue() },
             }),
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'orderBook',
       header: 'Order Book',
-      columns: [
-        {
-          id: 'bid',
+      columns: columnHelper.columns([
+        columnHelper.accessor('bid', {
           header: 'Bid',
           size: 90,
-          accessorFn: (row) => row.bid,
-          cell: ({ row }) => row.original.bid.toFixed(2),
-        },
-        {
-          id: 'bidSize',
+          cell: (info) => info.getValue().toFixed(2),
+        }),
+        columnHelper.accessor('bidSize', {
           header: 'Bid Vol',
           size: 100,
-          accessorFn: (row) => row.bidSize,
-          cell: ({ row }) => compactFormatter.format(row.original.bidSize),
-        },
-        {
-          id: 'ask',
+          cell: (info) => compactFormatter.format(info.getValue()),
+        }),
+        columnHelper.accessor('ask', {
           header: 'Ask',
           size: 90,
-          accessorFn: (row) => row.ask,
-          cell: ({ row }) => row.original.ask.toFixed(2),
-        },
-        {
-          id: 'askSize',
+          cell: (info) => info.getValue().toFixed(2),
+        }),
+        columnHelper.accessor('askSize', {
           header: 'Ask Vol',
           size: 100,
-          accessorFn: (row) => row.askSize,
-          cell: ({ row }) => compactFormatter.format(row.original.askSize),
-        },
-      ],
-    },
-    {
+          cell: (info) => compactFormatter.format(info.getValue()),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'session',
       header: 'Session',
-      columns: [
-        {
-          id: 'open',
+      columns: columnHelper.columns([
+        columnHelper.accessor('open', {
           header: 'Open',
           size: 90,
-          accessorFn: (row) => row.open,
-          cell: ({ row }) => row.original.open.toFixed(2),
-        },
-        {
-          id: 'high',
+          cell: (info) => info.getValue().toFixed(2),
+        }),
+        columnHelper.accessor('high', {
           header: 'High',
           size: 90,
-          accessorFn: (row) => row.high,
-          cell: ({ row }) => row.original.high.toFixed(2),
-        },
-        {
-          id: 'low',
+          cell: (info) => info.getValue().toFixed(2),
+        }),
+        columnHelper.accessor('low', {
           header: 'Low',
           size: 90,
-          accessorFn: (row) => row.low,
-          cell: ({ row }) => row.original.low.toFixed(2),
-        },
-      ],
-    },
-    {
+          cell: (info) => info.getValue().toFixed(2),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'chart',
       header: 'Chart',
-      columns: [
-        {
-          id: 'history',
+      columns: columnHelper.columns([
+        columnHelper.accessor('history', {
           header: 'Intraday',
           size: 150,
           enableSorting: false,
-          cell: ({ row }) =>
+          cell: (info) =>
             flexRenderComponent(SparklineCell, {
-              inputs: { values: row.original.history },
+              inputs: { values: info.getValue() },
             }),
-        },
-      ],
-    },
-  ]
+        }),
+      ]),
+    }),
+  ])
 }
 
 function getDayChange(quote: MarketQuote): number {

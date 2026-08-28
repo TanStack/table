@@ -43,13 +43,13 @@ export async function startExampleServer(exampleDir: string) {
     throw new Error(`Failed to find a Vite app for ${exampleDir}`)
   }
 
+  const playwrightViteMode = (process.env as Record<string, string | undefined>)
+    .PLAYWRIGHT_VITE_MODE
   const server = await createServer({
     root: exampleDir,
     configFile: configFile ?? false,
     logLevel: 'error',
-    ...(process.env.PLAYWRIGHT_VITE_MODE
-      ? { mode: process.env.PLAYWRIGHT_VITE_MODE }
-      : {}),
+    ...(playwrightViteMode ? { mode: playwrightViteMode } : {}),
     server: {
       host: '127.0.0.1',
       port: 0,

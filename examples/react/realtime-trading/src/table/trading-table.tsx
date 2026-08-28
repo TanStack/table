@@ -1,13 +1,4 @@
-import {
-  FlexRender,
-  createFilteredRowModel,
-  createSortedRowModel,
-  filterFn_includesString,
-  sortFn_basic,
-  stockFeatures,
-  tableFeatures,
-  useTable,
-} from '@tanstack/react-table'
+import { FlexRender, useTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useSelector } from '@tanstack/react-store'
 import { useLayoutEffect, useRef } from 'react'
@@ -29,6 +20,7 @@ import {
   sortIndicator,
 } from './table-interactions'
 import { useTradingGridPointer } from './use-trading-grid-pointer'
+import { tradingFeatures } from './trading-features'
 import {
   TRADING_ROW_HEIGHT,
   TRADING_ROW_OVERSCAN,
@@ -52,14 +44,6 @@ export type {
   RendererMode,
 } from './table-config/trading-table-config'
 export type { VirtualScrollMode } from './trading-row-virtualizer'
-
-const features = tableFeatures({
-  ...stockFeatures,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
-  sortFns: { basic: sortFn_basic },
-})
 
 export function TradingTable() {
   const controller = useTradingShellController()
@@ -350,7 +334,7 @@ function useTradingTable(props: { quotes: Array<MarketQuote> }) {
   return useTable(
     {
       key: 'react-realtime-trading',
-      features,
+      features: tradingFeatures,
       columns: tradingColumns,
       data: props.quotes,
       getRowId: (row) => row.id,

@@ -32,6 +32,7 @@ import {
   TRADING_ROW_HEIGHT,
   injectTradingRowVirtualizer,
 } from '../trading-row-virtualizer'
+import type { ColumnDef } from '@tanstack/angular-table'
 import type { ElementRef } from '@angular/core'
 import type { MarketQuote } from '../../feed/market-data'
 import type { RendererMode } from '../table-config/trading-column-types'
@@ -53,6 +54,8 @@ function createWorkerTableRuntime() {
 
   return { worker, features }
 }
+
+type WorkerFeatures = ReturnType<typeof createWorkerTableRuntime>['features']
 
 @Component({
   selector: 'app-worker-trading-table',
@@ -86,9 +89,9 @@ export class WorkerTradingTable {
     selectSymbol: (symbol) => this.symbolSelected.emit(symbol),
   })
 
-  readonly table = injectTable(() => ({
+  readonly table = injectTable<WorkerFeatures, MarketQuote>(() => ({
     data: this.quotes(),
-    columns: this.columns,
+    columns: this.columns as Array<ColumnDef<WorkerFeatures, MarketQuote>>,
     features: this.#workerRuntime.features,
     columnResizeMode: 'onChange' as const,
     defaultColumn: { minSize: 56, maxSize: 800 },

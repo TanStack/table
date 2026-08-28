@@ -1,6 +1,7 @@
 import { html } from 'lit'
+import { createColumnHelper } from '@tanstack/lit-table'
+import { tradingFeatures } from '../trading-features'
 import { recordCellRender } from './quote-cells'
-import type { ColumnDef, TableFeatures } from '@tanstack/lit-table'
 import type { MarketQuote } from '../../feed/market-data'
 import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
@@ -9,195 +10,152 @@ export interface CoreTableState {
   sorting: Array<{ id: string; desc: boolean }>
   columnFilters: Array<{ id: string; value: unknown }>
 }
-interface TradingCellContext {
-  row: { original: MarketQuote }
-}
-interface TradingColumnDefinition {
-  id: string
-  header: string
-  size?: number
-  columns?: Array<TradingColumnDefinition>
-  accessorFn?: (row: MarketQuote) => unknown
-  enableSorting?: boolean
-  filterFn?: 'includesString'
-  sortFn?: 'basic'
-  cell?: (context: TradingCellContext) => unknown
-}
 const compact = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const columnHelper = createColumnHelper<typeof tradingFeatures, MarketQuote>()
 
-export function createTradingColumns<TFeatures extends TableFeatures>(
-  controller: TradingBenchmarkController,
-): Array<ColumnDef<TFeatures, MarketQuote>> {
-  const columns: Array<TradingColumnDefinition> = [
-    {
+export function createTradingColumns(controller: TradingBenchmarkController) {
+  return columnHelper.columns([
+    columnHelper.group({
       id: 'instrument',
       header: 'Instrument',
-      columns: [
-        {
+      columns: columnHelper.columns([
+        columnHelper.accessor('venue', {
           id: 'market',
           header: 'Market',
           size: 72,
-          accessorFn: (row) => row.venue,
-          cell: ({ row }) => recordCellRender('Market', row.original.venue),
-        },
-        {
+          cell: (info) => recordCellRender('Market', info.getValue()),
+        }),
+        columnHelper.accessor('company', {
           id: 'name',
           header: 'Name',
           size: 180,
-          accessorFn: (row) => row.company,
-          cell: ({ row }) => recordCellRender('Name', row.original.company),
-        },
-        {
-          id: 'symbol',
+          cell: (info) => recordCellRender('Name', info.getValue()),
+        }),
+        columnHelper.accessor('symbol', {
           header: 'Symbol',
           size: 92,
-          accessorFn: (row) => row.symbol,
           filterFn: 'includesString',
-          cell: ({ row }) => recordCellRender('Symbol', row.original.symbol),
-        },
-      ],
-    },
-    {
+          cell: (info) => recordCellRender('Symbol', info.getValue()),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'priceAndChange',
       header: 'Price & Change',
-      columns: [
-        {
-          id: 'price',
+      columns: columnHelper.columns([
+        columnHelper.accessor('price', {
           header: 'Price',
           size: 96,
-          accessorFn: (row) => row.price,
           sortFn: 'basic',
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'Last',
               html`<quote-price-cell
-                .price=${row.original.price}
-                .move=${getDayChange(row.original)}
-                .select=${() => controller.actions.selectSymbol(row.original.symbol)}
+                .price=${info.getValue()}
+                .move=${getDayChange(info.row.original)}
+                .select=${() =>
+                  controller.actions.selectSymbol(info.row.original.symbol)}
               ></quote-price-cell>`,
             ),
-        },
-        {
+        }),
+        columnHelper.accessor(getDayChange, {
           id: 'change',
           header: 'Chg',
           size: 94,
-          accessorFn: getDayChange,
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'Change',
               renderMove(
                 controller.renderAtoms.rendererMode.get(),
-                getDayChange(row.original),
+                info.getValue(),
               ),
             ),
-        },
-        {
+        }),
+        columnHelper.accessor(getDayChangePercent, {
           id: 'changePercent',
           header: 'Chg%',
           size: 90,
-          accessorFn: getDayChangePercent,
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'ChangePercent',
               html`<quote-percent-change
-                .value=${getDayChangePercent(row.original)}
+                .value=${info.getValue()}
               ></quote-percent-change>`,
             ),
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'orderBook',
       header: 'Order Book',
-      columns: [
-        {
-          id: 'bid',
+      columns: columnHelper.columns([
+        columnHelper.accessor('bid', {
           header: 'Bid',
           size: 90,
-          accessorFn: (row) => row.bid,
-          cell: ({ row }) =>
-            recordCellRender('Bid', row.original.bid.toFixed(2)),
-        },
-        {
-          id: 'bidSize',
+          cell: (info) => recordCellRender('Bid', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('bidSize', {
           header: 'Bid Vol',
           size: 100,
-          accessorFn: (row) => row.bidSize,
-          cell: ({ row }) =>
-            recordCellRender('BidVolume', compact.format(row.original.bidSize)),
-        },
-        {
-          id: 'ask',
+          cell: (info) =>
+            recordCellRender('BidVolume', compact.format(info.getValue())),
+        }),
+        columnHelper.accessor('ask', {
           header: 'Ask',
           size: 90,
-          accessorFn: (row) => row.ask,
-          cell: ({ row }) =>
-            recordCellRender('Ask', row.original.ask.toFixed(2)),
-        },
-        {
-          id: 'askSize',
+          cell: (info) => recordCellRender('Ask', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('askSize', {
           header: 'Ask Vol',
           size: 100,
-          accessorFn: (row) => row.askSize,
-          cell: ({ row }) =>
-            recordCellRender('AskVolume', compact.format(row.original.askSize)),
-        },
-      ],
-    },
-    {
+          cell: (info) =>
+            recordCellRender('AskVolume', compact.format(info.getValue())),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'session',
       header: 'Session',
-      columns: [
-        {
-          id: 'open',
+      columns: columnHelper.columns([
+        columnHelper.accessor('open', {
           header: 'Open',
           size: 90,
-          accessorFn: (row) => row.open,
-          cell: ({ row }) =>
-            recordCellRender('Open', row.original.open.toFixed(2)),
-        },
-        {
-          id: 'high',
+          cell: (info) => recordCellRender('Open', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('high', {
           header: 'High',
           size: 90,
-          accessorFn: (row) => row.high,
-          cell: ({ row }) =>
-            recordCellRender('High', row.original.high.toFixed(2)),
-        },
-        {
-          id: 'low',
+          cell: (info) => recordCellRender('High', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('low', {
           header: 'Low',
           size: 90,
-          accessorFn: (row) => row.low,
-          cell: ({ row }) =>
-            recordCellRender('Low', row.original.low.toFixed(2)),
-        },
-      ],
-    },
-    {
+          cell: (info) => recordCellRender('Low', info.getValue().toFixed(2)),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'chart',
       header: 'Chart',
-      columns: [
-        {
-          id: 'history',
+      columns: columnHelper.columns([
+        columnHelper.accessor('history', {
           header: 'Intraday',
           size: 150,
           enableSorting: false,
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'Intraday',
               html`<quote-sparkline
-                .values=${row.original.history}
+                .values=${info.getValue()}
               ></quote-sparkline>`,
             ),
-        },
-      ],
-    },
-  ]
-  return columns as unknown as Array<ColumnDef<TFeatures, MarketQuote>>
+        }),
+      ]),
+    }),
+  ])
 }
 
 function renderMove(mode: RendererMode, move: number) {

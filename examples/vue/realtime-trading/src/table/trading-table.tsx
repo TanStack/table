@@ -9,22 +9,14 @@ import {
   watch,
   watchEffect,
 } from 'vue'
-import {
-  FlexRender,
-  createFilteredRowModel,
-  createSortedRowModel,
-  filterFn_includesString,
-  sortFn_basic,
-  stockFeatures,
-  tableFeatures,
-  useTable,
-} from '@tanstack/vue-table'
+import { FlexRender, useTable } from '@tanstack/vue-table'
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { useTableBenchmark } from '../benchmark/use-table-benchmark'
 import {
   useMarketFeedController,
   useTradingShellController,
 } from '../shell/trading-shell-context'
+import { tradingFeatures } from './trading-features'
 import {
   TRADING_COLUMN_COUNT,
   readMeasuredRows,
@@ -54,16 +46,8 @@ export type {
 } from './table-config/trading-columns'
 export type { VirtualScrollMode } from './trading-row-virtualizer'
 
-const features = tableFeatures({
-  ...stockFeatures,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
-  sortFns: { basic: sortFn_basic },
-})
-
 type TradingTableInstance = ReturnType<
-  typeof useTable<typeof features, MarketQuote>
+  typeof useTable<typeof tradingFeatures, MarketQuote>
 >
 type TradingRow = ReturnType<
   TradingTableInstance['getRowModel']
@@ -121,7 +105,7 @@ export const TradingTable = defineComponent({
     )
     const table = useTable({
       key: 'vue-realtime-trading',
-      features,
+      features: tradingFeatures,
       columns: tradingColumns,
       data: feed.quotes,
       getRowId: (row: MarketQuote) => row.id,

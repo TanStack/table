@@ -2,11 +2,12 @@
   import { get } from 'svelte/store'
   import { onMount, tick, untrack } from 'svelte'
   import { useSelector } from '@tanstack/svelte-store'
-  import { FlexRender, createFilteredRowModel, createSortedRowModel, createTable, filterFn_includesString, sortFn_basic, stockFeatures, tableFeatures } from '@tanstack/svelte-table'
+  import { FlexRender, createTable } from '@tanstack/svelte-table'
   import { createVirtualizer } from '@tanstack/svelte-virtual'
   import { startTableBenchmark } from '../benchmark/table-benchmark'
   import { useMarketFeedController, useTradingShellController } from '../shell/trading-shell-context'
   import { TRADING_COLUMN_COUNT, readMeasuredRows, rowModelDiagnostics, tradingColumns } from './table-config/trading-columns'
+  import { tradingFeatures } from './trading-features'
   import { TradingGridPointerController, handleCellNavigation, reorderColumnIds, sortAriaValue, sortIndicator } from './table-interactions'
   import { TRADING_ROW_HEIGHT, TRADING_ROW_OVERSCAN, resolveVirtualScrollMode } from './trading-row-virtualizer'
   import type { MarketQuote } from '../feed/market-data'
@@ -14,13 +15,6 @@
 
   export { TRADING_COLUMN_COUNT, rowModelDiagnostics }
 
-  const features = tableFeatures({
-    ...stockFeatures,
-    filteredRowModel: createFilteredRowModel(),
-    sortedRowModel: createSortedRowModel(),
-    filterFns: { includesString: filterFn_includesString },
-    sortFns: { basic: sortFn_basic },
-  })
   const controller = useTradingShellController()
   const feed = useMarketFeedController()
   const quotes = useSelector(feed.quotes)
@@ -29,7 +23,7 @@
   const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
   const table = createTable({
     key: 'svelte-realtime-trading',
-    features,
+    features: tradingFeatures,
     columns: tradingColumns,
     get data() { return quotes.current },
     getRowId: (row: MarketQuote) => row.id,

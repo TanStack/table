@@ -1,3 +1,5 @@
+import { createColumnHelper } from '@tanstack/octane-table'
+import { tradingFeatures } from '../trading-features'
 import {
   DownMoveCell,
   PercentChangeCell,
@@ -7,7 +9,6 @@ import {
   UpMoveCell,
   recordCellRender,
 } from './quote-cells.tsrx'
-import type { ColumnDef, TableFeatures } from '@tanstack/octane-table'
 import type { MarketQuote } from '../../feed/market-data'
 import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
@@ -17,55 +18,144 @@ export interface CoreTableState {
   columnFilters: Array<{ id: string; value: unknown }>
 }
 
-interface TradingCellContext { row: { original: MarketQuote } }
-interface TradingColumnDefinition {
-  id: string
-  header: string
-  size?: number
-  columns?: Array<TradingColumnDefinition>
-  accessorFn?: (row: MarketQuote) => unknown
-  enableSorting?: boolean
-  filterFn?: 'includesString'
-  sortFn?: 'basic'
-  cell?: (context: TradingCellContext) => unknown
-}
-
 const compact = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const columnHelper = createColumnHelper<typeof tradingFeatures, MarketQuote>()
 
-export function createTradingColumns<TFeatures extends TableFeatures>(
+export function createTradingColumns(
   controller: TradingBenchmarkController,
   rendererMode: RendererMode,
-): Array<ColumnDef<TFeatures, MarketQuote>> {
-  const columns: Array<TradingColumnDefinition> = [
-    { id: 'instrument', header: 'Instrument', columns: [
-      { id: 'market', header: 'Market', size: 72, accessorFn: (row) => row.venue, cell: ({ row }) => recordCellRender('Market', row.original.venue) },
-      { id: 'name', header: 'Name', size: 180, accessorFn: (row) => row.company, cell: ({ row }) => recordCellRender('Name', row.original.company) },
-      { id: 'symbol', header: 'Symbol', size: 92, accessorFn: (row) => row.symbol, filterFn: 'includesString', cell: ({ row }) => recordCellRender('Symbol', row.original.symbol) },
-    ] },
-    { id: 'priceAndChange', header: 'Price & Change', columns: [
-      { id: 'price', header: 'Price', size: 96, accessorFn: (row) => row.price, sortFn: 'basic', cell: ({ row }) => recordCellRender('Last', <PriceCell price={row.original.price} move={getDayChange(row.original)} onSelect={() => controller.actions.selectSymbol(row.original.symbol)} />) },
-      { id: 'change', header: 'Chg', size: 94, accessorFn: getDayChange, cell: ({ row }) => recordCellRender('Change', <MoveCell mode={rendererMode} move={getDayChange(row.original)} />) },
-      { id: 'changePercent', header: 'Chg%', size: 90, accessorFn: getDayChangePercent, cell: ({ row }) => recordCellRender('ChangePercent', <PercentChangeCell value={getDayChangePercent(row.original)} />) },
-    ] },
-    { id: 'orderBook', header: 'Order Book', columns: [
-      { id: 'bid', header: 'Bid', size: 90, accessorFn: (row) => row.bid, cell: ({ row }) => recordCellRender('Bid', row.original.bid.toFixed(2)) },
-      { id: 'bidSize', header: 'Bid Vol', size: 100, accessorFn: (row) => row.bidSize, cell: ({ row }) => recordCellRender('BidVolume', compact.format(row.original.bidSize)) },
-      { id: 'ask', header: 'Ask', size: 90, accessorFn: (row) => row.ask, cell: ({ row }) => recordCellRender('Ask', row.original.ask.toFixed(2)) },
-      { id: 'askSize', header: 'Ask Vol', size: 100, accessorFn: (row) => row.askSize, cell: ({ row }) => recordCellRender('AskVolume', compact.format(row.original.askSize)) },
-    ] },
-    { id: 'session', header: 'Session', columns: [
-      { id: 'open', header: 'Open', size: 90, accessorFn: (row) => row.open, cell: ({ row }) => recordCellRender('Open', row.original.open.toFixed(2)) },
-      { id: 'high', header: 'High', size: 90, accessorFn: (row) => row.high, cell: ({ row }) => recordCellRender('High', row.original.high.toFixed(2)) },
-      { id: 'low', header: 'Low', size: 90, accessorFn: (row) => row.low, cell: ({ row }) => recordCellRender('Low', row.original.low.toFixed(2)) },
-    ] },
-    { id: 'chart', header: 'Chart', columns: [
-      { id: 'history', header: 'Intraday', size: 150, enableSorting: false, cell: ({ row }) => recordCellRender('Intraday', <SparklineCell values={row.original.history} />) },
-    ] },
-  ]
-  return columns as unknown as Array<ColumnDef<TFeatures, MarketQuote>>
+) {
+  return columnHelper.columns([
+    columnHelper.group({
+      id: 'instrument',
+      header: 'Instrument',
+      columns: columnHelper.columns([
+        columnHelper.accessor('venue', {
+          id: 'market',
+          header: 'Market',
+          size: 72,
+          cell: (info) => recordCellRender('Market', info.getValue()),
+        }),
+        columnHelper.accessor('company', {
+          id: 'name',
+          header: 'Name',
+          size: 180,
+          cell: (info) => recordCellRender('Name', info.getValue()),
+        }),
+        columnHelper.accessor('symbol', {
+          header: 'Symbol',
+          size: 92,
+          filterFn: 'includesString',
+          cell: (info) => recordCellRender('Symbol', info.getValue()),
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      id: 'priceAndChange',
+      header: 'Price & Change',
+      columns: columnHelper.columns([
+        columnHelper.accessor('price', {
+          header: 'Price',
+          size: 96,
+          sortFn: 'basic',
+          cell: (info) =>
+            recordCellRender(
+              'Last',
+              <PriceCell
+                price={info.getValue()}
+                move={getDayChange(info.row.original)}
+                onSelect={() => controller.actions.selectSymbol(info.row.original.symbol)}
+              />,
+            ),
+        }),
+        columnHelper.accessor(getDayChange, {
+          id: 'change',
+          header: 'Chg',
+          size: 94,
+          cell: (info) =>
+            recordCellRender(
+              'Change',
+              <MoveCell mode={rendererMode} move={info.getValue()} />,
+            ),
+        }),
+        columnHelper.accessor(getDayChangePercent, {
+          id: 'changePercent',
+          header: 'Chg%',
+          size: 90,
+          cell: (info) =>
+            recordCellRender(
+              'ChangePercent',
+              <PercentChangeCell value={info.getValue()} />,
+            ),
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      id: 'orderBook',
+      header: 'Order Book',
+      columns: columnHelper.columns([
+        columnHelper.accessor('bid', {
+          header: 'Bid',
+          size: 90,
+          cell: (info) => recordCellRender('Bid', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('bidSize', {
+          header: 'Bid Vol',
+          size: 100,
+          cell: (info) =>
+            recordCellRender('BidVolume', compact.format(info.getValue())),
+        }),
+        columnHelper.accessor('ask', {
+          header: 'Ask',
+          size: 90,
+          cell: (info) => recordCellRender('Ask', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('askSize', {
+          header: 'Ask Vol',
+          size: 100,
+          cell: (info) =>
+            recordCellRender('AskVolume', compact.format(info.getValue())),
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      id: 'session',
+      header: 'Session',
+      columns: columnHelper.columns([
+        columnHelper.accessor('open', {
+          header: 'Open',
+          size: 90,
+          cell: (info) => recordCellRender('Open', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('high', {
+          header: 'High',
+          size: 90,
+          cell: (info) => recordCellRender('High', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('low', {
+          header: 'Low',
+          size: 90,
+          cell: (info) => recordCellRender('Low', info.getValue().toFixed(2)),
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      id: 'chart',
+      header: 'Chart',
+      columns: columnHelper.columns([
+        columnHelper.accessor('history', {
+          header: 'Intraday',
+          size: 150,
+          enableSorting: false,
+          cell: (info) =>
+            recordCellRender('Intraday', <SparklineCell values={info.getValue()} />),
+        }),
+      ]),
+    }),
+  ])
 }
 
 function MoveCell({ mode, move }: { mode: RendererMode; move: number }) @{

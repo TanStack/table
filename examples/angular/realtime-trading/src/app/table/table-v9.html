@@ -9,8 +9,14 @@
       [attr.data-table-worker-pending]="workerPending()"
       [attr.data-table-worker-compute-ms]="workerComputeMs()"
     >
+      <!--
+        $any: this template is shared by the current-thread and worker tables.
+        Their feature objects differ, and Table/Header/Cell are invariant in
+        TFeatures, so helper-typed instances are not assignable to the view
+        inputs typed with TableFeatures.
+      -->
       <table
-        [appTradingGridSelection]="table"
+        [appTradingGridSelection]="$any(table)"
         [interactions]="interactions"
         (symbolSelected)="symbolSelected.emit($event)"
         class="trading-data-grid virtual-table"
@@ -24,7 +30,7 @@
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th
-                  [appTradingHeaderCell]="header"
+                  [appTradingHeaderCell]="$any(header)"
                   [table]="table"
                   [interactions]="interactions"
                 ></th>
@@ -51,7 +57,7 @@
                 [attr.aria-selected]="row.getIsSelected()"
               >
                 @for (cell of row.getVisibleCells(); track cell.id) {
-                  <td [appTradingGridCell]="cell">
+                  <td [appTradingGridCell]="$any(cell)">
                     <ng-container *flexRenderCell="cell; let renderCell">
                       {{ renderCell }}
                     </ng-container>
@@ -75,7 +81,7 @@
       [attr.data-table-worker-compute-ms]="workerComputeMs()"
     >
       <table
-        [appTradingGridSelection]="table"
+        [appTradingGridSelection]="$any(table)"
         [interactions]="interactions"
         (symbolSelected)="symbolSelected.emit($event)"
         class="trading-data-grid"
@@ -89,7 +95,7 @@
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th
-                  [appTradingHeaderCell]="header"
+                  [appTradingHeaderCell]="$any(header)"
                   [table]="table"
                   [interactions]="interactions"
                 ></th>
@@ -107,7 +113,7 @@
               [attr.aria-selected]="row.getIsSelected()"
             >
               @for (cell of row.getVisibleCells(); track cell.id) {
-                <td [appTradingGridCell]="cell">
+                <td [appTradingGridCell]="$any(cell)">
                   <ng-container *flexRenderCell="cell; let renderCell">
                     {{ renderCell }}
                   </ng-container>

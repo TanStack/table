@@ -3,22 +3,14 @@ import { customElement, property } from 'lit/decorators.js'
 import { repeat } from 'lit/directives/repeat.js'
 import { createRef, ref } from 'lit/directives/ref.js'
 import { VirtualizerController } from '@tanstack/lit-virtual'
-import {
-  FlexRender,
-  TableController,
-  createFilteredRowModel,
-  createSortedRowModel,
-  filterFn_includesString,
-  sortFn_basic,
-  stockFeatures,
-  tableFeatures,
-} from '@tanstack/lit-table'
+import { FlexRender, TableController } from '@tanstack/lit-table'
 import { startTableBenchmark } from '../benchmark/table-benchmark'
 import { ControllerElement } from '../shell/controller-element'
 import {
   createTradingColumns,
   readMeasuredRows,
 } from './table-config/trading-columns'
+import { tradingFeatures } from './trading-features'
 import {
   TradingGridPointerController,
   handleCellNavigation,
@@ -38,13 +30,6 @@ import type { MarketQuote } from '../feed/market-data'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
 
-const features = tableFeatures({
-  ...stockFeatures,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
-  sortFns: { basic: sortFn_basic },
-})
 interface SelectedTableState {
   sorting: unknown
   columnFilters: unknown
@@ -53,7 +38,7 @@ interface SelectedTableState {
   cellSelection: unknown
 }
 type TradingTableInstance = LitTable<
-  typeof features,
+  typeof tradingFeatures,
   MarketQuote,
   SelectedTableState
 >
@@ -62,9 +47,10 @@ type TradingTableInstance = LitTable<
 export class TradingTable extends ControllerElement {
   @property({ attribute: false }) controller!: TradingBenchmarkController
   @property({ attribute: false }) feed!: MarketFeedController
-  readonly #tableController = new TableController<typeof features, MarketQuote>(
-    this,
-  )
+  readonly #tableController = new TableController<
+    typeof tradingFeatures,
+    MarketQuote
+  >(this)
   readonly #scrollRef: Ref<HTMLDivElement> = createRef()
   readonly #tableRef: Ref<HTMLTableElement> = createRef()
   readonly #virtualizer = new VirtualizerController<
@@ -84,7 +70,7 @@ export class TradingTable extends ControllerElement {
   }
   readonly #layout = { manuallyResized: false }
   #table?: TradingTableInstance
-  #columns?: ReturnType<typeof createTradingColumns<typeof features>>
+  #columns?: ReturnType<typeof createTradingColumns>
   #cleanup: Array<() => void> = []
   #domCommitScheduled = false
 
@@ -185,11 +171,11 @@ export class TradingTable extends ControllerElement {
   }
 
   protected render() {
-    this.#columns ??= createTradingColumns<typeof features>(this.controller)
+    this.#columns ??= createTradingColumns(this.controller)
     const table = this.#tableController.table(
       {
         key: 'lit-realtime-trading',
-        features,
+        features: tradingFeatures,
         columns: this.#columns,
         data: this.feed.quotes.get(),
         getRowId: (row) => row.id,

@@ -1,4 +1,5 @@
-import { renderComponent } from '@tanstack/svelte-table'
+import { createColumnHelper, renderComponent } from '@tanstack/svelte-table'
+import { tradingFeatures } from '../trading-features'
 import DayChangeCell from './DayChangeCell.svelte'
 import LastPriceCell from './LastPriceCell.svelte'
 import PercentChangeCell from './PercentChangeCell.svelte'
@@ -12,187 +13,145 @@ export interface CoreTableState {
   columnFilters: Array<{ id: string; value: unknown }>
 }
 
-interface TradingCellContext {
-  row: { original: MarketQuote }
-}
-
-export interface TradingColumnDefinition {
-  id: string
-  header: string
-  size?: number
-  columns?: Array<TradingColumnDefinition>
-  accessorFn?: (row: MarketQuote) => unknown
-  enableSorting?: boolean
-  filterFn?: 'includesString'
-  sortFn?: 'basic'
-  cell?: (context: TradingCellContext) => unknown
-}
-
 const compactFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const columnHelper = createColumnHelper<typeof tradingFeatures, MarketQuote>()
 
-export const tradingColumns: Array<TradingColumnDefinition> = [
-  {
+export const tradingColumns = columnHelper.columns([
+  columnHelper.group({
     id: 'instrument',
     header: 'Instrument',
-    columns: [
-      {
+    columns: columnHelper.columns([
+      columnHelper.accessor('venue', {
         id: 'market',
         header: 'Market',
         size: 72,
-        accessorFn: (row) => row.venue,
-        cell: ({ row }) => recordCellRender('Market', row.original.venue),
-      },
-      {
+        cell: (info) => recordCellRender('Market', info.getValue()),
+      }),
+      columnHelper.accessor('company', {
         id: 'name',
         header: 'Name',
         size: 180,
-        accessorFn: (row) => row.company,
-        cell: ({ row }) => recordCellRender('Name', row.original.company),
-      },
-      {
-        id: 'symbol',
+        cell: (info) => recordCellRender('Name', info.getValue()),
+      }),
+      columnHelper.accessor('symbol', {
         header: 'Symbol',
         size: 92,
-        accessorFn: (row) => row.symbol,
         filterFn: 'includesString',
-        cell: ({ row }) => recordCellRender('Symbol', row.original.symbol),
-      },
-    ],
-  },
-  {
+        cell: (info) => recordCellRender('Symbol', info.getValue()),
+      }),
+    ]),
+  }),
+  columnHelper.group({
     id: 'priceAndChange',
     header: 'Price & Change',
-    columns: [
-      {
-        id: 'price',
+    columns: columnHelper.columns([
+      columnHelper.accessor('price', {
         header: 'Price',
         size: 96,
-        accessorFn: (row) => row.price,
         sortFn: 'basic',
-        cell: ({ row }) =>
+        cell: (info) =>
           recordCellRender(
             'Last',
-            renderComponent(LastPriceCell, { quote: row.original }),
+            renderComponent(LastPriceCell, { quote: info.row.original }),
           ),
-      },
-      {
+      }),
+      columnHelper.accessor(getDayChange, {
         id: 'change',
         header: 'Chg',
         size: 94,
-        accessorFn: getDayChange,
-        cell: ({ row }) =>
+        cell: (info) =>
           recordCellRender(
             'Change',
-            renderComponent(DayChangeCell, { quote: row.original }),
+            renderComponent(DayChangeCell, { quote: info.row.original }),
           ),
-      },
-      {
+      }),
+      columnHelper.accessor(getDayChangePercent, {
         id: 'changePercent',
         header: 'Chg%',
         size: 90,
-        accessorFn: getDayChangePercent,
-        cell: ({ row }) =>
+        cell: (info) =>
           recordCellRender(
             'ChangePercent',
-            renderComponent(PercentChangeCell, {
-              value: getDayChangePercent(row.original),
-            }),
+            renderComponent(PercentChangeCell, { value: info.getValue() }),
           ),
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     id: 'orderBook',
     header: 'Order Book',
-    columns: [
-      {
-        id: 'bid',
+    columns: columnHelper.columns([
+      columnHelper.accessor('bid', {
         header: 'Bid',
         size: 90,
-        accessorFn: (row) => row.bid,
-        cell: ({ row }) => recordCellRender('Bid', row.original.bid.toFixed(2)),
-      },
-      {
-        id: 'bidSize',
+        cell: (info) => recordCellRender('Bid', info.getValue().toFixed(2)),
+      }),
+      columnHelper.accessor('bidSize', {
         header: 'Bid Vol',
         size: 100,
-        accessorFn: (row) => row.bidSize,
-        cell: ({ row }) =>
+        cell: (info) =>
           recordCellRender(
             'BidVolume',
-            compactFormatter.format(row.original.bidSize),
+            compactFormatter.format(info.getValue()),
           ),
-      },
-      {
-        id: 'ask',
+      }),
+      columnHelper.accessor('ask', {
         header: 'Ask',
         size: 90,
-        accessorFn: (row) => row.ask,
-        cell: ({ row }) => recordCellRender('Ask', row.original.ask.toFixed(2)),
-      },
-      {
-        id: 'askSize',
+        cell: (info) => recordCellRender('Ask', info.getValue().toFixed(2)),
+      }),
+      columnHelper.accessor('askSize', {
         header: 'Ask Vol',
         size: 100,
-        accessorFn: (row) => row.askSize,
-        cell: ({ row }) =>
+        cell: (info) =>
           recordCellRender(
             'AskVolume',
-            compactFormatter.format(row.original.askSize),
+            compactFormatter.format(info.getValue()),
           ),
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     id: 'session',
     header: 'Session',
-    columns: [
-      {
-        id: 'open',
+    columns: columnHelper.columns([
+      columnHelper.accessor('open', {
         header: 'Open',
         size: 90,
-        accessorFn: (row) => row.open,
-        cell: ({ row }) =>
-          recordCellRender('Open', row.original.open.toFixed(2)),
-      },
-      {
-        id: 'high',
+        cell: (info) => recordCellRender('Open', info.getValue().toFixed(2)),
+      }),
+      columnHelper.accessor('high', {
         header: 'High',
         size: 90,
-        accessorFn: (row) => row.high,
-        cell: ({ row }) =>
-          recordCellRender('High', row.original.high.toFixed(2)),
-      },
-      {
-        id: 'low',
+        cell: (info) => recordCellRender('High', info.getValue().toFixed(2)),
+      }),
+      columnHelper.accessor('low', {
         header: 'Low',
         size: 90,
-        accessorFn: (row) => row.low,
-        cell: ({ row }) => recordCellRender('Low', row.original.low.toFixed(2)),
-      },
-    ],
-  },
-  {
+        cell: (info) => recordCellRender('Low', info.getValue().toFixed(2)),
+      }),
+    ]),
+  }),
+  columnHelper.group({
     id: 'chart',
     header: 'Chart',
-    columns: [
-      {
-        id: 'history',
+    columns: columnHelper.columns([
+      columnHelper.accessor('history', {
         header: 'Intraday',
         size: 150,
         enableSorting: false,
-        cell: ({ row }) =>
+        cell: (info) =>
           recordCellRender(
             'Intraday',
-            renderComponent(SparklineCell, { values: row.original.history }),
+            renderComponent(SparklineCell, { values: info.getValue() }),
           ),
-      },
-    ],
-  },
-]
+      }),
+    ]),
+  }),
+])
 
 export const rowModelDiagnostics = {
   hasMeasurement: false,

@@ -1,5 +1,6 @@
+import { createColumnHelper } from '@tanstack/alpine-table'
+import { tradingFeatures } from '../trading-features'
 import { recordCellRender, sparklineMarkup } from './quote-cells'
-import type { ColumnDef, TableFeatures } from '@tanstack/alpine-table'
 import type { MarketQuote } from '../../feed/market-data'
 
 export type RendererMode = 'stable' | 'swap'
@@ -7,24 +8,11 @@ export interface CoreTableState {
   sorting: Array<{ id: string; desc: boolean }>
   columnFilters: Array<{ id: string; value: unknown }>
 }
-interface CellContext {
-  row: { original: MarketQuote }
-}
-interface Definition {
-  id: string
-  header: string
-  size?: number
-  columns?: Array<Definition>
-  accessorFn?: (row: MarketQuote) => unknown
-  enableSorting?: boolean
-  filterFn?: 'includesString'
-  sortFn?: 'basic'
-  cell?: (context: CellContext) => unknown
-}
 const compact = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const columnHelper = createColumnHelper<typeof tradingFeatures, MarketQuote>()
 const safe = (value: string) =>
   value
     .replaceAll('&', '&amp;')
@@ -32,165 +20,131 @@ const safe = (value: string) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
 
-export function createTradingColumns<TFeatures extends TableFeatures>(
-  getRendererMode: () => RendererMode,
-): Array<ColumnDef<TFeatures, MarketQuote>> {
-  const columns: Array<Definition> = [
-    {
+export function createTradingColumns(getRendererMode: () => RendererMode) {
+  return columnHelper.columns([
+    columnHelper.group({
       id: 'instrument',
       header: 'Instrument',
-      columns: [
-        {
+      columns: columnHelper.columns([
+        columnHelper.accessor('venue', {
           id: 'market',
           header: 'Market',
           size: 72,
-          accessorFn: (row) => row.venue,
-          cell: ({ row }) =>
-            recordCellRender('Market', safe(row.original.venue)),
-        },
-        {
+          cell: (info) => recordCellRender('Market', safe(info.getValue())),
+        }),
+        columnHelper.accessor('company', {
           id: 'name',
           header: 'Name',
           size: 180,
-          accessorFn: (row) => row.company,
-          cell: ({ row }) =>
-            recordCellRender('Name', safe(row.original.company)),
-        },
-        {
-          id: 'symbol',
+          cell: (info) => recordCellRender('Name', safe(info.getValue())),
+        }),
+        columnHelper.accessor('symbol', {
           header: 'Symbol',
           size: 92,
-          accessorFn: (row) => row.symbol,
           filterFn: 'includesString',
-          cell: ({ row }) =>
-            recordCellRender('Symbol', safe(row.original.symbol)),
-        },
-      ],
-    },
-    {
+          cell: (info) => recordCellRender('Symbol', safe(info.getValue())),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'priceAndChange',
       header: 'Price & Change',
-      columns: [
-        {
-          id: 'price',
+      columns: columnHelper.columns([
+        columnHelper.accessor('price', {
           header: 'Price',
           size: 96,
-          accessorFn: (row) => row.price,
           sortFn: 'basic',
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'Last',
-              `<quote-price-cell price="${row.original.price}" move="${getDayChange(row.original)}"></quote-price-cell>`,
+              `<quote-price-cell price="${info.getValue()}" move="${getDayChange(info.row.original)}"></quote-price-cell>`,
             ),
-        },
-        {
+        }),
+        columnHelper.accessor(getDayChange, {
           id: 'change',
           header: 'Chg',
           size: 94,
-          accessorFn: getDayChange,
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'Change',
-              moveMarkup(getRendererMode(), getDayChange(row.original)),
+              moveMarkup(getRendererMode(), info.getValue()),
             ),
-        },
-        {
+        }),
+        columnHelper.accessor(getDayChangePercent, {
           id: 'changePercent',
           header: 'Chg%',
           size: 90,
-          accessorFn: getDayChangePercent,
-          cell: ({ row }) =>
+          cell: (info) =>
             recordCellRender(
               'ChangePercent',
-              `<quote-percent-change value="${getDayChangePercent(row.original)}"></quote-percent-change>`,
+              `<quote-percent-change value="${info.getValue()}"></quote-percent-change>`,
             ),
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'orderBook',
       header: 'Order Book',
-      columns: [
-        {
-          id: 'bid',
+      columns: columnHelper.columns([
+        columnHelper.accessor('bid', {
           header: 'Bid',
           size: 90,
-          accessorFn: (row) => row.bid,
-          cell: ({ row }) =>
-            recordCellRender('Bid', row.original.bid.toFixed(2)),
-        },
-        {
-          id: 'bidSize',
+          cell: (info) => recordCellRender('Bid', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('bidSize', {
           header: 'Bid Vol',
           size: 100,
-          accessorFn: (row) => row.bidSize,
-          cell: ({ row }) =>
-            recordCellRender('BidVolume', compact.format(row.original.bidSize)),
-        },
-        {
-          id: 'ask',
+          cell: (info) =>
+            recordCellRender('BidVolume', compact.format(info.getValue())),
+        }),
+        columnHelper.accessor('ask', {
           header: 'Ask',
           size: 90,
-          accessorFn: (row) => row.ask,
-          cell: ({ row }) =>
-            recordCellRender('Ask', row.original.ask.toFixed(2)),
-        },
-        {
-          id: 'askSize',
+          cell: (info) => recordCellRender('Ask', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('askSize', {
           header: 'Ask Vol',
           size: 100,
-          accessorFn: (row) => row.askSize,
-          cell: ({ row }) =>
-            recordCellRender('AskVolume', compact.format(row.original.askSize)),
-        },
-      ],
-    },
-    {
+          cell: (info) =>
+            recordCellRender('AskVolume', compact.format(info.getValue())),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'session',
       header: 'Session',
-      columns: [
-        {
-          id: 'open',
+      columns: columnHelper.columns([
+        columnHelper.accessor('open', {
           header: 'Open',
           size: 90,
-          accessorFn: (row) => row.open,
-          cell: ({ row }) =>
-            recordCellRender('Open', row.original.open.toFixed(2)),
-        },
-        {
-          id: 'high',
+          cell: (info) => recordCellRender('Open', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('high', {
           header: 'High',
           size: 90,
-          accessorFn: (row) => row.high,
-          cell: ({ row }) =>
-            recordCellRender('High', row.original.high.toFixed(2)),
-        },
-        {
-          id: 'low',
+          cell: (info) => recordCellRender('High', info.getValue().toFixed(2)),
+        }),
+        columnHelper.accessor('low', {
           header: 'Low',
           size: 90,
-          accessorFn: (row) => row.low,
-          cell: ({ row }) =>
-            recordCellRender('Low', row.original.low.toFixed(2)),
-        },
-      ],
-    },
-    {
+          cell: (info) => recordCellRender('Low', info.getValue().toFixed(2)),
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'chart',
       header: 'Chart',
-      columns: [
-        {
-          id: 'history',
+      columns: columnHelper.columns([
+        columnHelper.accessor('history', {
           header: 'Intraday',
           size: 150,
           enableSorting: false,
-          cell: ({ row }) =>
-            recordCellRender('Intraday', sparklineMarkup(row.original.history)),
-        },
-      ],
-    },
-  ]
-  return columns as unknown as Array<ColumnDef<TFeatures, MarketQuote>>
+          cell: (info) =>
+            recordCellRender('Intraday', sparklineMarkup(info.getValue())),
+        }),
+      ]),
+    }),
+  ])
 }
 function moveMarkup(mode: RendererMode, move: number) {
   if (mode === 'stable')

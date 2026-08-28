@@ -1,3 +1,4 @@
+import { createColumnHelper } from '@tanstack/solid-table'
 import {
   AskCellRenderer,
   AskVolumeCellRenderer,
@@ -16,9 +17,8 @@ import {
   createPriceCellRenderer,
 } from './quote-cell-renderers'
 import { getDayChange, getDayChangePercent } from './market-quote-values'
-import type { JSX } from 'solid-js'
+import { tradingTableFeatures } from '../trading-table-features'
 import type { MarketQuote } from '../../feed/market-data'
-import type { TradingCellContext } from '../trading-table-features'
 
 export type RendererMode = 'stable' | 'swap'
 
@@ -27,157 +27,127 @@ export interface TradingColumnOptions {
   onSelectSymbol: (symbol: string) => void
 }
 
-export interface TradingColumnDefinition {
-  id: string
-  header: string
-  size?: number
-  columns?: Array<TradingColumnDefinition>
-  accessorFn?: (row: MarketQuote) => unknown
-  enableSorting?: boolean
-  cell?: (context: TradingCellContext) => JSX.Element
-}
+const columnHelper = createColumnHelper<
+  typeof tradingTableFeatures,
+  MarketQuote
+>()
 
-export type TradingColumnSet = Array<TradingColumnDefinition>
-
-export function createTradingColumns(
-  options: TradingColumnOptions,
-): TradingColumnSet {
+export function createTradingColumns(options: TradingColumnOptions) {
   const priceCell = createPriceCellRenderer(options.onSelectSymbol)
   const changeCell =
     options.rendererMode === 'stable'
       ? StableMoveCellRenderer
       : SwappingMoveCellRenderer
 
-  return [
-    {
+  return columnHelper.columns([
+    columnHelper.group({
       id: 'instrument',
       header: 'Instrument',
-      columns: [
-        {
+      columns: columnHelper.columns([
+        columnHelper.accessor('venue', {
           id: 'market',
           header: 'Market',
           size: 72,
-          accessorFn: (row) => row.venue,
           cell: MarketCellRenderer,
-        },
-        {
+        }),
+        columnHelper.accessor('company', {
           id: 'name',
           header: 'Name',
           size: 180,
-          accessorFn: (row) => row.company,
           cell: NameCellRenderer,
-        },
-        {
-          id: 'symbol',
+        }),
+        columnHelper.accessor('symbol', {
           header: 'Symbol',
           size: 92,
-          accessorFn: (row) => row.symbol,
           cell: SymbolCellRenderer,
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'priceAndChange',
       header: 'Price & Change',
-      columns: [
-        {
-          id: 'price',
+      columns: columnHelper.columns([
+        columnHelper.accessor('price', {
           header: 'Price',
           size: 96,
-          accessorFn: (row) => row.price,
           cell: priceCell,
-        },
-        {
+        }),
+        columnHelper.accessor((row) => getDayChange(row), {
           id: 'change',
           header: 'Chg',
           size: 94,
-          accessorFn: (row) => getDayChange(row),
           cell: changeCell,
-        },
-        {
+        }),
+        columnHelper.accessor((row) => getDayChangePercent(row), {
           id: 'changePercent',
           header: 'Chg%',
           size: 90,
-          accessorFn: (row) => getDayChangePercent(row),
           cell: PercentChangeCellRenderer,
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'orderBook',
       header: 'Order Book',
-      columns: [
-        {
-          id: 'bid',
+      columns: columnHelper.columns([
+        columnHelper.accessor('bid', {
           header: 'Bid',
           size: 90,
-          accessorFn: (row) => row.bid,
           cell: BidCellRenderer,
-        },
-        {
-          id: 'bidSize',
+        }),
+        columnHelper.accessor('bidSize', {
           header: 'Bid Vol',
           size: 100,
-          accessorFn: (row) => row.bidSize,
           cell: BidVolumeCellRenderer,
-        },
-        {
-          id: 'ask',
+        }),
+        columnHelper.accessor('ask', {
           header: 'Ask',
           size: 90,
-          accessorFn: (row) => row.ask,
           cell: AskCellRenderer,
-        },
-        {
-          id: 'askSize',
+        }),
+        columnHelper.accessor('askSize', {
           header: 'Ask Vol',
           size: 100,
-          accessorFn: (row) => row.askSize,
           cell: AskVolumeCellRenderer,
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'session',
       header: 'Session',
-      columns: [
-        {
-          id: 'open',
+      columns: columnHelper.columns([
+        columnHelper.accessor('open', {
           header: 'Open',
           size: 90,
-          accessorFn: (row) => row.open,
           cell: OpenCellRenderer,
-        },
-        {
-          id: 'high',
+        }),
+        columnHelper.accessor('high', {
           header: 'High',
           size: 90,
-          accessorFn: (row) => row.high,
           cell: HighCellRenderer,
-        },
-        {
-          id: 'low',
+        }),
+        columnHelper.accessor('low', {
           header: 'Low',
           size: 90,
-          accessorFn: (row) => row.low,
           cell: LowCellRenderer,
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       id: 'chart',
       header: 'Chart',
-      columns: [
-        {
-          id: 'history',
+      columns: columnHelper.columns([
+        columnHelper.accessor('history', {
           header: 'Intraday',
           size: 150,
           enableSorting: false,
           cell: SparklineCellRenderer,
-        },
-      ],
-    },
-  ]
+        }),
+      ]),
+    }),
+  ])
 }
+
+export type TradingColumnSet = ReturnType<typeof createTradingColumns>
 
 export const TRADING_COLUMN_COUNT = 14

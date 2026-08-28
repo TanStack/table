@@ -1,4 +1,5 @@
 import {
+  createColumnHelper,
   createFilteredRowModel,
   createSortedRowModel,
   stockFeatures,
@@ -8,7 +9,6 @@ import {
   initTableWorker,
   workerRowModelsFeature,
 } from '@tanstack/angular-table/experimental-worker-plugin'
-import type { ColumnDef } from '@tanstack/angular-table'
 import type { MarketQuote } from '../../feed/market-data'
 
 const workerFeatures = tableFeatures({
@@ -17,40 +17,34 @@ const workerFeatures = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
 })
+const columnHelper = createColumnHelper<typeof workerFeatures, MarketQuote>()
 
 // The worker only computes row models, so it needs portable accessors but none
 // of the Angular render components used by the visible table.
-const workerColumns: Array<
-  ColumnDef<typeof workerFeatures, MarketQuote, unknown>
-> = [
-  { id: 'market', accessorFn: (row) => row.venue },
-  { id: 'name', accessorFn: (row) => row.company },
-  { id: 'symbol', accessorFn: (row) => row.symbol },
-  { id: 'price', accessorFn: (row) => row.price },
-  {
+const workerColumns = columnHelper.columns([
+  columnHelper.accessor('venue', { id: 'market' }),
+  columnHelper.accessor('company', { id: 'name' }),
+  columnHelper.accessor('symbol', {}),
+  columnHelper.accessor('price', {}),
+  columnHelper.accessor((row) => row.price - row.previousClose, {
     id: 'change',
-    accessorFn: (row) => row.price - row.previousClose,
-  },
-  {
-    id: 'changePercent',
-    accessorFn: (row) =>
+  }),
+  columnHelper.accessor(
+    (row) =>
       row.previousClose === 0
         ? 0
         : ((row.price - row.previousClose) / row.previousClose) * 100,
-  },
-  { id: 'bid', accessorFn: (row) => row.bid },
-  { id: 'bidSize', accessorFn: (row) => row.bidSize },
-  { id: 'ask', accessorFn: (row) => row.ask },
-  { id: 'askSize', accessorFn: (row) => row.askSize },
-  { id: 'open', accessorFn: (row) => row.open },
-  { id: 'high', accessorFn: (row) => row.high },
-  { id: 'low', accessorFn: (row) => row.low },
-  {
-    id: 'history',
-    accessorFn: (row) => row.history,
-    enableSorting: false,
-  },
-]
+    { id: 'changePercent' },
+  ),
+  columnHelper.accessor('bid', {}),
+  columnHelper.accessor('bidSize', {}),
+  columnHelper.accessor('ask', {}),
+  columnHelper.accessor('askSize', {}),
+  columnHelper.accessor('open', {}),
+  columnHelper.accessor('high', {}),
+  columnHelper.accessor('low', {}),
+  columnHelper.accessor('history', { enableSorting: false }),
+])
 
 initTableWorker({
   features: workerFeatures,

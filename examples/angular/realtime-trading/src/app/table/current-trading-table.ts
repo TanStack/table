@@ -8,15 +8,10 @@ import {
   untracked,
   viewChild,
 } from '@angular/core'
-import {
-  FlexRender,
-  createSortedRowModel,
-  injectTable,
-  stockFeatures,
-  tableFeatures,
-} from '@tanstack/angular-table'
+import { FlexRender, injectTable } from '@tanstack/angular-table'
 import { TradingBenchmarkController } from '../benchmark/trading-benchmark.controller'
 import { createTradingColumns } from './table-config/trading-columns'
+import { tradingFeatures } from './trading-features'
 import { TradingTableInteractionController } from './table-interactions'
 import { injectTradingTableInitialFit } from './trading-table-initial-fit'
 import { TradingGridCellDirective } from './view/trading-grid-cell.directive'
@@ -31,11 +26,6 @@ import type { ElementRef } from '@angular/core'
 import type { MarketQuote } from '../feed/market-data'
 import type { RendererMode } from './table-config/trading-column-types'
 import type { VirtualScrollMode } from './trading-row-virtualizer'
-
-const features = tableFeatures({
-  ...stockFeatures,
-  sortedRowModel: createSortedRowModel(),
-})
 
 @Component({
   selector: 'app-current-trading-table',
@@ -70,7 +60,7 @@ export class CurrentTradingTable {
   readonly table = injectTable(() => ({
     data: this.quotes(),
     columns: this.columns,
-    features,
+    features: tradingFeatures,
     columnResizeMode: 'onChange' as const,
     defaultColumn: { minSize: 56, maxSize: 800 },
     autoResetCellSelection: false,
