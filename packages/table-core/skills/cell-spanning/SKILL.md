@@ -3,7 +3,7 @@ name: cell-spanning
 description: >
   Merge adjacent body cells with cellSpanningFeature: value-based rowSpan opt-in per column via spanRows, per-row colSpan via spanColumns, and the covered-cell convention where a span of 0 means skip the cell. Load for merged data grids, spans that disappear after sorting or paginating, ragged table rows, or a cell that unexpectedly merges down the whole tbody.
 metadata:
-  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.2.3' }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.2.4' }
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/framework/react/guide/cell-spanning.md'
