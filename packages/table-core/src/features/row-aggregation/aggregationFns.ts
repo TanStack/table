@@ -282,6 +282,39 @@ export const aggregationFn_median = constructAggregationFn<
   },
 })
 
+/**
+ * Computes the statistical mode (most frequent value) of the row values.
+ * If multiple values have the same maximum frequency, returns the first one encountered.
+ * Returns `undefined` when no rows are present.
+ */
+export const aggregationFn_mode = constructAggregationFn<
+  any,
+  any,
+  unknown,
+  unknown
+>({
+  aggregate: (context) => {
+    const rows = context.rows
+    if (!rows.length) return undefined
+
+    let maxCount = 0
+    let modeValue: unknown = undefined
+    const counts = new Map<unknown, number>()
+
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
+      const count = (counts.get(value) ?? 0) + 1
+      counts.set(value, count)
+      if (count > maxCount) {
+        maxCount = count
+        modeValue = value
+      }
+    }
+
+    return modeValue
+  },
+})
+
 /** Collects distinct row values using JavaScript `Set` semantics. */
 export const aggregationFn_unique = constructAggregationFn<
   any,
@@ -373,6 +406,7 @@ export const aggregationFns = {
   extent: aggregationFn_extent,
   mean: aggregationFn_mean,
   median: aggregationFn_median,
+  mode: aggregationFn_mode,
   unique: aggregationFn_unique,
   uniqueCount: aggregationFn_uniqueCount,
   count: aggregationFn_count,
