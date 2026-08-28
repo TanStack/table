@@ -14,7 +14,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
     "@tanstack/lit-store": "^0.14.1",
-    "@tanstack/lit-table": "^9.2.3",
+    "@tanstack/lit-table": "^9.2.4",
     "lit": "^3.3.3"
   },
   "devDependencies": {

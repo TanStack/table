@@ -1,5 +1,12 @@
 # @tanstack/alpine-table
 
+## 9.2.4
+
+### Patch Changes
+
+- Updated dependencies [[`f72e516`](https://github.com/TanStack/table/commit/f72e5164bcfe749403ec173035c226f8719647fc)]:
+  - @tanstack/table-core@9.2.4
+
 ## 9.2.3
 
 ### Patch Changes

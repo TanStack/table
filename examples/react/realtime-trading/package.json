@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@tanstack/react-store": "^0.11.1",
-    "@tanstack/react-table": "^9.2.3",
+    "@tanstack/react-table": "^9.2.4",
     "@tanstack/react-virtual": "^3.14.10",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"

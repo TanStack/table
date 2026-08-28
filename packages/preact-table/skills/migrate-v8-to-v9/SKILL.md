@@ -5,7 +5,7 @@ description: >
 metadata:
   type: lifecycle
   library: '@tanstack/preact-table'
-  library_version: '9.2.3'
+  library_version: '9.2.4'
   framework: preact
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'

@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/alpine-table",
-  "version": "9.2.3",
+  "version": "9.2.4",
   "description": "Headless UI for building powerful tables & datagrids for Alpine.",
   "author": "Tanner Linsley",
   "license": "MIT",
