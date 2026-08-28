@@ -43,16 +43,10 @@
         </aside>
       </div>
       <section class="market-panel" aria-label="Live synthetic quotes">
-        <div
-          x-ref="scroll"
-          class="table-scroll"
-          :class="{ 'is-virtualized': virtualMode() === 'tanstack' }"
-          data-trading-table
-        >
+        <div x-ref="scroll" class="table-scroll" data-trading-table>
           <table
             x-ref="table"
             class="trading-data-grid"
-            :class="{ 'virtual-table': virtualMode() === 'tanstack' }"
             data-testid="trading-table"
             role="grid"
             aria-multiselectable="true"
@@ -129,28 +123,23 @@
               ></template>
             </thead>
             <tbody
-              :class="{ 'virtual-table-body': virtualMode() === 'tanstack' }"
-              :style="virtualMode() === 'tanstack' ? `height:${tableHeight()}px` : ''"
               :data-source-row-count="local.feed.quotes.length"
               @mousedown="onBodyMouseDown($event)"
               @pointerover="onBodyPointerOver($event)"
               @mouseleave="resetPointer()"
               @click="onBodyClick($event)"
             >
-              <template x-for="item in renderRows()" :key="item.row.id"
+              <template
+                x-for="row in renderRows()"
+                :key="`${local.quotesVersion}:${row.id}`"
                 ><tr
-                  :class="{ 'virtual-table-row': item.virtual }"
-                  :style="item.virtual ? `transform:translateY(${item.virtual.start}px)` : ''"
-                  :data-virtual-index="item.virtual?.index ?? null"
-                  :data-symbol="item.row.original.symbol"
-                  :data-row-id="item.row.original.id"
-                  :data-symbol-selected="local.selectedSymbol === item.row.original.symbol ? 'true' : null"
-                  :title="item.row.original.company"
-                  :aria-selected="item.row.getIsSelected()"
+                  :data-symbol="row.original.symbol"
+                  :data-row-id="row.original.id"
+                  :data-symbol-selected="local.selectedSymbol === row.original.symbol ? 'true' : null"
+                  :title="row.original.company"
+                  :aria-selected="row.getIsSelected()"
                 >
-                  <template
-                    x-for="cell in item.row.getVisibleCells()"
-                    :key="cell.id"
+                  <template x-for="cell in row.getVisibleCells()" :key="cell.id"
                     ><td
                       :style="`width:calc(var(--col-${cell.column.id}-size) * 1px)`"
                       :data-column-id="cell.column.id"
@@ -161,27 +150,13 @@
                       :data-selection-left="cell.getSelectionEdges().left ? 'true' : null"
                       :aria-selected="cell.getIsSelected()"
                       :tabindex="cell.getTabIndex()"
-                      x-html="FlexRender({ cell })"
+                      x-effect="applyCellMarkup($el, FlexRender({ cell }))"
                     ></td
                   ></template></tr
               ></template>
             </tbody>
           </table>
         </div>
-        <template x-if="virtualMode() === 'tanstack'">
-          <footer
-            class="virtual-scroll-footer"
-            data-testid="virtual-scroll-footer"
-          >
-            <span
-              x-text="`TanStack · Total · ${rows().length} rows · ${table.getVisibleLeafColumns().length} columns`"
-            ></span
-            ><span
-              data-testid="visible-row-range"
-              x-text="visibleRangeText()"
-            ></span>
-          </footer>
-        </template>
       </section>
       <footer class="market-statusbar">
         <span
@@ -294,27 +269,6 @@
           </section>
           <section class="config-section" aria-labelledby="render-settings">
             <h2 id="render-settings">RENDER PATH</h2>
-            <label class="field" data-testid="virtual-scroll-mode"
-              ><span>Row rendering</span
-              ><select
-                data-testid="virtual-scroll-select"
-                :value="virtualMode()"
-                :disabled="local.feed.instrumentCount >= 1500"
-                @change="setVirtualMode($event)"
-              >
-                <template
-                  x-for="option in configuratorOptions.rowRenderingModes"
-                  :key="option.value"
-                  ><option
-                    :value="option.value"
-                    :selected="option.value === virtualMode()"
-                    x-text="option.label"
-                  ></option
-                ></template></select
-              ><small
-                x-text="local.feed.instrumentCount >= 1500 ? 'TanStack Virtual is required and locked at 1,500 or more rows.' : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'"
-              ></small
-            ></label>
             <label class="toggle-field"
               ><input
                 type="checkbox"

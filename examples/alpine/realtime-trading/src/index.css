@@ -37,7 +37,6 @@
   --shell-bar-height: 2.625rem;
   --metrics-height: 3.5rem;
   --statusbar-height: 1.625rem;
-  --virtual-footer-height: 2.125rem;
   --table-header-height: 2rem;
   --table-row-height: 2rem;
   --shell-inline-padding: 0.75rem;
@@ -279,22 +278,6 @@ select {
   background: var(--surface-table);
 }
 
-.virtual-scroll-footer {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: space-between;
-  min-height: var(--virtual-footer-height);
-  padding: 0 var(--shell-inline-padding);
-  color: var(--muted);
-  background: var(--surface-toolbar);
-  border-top: 1px solid var(--border);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
 table {
   min-width: 100%;
   border-spacing: 0;
@@ -302,40 +285,6 @@ table {
   font-family: var(--font-ui);
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
-}
-
-.virtual-table {
-  display: grid;
-}
-
-.virtual-table thead {
-  display: grid;
-}
-
-.virtual-table thead tr,
-.virtual-table-row {
-  display: flex;
-  width: 100%;
-}
-
-.virtual-table th,
-.virtual-table-row > td {
-  flex: 0 0 auto;
-}
-
-.virtual-table-body {
-  position: relative;
-  display: grid;
-}
-
-.virtual-table-row {
-  position: absolute;
-  left: 0;
-  height: var(--table-row-height);
-}
-
-.virtual-table-row > td {
-  display: block;
 }
 
 .trading-data-grid {

@@ -14,6 +14,7 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@tanstack/router-vite-plugin": "^1.167.35",
     "typescript": "6.0.3",
     "vite": "^8.2.2",

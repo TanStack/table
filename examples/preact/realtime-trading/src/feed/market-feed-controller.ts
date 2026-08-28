@@ -34,7 +34,9 @@ export interface MarketFeedActions {
 
 export class MarketFeedController {
   readonly workerReady = createAtom(false)
-  readonly running = createAtom(true)
+  readonly running = createAtom(
+    !new URLSearchParams(location.search).has('paused'),
+  )
   readonly instrumentCount = createAtom(initialMarketFeedConfig.instrumentCount)
   readonly targetTicksPerSecond = createAtom(
     initialMarketFeedConfig.targetSamplesPerSecond,

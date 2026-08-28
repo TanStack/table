@@ -12,12 +12,10 @@ import { startTableBenchmark } from '../benchmark/table-benchmark'
 import { useSelector } from '@tanstack/octane-store'
 import { createTradingColumns, readMeasuredRows } from './table-config/trading-columns.tsrx'
 import { handleCellNavigation, reorderColumnIds, sortAriaValue, sortIndicator } from './table-interactions'
-import { TRADING_ROW_HEIGHT, TRADING_ROW_OVERSCAN, resolveVirtualScrollMode, useVirtualizer } from './trading-row-virtualizer'
 import { useTradingGridPointer } from './use-trading-grid-pointer'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { MarketQuote } from '../feed/market-data'
 import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
-import type { TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
 
 const features = tableFeatures({
   ...stockFeatures,
@@ -27,9 +25,6 @@ const features = tableFeatures({
   sortFns: { basic: sortFn_basic },
 })
 
-const selectRequestedVirtualScrollMode = (state: TradingBenchmarkState) =>
-  state.requestedVirtualScrollMode
-
 interface TradingTableProps {
   controller: TradingBenchmarkController
   feed: MarketFeedController
@@ -37,12 +32,6 @@ interface TradingTableProps {
 
 export function TradingTable({ controller, feed }: TradingTableProps) @{
   const quotes = useSelector(feed.quotes)
-  const instrumentCount = useSelector(feed.instrumentCount)
-  const requestedVirtualScrollMode = useSelector(
-    controller.store,
-    selectRequestedVirtualScrollMode,
-    { compare: Object.is },
-  )
   const rendererMode = useSelector(controller.renderAtoms.rendererMode)
   const selectedSymbol = useSelector(controller.renderAtoms.selectedSymbol)
   const columns = useMemo(
@@ -68,10 +57,6 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
     }),
   )
   const rows = readMeasuredRows(() => table.getRowModel().rows)
-  const virtualMode = resolveVirtualScrollMode(
-    requestedVirtualScrollMode,
-    instrumentCount,
-  )
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const tableRef = useRef<HTMLTableElement | null>(null)
   const bodyRef = useRef<HTMLTableSectionElement | null>(null)
@@ -82,23 +67,9 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
     source: null as HTMLTableCellElement | null,
     target: null as HTMLTableCellElement | null,
   })
-  const virtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
-    count: rows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => TRADING_ROW_HEIGHT,
-    overscan: TRADING_ROW_OVERSCAN,
-    enabled: virtualMode === 'tanstack',
-    getItemKey: (index) => rows[index]?.id ?? index,
-  })
-  const virtualRows = virtualMode === 'tanstack' ? virtualizer.getVirtualItems() : []
-  const renderedRowCount = virtualMode === 'tanstack' ? virtualRows.length : rows.length
-  const range = virtualizer.range
-  const visibleRange = virtualMode === 'tanstack' && range && rows.length > 0
-    ? { start: Math.min(range.startIndex, rows.length - 1), end: Math.min(range.endIndex, rows.length - 1) }
-    : null
 
   useLayoutEffect(() => {
-    controller.actions.setRenderedRowCount(renderedRowCount)
+    controller.actions.setRenderedRowCount(rows.length)
     feed.completeRender()
   }, null)
 
@@ -155,15 +126,9 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
     element.classList.add('is-column-drop-target')
     drag.current.target = element
   }
-  const renderRow = (
-    row: (typeof rows)[number],
-    virtualRow?: { index: number; start: number },
-  ) => (
+  const renderRow = (row: (typeof rows)[number]) => (
     <tr
       key={row.id}
-      className={virtualRow ? 'virtual-table-row' : undefined}
-      style={virtualRow ? { transform: `translateY(${virtualRow.start}px)` } : undefined}
-      data-virtual-index={virtualRow?.index}
       data-symbol={row.original.symbol}
       data-row-id={row.original.id}
       data-symbol-selected={selectedSymbol === row.original.symbol ? 'true' : undefined}
@@ -192,12 +157,12 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
   <>
     <div
       ref={scrollRef}
-      className={`table-scroll${virtualMode === 'tanstack' ? ' is-virtualized' : ''}`}
+      className="table-scroll"
       data-trading-table
     >
       <table
         ref={tableRef}
-        className={`trading-data-grid${virtualMode === 'tanstack' ? ' virtual-table' : ''}`}
+        className="trading-data-grid"
         data-testid="trading-table"
         role="grid"
         aria-multiselectable="true"
@@ -278,23 +243,15 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
         </thead>
         <tbody
           ref={bodyRef}
-          className={virtualMode === 'tanstack' ? 'virtual-table-body' : undefined}
-          style={virtualMode === 'tanstack' ? { height: `${virtualizer.getTotalSize()}px` } : undefined}
           data-source-row-count={quotes.length}
           onMouseDown={pointer.onMouseDown}
           onPointerOver={pointer.onPointerOver}
           onMouseLeave={pointer.onMouseLeave}
           onClick={pointer.onClick}
         >
-          {virtualMode === 'tanstack'
-            ? virtualRows.map((item) => renderRow(rows[item.index]!, item))
-            : rows.map((row) => renderRow(row))}
+          {rows.map((row) => renderRow(row))}
         </tbody>
       </table>
     </div>
-    {virtualMode === 'tanstack' && <footer className="virtual-scroll-footer" data-testid="virtual-scroll-footer">
-      <span>TanStack · Total · {rows.length} rows · {table.getVisibleLeafColumns().length} columns</span>
-      <span data-testid="visible-row-range">{visibleRange ? `Current · rows ${visibleRange.start}..${visibleRange.end}` : 'Current · rows —'}</span>
-    </footer>}
   </>
 }

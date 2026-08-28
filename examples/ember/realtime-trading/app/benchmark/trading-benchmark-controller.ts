@@ -1,6 +1,5 @@
 import { cached, tracked } from '@glimmer/tracking'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
-import { FORCED_VIRTUALIZATION_ROW_COUNT } from '../table/trading-row-virtualizer'
 import {
   BenchmarkMonitor,
   initialMetrics,
@@ -9,23 +8,21 @@ import {
 import type { FeedMetrics } from './benchmark-monitor'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { RendererMode } from '../table/trading-table'
-import type { VirtualScrollPreference } from '../table/trading-row-virtualizer'
 
 export interface TradingBenchmarkActions {
   resetViewState: () => void
   setRendererMode: (mode: RendererMode) => void
-  setVirtualScrollEnabled: (enabled: boolean) => void
   setRenderedRowCount: (count: number) => void
   selectSymbol: (symbol: string | null) => void
   resetMarket: () => void
 }
 
 export class TradingBenchmarkController {
-  @tracked requestedVirtualScrollMode: VirtualScrollPreference = 'auto'
   @tracked metrics: FeedMetrics = initialMetrics
   @tracked mountedCells = 0
   @tracked selectedSymbol: string | null = null
   @tracked rendererMode: RendererMode = 'stable'
+  invalidateTable: (() => void) | null = null
   @cached
   get liveComponents(): number {
     const metrics = this.metrics
@@ -47,16 +44,10 @@ export class TradingBenchmarkController {
     this.actions = {
       resetViewState: () => {
         this.selectedSymbol = null
-        this.requestedVirtualScrollMode = 'auto'
+        this.invalidateTable?.()
       },
       setRendererMode: (mode) => {
         this.rendererMode = mode
-      },
-      setVirtualScrollEnabled: (enabled) => {
-        if (this.feed.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT) {
-          return
-        }
-        this.requestedVirtualScrollMode = enabled ? 'tanstack' : 'none'
       },
       setRenderedRowCount: (count) => {
         const mountedCells = count * TRADING_COLUMN_COUNT

@@ -263,7 +263,6 @@ export function TradingRow(props: {
   quote: MarketQuote
   children: ComponentChildren
   rowSelected: boolean
-  virtualRow?: { index: number; start: number }
 }) {
   const { selectedSymbol } = useTradingShellController().renderAtoms
   const selected = useSelector(
@@ -272,13 +271,6 @@ export function TradingRow(props: {
   )
   return (
     <tr
-      className={props.virtualRow ? 'virtual-table-row' : undefined}
-      style={
-        props.virtualRow
-          ? { transform: `translateY(${props.virtualRow.start}px)` }
-          : undefined
-      }
-      data-virtual-index={props.virtualRow?.index}
       data-symbol={props.quote.symbol}
       data-row-id={props.quote.id}
       data-symbol-selected={selected ? 'true' : undefined}

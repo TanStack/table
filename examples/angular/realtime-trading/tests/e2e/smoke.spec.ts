@@ -4,6 +4,8 @@ import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampl
 import {
   setRangeValue,
   scrollTradingTable,
+  pauseTradingFeed,
+  resumeTradingFeed,
 } from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
@@ -21,6 +23,7 @@ function collectPageErrors(page: Page) {
 }
 
 test('runs the Angular realtime trading workload', async ({ page }) => {
+  test.setTimeout(120_000)
   const server = await startExampleServer(exampleDir)
   const errors = collectPageErrors(page)
 
@@ -60,6 +63,7 @@ test('runs the Angular realtime trading workload', async ({ page }) => {
     await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
     await virtualScrollSelect.selectOption('none')
     await expect(table.locator('tbody tr')).toHaveCount(100)
+    await pauseTradingFeed(page)
     await instrumentCount.selectOption('1500')
     await expect(virtualScrollSelect).toHaveValue('tanstack')
     await expect(virtualScrollSelect).toBeDisabled()
@@ -87,6 +91,11 @@ test('runs the Angular realtime trading workload', async ({ page }) => {
       /^\s*Current · rows [1-9]\d*\.\.\d+\s*$/,
     )
     await instrumentCount.selectOption('100')
+    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
+    await expect(virtualScrollSelect).toHaveValue('none')
+    await expect(virtualScrollSelect).toBeEnabled()
+    await expect(table.locator('tbody tr')).toHaveCount(100)
+    await resumeTradingFeed(page)
     await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
     await expect(virtualScrollSelect).toHaveValue('none')
     await expect(virtualScrollSelect).toBeEnabled()

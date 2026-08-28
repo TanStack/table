@@ -220,7 +220,7 @@ export function readMeasuredRows<Row>(readRows: () => Array<Row>): Array<Row> {
     duration,
   )
   rowModelDiagnostics.lastRowCount = rows.length
-  if (rowModelDiagnostics.calls % 20 === 0) {
+  if ((rowModelDiagnostics.calls - 1) % 20 === 0) {
     try {
       performance.measure('tanstack-row-model', {
         start,

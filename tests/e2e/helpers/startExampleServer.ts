@@ -47,6 +47,9 @@ export async function startExampleServer(exampleDir: string) {
     root: exampleDir,
     configFile: configFile ?? false,
     logLevel: 'error',
+    ...(process.env.PLAYWRIGHT_VITE_MODE
+      ? { mode: process.env.PLAYWRIGHT_VITE_MODE }
+      : {}),
     server: {
       host: '127.0.0.1',
       port: 0,
@@ -123,7 +126,7 @@ async function listenOnSpawnedVitePort(exampleDir: string) {
           `Timed out starting Vite server for ${exampleDir}\n${output}`,
         ),
       )
-    }, 60_000)
+    }, 90_000)
 
     const handleOutput = (chunk: Buffer) => {
       output += chunk.toString()
@@ -203,7 +206,7 @@ async function startAngularExampleServer(exampleDir: string) {
           `Timed out starting Angular server for ${exampleDir}\n${output}`,
         ),
       )
-    }, 60_000)
+    }, 90_000)
 
     const handleOutput = (chunk: Buffer) => {
       output += chunk.toString()

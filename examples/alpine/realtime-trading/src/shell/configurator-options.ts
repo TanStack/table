@@ -31,11 +31,6 @@ const workerDeliveryOptions = [
   { label: '1,000 ms · 1 msg/s', value: 1_000 },
 ] as const satisfies ReadonlyArray<ConfiguratorOption<number>>
 
-const rowRenderingOptions = [
-  { label: 'Full DOM · render every row', value: 'none' },
-  { label: 'TanStack Virtual · visible rows only', value: 'tanstack' },
-] as const satisfies ReadonlyArray<ConfiguratorOption<string>>
-
 const intradaySamplingOptions = [
   { label: '16 ms · fastest', value: 16 },
   { label: '33 ms · very fast', value: 33 },
@@ -50,6 +45,5 @@ const intradaySamplingOptions = [
 export const configuratorOptions = {
   instrumentCounts: instrumentCountOptions,
   workerDeliveryIntervals: workerDeliveryOptions,
-  rowRenderingModes: rowRenderingOptions,
   intradaySamplingIntervals: intradaySamplingOptions,
 } as const

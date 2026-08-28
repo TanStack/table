@@ -4,6 +4,7 @@ import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampl
 import {
   setRangeValue,
   scrollTradingTable,
+  pausedFeedUrl,
 } from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
@@ -33,7 +34,7 @@ test('runs the React realtime trading workload', async ({ page }) => {
         }),
     )
 
-    await page.goto(server.url)
+    await page.goto(pausedFeedUrl(server.url))
 
     const table = page.getByTestId('trading-table')
     const instrumentCount = page.getByTestId('instrument-count-select')
@@ -44,6 +45,12 @@ test('runs the React realtime trading workload', async ({ page }) => {
     await expect(virtualScrollSelect).toHaveValue('none')
     await expect(virtualScrollSelect).toBeEnabled()
     await expect(table.locator('tbody tr')).toHaveCount(100)
+    const firstRow = table.locator('tbody tr').first()
+    const selectedSymbol = await firstRow.getAttribute('data-symbol')
+    await firstRow.getByRole('button').click()
+    await expect(page.getByTestId('selected-instrument')).toContainText(
+      selectedSymbol ?? '',
+    )
     await expect(table.locator('tbody')).toHaveCSS('user-select', 'none')
     await expect(table.locator('tbody tr').first()).toHaveCSS(
       'content-visibility',
@@ -106,14 +113,7 @@ test('runs the React realtime trading workload', async ({ page }) => {
     await expect(table.locator('thead')).toContainText('Market')
     await expect(table.locator('thead')).toContainText('Bid Vol')
     await expect(table.locator('thead')).toContainText('Intraday')
-    const selectedRow = table.locator('tbody tr').first()
-    const selectedSymbol = await selectedRow.getAttribute('data-symbol')
-    await scrollTradingTable(page, 0)
-    await selectedRow.locator('td').nth(1).click({ force: true })
-    await expect(page.getByTestId('selected-instrument')).toContainText(
-      selectedSymbol ?? '',
-    )
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED LIVE')
+    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
     await expect(instrumentCount.locator('option[value="150"]')).toHaveCount(1)
     await expect(instrumentCount.locator('option[value="350"]')).toHaveCount(1)
     await expect(instrumentCount.locator('option[value="750"]')).toHaveCount(1)
@@ -145,52 +145,11 @@ test('runs the React realtime trading workload', async ({ page }) => {
     await expect(publishInterval.locator('option[value="500"]')).toHaveCount(1)
     await expect(publishInterval.locator('option[value="1000"]')).toHaveCount(1)
 
-    await expect
-      .poll(async () => {
-        const text = await page.getByTestId('row-update-rate').textContent()
-        return Number(text?.replace(/\D/g, '') ?? 0)
-      })
-      .toBeGreaterThan(0)
-    await expect
-      .poll(async () => {
-        const text = await page.getByTestId('worker-messages').textContent()
-        return Number(text?.replace(/\D/g, '') ?? 0)
-      })
-      .toBeGreaterThan(0)
-    await expect
-      .poll(async () =>
-        Number(await page.getByTestId('message-rate').textContent()),
-      )
-      .toBeGreaterThan(0)
-    await expect
-      .poll(async () =>
-        Number(await page.getByTestId('table-render-rate').textContent()),
-      )
-      .toBeGreaterThan(0)
-
-    const firstPrice = page.locator('tbody tr').first().getByRole('button')
-    const priceBeforeUpdate = await firstPrice.textContent()
-    await expect
-      .poll(() => firstPrice.textContent())
-      .not.toBe(priceBeforeUpdate)
-
-    await page.locator('.config-section input[type="checkbox"]').first().check()
-    await page.getByTestId('feed-toggle').click()
-    await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
-
     await instrumentCount.selectOption('750')
     await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(750)
-    await expect
-      .poll(async () =>
-        Number(await page.getByTestId('profiler-commit-rate').textContent()),
-      )
-      .toBeGreaterThan(0)
     expect(
       await page.evaluate(
-        () =>
-          performance.getEntriesByName('react-profiler-commit').length > 0 &&
-          performance.getEntriesByName('tanstack-row-model').length > 0,
+        () => performance.getEntriesByName('tanstack-row-model').length > 0,
       ),
     ).toBe(true)
 

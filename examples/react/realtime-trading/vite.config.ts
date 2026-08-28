@@ -3,7 +3,7 @@ import babel from '@rolldown/plugin-babel'
 import rollupReplace from '@rollup/plugin-replace'
 import { defineConfig } from 'vite'
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   const development = mode === 'development'
   const profiling = mode === 'profile'
 
@@ -23,10 +23,14 @@ export default defineConfig(({ mode }) => {
         },
       }),
       react(),
-      babel({
-        presets: [reactCompilerPreset()],
-        include: [/\/src\/.*\.[jt]sx?$/],
-      }),
+      ...(command === 'build'
+        ? [
+            babel({
+              presets: [reactCompilerPreset()],
+              include: [/\/src\/.*\.[jt]sx?$/],
+            }),
+          ]
+        : []),
     ],
     resolve: {
       alias: profiling

@@ -6,10 +6,6 @@ import {
   feedSampleRateOptions,
 } from '../feed/feed-sample-rates'
 import {
-  FORCED_VIRTUALIZATION_ROW_COUNT,
-  resolveVirtualScrollMode,
-} from '../table/trading-row-virtualizer'
-import {
   useMarketFeedController,
   useTradingShellController,
   useTradingShellState,
@@ -127,12 +123,6 @@ function MarketStatusbar() {
 }
 
 function Configurator() {
-  const benchmarkState = useTradingShellState(
-    (storeState) => ({
-      requestedVirtualScrollMode: storeState.requestedVirtualScrollMode,
-    }),
-    { compare: shallow },
-  )
   const controller = useTradingShellController()
   const feed = useMarketFeedController()
   const running = useSelector(feed.running)
@@ -144,8 +134,7 @@ function Configurator() {
   const rendererMode = useSelector(controller.renderAtoms.rendererMode)
   const { actions } = controller
   const feedActions = feed.actions
-  const { requestedVirtualScrollMode } = benchmarkState
-  const { setRendererMode, setVirtualScrollEnabled, resetMarket } = actions
+  const { setRendererMode, resetMarket } = actions
   const {
     toggle,
     setInstrumentCount,
@@ -155,11 +144,6 @@ function Configurator() {
     setSparklineSampleInterval,
     runBurst,
   } = feedActions
-  const virtualScrollForced = instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
-  const virtualScrollMode = resolveVirtualScrollMode(
-    requestedVirtualScrollMode,
-    instrumentCount,
-  )
 
   return (
     <aside
@@ -263,29 +247,6 @@ function Configurator() {
 
       <section className="config-section" aria-labelledby="render-settings">
         <h2 id="render-settings">RENDER PATH</h2>
-        <label className="field" data-testid="virtual-scroll-mode">
-          <span>Row rendering</span>
-          <select
-            data-testid="virtual-scroll-select"
-            value={virtualScrollMode}
-            disabled={virtualScrollForced}
-            onChange={(event) =>
-              setVirtualScrollEnabled(event.currentTarget.value === 'tanstack')
-            }
-          >
-            {configuratorOptions.rowRenderingModes.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <small>
-            {virtualScrollForced
-              ? 'TanStack Virtual is required and locked at 1,500 or more rows.'
-              : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'}
-          </small>
-        </label>
-
         <label className="toggle-field">
           <input
             type="checkbox"

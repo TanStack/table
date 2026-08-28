@@ -19,6 +19,7 @@ export interface MarketFeedObserver {
   mutationStarted?: () => void
   batchApplied?: (batch: MarketFeedBatch) => void
   renderCommitted?: () => void
+  viewChanged?: () => void
 }
 
 export interface MarketFeedActions {
@@ -34,14 +35,14 @@ export interface MarketFeedActions {
 
 export class MarketFeedController {
   @tracked workerReady = false
-  @tracked running = true
-  @tracked instrumentCount = initialMarketFeedConfig.instrumentCount
+  @tracked running = !new URLSearchParams(location.search).has('paused')
+  instrumentCount = initialMarketFeedConfig.instrumentCount
   @tracked targetTicksPerSecond = initialMarketFeedConfig.targetSamplesPerSecond
   @tracked publishIntervalMs = initialMarketFeedConfig.publishIntervalMs
   @tracked updateSparklines = initialMarketFeedConfig.updateSparklines
   @tracked sparklineSampleIntervalMs =
     initialMarketFeedConfig.sparklineSampleIntervalMs
-  @tracked quotes: Array<MarketQuote> = []
+  quotes: Array<MarketQuote> = []
   readonly actions: MarketFeedActions
   readonly #observers = new Set<MarketFeedObserver>()
   readonly #runtime = {
@@ -167,6 +168,7 @@ export class MarketFeedController {
       )
       this.quotes = quotes
       this.workerReady = true
+      this.#notifyView()
       return
     }
 
@@ -178,6 +180,7 @@ export class MarketFeedController {
     this.#startMutation()
     const quotes = applyMarketUpdates(this.quotes, data.updates)
     this.quotes = quotes
+    this.#notifyView()
     const feedBatch = {
       tickCount: data.tickCount,
       updateCount: data.updates.length,
@@ -195,10 +198,12 @@ export class MarketFeedController {
   }
 
   #resetWorker(rowCount: number): void {
-    this.workerReady = false
-    this.#runtime.resetWaitingForCommit = true
-    this.#runtime.resetSnapshotReady = false
-    this.#post({ type: 'set-running', running: false })
+    if (this.running) {
+      this.workerReady = false
+      this.#runtime.resetWaitingForCommit = true
+      this.#runtime.resetSnapshotReady = false
+      this.#post({ type: 'set-running', running: false })
+    }
     this.#post({ type: 'reset', rowCount })
   }
 
@@ -206,6 +211,12 @@ export class MarketFeedController {
     this.#runtime.renderPending = true
     for (const observer of this.#observers) {
       observer.mutationStarted?.()
+    }
+  }
+
+  #notifyView(): void {
+    for (const observer of this.#observers) {
+      observer.viewChanged?.()
     }
   }
 

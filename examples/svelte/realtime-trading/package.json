@@ -19,6 +19,7 @@
     "svelte": "^5.56.10"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tsconfig/svelte": "^5.0.8",
     "svelte-check": "^4.7.6",

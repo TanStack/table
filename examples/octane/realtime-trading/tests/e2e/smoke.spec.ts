@@ -1,10 +1,7 @@
 import path from 'node:path'
 import { expect, test } from '@playwright/test'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
-import {
-  setRangeValue,
-  scrollTradingTable,
-} from '../../../../../tests/e2e/helpers/setRangeValue'
+import { setRangeValue } from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
 const exampleDir = path.resolve()
@@ -27,68 +24,15 @@ test('runs the Octane realtime trading workload', async ({ page }) => {
 
     const table = page.getByTestId('trading-table')
     const instrumentCount = page.getByTestId('instrument-count-select')
-    const virtualScrollSelect = page.getByTestId('virtual-scroll-select')
     await expect(table).toBeVisible()
     await expect(instrumentCount).toHaveValue('100')
     await expect(page.locator('.brand')).toHaveText('MARKET MONITOR')
-    await expect(virtualScrollSelect).toHaveValue('none')
-    await expect(virtualScrollSelect).toBeEnabled()
     await expect(table.locator('tbody tr')).toHaveCount(100)
     await expect(table.locator('tbody')).toHaveCSS('user-select', 'none')
     await expect(table.locator('tbody tr').first()).toHaveCSS(
       'content-visibility',
       'auto',
     )
-    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
-    await instrumentCount.selectOption('250')
-    await expect(virtualScrollSelect).toHaveValue('tanstack')
-    await expect(virtualScrollSelect).toBeEnabled()
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(250)
-    await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
-    await instrumentCount.selectOption('100')
-    await expect(virtualScrollSelect).toHaveValue('none')
-    await expect(table.locator('tbody tr')).toHaveCount(100)
-    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
-    await virtualScrollSelect.selectOption('tanstack')
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(100)
-    await expect(table.locator('tbody tr').first()).toHaveCSS(
-      'content-visibility',
-      'auto',
-    )
-    await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
-    await virtualScrollSelect.selectOption('none')
-    await expect(table.locator('tbody tr')).toHaveCount(100)
-    await instrumentCount.selectOption('1500')
-    await expect(virtualScrollSelect).toHaveValue('tanstack')
-    await expect(virtualScrollSelect).toBeDisabled()
-    await expect
-      .poll(() => table.locator('tbody tr').count())
-      .toBeLessThan(1500)
-    await expect(page.getByTestId('virtual-scroll-footer')).toContainText(
-      'Total · 1500 rows · 14 columns',
-    )
-    await expect(page.getByTestId('visible-row-range')).toHaveText(
-      /^\s*Current · rows 0\.\.\d+\s*$/,
-    )
-    await scrollTradingTable(page, 2_000)
-    await expect
-      .poll(async () =>
-        Number(
-          await table
-            .locator('tbody tr')
-            .first()
-            .getAttribute('data-virtual-index'),
-        ),
-      )
-      .toBeGreaterThan(0)
-    await expect(page.getByTestId('visible-row-range')).toHaveText(
-      /^\s*Current · rows [1-9]\d*\.\.\d+\s*$/,
-    )
-    await instrumentCount.selectOption('100')
-    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
-    await expect(virtualScrollSelect).toHaveValue('none')
-    await expect(virtualScrollSelect).toBeEnabled()
-    await expect(table.locator('tbody tr')).toHaveCount(100)
     await expect(table.locator('thead tr')).toHaveCount(2)
     await expect(table.locator('thead tr').last().locator('th')).toHaveCount(14)
     await expect(table.locator('thead')).not.toContainText('Identity')
@@ -168,8 +112,6 @@ test('runs the Octane realtime trading workload', async ({ page }) => {
     await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
     await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
 
-    await instrumentCount.selectOption('750')
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(750)
     expect(
       await page.evaluate(
         () => performance.getEntriesByName('tanstack-row-model').length > 0,

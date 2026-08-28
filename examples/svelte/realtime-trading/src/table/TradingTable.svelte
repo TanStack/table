@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from 'svelte/store'
-  import { onMount, tick } from 'svelte'
+  import { onMount, tick, untrack } from 'svelte'
   import { useSelector } from '@tanstack/svelte-store'
   import { FlexRender, createFilteredRowModel, createSortedRowModel, createTable, filterFn_includesString, sortFn_basic, stockFeatures, tableFeatures } from '@tanstack/svelte-table'
   import { createVirtualizer } from '@tanstack/svelte-virtual'
@@ -70,19 +70,31 @@
   const pointerInteractions = new TradingGridPointerController()
   const drag = { columnId: null as string | null, sourceElement: null as HTMLTableCellElement | null, targetElement: null as HTMLTableCellElement | null }
   const layout = { manuallyResized: false }
+  let lastVirtualizerCount = -1
+  let lastVirtualizerEnabled = false
 
   $effect(() => {
-    get(rowVirtualizer).setOptions({
-      count: rows.length,
-      estimateSize: () => TRADING_ROW_HEIGHT,
-      getScrollElement: () => refs.scroll,
-      getItemKey: (index) => rows[index]?.id ?? index,
-      overscan: TRADING_ROW_OVERSCAN,
-      enabled: virtualScrollMode === 'tanstack',
+    const count = rows.length
+    const enabled = virtualScrollMode === 'tanstack'
+    if (count === lastVirtualizerCount && enabled === lastVirtualizerEnabled) {
+      return
+    }
+    lastVirtualizerCount = count
+    lastVirtualizerEnabled = enabled
+    untrack(() => {
+      const virtualizer = get(rowVirtualizer)
+      virtualizer.setOptions({
+        count,
+        estimateSize: () => TRADING_ROW_HEIGHT,
+        getScrollElement: () => refs.scroll,
+        getItemKey: (index) => rows[index]?.id ?? index,
+        overscan: TRADING_ROW_OVERSCAN,
+        enabled,
+      })
+      virtualizer._willUpdate()
     })
   })
   $effect(() => { controller.actions.setRenderedRowCount(virtualScrollMode === 'tanstack' ? virtualRows.length : rows.length) })
-  $effect(() => { void quotes.current; tick().then(() => feed.completeRender()) })
 
   const writeColumnSizes = (): void => {
     if (!refs.table) return
@@ -119,9 +131,12 @@
     const order = table.atoms.columnOrder.subscribe(writeColumnSizes)
     const resizing = table.atoms.columnResizing.subscribe((state) => { if (state.isResizingColumn !== false) layout.manuallyResized = true })
     tick().then(() => { writeColumnSizes(); fitAvailableWidth(); if (refs.scroll) resizeObserver.observe(refs.scroll) })
+    const stopQuotes = feed.quotes.subscribe(() => {
+      void tick().then(() => feed.completeRender())
+    })
     const stopBenchmark = startTableBenchmark(controller)
     feed.completeRender()
-    return () => { sizing.unsubscribe(); order.unsubscribe(); resizing.unsubscribe(); resizeObserver.disconnect(); stopBenchmark() }
+    return () => { sizing.unsubscribe(); order.unsubscribe(); resizing.unsubscribe(); stopQuotes.unsubscribe(); resizeObserver.disconnect(); stopBenchmark() }
   })
 </script>
 

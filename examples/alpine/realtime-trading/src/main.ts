@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs'
+import { shallow } from '@tanstack/store'
 import {
   FlexRender,
   createFilteredRowModel,
@@ -9,12 +10,6 @@ import {
   stockFeatures,
   tableFeatures,
 } from '@tanstack/alpine-table'
-import {
-  Virtualizer,
-  elementScroll,
-  observeElementOffset,
-  observeElementRect,
-} from '@tanstack/virtual-core'
 import { TradingBenchmarkController } from './benchmark/trading-benchmark-controller'
 import { MarketFeedController } from './feed/market-feed-controller'
 import {
@@ -34,15 +29,9 @@ import {
   sortAriaValue,
   sortIndicator,
 } from './table/table-interactions'
-import {
-  TRADING_ROW_HEIGHT,
-  TRADING_ROW_OVERSCAN,
-  resolveVirtualScrollMode,
-} from './table/trading-row-virtualizer'
 import './table/table-config/quote-cells'
 import './index.css'
 import type { AlpineTable } from '@tanstack/alpine-table'
-import type { VirtualItem } from '@tanstack/virtual-core'
 import type { MarketQuote } from './feed/market-data'
 
 const features = tableFeatures({
@@ -59,6 +48,29 @@ const rate = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 1,
 })
 const ms = (number: number) => `${number.toFixed(2)} ms`
+
+function applyCellMarkup(element: HTMLElement, markup: unknown) {
+  const html = markup == null ? '' : String(markup)
+  const existing = element.firstElementChild as HTMLElement | null
+  if (existing && html.startsWith('<')) {
+    const closeIndex = html.indexOf('>')
+    const startTag = closeIndex === -1 ? html : html.slice(1, closeIndex)
+    const tagName = startTag.split(/\s/, 1)[0]?.replace(/\/$/, '')
+    if (tagName && existing.tagName.toLowerCase() === tagName) {
+      for (const match of startTag.matchAll(/([^\s=]+)="([^"]*)"/g)) {
+        const name = match[1]!
+        const value = match[2]!
+        if (existing.getAttribute(name) !== value) {
+          existing.setAttribute(name, value)
+        }
+      }
+      return
+    }
+  }
+  if (element.innerHTML !== html) {
+    element.innerHTML = html
+  }
+}
 
 Alpine.data('tradingApp', () => {
   const feed = new MarketFeedController()
@@ -78,8 +90,8 @@ Alpine.data('tradingApp', () => {
     selectedSymbol: controller.renderAtoms.selectedSymbol.get(),
     rendererMode: controller.renderAtoms.rendererMode.get(),
     sidebarOpen: true,
-    virtualVersion: 0,
     tableVersion: 0,
+    quotesVersion: 0,
   })
   const columns = createTradingColumns<typeof features>(
     () => local.rendererMode,
@@ -107,10 +119,6 @@ Alpine.data('tradingApp', () => {
   )
   const pointer = new TradingGridPointerController()
   const runtime = {
-    virtualizer: null as Virtualizer<
-      HTMLDivElement,
-      HTMLTableRowElement
-    > | null,
     cleanups: [] as Array<() => void>,
     manuallyResized: false,
     dragColumnId: null as string | null,
@@ -120,6 +128,13 @@ Alpine.data('tradingApp', () => {
     cachedFeed: null as Array<MarketQuote> | null,
     cachedTableVersion: -1,
     lastRenderedRowCount: -1,
+    lastTableUi: null as {
+      sorting: unknown
+      columnFilters: unknown
+      columnOrder: unknown
+      rowSelection: unknown
+      cellSelection: unknown
+    } | null,
     domCommitScheduled: false,
   }
   const rows = () => {
@@ -133,43 +148,16 @@ Alpine.data('tradingApp', () => {
     }
     return runtime.cachedRows
   }
-  const virtualMode = () =>
-    resolveVirtualScrollMode(
-      local.benchmark.requestedVirtualScrollMode,
-      local.feed.instrumentCount,
-    )
-  const syncVirtualizer = () => {
-    const virtualizer = runtime.virtualizer
+  const renderRows = () => {
+    void local.quotesVersion
     const currentRows = rows()
-    if (!virtualizer) return
-    virtualizer.setOptions({
-      ...virtualizer.options,
-      count: currentRows.length,
-      enabled: virtualMode() === 'tanstack',
-      getItemKey: (index) => currentRows[index]?.id ?? index,
-    })
-    virtualizer._willUpdate()
-  }
-  const renderRows = (): Array<{
-    row: (typeof runtime.cachedRows)[number]
-    virtual: VirtualItem | null
-  }> => {
-    void local.virtualVersion
-    syncVirtualizer()
-    const currentRows = rows()
-    const result =
-      virtualMode() === 'tanstack' && runtime.virtualizer
-        ? runtime.virtualizer
-            .getVirtualItems()
-            .map((item) => ({ row: currentRows[item.index], virtual: item }))
-        : currentRows.map((row) => ({ row, virtual: null }))
-    if (runtime.lastRenderedRowCount !== result.length) {
-      runtime.lastRenderedRowCount = result.length
+    if (runtime.lastRenderedRowCount !== currentRows.length) {
+      runtime.lastRenderedRowCount = currentRows.length
       queueMicrotask(() =>
         controller.actions.setRenderedRowCount(runtime.lastRenderedRowCount),
       )
     }
-    return result
+    return currentRows
   }
   const writeSizes = (tableElement: HTMLTableElement) => {
     for (const header of table.getFlatHeaders()) {
@@ -197,6 +185,7 @@ Alpine.data('tradingApp', () => {
   return {
     table,
     FlexRender,
+    applyCellMarkup,
     local,
     feed,
     controller,
@@ -205,19 +194,6 @@ Alpine.data('tradingApp', () => {
     init(this: { $refs: Record<string, HTMLElement> }) {
       const scroll = this.$refs.scroll as HTMLDivElement
       const tableElement = this.$refs.table as HTMLTableElement
-      runtime.virtualizer = new Virtualizer({
-        count: 0,
-        getScrollElement: () => scroll,
-        estimateSize: () => TRADING_ROW_HEIGHT,
-        overscan: TRADING_ROW_OVERSCAN,
-        observeElementRect,
-        observeElementOffset,
-        scrollToFn: elementScroll,
-        onChange: () => {
-          local.virtualVersion++
-        },
-      })
-      const stopVirtualizer = runtime.virtualizer._didMount()
       const resizeObserver = new ResizeObserver(() => {
         if (runtime.manuallyResized) return
         const width = table.getTotalSize()
@@ -265,11 +241,25 @@ Alpine.data('tradingApp', () => {
           local.feed.sparklineSampleIntervalMs = value
         }),
         feed.quotes.subscribe((quotes) => {
+          const lengthChanged = quotes.length !== local.feed.quotes.length
+          runtime.cachedFeed = null
           local.feed.quotes = quotes
+          if (lengthChanged) {
+            local.quotesVersion++
+            local.tableVersion++
+          }
+          table.setOptions((previous) => ({ ...previous, data: quotes }))
           scheduleDomCommit()
         }),
         controller.store.subscribe((state) => {
-          local.benchmark = state
+          const current = local.benchmark
+          if (current.mountedCells !== state.mountedCells) {
+            current.mountedCells = state.mountedCells
+          }
+          if (current.liveComponents !== state.liveComponents) {
+            current.liveComponents = state.liveComponents
+          }
+          current.metrics = state.metrics
         }),
         controller.renderAtoms.selectedSymbol.subscribe((symbol) => {
           local.selectedSymbol = symbol
@@ -279,6 +269,18 @@ Alpine.data('tradingApp', () => {
           local.tableVersion++
         }),
         table.store.subscribe(() => {
+          const state = table.store.state
+          const next = {
+            sorting: state.sorting,
+            columnFilters: state.columnFilters,
+            columnOrder: state.columnOrder,
+            rowSelection: state.rowSelection,
+            cellSelection: state.cellSelection,
+          }
+          if (runtime.lastTableUi && shallow(runtime.lastTableUi, next)) {
+            return
+          }
+          runtime.lastTableUi = next
           local.tableVersion++
         }),
         table.atoms.columnSizing.subscribe(() => writeSizes(tableElement)),
@@ -290,7 +292,6 @@ Alpine.data('tradingApp', () => {
       const stopFeed = feed.start()
       const stopBenchmark = controller.start()
       runtime.cleanups.push(
-        stopVirtualizer,
         stopFeed,
         stopBenchmark,
         () => resizeObserver.disconnect(),
@@ -308,22 +309,6 @@ Alpine.data('tradingApp', () => {
     },
     rows,
     renderRows,
-    virtualMode,
-    tableHeight() {
-      void local.virtualVersion
-      return (
-        runtime.virtualizer?.getTotalSize() ??
-        rows().length * TRADING_ROW_HEIGHT
-      )
-    },
-    visibleRangeText() {
-      void local.virtualVersion
-      const range = runtime.virtualizer?.range
-      const currentRows = rows()
-      if (!range || virtualMode() !== 'tanstack' || !currentRows.length)
-        return 'Current · rows —'
-      return `Current · rows ${Math.min(range.startIndex, currentRows.length - 1)}..${Math.min(range.endIndex, currentRows.length - 1)}`
-    },
     toggleSidebar() {
       local.sidebarOpen = !local.sidebarOpen
     },
@@ -351,11 +336,6 @@ Alpine.data('tradingApp', () => {
     setPublishInterval(event: Event) {
       feed.actions.setPublishInterval(
         Number((event.target as HTMLSelectElement).value),
-      )
-    },
-    setVirtualMode(event: Event) {
-      controller.actions.setVirtualScrollEnabled(
-        (event.target as HTMLSelectElement).value === 'tanstack',
       )
     },
     setRendererMode(event: Event) {

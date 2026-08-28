@@ -1,16 +1,13 @@
 import { feedSampleRateAt, feedSampleRateIndex, feedSampleRateOptions } from '../feed/feed-sample-rates'
-import { FORCED_VIRTUALIZATION_ROW_COUNT, resolveVirtualScrollMode } from '../table/trading-row-virtualizer'
 import { useSelector } from '@tanstack/octane-store'
 import { configuratorOptions } from './configurator-options'
 import { Diagnostics } from './Diagnostics.tsrx'
 import { MetricsStrip } from './MetricsStrip.tsrx'
 import { SelectedInstrument } from './SelectedInstrument.tsrx'
 import type { MarketFeedController } from '../feed/market-feed-controller'
-import type { TradingBenchmarkController, TradingBenchmarkState } from '../benchmark/trading-benchmark-controller'
+import type { TradingBenchmarkController } from '../benchmark/trading-benchmark-controller'
 
 const rate = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
-const selectRequestedVirtualScrollMode = (state: TradingBenchmarkState) =>
-  state.requestedVirtualScrollMode
 
 export function Configurator(props: {
   controller: TradingBenchmarkController
@@ -24,17 +21,7 @@ export function Configurator(props: {
   const sparklineSampleIntervalMs = useSelector(
     props.feed.sparklineSampleIntervalMs,
   )
-  const requestedVirtualScrollMode = useSelector(
-    props.controller.store,
-    selectRequestedVirtualScrollMode,
-    { compare: Object.is },
-  )
   const rendererMode = useSelector(props.controller.renderAtoms.rendererMode)
-  const forced = instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
-  const virtualMode = resolveVirtualScrollMode(
-    requestedVirtualScrollMode,
-    instrumentCount,
-  )
   const value = (event: Event): string => (event.target as HTMLInputElement | HTMLSelectElement).value
   const number = (event: Event): number => Number(value(event))
   const checked = (event: Event): boolean => (event.target as HTMLInputElement).checked
@@ -88,20 +75,6 @@ export function Configurator(props: {
     </section>
     <section className="config-section" aria-labelledby="render-settings">
       <h2 id="render-settings">RENDER PATH</h2>
-      <label className="field" data-testid="virtual-scroll-mode">
-        <span>Row rendering</span>
-        <select
-          data-testid="virtual-scroll-select"
-          value={virtualMode}
-          disabled={forced}
-          onChange={(event) => props.controller.actions.setVirtualScrollEnabled(value(event) === 'tanstack')}
-        >
-          @for (const option of configuratorOptions.rowRenderingModes; key option.value) {
-            <option value={option.value}>{option.label}</option>
-          }
-        </select>
-        <small>{forced ? 'TanStack Virtual is required and locked at 1,500 or more rows.' : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'}</small>
-      </label>
       <label className="toggle-field">
         <input type="checkbox" checked={rendererMode === 'swap'} onChange={(event) => props.controller.actions.setRendererMode(checked(event) ? 'swap' : 'stable')} />
         <span>Swap Tick component A ↔ B<small>destroy and recreate when direction changes</small></span>

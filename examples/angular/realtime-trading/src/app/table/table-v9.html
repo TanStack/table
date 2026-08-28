@@ -3,6 +3,7 @@
     <div
       #tanStackScrollContainer
       class="table-scroll is-virtualized"
+      data-trading-table
       tabindex="0"
       (keydown)="interactions.navigateCells(table, $event)"
       [attr.data-table-worker-pending]="workerPending()"
@@ -67,6 +68,7 @@
     <div
       #tanStackScrollContainer
       class="table-scroll"
+      data-trading-table
       tabindex="0"
       (keydown)="interactions.navigateCells(table, $event)"
       [attr.data-table-worker-pending]="workerPending()"

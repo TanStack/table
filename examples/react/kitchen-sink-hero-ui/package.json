@@ -31,6 +31,7 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.18",

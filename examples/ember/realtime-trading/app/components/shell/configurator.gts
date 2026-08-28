@@ -1,14 +1,12 @@
 import Component from '@glimmer/component'
 import { on } from '@ember/modifier'
+import { modifier } from 'ember-modifier'
 import {
   feedSampleRateAt,
   feedSampleRateIndex,
   feedSampleRateOptions,
 } from '../../feed/feed-sample-rates'
-import {
-  FORCED_VIRTUALIZATION_ROW_COUNT,
-  resolveVirtualScrollMode,
-} from '../../table/trading-row-virtualizer'
+import { initialMarketFeedConfig } from '../../feed/market-feed-config'
 import { configuratorOptions } from './configurator-options'
 import Diagnostics from './diagnostics.gts'
 import MetricsStrip from './metrics-strip.gts'
@@ -23,15 +21,29 @@ const rate = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 })
+const captureSelect = modifier(
+  (
+    element: HTMLSelectElement,
+    [capture]: [(el: HTMLSelectElement | null) => void],
+  ) => {
+    capture(element)
+    return () => capture(null)
+  },
+)
 
 export default class Configurator extends Component<Signature> {
   readonly feedSampleRateOptions = feedSampleRateOptions
   readonly options = configuratorOptions
+  uiInstrumentCount = initialMarketFeedConfig.instrumentCount
+  instrumentSelect: HTMLSelectElement | null = null
+  captureInstrumentSelect = (element: HTMLSelectElement | null) => {
+    this.instrumentSelect = element
+    if (element) {
+      element.value = String(this.uiInstrumentCount)
+    }
+  }
   get running() {
     return this.args.feed.running
-  }
-  get instrumentCount() {
-    return this.args.feed.instrumentCount
   }
   get targetTicksPerSecond() {
     return this.args.feed.targetTicksPerSecond
@@ -48,42 +60,27 @@ export default class Configurator extends Component<Signature> {
   get rendererMode() {
     return this.args.controller.rendererMode
   }
-
-  get virtualForced() {
-    return this.instrumentCount >= FORCED_VIRTUALIZATION_ROW_COUNT
-  }
-  get virtualMode() {
-    return resolveVirtualScrollMode(
-      this.args.controller.requestedVirtualScrollMode,
-      this.instrumentCount,
-    )
-  }
   get sampleRateIndex() {
     return feedSampleRateIndex(this.targetTicksPerSecond)
   }
   get sampleRateLabel() {
     return `${rate.format(this.targetTicksPerSecond)} samples/s`
   }
-  get virtualDescription() {
-    return this.virtualForced
-      ? 'TanStack Virtual is required and locked at 1,500 or more rows.'
-      : 'Full DOM is the default below 200 rows; TanStack Virtual is the default from 200 rows and remains selectable.'
-  }
 
-  setInstrumentCount = (event: Event) => {
+  setInstrumentCount = (value: string) => {
+    const count = Number(value)
+    this.args.feed.actions.setInstrumentCount(count)
     this.args.controller.actions.resetViewState()
-    this.args.feed.actions.setInstrumentCount(numberValue(event))
+    this.uiInstrumentCount = count
+  }
+  setInstrumentCountFromEvent = (event: Event) => {
+    this.setInstrumentCount(selectValue(event))
   }
   setSampleRate = (event: Event) => {
     this.args.feed.actions.setTargetRate(feedSampleRateAt(numberValue(event)))
   }
   setPublishInterval = (event: Event) => {
     this.args.feed.actions.setPublishInterval(numberValue(event))
-  }
-  setVirtualMode = (event: Event) => {
-    this.args.controller.actions.setVirtualScrollEnabled(
-      selectValue(event) === 'tanstack',
-    )
   }
   setRendererMode = (event: Event) => {
     this.args.controller.actions.setRendererMode(
@@ -116,12 +113,12 @@ export default class Configurator extends Component<Signature> {
         <label class='field'><span>Instruments (rows)</span>
           <select
             data-testid='instrument-count-select'
-            value={{this.instrumentCount}}
-            {{on 'change' this.setInstrumentCount}}
+            {{captureSelect this.captureInstrumentSelect}}
+            {{on 'input' this.setInstrumentCountFromEvent}}
+            {{on 'change' this.setInstrumentCountFromEvent}}
           >
             {{#each this.options.instrumentCounts as |item|}}<option
                 value={{optionValue item}}
-                selected={{eq (optionValue item) this.instrumentCount}}
               >{{optionLabel item}}</option>{{/each}}
           </select>
         </label>
@@ -158,20 +155,6 @@ export default class Configurator extends Component<Signature> {
       </section>
       <section class='config-section' aria-labelledby='render-settings'>
         <h2 id='render-settings'>RENDER PATH</h2>
-        <label class='field' data-testid='virtual-scroll-mode'><span>Row
-            rendering</span>
-          <select
-            data-testid='virtual-scroll-select'
-            value={{this.virtualMode}}
-            disabled={{this.virtualForced}}
-            {{on 'change' this.setVirtualMode}}
-          >
-            {{#each this.options.rowRenderingModes as |item|}}<option
-                value={{optionValue item}}
-                selected={{eq (optionValue item) this.virtualMode}}
-              >{{optionLabel item}}</option>{{/each}}
-          </select><small>{{this.virtualDescription}}</small>
-        </label>
         <label class='toggle-field'><input
             type='checkbox'
             checked={{eq this.rendererMode 'swap'}}

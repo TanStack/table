@@ -19,6 +19,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitejs/plugin-vue-jsx": "^5.1.6",

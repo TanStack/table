@@ -18,6 +18,7 @@
     "lit": "^3.3.3"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "typescript": "6.0.3",
     "vite": "^8.2.2"
   }

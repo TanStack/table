@@ -34,7 +34,9 @@ export interface MarketFeedActions {
 
 export class MarketFeedController {
   readonly workerReady = createAtom(false)
-  readonly running = createAtom(true)
+  readonly running = createAtom(
+    !new URLSearchParams(location.search).has('paused'),
+  )
   readonly instrumentCount = createAtom(initialMarketFeedConfig.instrumentCount)
   readonly targetTicksPerSecond = createAtom(
     initialMarketFeedConfig.targetSamplesPerSecond,
@@ -206,9 +208,11 @@ export class MarketFeedController {
 
   #resetWorker(rowCount: number): void {
     this.workerReady.set(false)
-    this.#runtime.resetWaitingForCommit = true
-    this.#runtime.resetSnapshotReady = false
-    this.#post({ type: 'set-running', running: false })
+    if (this.running.get()) {
+      this.#runtime.resetWaitingForCommit = true
+      this.#runtime.resetSnapshotReady = false
+      this.#post({ type: 'set-running', running: false })
+    }
     this.#post({ type: 'reset', rowCount })
   }
 

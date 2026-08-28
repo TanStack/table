@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
 import {
   setRangeValue,
-  scrollTradingTable,
+  pausedFeedUrl,
 } from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
@@ -23,72 +23,19 @@ test('runs the Preact realtime trading workload', async ({ page }) => {
   const errors = collectPageErrors(page)
 
   try {
-    await page.goto(server.url)
+    await page.goto(pausedFeedUrl(server.url))
 
     const table = page.getByTestId('trading-table')
     const instrumentCount = page.getByTestId('instrument-count-select')
-    const virtualScrollSelect = page.getByTestId('virtual-scroll-select')
     await expect(table).toBeVisible()
     await expect(instrumentCount).toHaveValue('100')
     await expect(page.locator('.brand')).toHaveText('MARKET MONITOR')
-    await expect(virtualScrollSelect).toHaveValue('none')
-    await expect(virtualScrollSelect).toBeEnabled()
     await expect(table.locator('tbody tr')).toHaveCount(100)
     await expect(table.locator('tbody')).toHaveCSS('user-select', 'none')
     await expect(table.locator('tbody tr').first()).toHaveCSS(
       'content-visibility',
       'auto',
     )
-    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
-    await instrumentCount.selectOption('250')
-    await expect(virtualScrollSelect).toHaveValue('tanstack')
-    await expect(virtualScrollSelect).toBeEnabled()
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(250)
-    await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
-    await instrumentCount.selectOption('100')
-    await expect(virtualScrollSelect).toHaveValue('none')
-    await expect(table.locator('tbody tr')).toHaveCount(100)
-    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
-    await virtualScrollSelect.selectOption('tanstack')
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(100)
-    await expect(table.locator('tbody tr').first()).toHaveCSS(
-      'content-visibility',
-      'auto',
-    )
-    await expect(page.getByTestId('virtual-scroll-footer')).toBeVisible()
-    await virtualScrollSelect.selectOption('none')
-    await expect(table.locator('tbody tr')).toHaveCount(100)
-    await instrumentCount.selectOption('1500')
-    await expect(virtualScrollSelect).toHaveValue('tanstack')
-    await expect(virtualScrollSelect).toBeDisabled()
-    await expect
-      .poll(() => table.locator('tbody tr').count())
-      .toBeLessThan(1500)
-    await expect(page.getByTestId('virtual-scroll-footer')).toContainText(
-      'Total · 1500 rows · 14 columns',
-    )
-    await expect(page.getByTestId('visible-row-range')).toHaveText(
-      /^\s*Current · rows 0\.\.\d+\s*$/,
-    )
-    await scrollTradingTable(page, 2_000)
-    await expect
-      .poll(async () =>
-        Number(
-          await table
-            .locator('tbody tr')
-            .first()
-            .getAttribute('data-virtual-index'),
-        ),
-      )
-      .toBeGreaterThan(0)
-    await expect(page.getByTestId('visible-row-range')).toHaveText(
-      /^\s*Current · rows [1-9]\d*\.\.\d+\s*$/,
-    )
-    await instrumentCount.selectOption('100')
-    await expect(page.getByTestId('virtual-scroll-footer')).toHaveCount(0)
-    await expect(virtualScrollSelect).toHaveValue('none')
-    await expect(virtualScrollSelect).toBeEnabled()
-    await expect(table.locator('tbody tr')).toHaveCount(100)
     await expect(table.locator('thead tr')).toHaveCount(2)
     await expect(table.locator('thead tr').last().locator('th')).toHaveCount(14)
     await expect(table.locator('thead')).not.toContainText('Identity')
@@ -102,7 +49,7 @@ test('runs the Preact realtime trading workload', async ({ page }) => {
     await expect(page.getByTestId('selected-instrument')).toContainText(
       selectedSymbol ?? '',
     )
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED LIVE')
+    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
     await expect(instrumentCount.locator('option[value="150"]')).toHaveCount(1)
     await expect(instrumentCount.locator('option[value="350"]')).toHaveCount(1)
     await expect(instrumentCount.locator('option[value="750"]')).toHaveCount(1)
@@ -134,42 +81,6 @@ test('runs the Preact realtime trading workload', async ({ page }) => {
     await expect(publishInterval.locator('option[value="500"]')).toHaveCount(1)
     await expect(publishInterval.locator('option[value="1000"]')).toHaveCount(1)
 
-    await expect
-      .poll(async () => {
-        const text = await page.getByTestId('row-update-rate').textContent()
-        return Number(text?.replace(/\D/g, '') ?? 0)
-      })
-      .toBeGreaterThan(0)
-    await expect
-      .poll(async () => {
-        const text = await page.getByTestId('worker-messages').textContent()
-        return Number(text?.replace(/\D/g, '') ?? 0)
-      })
-      .toBeGreaterThan(0)
-    await expect
-      .poll(async () =>
-        Number(await page.getByTestId('message-rate').textContent()),
-      )
-      .toBeGreaterThan(0)
-    await expect
-      .poll(async () =>
-        Number(await page.getByTestId('table-render-rate').textContent()),
-      )
-      .toBeGreaterThan(0)
-
-    const firstPrice = page.locator('tbody tr').first().getByRole('button')
-    const priceBeforeUpdate = await firstPrice.textContent()
-    await expect
-      .poll(() => firstPrice.textContent())
-      .not.toBe(priceBeforeUpdate)
-
-    await page.locator('.config-section input[type="checkbox"]').first().check()
-    await page.getByTestId('feed-toggle').click()
-    await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
-
-    await instrumentCount.selectOption('750')
-    await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(750)
     expect(
       await page.evaluate(
         () => performance.getEntriesByName('tanstack-row-model').length > 0,

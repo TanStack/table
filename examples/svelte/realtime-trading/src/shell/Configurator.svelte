@@ -16,10 +16,10 @@
   const publishIntervalMs = useSelector(feed.publishIntervalMs)
   const updateSparklines = useSelector(feed.updateSparklines)
   const sparklineSampleIntervalMs = useSelector(feed.sparklineSampleIntervalMs)
-  const benchmarkState = useSelector(controller.store)
+  const requestedVirtualScrollMode = useSelector(controller.store, (state) => state.requestedVirtualScrollMode)
   const rendererMode = useSelector(controller.renderAtoms.rendererMode)
   const virtualScrollForced = $derived(instrumentCount.current >= FORCED_VIRTUALIZATION_ROW_COUNT)
-  const virtualScrollMode = $derived(resolveVirtualScrollMode(benchmarkState.current.requestedVirtualScrollMode, instrumentCount.current))
+  const virtualScrollMode = $derived(resolveVirtualScrollMode(requestedVirtualScrollMode.current, instrumentCount.current))
   const rate = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
   const numberValue = (event: Event) => Number((event.target as HTMLInputElement | HTMLSelectElement).value)
   const stringValue = (event: Event) => (event.target as HTMLInputElement | HTMLSelectElement).value

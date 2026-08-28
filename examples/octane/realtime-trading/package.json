@@ -14,10 +14,10 @@
   "dependencies": {
     "@tanstack/octane-store": "^0.12.2",
     "@tanstack/octane-table": "^9.2.3",
-    "@tanstack/virtual-core": "^3.17.8",
     "octane": "0.1.36"
   },
   "devDependencies": {
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@tsrx/typescript-plugin": "^0.3.118",
     "typescript": "6.0.3",
     "vite": "^8.2.2"

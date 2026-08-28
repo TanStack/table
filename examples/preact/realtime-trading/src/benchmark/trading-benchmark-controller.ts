@@ -1,6 +1,5 @@
 import { batch, createAtom, createStore } from '@tanstack/preact-store'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
-import { FORCED_VIRTUALIZATION_ROW_COUNT } from '../table/trading-row-virtualizer'
 import {
   BenchmarkMonitor,
   initialMetrics,
@@ -9,10 +8,8 @@ import {
 import type { FeedMetrics } from './benchmark-monitor'
 import type { MarketFeedController } from '../feed/market-feed-controller'
 import type { RendererMode } from '../table/trading-table'
-import type { VirtualScrollPreference } from '../table/trading-row-virtualizer'
 
 export interface TradingBenchmarkState {
-  requestedVirtualScrollMode: VirtualScrollPreference
   metrics: FeedMetrics
   mountedCells: number
   liveComponents: number
@@ -22,14 +19,12 @@ export interface TradingBenchmarkState {
 export interface TradingBenchmarkActions {
   resetViewState: () => void
   setRendererMode: (mode: RendererMode) => void
-  setVirtualScrollEnabled: (enabled: boolean) => void
   setRenderedRowCount: (count: number) => void
   selectSymbol: (symbol: string | null) => void
   resetMarket: () => void
 }
 
 const initialState: TradingBenchmarkState = {
-  requestedVirtualScrollMode: 'auto',
   metrics: initialMetrics,
   mountedCells: 0,
   liveComponents: 0,
@@ -57,20 +52,9 @@ export class TradingBenchmarkController {
     this.actions = {
       resetViewState: () => {
         this.renderAtoms.selectedSymbol.set(null)
-        this.#patch({ requestedVirtualScrollMode: 'auto' })
       },
       setRendererMode: (mode) => {
         this.renderAtoms.rendererMode.set(mode)
-      },
-      setVirtualScrollEnabled: (enabled) => {
-        if (
-          this.feed.instrumentCount.get() >= FORCED_VIRTUALIZATION_ROW_COUNT
-        ) {
-          return
-        }
-        this.#patch({
-          requestedVirtualScrollMode: enabled ? 'tanstack' : 'none',
-        })
       },
       setRenderedRowCount: (count) => {
         const mountedCells = count * TRADING_COLUMN_COUNT

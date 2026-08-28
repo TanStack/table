@@ -131,6 +131,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -153,6 +156,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -178,6 +184,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -203,6 +212,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -231,6 +243,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -256,6 +271,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -284,6 +302,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -309,6 +330,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -334,6 +358,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -359,6 +386,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -384,6 +414,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -409,6 +442,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -434,6 +470,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -459,6 +498,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -484,6 +526,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -509,6 +554,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -534,6 +582,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -559,6 +610,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -584,6 +638,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -609,6 +666,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -634,6 +694,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -659,6 +722,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -684,6 +750,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -709,6 +778,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -734,6 +806,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -755,13 +830,13 @@ importers:
       '@tanstack/store':
         specifier: ^0.11.1
         version: 0.11.1
-      '@tanstack/virtual-core':
-        specifier: ^3.17.8
-        version: 3.17.8
       alpinejs:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/alpinejs':
         specifier: ^3.13.11
         version: 3.13.11
@@ -784,6 +859,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -809,6 +887,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -834,6 +915,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -859,6 +943,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -884,6 +971,9 @@ importers:
         specifier: ^3.16.3
         version: 3.16.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -3055,6 +3145,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3122,6 +3215,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3192,6 +3288,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3262,6 +3361,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3329,6 +3431,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3402,6 +3507,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3472,6 +3580,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3542,6 +3653,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3612,6 +3726,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3682,6 +3799,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3752,6 +3872,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3822,6 +3945,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3892,6 +4018,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -3962,6 +4091,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4032,6 +4164,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4105,6 +4240,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4175,6 +4313,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4245,6 +4386,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4315,6 +4459,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4385,6 +4532,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4455,6 +4605,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4528,6 +4681,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4598,6 +4754,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4668,6 +4827,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4738,6 +4900,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4811,6 +4976,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4881,6 +5049,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -4911,9 +5082,6 @@ importers:
       '@tanstack/store':
         specifier: ^0.11.1
         version: 0.11.1
-      '@tanstack/virtual-core':
-        specifier: ^3.17.8
-        version: 3.17.8
       decorator-transforms:
         specifier: 2.4.0
         version: 2.4.0(@babel/core@7.29.7(supports-color@8.1.1))
@@ -4957,6 +5125,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -5027,6 +5198,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -5097,6 +5271,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -5167,6 +5344,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -5237,6 +5417,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -5307,6 +5490,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -5377,6 +5563,9 @@ importers:
       '@nullvoxpopuli/ember-vite':
         specifier: 1.1.0
         version: 1.1.0(@glint/template@1.8.0)(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-babel':
         specifier: 7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@8.1.1))(@types/babel__core@7.20.5)(rollup@4.63.0)(supports-color@8.1.1)
@@ -5402,6 +5591,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5427,6 +5619,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5449,6 +5644,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5474,6 +5672,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5496,6 +5697,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5521,6 +5725,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5543,6 +5750,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5568,6 +5778,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5590,6 +5803,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5612,6 +5828,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5634,6 +5853,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5656,6 +5878,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5678,6 +5903,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5700,6 +5928,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5722,6 +5953,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5744,6 +5978,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5766,6 +6003,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5791,6 +6031,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5813,6 +6056,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5835,6 +6081,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5857,6 +6106,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5879,6 +6131,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5904,6 +6159,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5926,6 +6184,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5948,6 +6209,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5970,6 +6234,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -5995,6 +6262,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6017,6 +6287,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6042,6 +6315,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -6061,6 +6337,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6083,6 +6362,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6105,6 +6387,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6127,6 +6412,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6149,6 +6437,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6174,6 +6465,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6199,6 +6493,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6224,6 +6521,9 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -6249,6 +6549,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6271,6 +6574,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6296,6 +6602,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6318,6 +6627,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6343,6 +6655,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6362,6 +6677,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6381,6 +6699,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6403,6 +6724,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6425,6 +6749,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6447,6 +6774,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6469,6 +6799,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6491,6 +6824,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6513,6 +6849,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6535,6 +6874,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6557,6 +6899,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6579,6 +6924,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6604,6 +6952,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6626,6 +6977,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6648,6 +7002,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6673,6 +7030,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6698,6 +7058,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6720,6 +7083,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6745,6 +7111,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6767,6 +7136,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6789,6 +7161,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6811,6 +7186,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6836,6 +7214,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6861,6 +7242,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6879,13 +7263,13 @@ importers:
       '@tanstack/octane-table':
         specifier: workspace:*
         version: link:../../../packages/octane-table
-      '@tanstack/virtual-core':
-        specifier: ^3.17.8
-        version: 3.17.8
       octane:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6908,6 +7292,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6933,6 +7320,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6955,6 +7345,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -6977,6 +7370,9 @@ importers:
         specifier: 0.1.36
         version: 0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tsrx/typescript-plugin':
         specifier: ^0.3.118
         version: 0.3.118(octane@0.1.36(@typescript-eslint/types@8.68.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(typescript@6.0.3)
@@ -7005,6 +7401,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7036,6 +7435,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7067,6 +7469,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7098,6 +7503,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7129,6 +7537,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7154,6 +7565,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7179,6 +7593,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7213,6 +7630,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7235,6 +7655,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7257,6 +7680,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7279,6 +7705,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7301,6 +7730,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7323,6 +7755,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7345,6 +7780,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7367,6 +7805,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7389,6 +7830,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7411,6 +7855,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7442,6 +7889,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7464,6 +7914,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7486,6 +7939,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7514,6 +7970,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7542,6 +8001,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7564,6 +8026,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7592,6 +8057,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7614,6 +8082,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7636,6 +8107,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7658,6 +8132,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7689,6 +8166,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7714,6 +8194,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7729,9 +8212,6 @@ importers:
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
-      '@tanstack/virtual-core':
-        specifier: ^3.17.8
-        version: 3.17.8
       preact:
         specifier: ^10.29.8
         version: 10.29.8(preact-render-to-string@6.7.0)
@@ -7739,6 +8219,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7761,6 +8244,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7792,6 +8278,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7814,6 +8303,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7836,6 +8328,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7879,6 +8374,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7913,6 +8411,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.8)(rollup@4.63.0)(supports-color@8.1.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -7935,6 +8436,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -7984,6 +8488,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8033,6 +8540,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8082,6 +8592,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8134,6 +8647,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8177,6 +8693,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8226,6 +8745,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8269,6 +8791,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8321,6 +8846,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8361,6 +8889,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8413,6 +8944,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8453,6 +8987,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8493,6 +9030,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8533,6 +9073,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8573,6 +9116,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8613,6 +9159,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8653,6 +9202,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8693,6 +9245,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8733,6 +9288,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8782,6 +9340,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8825,6 +9386,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8868,6 +9432,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8914,6 +9481,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -8960,6 +9530,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9000,6 +9573,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9046,6 +9622,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9086,6 +9665,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9126,6 +9708,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9166,6 +9751,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9242,6 +9830,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9321,6 +9912,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9400,6 +9994,9 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9476,6 +10073,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9564,6 +10164,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9640,6 +10243,9 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9737,6 +10343,9 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9834,6 +10443,9 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9883,6 +10495,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9935,6 +10550,9 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -9984,6 +10602,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10045,6 +10666,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10094,6 +10718,9 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10161,6 +10788,9 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10228,6 +10858,9 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10295,6 +10928,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10374,6 +11010,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10417,6 +11056,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10460,6 +11102,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10512,6 +11157,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10555,6 +11203,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10607,6 +11258,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10647,6 +11301,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10696,6 +11353,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10736,6 +11396,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10779,6 +11442,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10822,6 +11488,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10868,6 +11537,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10911,6 +11583,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -10954,6 +11629,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -11009,6 +11687,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -11070,6 +11751,9 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -11122,6 +11806,9 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -11186,6 +11873,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@8.0.1)(@babel/plugin-transform-runtime@8.0.1(@babel/core@8.0.1))(@babel/runtime@8.0.0)(rolldown@1.2.1)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -11226,6 +11916,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11254,6 +11947,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11279,6 +11975,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11310,6 +12009,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11338,6 +12040,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11363,6 +12068,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11394,6 +12102,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11416,6 +12127,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11438,6 +12152,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11460,6 +12177,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11482,6 +12202,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11504,6 +12227,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11526,6 +12252,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11548,6 +12277,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11570,6 +12302,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11592,6 +12327,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11617,6 +12355,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11639,6 +12380,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11664,6 +12408,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11689,6 +12436,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11711,6 +12461,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11739,6 +12492,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11761,6 +12517,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11783,6 +12542,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11805,6 +12567,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11836,6 +12601,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11858,6 +12626,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11880,6 +12651,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11902,6 +12676,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11930,6 +12707,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11952,6 +12732,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -11980,6 +12763,9 @@ importers:
         specifier: ^1.9.15
         version: 1.9.15
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -12002,6 +12788,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -12027,6 +12816,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -12058,6 +12850,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -12083,6 +12878,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -12120,6 +12918,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -12154,6 +12955,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -12200,6 +13004,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@tanstack/router-vite-plugin':
         specifier: ^1.167.35
         version: 1.167.35(@tanstack/react-router@1.170.32(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(supports-color@7.2.0)(vite-plugin-solid@2.11.14(@testing-library/jest-dom@7.0.1(@testing-library/dom@10.4.1)(vitest@4.1.11))(solid-js@1.9.15)(supports-color@7.2.0)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))(webpack@5.109.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3))
@@ -12218,6 +13025,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12248,6 +13058,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12278,6 +13091,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12308,6 +13124,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12342,6 +13161,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12372,6 +13194,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12402,6 +13227,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12432,6 +13260,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12465,6 +13296,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12495,6 +13329,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12525,6 +13362,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12555,6 +13395,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12585,6 +13428,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12615,6 +13461,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12645,6 +13494,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12675,6 +13527,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12705,6 +13560,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12735,6 +13593,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12765,6 +13626,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12795,6 +13659,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12825,6 +13692,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12855,6 +13725,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12885,6 +13758,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12918,6 +13794,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12948,6 +13827,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -12978,6 +13860,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13008,6 +13893,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13056,6 +13944,9 @@ importers:
       '@lucide/svelte':
         specifier: ^1.34.0
         version: 1.34.0(svelte@5.56.10(@typescript-eslint/types@8.68.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13119,6 +14010,9 @@ importers:
       '@lucide/svelte':
         specifier: ^1.34.0
         version: 1.34.0(svelte@5.56.10(@typescript-eslint/types@8.68.0))
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13176,6 +14070,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13219,6 +14116,9 @@ importers:
         specifier: ^5.56.10
         version: 5.56.10(@typescript-eslint/types@8.68.0)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.3.0
         version: 7.3.0(svelte@5.56.10(@typescript-eslint/types@8.68.0))(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -13240,6 +14140,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13270,6 +14173,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13300,6 +14206,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13330,6 +14239,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13366,6 +14278,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13396,6 +14311,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13429,6 +14347,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13465,6 +14386,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13517,6 +14441,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13563,6 +14490,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13594,6 +14524,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13616,6 +14549,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13638,6 +14574,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13660,6 +14599,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.6.0
         version: 10.6.0
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.63.0)
@@ -13685,6 +14627,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13722,6 +14667,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13762,6 +14710,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13799,6 +14750,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13833,6 +14787,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13867,6 +14824,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13907,6 +14867,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13938,6 +14901,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -13969,6 +14935,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14000,6 +14969,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14031,6 +15003,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14062,6 +15037,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14093,6 +15071,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14124,6 +15105,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14155,6 +15139,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14186,6 +15173,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14223,6 +15213,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14254,6 +15247,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14285,6 +15281,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14316,6 +15315,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14347,6 +15349,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14381,6 +15386,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14412,6 +15420,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14443,6 +15454,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14474,6 +15488,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14514,6 +15531,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14590,6 +15610,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14651,6 +15674,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14682,6 +15708,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14713,6 +15742,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14744,6 +15776,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14781,6 +15816,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14812,6 +15850,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14843,6 +15884,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14877,6 +15921,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14920,6 +15967,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14954,6 +16004,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -14997,6 +16050,9 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -15043,6 +16099,9 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@6.0.3)
     devDependencies:
+      '@rolldown/binding-wasm32-wasi':
+        specifier: ~1.2.4
+        version: 1.2.6
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -15095,10 +16154,10 @@ importers:
     devDependencies:
       '@analogjs/vite-plugin-angular':
         specifier: ^2.7.1
-        version: 2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+        version: 2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
       '@analogjs/vitest-angular':
         specifier: ^2.7.1
-        version: 2.7.1(@analogjs/vite-plugin-angular@2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(@angular-devkit/architect@0.2201.6(chokidar@5.0.0))(@angular-devkit/schematics@22.1.6(chokidar@5.0.0))(vitest@4.1.11)
+        version: 2.7.1(@analogjs/vite-plugin-angular@2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(@angular-devkit/architect@0.2201.6(chokidar@5.0.0))(@angular-devkit/schematics@22.1.6(chokidar@5.0.0))(vitest@4.1.11)
       '@angular/compiler':
         specifier: ^22.1.1
         version: 22.1.1
@@ -17279,6 +18338,9 @@ packages:
   '@emnapi/core@2.0.0-alpha.3':
     resolution: {integrity: sha512-AZypUeJ/yByuxyS7BlSNRDOMLMlROYtjYdIAuBmJssVz1UJDSeYxLrdizhXCFYhedC5bqd/ASy8EuNXbVVXp9g==}
 
+  '@emnapi/core@2.0.0-alpha.4':
+    resolution: {integrity: sha512-KjoUR6mNvjT+z5bKMy+a5QDI+kTNTiMZi6uPKzWuWjwZGNa0UPwIVduTfeBRdf6v8Ws5fmHDh7Usf15w/ANfkg==}
+
   '@emnapi/runtime@1.10.0':
     resolution: {integrity: sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==}
 
@@ -17293,6 +18355,9 @@ packages:
 
   '@emnapi/runtime@2.0.0-alpha.3':
     resolution: {integrity: sha512-hFPAhMUjJD9BSyCANEISPOogeXC9Zo9ZQl7L6vKnaVsMkCtzznaW/naYypeyl0Gv5rYfWYsZbpixTMpjDJzQeA==}
+
+  '@emnapi/runtime@2.0.0-alpha.4':
+    resolution: {integrity: sha512-Wy1TQ99obRP3Ah7cf/OOtK1zD9t3pYTWz+G/SpAwTFMhG5hoMdlvfzBpYoHUigS/izu3q+VhYMKhJd7Ii/trpg==}
 
   '@emnapi/wasi-threads@1.0.4':
     resolution: {integrity: sha512-PJR+bOmMOPH8AtcTGAyYNiuJ3/Fcoj2XN/gBEWzDIKh254XO+mM9XoXHk5GNEhodxeMznbg7BlRojVbKN+gC6g==}
@@ -18610,6 +19675,13 @@ packages:
     peerDependencies:
       '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.3
       '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.3
+
+  '@napi-rs/wasm-runtime@1.2.3':
+    resolution: {integrity: sha512-UMduMbqO5s5zF2NkNacMT/yK5Y5QiKvWr2+50bzIIxFDwVJ2h49b+oyjaCGPhJxd2/gC2x39EHv/gHVuu36x2Q==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
+    peerDependencies:
+      '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.4
+      '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.4
 
   '@neodrag/core@3.0.0-next.11':
     resolution: {integrity: sha512-3WQWxyrbxiaK9zS5JU2wJsW2gpoQlZBXVghduBh61JpqaeE0T0cte8R0qYK2RuJo3J2TYQYqxO19CpG/C1i5eg==}
@@ -20881,6 +21953,10 @@ packages:
 
   '@rolldown/binding-wasm32-wasi@1.2.1':
     resolution: {integrity: sha512-/TX0SoRGojHzSAHpfVBbavRVSazg5U3h3Y3VXfcc0cdugq6kxdqw8LPGFiPr+/7gE/60zRcsOY2Vi9b9eT0jww==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
+
+  '@rolldown/binding-wasm32-wasi@1.2.6':
+    resolution: {integrity: sha512-7l2ygq7igusdJglAiXxy52BMlUT4ykpmLhX4YWR2bi+IGfAX4OAbpKyN74g9Zj64a9bhcekBxav4qRMsTIQmmg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
 
   '@rolldown/binding-win32-arm64-msvc@1.1.5':
@@ -29355,11 +30431,11 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
 
-  '@analogjs/vite-plugin-angular@2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))':
+  '@analogjs/vite-plugin-angular@2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))':
     dependencies:
       magic-string: 0.30.21
       obug: 2.1.4
-      oxc-parser: 0.121.0(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)
+      oxc-parser: 0.121.0(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)
       tinyglobby: 0.2.17
     optionalDependencies:
       '@angular-devkit/build-angular': 22.1.6(2828c779ce3b028972f8555a72f25fb0)
@@ -29370,9 +30446,9 @@ snapshots:
       - '@emnapi/core'
       - '@emnapi/runtime'
 
-  '@analogjs/vitest-angular@2.7.1(@analogjs/vite-plugin-angular@2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(@angular-devkit/architect@0.2201.6(chokidar@5.0.0))(@angular-devkit/schematics@22.1.6(chokidar@5.0.0))(vitest@4.1.11)':
+  '@analogjs/vitest-angular@2.7.1(@analogjs/vite-plugin-angular@2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0)))(@angular-devkit/architect@0.2201.6(chokidar@5.0.0))(@angular-devkit/schematics@22.1.6(chokidar@5.0.0))(vitest@4.1.11)':
     dependencies:
-      '@analogjs/vite-plugin-angular': 2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
+      '@analogjs/vite-plugin-angular': 2.7.1(@angular-devkit/build-angular@22.1.6(2828c779ce3b028972f8555a72f25fb0))(@angular/build@22.1.6(024014ee1152fb75104fa34d053c7f64))(@angular/compiler@22.1.1)(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
       '@angular-devkit/architect': 0.2201.6(chokidar@5.0.0)
       '@angular-devkit/schematics': 22.1.6(chokidar@5.0.0)
       vitest: 4.1.11(@types/node@26.2.0)(@vitest/coverage-v8@4.1.11)(jsdom@30.0.1(@noble/hashes@2.2.0))(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.26))(terser@5.49.0)(yaml@2.9.0))
@@ -32021,6 +33097,11 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  '@emnapi/core@2.0.0-alpha.4':
+    dependencies:
+      '@emnapi/wasi-threads': 2.0.1
+      tslib: 2.8.1
+
   '@emnapi/runtime@1.10.0':
     dependencies:
       tslib: 2.8.1
@@ -32044,6 +33125,10 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  '@emnapi/runtime@2.0.0-alpha.4':
+    dependencies:
+      tslib: 2.8.1
+
   '@emnapi/wasi-threads@1.0.4':
     dependencies:
       tslib: 2.8.1
@@ -32060,7 +33145,6 @@ snapshots:
   '@emnapi/wasi-threads@2.0.1':
     dependencies:
       tslib: 2.8.1
-    optional: true
 
   '@emotion/babel-plugin@11.13.5(supports-color@7.2.0)':
     dependencies:
@@ -33342,6 +34426,26 @@ snapshots:
       '@tybys/wasm-util': 0.10.3
     optional: true
 
+  '@napi-rs/wasm-runtime@1.2.1(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)':
+    dependencies:
+      '@emnapi/core': 2.0.0-alpha.4
+      '@emnapi/runtime': 2.0.0-alpha.4
+      '@tybys/wasm-util': 0.10.3
+    optional: true
+
+  '@napi-rs/wasm-runtime@1.2.3(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)':
+    dependencies:
+      '@emnapi/core': 1.11.2
+      '@emnapi/runtime': 1.11.2
+      '@tybys/wasm-util': 0.10.3
+    optional: true
+
+  '@napi-rs/wasm-runtime@1.2.3(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)':
+    dependencies:
+      '@emnapi/core': 2.0.0-alpha.4
+      '@emnapi/runtime': 2.0.0-alpha.4
+      '@tybys/wasm-util': 0.10.3
+
   '@neodrag/core@3.0.0-next.11': {}
 
   '@neodrag/solid@3.0.0-next.11(@neodrag/core@3.0.0-next.11)(solid-js@1.9.15)':
@@ -33646,9 +34750,9 @@ snapshots:
   '@oxc-parser/binding-openharmony-arm64@0.143.0':
     optional: true
 
-  '@oxc-parser/binding-wasm32-wasi@0.121.0(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)':
+  '@oxc-parser/binding-wasm32-wasi@0.121.0(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.2.1(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)
+      '@napi-rs/wasm-runtime': 1.2.1(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -33770,7 +34874,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.11.2
       '@emnapi/runtime': 1.11.2
-      '@napi-rs/wasm-runtime': 1.2.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
+      '@napi-rs/wasm-runtime': 1.2.3(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)
     optional: true
 
   '@oxc-resolver/binding-win32-arm64-msvc@11.24.2':
@@ -35192,6 +36296,12 @@ snapshots:
       '@emnapi/runtime': 2.0.0-alpha.3
       '@napi-rs/wasm-runtime': 1.2.1(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)
     optional: true
+
+  '@rolldown/binding-wasm32-wasi@1.2.6':
+    dependencies:
+      '@emnapi/core': 2.0.0-alpha.4
+      '@emnapi/runtime': 2.0.0-alpha.4
+      '@napi-rs/wasm-runtime': 1.2.3(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)
 
   '@rolldown/binding-win32-arm64-msvc@1.1.5':
     optional: true
@@ -36642,7 +37752,6 @@ snapshots:
   '@tybys/wasm-util@0.10.3':
     dependencies:
       tslib: 2.8.1
-    optional: true
 
   '@tybys/wasm-util@0.9.0':
     dependencies:
@@ -42487,7 +43596,7 @@ snapshots:
       safe-push-apply: 1.0.0
     optional: true
 
-  oxc-parser@0.121.0(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3):
+  oxc-parser@0.121.0(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4):
     dependencies:
       '@oxc-project/types': 0.121.0
     optionalDependencies:
@@ -42507,7 +43616,7 @@ snapshots:
       '@oxc-parser/binding-linux-x64-gnu': 0.121.0
       '@oxc-parser/binding-linux-x64-musl': 0.121.0
       '@oxc-parser/binding-openharmony-arm64': 0.121.0
-      '@oxc-parser/binding-wasm32-wasi': 0.121.0(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)
+      '@oxc-parser/binding-wasm32-wasi': 0.121.0(@emnapi/core@2.0.0-alpha.4)(@emnapi/runtime@2.0.0-alpha.4)
       '@oxc-parser/binding-win32-arm64-msvc': 0.121.0
       '@oxc-parser/binding-win32-ia32-msvc': 0.121.0
       '@oxc-parser/binding-win32-x64-msvc': 0.121.0

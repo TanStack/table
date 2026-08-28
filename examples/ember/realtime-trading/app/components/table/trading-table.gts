@@ -12,16 +12,8 @@ import {
   type Table,
 } from '@tanstack/ember-table'
 import {
-  Virtualizer,
-  elementScroll,
-  observeElementOffset,
-  observeElementRect,
-  type VirtualItem,
-} from '@tanstack/virtual-core'
-import {
   createTradingColumns,
   readMeasuredRows,
-  type RendererMode,
 } from '../../table/table-config/trading-columns.gts'
 import { tradingFeatures } from '../../table/trading-features'
 import {
@@ -31,26 +23,28 @@ import {
   sortAriaValue,
   sortIndicator,
 } from '../../table/table-interactions'
-import {
-  TRADING_ROW_HEIGHT,
-  TRADING_ROW_OVERSCAN,
-  resolveVirtualScrollMode,
-} from '../../table/trading-row-virtualizer'
 import { registerCleanup } from '../../utils/subscriptions'
+import { run } from '@ember/runloop'
 import type Owner from '@ember/owner'
 import type { MarketQuote } from '../../feed/market-data'
 import type { MarketFeedController } from '../../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
 interface Signature {
-  Args: { controller: TradingBenchmarkController; feed: MarketFeedController }
+  Args: {
+    controller: TradingBenchmarkController
+    feed: MarketFeedController
+  }
+}
+interface TableView {
+  quotes: Array<MarketQuote>
 }
 type TradingRow = Row<typeof tradingFeatures, MarketQuote>
 type TradingHeader = Header<typeof tradingFeatures, MarketQuote>
 interface RenderedRow {
+  id: string
   row: TradingRow
   cells: ReturnType<TradingRow['getVisibleCells']>
-  virtual: VirtualItem | null
 }
 
 const captureElement = modifier(
@@ -74,7 +68,10 @@ const markRenderCommitted = modifier(
 )
 
 export default class TradingTable extends Component<Signature> {
-  @tracked virtualVersion = 0
+  @tracked viewGeneration = 0
+  tableView: TableView = {
+    quotes: [],
+  }
   readonly pointer = new TradingGridPointerController()
   readonly layout = { manuallyResized: false }
   readonly drag = {
@@ -84,8 +81,6 @@ export default class TradingTable extends Component<Signature> {
   }
   scrollElement: HTMLDivElement | null = null
   bodyElement: HTMLTableSectionElement | null = null
-  virtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement> | null = null
-  stopVirtualizer: (() => void) | null = null
   resizeObserver: ResizeObserver | null = null
   mutationObserver: MutationObserver | null = null
 
@@ -101,11 +96,30 @@ export default class TradingTable extends Component<Signature> {
 
   constructor(owner: Owner, args: Signature['Args']) {
     super(owner, args)
+    this.args.controller.invalidateTable = this.queueSync
+    const stopObserving = this.args.feed.observe({
+      viewChanged: this.queueSync,
+    })
+    this.queueSync()
     registerCleanup(this, () => {
-      this.stopVirtualizer?.()
+      this.args.controller.invalidateTable = null
+      stopObserving()
       this.resizeObserver?.disconnect()
       this.mutationObserver?.disconnect()
     })
+  }
+
+  queueSync = () => {
+    queueMicrotask(() => {
+      run(() => this.syncView())
+    })
+  }
+
+  syncView = () => {
+    this.tableView = {
+      quotes: this.args.feed.quotes,
+    }
+    this.viewGeneration++
   }
 
   @cached
@@ -116,7 +130,8 @@ export default class TradingTable extends Component<Signature> {
     )
   }
   get data(): Array<MarketQuote> {
-    return this.args.feed.quotes
+    void this.viewGeneration
+    return this.tableView.quotes
   }
   get selectedSymbol() {
     return this.args.controller.selectedSymbol
@@ -132,79 +147,31 @@ export default class TradingTable extends Component<Signature> {
   get headerGroups() {
     return this.table.getHeaderGroups()
   }
-  get visibleLeafColumnCount() {
-    return this.table.getVisibleLeafColumns().length
-  }
   get sourceRowCount() {
-    return this.args.feed.quotes.length
-  }
-  get virtualMode() {
-    return resolveVirtualScrollMode(
-      this.args.controller.requestedVirtualScrollMode,
-      this.args.feed.instrumentCount,
-    )
+    void this.viewGeneration
+    return this.tableView.quotes.length
   }
   get renderedRows(): Array<RenderedRow> {
-    void this.virtualVersion
-    const rows = this.rows
-    this.syncVirtualizer(rows)
-    const result =
-      this.virtualMode === 'tanstack' && this.virtualizer
-        ? this.virtualizer.getVirtualItems().map((item) => ({
-            row: rows[item.index]!,
-            cells: rows[item.index]!.getVisibleCells(),
-            virtual: item,
-          }))
-        : rows.map((row) => ({
-            row,
-            cells: row.getVisibleCells(),
-            virtual: null,
-          }))
+    void this.viewGeneration
+    const result = this.rows.map((row) => ({
+      id: row.id,
+      row,
+      cells: row.getVisibleCells(),
+    }))
     queueMicrotask(() =>
       this.args.controller.actions.setRenderedRowCount(result.length),
     )
     return result
   }
-  get totalVirtualHeight() {
-    void this.virtualVersion
-    return (
-      this.virtualizer?.getTotalSize() ?? this.rows.length * TRADING_ROW_HEIGHT
-    )
-  }
-  get visibleRangeText() {
-    void this.virtualVersion
-    const range = this.virtualizer?.range
-    const rowCount = this.rows.length
-    return !range || this.virtualMode !== 'tanstack' || rowCount === 0
-      ? 'Current · rows —'
-      : `Current · rows ${Math.min(range.startIndex, rowCount - 1)}..${Math.min(range.endIndex, rowCount - 1)}`
-  }
 
   captureScroll = (element: HTMLElement | null) => {
-    this.stopVirtualizer?.()
-    this.resizeObserver?.disconnect()
-    this.stopVirtualizer = null
-    this.resizeObserver = null
     this.scrollElement = element as HTMLDivElement | null
     if (!this.scrollElement) return
-    this.virtualizer = new Virtualizer({
-      count: 0,
-      getScrollElement: () => this.scrollElement,
-      estimateSize: () => TRADING_ROW_HEIGHT,
-      overscan: TRADING_ROW_OVERSCAN,
-      observeElementRect,
-      observeElementOffset,
-      scrollToFn: elementScroll,
-      onChange: () => {
-        this.virtualVersion++
-      },
-    })
-    this.stopVirtualizer = this.virtualizer._didMount()
+    this.resizeObserver?.disconnect()
     this.resizeObserver = new ResizeObserver(() => this.fitAvailableWidth())
     this.resizeObserver.observe(this.scrollElement)
     queueMicrotask(() => {
-      this.fitAvailableWidth()
-      this.virtualVersion++
+      run(() => this.fitAvailableWidth())
     })
   }
   captureBody = (element: HTMLElement | null) => {
@@ -224,16 +191,6 @@ export default class TradingTable extends Component<Signature> {
     })
   }
 
-  syncVirtualizer(rows: Array<TradingRow>) {
-    if (!this.virtualizer) return
-    this.virtualizer.setOptions({
-      ...this.virtualizer.options,
-      count: rows.length,
-      enabled: this.virtualMode === 'tanstack',
-      getItemKey: (index) => rows[index]?.id ?? index,
-    })
-    this.virtualizer._willUpdate()
-  }
   @cached
   get columnSizeVars(): string {
     void this.table.store.state.columnSizing
@@ -330,14 +287,12 @@ export default class TradingTable extends Component<Signature> {
 
   <template>
     <div
-      class='table-scroll
-        {{if (eq this.virtualMode "tanstack") "is-virtualized"}}'
+      class='table-scroll'
       data-trading-table
       {{captureElement this.captureScroll}}
     >
       <table
-        class='trading-data-grid
-          {{if (eq this.virtualMode "tanstack") "virtual-table"}}'
+        class='trading-data-grid'
         data-testid='trading-table'
         role='grid'
         aria-multiselectable='true'
@@ -397,21 +352,16 @@ export default class TradingTable extends Component<Signature> {
           {{/each}}
         </thead>
         <tbody
-          class={{if (eq this.virtualMode 'tanstack') 'virtual-table-body'}}
-          style={{bodyStyle this.virtualMode this.totalVirtualHeight}}
           data-source-row-count={{this.sourceRowCount}}
           {{captureElement this.captureBody}}
-          {{markRenderCommitted @feed @feed.quotes}}
+          {{markRenderCommitted @feed this.data}}
           {{on 'mousedown' this.onBodyMouseDown}}
           {{on 'pointerover' this.onBodyPointerOver}}
           {{on 'mouseleave' this.resetPointer}}
           {{on 'click' this.onBodyClick}}
         >
-          {{#each this.renderedRows key='row.id' as |item|}}
+          {{#each this.renderedRows as |item|}}
             <tr
-              class={{if item.virtual 'virtual-table-row'}}
-              style={{rowStyle item.virtual}}
-              data-virtual-index={{virtualIndex item.virtual}}
               data-symbol={{item.row.original.symbol}}
               data-row-id={{item.row.original.id}}
               data-symbol-selected={{if
@@ -437,16 +387,6 @@ export default class TradingTable extends Component<Signature> {
         </tbody>
       </table>
     </div>
-    {{#if (eq this.virtualMode 'tanstack')}}<footer
-        class='virtual-scroll-footer'
-        data-testid='virtual-scroll-footer'
-      ><span>TanStack · Total ·
-          {{this.rows.length}}
-          rows ·
-          {{this.visibleLeafColumnCount}}
-          columns</span><span
-          data-testid='visible-row-range'
-        >{{this.visibleRangeText}}</span></footer>{{/if}}
   </template>
 }
 
@@ -471,10 +411,6 @@ const headerClass = (header: TradingHeader): string =>
   `${isLeaf(header) ? '' : 'column-group-header'} ${isLeaf(header) && !['market', 'name', 'symbol'].includes(header.column.id) ? 'numeric-header' : ''}`
 const cellStyle = (columnId: string) =>
   htmlSafe(`width:calc(var(--col-${columnId}-size) * 1px)`)
-const bodyStyle = (mode: string, height: number) =>
-  mode === 'tanstack' ? htmlSafe(`height:${height}px`) : undefined
-const rowStyle = (virtual: VirtualItem | null) =>
-  virtual ? htmlSafe(`transform:translateY(${virtual.start}px)`) : undefined
 const edgeAttr = (
   cell: {
     getSelectionEdges: () => {
@@ -496,7 +432,5 @@ const cellFocused = (
 const cellTabIndex = (
   cell: ReturnType<TradingRow['getVisibleCells']>[number],
 ): number => cell.getTabIndex()
-const virtualIndex = (virtual: VirtualItem | null): number | undefined =>
-  virtual?.index
 const eq = (left: unknown, right: unknown): boolean => left === right
 const not = (value: boolean): boolean => !value

@@ -44,6 +44,7 @@
     "@glint/template": "1.8.0",
     "@glint/tsserver-plugin": "2.7.3",
     "@nullvoxpopuli/ember-vite": "1.1.0",
+    "@rolldown/binding-wasm32-wasi": "~1.2.4",
     "@rollup/plugin-babel": "7.1.0",
     "babel-plugin-ember-template-compilation": "4.0.0",
     "typescript": "6.0.3",

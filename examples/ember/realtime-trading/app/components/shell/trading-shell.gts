@@ -1,6 +1,5 @@
 import Component from '@glimmer/component'
 import { tracked } from '@glimmer/tracking'
-import { on } from '@ember/modifier'
 import AppHeader from './app-header.gts'
 import Configurator from './configurator.gts'
 import MarketStatusbar from './market-statusbar.gts'
@@ -9,7 +8,10 @@ import type { MarketFeedController } from '../../feed/market-feed-controller'
 import type { TradingBenchmarkController } from '../../benchmark/trading-benchmark-controller'
 
 interface Signature {
-  Args: { controller: TradingBenchmarkController; feed: MarketFeedController }
+  Args: {
+    controller: TradingBenchmarkController
+    feed: MarketFeedController
+  }
 }
 
 export default class TradingShell extends Component<Signature> {
