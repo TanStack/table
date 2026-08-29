@@ -187,6 +187,34 @@ export function table_mergeOptions<
 }
 
 /**
+ * Clears every built row's accessor-value caches. Both are keyed by column id
+ * and rows outlive column-definition swaps, so a replaced `accessorFn` would
+ * otherwise never be read again. Emptied in place because sorted and grouped
+ * row clones share these objects by reference.
+ */
+function table_clearRowValueCaches<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): void {
+  if (!table._rowModels.coreRowModel) {
+    return
+  }
+
+  const rows = table.getCoreRowModel().flatRows
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]!
+
+    for (const key in row._valuesCache) {
+      delete row._valuesCache[key]
+    }
+    for (const key in row._uniqueValuesCache) {
+      delete row._uniqueValuesCache[key]
+    }
+  }
+}
+
+/**
  * Updates the table options object.
  *
  * The updater receives the current resolved options and the merged result is
@@ -213,6 +241,9 @@ export function table_setOptions<
     table.options as TableOptions<TFeatures, TData>,
   )
   const mergedOptions = table_mergeOptions(table, newOptions)
+  if (mergedOptions.columns !== table.options.columns) {
+    table_clearRowValueCaches(table)
+  }
 
   if (table.optionsStore) {
     table.optionsStore.set(() => mergedOptions)
