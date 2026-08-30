@@ -381,3 +381,16 @@ function calculateFrameRate(
   )
   return (timestamps.length / observedWindowMs) * 1_000
 }
+
+export function exposeTradingBenchmarkSnapshot(
+  metrics: FeedMetrics,
+  extras: { mountedCells: number; liveComponents: number },
+): void {
+  Object.assign(globalThis, {
+    __TANSTACK_TRADING_BENCHMARK__: {
+      capturedAt: performance.now(),
+      metrics,
+      ...extras,
+    },
+  })
+}

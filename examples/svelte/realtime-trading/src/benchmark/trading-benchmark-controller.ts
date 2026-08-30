@@ -3,6 +3,7 @@ import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import { FORCED_VIRTUALIZATION_ROW_COUNT } from '../table/trading-row-virtualizer'
 import {
   BenchmarkMonitor,
+  exposeTradingBenchmarkSnapshot,
   initialMetrics,
   longAnimationFramesSupported,
 } from './benchmark-monitor'
@@ -146,9 +147,15 @@ export class TradingBenchmarkController {
   }
 
   #publishMetrics(metrics: FeedMetrics): void {
+    const liveComponents =
+      metrics.componentsCreated - metrics.componentsDestroyed
     this.#patch({
       metrics,
-      liveComponents: metrics.componentsCreated - metrics.componentsDestroyed,
+      liveComponents,
+    })
+    exposeTradingBenchmarkSnapshot(metrics, {
+      mountedCells: this.store.get().mountedCells,
+      liveComponents,
     })
   }
 }

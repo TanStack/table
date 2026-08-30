@@ -2,6 +2,7 @@ import { cached, tracked } from '@glimmer/tracking'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import {
   BenchmarkMonitor,
+  exposeTradingBenchmarkSnapshot,
   initialMetrics,
   longAnimationFramesSupported,
 } from './benchmark-monitor'
@@ -114,5 +115,9 @@ export class TradingBenchmarkController {
 
   #publishMetrics(metrics: FeedMetrics): void {
     this.metrics = metrics
+    exposeTradingBenchmarkSnapshot(metrics, {
+      mountedCells: this.mountedCells,
+      liveComponents: this.liveComponents,
+    })
   }
 }

@@ -6,6 +6,7 @@ import {
 } from '../table/trading-row-virtualizer'
 import {
   BenchmarkMonitor,
+  exposeTradingBenchmarkSnapshot,
   initialMetrics,
   longAnimationFramesSupported,
 } from './benchmark-monitor'
@@ -57,7 +58,13 @@ export function createTradingBenchmarkController(feed: MarketFeedController) {
   const benchmarkFrame = (now: number): void => {
     monitor.recordAnimationFrame(now)
     if (monitor.shouldPublish(now)) {
-      setMetrics(monitor.publish(now))
+      const nextMetrics = monitor.publish(now)
+      setMetrics(nextMetrics)
+      exposeTradingBenchmarkSnapshot(nextMetrics, {
+        mountedCells: renderedRowCount() * TRADING_COLUMN_COUNT,
+        liveComponents:
+          nextMetrics.componentsCreated - nextMetrics.componentsDestroyed,
+      })
     }
     runtime.animationFrameId = requestAnimationFrame(benchmarkFrame)
   }

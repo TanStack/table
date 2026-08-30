@@ -252,3 +252,16 @@ function readHeapSizeMb(): number | null {
   ).memory
   return memory ? memory.usedJSHeapSize / 1_048_576 : null
 }
+
+export function exposeTradingBenchmarkSnapshot(
+  metrics: FeedMetrics,
+  extras: { mountedCells: number; liveComponents: number },
+): void {
+  Object.assign(globalThis, {
+    __TANSTACK_TRADING_BENCHMARK__: {
+      capturedAt: performance.now(),
+      metrics,
+      ...extras,
+    },
+  })
+}

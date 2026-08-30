@@ -12,7 +12,11 @@ import {
   FORCED_VIRTUALIZATION_ROW_COUNT,
   resolveVirtualScrollMode,
 } from '../table/trading-row-virtualizer'
-import { BenchmarkMonitor, initialMetrics } from './benchmark-monitor'
+import {
+  BenchmarkMonitor,
+  exposeTradingBenchmarkSnapshot,
+  initialMetrics,
+} from './benchmark-monitor'
 import type {
   VirtualScrollMode,
   VirtualScrollPreference,
@@ -130,7 +134,12 @@ export class TradingBenchmarkController {
   readonly #benchmarkFrame = (now: number): void => {
     this.#monitor.recordAnimationFrame(now)
     if (this.#monitor.shouldPublish(now)) {
-      this.metrics.set(this.#monitor.publish(now))
+      const metrics = this.#monitor.publish(now)
+      this.metrics.set(metrics)
+      exposeTradingBenchmarkSnapshot(metrics, {
+        mountedCells: this.mountedCells(),
+        liveComponents: this.liveComponents(),
+      })
     }
     this.#animationFrameId = requestAnimationFrame(this.#benchmarkFrame)
   }

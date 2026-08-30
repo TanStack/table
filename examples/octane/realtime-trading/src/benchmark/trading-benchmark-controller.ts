@@ -2,6 +2,7 @@ import { batch, createAtom, createStore } from '@tanstack/octane-store'
 import { TRADING_COLUMN_COUNT } from '../table/trading-table'
 import {
   BenchmarkMonitor,
+  exposeTradingBenchmarkSnapshot,
   initialMetrics,
   longAnimationFramesSupported,
 } from './benchmark-monitor'
@@ -130,9 +131,15 @@ export class TradingBenchmarkController {
   }
 
   #publishMetrics(metrics: FeedMetrics): void {
+    const liveComponents =
+      metrics.componentsCreated - metrics.componentsDestroyed
     this.#patch({
       metrics,
-      liveComponents: metrics.componentsCreated - metrics.componentsDestroyed,
+      liveComponents,
+    })
+    exposeTradingBenchmarkSnapshot(metrics, {
+      mountedCells: this.store.get().mountedCells,
+      liveComponents,
     })
   }
 }
