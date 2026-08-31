@@ -58,6 +58,7 @@ There are a few properties on `header` objects that are only useful if the heade
 - `isPlaceholder`: A boolean flag that is true if the header is a placeholder header. Placeholder headers fill the rows above a shallow leaf column's real header so that every header row accounts for every visible column. Render them as empty cells to keep the header grid aligned, or use `header.rowSpan` to merge each placeholder chain into one vertically spanning header cell.
 - `placeholderId`: The unique identifier for the placeholder header.
 - `subHeaders`: The array of sub/child headers that belong to this header. Will be empty if the header is a leaf header.
+- `getLeafHeaders()`: The leaf headers nested under this header, in left-to-right order. Group and placeholder headers are excluded, so a leaf header returns just itself. Use `table.getFlatHeaders()` if you need every header, group headers included.
 
 > [!NOTE]
 > `header.index` refers to its index within the header group (row of headers), i.e. its position from left to right. It is not the same as `header.depth`, which refers to the header group "row index".
