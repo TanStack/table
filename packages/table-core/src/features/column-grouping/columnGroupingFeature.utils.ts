@@ -1,4 +1,7 @@
-import { cloneState, hasOwn, setStateSlice } from '../../utils'
+import { cloneState, hasOwn, makeObjectMap, setStateSlice } from '../../utils'
+import { row_getValue } from '../../core/rows/coreRowsFeature.utils'
+import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
+import { aggregateColumnValue } from '../row-aggregation/rowAggregationFeature.utils'
 import type { Column_Internal } from '../../types/Column'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -187,7 +190,7 @@ export function table_resetGrouping<
 export function row_getIsGrouped<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>) {
+>(row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping<TFeatures, TData>>) {
   return !!row.groupingColumnId
 }
 
@@ -205,7 +208,10 @@ export function row_getIsGrouped<
 export function row_getGroupingValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>, columnId: string) {
+>(
+  row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping<TFeatures, TData>>,
+  columnId: string,
+) {
   if (row._groupingValuesCache && hasOwn(row._groupingValuesCache, columnId)) {
     return row._groupingValuesCache[columnId]
   }
@@ -219,15 +225,111 @@ export function row_getGroupingValue<
     return row.getValue(columnId)
   }
 
-  if (row._groupingValuesCache) {
-    row._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
-      row.original,
-      row.index,
-      row,
-    )
+  // Allocated on first use; the slot is declared at construction so this is
+  // a value write.
+  const groupingValuesCache = (row._groupingValuesCache ??= makeObjectMap())
+  groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
+    row.original,
+    row.index,
+    row,
+  )
+
+  return groupingValuesCache[columnId]
+}
+
+/**
+ * Grouping-aware implementation behind `row.getValue` when the grouping
+ * feature is registered.
+ *
+ * Leaf rows fall through to the core accessor read. Grouped rows resolve
+ * grouping-column values from their partition and other columns from the
+ * aggregation cache, replacing the per-row `getValue` closure the grouped row
+ * model used to install (an own property that forked row hidden classes).
+ */
+export function row_getGroupingAwareValue<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping<TFeatures, TData>>,
+  columnId: string,
+) {
+  if (row.groupingColumnId === undefined) {
+    return row_getValue(row, columnId)
+  }
+  return row_getGroupedValue(row, columnId)
+}
+
+/**
+ * Resolves `row.getValue` for a grouped row.
+ *
+ * The active grouping column and ancestor grouping columns expose their
+ * inherited grouping values (cached in `_valuesCache`). Other columns resolve
+ * through the aggregation cache, computing and caching the aggregation on
+ * first read when the aggregation feature is registered.
+ *
+ * Leaf rows must use `row_getValue` (or `row_getGroupingAwareValue`, which
+ * branches on `groupingColumnId`) instead.
+ */
+export function row_getGroupedValue<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping<TFeatures, TData>>,
+  columnId: string,
+) {
+  const table = row.table
+
+  // Mirror the grouped row model's `existingGrouping` filter (grouping ids
+  // whose columns exist) without allocating the filtered array: resolve this
+  // column's index among the existing grouped columns.
+  const grouping = table.atoms.grouping?.get() ?? []
+  let groupingIndex = -1
+  let existingIndex = 0
+  for (let i = 0; i < grouping.length; i++) {
+    const groupedColumnId = grouping[i]!
+    if (!table_getColumn(table, groupedColumnId)) continue
+    if (groupedColumnId === columnId) {
+      groupingIndex = existingIndex
+      break
+    }
+    existingIndex++
   }
 
-  return row._groupingValuesCache?.[columnId]
+  // Columns grouped at deeper levels than this row are still eligible for
+  // aggregation below.
+  if (groupingIndex !== -1 && groupingIndex <= row.depth) {
+    if (hasOwn(row._valuesCache, columnId)) {
+      return row._valuesCache[columnId]
+    }
+
+    const groupedRows = row._groupedRows
+    if (groupedRows?.[0]) {
+      row._valuesCache[columnId] =
+        groupedRows[0].getValue(columnId) ?? undefined
+    }
+
+    return row._valuesCache[columnId]
+  }
+
+  const aggregationCache = row._aggregationValuesCache
+  if (aggregationCache && hasOwn(aggregationCache, columnId)) {
+    return aggregationCache[columnId]
+  }
+
+  const column = table.getColumn(columnId)
+  if (typeof (column as any)?.getAggregationFns !== 'function') {
+    return undefined
+  }
+
+  const cache = (row._aggregationValuesCache ??= makeObjectMap())
+  cache[columnId] = aggregateColumnValue({
+    subRows: row.subRows,
+    column: column!,
+    groupingRow: row,
+    rows: row._groupedRows ?? row.leafRows ?? [],
+    uniqueRows: true,
+  })
+  return cache[columnId]
 }
 
 /**
@@ -245,7 +347,8 @@ export function cell_getIsGrouped<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>) {
-  const row = cell.row as Row<TFeatures, TData> & Partial<Row_ColumnGrouping>
+  const row = cell.row as Row<TFeatures, TData> &
+    Partial<Row_ColumnGrouping<TFeatures, TData>>
   return (
     column_getIsGrouped(cell.column) && cell.column.id === row.groupingColumnId
   )

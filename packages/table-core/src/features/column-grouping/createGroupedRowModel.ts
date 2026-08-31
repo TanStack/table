@@ -3,10 +3,7 @@ import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
-import {
-  aggregateColumnValue,
-  normalizeUniqueAggregationRows,
-} from '../row-aggregation/rowAggregationFeature.utils'
+import { normalizeUniqueAggregationRows } from '../row-aggregation/rowAggregationFeature.utils'
 import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
 import type { Column_Internal } from '../../types/Column'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -92,7 +89,7 @@ function _createGroupedRowModel<
   )
 
   const groupedFlatRows: Array<Row<TFeatures, TData>> &
-    Partial<Row_ColumnGrouping> = []
+    Partial<Row_ColumnGrouping<TFeatures, TData>> = []
   const groupedRowsById = makeObjectMap<Row<TFeatures, TData>>()
 
   // Recursively group the data
@@ -156,53 +153,18 @@ function _createGroupedRowModel<
           depth,
           undefined,
           parentId,
-        ) as Row<TFeatures, TData> & Partial<Row_ColumnGrouping>
+        ) as Row<TFeatures, TData> &
+          Partial<Row_ColumnGrouping<TFeatures, TData>>
 
-        Object.assign(row, {
-          groupingColumnId: columnId,
-          groupingValue,
-          subRows,
-          leafRows,
-          getValue: (colId: string) => {
-            const groupingIndex = existingGrouping.indexOf(colId)
-
-            // The active grouping column and ancestor grouping columns expose
-            // their inherited grouping values. Columns grouped at deeper
-            // levels are still eligible for aggregation here.
-            if (groupingIndex !== -1 && groupingIndex <= depth) {
-              if (hasOwn(row._valuesCache, colId)) {
-                return row._valuesCache[colId]
-              }
-
-              if (groupedRows[0]) {
-                row._valuesCache[colId] =
-                  groupedRows[0].getValue(colId) ?? undefined
-              }
-
-              return row._valuesCache[colId]
-            }
-
-            const aggregationCache = (row as any)._aggregationValuesCache as
-              Record<string, unknown> | undefined
-            if (aggregationCache && hasOwn(aggregationCache, colId)) {
-              return aggregationCache[colId]
-            }
-
-            const column = table.getColumn(colId) as any
-            if (typeof column.getAggregationFns !== 'function') return undefined
-
-            const cache = ((row as any)._aggregationValuesCache ??=
-              makeObjectMap())
-            cache[colId] = aggregateColumnValue({
-              subRows,
-              column,
-              groupingRow: row,
-              rows: groupedRows,
-              uniqueRows: true,
-            })
-            return cache[colId]
-          },
-        })
+        // Value writes to properties declared by the grouping feature's
+        // initRowInstanceData, so group rows keep the shared row hidden
+        // class. Grouped/aggregated `getValue` reads resolve through the
+        // prototype override in columnGroupingFeature.
+        row.groupingColumnId = columnId
+        row.groupingValue = groupingValue
+        row.subRows = subRows
+        row.leafRows = leafRows
+        row._groupedRows = groupedRows
 
         groupedFlatRows[flatIndex] = row
         groupedRowsById[id] = row
@@ -260,17 +222,13 @@ function groupBy<TFeatures extends TableFeatures, TData extends RowData = any>(
     const row = rows[i]!
     let groupingValue
     if (getGroupingValue) {
-      const cache = (row as any)._groupingValuesCache as
-        Record<string, unknown> | undefined
-      if (cache && hasOwn(cache, columnId)) {
-        groupingValue = cache[columnId]
-      } else if (cache) {
-        groupingValue = cache[columnId] = getGroupingValue(
-          row.original,
-          row.index,
-          row,
-        )
-      }
+      // Allocated on first use; the slot is declared by initRowInstanceData
+      // so this is a value write.
+      const cache = ((row as any)._groupingValuesCache ??=
+        makeObjectMap()) as Record<string, unknown>
+      groupingValue = hasOwn(cache, columnId)
+        ? cache[columnId]
+        : (cache[columnId] = getGroupingValue(row.original, row.index, row))
     } else {
       groupingValue = row.getValue(columnId)
     }
