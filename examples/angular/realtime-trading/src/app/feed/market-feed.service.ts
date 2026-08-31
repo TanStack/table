@@ -37,7 +37,7 @@ export class MarketFeedService {
   readonly #observers = new Set<MarketFeedObserver>()
 
   readonly workerReady = signal(false)
-  readonly running = signal(true)
+  readonly running = signal(!new URLSearchParams(location.search).has('paused'))
   readonly instrumentCount = signal(initialMarketFeedConfig.instrumentCount)
   readonly targetTicksPerSecond = signal(
     initialMarketFeedConfig.targetSamplesPerSecond,

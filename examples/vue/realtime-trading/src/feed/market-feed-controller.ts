@@ -34,7 +34,7 @@ export interface MarketFeedActions {
 
 export class MarketFeedController {
   readonly workerReady = ref(false)
-  readonly running = ref(true)
+  readonly running = ref(!new URLSearchParams(location.search).has('paused'))
   readonly instrumentCount = ref(initialMarketFeedConfig.instrumentCount)
   readonly targetTicksPerSecond = ref(
     initialMarketFeedConfig.targetSamplesPerSecond,

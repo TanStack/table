@@ -4,6 +4,9 @@ import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampl
 import {
   setRangeValue,
   scrollTradingTable,
+  pauseTradingFeed,
+  resumeTradingFeed,
+  pausedFeedUrl,
 } from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
@@ -23,7 +26,7 @@ test('runs the Vue realtime trading workload', async ({ page }) => {
   const errors = collectPageErrors(page)
 
   try {
-    await page.goto(server.url)
+    await page.goto(pausedFeedUrl(server.url))
 
     const table = page.getByTestId('trading-table')
     const instrumentCount = page.getByTestId('instrument-count-select')
@@ -102,7 +105,7 @@ test('runs the Vue realtime trading workload', async ({ page }) => {
     await expect(page.getByTestId('selected-instrument')).toContainText(
       selectedSymbol ?? '',
     )
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED LIVE')
+    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
     await expect(instrumentCount.locator('option[value="150"]')).toHaveCount(1)
     await expect(instrumentCount.locator('option[value="350"]')).toHaveCount(1)
     await expect(instrumentCount.locator('option[value="750"]')).toHaveCount(1)
@@ -134,6 +137,7 @@ test('runs the Vue realtime trading workload', async ({ page }) => {
     await expect(publishInterval.locator('option[value="500"]')).toHaveCount(1)
     await expect(publishInterval.locator('option[value="1000"]')).toHaveCount(1)
 
+    await resumeTradingFeed(page)
     await expect
       .poll(async () => {
         const text = await page.getByTestId('row-update-rate').textContent()
@@ -164,9 +168,7 @@ test('runs the Vue realtime trading workload', async ({ page }) => {
       .not.toBe(priceBeforeUpdate)
 
     await page.locator('.config-section input[type="checkbox"]').first().check()
-    await page.getByTestId('feed-toggle').click()
-    await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
+    await pauseTradingFeed(page)
 
     await instrumentCount.selectOption('750')
     await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(750)

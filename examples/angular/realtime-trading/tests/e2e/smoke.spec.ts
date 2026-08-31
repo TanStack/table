@@ -6,6 +6,7 @@ import {
   scrollTradingTable,
   pauseTradingFeed,
   resumeTradingFeed,
+  pausedFeedUrl,
 } from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
@@ -28,7 +29,7 @@ test('runs the Angular realtime trading workload', async ({ page }) => {
   const errors = collectPageErrors(page)
 
   try {
-    await page.goto(server.url)
+    await page.goto(pausedFeedUrl(server.url))
 
     const table = page.getByTestId('trading-table')
     const instrumentCount = page.getByTestId('instrument-count-select')

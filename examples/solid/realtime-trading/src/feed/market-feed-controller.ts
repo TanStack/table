@@ -23,7 +23,9 @@ export interface MarketFeedObserver {
 
 export function createMarketFeedController() {
   const [workerReady, setWorkerReady] = createSignal(false)
-  const [running, setRunning] = createSignal(true)
+  const [running, setRunning] = createSignal(
+    !new URLSearchParams(location.search).has('paused'),
+  )
   const [instrumentCount, setInstrumentCount] = createSignal(
     initialMarketFeedConfig.instrumentCount,
   )

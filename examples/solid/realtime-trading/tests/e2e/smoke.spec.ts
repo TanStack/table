@@ -4,6 +4,9 @@ import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampl
 import {
   setRangeValue,
   scrollTradingTable,
+  pauseTradingFeed,
+  resumeTradingFeed,
+  pausedFeedUrl,
 } from '../../../../../tests/e2e/helpers/setRangeValue'
 import type { Page } from '@playwright/test'
 
@@ -24,7 +27,7 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
   const errors = collectPageErrors(page)
 
   try {
-    await page.goto(server.url)
+    await page.goto(pausedFeedUrl(server.url))
 
     const table = page.getByTestId('trading-table')
     const instrumentCount = page.getByTestId('instrument-count-select')
@@ -36,9 +39,6 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
     await expect(virtualScrollSelect).toBeEnabled()
     await expect(table.locator('tbody tr')).toHaveCount(100)
     await expect(table.locator('tbody')).toHaveCSS('user-select', 'none')
-    const livePrice = table.locator('tbody tr').first().locator('td').nth(3)
-    const initialPrice = await livePrice.textContent()
-    await expect.poll(() => livePrice.textContent()).not.toBe(initialPrice)
     await expect(table.locator('tbody tr').first()).toHaveCSS(
       'content-visibility',
       'auto',
@@ -107,7 +107,7 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
       selectedSymbol ?? '',
     )
 
-    await page.getByTestId('feed-toggle').click()
+    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
     await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
     const dragStart = table.locator('tbody tr').nth(0).locator('td').nth(1)
     const dragEnd = table.locator('tbody tr').nth(2).locator('td').nth(4)
@@ -138,7 +138,7 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
       4,
     )
     await expect(table.locator('td[data-selection-left="true"]')).toHaveCount(3)
-    await page.getByTestId('feed-toggle').click()
+    await resumeTradingFeed(page)
 
     await expect(page.getByTestId('feed-status')).toHaveText('FEED LIVE')
     await expect(instrumentCount.locator('option[value="150"]')).toHaveCount(1)
@@ -202,9 +202,7 @@ test('runs the Solid realtime trading workload', async ({ page }) => {
       .not.toBe(priceBeforeUpdate)
 
     await page.locator('.config-section input[type="checkbox"]').first().check()
-    await page.getByTestId('feed-toggle').click()
-    await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
+    await pauseTradingFeed(page)
 
     expect(errors).toEqual([])
   } finally {
