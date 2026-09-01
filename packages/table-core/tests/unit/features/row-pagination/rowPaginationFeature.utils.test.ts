@@ -178,6 +178,20 @@ describe('table_setPageIndex', () => {
     ).toEqual({ pageIndex: 99, pageSize: 10 })
   })
 
+  it('should fall back to the default page index for a NaN update', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(DEFAULT_ROW_COUNT, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
+
+    table_setPageIndex(table, NaN)
+
+    expect(
+      getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 10 }),
+    ).toEqual({ pageIndex: 0, pageSize: 10 })
+  })
+
   it('keeps pre-pagination display indexes on the current page', () => {
     const table = makeTable(DEFAULT_ROW_COUNT, {
       initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
@@ -317,6 +331,20 @@ describe('table_setPageSize', () => {
         pageSize: Infinity,
       }),
     ).toEqual({ pageIndex: 0, pageSize: 10 })
+  })
+
+  it('should fall back to the default page size for a NaN update', () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable(DEFAULT_ROW_COUNT, {
+      onPaginationChange,
+      initialState: { pagination: { pageIndex: 2, pageSize: 5 } },
+    })
+
+    table_setPageSize(table, NaN)
+
+    expect(
+      getUpdaterResult(onPaginationChange, { pageIndex: 2, pageSize: 5 }),
+    ).toEqual({ pageIndex: 1, pageSize: 10 })
   })
 })
 
@@ -520,6 +548,26 @@ describe('table_getPageCount', () => {
     const table = makeTable(25, { manualPagination: true, pageCount: 7 })
 
     expect(table_getPageCount(table)).toBe(7)
+  })
+
+  it('should return 0 instead of throwing when pageSize is 0', () => {
+    // `table_setPageSize` clamps to a minimum of 1, but `initialState` (and a
+    // directly-supplied `pagination` state) bypasses that clamp.
+    const table = makeTable(25, {
+      initialState: { pagination: { pageIndex: 0, pageSize: 0 } },
+    })
+
+    expect(table_getPageCount(table)).toBe(0)
+    expect(table_getPageOptions(table)).toEqual([])
+  })
+
+  it('should return 0 instead of throwing when pageSize is negative', () => {
+    const table = makeTable(25, {
+      initialState: { pagination: { pageIndex: 0, pageSize: -5 } },
+    })
+
+    expect(table_getPageCount(table)).toBe(0)
+    expect(table_getPageOptions(table)).toEqual([])
   })
 })
 
