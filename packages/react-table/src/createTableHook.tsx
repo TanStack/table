@@ -97,9 +97,12 @@ export type AppColumnDefBase<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   IdentifiedColumnDef<TFeatures, TData, TValue>,
-  'cell' | 'header' | 'footer'
+  'cell' | 'aggregatedCell' | 'header' | 'footer'
 > & {
   cell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, TValue, TCellComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, TValue, TCellComponents>
   >
   header?: AppColumnDefTemplate<
@@ -120,9 +123,12 @@ export type AppDisplayColumnDef<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   DisplayColumnDef<TFeatures, TData, unknown>,
-  'cell' | 'header' | 'footer'
+  'cell' | 'aggregatedCell' | 'header' | 'footer'
 > & {
   cell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, unknown, TCellComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, unknown, TCellComponents>
   >
   header?: AppColumnDefTemplate<
@@ -143,9 +149,12 @@ export type AppGroupColumnDef<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   GroupColumnDef<TFeatures, TData, unknown>,
-  'cell' | 'header' | 'footer' | 'columns'
+  'cell' | 'aggregatedCell' | 'header' | 'footer' | 'columns'
 > & {
   cell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, unknown, TCellComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, unknown, TCellComponents>
   >
   header?: AppColumnDefTemplate<
@@ -173,7 +182,7 @@ export type AppColumnHelper<
 > = {
   /**
    * Creates a data column definition with an accessor key or function.
-   * The cell, header, and footer contexts include pre-bound components.
+   * The cell, aggregatedCell, header, and footer contexts include pre-bound components.
    */
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
@@ -212,7 +221,7 @@ export type AppColumnHelper<
 
   /**
    * Creates a display column definition for non-data columns.
-   * The cell, header, and footer contexts include pre-bound components.
+   * The cell, aggregatedCell, header, and footer contexts include pre-bound components.
    */
   display: (
     column: AppDisplayColumnDef<
@@ -225,7 +234,7 @@ export type AppColumnHelper<
 
   /**
    * Creates a group column definition with nested child columns.
-   * The cell, header, and footer contexts include pre-bound components.
+   * The cell, aggregatedCell, header, and footer contexts include pre-bound components.
    */
   group: (
     column: AppGroupColumnDef<
@@ -725,7 +734,7 @@ export function createTableHook<
 
   /**
    * Create a column helper pre-bound to the features and components configured in this table hook.
-   * The cell, header, and footer contexts include pre-bound components (e.g., `cell.TextCell`).
+   * The cell, aggregatedCell, header, and footer contexts include pre-bound components (e.g., `cell.TextCell`).
    * @example
    * ```tsx
    * const columnHelper = createAppColumnHelper<Person>()
