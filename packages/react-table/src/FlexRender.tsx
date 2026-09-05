@@ -1,4 +1,5 @@
 import React from 'react'
+import { getAggregatedCellRender } from '@tanstack/table-core/flex-render'
 import type {
   Cell,
   CellData,
@@ -106,14 +107,8 @@ export function FlexRender<
       getIsAggregated?: () => boolean
       getIsPlaceholder?: () => boolean
     }
-    const groupingDef = def as typeof def & {
-      aggregatedCell?: typeof def.cell
-    }
     if (groupingCell.getIsAggregated?.()) {
-      return flexRender(
-        groupingDef.aggregatedCell ?? def.cell,
-        cell.getContext(),
-      )
+      return flexRender(getAggregatedCellRender(cell), cell.getContext())
     }
     if (groupingCell.getIsPlaceholder?.()) {
       return null

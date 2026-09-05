@@ -1,6 +1,7 @@
 import { callMemoOrStaticFn, makeObjectMap } from '../../utils'
 import { table_getOrderColumnsFn } from '../../features/column-ordering/columnOrderingFeature.utils'
 import { constructColumn } from './constructColumn'
+import { defaultColumnCell } from './defaultColumnCell'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -98,7 +99,7 @@ export function table_getDefaultColumnDef<
 
       return null
     },
-    cell: (props) => props.renderValue<any>()?.toString?.() ?? null,
+    cell: defaultColumnCell,
     ...Object.values(table._features).reduce((obj, feature) => {
       return Object.assign(obj, feature.getDefaultColumnDef?.())
     }, {}),
