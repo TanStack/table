@@ -297,9 +297,8 @@ export const aggregationFn_mode = constructAggregationFn<
     const rows = context.rows
     if (!rows.length) return undefined
 
-    let maxCount = 0
-    let modeValue: unknown = undefined
     const counts = new Map<unknown, number>()
+    let maxCount = 0
 
     for (let i = 0; i < rows.length; i++) {
       const value = context.getValue(rows[i]!)
@@ -307,11 +306,17 @@ export const aggregationFn_mode = constructAggregationFn<
       counts.set(value, count)
       if (count > maxCount) {
         maxCount = count
-        modeValue = value
       }
     }
 
-    return modeValue
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
+      if (counts.get(value) === maxCount) {
+        return value
+      }
+    }
+
+    return undefined
   },
 })
 
