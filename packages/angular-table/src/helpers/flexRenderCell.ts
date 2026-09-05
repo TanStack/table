@@ -15,6 +15,7 @@ import {
   RowData,
   TableFeatures,
 } from '@tanstack/table-core'
+import { getAggregatedCellRender } from '@tanstack/table-core/flex-render'
 import { FlexViewRenderer } from '../flex-render/renderer'
 import type { FlexRenderInputContent } from '../flex-render/renderer'
 import type { CellContext, HeaderContext } from '@tanstack/table-core'
@@ -94,16 +95,12 @@ export class FlexRenderCell<
       const header = this.header()
       const footer = this.footer()
       if (cell) {
-        const def = cell.column.columnDef
         const groupingCell = cell as typeof cell & {
           getIsAggregated?: () => boolean
           getIsPlaceholder?: () => boolean
         }
-        const groupingDef = def as typeof def & {
-          aggregatedCell?: typeof def.cell
-        }
         if (groupingCell.getIsAggregated?.()) {
-          return [groupingDef.aggregatedCell ?? def.cell, cell.getContext()]
+          return [getAggregatedCellRender(cell), cell.getContext()]
         }
         if (groupingCell.getIsPlaceholder?.()) {
           return [null, null]

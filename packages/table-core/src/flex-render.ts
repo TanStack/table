@@ -1,7 +1,24 @@
+import { defaultColumnCell } from './core/columns/defaultColumnCell'
+import { formatAggregatedCellValue } from './features/row-aggregation/rowAggregationFeature.utils'
+import type { CellContext } from './core/cells/coreCellsFeature.types'
 import type { Cell } from './types/Cell'
+import type { ColumnDefTemplate } from './types/ColumnDef'
 import type { Header } from './types/Header'
 import type { TableFeatures } from './types/TableFeatures'
 import type { CellData, RowData } from './types/type-utils'
+
+interface AggregatedCellRenderCell<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData,
+> {
+  column: {
+    columnDef: {
+      cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
+    }
+  }
+  getContext: () => CellContext<TFeatures, TData, TValue>
+}
 
 /**
  * Renders a static value or render function with the provided props.
@@ -19,6 +36,36 @@ export function flexRender<TProps extends object>(
   }
 
   return comp
+}
+
+export function getAggregatedCellRender<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  cell: AggregatedCellRenderCell<TFeatures, TData, TValue>,
+): ColumnDefTemplate<CellContext<TFeatures, TData, TValue>> {
+  const def = cell.column.columnDef
+  const groupingDef = def as typeof def & {
+    aggregatedCell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
+  }
+  const customCell = def.cell === defaultColumnCell ? undefined : def.cell
+
+  return (
+    groupingDef.aggregatedCell ??
+    customCell ??
+    ((context: CellContext<TFeatures, TData, TValue>) => {
+      const columnDef = context.column
+        .columnDef as typeof context.column.columnDef & {
+        aggregationFn?: unknown
+      }
+
+      return formatAggregatedCellValue(
+        context.getValue(),
+        columnDef.aggregationFn,
+      )
+    })
+  )
 }
 
 export type FlexRenderProps<
@@ -65,14 +112,8 @@ export function FlexRender<
       getIsAggregated?: () => boolean
       getIsPlaceholder?: () => boolean
     }
-    const groupingDef = def as typeof def & {
-      aggregatedCell?: typeof def.cell
-    }
     if (groupingCell.getIsAggregated?.()) {
-      return flexRender(
-        groupingDef.aggregatedCell ?? def.cell,
-        cell.getContext(),
-      )
+      return flexRender(getAggregatedCellRender(cell), cell.getContext())
     }
     if (groupingCell.getIsPlaceholder?.()) {
       return null

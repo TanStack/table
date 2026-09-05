@@ -15,6 +15,7 @@ import {
   rowExpandingFeature,
   rowSelectionFeature,
 } from '../../../../src'
+import { FlexRender } from '../../../../src/flex-render'
 import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src'
 
@@ -601,12 +602,7 @@ describe('aggregation and grouping integration', () => {
       .getAllCells()
       .find((cell) => cell.column.id === 'amount')!
     expect(amountCell.getIsAggregated()).toBe(true)
-    const defaultAggregatedCell = amountCell.column.columnDef.aggregatedCell
-    expect(
-      typeof defaultAggregatedCell === 'function'
-        ? defaultAggregatedCell(amountCell.getContext())
-        : defaultAggregatedCell,
-    ).toContain('sum: 130')
+    expect(FlexRender({ cell: amountCell })).toContain('sum: 130')
     expect(
       region
         .getAllCells()
