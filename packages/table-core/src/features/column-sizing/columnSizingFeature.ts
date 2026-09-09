@@ -49,6 +49,7 @@ export const columnSizingFeature: TableFeature = {
         fn: (column) => column_getSize(column),
         memoDeps: (column) => [
           table.options.columns,
+          table.options.defaultColumn,
           table.atoms.columnSizing?.get()?.[column.id], // just this column's size state
         ],
       },
@@ -72,6 +73,7 @@ export const columnSizingFeature: TableFeature = {
         fn: (header) => header_getSize(header),
         memoDeps: (header) => [
           table.options.columns,
+          table.options.defaultColumn,
           header.column.columns.length > 0
             ? table.atoms.columnSizing?.get() // must be all columns (sum child columns)
             : table.atoms.columnSizing?.get()?.[header.column.id], // can just check its associated column size state
@@ -81,6 +83,7 @@ export const columnSizingFeature: TableFeature = {
         fn: (header) => header_getStart(header),
         memoDeps: () => [
           table.options.columns,
+          table.options.defaultColumn,
           table.atoms.columnSizing?.get(),
           table.atoms.columnOrder?.get(),
           table.atoms.columnPinning?.get(),
@@ -98,6 +101,7 @@ export const columnSizingFeature: TableFeature = {
         fn: () => table_getColumnOffsets(table),
         memoDeps: () => [
           table.options.columns,
+          table.options.defaultColumn,
           table.atoms.columnSizing?.get(),
           table.atoms.columnOrder?.get(),
           table.atoms.columnPinning?.get(),

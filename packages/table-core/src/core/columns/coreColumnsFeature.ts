@@ -20,7 +20,10 @@ export const coreColumnsFeature: TableFeature = {
     assignPrototypeAPIs('coreColumnsFeature', prototype, table, {
       column_getFlatColumns: {
         fn: (column) => column_getFlatColumns(column),
-        memoDeps: (column) => [column.table.options.columns],
+        memoDeps: (column) => [
+          column.table.options.columns,
+          column.table.options.defaultColumn,
+        ],
       },
       column_getLeafColumns: {
         fn: (column) => column_getLeafColumns(column),
@@ -28,6 +31,7 @@ export const coreColumnsFeature: TableFeature = {
           column.table.atoms.columnOrder?.get(),
           column.table.atoms.grouping?.get(),
           column.table.options.columns,
+          column.table.options.defaultColumn,
           column.table.options.groupedColumnMode,
         ],
       },
@@ -42,15 +46,15 @@ export const coreColumnsFeature: TableFeature = {
       },
       table_getAllColumns: {
         fn: () => table_getAllColumns(table),
-        memoDeps: () => [table.options.columns],
+        memoDeps: () => [table.options.columns, table.options.defaultColumn],
       },
       table_getAllFlatColumns: {
         fn: () => table_getAllFlatColumns(table),
-        memoDeps: () => [table.options.columns],
+        memoDeps: () => [table.options.columns, table.options.defaultColumn],
       },
       table_getAllFlatColumnsById: {
         fn: () => table_getAllFlatColumnsById(table),
-        memoDeps: () => [table.options.columns],
+        memoDeps: () => [table.options.columns, table.options.defaultColumn],
       },
       table_getAllLeafColumns: {
         fn: () => table_getAllLeafColumns(table),
@@ -58,6 +62,7 @@ export const coreColumnsFeature: TableFeature = {
           table.atoms.columnOrder?.get(),
           table.atoms.grouping?.get(),
           table.options.columns,
+          table.options.defaultColumn,
           table.options.groupedColumnMode,
         ],
       },

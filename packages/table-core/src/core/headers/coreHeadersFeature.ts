@@ -17,11 +17,17 @@ export const coreHeadersFeature: TableFeature = {
     assignPrototypeAPIs('coreHeadersFeature', prototype, table, {
       header_getLeafHeaders: {
         fn: (header) => header_getLeafHeaders(header),
-        memoDeps: (header) => [header.column.table.options.columns],
+        memoDeps: (header) => [
+          header.column.table.options.columns,
+          header.column.table.options.defaultColumn,
+        ],
       },
       header_getContext: {
         fn: (header) => header_getContext(header),
-        memoDeps: (header) => [header.column.table.options.columns],
+        memoDeps: (header) => [
+          header.column.table.options.columns,
+          header.column.table.options.defaultColumn,
+        ],
       },
     })
   },
@@ -32,6 +38,7 @@ export const coreHeadersFeature: TableFeature = {
         fn: () => table_getHeaderGroups(table),
         memoDeps: () => [
           table.options.columns,
+          table.options.defaultColumn,
           table.atoms.columnOrder?.get(),
           table.atoms.grouping?.get(),
           table.atoms.columnPinning?.get(),

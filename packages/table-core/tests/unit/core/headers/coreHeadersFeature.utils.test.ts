@@ -297,6 +297,27 @@ describe('header rowSpan for uneven column trees', () => {
       ['b', false, 1],
     ])
   })
+
+  it('should update header columns when defaultColumn changes via setOptions', () => {
+    const table = makeTable({
+      defaultColumn: { meta: { tag: 'old' } },
+    })
+
+    const initialGroups = table.getHeaderGroups()
+    expect(initialGroups[1]!.headers[0]!.column.columnDef.meta).toEqual({
+      tag: 'old',
+    })
+
+    table.setOptions((prev) => ({
+      ...prev,
+      defaultColumn: { meta: { tag: 'new' } },
+    }))
+
+    const updatedGroups = table.getHeaderGroups()
+    expect(updatedGroups[1]!.headers[0]!.column.columnDef.meta).toEqual({
+      tag: 'new',
+    })
+  })
 })
 
 describe('header_getLeafHeaders', () => {

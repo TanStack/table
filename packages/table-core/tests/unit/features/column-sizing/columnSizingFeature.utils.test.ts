@@ -65,6 +65,28 @@ describe('header_getSize', () => {
     expect(header.getSize()).toBe(200)
   })
 
+  it('updates size when defaultColumn changes via setOptions', () => {
+    const table = constructTable({
+      features,
+      columns: [{ id: 'a', accessorKey: 'a' }],
+      data,
+      defaultColumn: { size: 100 },
+    })
+
+    const initialHeader = table.getHeaderGroups()[0]!.headers[0]!
+    expect(initialHeader.getSize()).toBe(100)
+    expect(table.getAllColumns()[0]!.getSize()).toBe(100)
+
+    table.setOptions((prev) => ({
+      ...prev,
+      defaultColumn: { size: 50 },
+    }))
+
+    const updatedHeader = table.getHeaderGroups()[0]!.headers[0]!
+    expect(updatedHeader.getSize()).toBe(50)
+    expect(table.getAllColumns()[0]!.getSize()).toBe(50)
+  })
+
   it('returns sum of subHeader sizes for a parent header', () => {
     const table = makeTable({
       columns: [

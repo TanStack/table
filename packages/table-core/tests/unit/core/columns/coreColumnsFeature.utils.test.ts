@@ -225,4 +225,26 @@ describe('table_getDefaultColumnDef', () => {
 
     expect(table_getDefaultColumnDef(table).header).toBe('custom header')
   })
+
+  it('should update columns and leaf columns when defaultColumn changes via setOptions', () => {
+    const table = constructTable<typeof features, Item>({
+      features,
+      columns: [{ accessorKey: 'a', id: 'a' }],
+      data,
+      defaultColumn: { meta: { tag: 'old' } },
+    })
+
+    const initialColumns = table.getAllColumns()
+    expect(initialColumns[0]!.columnDef.meta).toEqual({ tag: 'old' })
+    expect(table.getAllLeafColumns()[0]!.columnDef.meta).toEqual({ tag: 'old' })
+
+    table.setOptions((prev) => ({
+      ...prev,
+      defaultColumn: { meta: { tag: 'new' } },
+    }))
+
+    const updatedColumns = table.getAllColumns()
+    expect(updatedColumns[0]!.columnDef.meta).toEqual({ tag: 'new' })
+    expect(table.getAllLeafColumns()[0]!.columnDef.meta).toEqual({ tag: 'new' })
+  })
 })
