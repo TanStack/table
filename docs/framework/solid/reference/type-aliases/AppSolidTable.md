@@ -3,8 +3,6 @@ id: AppSolidTable
 title: AppSolidTable
 ---
 
-# Type Alias: AppSolidTable\<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppSolidTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = SolidTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```

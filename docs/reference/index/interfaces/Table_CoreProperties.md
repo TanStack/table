@@ -3,8 +3,6 @@ id: Table_CoreProperties
 title: Table_CoreProperties
 ---
 
-# Interface: Table\_CoreProperties\<TFeatures, TData\>
-
 Defined in: [core/table/coreTablesFeature.types.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L156)
 
 ## Extended by

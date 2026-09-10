@@ -3,8 +3,6 @@ id: CachedRowModel_Faceted
 title: CachedRowModel_Faceted
 ---
 
-# Interface: CachedRowModel\_Faceted\<TFeatures, TData\>
-
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L50)
 
 ## Type Parameters

@@ -3,8 +3,6 @@ id: table_getCanNextPage
 title: table_getCanNextPage
 ---
 
-# Function: table\_getCanNextPage()
-
 ```ts
 function table_getCanNextPage<TFeatures, TData>(table): boolean;
 ```

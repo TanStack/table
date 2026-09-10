@@ -3,8 +3,6 @@ id: LegacyRow
 title: LegacyRow
 ---
 
-# ~~Type Alias: LegacyRow\<TData\>~~
-
 ```ts
 type LegacyRow<TData> = Row<LegacyFeatures, TData>;
 ```

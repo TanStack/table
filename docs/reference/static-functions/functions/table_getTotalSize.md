@@ -3,8 +3,6 @@ id: table_getTotalSize
 title: table_getTotalSize
 ---
 
-# Function: table\_getTotalSize()
-
 ```ts
 function table_getTotalSize<TFeatures, TData>(table): number;
 ```

@@ -3,8 +3,6 @@ id: table_getCellSelectionColumnIds
 title: table_getCellSelectionColumnIds
 ---
 
-# Function: table\_getCellSelectionColumnIds()
-
 ```ts
 function table_getCellSelectionColumnIds<TFeatures, TData>(table): string[];
 ```

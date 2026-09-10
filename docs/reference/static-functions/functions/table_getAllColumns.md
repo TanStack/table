@@ -3,8 +3,6 @@ id: table_getAllColumns
 title: table_getAllColumns
 ---
 
-# Function: table\_getAllColumns()
-
 ```ts
 function table_getAllColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```

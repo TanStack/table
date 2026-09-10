@@ -3,8 +3,6 @@ id: column_getCanPin
 title: column_getCanPin
 ---
 
-# Function: column\_getCanPin()
-
 ```ts
 function column_getCanPin<TFeatures, TData, TValue>(column): boolean;
 ```

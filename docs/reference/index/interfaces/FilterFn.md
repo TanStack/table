@@ -3,8 +3,6 @@ id: FilterFn
 title: FilterFn
 ---
 
-# Interface: FilterFn()\<TFeatures, TData\>
-
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L60)
 
 ## Type Parameters

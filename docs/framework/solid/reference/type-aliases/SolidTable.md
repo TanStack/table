@@ -3,8 +3,6 @@ id: SolidTable
 title: SolidTable
 ---
 
-# Type Alias: SolidTable\<TFeatures, TData\>
-
 ```ts
 type SolidTable<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```

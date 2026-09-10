@@ -3,8 +3,6 @@ id: AppHeaderPropsWithoutSelector
 title: AppHeaderPropsWithoutSelector
 ---
 
-# Interface: AppHeaderPropsWithoutSelector\<TFeatures, TData, TValue, THeaderComponents\>
-
 Defined in: [types.ts:635](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L635)
 
 Props for AppHeader/AppFooter component — without selector.

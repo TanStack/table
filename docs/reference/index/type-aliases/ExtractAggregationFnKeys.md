@@ -3,8 +3,6 @@ id: ExtractAggregationFnKeys
 title: ExtractAggregationFnKeys
 ---
 
-# Type Alias: ExtractAggregationFnKeys\<TFeatures\>
-
 ```ts
 type ExtractAggregationFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | keyof AggregationFns

@@ -3,8 +3,6 @@ id: column_getAutoFilterFn
 title: column_getAutoFilterFn
 ---
 
-# Function: column\_getAutoFilterFn()
-
 ```ts
 function column_getAutoFilterFn<TFeatures, TData, TValue>(column):
   | FilterFn<TFeatures, TData>

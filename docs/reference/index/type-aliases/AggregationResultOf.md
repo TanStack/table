@@ -3,8 +3,6 @@ id: AggregationResultOf
 title: AggregationResultOf
 ---
 
-# Type Alias: AggregationResultOf\<TDefinition\>
-
 ```ts
 type AggregationResultOf<TDefinition> = TDefinition extends AggregationFnDef<any, any, any, infer TResult> ? TResult : unknown;
 ```

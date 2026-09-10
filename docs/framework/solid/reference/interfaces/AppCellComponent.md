@@ -3,8 +3,6 @@ id: AppCellComponent
 title: AppCellComponent
 ---
 
-# Interface: AppCellComponent()\<TFeatures, TData, TCellComponents\>
-
 Defined in: [createTableHook.tsx:311](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L311)
 
 Component type for AppCell - wraps a cell and provides cell context.

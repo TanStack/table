@@ -3,8 +3,6 @@ id: table_getEndLeafHeaders
 title: table_getEndLeafHeaders
 ---
 
-# Function: table\_getEndLeafHeaders()
-
 ```ts
 function table_getEndLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```

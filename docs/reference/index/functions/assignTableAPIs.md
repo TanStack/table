@@ -3,8 +3,6 @@ id: assignTableAPIs
 title: assignTableAPIs
 ---
 
-# Function: assignTableAPIs()
-
 ```ts
 function assignTableAPIs<TFeatures, TData, TDeps, TDepArgs>(
    feature,

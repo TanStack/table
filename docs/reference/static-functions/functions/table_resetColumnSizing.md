@@ -3,8 +3,6 @@ id: table_resetColumnSizing
 title: table_resetColumnSizing
 ---
 
-# Function: table\_resetColumnSizing()
-
 ```ts
 function table_resetColumnSizing<TFeatures, TData>(table, defaultState?): void;
 ```

@@ -3,8 +3,6 @@ id: table_getStartFooterGroups
 title: table_getStartFooterGroups
 ---
 
-# Function: table\_getStartFooterGroups()
-
 ```ts
 function table_getStartFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```

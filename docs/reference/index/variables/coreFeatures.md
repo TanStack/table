@@ -3,8 +3,6 @@ id: coreFeatures
 title: coreFeatures
 ---
 
-# Variable: coreFeatures
-
 ```ts
 const coreFeatures: CoreFeatures;
 ```

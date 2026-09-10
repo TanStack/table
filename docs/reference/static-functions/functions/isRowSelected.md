@@ -3,8 +3,6 @@ id: isRowSelected
 title: isRowSelected
 ---
 
-# Function: isRowSelected()
-
 ```ts
 function isRowSelected<TFeatures, TData>(row, rowSelection): boolean;
 ```

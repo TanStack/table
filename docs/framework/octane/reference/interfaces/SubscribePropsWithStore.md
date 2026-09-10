@@ -3,8 +3,6 @@ id: SubscribePropsWithStore
 title: SubscribePropsWithStore
 ---
 
-# Interface: SubscribePropsWithStore\<TFeatures, TSelected\>
-
 Defined in: [types.ts:113](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L113)
 
 Subscribe to `table.store` (full table state). The selector receives the full

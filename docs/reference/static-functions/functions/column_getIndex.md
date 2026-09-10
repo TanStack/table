@@ -3,8 +3,6 @@ id: column_getIndex
 title: column_getIndex
 ---
 
-# Function: column\_getIndex()
-
 ```ts
 function column_getIndex<TFeatures, TData, TValue>(column, position?): number;
 ```

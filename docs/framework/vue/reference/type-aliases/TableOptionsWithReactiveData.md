@@ -3,8 +3,6 @@ id: TableOptionsWithReactiveData
 title: TableOptionsWithReactiveData
 ---
 
-# Type Alias: TableOptionsWithReactiveData\<TFeatures, TData\>
-
 ```ts
 type TableOptionsWithReactiveData<TFeatures, TData> = { [K in keyof TableOptions<TFeatures, TData>]: K extends "data" ? MaybeRef<ReadonlyArray<TData>> : MaybeRef<TableOptions<TFeatures, TData>[K]> };
 ```

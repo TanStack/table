@@ -3,8 +3,6 @@ id: row_getStartVisibleCells
 title: row_getStartVisibleCells
 ---
 
-# Function: row\_getStartVisibleCells()
-
 ```ts
 function row_getStartVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```

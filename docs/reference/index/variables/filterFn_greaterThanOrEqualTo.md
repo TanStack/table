@@ -3,8 +3,6 @@ id: filterFn_greaterThanOrEqualTo
 title: filterFn_greaterThanOrEqualTo
 ---
 
-# Variable: filterFn\_greaterThanOrEqualTo
-
 ```ts
 const filterFn_greaterThanOrEqualTo: CreatedFilterFn<any, any>;
 ```

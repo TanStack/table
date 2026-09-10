@@ -3,8 +3,6 @@ id: row_getCanSelectSubRows
 title: row_getCanSelectSubRows
 ---
 
-# Function: row\_getCanSelectSubRows()
-
 ```ts
 function row_getCanSelectSubRows<TFeatures, TData>(row): boolean;
 ```

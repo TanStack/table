@@ -3,8 +3,6 @@ id: column_getFacetedMinMaxValues
 title: column_getFacetedMinMaxValues
 ---
 
-# Function: column\_getFacetedMinMaxValues()
-
 ```ts
 function column_getFacetedMinMaxValues<TFeatures, TData, TValue>(column, table): [number, number] | undefined;
 ```

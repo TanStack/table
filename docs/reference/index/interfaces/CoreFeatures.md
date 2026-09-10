@@ -3,8 +3,6 @@ id: CoreFeatures
 title: CoreFeatures
 ---
 
-# Interface: CoreFeatures
-
 Defined in: [core/coreFeatures.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L9)
 
 ## Properties

@@ -3,8 +3,6 @@ id: getPaginationRowModel
 title: getPaginationRowModel
 ---
 
-# ~~Function: getPaginationRowModel()~~
-
 ```ts
 function getPaginationRowModel<TData>(): RowModelFactory<TData>;
 ```

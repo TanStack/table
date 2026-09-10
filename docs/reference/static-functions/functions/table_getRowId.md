@@ -3,8 +3,6 @@ id: table_getRowId
 title: table_getRowId
 ---
 
-# Function: table\_getRowId()
-
 ```ts
 function table_getRowId<TFeatures, TData>(
    originalRow,

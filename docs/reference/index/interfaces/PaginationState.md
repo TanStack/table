@@ -3,8 +3,6 @@ id: PaginationState
 title: PaginationState
 ---
 
-# Interface: PaginationState
-
 Defined in: [features/row-pagination/rowPaginationFeature.types.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L5)
 
 ## Properties

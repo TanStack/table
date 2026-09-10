@@ -3,8 +3,6 @@ id: column_getAggregationValue
 title: column_getAggregationValue
 ---
 
-# Function: column\_getAggregationValue()
-
 ```ts
 function column_getAggregationValue<TFeatures, TData, TValue>(column, options?): ColumnAggregationValue<TFeatures>;
 ```

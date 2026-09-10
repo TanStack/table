@@ -3,8 +3,6 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
-# Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 Defined in: [types.ts:807](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L807)
 
 ## Type Parameters

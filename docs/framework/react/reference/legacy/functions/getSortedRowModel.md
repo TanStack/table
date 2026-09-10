@@ -3,8 +3,6 @@ id: getSortedRowModel
 title: getSortedRowModel
 ---
 
-# ~~Function: getSortedRowModel()~~
-
 ```ts
 function getSortedRowModel<TData>(): RowModelFactory<TData>;
 ```

@@ -3,8 +3,6 @@ id: DeepKeys
 title: DeepKeys
 ---
 
-# Type Alias: DeepKeys\<T, TDepth\>
-
 ```ts
 type DeepKeys<T, TDepth> = TDepth["length"] extends 5 ? never : unknown extends T ? string : T extends ReadonlyArray<any> & IsTuple<T> ?
   | AllowedIndexes<T>

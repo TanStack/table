@@ -3,8 +3,6 @@ id: legacyCreateColumnHelper
 title: legacyCreateColumnHelper
 ---
 
-# ~~Function: legacyCreateColumnHelper()~~
-
 ```ts
 function legacyCreateColumnHelper<TData>(): ColumnHelper<LegacyFeatures, TData>;
 ```

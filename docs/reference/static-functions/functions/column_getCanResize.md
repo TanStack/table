@@ -3,8 +3,6 @@ id: column_getCanResize
 title: column_getCanResize
 ---
 
-# Function: column\_getCanResize()
-
 ```ts
 function column_getCanResize<TFeatures, TData, TValue>(column): boolean;
 ```

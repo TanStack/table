@@ -3,8 +3,6 @@ id: TableHookContexts
 title: TableHookContexts
 ---
 
-# Interface: TableHookContexts\<TFeatures, TData\>
-
 Defined in: [types.ts:310](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L310)
 
 The object returned by `createTableHookContexts`: three scoped octane

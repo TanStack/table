@@ -3,8 +3,6 @@ id: SortDirection
 title: SortDirection
 ---
 
-# Type Alias: SortDirection
-
 ```ts
 type SortDirection = "asc" | "desc";
 ```

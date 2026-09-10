@@ -3,8 +3,6 @@ id: Table_Core
 title: Table_Core
 ---
 
-# Interface: Table\_Core\<TFeatures, TData\>
-
 Defined in: [types/Table.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L41)
 
 The core table object that only includes the core table functionality such as column, header, row, and table APIS.

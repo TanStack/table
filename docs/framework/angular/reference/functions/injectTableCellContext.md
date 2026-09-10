@@ -3,8 +3,6 @@ id: injectTableCellContext
 title: injectTableCellContext
 ---
 
-# Function: injectTableCellContext()
-
 ```ts
 function injectTableCellContext<TFeatures, TData, TValue>(): Signal<Cell<TFeatures, TData, TValue>>;
 ```

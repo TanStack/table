@@ -3,8 +3,6 @@ id: GroupingColumnMode
 title: GroupingColumnMode
 ---
 
-# Type Alias: GroupingColumnMode
-
 ```ts
 type GroupingColumnMode = false | "reorder" | "remove";
 ```

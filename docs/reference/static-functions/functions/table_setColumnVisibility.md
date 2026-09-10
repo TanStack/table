@@ -3,8 +3,6 @@ id: table_setColumnVisibility
 title: table_setColumnVisibility
 ---
 
-# Function: table\_setColumnVisibility()
-
 ```ts
 function table_setColumnVisibility<TFeatures, TData>(table, updater): void;
 ```

@@ -3,8 +3,6 @@ id: TanStackTableHeaderContext
 title: TanStackTableHeaderContext
 ---
 
-# Interface: TanStackTableHeaderContext\<TFeatures, TData, TValue\>
-
 Defined in: [packages/angular-table/src/helpers/header.ts:11](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L11)
 
 DI context shape for a TanStack Table header.

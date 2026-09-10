@@ -3,8 +3,6 @@ id: useTable
 title: useTable
 ---
 
-# Function: useTable()
-
 ```ts
 function useTable<TFeatures, TData, TSelected>(tableOptions, selector?): OctaneTable<TFeatures, TData, TSelected>;
 ```

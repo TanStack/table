@@ -3,8 +3,6 @@ id: ColumnAggregationValue
 title: ColumnAggregationValue
 ---
 
-# Type Alias: ColumnAggregationValue\<TFeatures\>
-
 ```ts
 type ColumnAggregationValue<TFeatures> =
   | RegisteredAggregationResult<TFeatures>

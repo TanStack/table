@@ -3,8 +3,6 @@ id: callMemoOrStaticFn
 title: callMemoOrStaticFn
 ---
 
-# Function: callMemoOrStaticFn()
-
 ```ts
 function callMemoOrStaticFn<TObject, TArgs, TReturn>(
    obj,

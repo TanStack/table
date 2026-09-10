@@ -3,8 +3,6 @@ id: createTable
 title: createTable
 ---
 
-# Function: createTable()
-
 ```ts
 function createTable<TFeatures, TData>(tableOptions): SvelteTable<TFeatures, TData>;
 ```

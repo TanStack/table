@@ -3,8 +3,6 @@ id: AppHeaderPropsWithoutSelector
 title: AppHeaderPropsWithoutSelector
 ---
 
-# Interface: AppHeaderPropsWithoutSelector\<TFeatures, TData, TValue, THeaderComponents\>
-
 Defined in: [react-table/src/createTableHook.tsx:434](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L434)
 
 Props for AppHeader/AppFooter component - without selector

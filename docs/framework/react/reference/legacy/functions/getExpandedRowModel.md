@@ -3,8 +3,6 @@ id: getExpandedRowModel
 title: getExpandedRowModel
 ---
 
-# ~~Function: getExpandedRowModel()~~
-
 ```ts
 function getExpandedRowModel<TData>(): RowModelFactory<TData>;
 ```

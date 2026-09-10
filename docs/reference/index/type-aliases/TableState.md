@@ -3,8 +3,6 @@ id: TableState
 title: TableState
 ---
 
-# Type Alias: TableState\<TFeatures\>
-
 ```ts
 type TableState<TFeatures> = ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>;
 ```

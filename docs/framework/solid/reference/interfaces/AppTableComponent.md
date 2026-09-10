@@ -3,8 +3,6 @@ id: AppTableComponent
 title: AppTableComponent
 ---
 
-# Interface: AppTableComponent()\<_TFeatures\>
-
 Defined in: [createTableHook.tsx:337](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L337)
 
 Component type for AppTable - root wrapper with optional Subscribe

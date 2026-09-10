@@ -3,8 +3,6 @@ id: table_getCenterLeafColumns
 title: table_getCenterLeafColumns
 ---
 
-# Function: table\_getCenterLeafColumns()
-
 ```ts
 function table_getCenterLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```

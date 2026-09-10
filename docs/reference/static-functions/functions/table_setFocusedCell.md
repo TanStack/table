@@ -3,8 +3,6 @@ id: table_setFocusedCell
 title: table_setFocusedCell
 ---
 
-# Function: table\_setFocusedCell()
-
 ```ts
 function table_setFocusedCell<TFeatures, TData>(
    table,

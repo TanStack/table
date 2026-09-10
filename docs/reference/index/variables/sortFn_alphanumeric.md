@@ -3,8 +3,6 @@ id: sortFn_alphanumeric
 title: sortFn_alphanumeric
 ---
 
-# Variable: sortFn\_alphanumeric
-
 ```ts
 const sortFn_alphanumeric: CreatedSortFn<any, any>;
 ```

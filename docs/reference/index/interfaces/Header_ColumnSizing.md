@@ -3,8 +3,6 @@ id: Header_ColumnSizing
 title: Header_ColumnSizing
 ---
 
-# Interface: Header\_ColumnSizing
-
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L138)
 
 ## Properties

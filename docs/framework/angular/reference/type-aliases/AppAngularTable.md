@@ -3,8 +3,6 @@ id: AppAngularTable
 title: AppAngularTable
 ---
 
-# Type Alias: AppAngularTable\<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppAngularTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = AngularTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```

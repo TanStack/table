@@ -3,8 +3,6 @@ id: IdIdentifier
 title: IdIdentifier
 ---
 
-# Interface: IdIdentifier\<TFeatures, TData, TValue\>
-
 Defined in: [types/ColumnDef.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L84)
 
 ## Type Parameters

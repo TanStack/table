@@ -3,8 +3,6 @@ id: AccessorFnColumnDefBase
 title: AccessorFnColumnDefBase
 ---
 
-# Type Alias: AccessorFnColumnDefBase\<TFeatures, TData, TValue\>
-
 ```ts
 type AccessorFnColumnDefBase<TFeatures, TData, TValue> = ColumnDefBase<TFeatures, TData, TValue> & object;
 ```

@@ -3,8 +3,6 @@ id: getDefaultColumnSizingColumnDef
 title: getDefaultColumnSizingColumnDef
 ---
 
-# Function: getDefaultColumnSizingColumnDef()
-
 ```ts
 function getDefaultColumnSizingColumnDef(): object;
 ```

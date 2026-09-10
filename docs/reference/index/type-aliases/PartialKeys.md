@@ -3,8 +3,6 @@ id: PartialKeys
 title: PartialKeys
 ---
 
-# Type Alias: PartialKeys\<T, K\>
-
 ```ts
 type PartialKeys<T, K> = Omit<T, K> & Partial<Pick<T, K>>;
 ```

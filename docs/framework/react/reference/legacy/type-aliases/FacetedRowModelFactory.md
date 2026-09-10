@@ -3,8 +3,6 @@ id: FacetedRowModelFactory
 title: FacetedRowModelFactory
 ---
 
-# Type Alias: FacetedRowModelFactory()\<TData\>
-
 ```ts
 type FacetedRowModelFactory<TData> = (table, columnId) => () => RowModel<LegacyFeatures, TData>;
 ```

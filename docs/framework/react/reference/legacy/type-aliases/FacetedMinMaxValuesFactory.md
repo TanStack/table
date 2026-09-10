@@ -3,8 +3,6 @@ id: FacetedMinMaxValuesFactory
 title: FacetedMinMaxValuesFactory
 ---
 
-# Type Alias: FacetedMinMaxValuesFactory()\<TData\>
-
 ```ts
 type FacetedMinMaxValuesFactory<TData> = (table, columnId) => () => undefined | [number, number];
 ```

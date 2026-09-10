@@ -3,8 +3,6 @@ id: AppCellPropsWithoutSelector
 title: AppCellPropsWithoutSelector
 ---
 
-# Interface: AppCellPropsWithoutSelector\<TFeatures, TData, TValue, TCellComponents\>
-
 Defined in: [react-table/src/createTableHook.tsx:398](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L398)
 
 Props for AppCell component - without selector

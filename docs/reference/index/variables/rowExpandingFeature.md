@@ -3,8 +3,6 @@ id: rowExpandingFeature
 title: rowExpandingFeature
 ---
 
-# Variable: rowExpandingFeature
-
 ```ts
 const rowExpandingFeature: TableFeature;
 ```

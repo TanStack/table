@@ -3,8 +3,6 @@ id: RowModelFns_ColumnFiltering
 title: RowModelFns_ColumnFiltering
 ---
 
-# Interface: RowModelFns\_ColumnFiltering\<TFeatures, TData\>
-
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L53)
 
 ## Type Parameters

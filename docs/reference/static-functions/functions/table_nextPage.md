@@ -3,8 +3,6 @@ id: table_nextPage
 title: table_nextPage
 ---
 
-# Function: table\_nextPage()
-
 ```ts
 function table_nextPage<TFeatures, TData>(table): void;
 ```

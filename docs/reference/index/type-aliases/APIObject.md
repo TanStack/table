@@ -3,8 +3,6 @@ id: APIObject
 title: APIObject
 ---
 
-# Type Alias: APIObject\<TDeps, TDepArgs\>
-
 ```ts
 type APIObject<TDeps, TDepArgs> = Record<string, API<TDeps, TDepArgs>>;
 ```

@@ -3,8 +3,6 @@ id: AppCellPropsWithSelector
 title: AppCellPropsWithSelector
 ---
 
-# Interface: AppCellPropsWithSelector\<TFeatures, TData, TValue, TCellComponents, TSelected\>
-
 Defined in: [react-table/src/createTableHook.tsx:415](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L415)
 
 Props for AppCell component - with selector

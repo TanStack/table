@@ -3,8 +3,6 @@ id: flexRenderComponent
 title: flexRenderComponent
 ---
 
-# Function: flexRenderComponent()
-
 ```ts
 function flexRenderComponent<TComponent>(component, options?): FlexRenderComponent<TComponent>;
 ```

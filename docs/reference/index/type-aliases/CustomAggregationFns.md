@@ -3,8 +3,6 @@ id: CustomAggregationFns
 title: CustomAggregationFns
 ---
 
-# Type Alias: CustomAggregationFns\<TFeatures, TData\>
-
 ```ts
 type CustomAggregationFns<TFeatures, TData> = Record<string, AggregationFnDef<TFeatures, TData, any, any>>;
 ```

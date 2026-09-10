@@ -3,8 +3,6 @@ id: TanStackTableCell
 title: TanStackTableCell
 ---
 
-# Class: TanStackTableCell\<TFeatures, TData, TValue\>
-
 Defined in: [packages/angular-table/src/helpers/cell.ts:76](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L76)
 
 Provides a TanStack Table `Cell` instance in Angular DI.

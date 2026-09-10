@@ -3,8 +3,6 @@ id: normalizeAggregationRows
 title: normalizeAggregationRows
 ---
 
-# Function: normalizeAggregationRows()
-
 ```ts
 function normalizeAggregationRows<TFeatures, TData>(rows, maxDepth): Row<TFeatures, TData>[];
 ```

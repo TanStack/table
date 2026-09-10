@@ -3,8 +3,6 @@ id: ToggleSelectedOptions
 title: ToggleSelectedOptions
 ---
 
-# Interface: ToggleSelectedOptions
-
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L11)
 
 Controls how toggling a row affects its descendants and ancestors.

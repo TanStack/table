@@ -3,8 +3,6 @@ id: ResolvedAggregationFn
 title: ResolvedAggregationFn
 ---
 
-# Interface: ResolvedAggregationFn\<TFeatures, TData\>
-
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:222](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L222)
 
 A validated aggregation entry returned by `column.getAggregationFns()`.

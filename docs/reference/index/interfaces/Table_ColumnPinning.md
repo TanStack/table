@@ -3,8 +3,6 @@ id: Table_ColumnPinning
 title: Table_ColumnPinning
 ---
 
-# Interface: Table\_ColumnPinning\<TFeatures, TData\>
-
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L98)
 
 ## Type Parameters

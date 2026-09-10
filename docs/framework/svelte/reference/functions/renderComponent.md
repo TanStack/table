@@ -3,8 +3,6 @@ id: renderComponent
 title: renderComponent
 ---
 
-# Function: renderComponent()
-
 ```ts
 function renderComponent<TComponent, TProps>(component, props?): RenderComponentConfig<TComponent>;
 ```

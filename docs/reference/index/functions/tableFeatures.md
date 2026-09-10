@@ -3,8 +3,6 @@ id: tableFeatures
 title: tableFeatures
 ---
 
-# Function: tableFeatures()
-
 ```ts
 function tableFeatures<TFeatures>(features): TFeatures;
 ```

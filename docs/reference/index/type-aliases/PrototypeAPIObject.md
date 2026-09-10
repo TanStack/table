@@ -3,8 +3,6 @@ id: PrototypeAPIObject
 title: PrototypeAPIObject
 ---
 
-# Type Alias: PrototypeAPIObject\<TDeps, TDepArgs\>
-
 ```ts
 type PrototypeAPIObject<TDeps, TDepArgs> = Record<string, PrototypeAPI<TDeps, TDepArgs>>;
 ```

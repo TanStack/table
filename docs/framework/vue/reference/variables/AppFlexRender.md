@@ -3,8 +3,6 @@ id: AppFlexRender
 title: AppFlexRender
 ---
 
-# Variable: AppFlexRender
-
 ```ts
 const AppFlexRender: DefineComponent<ExtractPropTypes<{
   cell: {

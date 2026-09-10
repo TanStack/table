@@ -3,8 +3,6 @@ id: Column_RowAggregation
 title: Column_RowAggregation
 ---
 
-# Interface: Column\_RowAggregation\<TFeatures, TData\>
-
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:264](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L264)
 
 Column instance APIs installed by `rowAggregationFeature`.

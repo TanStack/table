@@ -3,8 +3,6 @@ id: table_getEndLeafColumns
 title: table_getEndLeafColumns
 ---
 
-# Function: table\_getEndLeafColumns()
-
 ```ts
 function table_getEndLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```

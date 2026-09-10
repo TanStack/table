@@ -3,8 +3,6 @@ id: FlexRenderableSignature
 title: FlexRenderableSignature
 ---
 
-# Interface: FlexRenderableSignature\<TFeatures, TData, TValue, TOptions\>
-
 Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:5
 
 ## Type Parameters

@@ -3,8 +3,6 @@ id: table_getCellSelectionBounds
 title: table_getCellSelectionBounds
 ---
 
-# Function: table\_getCellSelectionBounds()
-
 ```ts
 function table_getCellSelectionBounds<TFeatures, TData>(table): CellSelectionBounds[];
 ```

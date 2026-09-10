@@ -3,8 +3,6 @@ id: Row_RowSelection
 title: Row_RowSelection
 ---
 
-# Interface: Row\_RowSelection
-
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L89)
 
 ## Properties

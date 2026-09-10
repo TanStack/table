@@ -3,8 +3,6 @@ id: Table_ColumnSizing
 title: Table_ColumnSizing
 ---
 
-# Interface: Table\_ColumnSizing
-
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L62)
 
 ## Properties

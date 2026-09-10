@@ -3,8 +3,6 @@ id: column_getIsFirstColumn
 title: column_getIsFirstColumn
 ---
 
-# Function: column\_getIsFirstColumn()
-
 ```ts
 function column_getIsFirstColumn<TFeatures, TData, TValue>(column, position?): boolean;
 ```

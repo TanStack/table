@@ -3,8 +3,6 @@ id: Updater
 title: Updater
 ---
 
-# Type Alias: Updater\<T\>
-
 ```ts
 type Updater<T> = T | (old) => T;
 ```

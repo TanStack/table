@@ -3,8 +3,6 @@ id: FlexRenderHeader
 title: FlexRenderHeader
 ---
 
-# Class: FlexRenderHeader\<TFeatures, TData, TValue\>
-
 Defined in: packages/ember-table/declarations/FlexRender.d.ts:40
 
 ## Extends

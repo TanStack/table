@@ -3,8 +3,6 @@ id: filterFn_endsWith
 title: filterFn_endsWith
 ---
 
-# Variable: filterFn\_endsWith
-
 ```ts
 const filterFn_endsWith: CreatedFilterFn<any, any>;
 ```

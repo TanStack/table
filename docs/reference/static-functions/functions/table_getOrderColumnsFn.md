@@ -3,8 +3,6 @@ id: table_getOrderColumnsFn
 title: table_getOrderColumnsFn
 ---
 
-# Function: table\_getOrderColumnsFn()
-
 ```ts
 function table_getOrderColumnsFn<TFeatures, TData>(table): (columns) => Column_Internal<TFeatures, TData, unknown>[];
 ```

@@ -3,8 +3,6 @@ id: column_getIsVisible
 title: column_getIsVisible
 ---
 
-# Function: column\_getIsVisible()
-
 ```ts
 function column_getIsVisible<TFeatures, TData, TValue>(column): boolean;
 ```

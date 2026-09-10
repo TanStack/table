@@ -3,8 +3,6 @@ id: FlexRenderCell
 title: FlexRenderCell
 ---
 
-# Interface: FlexRenderCell
-
 Defined in: [packages/vue-table/src/FlexRender.ts:4](https://github.com/TanStack/table/blob/main/packages/vue-table/src/FlexRender.ts#L4)
 
 ## Properties

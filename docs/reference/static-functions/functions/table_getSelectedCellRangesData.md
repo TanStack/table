@@ -3,8 +3,6 @@ id: table_getSelectedCellRangesData
 title: table_getSelectedCellRangesData
 ---
 
-# Function: table\_getSelectedCellRangesData()
-
 ```ts
 function table_getSelectedCellRangesData<TFeatures, TData>(table): unknown[][][];
 ```

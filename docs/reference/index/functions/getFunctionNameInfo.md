@@ -3,8 +3,6 @@ id: getFunctionNameInfo
 title: getFunctionNameInfo
 ---
 
-# Function: getFunctionNameInfo()
-
 ```ts
 function getFunctionNameInfo(staticFnName, splitBy): object;
 ```

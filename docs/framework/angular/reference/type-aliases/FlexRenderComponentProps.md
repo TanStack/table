@@ -3,8 +3,6 @@ id: FlexRenderComponentProps
 title: FlexRenderComponentProps
 ---
 
-# Type Alias: FlexRenderComponentProps
-
 ```ts
 type FlexRenderComponentProps = InjectionToken<{
 }>;

@@ -3,8 +3,6 @@ id: RowModelFactory
 title: RowModelFactory
 ---
 
-# Type Alias: RowModelFactory()\<TData\>
-
 ```ts
 type RowModelFactory<TData> = (table) => () => RowModel<LegacyFeatures, TData>;
 ```

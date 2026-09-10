@@ -3,8 +3,6 @@ id: columnGroupingFeature
 title: columnGroupingFeature
 ---
 
-# Variable: columnGroupingFeature
-
 ```ts
 const columnGroupingFeature: TableFeature;
 ```

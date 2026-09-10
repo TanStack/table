@@ -3,8 +3,6 @@ id: sortFn_datetime
 title: sortFn_datetime
 ---
 
-# Variable: sortFn\_datetime
-
 ```ts
 const sortFn_datetime: CreatedSortFn<any, any>;
 ```

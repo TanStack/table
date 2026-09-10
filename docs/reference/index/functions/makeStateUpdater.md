@@ -3,8 +3,6 @@ id: makeStateUpdater
 title: makeStateUpdater
 ---
 
-# Function: makeStateUpdater()
-
 ```ts
 function makeStateUpdater<TFeatures, K>(key, instance): (updater) => void;
 ```

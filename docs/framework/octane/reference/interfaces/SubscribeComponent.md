@@ -3,8 +3,6 @@ id: SubscribeComponent
 title: SubscribeComponent
 ---
 
-# Interface: SubscribeComponent()
-
 Defined in: [types.ts:181](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L181)
 
 The call signature of the standalone `Subscribe` component.

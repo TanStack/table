@@ -3,8 +3,6 @@ id: createFacetedRowModel
 title: createFacetedRowModel
 ---
 
-# Function: createFacetedRowModel()
-
 ```ts
 function createFacetedRowModel<TFeatures, TData>(): (table, columnId) => () => RowModel<TFeatures, TData>;
 ```

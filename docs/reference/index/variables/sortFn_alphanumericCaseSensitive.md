@@ -3,8 +3,6 @@ id: sortFn_alphanumericCaseSensitive
 title: sortFn_alphanumericCaseSensitive
 ---
 
-# Variable: sortFn\_alphanumericCaseSensitive
-
 ```ts
 const sortFn_alphanumericCaseSensitive: CreatedSortFn<any, any>;
 ```

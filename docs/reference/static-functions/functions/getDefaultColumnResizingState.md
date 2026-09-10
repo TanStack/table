@@ -3,8 +3,6 @@ id: getDefaultColumnResizingState
 title: getDefaultColumnResizingState
 ---
 
-# Function: getDefaultColumnResizingState()
-
 ```ts
 function getDefaultColumnResizingState(): columnResizingState;
 ```

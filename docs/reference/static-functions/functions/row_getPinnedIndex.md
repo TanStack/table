@@ -3,8 +3,6 @@ id: row_getPinnedIndex
 title: row_getPinnedIndex
 ---
 
-# Function: row\_getPinnedIndex()
-
 ```ts
 function row_getPinnedIndex<TFeatures, TData>(row): number;
 ```

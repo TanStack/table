@@ -3,8 +3,6 @@ id: Column_ColumnVisibility
 title: Column_ColumnVisibility
 ---
 
-# Interface: Column\_ColumnVisibility
-
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L95)
 
 ## Properties

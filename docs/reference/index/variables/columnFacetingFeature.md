@@ -3,8 +3,6 @@ id: columnFacetingFeature
 title: columnFacetingFeature
 ---
 
-# Variable: columnFacetingFeature
-
 ```ts
 const columnFacetingFeature: TableFeature;
 ```

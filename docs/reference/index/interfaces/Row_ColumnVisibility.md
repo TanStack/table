@@ -3,8 +3,6 @@ id: Row_ColumnVisibility
 title: Row_ColumnVisibility
 ---
 
-# Interface: Row\_ColumnVisibility\<TFeatures, TData\>
-
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L78)
 
 ## Type Parameters

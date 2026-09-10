@@ -3,8 +3,6 @@ id: AggregationMergeContext
 title: AggregationMergeContext
 ---
 
-# Interface: AggregationMergeContext\<TFeatures, TData, TValue, TResult\>
-
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L49)
 
 Additional values available when merging nested grouped results.

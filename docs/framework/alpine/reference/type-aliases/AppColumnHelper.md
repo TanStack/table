@@ -3,8 +3,6 @@ id: AppColumnHelper
 title: AppColumnHelper
 ---
 
-# Type Alias: AppColumnHelper\<TFeatures, TData\>
-
 ```ts
 type AppColumnHelper<TFeatures, TData> = ReturnType<typeof coreCreateColumnHelper>;
 ```

@@ -3,8 +3,6 @@ id: table_selectAllCells
 title: table_selectAllCells
 ---
 
-# Function: table\_selectAllCells()
-
 ```ts
 function table_selectAllCells<TFeatures, TData>(table): void;
 ```

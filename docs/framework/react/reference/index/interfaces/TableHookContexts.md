@@ -3,8 +3,6 @@ id: TableHookContexts
 title: TableHookContexts
 ---
 
-# Interface: TableHookContexts\<TFeatures, TData\>
-
 Defined in: [react-table/src/createTableHookContexts.tsx:17](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L17)
 
 The object returned by [createTableHookContexts](../functions/createTableHookContexts.md): three scoped React

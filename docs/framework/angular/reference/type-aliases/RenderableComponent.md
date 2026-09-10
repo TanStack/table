@@ -3,8 +3,6 @@ id: RenderableComponent
 title: RenderableComponent
 ---
 
-# Type Alias: RenderableComponent
-
 ```ts
 type RenderableComponent =
   | Type<any>

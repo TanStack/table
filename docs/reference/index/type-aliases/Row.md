@@ -3,8 +3,6 @@ id: Row
 title: Row
 ---
 
-# Type Alias: Row\<TFeatures, TData\>
-
 ```ts
 type Row<TFeatures, TData> = Row_Core<TFeatures, TData> & ExtractFeatureMapTypes<TFeatures, Row_FeatureMap<TFeatures, TData>>;
 ```

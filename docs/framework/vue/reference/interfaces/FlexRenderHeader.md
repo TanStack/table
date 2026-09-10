@@ -3,8 +3,6 @@ id: FlexRenderHeader
 title: FlexRenderHeader
 ---
 
-# Interface: FlexRenderHeader
-
 Defined in: [packages/vue-table/src/FlexRender.ts:16](https://github.com/TanStack/table/blob/main/packages/vue-table/src/FlexRender.ts#L16)
 
 ## Properties

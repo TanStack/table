@@ -3,8 +3,6 @@ id: CreateTableContextOptions
 title: CreateTableContextOptions
 ---
 
-# Type Alias: CreateTableContextOptions\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type CreateTableContextOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```

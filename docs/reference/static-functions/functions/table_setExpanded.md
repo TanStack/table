@@ -3,8 +3,6 @@ id: table_setExpanded
 title: table_setExpanded
 ---
 
-# Function: table\_setExpanded()
-
 ```ts
 function table_setExpanded<TFeatures, TData>(table, updater): void;
 ```

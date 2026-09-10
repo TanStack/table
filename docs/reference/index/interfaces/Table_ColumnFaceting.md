@@ -3,8 +3,6 @@ id: Table_ColumnFaceting
 title: Table_ColumnFaceting
 ---
 
-# Interface: Table\_ColumnFaceting\<TFeatures, TData\>
-
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L62)
 
 ## Type Parameters

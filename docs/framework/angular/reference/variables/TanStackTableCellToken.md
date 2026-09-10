@@ -3,8 +3,6 @@ id: TanStackTableCellToken
 title: TanStackTableCellToken
 ---
 
-# Variable: TanStackTableCellToken
-
 ```ts
 const TanStackTableCellToken: InjectionToken<Signal<Cell<TableFeatures, RowData, unknown>>>;
 ```

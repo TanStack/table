@@ -3,8 +3,6 @@ id: createGroupedRowModel
 title: createGroupedRowModel
 ---
 
-# Function: createGroupedRowModel()
-
 ```ts
 function createGroupedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```

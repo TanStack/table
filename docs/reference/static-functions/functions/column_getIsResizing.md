@@ -3,8 +3,6 @@ id: column_getIsResizing
 title: column_getIsResizing
 ---
 
-# Function: column\_getIsResizing()
-
 ```ts
 function column_getIsResizing<TFeatures, TData, TValue>(column): boolean;
 ```

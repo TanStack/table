@@ -3,8 +3,6 @@ id: cloneState
 title: cloneState
 ---
 
-# Function: cloneState()
-
 ```ts
 function cloneState<T>(value): T;
 ```

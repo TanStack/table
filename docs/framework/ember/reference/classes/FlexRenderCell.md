@@ -3,8 +3,6 @@ id: FlexRenderCell
 title: FlexRenderCell
 ---
 
-# Class: FlexRenderCell\<TFeatures, TData, TValue\>
-
 Defined in: packages/ember-table/declarations/FlexRender.d.ts:26
 
 ## Extends

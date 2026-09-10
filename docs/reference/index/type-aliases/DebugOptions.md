@@ -3,8 +3,6 @@ id: DebugOptions
 title: DebugOptions
 ---
 
-# Type Alias: DebugOptions\<TFeatures\>
-
 ```ts
 type DebugOptions<TFeatures> = object & DebugKeysFor<CoreFeatures & TFeatures>;
 ```

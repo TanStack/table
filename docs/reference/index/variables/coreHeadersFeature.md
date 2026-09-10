@@ -3,8 +3,6 @@ id: coreHeadersFeature
 title: coreHeadersFeature
 ---
 
-# Variable: coreHeadersFeature
-
 ```ts
 const coreHeadersFeature: TableFeature;
 ```

@@ -3,8 +3,6 @@ id: getDefaultColumnSizingState
 title: getDefaultColumnSizingState
 ---
 
-# Function: getDefaultColumnSizingState()
-
 ```ts
 function getDefaultColumnSizingState(): ColumnSizingState;
 ```

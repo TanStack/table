@@ -3,8 +3,6 @@ id: getInitialTableState
 title: getInitialTableState
 ---
 
-# Function: getInitialTableState()
-
 ```ts
 function getInitialTableState<TFeatures>(features, initialState): TableState<TFeatures>;
 ```

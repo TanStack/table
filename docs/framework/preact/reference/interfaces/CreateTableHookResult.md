@@ -3,8 +3,6 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
-# Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 Defined in: [createTableHook.tsx:295](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L295)
 
 ## Type Parameters

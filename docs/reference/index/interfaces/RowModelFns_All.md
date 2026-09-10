@@ -3,8 +3,6 @@ id: RowModelFns_All
 title: RowModelFns_All
 ---
 
-# Interface: RowModelFns\_All\<TFeatures, TData\>
-
 Defined in: [types/RowModelFns.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L25)
 
 ## Extends

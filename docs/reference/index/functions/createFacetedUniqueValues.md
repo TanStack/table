@@ -3,8 +3,6 @@ id: createFacetedUniqueValues
 title: createFacetedUniqueValues
 ---
 
-# Function: createFacetedUniqueValues()
-
 ```ts
 function createFacetedUniqueValues<TFeatures, TData>(): (table, columnId) => () => Map<any, number>;
 ```

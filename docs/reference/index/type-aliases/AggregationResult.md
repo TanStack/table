@@ -3,8 +3,6 @@ id: AggregationResult
 title: AggregationResult
 ---
 
-# Type Alias: AggregationResult\<TOption, TFeatures\>
-
 ```ts
 type AggregationResult<TOption, TFeatures> = TOption extends ReadonlyArray<infer TEntry> ? { [TKey in AggregationEntryId<TEntry>]: AggregationResultOfRef<AggregationEntryDefinition<Extract<TEntry, TKey | { id: TKey }>>, TFeatures> } : AggregationResultOfRef<TOption, TFeatures>;
 ```

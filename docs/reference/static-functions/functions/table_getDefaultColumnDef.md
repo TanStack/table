@@ -3,8 +3,6 @@ id: table_getDefaultColumnDef
 title: table_getDefaultColumnDef
 ---
 
-# Function: table\_getDefaultColumnDef()
-
 ```ts
 function table_getDefaultColumnDef<TFeatures, TData>(table): Partial<ColumnDef<TFeatures, TData, unknown>>;
 ```

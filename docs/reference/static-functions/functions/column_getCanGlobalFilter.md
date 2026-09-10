@@ -3,8 +3,6 @@ id: column_getCanGlobalFilter
 title: column_getCanGlobalFilter
 ---
 
-# Function: column\_getCanGlobalFilter()
-
 ```ts
 function column_getCanGlobalFilter<TFeatures, TData, TValue>(column): boolean;
 ```

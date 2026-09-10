@@ -3,8 +3,6 @@ id: ColSpanContext
 title: ColSpanContext
 ---
 
-# Interface: ColSpanContext\<TFeatures, TData, TValue\>
-
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L68)
 
 Context passed to a `spanColumns` resolver for each rendered row.

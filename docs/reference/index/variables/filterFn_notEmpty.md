@@ -3,8 +3,6 @@ id: filterFn_notEmpty
 title: filterFn_notEmpty
 ---
 
-# Variable: filterFn\_notEmpty
-
 ```ts
 const filterFn_notEmpty: CreatedFilterFn<any, any>;
 ```

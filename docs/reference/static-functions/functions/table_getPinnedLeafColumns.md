@@ -3,8 +3,6 @@ id: table_getPinnedLeafColumns
 title: table_getPinnedLeafColumns
 ---
 
-# Function: table\_getPinnedLeafColumns()
-
 ```ts
 function table_getPinnedLeafColumns<TFeatures, TData>(table, position):
   | Column<TFeatures, TData, unknown>[]

@@ -3,8 +3,6 @@ id: table_autoResetSorting
 title: table_autoResetSorting
 ---
 
-# Function: table\_autoResetSorting()
-
 ```ts
 function table_autoResetSorting<TFeatures, TData>(table): void;
 ```

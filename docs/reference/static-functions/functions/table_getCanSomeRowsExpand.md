@@ -3,8 +3,6 @@ id: table_getCanSomeRowsExpand
 title: table_getCanSomeRowsExpand
 ---
 
-# Function: table\_getCanSomeRowsExpand()
-
 ```ts
 function table_getCanSomeRowsExpand<TFeatures, TData>(table): boolean;
 ```

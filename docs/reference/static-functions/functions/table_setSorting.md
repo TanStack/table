@@ -3,8 +3,6 @@ id: table_setSorting
 title: table_setSorting
 ---
 
-# Function: table\_setSorting()
-
 ```ts
 function table_setSorting<TFeatures, TData>(table, updater): void;
 ```

@@ -3,8 +3,6 @@ id: columnResizingFeature
 title: columnResizingFeature
 ---
 
-# Variable: columnResizingFeature
-
 ```ts
 const columnResizingFeature: TableFeature;
 ```

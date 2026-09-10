@@ -3,8 +3,6 @@ id: aggregationFn_min
 title: aggregationFn_min
 ---
 
-# Variable: aggregationFn\_min
-
 ```ts
 const aggregationFn_min: AggregationFnDef<any, any, unknown, RangeValue | undefined>;
 ```

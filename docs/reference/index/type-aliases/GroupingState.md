@@ -3,8 +3,6 @@ id: GroupingState
 title: GroupingState
 ---
 
-# Type Alias: GroupingState
-
 ```ts
 type GroupingState = string[];
 ```

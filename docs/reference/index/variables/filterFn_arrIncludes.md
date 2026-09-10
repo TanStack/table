@@ -3,8 +3,6 @@ id: filterFn_arrIncludes
 title: filterFn_arrIncludes
 ---
 
-# Variable: filterFn\_arrIncludes
-
 ```ts
 const filterFn_arrIncludes: CreatedFilterFn<any, any>;
 ```

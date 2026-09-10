@@ -3,8 +3,6 @@ id: LegacyColumnDef
 title: LegacyColumnDef
 ---
 
-# ~~Type Alias: LegacyColumnDef\<TData, TValue\>~~
-
 ```ts
 type LegacyColumnDef<TData, TValue> = ColumnDef<LegacyFeatures, TData, TValue>;
 ```

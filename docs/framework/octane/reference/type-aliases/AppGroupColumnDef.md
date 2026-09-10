@@ -3,8 +3,6 @@ id: AppGroupColumnDef
 title: AppGroupColumnDef
 ---
 
-# Type Alias: AppGroupColumnDef\<TFeatures, TData, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppGroupColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<GroupColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer" | "columns"> & object;
 ```

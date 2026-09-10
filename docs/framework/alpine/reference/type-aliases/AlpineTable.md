@@ -3,8 +3,6 @@ id: AlpineTable
 title: AlpineTable
 ---
 
-# Type Alias: AlpineTable\<TFeatures, TData\>
-
 ```ts
 type AlpineTable<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```

@@ -3,8 +3,6 @@ id: LegacyHeader
 title: LegacyHeader
 ---
 
-# ~~Type Alias: LegacyHeader\<TData, TValue\>~~
-
 ```ts
 type LegacyHeader<TData, TValue> = Header<LegacyFeatures, TData, TValue>;
 ```

@@ -3,8 +3,6 @@ id: TableOptions_Cell
 title: TableOptions_Cell
 ---
 
-# Interface: TableOptions\_Cell
-
 Defined in: [core/cells/coreCellsFeature.types.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L63)
 
 ## Extended by

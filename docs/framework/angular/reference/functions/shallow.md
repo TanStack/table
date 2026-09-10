@@ -3,8 +3,6 @@ id: shallow
 title: shallow
 ---
 
-# Function: shallow()
-
 ```ts
 function shallow<T>(objA, objB): boolean;
 ```

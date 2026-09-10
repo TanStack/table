@@ -3,8 +3,6 @@ id: AppDisplayColumnDef
 title: AppDisplayColumnDef
 ---
 
-# Type Alias: AppDisplayColumnDef\<TFeatures, TData, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppDisplayColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<DisplayColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer"> & object;
 ```

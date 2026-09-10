@@ -3,8 +3,6 @@ id: aggregateColumnValue
 title: aggregateColumnValue
 ---
 
-# Function: aggregateColumnValue()
-
 ```ts
 function aggregateColumnValue<TFeatures, TData>(args): unknown;
 ```

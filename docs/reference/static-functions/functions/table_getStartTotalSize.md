@@ -3,8 +3,6 @@ id: table_getStartTotalSize
 title: table_getStartTotalSize
 ---
 
-# Function: table\_getStartTotalSize()
-
 ```ts
 function table_getStartTotalSize<TFeatures, TData>(table): number;
 ```

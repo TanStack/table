@@ -3,8 +3,6 @@ id: table_getRow
 title: table_getRow
 ---
 
-# Function: table\_getRow()
-
 ```ts
 function table_getRow<TFeatures, TData>(
    table,

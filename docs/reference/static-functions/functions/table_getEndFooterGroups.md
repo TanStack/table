@@ -3,8 +3,6 @@ id: table_getEndFooterGroups
 title: table_getEndFooterGroups
 ---
 
-# Function: table\_getEndFooterGroups()
-
 ```ts
 function table_getEndFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```

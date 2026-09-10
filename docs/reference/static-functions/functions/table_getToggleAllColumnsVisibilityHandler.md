@@ -3,8 +3,6 @@ id: table_getToggleAllColumnsVisibilityHandler
 title: table_getToggleAllColumnsVisibilityHandler
 ---
 
-# Function: table\_getToggleAllColumnsVisibilityHandler()
-
 ```ts
 function table_getToggleAllColumnsVisibilityHandler<TFeatures, TData>(table): (e) => void;
 ```

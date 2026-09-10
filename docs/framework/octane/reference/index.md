@@ -3,8 +3,6 @@ id: "@tanstack/octane-table"
 title: "@tanstack/octane-table"
 ---
 
-# @tanstack/octane-table
-
 ## Interfaces
 
 - [AppCellComponent](interfaces/AppCellComponent.md)

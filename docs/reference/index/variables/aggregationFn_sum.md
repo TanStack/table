@@ -3,8 +3,6 @@ id: aggregationFn_sum
 title: aggregationFn_sum
 ---
 
-# Variable: aggregationFn\_sum
-
 ```ts
 const aggregationFn_sum: AggregationFnDef<any, any, unknown, number>;
 ```

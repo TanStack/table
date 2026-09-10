@@ -3,8 +3,6 @@ id: Column_Internal
 title: Column_Internal
 ---
 
-# Interface: Column\_Internal\<TFeatures, TData, TValue\>
-
 Defined in: [types/Column.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L48)
 
 ## Extends

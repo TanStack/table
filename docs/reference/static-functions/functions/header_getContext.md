@@ -3,8 +3,6 @@ id: header_getContext
 title: header_getContext
 ---
 
-# Function: header\_getContext()
-
 ```ts
 function header_getContext<TFeatures, TData, TValue>(header): object;
 ```

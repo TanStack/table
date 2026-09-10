@@ -3,8 +3,6 @@ id: Table_RowModels_Expanded
 title: Table_RowModels_Expanded
 ---
 
-# Interface: Table\_RowModels\_Expanded\<TFeatures, TData\>
-
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L113)
 
 ## Type Parameters

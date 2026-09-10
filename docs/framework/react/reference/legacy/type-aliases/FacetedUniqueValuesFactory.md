@@ -3,8 +3,6 @@ id: FacetedUniqueValuesFactory
 title: FacetedUniqueValuesFactory
 ---
 
-# Type Alias: FacetedUniqueValuesFactory()\<TData\>
-
 ```ts
 type FacetedUniqueValuesFactory<TData> = (table, columnId) => () => Map<any, number>;
 ```

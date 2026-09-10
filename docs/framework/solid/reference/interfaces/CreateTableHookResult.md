@@ -3,8 +3,6 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
-# Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 Defined in: [createTableHook.tsx:405](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L405)
 
 ## Type Parameters

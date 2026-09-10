@@ -3,8 +3,6 @@ id: CellSelectionDirection
 title: CellSelectionDirection
 ---
 
-# Type Alias: CellSelectionDirection
-
 ```ts
 type CellSelectionDirection = "up" | "down" | "left" | "right";
 ```

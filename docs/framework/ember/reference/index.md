@@ -3,8 +3,6 @@ id: "@tanstack/ember-table"
 title: "@tanstack/ember-table"
 ---
 
-# @tanstack/ember-table
-
 ## Classes
 
 - [ComputedSignal](classes/ComputedSignal.md)

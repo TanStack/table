@@ -3,8 +3,6 @@ id: cellSpanningFeature
 title: cellSpanningFeature
 ---
 
-# Variable: cellSpanningFeature
-
 ```ts
 const cellSpanningFeature: TableFeature;
 ```

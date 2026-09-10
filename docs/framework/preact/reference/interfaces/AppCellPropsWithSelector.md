@@ -3,8 +3,6 @@ id: AppCellPropsWithSelector
 title: AppCellPropsWithSelector
 ---
 
-# Interface: AppCellPropsWithSelector\<TFeatures, TData, TValue, TCellComponents, TSelected\>
-
 Defined in: [createTableHook.tsx:412](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L412)
 
 Props for AppCell component - with selector

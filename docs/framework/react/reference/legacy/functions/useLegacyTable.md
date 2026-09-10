@@ -3,8 +3,6 @@ id: useLegacyTable
 title: useLegacyTable
 ---
 
-# ~~Function: useLegacyTable()~~
-
 ```ts
 function useLegacyTable<TData>(options): LegacyReactTable<TData>;
 ```

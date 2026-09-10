@@ -3,8 +3,6 @@ id: Table_Columns
 title: Table_Columns
 ---
 
-# Interface: Table\_Columns\<TFeatures, TData\>
-
 Defined in: [core/columns/coreColumnsFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L76)
 
 ## Extended by

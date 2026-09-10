@@ -3,8 +3,6 @@ id: cell_getSelectionExtendHandler
 title: cell_getSelectionExtendHandler
 ---
 
-# Function: cell\_getSelectionExtendHandler()
-
 ```ts
 function cell_getSelectionExtendHandler<TFeatures, TData, TValue>(cell): (_e) => void;
 ```

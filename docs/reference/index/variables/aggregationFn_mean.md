@@ -3,8 +3,6 @@ id: aggregationFn_mean
 title: aggregationFn_mean
 ---
 
-# Variable: aggregationFn\_mean
-
 ```ts
 const aggregationFn_mean: AggregationFnDef<any, any, unknown, number | undefined>;
 ```

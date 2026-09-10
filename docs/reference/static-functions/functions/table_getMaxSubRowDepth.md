@@ -3,8 +3,6 @@ id: table_getMaxSubRowDepth
 title: table_getMaxSubRowDepth
 ---
 
-# Function: table\_getMaxSubRowDepth()
-
 ```ts
 function table_getMaxSubRowDepth<TFeatures, TData>(table): number;
 ```

@@ -3,8 +3,6 @@ id: ReactTable
 title: ReactTable
 ---
 
-# Type Alias: ReactTable\<TFeatures, TData, TSelected\>
-
 ```ts
 type ReactTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```

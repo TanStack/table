@@ -3,8 +3,6 @@ id: RowPinningPosition
 title: RowPinningPosition
 ---
 
-# Type Alias: RowPinningPosition
-
 ```ts
 type RowPinningPosition = false | "top" | "bottom";
 ```

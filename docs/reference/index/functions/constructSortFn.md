@@ -3,8 +3,6 @@ id: constructSortFn
 title: constructSortFn
 ---
 
-# Function: constructSortFn()
-
 ```ts
 function constructSortFn<TFeatures, TData>(def): CreatedSortFn<TFeatures, TData>;
 ```

@@ -3,8 +3,6 @@ id: TableOptions_RowSorting
 title: TableOptions_RowSorting
 ---
 
-# Interface: TableOptions\_RowSorting
-
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:216](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L216)
 
 ## Properties

@@ -3,8 +3,6 @@ id: "@tanstack/alpine-table"
 title: "@tanstack/alpine-table"
 ---
 
-# @tanstack/alpine-table
-
 ## Type Aliases
 
 - [AlpineTable](type-aliases/AlpineTable.md)

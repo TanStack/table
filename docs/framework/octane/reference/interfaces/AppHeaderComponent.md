@@ -3,8 +3,6 @@ id: AppHeaderComponent
 title: AppHeaderComponent
 ---
 
-# Interface: AppHeaderComponent()\<TFeatures, TData, THeaderComponents\>
-
 Defined in: [types.ts:698](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L698)
 
 Component type for AppHeader/AppFooter — wraps a header and provides header

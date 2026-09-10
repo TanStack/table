@@ -3,8 +3,6 @@ id: row_getCanExpand
 title: row_getCanExpand
 ---
 
-# Function: row\_getCanExpand()
-
 ```ts
 function row_getCanExpand<TFeatures, TData>(row): boolean;
 ```

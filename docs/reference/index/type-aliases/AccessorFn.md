@@ -3,8 +3,6 @@ id: AccessorFn
 title: AccessorFn
 ---
 
-# Type Alias: AccessorFn()\<TData, TValue\>
-
 ```ts
 type AccessorFn<TData, TValue> = (originalRow, index) => TValue;
 ```

@@ -3,8 +3,6 @@ id: Atoms
 title: Atoms
 ---
 
-# Type Alias: Atoms\<TFeatures\>
-
 ```ts
 type Atoms<TFeatures> = { [K in keyof TableState<TFeatures>]-?: ReadonlyAtom<TableState<TFeatures>[K]> };
 ```

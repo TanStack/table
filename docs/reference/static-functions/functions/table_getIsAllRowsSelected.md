@@ -3,8 +3,6 @@ id: table_getIsAllRowsSelected
 title: table_getIsAllRowsSelected
 ---
 
-# Function: table\_getIsAllRowsSelected()
-
 ```ts
 function table_getIsAllRowsSelected<TFeatures, TData>(table): boolean;
 ```

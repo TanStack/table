@@ -3,8 +3,6 @@ id: column_clearSorting
 title: column_clearSorting
 ---
 
-# Function: column\_clearSorting()
-
 ```ts
 function column_clearSorting<TFeatures, TData, TValue>(column): void;
 ```

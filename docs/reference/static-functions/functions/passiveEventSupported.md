@@ -3,8 +3,6 @@ id: passiveEventSupported
 title: passiveEventSupported
 ---
 
-# Function: passiveEventSupported()
-
 ```ts
 function passiveEventSupported(): boolean;
 ```

@@ -3,8 +3,6 @@ id: table_toggleAllRowsSelected
 title: table_toggleAllRowsSelected
 ---
 
-# Function: table\_toggleAllRowsSelected()
-
 ```ts
 function table_toggleAllRowsSelected<TFeatures, TData>(
    table,

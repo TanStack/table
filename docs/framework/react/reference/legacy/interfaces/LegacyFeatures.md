@@ -3,8 +3,6 @@ id: LegacyFeatures
 title: LegacyFeatures
 ---
 
-# Interface: LegacyFeatures
-
 Defined in: [react-table/src/useLegacyTable.ts:168](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L168)
 
 Feature set registered by `useLegacyTable`.

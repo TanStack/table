@@ -3,8 +3,6 @@ id: ColumnSizingState
 title: ColumnSizingState
 ---
 
-# Type Alias: ColumnSizingState
-
 ```ts
 type ColumnSizingState = Record<string, number>;
 ```

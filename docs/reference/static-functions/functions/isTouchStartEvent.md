@@ -3,8 +3,6 @@ id: isTouchStartEvent
 title: isTouchStartEvent
 ---
 
-# Function: isTouchStartEvent()
-
 ```ts
 function isTouchStartEvent(e): e is TouchEvent;
 ```

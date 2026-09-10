@@ -3,8 +3,6 @@ id: cell_getContext
 title: cell_getContext
 ---
 
-# Function: cell\_getContext()
-
 ```ts
 function cell_getContext<TFeatures, TData, TValue>(cell): object;
 ```

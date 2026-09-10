@@ -3,8 +3,6 @@ id: getFacetedUniqueValues
 title: getFacetedUniqueValues
 ---
 
-# ~~Function: getFacetedUniqueValues()~~
-
 ```ts
 function getFacetedUniqueValues<TData>(): FacetedUniqueValuesFactory<TData>;
 ```

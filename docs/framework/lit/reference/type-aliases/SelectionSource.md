@@ -3,8 +3,6 @@ id: SelectionSource
 title: SelectionSource
 ---
 
-# Type Alias: SelectionSource\<TValue\>
-
 ```ts
 type SelectionSource<TValue> =
   | Atom<TValue>

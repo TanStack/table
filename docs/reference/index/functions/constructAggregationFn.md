@@ -3,8 +3,6 @@ id: constructAggregationFn
 title: constructAggregationFn
 ---
 
-# Function: constructAggregationFn()
-
 ```ts
 function constructAggregationFn<TFeatures, TData, TValue, TResult>(definition): AggregationFnDef<TFeatures, TData, TValue, TResult>;
 ```

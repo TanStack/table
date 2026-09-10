@@ -3,8 +3,6 @@ id: TableOptions_Table
 title: TableOptions_Table
 ---
 
-# Interface: TableOptions\_Table\<TFeatures, TData\>
-
 Defined in: [core/table/coreTablesFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L88)
 
 ## Extended by

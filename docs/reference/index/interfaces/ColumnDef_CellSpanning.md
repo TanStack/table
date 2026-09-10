@@ -3,8 +3,6 @@ id: ColumnDef_CellSpanning
 title: ColumnDef_CellSpanning
 ---
 
-# Interface: ColumnDef\_CellSpanning\<TFeatures, TData, TValue\>
-
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L78)
 
 ## Type Parameters

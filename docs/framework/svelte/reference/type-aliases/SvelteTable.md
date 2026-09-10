@@ -3,8 +3,6 @@ id: SvelteTable
 title: SvelteTable
 ---
 
-# Type Alias: SvelteTable\<TFeatures, TData\>
-
 ```ts
 type SvelteTable<TFeatures, TData> = Table<TFeatures, TData>;
 ```

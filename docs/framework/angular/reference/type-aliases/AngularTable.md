@@ -3,8 +3,6 @@ id: AngularTable
 title: AngularTable
 ---
 
-# Type Alias: AngularTable\<TFeatures, TData\>
-
 ```ts
 type AngularTable<TFeatures, TData> = Table<TFeatures, TData>;
 ```

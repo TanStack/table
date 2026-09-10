@@ -3,8 +3,6 @@ id: filterFn_weakEquals
 title: filterFn_weakEquals
 ---
 
-# Variable: filterFn\_weakEquals
-
 ```ts
 const filterFn_weakEquals: CreatedFilterFn<any, any>;
 ```

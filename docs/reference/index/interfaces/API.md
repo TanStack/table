@@ -3,8 +3,6 @@ id: API
 title: API
 ---
 
-# Interface: API\<_TDeps, _TDepArgs\>
-
 Defined in: [utils.ts:514](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L514)
 
 ## Type Parameters

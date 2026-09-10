@@ -3,8 +3,6 @@ id: coreTablesFeature
 title: coreTablesFeature
 ---
 
-# Variable: coreTablesFeature
-
 ```ts
 const coreTablesFeature: TableFeature;
 ```

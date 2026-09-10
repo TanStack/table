@@ -3,8 +3,6 @@ id: row_pin
 title: row_pin
 ---
 
-# Function: row\_pin()
-
 ```ts
 function row_pin<TFeatures, TData>(
    row,

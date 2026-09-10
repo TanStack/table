@@ -3,8 +3,6 @@ id: TanStackTableToken
 title: TanStackTableToken
 ---
 
-# Variable: TanStackTableToken
-
 ```ts
 const TanStackTableToken: InjectionToken<Signal<AngularTable<TableFeatures, RowData>>>;
 ```

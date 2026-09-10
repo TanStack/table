@@ -3,8 +3,6 @@ id: columnVisibilityFeature
 title: columnVisibilityFeature
 ---
 
-# Variable: columnVisibilityFeature
-
 ```ts
 const columnVisibilityFeature: TableFeature;
 ```

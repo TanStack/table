@@ -3,8 +3,6 @@ id: LegacyRowModelOptions
 title: LegacyRowModelOptions
 ---
 
-# Interface: LegacyRowModelOptions\<TData\>
-
 Defined in: [react-table/src/useLegacyTable.ts:208](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L208)
 
 Legacy v8-style row model options

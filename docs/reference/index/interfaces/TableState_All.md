@@ -3,8 +3,6 @@ id: TableState_All
 title: TableState_All
 ---
 
-# Interface: TableState\_All
-
 Defined in: [types/TableState.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L49)
 
 Internal broad state shape containing every registered feature state slice.

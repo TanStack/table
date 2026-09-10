@@ -3,8 +3,6 @@ id: filterFn_startsWith
 title: filterFn_startsWith
 ---
 
-# Variable: filterFn\_startsWith
-
 ```ts
 const filterFn_startsWith: CreatedFilterFn<any, any>;
 ```

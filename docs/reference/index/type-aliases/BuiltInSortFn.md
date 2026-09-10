@@ -3,8 +3,6 @@ id: BuiltInSortFn
 title: BuiltInSortFn
 ---
 
-# Type Alias: BuiltInSortFn
-
 ```ts
 type BuiltInSortFn = keyof typeof sortFns;
 ```

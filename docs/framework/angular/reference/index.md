@@ -3,8 +3,6 @@ id: "@tanstack/angular-table"
 title: "@tanstack/angular-table"
 ---
 
-# @tanstack/angular-table
-
 ## Classes
 
 - [FlexRenderCell](classes/FlexRenderCell.md)

@@ -3,8 +3,6 @@ id: column_toggleSorting
 title: column_toggleSorting
 ---
 
-# Function: column\_toggleSorting()
-
 ```ts
 function column_toggleSorting<TFeatures, TData, TValue>(
    column,

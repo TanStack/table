@@ -3,8 +3,6 @@ id: Row_ColumnGrouping
 title: Row_ColumnGrouping
 ---
 
-# Interface: Row\_ColumnGrouping
-
 Defined in: [features/column-grouping/columnGroupingFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L58)
 
 ## Properties

@@ -3,8 +3,6 @@ id: createPaginatedRowModel
 title: createPaginatedRowModel
 ---
 
-# Function: createPaginatedRowModel()
-
 ```ts
 function createPaginatedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```

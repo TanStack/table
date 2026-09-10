@@ -3,8 +3,6 @@ id: cell_getTabIndex
 title: cell_getTabIndex
 ---
 
-# Function: cell\_getTabIndex()
-
 ```ts
 function cell_getTabIndex<TFeatures, TData, TValue>(cell): number;
 ```

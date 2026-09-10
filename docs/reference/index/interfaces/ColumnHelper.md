@@ -3,8 +3,6 @@ id: ColumnHelper
 title: ColumnHelper
 ---
 
-# Interface: ColumnHelper\<TFeatures, TData\>
-
 Defined in: [helpers/columnHelper.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L13)
 
 ## Type Parameters

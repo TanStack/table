@@ -3,8 +3,6 @@ id: createFacetedMinMaxValues
 title: createFacetedMinMaxValues
 ---
 
-# Function: createFacetedMinMaxValues()
-
 ```ts
 function createFacetedMinMaxValues<TFeatures, TData>(): (table, columnId) => () => [number, number] | undefined;
 ```

@@ -3,8 +3,6 @@ id: column_getAutoAggregationFn
 title: column_getAutoAggregationFn
 ---
 
-# Function: column\_getAutoAggregationFn()
-
 ```ts
 function column_getAutoAggregationFn<TFeatures, TData, TValue>(column):
   | AggregationFnDef<TFeatures, TData, any, any>

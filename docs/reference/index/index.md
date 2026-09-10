@@ -3,8 +3,6 @@ id: index
 title: index
 ---
 
-# index
-
 ## Interfaces
 
 - [AggregationContext](interfaces/AggregationContext.md)

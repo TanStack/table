@@ -3,8 +3,6 @@ id: getDefaultSortingState
 title: getDefaultSortingState
 ---
 
-# Function: getDefaultSortingState()
-
 ```ts
 function getDefaultSortingState(): SortingState;
 ```

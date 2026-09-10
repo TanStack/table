@@ -3,8 +3,6 @@ id: AggregationFnDef
 title: AggregationFnDef
 ---
 
-# Interface: AggregationFnDef\<TFeatures, TData, TValue, TResult\>
-
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L62)
 
 A context-based aggregation definition and optional grouped-result merge.

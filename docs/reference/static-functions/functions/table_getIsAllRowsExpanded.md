@@ -3,8 +3,6 @@ id: table_getIsAllRowsExpanded
 title: table_getIsAllRowsExpanded
 ---
 
-# Function: table\_getIsAllRowsExpanded()
-
 ```ts
 function table_getIsAllRowsExpanded<TFeatures, TData>(table): boolean;
 ```

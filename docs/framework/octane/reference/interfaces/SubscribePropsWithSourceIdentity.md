@@ -3,8 +3,6 @@ id: SubscribePropsWithSourceIdentity
 title: SubscribePropsWithSourceIdentity
 ---
 
-# Interface: SubscribePropsWithSourceIdentity\<TSourceValue\>
-
 Defined in: [types.ts:134](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L134)
 
 Subscribe to the full value of a source (e.g. `table.atoms.rowSelection` or

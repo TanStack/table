@@ -3,8 +3,6 @@ id: injectTableHeaderContext
 title: injectTableHeaderContext
 ---
 
-# Function: injectTableHeaderContext()
-
 ```ts
 function injectTableHeaderContext<TFeatures, TData, TValue>(): Signal<Header<TFeatures, TData, TValue>>;
 ```

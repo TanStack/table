@@ -3,8 +3,6 @@ id: sortFn_text
 title: sortFn_text
 ---
 
-# Variable: sortFn\_text
-
 ```ts
 const sortFn_text: CreatedSortFn<any, any>;
 ```

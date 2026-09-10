@@ -3,8 +3,6 @@ id: table_getFocusedCell
 title: table_getFocusedCell
 ---
 
-# Function: table\_getFocusedCell()
-
 ```ts
 function table_getFocusedCell<TFeatures, TData>(table):
   | Cell<TFeatures, TData, any>

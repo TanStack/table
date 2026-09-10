@@ -3,8 +3,6 @@ id: FlexRender
 title: FlexRender
 ---
 
-# Variable: FlexRender
-
 ```ts
 const FlexRender: DefineComponent<{
   cell?: FlexRenderCell;

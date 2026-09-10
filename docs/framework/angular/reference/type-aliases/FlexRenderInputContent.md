@@ -3,8 +3,6 @@ id: FlexRenderInputContent
 title: FlexRenderInputContent
 ---
 
-# Type Alias: FlexRenderInputContent\<TProps\>
-
 ```ts
 type FlexRenderInputContent<TProps> =
   | number

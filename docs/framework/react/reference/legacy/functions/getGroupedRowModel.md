@@ -3,8 +3,6 @@ id: getGroupedRowModel
 title: getGroupedRowModel
 ---
 
-# ~~Function: getGroupedRowModel()~~
-
 ```ts
 function getGroupedRowModel<TData>(): RowModelFactory<TData>;
 ```

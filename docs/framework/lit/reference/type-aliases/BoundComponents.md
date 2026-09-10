@@ -3,8 +3,6 @@ id: BoundComponents
 title: BoundComponents
 ---
 
-# Type Alias: BoundComponents\<TComponents\>
-
 ```ts
 type BoundComponents<TComponents> = { [TKey in keyof TComponents]: () => ReturnType<TComponents[TKey]> };
 ```

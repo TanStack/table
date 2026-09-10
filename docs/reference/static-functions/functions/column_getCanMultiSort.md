@@ -3,8 +3,6 @@ id: column_getCanMultiSort
 title: column_getCanMultiSort
 ---
 
-# Function: column\_getCanMultiSort()
-
 ```ts
 function column_getCanMultiSort<TFeatures, TData, TValue>(column): boolean;
 ```

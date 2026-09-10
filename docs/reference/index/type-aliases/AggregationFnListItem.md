@@ -3,8 +3,6 @@ id: AggregationFnListItem
 title: AggregationFnListItem
 ---
 
-# Type Alias: AggregationFnListItem\<TFeatures, TData, TValue\>
-
 ```ts
 type AggregationFnListItem<TFeatures, TData, TValue> =
   | "auto"

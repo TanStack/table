@@ -3,8 +3,6 @@ id: table_getColumn
 title: table_getColumn
 ---
 
-# Function: table\_getColumn()
-
 ```ts
 function table_getColumn<TFeatures, TData>(table, columnId):
   | Column<TFeatures, TData, unknown>

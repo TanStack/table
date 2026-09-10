@@ -3,8 +3,6 @@ id: getFilteredRowModel
 title: getFilteredRowModel
 ---
 
-# ~~Function: getFilteredRowModel()~~
-
 ```ts
 function getFilteredRowModel<TData>(): RowModelFactory<TData>;
 ```

@@ -3,8 +3,6 @@ id: table_getIsSomePageRowsSelected
 title: table_getIsSomePageRowsSelected
 ---
 
-# Function: table\_getIsSomePageRowsSelected()
-
 ```ts
 function table_getIsSomePageRowsSelected<TFeatures, TData>(table): boolean;
 ```

@@ -3,8 +3,6 @@ id: FlexRenderContent
 title: FlexRenderContent
 ---
 
-# Type Alias: FlexRenderContent\<TProps\>
-
 ```ts
 type FlexRenderContent<TProps> =
   | string

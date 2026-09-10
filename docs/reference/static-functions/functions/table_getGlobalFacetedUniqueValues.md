@@ -3,8 +3,6 @@ id: table_getGlobalFacetedUniqueValues
 title: table_getGlobalFacetedUniqueValues
 ---
 
-# Function: table\_getGlobalFacetedUniqueValues()
-
 ```ts
 function table_getGlobalFacetedUniqueValues<TFeatures, TData>(table): Map<any, number>;
 ```

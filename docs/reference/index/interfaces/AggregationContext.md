@@ -3,8 +3,6 @@ id: AggregationContext
 title: AggregationContext
 ---
 
-# Interface: AggregationContext\<TFeatures, TData, TValue\>
-
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L14)
 
 Values and table objects available while one aggregation is evaluated.

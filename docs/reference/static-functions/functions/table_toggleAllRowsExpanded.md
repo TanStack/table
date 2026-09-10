@@ -3,8 +3,6 @@ id: table_toggleAllRowsExpanded
 title: table_toggleAllRowsExpanded
 ---
 
-# Function: table\_toggleAllRowsExpanded()
-
 ```ts
 function table_toggleAllRowsExpanded<TFeatures, TData>(table, expanded?): void;
 ```

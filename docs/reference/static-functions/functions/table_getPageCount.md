@@ -3,8 +3,6 @@ id: table_getPageCount
 title: table_getPageCount
 ---
 
-# Function: table\_getPageCount()
-
 ```ts
 function table_getPageCount<TFeatures, TData>(table): number;
 ```

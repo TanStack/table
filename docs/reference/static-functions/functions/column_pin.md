@@ -3,8 +3,6 @@ id: column_pin
 title: column_pin
 ---
 
-# Function: column\_pin()
-
 ```ts
 function column_pin<TFeatures, TData, TValue>(column, position): void;
 ```

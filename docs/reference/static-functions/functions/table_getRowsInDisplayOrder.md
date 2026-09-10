@@ -3,8 +3,6 @@ id: table_getRowsInDisplayOrder
 title: table_getRowsInDisplayOrder
 ---
 
-# Function: table\_getRowsInDisplayOrder()
-
 ```ts
 function table_getRowsInDisplayOrder<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```

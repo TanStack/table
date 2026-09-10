@@ -3,8 +3,6 @@ id: table_resetColumnVisibility
 title: table_resetColumnVisibility
 ---
 
-# Function: table\_resetColumnVisibility()
-
 ```ts
 function table_resetColumnVisibility<TFeatures, TData>(table, defaultState?): void;
 ```

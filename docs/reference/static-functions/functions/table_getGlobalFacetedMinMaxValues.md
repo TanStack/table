@@ -3,8 +3,6 @@ id: table_getGlobalFacetedMinMaxValues
 title: table_getGlobalFacetedMinMaxValues
 ---
 
-# Function: table\_getGlobalFacetedMinMaxValues()
-
 ```ts
 function table_getGlobalFacetedMinMaxValues<TFeatures, TData>(table): [number, number] | undefined;
 ```

@@ -3,8 +3,6 @@ id: table_getCellSelectionMergeBounds
 title: table_getCellSelectionMergeBounds
 ---
 
-# Function: table\_getCellSelectionMergeBounds()
-
 ```ts
 function table_getCellSelectionMergeBounds<TFeatures, TData>(table): CellSelectionBounds[];
 ```
