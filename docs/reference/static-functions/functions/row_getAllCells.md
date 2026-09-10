@@ -3,6 +3,8 @@ id: row_getAllCells
 title: row_getAllCells
 ---
 
+# Function: row\_getAllCells()
+
 ```ts
 function row_getAllCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```

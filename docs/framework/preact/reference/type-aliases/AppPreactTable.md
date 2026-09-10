@@ -3,6 +3,8 @@ id: AppPreactTable
 title: AppPreactTable
 ---
 
+# Type Alias: AppPreactTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
+
 ```ts
 type AppPreactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = PreactTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
 ```

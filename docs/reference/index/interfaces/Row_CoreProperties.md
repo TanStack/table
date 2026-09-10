@@ -3,6 +3,8 @@ id: Row_CoreProperties
 title: Row_CoreProperties
 ---
 
+# Interface: Row\_CoreProperties\<TFeatures, TData\>
+
 Defined in: [core/rows/coreRowsFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L8)
 
 ## Extended by

@@ -3,6 +3,8 @@ id: createCoreRowModel
 title: createCoreRowModel
 ---
 
+# Function: createCoreRowModel()
+
 ```ts
 function createCoreRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```

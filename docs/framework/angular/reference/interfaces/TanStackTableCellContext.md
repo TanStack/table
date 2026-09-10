@@ -3,6 +3,8 @@ id: TanStackTableCellContext
 title: TanStackTableCellContext
 ---
 
+# Interface: TanStackTableCellContext\<TFeatures, TData, TValue\>
+
 Defined in: [packages/angular-table/src/helpers/cell.ts:11](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L11)
 
 DI context shape for a TanStack Table cell.

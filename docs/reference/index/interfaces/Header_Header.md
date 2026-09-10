@@ -3,6 +3,8 @@ id: Header_Header
 title: Header_Header
 ---
 
+# Interface: Header\_Header\<TFeatures, TData, TValue\>
+
 Defined in: [core/headers/coreHeadersFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L114)
 
 ## Extends

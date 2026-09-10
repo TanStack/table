@@ -3,6 +3,8 @@ id: getCoreRowModel
 title: getCoreRowModel
 ---
 
+# ~~Function: getCoreRowModel()~~
+
 ```ts
 function getCoreRowModel<TData>(): RowModelFactory<TData>;
 ```

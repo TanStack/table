@@ -3,6 +3,8 @@ id: AppColumnHelper
 title: AppColumnHelper
 ---
 
+# Type Alias: AppColumnHelper\<TFeatures, TData, TCellComponents, THeaderComponents\>
+
 ```ts
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```

@@ -3,6 +3,8 @@ id: LegacyTableOptions
 title: LegacyTableOptions
 ---
 
+# ~~Type Alias: LegacyTableOptions\<TData\>~~
+
 ```ts
 type LegacyTableOptions<TData> = Omit<TableOptions<LegacyFeatures, TData>, "features"> & LegacyRowModelOptions<TData>;
 ```

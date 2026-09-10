@@ -3,6 +3,8 @@ id: filterFn_includesString
 title: filterFn_includesString
 ---
 
+# Variable: filterFn\_includesString
+
 ```ts
 const filterFn_includesString: CreatedFilterFn<any, any>;
 ```

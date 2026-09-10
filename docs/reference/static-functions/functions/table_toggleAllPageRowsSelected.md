@@ -3,6 +3,8 @@ id: table_toggleAllPageRowsSelected
 title: table_toggleAllPageRowsSelected
 ---
 
+# Function: table\_toggleAllPageRowsSelected()
+
 ```ts
 function table_toggleAllPageRowsSelected<TFeatures, TData>(
    table,

@@ -3,6 +3,8 @@ id: getDefaultGroupingState
 title: getDefaultGroupingState
 ---
 
+# Function: getDefaultGroupingState()
+
 ```ts
 function getDefaultGroupingState(): GroupingState;
 ```

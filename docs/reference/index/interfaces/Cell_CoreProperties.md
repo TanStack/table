@@ -3,6 +3,8 @@ id: Cell_CoreProperties
 title: Cell_CoreProperties
 ---
 
+# Interface: Cell\_CoreProperties\<TFeatures, TData, TValue\>
+
 Defined in: [core/cells/coreCellsFeature.types.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L21)
 
 ## Extended by

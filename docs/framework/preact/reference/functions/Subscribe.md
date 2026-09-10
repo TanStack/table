@@ -3,6 +3,8 @@ id: Subscribe
 title: Subscribe
 ---
 
+# Function: Subscribe()
+
 ## Call Signature
 
 ```ts

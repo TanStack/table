@@ -3,6 +3,8 @@ id: column_getToggleSortingHandler
 title: column_getToggleSortingHandler
 ---
 
+# Function: column\_getToggleSortingHandler()
+
 ```ts
 function column_getToggleSortingHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```

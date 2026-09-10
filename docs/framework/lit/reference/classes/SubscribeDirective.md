@@ -3,6 +3,8 @@ id: SubscribeDirective
 title: SubscribeDirective
 ---
 
+# Class: SubscribeDirective
+
 Defined in: [packages/lit-table/src/subscribe-directive.ts:43](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L43)
 
 An asynchronous Lit directive that subscribes to a `@tanstack/lit-store`

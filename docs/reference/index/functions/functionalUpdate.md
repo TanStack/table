@@ -3,6 +3,8 @@ id: functionalUpdate
 title: functionalUpdate
 ---
 
+# Function: functionalUpdate()
+
 ```ts
 function functionalUpdate<T>(updater, input): T;
 ```

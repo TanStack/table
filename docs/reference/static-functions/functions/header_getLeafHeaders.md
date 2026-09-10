@@ -3,6 +3,8 @@ id: header_getLeafHeaders
 title: header_getLeafHeaders
 ---
 
+# Function: header\_getLeafHeaders()
+
 ```ts
 function header_getLeafHeaders<TFeatures, TData, TValue>(header): Header<TFeatures, TData, TValue>[];
 ```

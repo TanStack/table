@@ -3,6 +3,8 @@ id: getDefaultCellSelectionState
 title: getDefaultCellSelectionState
 ---
 
+# Function: getDefaultCellSelectionState()
+
 ```ts
 function getDefaultCellSelectionState(): CellSelectionState;
 ```

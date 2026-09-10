@@ -3,6 +3,8 @@ id: table_getColumnIndexes
 title: table_getColumnIndexes
 ---
 
+# Function: table\_getColumnIndexes()
+
 ```ts
 function table_getColumnIndexes<TFeatures, TData>(table): ColumnIndexes;
 ```

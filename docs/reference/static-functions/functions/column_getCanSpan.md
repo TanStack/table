@@ -3,6 +3,8 @@ id: column_getCanSpan
 title: column_getCanSpan
 ---
 
+# Function: column\_getCanSpan()
+
 ```ts
 function column_getCanSpan<TFeatures, TData, TValue>(column): boolean;
 ```

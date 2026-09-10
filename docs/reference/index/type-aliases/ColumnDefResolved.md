@@ -3,6 +3,8 @@ id: ColumnDefResolved
 title: ColumnDefResolved
 ---
 
+# Type Alias: ColumnDefResolved\<TFeatures, TData, TValue\>
+
 ```ts
 type ColumnDefResolved<TFeatures, TData, TValue> = Partial<UnionToIntersection<ColumnDef<TFeatures, TData, TValue>>> & object;
 ```

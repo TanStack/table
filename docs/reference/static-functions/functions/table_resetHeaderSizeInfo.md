@@ -3,6 +3,8 @@ id: table_resetHeaderSizeInfo
 title: table_resetHeaderSizeInfo
 ---
 
+# Function: table\_resetHeaderSizeInfo()
+
 ```ts
 function table_resetHeaderSizeInfo<TFeatures, TData>(table, defaultState?): void;
 ```

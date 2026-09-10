@@ -3,6 +3,8 @@ id: SubscribePropsWithStore
 title: SubscribePropsWithStore
 ---
 
+# Type Alias: SubscribePropsWithStore\<TFeatures, TSelected\>
+
 ```ts
 type SubscribePropsWithStore<TFeatures, TSelected> = object;
 ```

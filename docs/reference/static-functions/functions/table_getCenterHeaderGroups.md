@@ -3,6 +3,8 @@ id: table_getCenterHeaderGroups
 title: table_getCenterHeaderGroups
 ---
 
+# Function: table\_getCenterHeaderGroups()
+
 ```ts
 function table_getCenterHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```

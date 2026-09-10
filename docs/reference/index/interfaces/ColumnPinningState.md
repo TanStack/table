@@ -3,6 +3,8 @@ id: ColumnPinningState
 title: ColumnPinningState
 ---
 
+# Interface: ColumnPinningState
+
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L17)
 
 ## Properties

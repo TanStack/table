@@ -3,6 +3,8 @@ id: table_getIsSomeColumnsVisible
 title: table_getIsSomeColumnsVisible
 ---
 
+# Function: table\_getIsSomeColumnsVisible()
+
 ```ts
 function table_getIsSomeColumnsVisible<TFeatures, TData>(table): boolean;
 ```

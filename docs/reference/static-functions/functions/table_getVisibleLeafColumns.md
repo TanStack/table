@@ -3,6 +3,8 @@ id: table_getVisibleLeafColumns
 title: table_getVisibleLeafColumns
 ---
 
+# Function: table\_getVisibleLeafColumns()
+
 ```ts
 function table_getVisibleLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```

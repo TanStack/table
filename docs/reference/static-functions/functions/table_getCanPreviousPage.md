@@ -3,6 +3,8 @@ id: table_getCanPreviousPage
 title: table_getCanPreviousPage
 ---
 
+# Function: table\_getCanPreviousPage()
+
 ```ts
 function table_getCanPreviousPage<TFeatures, TData>(table): boolean;
 ```

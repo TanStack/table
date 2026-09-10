@@ -3,6 +3,8 @@ id: column_getCanHide
 title: column_getCanHide
 ---
 
+# Function: column\_getCanHide()
+
 ```ts
 function column_getCanHide<TFeatures, TData, TValue>(column): boolean;
 ```

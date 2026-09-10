@@ -3,6 +3,8 @@ id: TableOptions_RowPagination
 title: TableOptions_RowPagination
 ---
 
+# Interface: TableOptions\_RowPagination
+
 Defined in: [features/row-pagination/rowPaginationFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L18)
 
 ## Properties

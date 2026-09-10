@@ -3,6 +3,8 @@ id: column_getStart
 title: column_getStart
 ---
 
+# Function: column\_getStart()
+
 ```ts
 function column_getStart<TFeatures, TData, TValue>(column, position?): number;
 ```

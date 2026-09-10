@@ -3,6 +3,8 @@ id: "@tanstack/preact-table"
 title: "@tanstack/preact-table"
 ---
 
+# @tanstack/preact-table
+
 ## Interfaces
 
 - [AppCellComponent](interfaces/AppCellComponent.md)

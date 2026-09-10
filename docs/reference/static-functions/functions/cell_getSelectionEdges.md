@@ -3,6 +3,8 @@ id: cell_getSelectionEdges
 title: cell_getSelectionEdges
 ---
 
+# Function: cell\_getSelectionEdges()
+
 ```ts
 function cell_getSelectionEdges<TFeatures, TData, TValue>(cell): CellSelectionEdges;
 ```

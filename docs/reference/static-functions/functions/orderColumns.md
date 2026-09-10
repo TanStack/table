@@ -3,6 +3,8 @@ id: orderColumns
 title: orderColumns
 ---
 
+# Function: orderColumns()
+
 ```ts
 function orderColumns<TFeatures, TData>(table, leafColumns): Column_Internal<TFeatures, TData, unknown>[];
 ```

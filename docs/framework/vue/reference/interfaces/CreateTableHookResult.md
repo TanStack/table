@@ -3,6 +3,8 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
+# Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
+
 Defined in: [packages/vue-table/src/createTableHook.ts:226](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L226)
 
 ## Type Parameters

@@ -3,6 +3,8 @@ id: LitRenderable
 title: LitRenderable
 ---
 
+# Type Alias: LitRenderable
+
 ```ts
 type LitRenderable =
   | TemplateResult

@@ -3,6 +3,8 @@ id: static-functions
 title: static-functions
 ---
 
+# static-functions
+
 ## Functions
 
 - [aggregateColumnValue](functions/aggregateColumnValue.md)

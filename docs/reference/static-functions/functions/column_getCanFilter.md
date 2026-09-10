@@ -3,6 +3,8 @@ id: column_getCanFilter
 title: column_getCanFilter
 ---
 
+# Function: column\_getCanFilter()
+
 ```ts
 function column_getCanFilter<TFeatures, TData, TValue>(column): boolean;
 ```

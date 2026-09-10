@@ -3,6 +3,8 @@ id: CellSelectionRangeOperation
 title: CellSelectionRangeOperation
 ---
 
+# Type Alias: CellSelectionRangeOperation
+
 ```ts
 type CellSelectionRangeOperation = "include" | "exclude";
 ```

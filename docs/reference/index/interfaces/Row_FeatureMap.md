@@ -3,6 +3,8 @@ id: Row_FeatureMap
 title: Row_FeatureMap
 ---
 
+# Interface: Row\_FeatureMap\<TFeatures, TData\>
+
 Defined in: [types/Row.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L18)
 
 ## Type Parameters

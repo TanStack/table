@@ -3,6 +3,8 @@ id: Column_RowSorting
 title: Column_RowSorting
 ---
 
+# Interface: Column\_RowSorting\<TFeatures, TData\>
+
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L160)
 
 ## Type Parameters

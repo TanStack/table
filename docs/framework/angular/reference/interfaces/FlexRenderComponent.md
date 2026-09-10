@@ -3,6 +3,8 @@ id: FlexRenderComponent
 title: FlexRenderComponent
 ---
 
+# Interface: FlexRenderComponent\<TComponent\>
+
 Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:205](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L205)
 
 Wrapper interface for a component that will be used as content for [FlexRenderDirective](../classes/FlexRenderDirective.md).

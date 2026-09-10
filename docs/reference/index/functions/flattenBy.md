@@ -3,6 +3,8 @@ id: flattenBy
 title: flattenBy
 ---
 
+# Function: flattenBy()
+
 ```ts
 function flattenBy<TNode>(arr, getChildren): TNode[];
 ```

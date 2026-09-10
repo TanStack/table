@@ -3,6 +3,8 @@ id: FlexRenderComponentInstance
 title: FlexRenderComponentInstance
 ---
 
+# Class: FlexRenderComponentInstance\<TComponent\>
+
 Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:259](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L259)
 
 Wrapper class for a component that will be used as content for [FlexRenderDirective](FlexRenderDirective.md)

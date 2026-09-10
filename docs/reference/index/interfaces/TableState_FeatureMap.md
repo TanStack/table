@@ -3,6 +3,8 @@ id: TableState_FeatureMap
 title: TableState_FeatureMap
 ---
 
+# Interface: TableState\_FeatureMap
+
 Defined in: [types/TableState.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L17)
 
 ## Properties

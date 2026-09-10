@@ -3,6 +3,8 @@ id: FlexRender
 title: FlexRender
 ---
 
+# Type Alias: FlexRender
+
 ```ts
 type FlexRender = SvelteComponent;
 ```

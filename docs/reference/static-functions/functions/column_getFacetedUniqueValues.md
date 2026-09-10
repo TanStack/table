@@ -3,6 +3,8 @@ id: column_getFacetedUniqueValues
 title: column_getFacetedUniqueValues
 ---
 
+# Function: column\_getFacetedUniqueValues()
+
 ```ts
 function column_getFacetedUniqueValues<TFeatures, TData, TValue>(column, table): Map<any, number>;
 ```

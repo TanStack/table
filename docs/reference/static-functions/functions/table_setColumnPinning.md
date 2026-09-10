@@ -3,6 +3,8 @@ id: table_setColumnPinning
 title: table_setColumnPinning
 ---
 
+# Function: table\_setColumnPinning()
+
 ```ts
 function table_setColumnPinning<TFeatures, TData>(table, updater): void;
 ```

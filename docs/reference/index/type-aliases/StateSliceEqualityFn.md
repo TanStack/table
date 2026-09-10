@@ -3,6 +3,8 @@ id: StateSliceEqualityFn
 title: StateSliceEqualityFn
 ---
 
+# Type Alias: StateSliceEqualityFn()\<T\>
+
 ```ts
 type StateSliceEqualityFn<T> = (current, next) => boolean;
 ```

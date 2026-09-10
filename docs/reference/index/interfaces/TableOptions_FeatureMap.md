@@ -3,6 +3,8 @@ id: TableOptions_FeatureMap
 title: TableOptions_FeatureMap
 ---
 
+# Interface: TableOptions\_FeatureMap\<TFeatures, TData\>
+
 Defined in: [types/TableOptions.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L62)
 
 ## Type Parameters

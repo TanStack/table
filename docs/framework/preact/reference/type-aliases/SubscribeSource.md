@@ -3,6 +3,8 @@ id: SubscribeSource
 title: SubscribeSource
 ---
 
+# Type Alias: SubscribeSource\<TValue\>
+
 ```ts
 type SubscribeSource<TValue> =
   | Atom<TValue>

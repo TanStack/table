@@ -3,6 +3,8 @@ id: useTable
 title: useTable
 ---
 
+# Function: useTable()
+
 ## Call Signature
 
 ```ts

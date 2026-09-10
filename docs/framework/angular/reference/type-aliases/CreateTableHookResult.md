@@ -3,6 +3,8 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
+# Type Alias: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
+
 ```ts
 type CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = object;
 ```

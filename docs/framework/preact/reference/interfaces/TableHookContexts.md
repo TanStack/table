@@ -3,6 +3,8 @@ id: TableHookContexts
 title: TableHookContexts
 ---
 
+# Interface: TableHookContexts\<TFeatures, TData\>
+
 Defined in: [createTableHookContexts.tsx:18](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHookContexts.tsx#L18)
 
 The object returned by [createTableHookContexts](../functions/createTableHookContexts.md): three scoped Preact

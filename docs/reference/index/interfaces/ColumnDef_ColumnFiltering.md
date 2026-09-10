@@ -3,6 +3,8 @@ id: ColumnDef_ColumnFiltering
 title: ColumnDef_ColumnFiltering
 ---
 
+# Interface: ColumnDef\_ColumnFiltering\<TFeatures, TData\>
+
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L177)
 
 ## Type Parameters

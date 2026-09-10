@@ -3,6 +3,8 @@ id: TableFeatures
 title: TableFeatures
 ---
 
+# Interface: TableFeatures
+
 Defined in: [types/TableFeatures.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L184)
 
 Complete feature registry for a table.

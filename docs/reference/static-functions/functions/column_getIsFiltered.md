@@ -3,6 +3,8 @@ id: column_getIsFiltered
 title: column_getIsFiltered
 ---
 
+# Function: column\_getIsFiltered()
+
 ```ts
 function column_getIsFiltered<TFeatures, TData, TValue>(column): boolean;
 ```

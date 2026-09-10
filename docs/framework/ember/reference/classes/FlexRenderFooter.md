@@ -3,6 +3,8 @@ id: FlexRenderFooter
 title: FlexRenderFooter
 ---
 
+# Class: FlexRenderFooter\<TFeatures, TData, TValue\>
+
 Defined in: packages/ember-table/declarations/FlexRender.d.ts:54
 
 ## Extends

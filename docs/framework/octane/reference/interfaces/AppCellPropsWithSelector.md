@@ -3,6 +3,8 @@ id: AppCellPropsWithSelector
 title: AppCellPropsWithSelector
 ---
 
+# Interface: AppCellPropsWithSelector\<TFeatures, TData, TValue, TCellComponents, TSelected\>
+
 Defined in: [types.ts:618](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L618)
 
 Props for AppCell component — with selector.

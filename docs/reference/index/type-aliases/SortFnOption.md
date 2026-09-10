@@ -3,6 +3,8 @@ id: SortFnOption
 title: SortFnOption
 ---
 
+# Type Alias: SortFnOption\<TFeatures, TData\>
+
 ```ts
 type SortFnOption<TFeatures, TData> =
   | "auto"

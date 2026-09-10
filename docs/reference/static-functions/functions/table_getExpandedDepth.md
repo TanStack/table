@@ -3,6 +3,8 @@ id: table_getExpandedDepth
 title: table_getExpandedDepth
 ---
 
+# Function: table\_getExpandedDepth()
+
 ```ts
 function table_getExpandedDepth<TFeatures, TData>(table): number;
 ```

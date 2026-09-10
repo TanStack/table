@@ -3,6 +3,8 @@ id: legacy
 title: legacy
 ---
 
+# legacy
+
 ## Interfaces
 
 - [LegacyFeatures](interfaces/LegacyFeatures.md)

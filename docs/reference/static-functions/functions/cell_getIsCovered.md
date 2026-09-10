@@ -3,6 +3,8 @@ id: cell_getIsCovered
 title: cell_getIsCovered
 ---
 
+# Function: cell\_getIsCovered()
+
 ```ts
 function cell_getIsCovered<TFeatures, TData, TValue>(cell): boolean;
 ```

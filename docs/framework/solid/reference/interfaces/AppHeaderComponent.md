@@ -3,6 +3,8 @@ id: AppHeaderComponent
 title: AppHeaderComponent
 ---
 
+# Interface: AppHeaderComponent()\<TFeatures, TData, THeaderComponents\>
+
 Defined in: [createTableHook.tsx:324](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L324)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context.

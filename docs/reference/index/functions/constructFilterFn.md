@@ -3,6 +3,8 @@ id: constructFilterFn
 title: constructFilterFn
 ---
 
+# Function: constructFilterFn()
+
 ```ts
 function constructFilterFn<TFeatures, TData>(def): CreatedFilterFn<TFeatures, TData>;
 ```

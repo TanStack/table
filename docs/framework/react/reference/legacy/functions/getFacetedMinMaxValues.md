@@ -3,6 +3,8 @@ id: getFacetedMinMaxValues
 title: getFacetedMinMaxValues
 ---
 
+# ~~Function: getFacetedMinMaxValues()~~
+
 ```ts
 function getFacetedMinMaxValues<TData>(): FacetedMinMaxValuesFactory<TData>;
 ```

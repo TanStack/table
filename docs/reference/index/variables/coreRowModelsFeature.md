@@ -3,6 +3,8 @@ id: coreRowModelsFeature
 title: coreRowModelsFeature
 ---
 
+# Variable: coreRowModelsFeature
+
 ```ts
 const coreRowModelsFeature: TableFeature;
 ```

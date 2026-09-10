@@ -3,6 +3,8 @@ id: TanStackTable
 title: TanStackTable
 ---
 
+# Class: TanStackTable\<TFeatures, TData\>
+
 Defined in: [packages/angular-table/src/helpers/table.ts:59](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L59)
 
 Provides a TanStack Table instance (`AngularTable`) in Angular DI.

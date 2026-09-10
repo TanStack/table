@@ -3,6 +3,8 @@ id: columnResizingState
 title: columnResizingState
 ---
 
+# Interface: columnResizingState
+
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L7)
 
 ## Properties

@@ -3,6 +3,8 @@ id: ColumnFilterAutoRemoveTestFn
 title: ColumnFilterAutoRemoveTestFn
 ---
 
+# Type Alias: ColumnFilterAutoRemoveTestFn()\<TFeatures, TData, TValue\>
+
 ```ts
 type ColumnFilterAutoRemoveTestFn<TFeatures, TData, TValue> = (value, column?) => boolean;
 ```

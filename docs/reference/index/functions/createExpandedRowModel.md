@@ -3,6 +3,8 @@ id: createExpandedRowModel
 title: createExpandedRowModel
 ---
 
+# Function: createExpandedRowModel()
+
 ```ts
 function createExpandedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```

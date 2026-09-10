@@ -3,6 +3,8 @@ id: createColumnHelper
 title: createColumnHelper
 ---
 
+# Function: createColumnHelper()
+
 ```ts
 function createColumnHelper<TFeatures, TData>(): ColumnHelper<TFeatures, TData>;
 ```

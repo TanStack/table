@@ -3,6 +3,8 @@ id: table_getToggleAllRowsExpandedHandler
 title: table_getToggleAllRowsExpandedHandler
 ---
 
+# Function: table\_getToggleAllRowsExpandedHandler()
+
 ```ts
 function table_getToggleAllRowsExpandedHandler<TFeatures, TData>(table): (_e) => void;
 ```

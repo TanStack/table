@@ -3,6 +3,8 @@ id: BuiltInAggregationFn
 title: BuiltInAggregationFn
 ---
 
+# Type Alias: BuiltInAggregationFn
+
 ```ts
 type BuiltInAggregationFn = keyof typeof aggregationFns;
 ```

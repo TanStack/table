@@ -3,6 +3,8 @@ id: RowData
 title: RowData
 ---
 
+# Type Alias: RowData
+
 ```ts
 type RowData = Record<string, any> | any[];
 ```

@@ -3,6 +3,8 @@ id: table_getStartLeafColumns
 title: table_getStartLeafColumns
 ---
 
+# Function: table\_getStartLeafColumns()
+
 ```ts
 function table_getStartLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```

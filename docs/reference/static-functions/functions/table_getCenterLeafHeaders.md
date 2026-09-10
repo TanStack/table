@@ -3,6 +3,8 @@ id: table_getCenterLeafHeaders
 title: table_getCenterLeafHeaders
 ---
 
+# Function: table\_getCenterLeafHeaders()
+
 ```ts
 function table_getCenterLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```

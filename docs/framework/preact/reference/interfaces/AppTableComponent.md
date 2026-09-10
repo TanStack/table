@@ -3,6 +3,8 @@ id: AppTableComponent
 title: AppTableComponent
 ---
 
+# Interface: AppTableComponent()\<TFeatures\>
+
 Defined in: [createTableHook.tsx:521](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L521)
 
 Component type for AppTable - root wrapper with optional Subscribe

@@ -3,6 +3,8 @@ id: AppCellContext
 title: AppCellContext
 ---
 
+# Interface: AppCellContext\<TFeatures, TData, TValue, TCellComponents\>
+
 Defined in: [types.ts:341](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L341)
 
 Enhanced CellContext with pre-bound cell components.

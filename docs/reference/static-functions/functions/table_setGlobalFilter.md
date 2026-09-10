@@ -3,6 +3,8 @@ id: table_setGlobalFilter
 title: table_setGlobalFilter
 ---
 
+# Function: table\_setGlobalFilter()
+
 ```ts
 function table_setGlobalFilter<TFeatures, TData>(table, updater): void;
 ```

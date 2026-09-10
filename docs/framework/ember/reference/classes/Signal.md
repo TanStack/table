@@ -3,6 +3,8 @@ id: Signal
 title: Signal
 ---
 
+# Class: Signal\<T\>
+
 Defined in: packages/ember-table/declarations/signal.d.ts:8
 
 Ember-native signal implementation.

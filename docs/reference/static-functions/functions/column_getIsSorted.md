@@ -3,6 +3,8 @@ id: column_getIsSorted
 title: column_getIsSorted
 ---
 
+# Function: column\_getIsSorted()
+
 ```ts
 function column_getIsSorted<TFeatures, TData, TValue>(column): false | SortDirection;
 ```

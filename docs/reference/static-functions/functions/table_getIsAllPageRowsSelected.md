@@ -3,6 +3,8 @@ id: table_getIsAllPageRowsSelected
 title: table_getIsAllPageRowsSelected
 ---
 
+# Function: table\_getIsAllPageRowsSelected()
+
 ```ts
 function table_getIsAllPageRowsSelected<TFeatures, TData>(table): boolean;
 ```

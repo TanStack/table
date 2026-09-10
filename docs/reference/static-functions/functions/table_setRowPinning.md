@@ -3,6 +3,8 @@ id: table_setRowPinning
 title: table_setRowPinning
 ---
 
+# Function: table\_setRowPinning()
+
 ```ts
 function table_setRowPinning<TFeatures, TData>(table, updater): void;
 ```

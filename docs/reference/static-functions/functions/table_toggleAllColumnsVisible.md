@@ -3,6 +3,8 @@ id: table_toggleAllColumnsVisible
 title: table_toggleAllColumnsVisible
 ---
 
+# Function: table\_toggleAllColumnsVisible()
+
 ```ts
 function table_toggleAllColumnsVisible<TFeatures, TData>(table, value?): void;
 ```

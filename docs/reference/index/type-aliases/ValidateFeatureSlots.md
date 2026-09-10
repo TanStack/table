@@ -3,6 +3,8 @@ id: ValidateFeatureSlots
 title: ValidateFeatureSlots
 ---
 
+# Type Alias: ValidateFeatureSlots\<TFeatures\>
+
 ```ts
 type ValidateFeatureSlots<TFeatures> = IsAny<TFeatures> extends true ? object : { [K in keyof TFeatures as K extends keyof FeatureSlotPrereqs ? K : never]: K extends keyof FeatureSlotPrereqs ? [Extract<FeatureSlotPrereqs[K], keyof TFeatures>] extends [never] ? `Error: '${K & string}' requires '${FeatureSlotPrereqs[K] & string}' to be included in this table's features.` : TFeatures[K] : never };
 ```

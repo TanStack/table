@@ -3,6 +3,8 @@ id: ExpandedState
 title: ExpandedState
 ---
 
+# Type Alias: ExpandedState
+
 ```ts
 type ExpandedState = true | Record<string, boolean>;
 ```

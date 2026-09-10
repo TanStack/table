@@ -3,6 +3,8 @@ id: column_getPinnedIndex
 title: column_getPinnedIndex
 ---
 
+# Function: column\_getPinnedIndex()
+
 ```ts
 function column_getPinnedIndex<TFeatures, TData, TValue>(column): number;
 ```

@@ -3,6 +3,8 @@ id: CellSelectionState
 title: CellSelectionState
 ---
 
+# Type Alias: CellSelectionState
+
 ```ts
 type CellSelectionState = CellSelectionRange[];
 ```

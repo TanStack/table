@@ -3,6 +3,8 @@ id: row_getCanPin
 title: row_getCanPin
 ---
 
+# Function: row\_getCanPin()
+
 ```ts
 function row_getCanPin<TFeatures, TData>(row): boolean;
 ```

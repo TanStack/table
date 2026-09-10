@@ -3,6 +3,8 @@ id: ColumnResizeMode
 title: ColumnResizeMode
 ---
 
+# Type Alias: ColumnResizeMode
+
 ```ts
 type ColumnResizeMode = "onChange" | "onEnd";
 ```

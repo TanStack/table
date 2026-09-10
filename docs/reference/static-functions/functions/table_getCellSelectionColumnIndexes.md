@@ -3,6 +3,8 @@ id: table_getCellSelectionColumnIndexes
 title: table_getCellSelectionColumnIndexes
 ---
 
+# Function: table\_getCellSelectionColumnIndexes()
+
 ```ts
 function table_getCellSelectionColumnIndexes<TFeatures, TData>(table): Record<string, number>;
 ```

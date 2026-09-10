@@ -3,6 +3,8 @@ id: column_getIsGrouped
 title: column_getIsGrouped
 ---
 
+# Function: column\_getIsGrouped()
+
 ```ts
 function column_getIsGrouped<TFeatures, TData, TValue>(column): boolean;
 ```

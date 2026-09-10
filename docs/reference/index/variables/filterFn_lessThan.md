@@ -3,6 +3,8 @@ id: filterFn_lessThan
 title: filterFn_lessThan
 ---
 
+# Variable: filterFn\_lessThan
+
 ```ts
 const filterFn_lessThan: CreatedFilterFn<any, any>;
 ```

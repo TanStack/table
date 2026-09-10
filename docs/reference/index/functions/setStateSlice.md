@@ -3,6 +3,8 @@ id: setStateSlice
 title: setStateSlice
 ---
 
+# Function: setStateSlice()
+
 ```ts
 function setStateSlice<K>(
    instance,

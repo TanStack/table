@@ -3,6 +3,8 @@ id: HeaderGroup_Core
 title: HeaderGroup_Core
 ---
 
+# Interface: HeaderGroup\_Core\<TFeatures, TData\>
+
 Defined in: [types/HeaderGroup.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/HeaderGroup.ts#L5)
 
 ## Extends

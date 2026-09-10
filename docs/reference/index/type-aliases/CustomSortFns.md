@@ -3,6 +3,8 @@ id: CustomSortFns
 title: CustomSortFns
 ---
 
+# Type Alias: CustomSortFns\<TFeatures, TData\>
+
 ```ts
 type CustomSortFns<TFeatures, TData> = Record<string, SortFn<TFeatures, TData>>;
 ```

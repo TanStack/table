@@ -3,6 +3,8 @@ id: cell_getRowSpan
 title: cell_getRowSpan
 ---
 
+# Function: cell\_getRowSpan()
+
 ```ts
 function cell_getRowSpan<TFeatures, TData, TValue>(cell): number;
 ```

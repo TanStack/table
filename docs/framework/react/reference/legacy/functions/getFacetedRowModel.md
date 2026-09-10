@@ -3,6 +3,8 @@ id: getFacetedRowModel
 title: getFacetedRowModel
 ---
 
+# ~~Function: getFacetedRowModel()~~
+
 ```ts
 function getFacetedRowModel<TData>(): FacetedRowModelFactory<TData>;
 ```

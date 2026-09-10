@@ -3,6 +3,8 @@ id: table_getStartLeafHeaders
 title: table_getStartLeafHeaders
 ---
 
+# Function: table\_getStartLeafHeaders()
+
 ```ts
 function table_getStartLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```

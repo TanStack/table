@@ -3,6 +3,8 @@ id: aggregationFn_max
 title: aggregationFn_max
 ---
 
+# Variable: aggregationFn\_max
+
 ```ts
 const aggregationFn_max: AggregationFnDef<any, any, unknown, RangeValue | undefined>;
 ```

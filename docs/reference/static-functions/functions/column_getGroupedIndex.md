@@ -3,6 +3,8 @@ id: column_getGroupedIndex
 title: column_getGroupedIndex
 ---
 
+# Function: column\_getGroupedIndex()
+
 ```ts
 function column_getGroupedIndex<TFeatures, TData, TValue>(column): number;
 ```

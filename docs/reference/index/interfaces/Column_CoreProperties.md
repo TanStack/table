@@ -3,6 +3,8 @@ id: Column_CoreProperties
 title: Column_CoreProperties
 ---
 
+# Interface: Column\_CoreProperties\<TFeatures, TData, TValue\>
+
 Defined in: [core/columns/coreColumnsFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L7)
 
 ## Extended by

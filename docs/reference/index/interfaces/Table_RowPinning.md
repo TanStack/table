@@ -3,6 +3,8 @@ id: Table_RowPinning
 title: Table_RowPinning
 ---
 
+# Interface: Table\_RowPinning\<TFeatures, TData\>
+
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L65)
 
 ## Type Parameters

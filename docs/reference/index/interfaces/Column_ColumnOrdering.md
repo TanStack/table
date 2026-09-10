@@ -3,6 +3,8 @@ id: Column_ColumnOrdering
 title: Column_ColumnOrdering
 ---
 
+# Interface: Column\_ColumnOrdering
+
 Defined in: [features/column-ordering/columnOrderingFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L39)
 
 ## Properties

@@ -3,6 +3,8 @@ id: ExternalAtoms
 title: ExternalAtoms
 ---
 
+# Type Alias: ExternalAtoms\<TFeatures\>
+
 ```ts
 type ExternalAtoms<TFeatures> = Partial<{ [K in keyof TableState<TFeatures>]: Atom<TableState<TFeatures>[K]> }>;
 ```

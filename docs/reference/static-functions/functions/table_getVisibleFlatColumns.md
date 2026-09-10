@@ -3,6 +3,8 @@ id: table_getVisibleFlatColumns
 title: table_getVisibleFlatColumns
 ---
 
+# Function: table\_getVisibleFlatColumns()
+
 ```ts
 function table_getVisibleFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```

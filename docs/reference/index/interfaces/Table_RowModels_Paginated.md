@@ -3,6 +3,8 @@ id: Table_RowModels_Paginated
 title: Table_RowModels_Paginated
 ---
 
+# Interface: Table\_RowModels\_Paginated\<TFeatures, TData\>
+
 Defined in: [features/row-pagination/rowPaginationFeature.types.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L127)
 
 ## Type Parameters

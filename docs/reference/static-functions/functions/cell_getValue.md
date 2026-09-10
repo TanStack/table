@@ -3,6 +3,8 @@ id: cell_getValue
 title: cell_getValue
 ---
 
+# Function: cell\_getValue()
+
 ```ts
 function cell_getValue<TFeatures, TData, TValue>(cell): TValue;
 ```

@@ -3,6 +3,8 @@ id: aggregationFns
 title: aggregationFns
 ---
 
+# ~~Variable: aggregationFns~~
+
 ```ts
 const aggregationFns: object;
 ```

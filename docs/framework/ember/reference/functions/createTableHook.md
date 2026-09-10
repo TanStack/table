@@ -3,6 +3,8 @@ id: createTableHook
 title: createTableHook
 ---
 
+# Function: createTableHook()
+
 ```ts
 function createTableHook<TFeatures>(__namedParameters): object;
 ```

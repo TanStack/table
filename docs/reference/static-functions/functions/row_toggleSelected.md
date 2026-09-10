@@ -3,6 +3,8 @@ id: row_toggleSelected
 title: row_toggleSelected
 ---
 
+# Function: row\_toggleSelected()
+
 ```ts
 function row_toggleSelected<TFeatures, TData>(
    row,

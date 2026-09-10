@@ -3,6 +3,8 @@ id: getDefaultColumnVisibilityState
 title: getDefaultColumnVisibilityState
 ---
 
+# Function: getDefaultColumnVisibilityState()
+
 ```ts
 function getDefaultColumnVisibilityState(): ColumnVisibilityState;
 ```

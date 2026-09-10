@@ -3,6 +3,8 @@ id: StringHeaderIdentifier
 title: StringHeaderIdentifier
 ---
 
+# Interface: StringHeaderIdentifier
+
 Defined in: [types/ColumnDef.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L73)
 
 ## Properties

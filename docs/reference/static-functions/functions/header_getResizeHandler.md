@@ -3,6 +3,8 @@ id: header_getResizeHandler
 title: header_getResizeHandler
 ---
 
+# Function: header\_getResizeHandler()
+
 ```ts
 function header_getResizeHandler<TFeatures, TData, TValue>(header, _contextDocument?): (event) => void;
 ```

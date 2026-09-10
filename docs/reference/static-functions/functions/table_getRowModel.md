@@ -3,6 +3,8 @@ id: table_getRowModel
 title: table_getRowModel
 ---
 
+# Function: table\_getRowModel()
+
 ```ts
 function table_getRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

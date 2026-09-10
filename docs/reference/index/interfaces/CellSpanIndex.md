@@ -3,6 +3,8 @@ id: CellSpanIndex
 title: CellSpanIndex
 ---
 
+# Interface: CellSpanIndex\<TFeatures, TData\>
+
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L13)
 
 The table's cell span index for the rows that are currently rendered.

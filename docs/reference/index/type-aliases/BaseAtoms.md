@@ -3,6 +3,8 @@ id: BaseAtoms
 title: BaseAtoms
 ---
 
+# Type Alias: BaseAtoms\<TFeatures\>
+
 ```ts
 type BaseAtoms<TFeatures> = { [K in keyof TableState<TFeatures>]-?: Atom<TableState<TFeatures>[K]> };
 ```

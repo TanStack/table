@@ -3,6 +3,8 @@ id: table_getCellSpanIndex
 title: table_getCellSpanIndex
 ---
 
+# Function: table\_getCellSpanIndex()
+
 ```ts
 function table_getCellSpanIndex<TFeatures, TData>(table): CellSpanIndex<TFeatures, TData>;
 ```

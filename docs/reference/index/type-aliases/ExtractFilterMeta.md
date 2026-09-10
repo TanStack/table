@@ -3,6 +3,8 @@ id: ExtractFilterMeta
 title: ExtractFilterMeta
 ---
 
+# Type Alias: ExtractFilterMeta\<TFeatures\>
+
 ```ts
 type ExtractFilterMeta<TFeatures> = IsAny<TFeatures> extends true ? FilterMeta : TFeatures extends object ? TFilterMeta : FilterMeta;
 ```

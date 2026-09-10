@@ -3,6 +3,8 @@ id: ColumnDefTemplate
 title: ColumnDefTemplate
 ---
 
+# Type Alias: ColumnDefTemplate\<TProps\>
+
 ```ts
 type ColumnDefTemplate<TProps> = string | (props) => any;
 ```

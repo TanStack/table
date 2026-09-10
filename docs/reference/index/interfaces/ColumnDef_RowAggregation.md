@@ -3,6 +3,8 @@ id: ColumnDef_RowAggregation
 title: ColumnDef_RowAggregation
 ---
 
+# Interface: ColumnDef\_RowAggregation\<TFeatures, TData, TValue\>
+
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L233)
 
 Column-definition options installed by `rowAggregationFeature`.

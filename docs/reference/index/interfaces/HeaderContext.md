@@ -3,6 +3,8 @@ id: HeaderContext
 title: HeaderContext
 ---
 
+# Interface: HeaderContext\<TFeatures, TData, TValue\>
+
 Defined in: [core/headers/coreHeadersFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L32)
 
 ## Type Parameters

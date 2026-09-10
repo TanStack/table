@@ -3,6 +3,8 @@ id: table_getPreSelectedRowModel
 title: table_getPreSelectedRowModel
 ---
 
+# Function: table\_getPreSelectedRowModel()
+
 ```ts
 function table_getPreSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

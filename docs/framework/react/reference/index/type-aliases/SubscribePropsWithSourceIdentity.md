@@ -3,6 +3,8 @@ id: SubscribePropsWithSourceIdentity
 title: SubscribePropsWithSourceIdentity
 ---
 
+# Type Alias: SubscribePropsWithSourceIdentity\<TSourceValue\>
+
 ```ts
 type SubscribePropsWithSourceIdentity<TSourceValue> = object;
 ```

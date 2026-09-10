@@ -3,6 +3,8 @@ id: table_resetGlobalFilter
 title: table_resetGlobalFilter
 ---
 
+# Function: table\_resetGlobalFilter()
+
 ```ts
 function table_resetGlobalFilter<TFeatures, TData>(table, defaultState?): void;
 ```

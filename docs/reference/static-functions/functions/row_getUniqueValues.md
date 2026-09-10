@@ -3,6 +3,8 @@ id: row_getUniqueValues
 title: row_getUniqueValues
 ---
 
+# Function: row\_getUniqueValues()
+
 ```ts
 function row_getUniqueValues<TFeatures, TData>(row, columnId): unknown;
 ```

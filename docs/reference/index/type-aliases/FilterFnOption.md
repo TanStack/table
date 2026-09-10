@@ -3,6 +3,8 @@ id: FilterFnOption
 title: FilterFnOption
 ---
 
+# Type Alias: FilterFnOption\<TFeatures, TData\>
+
 ```ts
 type FilterFnOption<TFeatures, TData> =
   | "auto"

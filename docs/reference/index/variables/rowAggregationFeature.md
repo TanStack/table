@@ -3,6 +3,8 @@ id: rowAggregationFeature
 title: rowAggregationFeature
 ---
 
+# Variable: rowAggregationFeature
+
 ```ts
 const rowAggregationFeature: TableFeature;
 ```

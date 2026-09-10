@@ -3,6 +3,8 @@ id: AppCellContext
 title: AppCellContext
 ---
 
+# Type Alias: AppCellContext\<TFeatures, TData, TValue, TCellComponents\>
+
 ```ts
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```

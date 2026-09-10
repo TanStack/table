@@ -3,6 +3,8 @@ id: column_getAggregationFns
 title: column_getAggregationFns
 ---
 
+# Function: column\_getAggregationFns()
+
 ```ts
 function column_getAggregationFns<TFeatures, TData, TValue>(column): readonly ResolvedAggregationFn<TFeatures, TData>[];
 ```

@@ -3,6 +3,8 @@ id: TableOptions_RowSelection
 title: TableOptions_RowSelection
 ---
 
+# Interface: TableOptions\_RowSelection\<TFeatures, TData\>
+
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L34)
 
 ## Type Parameters

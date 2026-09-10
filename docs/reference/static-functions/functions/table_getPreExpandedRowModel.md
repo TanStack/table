@@ -3,6 +3,8 @@ id: table_getPreExpandedRowModel
 title: table_getPreExpandedRowModel
 ---
 
+# Function: table\_getPreExpandedRowModel()
+
 ```ts
 function table_getPreExpandedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

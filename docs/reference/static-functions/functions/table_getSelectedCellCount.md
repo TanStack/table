@@ -3,6 +3,8 @@ id: table_getSelectedCellCount
 title: table_getSelectedCellCount
 ---
 
+# Function: table\_getSelectedCellCount()
+
 ```ts
 function table_getSelectedCellCount<TFeatures, TData>(table): number;
 ```

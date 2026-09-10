@@ -3,6 +3,8 @@ id: AppVueTable
 title: AppVueTable
 ---
 
+# Type Alias: AppVueTable\<TFeatures, TData, TTableComponents, _TCellComponents, _THeaderComponents\>
+
 ```ts
 type AppVueTable<TFeatures, TData, TTableComponents, _TCellComponents, _THeaderComponents> = VueTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```

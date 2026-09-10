@@ -3,6 +3,8 @@ id: AppAlpineTable
 title: AppAlpineTable
 ---
 
+# Type Alias: AppAlpineTable\<TFeatures, TData\>
+
 ```ts
 type AppAlpineTable<TFeatures, TData> = AlpineTable<TFeatures, TData>;
 ```

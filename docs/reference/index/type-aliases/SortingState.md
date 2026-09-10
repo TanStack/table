@@ -3,6 +3,8 @@ id: SortingState
 title: SortingState
 ---
 
+# Type Alias: SortingState
+
 ```ts
 type SortingState = ColumnSort[];
 ```

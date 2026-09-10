@@ -3,6 +3,8 @@ id: Table
 title: Table
 ---
 
+# Type Alias: Table\<TFeatures, TData\>
+
 ```ts
 type Table<TFeatures, TData> = Table_Core<TFeatures, TData> & ExtractFeatureMapTypes<TFeatures, Table_FeatureMap<TFeatures, TData>>;
 ```

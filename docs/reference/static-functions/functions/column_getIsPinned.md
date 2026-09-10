@@ -3,6 +3,8 @@ id: column_getIsPinned
 title: column_getIsPinned
 ---
 
+# Function: column\_getIsPinned()
+
 ```ts
 function column_getIsPinned<TFeatures, TData, TValue>(column): ColumnPinningPosition;
 ```

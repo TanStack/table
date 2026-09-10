@@ -3,6 +3,8 @@ id: Cell
 title: Cell
 ---
 
+# Type Alias: Cell\<TFeatures, TData, TValue\>
+
 ```ts
 type Cell<TFeatures, TData, TValue> = Cell_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap>;
 ```

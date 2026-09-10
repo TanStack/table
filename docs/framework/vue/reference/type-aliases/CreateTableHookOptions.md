@@ -3,6 +3,8 @@ id: CreateTableHookOptions
 title: CreateTableHookOptions
 ---
 
+# Type Alias: CreateTableHookOptions\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
+
 ```ts
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptionsWithReactiveData<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```

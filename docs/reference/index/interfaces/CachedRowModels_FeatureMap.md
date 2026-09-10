@@ -3,6 +3,8 @@ id: CachedRowModels_FeatureMap
 title: CachedRowModels_FeatureMap
 ---
 
+# Interface: CachedRowModels\_FeatureMap\<TFeatures, TData\>
+
 Defined in: [types/RowModel.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L11)
 
 ## Type Parameters

@@ -3,6 +3,8 @@ id: Table_RowModels_Core
 title: Table_RowModels_Core
 ---
 
+# Interface: Table\_RowModels\_Core\<TFeatures, TData\>
+
 Defined in: [core/row-models/coreRowModelsFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L27)
 
 ## Type Parameters

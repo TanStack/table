@@ -3,6 +3,8 @@ id: table_setColumnFilters
 title: table_setColumnFilters
 ---
 
+# Function: table\_setColumnFilters()
+
 ```ts
 function table_setColumnFilters<TFeatures, TData>(table, updater): void;
 ```

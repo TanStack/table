@@ -3,6 +3,8 @@ id: table_setColumnResizing
 title: table_setColumnResizing
 ---
 
+# Function: table\_setColumnResizing()
+
 ```ts
 function table_setColumnResizing<TFeatures, TData>(table, updater): void;
 ```

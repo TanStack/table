@@ -3,6 +3,8 @@ id: LegacyHeaderGroup
 title: LegacyHeaderGroup
 ---
 
+# ~~Type Alias: LegacyHeaderGroup\<TData\>~~
+
 ```ts
 type LegacyHeaderGroup<TData> = HeaderGroup<LegacyFeatures, TData>;
 ```

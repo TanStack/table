@@ -3,6 +3,8 @@ id: RowModelFns_FeatureMap
 title: RowModelFns_FeatureMap
 ---
 
+# Interface: RowModelFns\_FeatureMap\<TFeatures, TData\>
+
 Defined in: [types/RowModelFns.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L9)
 
 ## Type Parameters

@@ -3,6 +3,8 @@ id: CellContext
 title: CellContext
 ---
 
+# Interface: CellContext\<TFeatures, TData, TValue\>
+
 Defined in: [core/cells/coreCellsFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L8)
 
 ## Type Parameters

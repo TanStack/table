@@ -3,6 +3,8 @@ id: column_getCanGroup
 title: column_getCanGroup
 ---
 
+# Function: column\_getCanGroup()
+
 ```ts
 function column_getCanGroup<TFeatures, TData, TValue>(column): boolean;
 ```

@@ -3,6 +3,8 @@ id: AppEmberTable
 title: AppEmberTable
 ---
 
+# Type Alias: AppEmberTable\<TFeatures, TData\>
+
 ```ts
 type AppEmberTable<TFeatures, TData> = Table<TFeatures, TData>;
 ```

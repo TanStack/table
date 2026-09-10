@@ -3,6 +3,8 @@ id: StringOrTemplateHeader
 title: StringOrTemplateHeader
 ---
 
+# Type Alias: StringOrTemplateHeader\<TFeatures, TData, TValue\>
+
 ```ts
 type StringOrTemplateHeader<TFeatures, TData, TValue> =
   | string

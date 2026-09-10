@@ -3,6 +3,8 @@ id: cell_getCanSelect
 title: cell_getCanSelect
 ---
 
+# Function: cell\_getCanSelect()
+
 ```ts
 function cell_getCanSelect<TFeatures, TData, TValue>(cell): boolean;
 ```

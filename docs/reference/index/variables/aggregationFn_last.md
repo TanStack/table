@@ -3,6 +3,8 @@ id: aggregationFn_last
 title: aggregationFn_last
 ---
 
+# Variable: aggregationFn\_last
+
 ```ts
 const aggregationFn_last: AggregationFnDef<any, any, unknown, unknown>;
 ```

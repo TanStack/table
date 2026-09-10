@@ -3,6 +3,8 @@ id: table_getAllLeafColumnsById
 title: table_getAllLeafColumnsById
 ---
 
+# Function: table\_getAllLeafColumnsById()
+
 ```ts
 function table_getAllLeafColumnsById<TFeatures, TData>(table): Record<string, Column<TFeatures, TData, unknown>>;
 ```

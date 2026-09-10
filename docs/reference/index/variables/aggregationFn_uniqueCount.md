@@ -3,6 +3,8 @@ id: aggregationFn_uniqueCount
 title: aggregationFn_uniqueCount
 ---
 
+# Variable: aggregationFn\_uniqueCount
+
 ```ts
 const aggregationFn_uniqueCount: AggregationFnDef<any, any, unknown, number>;
 ```

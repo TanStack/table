@@ -3,6 +3,8 @@ id: table_setPageIndex
 title: table_setPageIndex
 ---
 
+# Function: table\_setPageIndex()
+
 ```ts
 function table_setPageIndex<TFeatures, TData>(table, updater): void;
 ```

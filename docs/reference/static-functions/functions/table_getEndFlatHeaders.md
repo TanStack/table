@@ -3,6 +3,8 @@ id: table_getEndFlatHeaders
 title: table_getEndFlatHeaders
 ---
 
+# Function: table\_getEndFlatHeaders()
+
 ```ts
 function table_getEndFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```

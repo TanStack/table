@@ -3,6 +3,8 @@ id: AggregationFnOption
 title: AggregationFnOption
 ---
 
+# Type Alias: AggregationFnOption\<TFeatures, TData, TValue\>
+
 ```ts
 type AggregationFnOption<TFeatures, TData, TValue> =
   | AggregationFnRef<TFeatures, TData, TValue, any>

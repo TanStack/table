@@ -3,6 +3,8 @@ id: table_getToggleAllPageRowsSelectedHandler
 title: table_getToggleAllPageRowsSelectedHandler
 ---
 
+# Function: table\_getToggleAllPageRowsSelectedHandler()
+
 ```ts
 function table_getToggleAllPageRowsSelectedHandler<TFeatures, TData>(table): (e) => void;
 ```

@@ -3,6 +3,8 @@ id: column_toggleGrouping
 title: column_toggleGrouping
 ---
 
+# Function: column\_toggleGrouping()
+
 ```ts
 function column_toggleGrouping<TFeatures, TData, TValue>(column): void;
 ```

@@ -3,6 +3,8 @@ id: emberReactivity
 title: emberReactivity
 ---
 
+# Function: emberReactivity()
+
 ```ts
 function emberReactivity(): TableReactivityBindings;
 ```

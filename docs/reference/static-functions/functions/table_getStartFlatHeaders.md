@@ -3,6 +3,8 @@ id: table_getStartFlatHeaders
 title: table_getStartFlatHeaders
 ---
 
+# Function: table\_getStartFlatHeaders()
+
 ```ts
 function table_getStartFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```

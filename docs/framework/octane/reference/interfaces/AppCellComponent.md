@@ -3,6 +3,8 @@ id: AppCellComponent
 title: AppCellComponent
 ---
 
+# Interface: AppCellComponent()\<TFeatures, TData, TCellComponents\>
+
 Defined in: [types.ts:670](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L670)
 
 Component type for AppCell — wraps a cell and provides cell context with

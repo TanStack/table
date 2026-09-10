@@ -3,6 +3,8 @@ id: table_getTopRows
 title: table_getTopRows
 ---
 
+# Function: table\_getTopRows()
+
 ```ts
 function table_getTopRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```

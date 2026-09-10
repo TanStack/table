@@ -3,6 +3,8 @@ id: column_toggleVisibility
 title: column_toggleVisibility
 ---
 
+# Function: column\_toggleVisibility()
+
 ```ts
 function column_toggleVisibility<TFeatures, TData, TValue>(column, visible?): void;
 ```

@@ -3,6 +3,8 @@ id: filterFn_inDateRange
 title: filterFn_inDateRange
 ---
 
+# Variable: filterFn\_inDateRange
+
 ```ts
 const filterFn_inDateRange: CreatedFilterFn<any, any>;
 ```

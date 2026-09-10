@@ -3,6 +3,8 @@ id: column_getFilterValue
 title: column_getFilterValue
 ---
 
+# Function: column\_getFilterValue()
+
 ```ts
 function column_getFilterValue<TFeatures, TData, TValue>(column): unknown;
 ```

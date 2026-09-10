@@ -3,6 +3,8 @@ id: OctaneTable
 title: OctaneTable
 ---
 
+# Type Alias: OctaneTable\<TFeatures, TData, TSelected\>
+
 ```ts
 type OctaneTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```

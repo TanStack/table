@@ -3,6 +3,8 @@ id: constructColumn
 title: constructColumn
 ---
 
+# Function: constructColumn()
+
 ```ts
 function constructColumn<TFeatures, TData, TValue>(
    table,

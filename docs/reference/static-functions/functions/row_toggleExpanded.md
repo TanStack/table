@@ -3,6 +3,8 @@ id: row_toggleExpanded
 title: row_toggleExpanded
 ---
 
+# Function: row\_toggleExpanded()
+
 ```ts
 function row_toggleExpanded<TFeatures, TData>(row, expanded?): void;
 ```

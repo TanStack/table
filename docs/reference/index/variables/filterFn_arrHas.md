@@ -3,6 +3,8 @@ id: filterFn_arrHas
 title: filterFn_arrHas
 ---
 
+# Variable: filterFn\_arrHas
+
 ```ts
 const filterFn_arrHas: CreatedFilterFn<any, any>;
 ```

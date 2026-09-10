@@ -3,6 +3,8 @@ id: columnOrderingFeature
 title: columnOrderingFeature
 ---
 
+# Variable: columnOrderingFeature
+
 ```ts
 const columnOrderingFeature: TableFeature;
 ```

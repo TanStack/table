@@ -3,6 +3,8 @@ id: subscribe
 title: subscribe
 ---
 
+# Variable: subscribe()
+
 ```ts
 const subscribe: {
 <TSource>  (source, template): DirectiveResult<typeof SubscribeDirective>;

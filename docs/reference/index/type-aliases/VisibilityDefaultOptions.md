@@ -3,6 +3,8 @@ id: VisibilityDefaultOptions
 title: VisibilityDefaultOptions
 ---
 
+# Type Alias: VisibilityDefaultOptions
+
 ```ts
 type VisibilityDefaultOptions = Pick<TableOptions_ColumnVisibility, "onColumnVisibilityChange">;
 ```

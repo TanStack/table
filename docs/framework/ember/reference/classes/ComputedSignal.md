@@ -3,6 +3,8 @@ id: ComputedSignal
 title: ComputedSignal
 ---
 
+# Class: ComputedSignal\<T\>
+
 Defined in: packages/ember-table/declarations/signal.d.ts:19
 
 ## Type Parameters

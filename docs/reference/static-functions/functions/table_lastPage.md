@@ -3,6 +3,8 @@ id: table_lastPage
 title: table_lastPage
 ---
 
+# Function: table\_lastPage()
+
 ```ts
 function table_lastPage<TFeatures, TData>(table): void;
 ```

@@ -3,6 +3,8 @@ id: Column
 title: Column
 ---
 
+# Type Alias: Column\<TFeatures, TData, TValue\>
+
 ```ts
 type Column<TFeatures, TData, TValue> = Column_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, Column_FeatureMap<TFeatures, TData>>;
 ```

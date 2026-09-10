@@ -3,6 +3,8 @@ id: NonFeatureKeys
 title: NonFeatureKeys
 ---
 
+# Type Alias: NonFeatureKeys
+
 ```ts
 type NonFeatureKeys =
   | "aggregationFns"

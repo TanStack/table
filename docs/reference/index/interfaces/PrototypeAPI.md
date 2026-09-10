@@ -3,6 +3,8 @@ id: PrototypeAPI
 title: PrototypeAPI
 ---
 
+# Interface: PrototypeAPI\<_TDeps, _TDepArgs\>
+
 Defined in: [utils.ts:569](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L569)
 
 ## Type Parameters

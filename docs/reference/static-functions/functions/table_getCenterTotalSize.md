@@ -3,6 +3,8 @@ id: table_getCenterTotalSize
 title: table_getCenterTotalSize
 ---
 
+# Function: table\_getCenterTotalSize()
+
 ```ts
 function table_getCenterTotalSize<TFeatures, TData>(table): number;
 ```

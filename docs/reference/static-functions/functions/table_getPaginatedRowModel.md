@@ -3,6 +3,8 @@ id: table_getPaginatedRowModel
 title: table_getPaginatedRowModel
 ---
 
+# Function: table\_getPaginatedRowModel()
+
 ```ts
 function table_getPaginatedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

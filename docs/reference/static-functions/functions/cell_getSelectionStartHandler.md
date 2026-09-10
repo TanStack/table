@@ -3,6 +3,8 @@ id: cell_getSelectionStartHandler
 title: cell_getSelectionStartHandler
 ---
 
+# Function: cell\_getSelectionStartHandler()
+
 ```ts
 function cell_getSelectionStartHandler<TFeatures, TData, TValue>(cell, _contextDocument?): (e) => void;
 ```

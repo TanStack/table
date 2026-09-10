@@ -3,6 +3,8 @@ id: table_publishExternalState
 title: table_publishExternalState
 ---
 
+# Function: table\_publishExternalState()
+
 ```ts
 function table_publishExternalState<TFeatures, TData>(
    table,

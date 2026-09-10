@@ -3,6 +3,8 @@ id: table_autoResetPageIndex
 title: table_autoResetPageIndex
 ---
 
+# Function: table\_autoResetPageIndex()
+
 ```ts
 function table_autoResetPageIndex<TFeatures, TData>(table): void;
 ```

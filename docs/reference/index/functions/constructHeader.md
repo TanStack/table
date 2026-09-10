@@ -3,6 +3,8 @@ id: constructHeader
 title: constructHeader
 ---
 
+# Function: constructHeader()
+
 ```ts
 function constructHeader<TFeatures, TData, TValue>(
    table,

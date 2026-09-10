@@ -3,6 +3,8 @@ id: rowSortingFeature
 title: rowSortingFeature
 ---
 
+# Variable: rowSortingFeature
+
 ```ts
 const rowSortingFeature: TableFeature;
 ```

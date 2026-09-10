@@ -3,6 +3,8 @@ id: filterFns
 title: filterFns
 ---
 
+# ~~Variable: filterFns~~
+
 ```ts
 const filterFns: object;
 ```

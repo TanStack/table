@@ -3,6 +3,8 @@ id: column_getToggleVisibilityHandler
 title: column_getToggleVisibilityHandler
 ---
 
+# Function: column\_getToggleVisibilityHandler()
+
 ```ts
 function column_getToggleVisibilityHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```

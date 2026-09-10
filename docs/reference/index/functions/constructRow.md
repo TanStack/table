@@ -3,6 +3,8 @@ id: constructRow
 title: constructRow
 ---
 
+# Function: constructRow()
+
 ```ts
 function constructRow<TFeatures, TData>(
    table,

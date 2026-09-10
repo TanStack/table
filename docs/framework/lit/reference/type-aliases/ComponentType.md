@@ -3,6 +3,8 @@ id: ComponentType
 title: ComponentType
 ---
 
+# Type Alias: ComponentType()\<T\>
+
 ```ts
 type ComponentType<T> = (props) => any;
 ```

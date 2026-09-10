@@ -3,6 +3,8 @@ id: AppReactTable
 title: AppReactTable
 ---
 
+# Type Alias: AppReactTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
+
 ```ts
 type AppReactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = ReactTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
 ```

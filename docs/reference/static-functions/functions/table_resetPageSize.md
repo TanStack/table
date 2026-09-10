@@ -3,6 +3,8 @@ id: table_resetPageSize
 title: table_resetPageSize
 ---
 
+# Function: table\_resetPageSize()
+
 ```ts
 function table_resetPageSize<TFeatures, TData>(table, defaultState?): void;
 ```

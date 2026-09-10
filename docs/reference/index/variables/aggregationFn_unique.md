@@ -3,6 +3,8 @@ id: aggregationFn_unique
 title: aggregationFn_unique
 ---
 
+# Variable: aggregationFn\_unique
+
 ```ts
 const aggregationFn_unique: AggregationFnDef<any, any, unknown, unknown[]>;
 ```

@@ -3,6 +3,8 @@ id: ColumnOrderState
 title: ColumnOrderState
 ---
 
+# Type Alias: ColumnOrderState
+
 ```ts
 type ColumnOrderState = string[];
 ```

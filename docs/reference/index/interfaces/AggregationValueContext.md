@@ -3,6 +3,8 @@ id: AggregationValueContext
 title: AggregationValueContext
 ---
 
+# Interface: AggregationValueContext\<TFeatures, TData, TValue\>
+
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:309](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L309)
 
 Values passed to a column-level aggregation-value provider.

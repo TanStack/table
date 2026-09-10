@@ -3,6 +3,8 @@ id: column_getCanSort
 title: column_getCanSort
 ---
 
+# Function: column\_getCanSort()
+
 ```ts
 function column_getCanSort<TFeatures, TData, TValue>(column): boolean;
 ```

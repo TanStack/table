@@ -3,6 +3,8 @@ id: isFunction
 title: isFunction
 ---
 
+# Function: isFunction()
+
 ```ts
 function isFunction<T>(d): d is T;
 ```

@@ -3,6 +3,8 @@ id: createFilteredRowModel
 title: createFilteredRowModel
 ---
 
+# Function: createFilteredRowModel()
+
 ```ts
 function createFilteredRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```

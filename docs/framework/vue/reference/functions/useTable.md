@@ -3,6 +3,8 @@ id: useTable
 title: useTable
 ---
 
+# Function: useTable()
+
 ```ts
 function useTable<TFeatures, TData>(tableOptions): VueTable<TFeatures, TData>;
 ```

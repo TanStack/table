@@ -3,6 +3,8 @@ id: injectTable
 title: injectTable
 ---
 
+# Function: injectTable()
+
 ```ts
 function injectTable<TFeatures, TData>(options): AngularTable<TFeatures, TData>;
 ```

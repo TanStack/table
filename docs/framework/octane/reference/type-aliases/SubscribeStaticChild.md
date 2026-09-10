@@ -3,6 +3,8 @@ id: SubscribeStaticChild
 title: SubscribeStaticChild
 ---
 
+# Type Alias: SubscribeStaticChild
+
 ```ts
 type SubscribeStaticChild =
   | ElementDescriptor<any>

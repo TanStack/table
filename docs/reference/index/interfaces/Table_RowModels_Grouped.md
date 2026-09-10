@@ -3,6 +3,8 @@ id: Table_RowModels_Grouped
 title: Table_RowModels_Grouped
 ---
 
+# Interface: Table\_RowModels\_Grouped\<TFeatures, TData\>
+
 Defined in: [features/column-grouping/columnGroupingFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L133)
 
 ## Type Parameters

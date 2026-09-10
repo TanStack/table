@@ -3,6 +3,8 @@ id: Atoms_All
 title: Atoms_All
 ---
 
+# Type Alias: Atoms\_All
+
 ```ts
 type Atoms_All = { [K in keyof TableState_All]?: ReadonlyAtom<TableState_All[K]> };
 ```

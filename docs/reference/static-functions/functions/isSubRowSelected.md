@@ -3,6 +3,8 @@ id: isSubRowSelected
 title: isSubRowSelected
 ---
 
+# Function: isSubRowSelected()
+
 ```ts
 function isSubRowSelected<TFeatures, TData>(row): boolean | "some" | "all";
 ```

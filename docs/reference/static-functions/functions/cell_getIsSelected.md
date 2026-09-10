@@ -3,6 +3,8 @@ id: cell_getIsSelected
 title: cell_getIsSelected
 ---
 
+# Function: cell\_getIsSelected()
+
 ```ts
 function cell_getIsSelected<TFeatures, TData, TValue>(cell): boolean;
 ```

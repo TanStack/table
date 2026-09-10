@@ -3,6 +3,8 @@ id: table_moveCellSelection
 title: table_moveCellSelection
 ---
 
+# Function: table\_moveCellSelection()
+
 ```ts
 function table_moveCellSelection<TFeatures, TData>(table, direction): void;
 ```

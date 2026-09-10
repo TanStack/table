@@ -3,6 +3,8 @@ id: tableOptions
 title: tableOptions
 ---
 
+# Function: tableOptions()
+
 Runtime implementation for `tableOptions`.
 
 The helper returns the same object it receives; all value comes from the

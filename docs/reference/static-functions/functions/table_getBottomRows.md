@@ -3,6 +3,8 @@ id: table_getBottomRows
 title: table_getBottomRows
 ---
 
+# Function: table\_getBottomRows()
+
 ```ts
 function table_getBottomRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```

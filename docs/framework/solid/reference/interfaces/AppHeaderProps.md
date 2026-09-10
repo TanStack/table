@@ -3,6 +3,8 @@ id: AppHeaderProps
 title: AppHeaderProps
 ---
 
+# Interface: AppHeaderProps\<TFeatures, TData, TValue, THeaderComponents\>
+
 Defined in: [createTableHook.tsx:295](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L295)
 
 Props for AppHeader/AppFooter component.

@@ -3,6 +3,8 @@ id: sortFns
 title: sortFns
 ---
 
+# ~~Variable: sortFns~~
+
 ```ts
 const sortFns: object;
 ```

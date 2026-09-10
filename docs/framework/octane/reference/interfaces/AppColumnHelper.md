@@ -3,6 +3,8 @@ id: AppColumnHelper
 title: AppColumnHelper
 ---
 
+# Interface: AppColumnHelper\<TFeatures, TData, TCellComponents, THeaderComponents\>
+
 Defined in: [types.ts:455](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L455)
 
 Enhanced column helper with pre-bound components in cell/header/footer

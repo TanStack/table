@@ -3,6 +3,8 @@ id: ColumnResizeDirection
 title: ColumnResizeDirection
 ---
 
+# Type Alias: ColumnResizeDirection
+
 ```ts
 type ColumnResizeDirection = "ltr" | "rtl";
 ```

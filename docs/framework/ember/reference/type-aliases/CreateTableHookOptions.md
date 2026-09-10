@@ -3,6 +3,8 @@ id: CreateTableHookOptions
 title: CreateTableHookOptions
 ---
 
+# Type Alias: CreateTableHookOptions\<TFeatures\>
+
 ```ts
 type CreateTableHookOptions<TFeatures> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "state">;
 ```

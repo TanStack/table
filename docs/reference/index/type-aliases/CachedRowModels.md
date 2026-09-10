@@ -3,6 +3,8 @@ id: CachedRowModels
 title: CachedRowModels
 ---
 
+# Type Alias: CachedRowModels\<TFeatures, TData\>
+
 ```ts
 type CachedRowModels<TFeatures, TData> = Partial<CachedRowModel_Core<TFeatures, TData>> & ExtractFeatureMapTypes<TFeatures, CachedRowModels_FeatureMap<TFeatures, TData>>;
 ```

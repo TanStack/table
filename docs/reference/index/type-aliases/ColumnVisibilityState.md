@@ -3,6 +3,8 @@ id: ColumnVisibilityState
 title: ColumnVisibilityState
 ---
 
+# Type Alias: ColumnVisibilityState
+
 ```ts
 type ColumnVisibilityState = Record<string, boolean>;
 ```

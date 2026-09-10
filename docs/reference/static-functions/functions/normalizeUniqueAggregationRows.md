@@ -3,6 +3,8 @@ id: normalizeUniqueAggregationRows
 title: normalizeUniqueAggregationRows
 ---
 
+# Function: normalizeUniqueAggregationRows()
+
 ```ts
 function normalizeUniqueAggregationRows<TFeatures, TData>(rows, maxDepth): readonly Row<TFeatures, TData>[];
 ```

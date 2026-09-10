@@ -3,6 +3,8 @@ id: ExtractFilterFnKeys
 title: ExtractFilterFnKeys
 ---
 
+# Type Alias: ExtractFilterFnKeys\<TFeatures\>
+
 ```ts
 type ExtractFilterFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | keyof FilterFns

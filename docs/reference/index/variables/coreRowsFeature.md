@@ -3,6 +3,8 @@ id: coreRowsFeature
 title: coreRowsFeature
 ---
 
+# Variable: coreRowsFeature
+
 ```ts
 const coreRowsFeature: TableFeature;
 ```

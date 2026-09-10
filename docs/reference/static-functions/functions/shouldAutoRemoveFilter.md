@@ -3,6 +3,8 @@ id: shouldAutoRemoveFilter
 title: shouldAutoRemoveFilter
 ---
 
+# Function: shouldAutoRemoveFilter()
+
 ```ts
 function shouldAutoRemoveFilter<TFeatures, TData, TValue>(
    filterFn?,

@@ -3,6 +3,8 @@ id: TableOptions_GlobalFiltering
 title: TableOptions_GlobalFiltering
 ---
 
+# Interface: TableOptions\_GlobalFiltering\<TFeatures, TData\>
+
 Defined in: [features/global-filtering/globalFilteringFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L35)
 
 ## Type Parameters

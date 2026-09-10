@@ -3,6 +3,8 @@ id: row_getLeafRows
 title: row_getLeafRows
 ---
 
+# Function: row\_getLeafRows()
+
 ```ts
 function row_getLeafRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```

@@ -3,6 +3,8 @@ id: createSortedRowModel
 title: createSortedRowModel
 ---
 
+# Function: createSortedRowModel()
+
 ```ts
 function createSortedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```

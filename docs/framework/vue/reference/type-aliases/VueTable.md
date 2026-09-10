@@ -3,6 +3,8 @@ id: VueTable
 title: VueTable
 ---
 
+# Type Alias: VueTable\<TFeatures, TData\>
+
 ```ts
 type VueTable<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```

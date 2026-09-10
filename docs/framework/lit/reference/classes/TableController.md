@@ -3,6 +3,8 @@ id: TableController
 title: TableController
 ---
 
+# Class: TableController\<TFeatures, TData\>
+
 Defined in: [packages/lit-table/src/TableController.ts:123](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L123)
 
 A Lit ReactiveController for TanStack Table integration.

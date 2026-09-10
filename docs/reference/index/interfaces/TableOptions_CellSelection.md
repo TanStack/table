@@ -3,6 +3,8 @@ id: TableOptions_CellSelection
 title: TableOptions_CellSelection
 ---
 
+# Interface: TableOptions\_CellSelection\<TFeatures, TData\>
+
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L89)
 
 ## Type Parameters

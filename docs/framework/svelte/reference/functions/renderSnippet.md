@@ -3,6 +3,8 @@ id: renderSnippet
 title: renderSnippet
 ---
 
+# Function: renderSnippet()
+
 ```ts
 function renderSnippet<TProps>(snippet, params?): RenderSnippetConfig<TProps>;
 ```

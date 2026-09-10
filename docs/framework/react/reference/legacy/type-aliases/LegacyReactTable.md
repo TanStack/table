@@ -3,6 +3,8 @@ id: LegacyReactTable
 title: LegacyReactTable
 ---
 
+# ~~Type Alias: LegacyReactTable\<TData\>~~
+
 ```ts
 type LegacyReactTable<TData> = ReactTable<LegacyFeatures, TData, TableState<LegacyFeatures>> & object;
 ```

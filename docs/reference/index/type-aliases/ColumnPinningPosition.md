@@ -3,6 +3,8 @@ id: ColumnPinningPosition
 title: ColumnPinningPosition
 ---
 
+# Type Alias: ColumnPinningPosition
+
 ```ts
 type ColumnPinningPosition = false | "start" | "end";
 ```

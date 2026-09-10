@@ -3,6 +3,8 @@ id: table_getColumnOffsets
 title: table_getColumnOffsets
 ---
 
+# Function: table\_getColumnOffsets()
+
 ```ts
 function table_getColumnOffsets<TFeatures, TData>(table): ColumnOffsetsByPosition;
 ```

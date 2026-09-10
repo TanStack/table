@@ -3,6 +3,8 @@ id: RowModelFns
 title: RowModelFns
 ---
 
+# Type Alias: RowModelFns\<TFeatures, TData\>
+
 ```ts
 type RowModelFns<TFeatures, TData> = Partial<ExtractFeatureMapTypes<TFeatures, RowModelFns_FeatureMap<TFeatures, TData>>>;
 ```

@@ -3,6 +3,8 @@ id: row_renderValue
 title: row_renderValue
 ---
 
+# Function: row\_renderValue()
+
 ```ts
 function row_renderValue<TFeatures, TData>(row, columnId): any;
 ```

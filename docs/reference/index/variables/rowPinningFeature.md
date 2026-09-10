@@ -3,6 +3,8 @@ id: rowPinningFeature
 title: rowPinningFeature
 ---
 
+# Variable: rowPinningFeature
+
 ```ts
 const rowPinningFeature: TableFeature;
 ```

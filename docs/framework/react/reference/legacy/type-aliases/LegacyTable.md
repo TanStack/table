@@ -3,6 +3,8 @@ id: LegacyTable
 title: LegacyTable
 ---
 
+# ~~Type Alias: LegacyTable\<TData\>~~
+
 ```ts
 type LegacyTable<TData> = Table<LegacyFeatures, TData>;
 ```

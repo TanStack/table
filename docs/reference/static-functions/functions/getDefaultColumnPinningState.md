@@ -3,6 +3,8 @@ id: getDefaultColumnPinningState
 title: getDefaultColumnPinningState
 ---
 
+# Function: getDefaultColumnPinningState()
+
 ```ts
 function getDefaultColumnPinningState(): ColumnPinningState;
 ```

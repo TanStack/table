@@ -3,6 +3,8 @@ id: reSplitAlphaNumeric
 title: reSplitAlphaNumeric
 ---
 
+# Variable: reSplitAlphaNumeric
+
 ```ts
 const reSplitAlphaNumeric: RegExp;
 ```

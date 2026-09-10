@@ -3,6 +3,8 @@ id: row_getAllCellsByColumnId
 title: row_getAllCellsByColumnId
 ---
 
+# Function: row\_getAllCellsByColumnId()
+
 ```ts
 function row_getAllCellsByColumnId<TFeatures, TData>(row): Record<string, Cell<TFeatures, TData, unknown>>;
 ```

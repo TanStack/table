@@ -3,6 +3,8 @@ id: header_getSize
 title: header_getSize
 ---
 
+# Function: header\_getSize()
+
 ```ts
 function header_getSize<TFeatures, TData, TValue>(header): number;
 ```

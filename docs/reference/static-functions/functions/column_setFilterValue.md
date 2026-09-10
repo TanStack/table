@@ -3,6 +3,8 @@ id: column_setFilterValue
 title: column_setFilterValue
 ---
 
+# Function: column\_setFilterValue()
+
 ```ts
 function column_setFilterValue<TFeatures, TData, TValue>(column, value): void;
 ```

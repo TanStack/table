@@ -3,6 +3,8 @@ id: stateSlicesEqual
 title: stateSlicesEqual
 ---
 
+# Function: stateSlicesEqual()
+
 ```ts
 function stateSlicesEqual(a, b): boolean;
 ```

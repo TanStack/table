@@ -3,6 +3,8 @@ id: cell_getIsFocused
 title: cell_getIsFocused
 ---
 
+# Function: cell\_getIsFocused()
+
 ```ts
 function cell_getIsFocused<TFeatures, TData, TValue>(cell): boolean;
 ```

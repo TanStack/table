@@ -3,6 +3,8 @@ id: ColumnSizingDefaultOptions
 title: ColumnSizingDefaultOptions
 ---
 
+# Type Alias: ColumnSizingDefaultOptions
+
 ```ts
 type ColumnSizingDefaultOptions = Pick<TableOptions_ColumnSizing, "onColumnSizingChange">;
 ```

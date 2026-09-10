@@ -3,6 +3,8 @@ id: RowPinningState
 title: RowPinningState
 ---
 
+# Interface: RowPinningState
+
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L7)
 
 ## Properties

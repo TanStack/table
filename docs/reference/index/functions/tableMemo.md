@@ -3,6 +3,8 @@ id: tableMemo
 title: tableMemo
 ---
 
+# Function: tableMemo()
+
 ```ts
 function tableMemo<TFeatures, TDeps, TDepArgs, TResult>(__namedParameters): (depArgs?) => TResult;
 ```

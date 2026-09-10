@@ -3,6 +3,8 @@ id: CreatedFilterFn
 title: CreatedFilterFn
 ---
 
+# Interface: CreatedFilterFn()\<TFeatures, TData\>
+
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L126)
 
 The shape returned by `constructFilterFn`: a `FilterFn` with its definition

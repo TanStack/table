@@ -3,6 +3,8 @@ id: table_selectCellRange
 title: table_selectCellRange
 ---
 
+# Function: table\_selectCellRange()
+
 ```ts
 function table_selectCellRange<TFeatures, TData>(
    table,

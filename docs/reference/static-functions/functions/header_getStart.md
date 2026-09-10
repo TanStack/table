@@ -3,6 +3,8 @@ id: header_getStart
 title: header_getStart
 ---
 
+# Function: header\_getStart()
+
 ```ts
 function header_getStart<TFeatures, TData, TValue>(header): number;
 ```

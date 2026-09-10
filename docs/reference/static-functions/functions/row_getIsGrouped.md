@@ -3,6 +3,8 @@ id: row_getIsGrouped
 title: row_getIsGrouped
 ---
 
+# Function: row\_getIsGrouped()
+
 ```ts
 function row_getIsGrouped<TFeatures, TData>(row): boolean;
 ```

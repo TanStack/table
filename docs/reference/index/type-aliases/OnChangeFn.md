@@ -3,6 +3,8 @@ id: OnChangeFn
 title: OnChangeFn
 ---
 
+# Type Alias: OnChangeFn()\<T\>
+
 ```ts
 type OnChangeFn<T> = (updaterOrValue) => void;
 ```

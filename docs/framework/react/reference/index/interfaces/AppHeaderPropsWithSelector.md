@@ -3,6 +3,8 @@ id: AppHeaderPropsWithSelector
 title: AppHeaderPropsWithSelector
 ---
 
+# Interface: AppHeaderPropsWithSelector\<TFeatures, TData, TValue, THeaderComponents, TSelected\>
+
 Defined in: [react-table/src/createTableHook.tsx:451](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L451)
 
 Props for AppHeader/AppFooter component - with selector

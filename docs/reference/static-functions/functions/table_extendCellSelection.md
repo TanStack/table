@@ -3,6 +3,8 @@ id: table_extendCellSelection
 title: table_extendCellSelection
 ---
 
+# Function: table\_extendCellSelection()
+
 ```ts
 function table_extendCellSelection<TFeatures, TData>(table, direction): void;
 ```

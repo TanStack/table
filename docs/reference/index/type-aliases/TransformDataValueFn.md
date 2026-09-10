@@ -3,6 +3,8 @@ id: TransformDataValueFn
 title: TransformDataValueFn
 ---
 
+# Type Alias: TransformDataValueFn()
+
 ```ts
 type TransformDataValueFn = (dataValue) => any;
 ```

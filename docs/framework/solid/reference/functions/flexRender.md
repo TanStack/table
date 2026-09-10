@@ -3,6 +3,8 @@ id: flexRender
 title: flexRender
 ---
 
+# Function: flexRender()
+
 ```ts
 function flexRender<TProps>(Comp, props): Element;
 ```

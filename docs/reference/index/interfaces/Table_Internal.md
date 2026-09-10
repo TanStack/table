@@ -3,6 +3,8 @@ id: Table_Internal
 title: Table_Internal
 ---
 
+# Interface: Table\_Internal\<TFeatures, TData\>
+
 Defined in: [types/Table.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L94)
 
 Internal broad table shape used by feature implementations.

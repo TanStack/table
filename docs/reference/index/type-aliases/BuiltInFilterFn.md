@@ -3,6 +3,8 @@ id: BuiltInFilterFn
 title: BuiltInFilterFn
 ---
 
+# Type Alias: BuiltInFilterFn
+
 ```ts
 type BuiltInFilterFn = keyof typeof filterFns;
 ```

@@ -3,6 +3,8 @@ id: row_getVisibleCellsByColumnId
 title: row_getVisibleCellsByColumnId
 ---
 
+# Function: row\_getVisibleCellsByColumnId()
+
 ```ts
 function row_getVisibleCellsByColumnId<TFeatures, TData>(row): Record<string, Cell<TFeatures, TData, unknown>>;
 ```

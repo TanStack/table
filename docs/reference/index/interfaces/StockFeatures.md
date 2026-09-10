@@ -3,6 +3,8 @@ id: StockFeatures
 title: StockFeatures
 ---
 
+# Interface: StockFeatures
+
 Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L19)
 
 ## Properties

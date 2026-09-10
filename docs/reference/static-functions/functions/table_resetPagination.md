@@ -3,6 +3,8 @@ id: table_resetPagination
 title: table_resetPagination
 ---
 
+# Function: table\_resetPagination()
+
 ```ts
 function table_resetPagination<TFeatures, TData>(table, defaultState?): void;
 ```

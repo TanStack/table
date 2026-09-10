@@ -3,6 +3,8 @@ id: table_getIsSomeColumnsPinned
 title: table_getIsSomeColumnsPinned
 ---
 
+# Function: table\_getIsSomeColumnsPinned()
+
 ```ts
 function table_getIsSomeColumnsPinned<TFeatures, TData>(table, position?): boolean;
 ```

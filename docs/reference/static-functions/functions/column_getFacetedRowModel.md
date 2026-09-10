@@ -3,6 +3,8 @@ id: column_getFacetedRowModel
 title: column_getFacetedRowModel
 ---
 
+# Function: column\_getFacetedRowModel()
+
 ```ts
 function column_getFacetedRowModel<TFeatures, TData, TValue>(column, table): RowModel<TFeatures, TData>;
 ```

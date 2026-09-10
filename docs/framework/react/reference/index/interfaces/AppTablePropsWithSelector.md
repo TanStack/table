@@ -3,6 +3,8 @@ id: AppTablePropsWithSelector
 title: AppTablePropsWithSelector
 ---
 
+# Interface: AppTablePropsWithSelector\<TFeatures, TSelected\>
+
 Defined in: [react-table/src/createTableHook.tsx:387](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L387)
 
 Props for AppTable component - with selector

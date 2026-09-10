@@ -3,6 +3,8 @@ id: CustomFilterFns
 title: CustomFilterFns
 ---
 
+# Type Alias: CustomFilterFns\<TFeatures, TData\>
+
 ```ts
 type CustomFilterFns<TFeatures, TData> = Record<string, FilterFn<TFeatures, TData>>;
 ```

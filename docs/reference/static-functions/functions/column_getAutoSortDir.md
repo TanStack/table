@@ -3,6 +3,8 @@ id: column_getAutoSortDir
 title: column_getAutoSortDir
 ---
 
+# Function: column\_getAutoSortDir()
+
 ```ts
 function column_getAutoSortDir<TFeatures, TData, TValue>(column): "asc" | "desc";
 ```

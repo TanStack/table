@@ -3,6 +3,8 @@ id: table_getRowCount
 title: table_getRowCount
 ---
 
+# Function: table\_getRowCount()
+
 ```ts
 function table_getRowCount<TFeatures, TData>(table): number;
 ```

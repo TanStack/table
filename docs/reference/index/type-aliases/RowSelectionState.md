@@ -3,6 +3,8 @@ id: RowSelectionState
 title: RowSelectionState
 ---
 
+# Type Alias: RowSelectionState
+
 ```ts
 type RowSelectionState = Record<string, true>;
 ```

@@ -3,6 +3,8 @@ id: IdentifiedColumnDef
 title: IdentifiedColumnDef
 ---
 
+# Type Alias: IdentifiedColumnDef\<TFeatures, TData, TValue\>
+
 ```ts
 type IdentifiedColumnDef<TFeatures, TData, TValue> = ColumnDefBase<TFeatures, TData, TValue> & object;
 ```

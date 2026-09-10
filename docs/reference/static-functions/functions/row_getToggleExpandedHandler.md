@@ -3,6 +3,8 @@ id: row_getToggleExpandedHandler
 title: row_getToggleExpandedHandler
 ---
 
+# Function: row\_getToggleExpandedHandler()
+
 ```ts
 function row_getToggleExpandedHandler<TFeatures, TData>(row): () => void;
 ```

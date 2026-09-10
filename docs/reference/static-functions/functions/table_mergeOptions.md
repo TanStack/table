@@ -3,6 +3,8 @@ id: table_mergeOptions
 title: table_mergeOptions
 ---
 
+# Function: table\_mergeOptions()
+
 ```ts
 function table_mergeOptions<TFeatures, TData>(table, newOptions): TableOptions<TFeatures, TData>;
 ```

@@ -3,6 +3,8 @@ id: AppCellProps
 title: AppCellProps
 ---
 
+# Interface: AppCellProps\<TFeatures, TData, TValue, TCellComponents\>
+
 Defined in: [createTableHook.tsx:279](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L279)
 
 Props for AppCell component.

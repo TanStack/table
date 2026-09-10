@@ -3,6 +3,8 @@ id: row_getCenterVisibleCells
 title: row_getCenterVisibleCells
 ---
 
+# Function: row\_getCenterVisibleCells()
+
 ```ts
 function row_getCenterVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```

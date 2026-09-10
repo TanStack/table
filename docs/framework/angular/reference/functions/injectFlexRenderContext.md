@@ -3,6 +3,8 @@ id: injectFlexRenderContext
 title: injectFlexRenderContext
 ---
 
+# Function: injectFlexRenderContext()
+
 ```ts
 function injectFlexRenderContext<T>(): T;
 ```

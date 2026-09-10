@@ -3,6 +3,8 @@ id: cell_getIsAggregated
 title: cell_getIsAggregated
 ---
 
+# Function: cell\_getIsAggregated()
+
 ```ts
 function cell_getIsAggregated<TFeatures, TData, TValue>(cell): boolean;
 ```

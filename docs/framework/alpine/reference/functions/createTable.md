@@ -3,6 +3,8 @@ id: createTable
 title: createTable
 ---
 
+# Function: createTable()
+
 ```ts
 function createTable<TFeatures, TData>(tableOptions, selector?): AlpineTable<TFeatures, TData>;
 ```

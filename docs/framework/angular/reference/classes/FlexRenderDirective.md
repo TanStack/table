@@ -3,6 +3,8 @@ id: FlexRenderDirective
 title: FlexRenderDirective
 ---
 
+# Class: FlexRenderDirective\<TFeatures, TRowData, TValue, TProps\>
+
 Defined in: [packages/angular-table/src/flexRender.ts:84](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L84)
 
 Use this utility directive to render headers, cells, or footers with custom markup.

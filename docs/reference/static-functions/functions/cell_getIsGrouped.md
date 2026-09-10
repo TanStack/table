@@ -3,6 +3,8 @@ id: cell_getIsGrouped
 title: cell_getIsGrouped
 ---
 
+# Function: cell\_getIsGrouped()
+
 ```ts
 function cell_getIsGrouped<TFeatures, TData, TValue>(cell): boolean;
 ```

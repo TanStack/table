@@ -3,6 +3,8 @@ id: AppHeaderContext
 title: AppHeaderContext
 ---
 
+# Interface: AppHeaderContext\<TFeatures, TData, TValue, THeaderComponents\>
+
 Defined in: [types.ts:360](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L360)
 
 Enhanced HeaderContext with pre-bound header components.

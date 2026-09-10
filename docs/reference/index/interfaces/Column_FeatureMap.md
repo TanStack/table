@@ -3,6 +3,8 @@ id: Column_FeatureMap
 title: Column_FeatureMap
 ---
 
+# Interface: Column\_FeatureMap\<TFeatures, TData\>
+
 Defined in: [types/Column.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L24)
 
 ## Type Parameters

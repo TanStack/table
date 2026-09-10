@@ -3,6 +3,8 @@ id: column_getFirstSortDir
 title: column_getFirstSortDir
 ---
 
+# Function: column\_getFirstSortDir()
+
 ```ts
 function column_getFirstSortDir<TFeatures, TData, TValue>(column): "asc" | "desc";
 ```

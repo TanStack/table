@@ -3,6 +3,8 @@ id: Cell_CellSpanning
 title: Cell_CellSpanning
 ---
 
+# Interface: Cell\_CellSpanning
+
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L139)
 
 ## Properties

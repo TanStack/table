@@ -3,6 +3,8 @@ id: row_getValue
 title: row_getValue
 ---
 
+# Function: row\_getValue()
+
 ```ts
 function row_getValue<TFeatures, TData>(row, columnId): unknown;
 ```

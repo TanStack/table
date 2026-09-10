@@ -3,6 +3,8 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
+# Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
+
 Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:377](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L377)
 
 ## Type Parameters

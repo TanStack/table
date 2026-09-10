@@ -3,6 +3,8 @@ id: skipFirstRun
 title: skipFirstRun
 ---
 
+# Function: skipFirstRun()
+
 ```ts
 function skipFirstRun(fn): () => void;
 ```

@@ -3,6 +3,8 @@ id: DisplayColumnDef
 title: DisplayColumnDef
 ---
 
+# Type Alias: DisplayColumnDef\<TFeatures, TData, TValue\>
+
 ```ts
 type DisplayColumnDef<TFeatures, TData, TValue> = ColumnDefBase<TFeatures, TData, TValue> & ColumnIdentifiers<TFeatures, TData, TValue>;
 ```

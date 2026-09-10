@@ -3,6 +3,8 @@ id: TableOptions_ColumnFiltering
 title: TableOptions_ColumnFiltering
 ---
 
+# Interface: TableOptions\_ColumnFiltering\<_TFeatures, _TData\>
+
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:245](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L245)
 
 ## Type Parameters

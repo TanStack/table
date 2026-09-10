@@ -3,6 +3,8 @@ id: ColumnResizingDefaultOptions
 title: ColumnResizingDefaultOptions
 ---
 
+# Type Alias: ColumnResizingDefaultOptions
+
 ```ts
 type ColumnResizingDefaultOptions = Pick<TableOptions_ColumnResizing,
   | "columnResizeMode"

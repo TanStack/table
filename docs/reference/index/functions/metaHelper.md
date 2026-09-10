@@ -3,6 +3,8 @@ id: metaHelper
 title: metaHelper
 ---
 
+# Function: metaHelper()
+
 ```ts
 function metaHelper<TMeta>(): TMeta;
 ```

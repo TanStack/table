@@ -3,6 +3,8 @@ id: table_getStartHeaderGroups
 title: table_getStartHeaderGroups
 ---
 
+# Function: table\_getStartHeaderGroups()
+
 ```ts
 function table_getStartHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```

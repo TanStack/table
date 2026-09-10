@@ -3,6 +3,8 @@ id: "@tanstack/solid-table"
 title: "@tanstack/solid-table"
 ---
 
+# @tanstack/solid-table
+
 ## Interfaces
 
 - [AppCellComponent](interfaces/AppCellComponent.md)

@@ -3,6 +3,8 @@ id: filterFn_equalsString
 title: filterFn_equalsString
 ---
 
+# Variable: filterFn\_equalsString
+
 ```ts
 const filterFn_equalsString: CreatedFilterFn<any, any>;
 ```

@@ -3,6 +3,8 @@ id: cellSelectionFeature
 title: cellSelectionFeature
 ---
 
+# Variable: cellSelectionFeature
+
 ```ts
 const cellSelectionFeature: TableFeature;
 ```

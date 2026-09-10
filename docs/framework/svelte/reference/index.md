@@ -3,6 +3,8 @@ id: "@tanstack/svelte-table"
 title: "@tanstack/svelte-table"
 ---
 
+# @tanstack/svelte-table
+
 ## Interfaces
 
 - [CreateTableHookResult](interfaces/CreateTableHookResult.md)

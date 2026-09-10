@@ -3,6 +3,8 @@ id: table_autoResetExpanded
 title: table_autoResetExpanded
 ---
 
+# Function: table\_autoResetExpanded()
+
 ```ts
 function table_autoResetExpanded<TFeatures, TData>(table): void;
 ```

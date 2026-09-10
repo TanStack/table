@@ -3,6 +3,8 @@ id: row_getVisibleCells
 title: row_getVisibleCells
 ---
 
+# Function: row\_getVisibleCells()
+
 ```ts
 function row_getVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```

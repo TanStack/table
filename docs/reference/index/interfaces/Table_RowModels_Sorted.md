@@ -3,6 +3,8 @@ id: Table_RowModels_Sorted
 title: Table_RowModels_Sorted
 ---
 
+# Interface: Table\_RowModels\_Sorted\<TFeatures, TData\>
+
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:282](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L282)
 
 ## Type Parameters

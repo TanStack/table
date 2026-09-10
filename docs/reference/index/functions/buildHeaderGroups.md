@@ -3,6 +3,8 @@ id: buildHeaderGroups
 title: buildHeaderGroups
 ---
 
+# Function: buildHeaderGroups()
+
 ```ts
 function buildHeaderGroups<TFeatures, TData, TValue>(
    allColumns,

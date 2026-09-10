@@ -3,6 +3,8 @@ id: SubscribePropsWithSourceWithSelector
 title: SubscribePropsWithSourceWithSelector
 ---
 
+# Type Alias: SubscribePropsWithSourceWithSelector\<TSourceValue, TSelected\>
+
 ```ts
 type SubscribePropsWithSourceWithSelector<TSourceValue, TSelected> = object;
 ```

@@ -3,6 +3,8 @@ id: filterFn_includesStringSensitive
 title: filterFn_includesStringSensitive
 ---
 
+# Variable: filterFn\_includesStringSensitive
+
 ```ts
 const filterFn_includesStringSensitive: CreatedFilterFn<any, any>;
 ```

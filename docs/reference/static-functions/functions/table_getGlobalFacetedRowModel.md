@@ -3,6 +3,8 @@ id: table_getGlobalFacetedRowModel
 title: table_getGlobalFacetedRowModel
 ---
 
+# Function: table\_getGlobalFacetedRowModel()
+
 ```ts
 function table_getGlobalFacetedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

@@ -3,6 +3,8 @@ id: CreatedSortFn
 title: CreatedSortFn
 ---
 
+# Interface: CreatedSortFn()\<TFeatures, TData\>
+
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L81)
 
 The shape returned by `constructSortFn`: a `SortFn` with its definition

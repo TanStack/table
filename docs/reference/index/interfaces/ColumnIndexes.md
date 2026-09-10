@@ -3,6 +3,8 @@ id: ColumnIndexes
 title: ColumnIndexes
 ---
 
+# Interface: ColumnIndexes
+
 Defined in: [features/column-ordering/columnOrderingFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L7)
 
 ## Properties

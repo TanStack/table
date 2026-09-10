@@ -3,6 +3,8 @@ id: Table_Rows
 title: Table_Rows
 ---
 
+# Interface: Table\_Rows\<TFeatures, TData\>
+
 Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L130)
 
 ## Extended by

@@ -3,6 +3,8 @@ id: getDefaultColumnFiltersState
 title: getDefaultColumnFiltersState
 ---
 
+# Function: getDefaultColumnFiltersState()
+
 ```ts
 function getDefaultColumnFiltersState(): ColumnFiltersState;
 ```

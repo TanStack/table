@@ -3,6 +3,8 @@ id: ColumnFiltersState
 title: ColumnFiltersState
 ---
 
+# Type Alias: ColumnFiltersState
+
 ```ts
 type ColumnFiltersState = ColumnFilter[];
 ```

@@ -3,6 +3,8 @@ id: table_resetColumnFilters
 title: table_resetColumnFilters
 ---
 
+# Function: table\_resetColumnFilters()
+
 ```ts
 function table_resetColumnFilters<TFeatures, TData>(table, defaultState?): void;
 ```

@@ -3,6 +3,8 @@ id: row_getIsAllParentsExpanded
 title: row_getIsAllParentsExpanded
 ---
 
+# Function: row\_getIsAllParentsExpanded()
+
 ```ts
 function row_getIsAllParentsExpanded<TFeatures, TData>(row): boolean;
 ```

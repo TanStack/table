@@ -3,6 +3,8 @@ id: table_setGrouping
 title: table_setGrouping
 ---
 
+# Function: table\_setGrouping()
+
 ```ts
 function table_setGrouping<TFeatures, TData>(table, updater): void;
 ```

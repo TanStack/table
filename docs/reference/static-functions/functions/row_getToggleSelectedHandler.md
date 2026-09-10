@@ -3,6 +3,8 @@ id: row_getToggleSelectedHandler
 title: row_getToggleSelectedHandler
 ---
 
+# Function: row\_getToggleSelectedHandler()
+
 ```ts
 function row_getToggleSelectedHandler<TFeatures, TData>(row, opts?): (e) => void;
 ```

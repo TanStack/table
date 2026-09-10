@@ -3,6 +3,8 @@ id: cell_renderValue
 title: cell_renderValue
 ---
 
+# Function: cell\_renderValue()
+
 ```ts
 function cell_renderValue<TFeatures, TData, TValue>(cell): any;
 ```

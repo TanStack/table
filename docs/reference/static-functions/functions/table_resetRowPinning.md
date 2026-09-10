@@ -3,6 +3,8 @@ id: table_resetRowPinning
 title: table_resetRowPinning
 ---
 
+# Function: table\_resetRowPinning()
+
 ```ts
 function table_resetRowPinning<TFeatures, TData>(table, defaultState?): void;
 ```

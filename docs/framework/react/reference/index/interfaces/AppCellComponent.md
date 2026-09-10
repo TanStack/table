@@ -3,6 +3,8 @@ id: AppCellComponent
 title: AppCellComponent
 ---
 
+# Interface: AppCellComponent()\<TFeatures, TData, TCellComponents\>
+
 Defined in: [react-table/src/createTableHook.tsx:470](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L470)
 
 Component type for AppCell - wraps a cell and provides cell context with optional Subscribe

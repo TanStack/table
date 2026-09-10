@@ -3,6 +3,8 @@ id: AggregationFnDescriptor
 title: AggregationFnDescriptor
 ---
 
+# Interface: AggregationFnDescriptor\<TFeatures, TData, TValue, TResult\>
+
 Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L128)
 
 Gives an aggregation reference a stable key in a multiple result.

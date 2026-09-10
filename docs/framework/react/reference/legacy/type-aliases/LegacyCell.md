@@ -3,6 +3,8 @@ id: LegacyCell
 title: LegacyCell
 ---
 
+# ~~Type Alias: LegacyCell\<TData, TValue\>~~
+
 ```ts
 type LegacyCell<TData, TValue> = Cell<LegacyFeatures, TData, TValue>;
 ```

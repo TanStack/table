@@ -3,6 +3,8 @@ id: column_getSize
 title: column_getSize
 ---
 
+# Function: column\_getSize()
+
 ```ts
 function column_getSize<TFeatures, TData, TValue>(column): number;
 ```

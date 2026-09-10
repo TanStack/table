@@ -3,6 +3,8 @@ id: ExtractSortFnKeys
 title: ExtractSortFnKeys
 ---
 
+# Type Alias: ExtractSortFnKeys\<TFeatures\>
+
 ```ts
 type ExtractSortFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | keyof SortFns

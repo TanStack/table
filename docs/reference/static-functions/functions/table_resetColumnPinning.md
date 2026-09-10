@@ -3,6 +3,8 @@ id: table_resetColumnPinning
 title: table_resetColumnPinning
 ---
 
+# Function: table\_resetColumnPinning()
+
 ```ts
 function table_resetColumnPinning<TFeatures, TData>(table, defaultState?): void;
 ```

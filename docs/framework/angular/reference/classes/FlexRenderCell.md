@@ -3,6 +3,8 @@ id: FlexRenderCell
 title: FlexRenderCell
 ---
 
+# Class: FlexRenderCell\<TFeatures, TData, TValue\>
+
 Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:62](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L62)
 
 Simplified directive wrapper of `*flexRender`.

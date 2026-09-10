@@ -3,6 +3,8 @@ id: ExtractTableMeta
 title: ExtractTableMeta
 ---
 
+# Type Alias: ExtractTableMeta\<TFeatures, TData\>
+
 ```ts
 type ExtractTableMeta<TFeatures, TData> = IsAny<TFeatures> extends true ? TableMeta<TFeatures, TData> : TFeatures extends object ? TMeta : TableMeta<TFeatures, TData>;
 ```

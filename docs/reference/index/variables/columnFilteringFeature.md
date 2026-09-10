@@ -3,6 +3,8 @@ id: columnFilteringFeature
 title: columnFilteringFeature
 ---
 
+# Variable: columnFilteringFeature
+
 ```ts
 const columnFilteringFeature: TableFeature;
 ```

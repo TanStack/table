@@ -3,6 +3,8 @@ id: table_autoResetCellSelection
 title: table_autoResetCellSelection
 ---
 
+# Function: table\_autoResetCellSelection()
+
 ```ts
 function table_autoResetCellSelection<TFeatures, TData>(table): void;
 ```

@@ -3,6 +3,8 @@ id: PreactTable
 title: PreactTable
 ---
 
+# Type Alias: PreactTable\<TFeatures, TData, TSelected\>
+
 ```ts
 type PreactTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```

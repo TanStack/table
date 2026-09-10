@@ -3,6 +3,8 @@ id: FlexRenderProps
 title: FlexRenderProps
 ---
 
+# Type Alias: FlexRenderProps\<TFeatures, TData, TValue\>
+
 ```ts
 type FlexRenderProps<TFeatures, TData, TValue> =
   | {

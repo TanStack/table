@@ -3,6 +3,8 @@ id: column_getSortIndex
 title: column_getSortIndex
 ---
 
+# Function: column\_getSortIndex()
+
 ```ts
 function column_getSortIndex<TFeatures, TData, TValue>(column): number;
 ```

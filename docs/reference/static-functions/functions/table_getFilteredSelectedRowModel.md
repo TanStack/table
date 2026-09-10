@@ -3,6 +3,8 @@ id: table_getFilteredSelectedRowModel
 title: table_getFilteredSelectedRowModel
 ---
 
+# Function: table\_getFilteredSelectedRowModel()
+
 ```ts
 function table_getFilteredSelectedRowModel<TFeatures, TData>(table):
   | RowModel<TFeatures, TData>

@@ -3,6 +3,8 @@ id: table_getCenterRows
 title: table_getCenterRows
 ---
 
+# Function: table\_getCenterRows()
+
 ```ts
 function table_getCenterRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```

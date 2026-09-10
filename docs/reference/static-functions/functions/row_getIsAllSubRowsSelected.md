@@ -3,6 +3,8 @@ id: row_getIsAllSubRowsSelected
 title: row_getIsAllSubRowsSelected
 ---
 
+# Function: row\_getIsAllSubRowsSelected()
+
 ```ts
 function row_getIsAllSubRowsSelected<TFeatures, TData>(row): boolean;
 ```

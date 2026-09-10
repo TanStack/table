@@ -3,6 +3,8 @@ id: AppTablePropsWithoutSelector
 title: AppTablePropsWithoutSelector
 ---
 
+# Interface: AppTablePropsWithoutSelector
+
 Defined in: [types.ts:588](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L588)
 
 Props for AppTable component — without selector.

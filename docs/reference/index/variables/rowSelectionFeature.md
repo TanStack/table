@@ -3,6 +3,8 @@ id: rowSelectionFeature
 title: rowSelectionFeature
 ---
 
+# Variable: rowSelectionFeature
+
 ```ts
 const rowSelectionFeature: TableFeature;
 ```

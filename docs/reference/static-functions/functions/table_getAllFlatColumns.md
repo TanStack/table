@@ -3,6 +3,8 @@ id: table_getAllFlatColumns
 title: table_getAllFlatColumns
 ---
 
+# Function: table\_getAllFlatColumns()
+
 ```ts
 function table_getAllFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```

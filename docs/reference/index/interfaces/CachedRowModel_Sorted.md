@@ -3,6 +3,8 @@ id: CachedRowModel_Sorted
 title: CachedRowModel_Sorted
 ---
 
+# Interface: CachedRowModel\_Sorted\<TFeatures, TData\>
+
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:296](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L296)
 
 ## Type Parameters

@@ -3,6 +3,8 @@ id: AppLitTable
 title: AppLitTable
 ---
 
+# Type Alias: AppLitTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
+
 ```ts
 type AppLitTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = LitTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
 ```

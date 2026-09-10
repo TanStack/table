@@ -3,6 +3,8 @@ id: table_syncExternalStateToBaseAtoms
 title: table_syncExternalStateToBaseAtoms
 ---
 
+# Function: table\_syncExternalStateToBaseAtoms()
+
 ```ts
 function table_syncExternalStateToBaseAtoms<TFeatures, TData>(
    table,

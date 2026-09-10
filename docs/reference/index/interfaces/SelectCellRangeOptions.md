@@ -3,6 +3,8 @@ id: SelectCellRangeOptions
 title: SelectCellRangeOptions
 ---
 
+# Interface: SelectCellRangeOptions
+
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L74)
 
 ## Properties

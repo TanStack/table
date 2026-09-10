@@ -3,6 +3,8 @@ id: columnPinningFeature
 title: columnPinningFeature
 ---
 
+# Variable: columnPinningFeature
+
 ```ts
 const columnPinningFeature: TableFeature;
 ```

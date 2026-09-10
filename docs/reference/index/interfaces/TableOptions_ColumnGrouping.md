@@ -3,6 +3,8 @@ id: TableOptions_ColumnGrouping
 title: TableOptions_ColumnGrouping
 ---
 
+# Interface: TableOptions\_ColumnGrouping
+
 Defined in: [features/column-grouping/columnGroupingFeature.types.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L94)
 
 ## Properties

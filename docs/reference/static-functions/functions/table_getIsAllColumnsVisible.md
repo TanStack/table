@@ -3,6 +3,8 @@ id: table_getIsAllColumnsVisible
 title: table_getIsAllColumnsVisible
 ---
 
+# Function: table\_getIsAllColumnsVisible()
+
 ```ts
 function table_getIsAllColumnsVisible<TFeatures, TData>(table): boolean;
 ```

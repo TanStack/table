@@ -3,6 +3,8 @@ id: row_getEndVisibleCells
 title: row_getEndVisibleCells
 ---
 
+# Function: row\_getEndVisibleCells()
+
 ```ts
 function row_getEndVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```

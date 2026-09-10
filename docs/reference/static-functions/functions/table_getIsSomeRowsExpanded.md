@@ -3,6 +3,8 @@ id: table_getIsSomeRowsExpanded
 title: table_getIsSomeRowsExpanded
 ---
 
+# Function: table\_getIsSomeRowsExpanded()
+
 ```ts
 function table_getIsSomeRowsExpanded<TFeatures, TData>(table): boolean;
 ```

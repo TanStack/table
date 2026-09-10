@@ -3,6 +3,8 @@ id: table_getFilteredRowModel
 title: table_getFilteredRowModel
 ---
 
+# Function: table\_getFilteredRowModel()
+
 ```ts
 function table_getFilteredRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

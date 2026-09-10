@@ -3,6 +3,8 @@ id: Table_ColumnGrouping
 title: Table_ColumnGrouping
 ---
 
+# Interface: Table\_ColumnGrouping\<_TFeatures, _TData\>
+
 Defined in: [features/column-grouping/columnGroupingFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L117)
 
 ## Type Parameters

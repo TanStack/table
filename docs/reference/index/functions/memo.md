@@ -3,6 +3,8 @@ id: memo
 title: memo
 ---
 
+# Function: memo()
+
 ```ts
 function memo<TDeps, TDepArgs, TResult>(__namedParameters): (depArgs?) => TResult;
 ```

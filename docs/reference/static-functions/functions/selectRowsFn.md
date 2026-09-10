@@ -3,6 +3,8 @@ id: selectRowsFn
 title: selectRowsFn
 ---
 
+# Function: selectRowsFn()
+
 ```ts
 function selectRowsFn<TFeatures, TData>(rowModel, table): RowModel<TFeatures, TData>;
 ```

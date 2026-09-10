@@ -3,6 +3,8 @@ id: column_getIsLastColumn
 title: column_getIsLastColumn
 ---
 
+# Function: column\_getIsLastColumn()
+
 ```ts
 function column_getIsLastColumn<TFeatures, TData, TValue>(column, position?): boolean;
 ```

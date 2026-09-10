@@ -3,6 +3,8 @@ id: cell_getIsPlaceholder
 title: cell_getIsPlaceholder
 ---
 
+# Function: cell\_getIsPlaceholder()
+
 ```ts
 function cell_getIsPlaceholder<TFeatures, TData, TValue>(cell): boolean;
 ```

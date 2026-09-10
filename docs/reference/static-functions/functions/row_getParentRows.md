@@ -3,6 +3,8 @@ id: row_getParentRows
 title: row_getParentRows
 ---
 
+# Function: row\_getParentRows()
+
 ```ts
 function row_getParentRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```

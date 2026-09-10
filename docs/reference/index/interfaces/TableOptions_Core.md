@@ -3,6 +3,8 @@ id: TableOptions_Core
 title: TableOptions_Core
 ---
 
+# Interface: TableOptions\_Core\<TFeatures, TData\>
+
 Defined in: [types/TableOptions.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L33)
 
 Core options that are always available on a table, before optional feature

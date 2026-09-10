@@ -3,6 +3,8 @@ id: assignPrototypeAPIs
 title: assignPrototypeAPIs
 ---
 
+# Function: assignPrototypeAPIs()
+
 ```ts
 function assignPrototypeAPIs<TFeatures, TData, TDeps, TDepArgs>(
    feature,

@@ -3,6 +3,8 @@ id: CellSelectionRangeMode
 title: CellSelectionRangeMode
 ---
 
+# Type Alias: CellSelectionRangeMode
+
 ```ts
 type CellSelectionRangeMode = "replace" | "include" | "exclude";
 ```

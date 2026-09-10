@@ -3,6 +3,8 @@ id: getDefaultColumnOrderState
 title: getDefaultColumnOrderState
 ---
 
+# Function: getDefaultColumnOrderState()
+
 ```ts
 function getDefaultColumnOrderState(): ColumnOrderState;
 ```

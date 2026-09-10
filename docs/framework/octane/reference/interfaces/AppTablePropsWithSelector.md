@@ -3,6 +3,8 @@ id: AppTablePropsWithSelector
 title: AppTablePropsWithSelector
 ---
 
+# Interface: AppTablePropsWithSelector\<TFeatures, TSelected\>
+
 Defined in: [types.ts:594](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L594)
 
 Props for AppTable component — with selector.

@@ -3,6 +3,8 @@ id: aggregationFn_extent
 title: aggregationFn_extent
 ---
 
+# Variable: aggregationFn\_extent
+
 ```ts
 const aggregationFn_extent: AggregationFnDef<any, any, unknown, [RangeValue | undefined, RangeValue | undefined]>;
 ```

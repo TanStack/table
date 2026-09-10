@@ -3,6 +3,8 @@ id: Table_RowExpanding
 title: Table_RowExpanding
 ---
 
+# Interface: Table\_RowExpanding\<_TFeatures, _TData\>
+
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L72)
 
 ## Type Parameters

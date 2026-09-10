@@ -3,6 +3,8 @@ id: formatAggregatedCellValue
 title: formatAggregatedCellValue
 ---
 
+# Function: formatAggregatedCellValue()
+
 ```ts
 function formatAggregatedCellValue(value, option): string | null;
 ```

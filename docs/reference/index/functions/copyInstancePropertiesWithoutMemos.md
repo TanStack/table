@@ -3,6 +3,8 @@ id: copyInstancePropertiesWithoutMemos
 title: copyInstancePropertiesWithoutMemos
 ---
 
+# Function: copyInstancePropertiesWithoutMemos()
+
 ```ts
 function copyInstancePropertiesWithoutMemos<TTarget, TSource>(target, source): TTarget & TSource;
 ```

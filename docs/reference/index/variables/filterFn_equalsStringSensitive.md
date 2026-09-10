@@ -3,6 +3,8 @@ id: filterFn_equalsStringSensitive
 title: filterFn_equalsStringSensitive
 ---
 
+# Variable: filterFn\_equalsStringSensitive
+
 ```ts
 const filterFn_equalsStringSensitive: CreatedFilterFn<any, any>;
 ```

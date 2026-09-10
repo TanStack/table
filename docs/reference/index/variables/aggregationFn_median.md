@@ -3,6 +3,8 @@ id: aggregationFn_median
 title: aggregationFn_median
 ---
 
+# Variable: aggregationFn\_median
+
 ```ts
 const aggregationFn_median: AggregationFnDef<any, any, unknown, number | undefined>;
 ```

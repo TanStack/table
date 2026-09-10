@@ -3,6 +3,8 @@ id: column_getAfter
 title: column_getAfter
 ---
 
+# Function: column\_getAfter()
+
 ```ts
 function column_getAfter<TFeatures, TData, TValue>(column, position?): number;
 ```

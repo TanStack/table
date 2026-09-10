@@ -3,6 +3,8 @@ id: row_getDisplayIndex
 title: row_getDisplayIndex
 ---
 
+# Function: row\_getDisplayIndex()
+
 ```ts
 function row_getDisplayIndex<TFeatures, TData>(row): number;
 ```
