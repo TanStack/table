@@ -348,7 +348,10 @@ export function table_getRow<
   if (!row) {
     row = table.getCoreRowModel().rowsById[rowId]
     if (!row) {
-      if (process.env.NODE_ENV === 'development') {
+      if (
+        typeof process !== 'undefined' &&
+        process.env.NODE_ENV === 'development'
+      ) {
         throw new Error(`getRow could not find row with ID: ${rowId}`)
       }
       throw new Error()

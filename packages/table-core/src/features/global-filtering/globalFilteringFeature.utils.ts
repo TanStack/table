@@ -75,6 +75,7 @@ export function table_getGlobalFilterFn<
       : filterFns?.[globalFilterFn as string]
 
   if (
+    typeof process !== 'undefined' &&
     process.env.NODE_ENV === 'development' &&
     !filterFn &&
     globalFilterFn != null
