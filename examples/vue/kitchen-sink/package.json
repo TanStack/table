@@ -15,15 +15,15 @@
     "@tanstack/vue-devtools": "^0.2.26",
     "@tanstack/vue-table": "^9.2.4",
     "@tanstack/vue-table-devtools": "^9.2.0",
-    "vue": "^3.5.41"
+    "vue": "^3.5.42"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.4",
-    "@types/node": "^26.2.0",
+    "@rolldown/binding-wasm32-wasi": "~1.2.8",
+    "@types/node": "^26.5.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
     "typescript": "6.0.3",
-    "vite": "^8.2.2",
+    "vite": "^8.3.0",
     "vue-tsc": "^3.3.11"
   }
 }

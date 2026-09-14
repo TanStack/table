@@ -14,23 +14,23 @@
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
     "@tanstack/react-devtools": "^0.10.12",
-    "@tanstack/react-router": "^1.170.32",
-    "@tanstack/react-start": "^1.168.49",
+    "@tanstack/react-router": "^1.170.36",
+    "@tanstack/react-start": "^1.168.53",
     "@tanstack/react-store": "^0.11.1",
     "@tanstack/react-table": "^9.2.4",
     "@tanstack/react-table-devtools": "^9.2.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.4",
-    "@rolldown/plugin-babel": "^0.2.3",
-    "@types/node": "^26.2.0",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5",
-    "@vitejs/plugin-react": "^6.1.0",
+    "@rolldown/binding-wasm32-wasi": "~1.2.8",
+    "@rolldown/plugin-babel": "^0.2.4",
+    "@types/node": "^26.5.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   }
 }

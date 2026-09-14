@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@tanstack/table-core": "workspace:*",
-    "eslint-plugin-solid": "^0.14.5",
+    "eslint-plugin-solid": "^0.18.0",
     "vite-plugin-solid": "^2.11.14"
   }
 }

@@ -92,3 +92,23 @@ test('regenerates table data', async ({ page }) => {
     await server.close()
   }
 })
+
+test('switches themes and restores the saved preference', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    await page.getByRole('button', { name: 'Theme', exact: true }).click()
+    await page.getByRole('menuitem', { name: 'Dark', exact: true }).click()
+    await expect(page.locator('html')).toHaveClass(/dark/)
+
+    await page.reload()
+    await expect(page.locator('html')).toHaveClass(/dark/)
+
+    await page.getByRole('button', { name: 'Theme', exact: true }).click()
+    await page.getByRole('menuitem', { name: 'Light', exact: true }).click()
+    await expect(page.locator('html')).toHaveClass(/light/)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

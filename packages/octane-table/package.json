@@ -60,7 +60,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@tsrx/typescript-plugin": "^0.3.118",
+    "@tsrx/typescript-plugin": "^0.3.138",
     "octane": "0.1.36",
     "typescript": "6.0.3"
   },

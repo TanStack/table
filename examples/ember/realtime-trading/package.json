@@ -30,7 +30,7 @@
     }
   },
   "dependencies": {
-    "@embroider/macros": "1.20.6",
+    "@embroider/macros": "1.21.1",
     "@embroider/router": "3.0.6",
     "@glimmer/component": "2.1.1",
     "@tanstack/ember-table": "^9.2.4",
@@ -46,16 +46,16 @@
     "@babel/plugin-transform-typescript": "7.29.7",
     "@babel/runtime": "7.29.7",
     "@ember/app-tsconfig": "2.0.0",
-    "@embroider/core": "4.6.3",
-    "@glint/ember-tsc": "1.11.0",
-    "@glint/template": "1.8.0",
-    "@glint/tsserver-plugin": "2.7.3",
+    "@embroider/core": "4.6.7",
+    "@glint/ember-tsc": "1.11.4",
+    "@glint/template": "1.9.0",
+    "@glint/tsserver-plugin": "2.7.7",
     "@nullvoxpopuli/ember-vite": "1.1.0",
-    "@rolldown/binding-wasm32-wasi": "~1.2.4",
+    "@rolldown/binding-wasm32-wasi": "~1.2.8",
     "@rollup/plugin-babel": "7.1.0",
     "babel-plugin-ember-template-compilation": "4.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   },
   "engines": {
     "node": ">= 24"

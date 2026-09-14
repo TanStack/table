@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "@tanstack/lit-table": "^9.2.4",
-    "@tanstack/lit-virtual": "^3.13.37",
+    "@tanstack/lit-virtual": "^3.14.1",
     "@tanstack/store": "^0.11.1",
     "lit": "^3.3.3"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.4",
+    "@rolldown/binding-wasm32-wasi": "~1.2.8",
     "typescript": "6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   }
 }

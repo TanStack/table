@@ -117,16 +117,19 @@ describe('injectTable', () => {
       { id: 'id', header: 'Id', cell: (context) => context.getValue() },
       { id: 'title', header: 'Title', cell: (context) => context.getValue() },
     ]
-    const table = TestBed.runInInjectionContext(() =>
-      injectTable(() => ({
-        data: data(),
-        features: stockFeatures,
-        columns: columns,
-        getRowId: (row) => row.id,
-      })),
-    )
+    const createTable = () =>
+      TestBed.runInInjectionContext(() =>
+        injectTable(() => ({
+          data: data(),
+          features: stockFeatures,
+          columns: columns,
+          getRowId: (row) => row.id,
+        })),
+      )
 
     test('exposes a table instance through the proxy', () => {
+      const table = createTable()
+
       expect(isProxy(table)).toBe(true)
       expect(table).toBeDefined()
       expect(typeof table).toBe('object')
@@ -134,12 +137,16 @@ describe('injectTable', () => {
     })
 
     test('supports "in" operator', () => {
+      const table = createTable()
+
       expect('atoms' in table).toBe(true)
       expect('options' in table).toBe(true)
       expect('notFound' in table).toBe(false)
     })
 
     test('supports "Object.keys"', () => {
+      const table = createTable()
+
       const keys = Object.keys(table)
       expect(keys).toEqual(expect.arrayContaining(['options', 'getRowModel']))
     })
