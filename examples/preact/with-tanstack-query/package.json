@@ -14,16 +14,16 @@
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
     "@tanstack/preact-devtools": "^0.10.12",
-    "@tanstack/preact-query": "^5.101.4",
-    "@tanstack/preact-query-devtools": "^5.101.4",
+    "@tanstack/preact-query": "^5.102.8",
+    "@tanstack/preact-query-devtools": "^5.102.8",
     "@tanstack/preact-table": "^9.2.4",
     "@tanstack/preact-table-devtools": "^9.2.0",
     "preact": "^10.29.8"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
-    "@rolldown/binding-wasm32-wasi": "~1.2.4",
+    "@rolldown/binding-wasm32-wasi": "~1.2.8",
     "typescript": "6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   }
 }

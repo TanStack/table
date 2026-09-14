@@ -174,6 +174,9 @@ function ChakraExampleProvider({ children }: { children: React.ReactNode }) {
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange
+        // This client-only example applies themes through effects, so the SSR
+        // initialization script should remain inert.
+        scriptProps={{ type: 'text/plain' }}
       >
         {children}
       </ThemeProvider>

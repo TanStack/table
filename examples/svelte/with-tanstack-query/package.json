@@ -12,20 +12,20 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@rolldown/binding-wasm32-wasi": "~1.2.4",
+    "@rolldown/binding-wasm32-wasi": "~1.2.8",
     "@rollup/plugin-replace": "^6.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte": "^5.56.10",
+    "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
     "typescript": "6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   },
   "dependencies": {
-    "@tanstack/query-devtools": "^5.101.4",
+    "@tanstack/query-devtools": "^5.102.8",
     "@tanstack/svelte-devtools": "^0.1.6",
-    "@tanstack/svelte-query": "^6.1.38",
-    "@tanstack/svelte-query-devtools": "^6.1.38",
+    "@tanstack/svelte-query": "^6.1.48",
+    "@tanstack/svelte-query-devtools": "^6.1.48",
     "@tanstack/svelte-table": "^9.2.4",
     "@tanstack/table-devtools": "^9.2.0"
   }

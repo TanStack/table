@@ -3,7 +3,7 @@ packages:
   - packages/*
 
 overrides:
-  '@internationalized/date': '3.12.3'
+  '@internationalized/date': '3.12.4'
   '@tanstack/alpine-table': 'workspace:*'
   '@tanstack/angular-table-devtools': 'workspace:*'
   '@tanstack/angular-table': 'workspace:*'

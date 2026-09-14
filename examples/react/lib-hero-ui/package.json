@@ -13,23 +13,23 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@heroui/react": "^3.2.4",
-    "@heroui/styles": "^3.2.4",
+    "@heroui/react": "^3.2.5",
+    "@heroui/styles": "^3.2.5",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-table": "^9.2.4",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.4",
-    "@rolldown/plugin-babel": "^0.2.3",
+    "@rolldown/binding-wasm32-wasi": "~1.2.8",
+    "@rolldown/plugin-babel": "^0.2.4",
     "@rollup/plugin-replace": "^6.0.3",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5",
-    "@vitejs/plugin-react": "^6.1.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   }
 }
