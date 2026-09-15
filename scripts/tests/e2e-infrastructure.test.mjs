@@ -131,7 +131,8 @@ test('the E2E runner propagates a failure without launching a retry', async () =
     await writeFile(
       path.join(fixture, 'nx'),
       `#!/usr/bin/env node
-      require('node:fs').appendFileSync(${JSON.stringify(calls)}, JSON.stringify(process.argv.slice(2)) + '\\n')
+      import { appendFileSync } from 'node:fs'
+      appendFileSync(${JSON.stringify(calls)}, JSON.stringify(process.argv.slice(2)) + '\\n')
       process.exit(7)
     `,
       { mode: 0o755 },
