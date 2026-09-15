@@ -280,7 +280,11 @@ export function table_getColumn<
 ): Column<TFeatures, TData, unknown> | undefined {
   const column = table.getAllFlatColumnsById()[columnId]
 
-  if (process.env.NODE_ENV === 'development' && !column) {
+  if (
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV === 'development' &&
+    !column
+  ) {
     console.warn(`[Table] Column with id '${columnId}' does not exist.`)
   }
 

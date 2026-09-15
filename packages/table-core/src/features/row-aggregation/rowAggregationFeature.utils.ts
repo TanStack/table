@@ -48,7 +48,10 @@ function isAggregationFnDescriptor(
 }
 
 function warn(message: string) {
-  if (process.env.NODE_ENV === 'development') {
+  if (
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV === 'development'
+  ) {
     console.warn(message)
   }
 }
