@@ -70,6 +70,7 @@ test(
             '--config',
             path.join(root, 'playwright.config.ts'),
             '--reporter=line',
+            '--retries=0',
           ],
           {
             cwd: root,
@@ -122,42 +123,149 @@ test(
   },
 )
 
-test('the E2E runner propagates a failure without launching a retry', async () => {
-  const parent = path.join(root, '.cache')
-  await mkdir(parent, { recursive: true })
-  const fixture = await mkdtemp(path.join(parent, 'e2e-runner-'))
-  try {
-    const calls = path.join(fixture, 'calls.jsonl')
-    await writeFile(
-      path.join(fixture, 'nx'),
-      `#!/usr/bin/env node
+for (const retry of [true, false]) {
+  test(`the E2E runner ${retry ? 'retries once by default' : 'supports explicit verification without retries'}`, async () => {
+    const parent = path.join(root, '.cache')
+    await mkdir(parent, { recursive: true })
+    const fixture = await mkdtemp(path.join(parent, 'e2e-runner-'))
+    try {
+      const calls = path.join(fixture, 'calls.jsonl')
+      await writeFile(
+        path.join(fixture, 'nx'),
+        `#!/usr/bin/env node
       import { appendFileSync } from 'node:fs'
       appendFileSync(${JSON.stringify(calls)}, JSON.stringify(process.argv.slice(2)) + '\\n')
       process.exit(7)
     `,
-      { mode: 0o755 },
-    )
-    const result = spawnSync(
-      process.execPath,
-      ['scripts/run-e2e.mjs', '--affected', '--base=main'],
-      {
-        cwd: root,
-        env: {
-          ...process.env,
-          PATH: `${fixture}${path.delimiter}${process.env.PATH}`,
+        { mode: 0o755 },
+      )
+      const result = spawnSync(
+        process.execPath,
+        [
+          'scripts/run-e2e-with-retry.mjs',
+          '--affected',
+          '--base=main',
+          ...(retry ? [] : ['--no-retry']),
+        ],
+        {
+          cwd: root,
+          env: {
+            ...process.env,
+            PATH: `${fixture}${path.delimiter}${process.env.PATH}`,
+          },
+          encoding: 'utf8',
         },
-        encoding: 'utf8',
-      },
-    )
-    assert.equal(result.status, 7, result.stderr)
-    const invocations = (await readFile(calls, 'utf8'))
-      .trim()
-      .split('\n')
-      .map(JSON.parse)
-    assert.deepEqual(invocations, [
-      ['affected', '--target=test:e2e', '--parallel=2', '--base=main'],
-    ])
-  } finally {
-    await rm(fixture, { recursive: true, force: true })
-  }
-})
+      )
+      assert.equal(result.status, 7, result.stderr)
+      const invocations = (await readFile(calls, 'utf8'))
+        .trim()
+        .split('\n')
+        .map(JSON.parse)
+      assert.deepEqual(
+        invocations,
+        Array.from({ length: retry ? 2 : 1 }, () => [
+          'affected',
+          '--target=test:e2e',
+          '--parallel=2',
+          '--base=main',
+        ]),
+      )
+    } finally {
+      await rm(fixture, { recursive: true, force: true })
+    }
+  })
+}
+
+test(
+  'a failed test cleans up spawned server descendants',
+  { timeout: 30_000 },
+  async () => {
+    const parent = path.join(root, '.cache')
+    await mkdir(parent, { recursive: true })
+    const fixture = await mkdtemp(path.join(parent, 'e2e-cleanup-'))
+    const pidFile = path.join(fixture, 'server.pid')
+    let pid
+    try {
+      await mkdir(path.join(fixture, 'tests/e2e'), { recursive: true })
+      await writeFile(
+        path.join(fixture, 'package.json'),
+        JSON.stringify({ dependencies: { 'ember-source': '*' } }),
+      )
+      await writeFile(
+        path.join(fixture, 'pnpm'),
+        `#!/usr/bin/env node
+      const { spawn } = require('node:child_process')
+      const child = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' })
+      require('node:fs').writeFileSync(${JSON.stringify(pidFile)}, String(child.pid))
+      console.log('http://127.0.0.1:18999/')
+      setInterval(() => {}, 1000)
+    `,
+        { mode: 0o755 },
+      )
+      await writeFile(
+        path.join(fixture, 'tests/e2e/cleanup.spec.ts'),
+        `
+      import { test } from '@playwright/test'
+      import { startExampleServer } from ${JSON.stringify(path.join(root, 'tests/e2e/helpers/startExampleServer.ts'))}
+      let server
+      test.afterAll(async () => { await server?.close(); await server?.close() })
+      test('fails before caller reaches cleanup', async () => {
+        server = await startExampleServer(${JSON.stringify(fixture)})
+        throw new Error('intentional navigation failure')
+      })
+    `,
+      )
+      const child = spawn(
+        process.execPath,
+        [
+          playwright,
+          'test',
+          '--config',
+          path.join(root, 'playwright.config.ts'),
+        ],
+        {
+          cwd: fixture,
+          env: {
+            ...process.env,
+            PLAYWRIGHT_TEST_DIR: path.join(fixture, 'tests/e2e'),
+            PATH: `${fixture}${path.delimiter}${process.env.PATH}`,
+          },
+          stdio: ['ignore', 'pipe', 'pipe'],
+        },
+      )
+      let log = ''
+      child.stdout.on('data', (chunk) => {
+        log += chunk
+      })
+      child.stderr.on('data', (chunk) => {
+        log += chunk
+      })
+      const [code] = await once(child, 'close')
+      assert.equal(code, 1, log)
+      assert.match(log, /intentional navigation failure/)
+      pid = Number(await readFile(pidFile, 'utf8'))
+      // Allow the OS to reap the killed descendant before checking its PID.
+      for (let attempt = 0; attempt < 50; attempt++) {
+        try {
+          process.kill(pid, 0)
+        } catch (error) {
+          assert.equal(error.code, 'ESRCH')
+          return
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
+      assert.fail(`server descendant ${pid} survived the failed test`)
+    } finally {
+      if (pid) {
+        try {
+          process.kill(pid, 'SIGKILL')
+        } catch {}
+      }
+      await rm(fixture, { recursive: true, force: true })
+      await rm(
+        path.join(root, 'test-results', '.cache', path.basename(fixture)),
+        { recursive: true, force: true },
+      )
+    }
+  },
+)

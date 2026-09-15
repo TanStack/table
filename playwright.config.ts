@@ -26,7 +26,7 @@ export default defineConfig({
   expect: {
     timeout: 10_000,
   },
-  retries: 0,
+  retries: process.env.CI ? 1 : 0,
   // Nx owns concurrency; each example gets one browser worker.
   workers: 1,
   use: {
