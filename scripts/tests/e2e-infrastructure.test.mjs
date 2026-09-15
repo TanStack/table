@@ -123,9 +123,9 @@ test(
 )
 
 test('the E2E runner propagates a failure without launching a retry', async () => {
-  const fixture = await mkdtemp(
-    path.join(root, 'node_modules/.cache/e2e-runner-'),
-  )
+  const parent = path.join(root, '.cache')
+  await mkdir(parent, { recursive: true })
+  const fixture = await mkdtemp(path.join(parent, 'e2e-runner-'))
   try {
     const calls = path.join(fixture, 'calls.jsonl')
     await writeFile(
