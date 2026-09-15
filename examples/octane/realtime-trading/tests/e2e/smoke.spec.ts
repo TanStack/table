@@ -83,6 +83,23 @@ test('runs the Octane realtime trading workload', async ({ page }) => {
     await expect(publishInterval.locator('option[value="500"]')).toHaveCount(1)
     await expect(publishInterval.locator('option[value="1000"]')).toHaveCount(1)
 
+    // Exercise delivery and rendering without turning this smoke test into a
+    // throughput benchmark on shared CI runners. Configure controls while paused.
+    await setRangeValue(targetRateSlider, '3')
+    await expect(page.getByTestId('target-sample-rate')).toContainText(
+      '1K samples/s',
+    )
+    await publishInterval.selectOption('250')
+    await expect(publishInterval).toHaveValue('250')
+    await sparklineInterval.selectOption('100')
+    const swapRenderer = page.getByRole('checkbox', {
+      name: /Swap Tick component/,
+    })
+    await swapRenderer.check()
+    await expect(swapRenderer).toBeChecked()
+
+    const firstPrice = table.locator('tbody tr').first().getByRole('button')
+    const priceBeforeUpdate = await firstPrice.textContent()
     await resumeTradingFeed(page)
     await expect
       .poll(async () => {
@@ -107,20 +124,20 @@ test('runs the Octane realtime trading workload', async ({ page }) => {
       )
       .toBeGreaterThan(0)
 
-    const firstPrice = page.locator('tbody tr').first().getByRole('button')
-    const priceBeforeUpdate = await firstPrice.textContent()
     await expect
       .poll(() => firstPrice.textContent())
       .not.toBe(priceBeforeUpdate)
 
-    await page.locator('.config-section input[type="checkbox"]').first().check()
+    // Row-model timing is sampled every twentieth call, so wait for a sample
+    // before stopping the lower-rate feed.
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => performance.getEntriesByName('tanstack-row-model').length,
+        ),
+      )
+      .toBeGreaterThan(0)
     await pauseTradingFeed(page)
-
-    expect(
-      await page.evaluate(
-        () => performance.getEntriesByName('tanstack-row-model').length > 0,
-      ),
-    ).toBe(true)
 
     expect(errors).toEqual([])
   } finally {

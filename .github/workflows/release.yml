@@ -73,3 +73,11 @@ jobs:
         run: pnpm run test:e2e:install
       - name: Run E2E Tests
         run: pnpm run test:e2e
+      - name: Upload E2E failure artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: e2e-failures
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
