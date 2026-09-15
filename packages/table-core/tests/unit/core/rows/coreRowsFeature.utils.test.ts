@@ -96,6 +96,14 @@ function makeNestedTable(
   })
 }
 
+function makeAccessorTable(accessorFn: (person: Person) => string) {
+  return constructTable({
+    features,
+    data: generateTestData(1),
+    columns: [{ id: 'name', accessorFn }],
+  })
+}
+
 describe('row_getValue', () => {
   it('should read and cache the accessor value', () => {
     const table = makeTable(1)
@@ -112,6 +120,62 @@ describe('row_getValue', () => {
     const row = table.getRowModel().rows[0]!
 
     expect(row_getValue(row, 'not-a-column')).toBeUndefined()
+  })
+
+  it('should re-read the value when the column accessor is replaced', () => {
+    const table = makeAccessorTable((person) => `${person.firstName} last`)
+    const row = table.getCoreRowModel().rows[0]!
+    const original = row_getValue(row, 'name')
+
+    table.setOptions((old) => ({
+      ...old,
+      columns: [
+        {
+          id: 'name',
+          accessorFn: (person: Person) => `${person.firstName} replaced`,
+        },
+      ],
+    }))
+
+    expect(table.getCoreRowModel().rows[0]!).toBe(row)
+    expect(row_getValue(row, 'name')).not.toBe(original)
+    expect(row_getValue(row, 'name')).toBe(`${row.original.firstName} replaced`)
+  })
+
+  it('should not expose stale values to subscribers notified during the options update', () => {
+    const table = makeAccessorTable(() => 'original')
+    const row = table.getCoreRowModel().rows[0]!
+    row_getValue(row, 'name')
+
+    const observed: Array<unknown> = []
+    const subscription = table.optionsStore!.subscribe(() => {
+      observed.push(row_getValue(row, 'name'))
+    })
+
+    table.setOptions((old) => ({
+      ...old,
+      columns: [{ id: 'name', accessorFn: () => 'replaced' }],
+    }))
+    subscription.unsubscribe()
+
+    expect(observed).toEqual(['replaced'])
+  })
+
+  it('should call the replacement accessor exactly once per read cycle', () => {
+    const table = makeAccessorTable(() => 'original')
+    const row = table.getCoreRowModel().rows[0]!
+    row_getValue(row, 'name')
+
+    const replacement = vi.fn(() => 'replaced')
+    table.setOptions((old) => ({
+      ...old,
+      columns: [{ id: 'name', accessorFn: replacement }],
+    }))
+
+    row_getValue(row, 'name')
+    row_getValue(row, 'name')
+
+    expect(replacement).toHaveBeenCalledTimes(1)
   })
 })
 
@@ -137,6 +201,20 @@ describe('row_getUniqueValues', () => {
     expect(row_getUniqueValues(row, 'firstName')).toEqual(['x', 'y'])
     expect(row_getUniqueValues(row, 'firstName')).toEqual(['x', 'y'])
     expect(getUniqueValues).toHaveBeenCalledTimes(1)
+  })
+
+  it('should re-read unique values when the column accessor is replaced', () => {
+    const table = makeAccessorTable(() => 'original')
+    const row = table.getCoreRowModel().rows[0]!
+
+    expect(row_getUniqueValues(row, 'name')).toEqual(['original'])
+
+    table.setOptions((old) => ({
+      ...old,
+      columns: [{ id: 'name', accessorFn: () => 'replaced' }],
+    }))
+
+    expect(row_getUniqueValues(row, 'name')).toEqual(['replaced'])
   })
 
   it('should return undefined for unknown columns', () => {
