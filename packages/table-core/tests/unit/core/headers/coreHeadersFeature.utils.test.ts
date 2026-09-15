@@ -300,7 +300,7 @@ describe('header rowSpan for uneven column trees', () => {
 })
 
 describe('header_getLeafHeaders', () => {
-  it('should collect descendant leaf headers before the header itself', () => {
+  it('should collect descendant leaf headers without the group header itself', () => {
     const table = makeTable()
     const groupHeader = table_getHeaderGroups(table)[0]!.headers.find(
       (header) => header.column.id === 'group',
@@ -308,11 +308,7 @@ describe('header_getLeafHeaders', () => {
 
     const leafHeaders = header_getLeafHeaders(groupHeader)
 
-    expect(leafHeaders.map((header) => header.column.id)).toEqual([
-      'a',
-      'b',
-      'group',
-    ])
+    expect(leafHeaders.map((header) => header.column.id)).toEqual(['a', 'b'])
   })
 
   it('should return only itself for a leaf header', () => {
@@ -324,7 +320,7 @@ describe('header_getLeafHeaders', () => {
     expect(header_getLeafHeaders(leafHeader)).toEqual([leafHeader])
   })
 
-  it('should preserve descendant-first identity across three levels', () => {
+  it('should skip intermediate group headers across three levels', () => {
     const deepColumns: Array<ColumnDef<typeof features, Item, any>> = [
       {
         id: 'outer',
@@ -346,18 +342,12 @@ describe('header_getLeafHeaders', () => {
     })
     const headerGroups = table_getHeaderGroups(table)
     const outer = headerGroups[0]!.headers[0]!
-    const inner = headerGroups[1]!.headers[0]!
     const [a, b] = headerGroups[2]!.headers
 
     const leafHeaders = header_getLeafHeaders(outer)
 
-    expect(leafHeaders.map((header) => header.column.id)).toEqual([
-      'a',
-      'b',
-      'inner',
-      'outer',
-    ])
-    expect(leafHeaders).toEqual([a, b, inner, outer])
+    expect(leafHeaders.map((header) => header.column.id)).toEqual(['a', 'b'])
+    expect(leafHeaders).toEqual([a, b])
   })
 })
 
@@ -379,6 +369,15 @@ describe('table_getLeafHeaders', () => {
     const table = makeTable()
     const ids = table_getLeafHeaders(table).map((header) => header.column.id)
 
-    expect(ids).toEqual(expect.arrayContaining(['a', 'b', 'c']))
+    expect(ids).toEqual(['a', 'b', 'c'])
+  })
+
+  it('should return the real leaf header instead of its placeholder chain', () => {
+    const table = makeTable()
+    const leafHeaders = table_getLeafHeaders(table)
+
+    expect(leafHeaders.every((header) => !header.isPlaceholder)).toBe(true)
+    // Real leaf headers keep the plain column id; placeholders do not.
+    expect(leafHeaders.map((header) => header.id)).toEqual(['a', 'b', 'c'])
   })
 })

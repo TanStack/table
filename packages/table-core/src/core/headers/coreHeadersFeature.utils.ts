@@ -19,18 +19,21 @@ function collectLeafHeaders<
   header: Header_Header<TFeatures, TData, TValue>,
   leafHeaders: Array<Header<TFeatures, TData, TValue>>,
 ): void {
+  if (!header.subHeaders.length) {
+    leafHeaders.push(header as Header<TFeatures, TData, TValue>)
+    return
+  }
+
   for (let i = 0; i < header.subHeaders.length; i++) {
     collectLeafHeaders(header.subHeaders[i]!, leafHeaders)
   }
-
-  leafHeaders.push(header as Header<TFeatures, TData, TValue>)
 }
 
 /**
  * Walks a header tree and collects all descendant leaf headers.
  *
- * The header itself is included after its descendants, matching the recursive
- * shape used by nested header groups.
+ * Parent/group headers are skipped, so the result is one header per leaf column
+ * in left-to-right order. A header that is itself a leaf returns just itself.
  *
  * @example
  * ```ts
