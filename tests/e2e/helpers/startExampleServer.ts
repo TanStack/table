@@ -1,9 +1,14 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
+import nodeProcess from 'node:process'
 import { spawn } from 'node:child_process'
 import type { ChildProcess } from 'node:child_process'
 import { test } from '@playwright/test'
 import { createServer } from 'vite'
+
+// Browser examples declare a minimal global process, which also narrows the
+// node:process export. This helper runs exclusively in a Node test worker.
+const process = nodeProcess as NodeJS.Process
 
 // Register cleanup before startup/navigation can fail. Killing pnpm alone leaves
 // its Vite/Angular descendants alive on Linux, accumulating servers across tasks.
