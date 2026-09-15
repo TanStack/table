@@ -107,7 +107,9 @@ export function table_resetPagination<
  * Updates `pagination.pageIndex` and clamps it to the known page range.
  *
  * Unknown page counts (`undefined` or `-1`) allow any non-negative page index.
- * Known page counts clamp the index between `0` and `pageCount - 1`.
+ * Known page counts clamp the index between `0` and `pageCount - 1`. A `NaN`
+ * update (e.g. from an emptied numeric input) falls back to the default page
+ * index instead of poisoning the state.
  *
  * @example
  * ```ts
@@ -120,6 +122,10 @@ export function table_setPageIndex<
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<number>) {
   table_setPagination(table, (old) => {
     let pageIndex = functionalUpdate(updater, old.pageIndex)
+
+    if (Number.isNaN(pageIndex)) {
+      pageIndex = defaultPageIndex
+    }
 
     const maxPageIndex =
       typeof table.options.pageCount === 'undefined' ||
@@ -188,7 +194,9 @@ export function table_resetPageSize<
  * Updates `pagination.pageSize` while preserving the current top row.
  *
  * The new size is clamped to at least `1`, and `pageIndex` is recalculated so
- * the row that was previously at the top of the page remains in view.
+ * the row that was previously at the top of the page remains in view. A
+ * `NaN` update (e.g. from an emptied numeric input) falls back to the default
+ * page size instead of poisoning the state.
  *
  * @example
  * ```ts
@@ -200,7 +208,10 @@ export function table_setPageSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, updater: Updater<number>) {
   table_setPagination(table, (old) => {
-    const pageSize = Math.max(1, functionalUpdate(updater, old.pageSize))
+    const updatedPageSize = functionalUpdate(updater, old.pageSize)
+    const pageSize = Number.isNaN(updatedPageSize)
+      ? defaultPageSize
+      : Math.max(1, updatedPageSize)
     const topRowIndex =
       old.pageSize === Infinity ? 0 : old.pageSize * old.pageIndex
     const pageIndex =
@@ -391,7 +402,10 @@ export function table_lastPage<
  * Resolves the number of pages for the current pagination state.
  *
  * `options.pageCount` wins for manual pagination. Otherwise the value is
- * calculated from `table_getRowCount(table)` and the current `pageSize`.
+ * calculated from `table_getRowCount(table)` and the current `pageSize`. A
+ * non-positive or non-numeric `pageSize` (only reachable by bypassing
+ * `table_setPageSize`, e.g. via `initialState`) returns `0` instead of
+ * dividing into `Infinity`/`NaN`.
  *
  * @example
  * ```ts
@@ -412,6 +426,15 @@ export function table_getPageCount<
 
   if (pageSize === Infinity && Number.isFinite(rowCount) && rowCount > 0) {
     return 1
+  }
+
+  // A non-positive or non-numeric page size (reachable via `initialState` or
+  // a directly-supplied `pagination` state, bypassing `table_setPageSize`'s
+  // clamp) would otherwise divide into `Infinity`/`NaN` and make
+  // `table_getPageOptions` throw when it tries to build an array of that
+  // length.
+  if (!(pageSize > 0)) {
+    return 0
   }
 
   return Math.ceil(rowCount / pageSize)
