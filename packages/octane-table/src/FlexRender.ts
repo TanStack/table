@@ -4,6 +4,7 @@
 // builds the descriptor directly), so this file stays a normal `.ts` module and
 // needs no `.tsrx.d.ts` sidecar.
 import { createElement } from 'octane'
+import { getAggregatedCellRender } from '@tanstack/table-core/flex-render'
 import type { CellData, RowData, TableFeatures } from '@tanstack/table-core'
 import type { OctaneNode } from 'octane'
 import type { FlexRenderProps, Renderable } from './types'
@@ -65,14 +66,8 @@ export function FlexRender<
       getIsAggregated?: () => boolean
       getIsPlaceholder?: () => boolean
     }
-    const groupingDef = def as typeof def & {
-      aggregatedCell?: typeof def.cell
-    }
     if (groupingCell.getIsAggregated?.()) {
-      return flexRender(
-        groupingDef.aggregatedCell ?? def.cell,
-        cell.getContext(),
-      )
+      return flexRender(getAggregatedCellRender(cell), cell.getContext())
     }
     if (groupingCell.getIsPlaceholder?.()) {
       return null

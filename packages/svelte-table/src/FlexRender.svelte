@@ -3,6 +3,7 @@
   generics="TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData"
 >
   import { isFunction } from '@tanstack/table-core'
+  import { getAggregatedCellRender } from '@tanstack/table-core/flex-render'
   import {
     RenderComponentConfig,
     RenderSnippetConfig,
@@ -66,11 +67,8 @@
         getIsAggregated?: () => boolean
         getIsPlaceholder?: () => boolean
       }
-      const groupingColumnDef = columnDef as typeof columnDef & {
-        aggregatedCell?: typeof columnDef.cell
-      }
       const content = groupingCell.getIsAggregated?.()
-        ? (groupingColumnDef.aggregatedCell ?? columnDef.cell)
+        ? getAggregatedCellRender(props.cell)
         : groupingCell.getIsPlaceholder?.()
           ? undefined
           : columnDef.cell

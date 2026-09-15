@@ -1,4 +1,5 @@
 import { Match, Show, Switch, createComponent } from 'solid-js'
+import { getAggregatedCellRender } from '@tanstack/table-core/flex-render'
 import type { JSX } from 'solid-js'
 import type {
   Cell,
@@ -102,9 +103,6 @@ export function FlexRender<
             getIsAggregated?: () => boolean
             getIsPlaceholder?: () => boolean
           }
-          const groupingDef = def as typeof def & {
-            aggregatedCell?: typeof def.cell
-          }
 
           return (
             <Show
@@ -115,10 +113,7 @@ export function FlexRender<
                 </Show>
               }
             >
-              {flexRender(
-                groupingDef.aggregatedCell ?? def.cell,
-                c.getContext(),
-              )}
+              {flexRender(getAggregatedCellRender(c), c.getContext())}
             </Show>
           )
         }}

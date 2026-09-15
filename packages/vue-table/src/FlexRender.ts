@@ -1,4 +1,5 @@
 import { defineComponent, h, isVNode } from 'vue'
+import { getAggregatedCellRender } from '@tanstack/table-core/flex-render'
 import type { PropType } from 'vue'
 
 export interface FlexRenderCell {
@@ -117,7 +118,7 @@ export const FlexRender = defineComponent({
         //     a custom group header typically branch on `cell.getIsGrouped()`
         //     themselves first
         if (cell.getIsAggregated?.()) {
-          return flexRender(def.aggregatedCell ?? def.cell, cell.getContext())
+          return flexRender(getAggregatedCellRender(cell), cell.getContext())
         }
         if (cell.getIsPlaceholder?.()) {
           return null

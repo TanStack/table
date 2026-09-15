@@ -188,10 +188,7 @@ describe('FlexRender with the column grouping feature', () => {
     expect(FlexRender({ cell })).toBe('Region Europe')
   })
 
-  // `rowAggregationFeature` supplies a default `aggregatedCell`, so a column
-  // that declares none still renders the formatted aggregate rather than
-  // falling through to its `cell` template.
-  it('should use the feature default when a column defines no aggregatedCell', () => {
+  it('should render aggregated cells with cell when no aggregatedCell is defined', () => {
     const table = constructTable({
       features: groupingFeatures,
       data,
@@ -202,6 +199,27 @@ describe('FlexRender with the column grouping feature', () => {
           accessorKey: 'amount',
           aggregationFn: 'sum',
           cell: (context) => `Amount ${String(context.getValue())}`,
+        },
+      ],
+      initialState: { grouping: ['region'] },
+    })
+    const row = table.getRowModel().rows[0]!
+    const cell = row.getAllCells().find((c) => c.column.id === 'amount')!
+
+    expect(cell.getIsAggregated()).toBe(true)
+    expect(FlexRender({ cell })).toBe('Amount 3')
+  })
+
+  it('should format aggregated cells when no cell renderers are defined', () => {
+    const table = constructTable({
+      features: groupingFeatures,
+      data,
+      columns: [
+        { id: 'region', accessorKey: 'region' },
+        {
+          id: 'amount',
+          accessorKey: 'amount',
+          aggregationFn: 'sum',
         },
       ],
       initialState: { grouping: ['region'] },

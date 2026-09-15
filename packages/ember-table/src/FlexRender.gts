@@ -1,7 +1,10 @@
 import Component from '@glimmer/component'
 import { cached } from '@glimmer/tracking'
 import { FlexRenderComponentConfig } from './flex-render-helpers.ts'
-import { flexRender } from '@tanstack/table-core/flex-render'
+import {
+  flexRender,
+  getAggregatedCellRender,
+} from '@tanstack/table-core/flex-render'
 import type {
   Cell_Core,
   CellContext,
@@ -83,13 +86,10 @@ export class FlexRenderCell<
       getIsAggregated?: () => boolean
       getIsPlaceholder?: () => boolean
     }
-    const groupingDefinition = definition as typeof definition & {
-      aggregatedCell?: typeof definition.cell
-    }
 
     if (groupingCell.getIsAggregated?.()) {
       return flexRender(
-        groupingDefinition.aggregatedCell ?? definition.cell,
+        getAggregatedCellRender(cell),
         cell.getContext(),
       ) as CellRenderResult<TFeatures, TData, TValue>
     }
