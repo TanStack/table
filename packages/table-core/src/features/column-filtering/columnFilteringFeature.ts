@@ -18,6 +18,15 @@ import {
 } from './columnFilteringFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 
+// Shared initial values for the per-row filter maps: rows keep one hidden
+// class and `row.columnFilters(Meta)` stays always-defined for userland
+// readers (fuzzy-sort reads meta directly), without paying for two map
+// allocations per row at construction. Frozen because every filter pass
+// assigns fresh maps before writing; a stray write to the shared map would
+// throw instead of leaking across rows.
+const initialColumnFilters = Object.freeze(makeObjectMap<boolean>())
+const initialColumnFiltersMeta = Object.freeze(makeObjectMap())
+
 /**
  * Feature that adds per-column filtering state, options, and column/table filter APIs.
  */
@@ -70,8 +79,8 @@ export const columnFilteringFeature: TableFeature = {
   },
 
   initRowInstanceData: (row) => {
-    ;(row as any).columnFilters = makeObjectMap()
-    ;(row as any).columnFiltersMeta = makeObjectMap()
+    ;(row as any).columnFilters = initialColumnFilters
+    ;(row as any).columnFiltersMeta = initialColumnFiltersMeta
   },
 
   constructTableAPIs: (table) => {

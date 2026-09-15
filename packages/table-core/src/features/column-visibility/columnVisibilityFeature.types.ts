@@ -80,6 +80,18 @@ export interface Row_ColumnVisibility<
   in out TData extends RowData,
 > {
   /**
+   * Dedicated memo slot for the render-hot `getVisibleCells` API. Declared in
+   * `initRowInstanceData` so creating the memo never changes the row's hidden
+   * class.
+   * @internal
+   */
+  _memoGetVisibleCells?: (...args: Array<any>) => any
+  /**
+   * Dedicated memo slot for the `getVisibleCellsByColumnId` API.
+   * @internal
+   */
+  _memoGetVisibleCellsByColumnId?: (...args: Array<any>) => any
+  /**
    * Gets this row's cells for currently visible columns.
    */
   getVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>

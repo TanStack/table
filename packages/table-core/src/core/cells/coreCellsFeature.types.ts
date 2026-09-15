@@ -24,6 +24,18 @@ export interface Cell_CoreProperties<
   TValue extends CellData = CellData,
 > {
   /**
+   * Dedicated memo slot for the render-hot `getContext` API. Declared at
+   * construction so creating the memo never changes the cell's hidden class.
+   * @internal
+   */
+  _memoGetContext?: (...args: Array<any>) => any
+  /**
+   * Holder for lazily created memoized API state. Declared at construction so
+   * creating a memo never changes the cell's hidden class.
+   * @internal
+   */
+  _memos?: Record<string, (...args: Array<any>) => any>
+  /**
    * The associated Column object for the cell.
    */
   column: Column<TFeatures, TData, TValue>

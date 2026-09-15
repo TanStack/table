@@ -10,6 +10,12 @@ export interface Column_CoreProperties<
   TValue extends CellData = CellData,
 > {
   /**
+   * Holder for lazily created memoized API state. Declared at construction so
+   * creating a memo never changes the column's hidden class.
+   * @internal
+   */
+  _memos?: Record<string, (...args: Array<any>) => any>
+  /**
    * The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column def has a valid accessor key or function defined.
    */
   accessorFn?: AccessorFn<TData, TValue>

@@ -60,6 +60,11 @@ export interface Row_RowPinning {
     includeLeafRows?: boolean,
     includeParentRows?: boolean,
   ) => void
+  /**
+   * If this row was returned by `getTopRows`/`getBottomRows`, the region it
+   * was collected for. Managed by those APIs; `undefined` otherwise.
+   */
+  position?: 'top' | 'bottom'
 }
 
 export interface Table_RowPinning<
