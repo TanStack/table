@@ -17,20 +17,21 @@ function getProjectName() {
 
 export default defineConfig({
   testDir,
-  // The unit of parallelism is the spec file, not the test. Each example's spec
-  // starts one dev server in `beforeAll` and shares it across its tests; with
-  // `fullyParallel` every test becomes its own job, so CI's two workers would
-  // split a single file and start that server twice.
+  // Separate Playwright processes must never clean each other's traces/results.
+  outputDir: path.join(import.meta.dirname, 'test-results', getProjectName()),
+  // Keep each spec serial: examples may share a dev server across its tests.
+  // Nx schedules separate example processes.
   fullyParallel: false,
   timeout: 60_000,
   expect: {
     timeout: 10_000,
   },
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  // Nx owns concurrency; each example gets one browser worker.
+  workers: 1,
   use: {
     screenshot: 'only-on-failure',
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     video: 'off',
   },
   projects: [

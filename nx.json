@@ -46,7 +46,14 @@
     },
     "test:e2e": {
       "dependsOn": ["^build"],
-      "inputs": ["default", "^public"],
+      "inputs": [
+        "default",
+        "^public",
+        "{workspaceRoot}/playwright.config.ts",
+        "{workspaceRoot}/tests/e2e/helpers/**/*",
+        "{workspaceRoot}/scripts/run-e2e-with-retry.mjs",
+        "{workspaceRoot}/scripts/tests/e2e-infrastructure.test.mjs"
+      ],
       "cache": true
     },
     "test:build": {

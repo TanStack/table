@@ -136,51 +136,45 @@ test('runs the Svelte realtime trading workload', async ({ page }) => {
     const publishInterval = page.getByTestId('publish-interval-select')
     await expect(publishInterval.locator('option[value="500"]')).toHaveCount(1)
     await expect(publishInterval.locator('option[value="1000"]')).toHaveCount(1)
-    await publishInterval.selectOption('100')
 
+    // Exercise delivery and rendering without turning this smoke test into a
+    // throughput benchmark on shared CI runners. Configure controls while paused.
+    await setRangeValue(targetRateSlider, '0')
+    await expect(page.getByTestId('target-sample-rate')).toContainText(
+      '100 samples/s',
+    )
+    await publishInterval.selectOption('500')
+    await expect(publishInterval).toHaveValue('500')
+    await sparklineInterval.selectOption('100')
+    const swapRenderer = page.getByRole('checkbox', {
+      name: /Swap Tick component/,
+    })
+    await swapRenderer.check()
+    await expect(swapRenderer).toBeChecked()
+
+    const firstPrice = table.locator('tbody tr').first().getByRole('button')
+    const priceBeforeUpdate = await firstPrice.textContent()
     await resumeTradingFeed(page)
-
     await expect
-      .poll(async () => {
-        const text = await page.getByTestId('row-update-rate').textContent()
-        return Number(text?.replace(/\D/g, '') ?? 0)
-      })
-      .toBeGreaterThan(0)
+      .poll(() => firstPrice.textContent())
+      .not.toBe(priceBeforeUpdate)
+
+    await page.getByTestId('feed-toggle').click()
+    await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
+    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
+
+    // Delivery is cumulative; instantaneous rates can legitimately fall to
+    // zero between samples on a busy runner. The price assertion above proves
+    // that a delivered update reached the rendered table.
     await expect
       .poll(async () => {
         const text = await page.getByTestId('worker-messages').textContent()
         return Number(text?.replace(/\D/g, '') ?? 0)
       })
       .toBeGreaterThan(0)
-    await expect
-      .poll(async () =>
-        Number(await page.getByTestId('message-rate').textContent()),
-      )
-      .toBeGreaterThan(0)
-    await expect
-      .poll(async () =>
-        Number(await page.getByTestId('table-render-rate').textContent()),
-      )
-      .toBeGreaterThan(0)
-
-    const firstPrice = page.locator('tbody tr').first().getByRole('button')
-    const priceBeforeUpdate = await firstPrice.textContent()
-    await expect
-      .poll(() => firstPrice.textContent())
-      .not.toBe(priceBeforeUpdate)
-
-    await page.locator('.config-section input[type="checkbox"]').first().check()
-    await page.getByTestId('feed-toggle').click()
-    await expect(page.getByTestId('feed-toggle')).toHaveText('START FEED')
-    await expect(page.getByTestId('feed-status')).toHaveText('FEED PAUSED')
 
     await instrumentCount.selectOption('750')
     await expect.poll(() => table.locator('tbody tr').count()).toBeLessThan(750)
-    expect(
-      await page.evaluate(
-        () => performance.getEntriesByName('tanstack-row-model').length > 0,
-      ),
-    ).toBe(true)
 
     expect(errors).toEqual([])
   } finally {

@@ -32,8 +32,8 @@
     "test:ci": "pnpm run test:compiler-examples && nx run-many --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",
     "test:compiler-examples": "node scripts/verify-react-compiler-examples.mjs",
     "test:docs": "node scripts/verify-links.ts",
-    "test:e2e": "node scripts/run-e2e-with-retry.mjs",
-    "test:e2e:affected": "nx affected --target=test:e2e",
+    "test:e2e": "pnpm run test:e2e:infrastructure && node scripts/run-e2e-with-retry.mjs",
+    "test:e2e:affected": "pnpm run test:e2e:infrastructure && node scripts/run-e2e-with-retry.mjs --affected",
     "test:e2e:install": "playwright install chromium",
     "test:eslint": "nx affected --target=test:eslint",
     "test:intent": "intent validate && intent stale",
@@ -48,7 +48,8 @@
     "test:types": "nx affected --targets=test:types",
     "skills:versions:check": "node scripts/sync-skill-versions.mjs",
     "skills:versions:fix": "node scripts/sync-skill-versions.mjs --write",
-    "watch": "pnpm run build:all && nx watch --all -- pnpm run build:all"
+    "watch": "pnpm run build:all && nx watch --all -- pnpm run build:all",
+    "test:e2e:infrastructure": "node --test scripts/tests/e2e-infrastructure.test.mjs"
   },
   "nx": {
     "includedScripts": [
