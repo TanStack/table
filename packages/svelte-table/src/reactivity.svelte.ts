@@ -32,7 +32,7 @@ function subscribeToRune<T>(
 }
 
 function createRuneWritableAtom<T>(initialValue: T): Atom<T> {
-  let value = $state(initialValue)
+  let value = $state.raw(initialValue)
 
   return {
     set: (updater: T | ((prevVal: T) => T)) => {
