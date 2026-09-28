@@ -280,9 +280,9 @@ export const filterFn_betweenInclusive = constructFilterFn({
  * Filter values are normalized so blank endpoints become open-ended and
  * reversed endpoints are swapped. Only real numbers can fall inside the
  * range: non-numeric row values (`null`, `undefined`, strings, booleans)
- * never match. A filter value that is not a `[min, max]` tuple leaves the
- * range fully open (and warns in development) rather than filtering on a
- * range read out of its characters.
+ * never match. A filter value that is not an array leaves the range fully
+ * open and warns in development, instead of being split per character or
+ * throwing.
  */
 export const filterFn_inNumberRange = constructFilterFn({
   filter: (dataValue: number, filterValue: [number, number]) => {
@@ -296,7 +296,7 @@ export const filterFn_inNumberRange = constructFilterFn({
     return dataValue >= min && dataValue <= max
   },
   resolveFilterValue: (val: [any, any]) => {
-    if (!isRangeTuple(val, 'inNumberRange')) {
+    if (!isRangeArray(val, 'inNumberRange')) {
       return [-Infinity, Infinity] as const
     }
 
@@ -333,9 +333,8 @@ export const filterFn_inNumberRange = constructFilterFn({
  * Row values and range endpoints may be `Date` objects, timestamps, or
  * parseable date strings. Blank or invalid endpoints become open-ended and
  * reversed endpoints are swapped. Rows without a valid date never match. A
- * filter value that is not a `[min, max]` tuple leaves the range fully open
- * (and warns in development) rather than filtering on a range read out of its
- * characters.
+ * filter value that is not an array leaves the range fully open and warns in
+ * development, instead of being split per character or throwing.
  */
 export const filterFn_inDateRange = constructFilterFn({
   filter: (dataValue: number, filterValue: [number, number]) => {
@@ -343,7 +342,7 @@ export const filterFn_inDateRange = constructFilterFn({
     return dataValue >= min && dataValue <= max
   },
   resolveFilterValue: (val: [any, any]) => {
-    if (!isRangeTuple(val, 'inDateRange')) {
+    if (!isRangeArray(val, 'inDateRange')) {
       return [-Infinity, Infinity] as const
     }
 
@@ -488,9 +487,10 @@ function testFalsy(val: any) {
  * be handed anything. Destructuring a string splits it per character (`'30'`
  * becomes `'3'` and `'0'`, a range nothing asked for), and destructuring a
  * number, boolean or `Date` throws. `autoRemove` does not catch either case,
- * since it only drops falsy values and fully blank tuples.
+ * since it only drops falsy values and fully blank tuples. Arrays of any
+ * length pass through to the existing endpoint handling unchanged.
  */
-function isRangeTuple(val: any, filterFnName: string): val is [any, any] {
+function isRangeArray(val: any, filterFnName: string): val is Array<any> {
   if (Array.isArray(val)) {
     return true
   }

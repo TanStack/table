@@ -917,7 +917,7 @@ describe('Number Range Filters', () => {
       ])
     })
 
-    describe('filterFn_inNumberRange.resolveFilterValue non-tuple guard', () => {
+    describe('filterFn_inNumberRange.resolveFilterValue non-array guard', () => {
       const resolve = filterFn_inNumberRange.resolveFilterValue!
 
       it('should leave the range open for a string instead of splitting it per character', () => {
@@ -938,6 +938,12 @@ describe('Number Range Filters', () => {
           Infinity,
         ])
         expect(resolve(true as any)).toEqual([-Infinity, Infinity])
+      })
+
+      it('should leave arrays to the existing endpoint handling', () => {
+        // Only non-arrays are guarded. An array is read by position exactly
+        // as before, so a lone endpoint stays an open-ended range.
+        expect(resolve([30] as any)).toEqual([30, Infinity])
       })
 
       // The guard warning only fires in development builds.
@@ -1171,7 +1177,7 @@ describe('filterFn_inDateRange', () => {
     ])
   })
 
-  it('leaves the range open for filter values that are not [min, max] tuples', () => {
+  it('leaves the range open for filter values that are not arrays', () => {
     // The guard warning only fires in development builds.
     vi.stubEnv('NODE_ENV', 'development')
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
