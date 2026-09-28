@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   columnFilteringFeature,
   constructFilterFn,
@@ -917,6 +917,58 @@ describe('Number Range Filters', () => {
       ])
     })
 
+    describe('filterFn_inNumberRange.resolveFilterValue non-tuple guard', () => {
+      const resolve = filterFn_inNumberRange.resolveFilterValue!
+
+      it('should leave the range open for a string instead of splitting it per character', () => {
+        // Destructuring `'30'` used to yield min `'3'`, max `'0'`, i.e. the
+        // range [0, 3] — a `<select>` sends strings, so this is reachable.
+        expect(resolve('30' as any)).toEqual([-Infinity, Infinity])
+        expect(resolve('7' as any)).toEqual([-Infinity, Infinity])
+        // A fresh tuple each time, so a caller writing into one cannot
+        // change what every later malformed value resolves to.
+        expect(resolve('30' as any)).not.toBe(resolve('7' as any))
+      })
+
+      it('should leave the range open for non-iterable values instead of throwing', () => {
+        expect(() => resolve(30 as any)).not.toThrow()
+        expect(resolve(30 as any)).toEqual([-Infinity, Infinity])
+        expect(resolve(new Date('2026-01-01') as any)).toEqual([
+          -Infinity,
+          Infinity,
+        ])
+        expect(resolve(true as any)).toEqual([-Infinity, Infinity])
+      })
+
+      // The guard warning only fires in development builds.
+      function spyOnDevWarnings() {
+        vi.stubEnv('NODE_ENV', 'development')
+        return vi.spyOn(console, 'warn').mockImplementation(() => {})
+      }
+
+      afterEach(() => {
+        vi.unstubAllEnvs()
+        vi.restoreAllMocks()
+      })
+
+      it('should warn once per resolve in development', () => {
+        const warn = spyOnDevWarnings()
+
+        resolve('30' as any)
+
+        expect(warn).toHaveBeenCalledTimes(1)
+        expect(warn.mock.calls[0]![0]).toContain('inNumberRange')
+      })
+
+      it('should not warn for a well-formed tuple', () => {
+        const warn = spyOnDevWarnings()
+
+        expect(resolve([29, 31])).toEqual([29, 31])
+
+        expect(warn).not.toHaveBeenCalled()
+      })
+    })
+
     it('should auto-remove only fully empty ranges', () => {
       const autoRemove = filterFn_inNumberRange.autoRemove!
 
@@ -1094,6 +1146,11 @@ describe('filterFn_empty / filterFn_notEmpty', () => {
 describe('filterFn_inDateRange', () => {
   const resolve = filterFn_inDateRange.resolveFilterValue!
 
+  afterEach(() => {
+    vi.unstubAllEnvs()
+    vi.restoreAllMocks()
+  })
+
   function makeValueRow(value: unknown) {
     const sampleTable = constructTable<typeof features, { value: unknown }>({
       features,
@@ -1112,6 +1169,26 @@ describe('filterFn_inDateRange', () => {
       min.getTime(),
       max.getTime(),
     ])
+  })
+
+  it('leaves the range open for filter values that are not [min, max] tuples', () => {
+    // The guard warning only fires in development builds.
+    vi.stubEnv('NODE_ENV', 'development')
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    // Every character used to be run through `new Date()`, so both of these
+    // resolved to the same nonsensical range around the year 2000.
+    expect(resolve('2026-06-15' as any)).toEqual([-Infinity, Infinity])
+    expect(resolve('2026' as any)).toEqual([-Infinity, Infinity])
+    // A bare Date is not iterable: destructuring it threw a TypeError.
+    expect(() => resolve(new Date('2026-01-01') as any)).not.toThrow()
+    expect(resolve(new Date('2026-01-01') as any)).toEqual([
+      -Infinity,
+      Infinity,
+    ])
+    expect(warn.mock.calls[0]![0]).toContain('inDateRange')
+    // A fresh tuple each time, as for `inNumberRange`.
+    expect(resolve('2026' as any)).not.toBe(resolve('2027' as any))
   })
 
   it('treats blank or invalid endpoints as open-ended and swaps reversed ranges', () => {
@@ -1169,6 +1246,40 @@ describe('filterFn_inDateRange', () => {
     expect(filterFn_inDateRange.autoRemove!([null, null])).toBe(true)
     expect(filterFn_inDateRange.autoRemove!([new Date(0), null])).toBe(false)
   })
+})
+
+// Regression for #6078: the published ESM build keeps raw `process.env` reads,
+// so runtimes with no `process` global (a browser loading the package through
+// an import map) must not reach one. The guard's dev warning sits on exactly
+// the malformed-input path, so without the `typeof process` check it would
+// trade the old `TypeError` for a new one.
+describe('range filter guards without a `process` global', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it.each([
+    ['inNumberRange', filterFn_inNumberRange],
+    ['inDateRange', filterFn_inDateRange],
+  ] as const)(
+    '%s leaves the range open without throwing or warning',
+    (_name, filterFn) => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      vi.stubGlobal('process', undefined)
+
+      const resolve = filterFn.resolveFilterValue!
+
+      expect(() => resolve('30' as any)).not.toThrow()
+      expect(resolve('30' as any)).toEqual([-Infinity, Infinity])
+      expect(resolve(30 as any)).toEqual([-Infinity, Infinity])
+      expect(resolve(new Date('2026-01-01') as any)).toEqual([
+        -Infinity,
+        Infinity,
+      ])
+      expect(warn).not.toHaveBeenCalled()
+    },
+  )
 })
 
 describe('filter fn registry', () => {

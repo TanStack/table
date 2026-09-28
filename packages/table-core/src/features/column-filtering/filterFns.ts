@@ -280,7 +280,9 @@ export const filterFn_betweenInclusive = constructFilterFn({
  * Filter values are normalized so blank endpoints become open-ended and
  * reversed endpoints are swapped. Only real numbers can fall inside the
  * range: non-numeric row values (`null`, `undefined`, strings, booleans)
- * never match.
+ * never match. A filter value that is not a `[min, max]` tuple leaves the
+ * range fully open (and warns in development) rather than filtering on a
+ * range read out of its characters.
  */
 export const filterFn_inNumberRange = constructFilterFn({
   filter: (dataValue: number, filterValue: [number, number]) => {
@@ -294,6 +296,10 @@ export const filterFn_inNumberRange = constructFilterFn({
     return dataValue >= min && dataValue <= max
   },
   resolveFilterValue: (val: [any, any]) => {
+    if (!isRangeTuple(val, 'inNumberRange')) {
+      return [-Infinity, Infinity] as const
+    }
+
     const [unsafeMin, unsafeMax] = val
 
     const parsedMin =
@@ -326,7 +332,10 @@ export const filterFn_inNumberRange = constructFilterFn({
  *
  * Row values and range endpoints may be `Date` objects, timestamps, or
  * parseable date strings. Blank or invalid endpoints become open-ended and
- * reversed endpoints are swapped. Rows without a valid date never match.
+ * reversed endpoints are swapped. Rows without a valid date never match. A
+ * filter value that is not a `[min, max]` tuple leaves the range fully open
+ * (and warns in development) rather than filtering on a range read out of its
+ * characters.
  */
 export const filterFn_inDateRange = constructFilterFn({
   filter: (dataValue: number, filterValue: [number, number]) => {
@@ -334,6 +343,10 @@ export const filterFn_inDateRange = constructFilterFn({
     return dataValue >= min && dataValue <= max
   },
   resolveFilterValue: (val: [any, any]) => {
+    if (!isRangeTuple(val, 'inDateRange')) {
+      return [-Infinity, Infinity] as const
+    }
+
     const [unsafeMin, unsafeMax] = val
 
     const parsedMin = toDateTimestamp(unsafeMin)
@@ -466,6 +479,33 @@ export type BuiltInFilterFn = keyof typeof filterFns
 
 function testFalsy(val: any) {
   return val === undefined || val === null || val === ''
+}
+
+/**
+ * Guards a range filter value before it is destructured.
+ *
+ * `[any, any]` only exists at compile time: at runtime `setFilterValue()` can
+ * be handed anything. Destructuring a string splits it per character (`'30'`
+ * becomes `'3'` and `'0'`, a range nothing asked for), and destructuring a
+ * number, boolean or `Date` throws. `autoRemove` does not catch either case,
+ * since it only drops falsy values and fully blank tuples.
+ */
+function isRangeTuple(val: any, filterFnName: string): val is [any, any] {
+  if (Array.isArray(val)) {
+    return true
+  }
+
+  if (
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV === 'development'
+  ) {
+    console.warn(
+      `filterFn '${filterFnName}' expects a [min, max] tuple, received:`,
+      val,
+    )
+  }
+
+  return false
 }
 
 function testValueEmpty(dataValue: any) {
