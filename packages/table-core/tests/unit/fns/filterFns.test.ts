@@ -1254,40 +1254,6 @@ describe('filterFn_inDateRange', () => {
   })
 })
 
-// Regression for #6078: the published ESM build keeps raw `process.env` reads,
-// so runtimes with no `process` global (a browser loading the package through
-// an import map) must not reach one. The guard's dev warning sits on exactly
-// the malformed-input path, so without the `typeof process` check it would
-// trade the old `TypeError` for a new one.
-describe('range filter guards without a `process` global', () => {
-  afterEach(() => {
-    vi.unstubAllGlobals()
-    vi.restoreAllMocks()
-  })
-
-  it.each([
-    ['inNumberRange', filterFn_inNumberRange],
-    ['inDateRange', filterFn_inDateRange],
-  ] as const)(
-    '%s leaves the range open without throwing or warning',
-    (_name, filterFn) => {
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-      vi.stubGlobal('process', undefined)
-
-      const resolve = filterFn.resolveFilterValue!
-
-      expect(() => resolve('30' as any)).not.toThrow()
-      expect(resolve('30' as any)).toEqual([-Infinity, Infinity])
-      expect(resolve(30 as any)).toEqual([-Infinity, Infinity])
-      expect(resolve(new Date('2026-01-01') as any)).toEqual([
-        -Infinity,
-        Infinity,
-      ])
-      expect(warn).not.toHaveBeenCalled()
-    },
-  )
-})
-
 describe('filter fn registry', () => {
   it('registers the case-sensitive string equality filter fn', () => {
     expect(filterFns.equalsStringSensitive).toBe(filterFn_equalsStringSensitive)

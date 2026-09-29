@@ -495,10 +495,7 @@ function isRangeArray(val: any, filterFnName: string): val is Array<any> {
     return true
   }
 
-  if (
-    typeof process !== 'undefined' &&
-    process.env.NODE_ENV === 'development'
-  ) {
+  if (process.env.NODE_ENV === 'development') {
     console.warn(
       `filterFn '${filterFnName}' expects a [min, max] tuple, received:`,
       val,
