@@ -97,7 +97,7 @@ export type AppColumnDefBase<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   IdentifiedColumnDef<TFeatures, TData, TValue>,
-  'cell' | 'header' | 'footer'
+  'cell' | 'header' | 'footer' | 'aggregatedCell'
 > & {
   cell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, TValue, TCellComponents>
@@ -107,6 +107,9 @@ export type AppColumnDefBase<
   >
   footer?: AppColumnDefTemplate<
     AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, TValue, TCellComponents>
   >
 }
 
@@ -120,7 +123,7 @@ export type AppDisplayColumnDef<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   DisplayColumnDef<TFeatures, TData, unknown>,
-  'cell' | 'header' | 'footer'
+  'cell' | 'header' | 'footer' | 'aggregatedCell'
 > & {
   cell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, unknown, TCellComponents>
@@ -130,6 +133,9 @@ export type AppDisplayColumnDef<
   >
   footer?: AppColumnDefTemplate<
     AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, unknown, TCellComponents>
   >
 }
 
