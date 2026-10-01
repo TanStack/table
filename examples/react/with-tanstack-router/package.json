@@ -17,7 +17,7 @@
     "@tanstack/react-pacer-devtools": "0.8.0",
     "@tanstack/react-query": "^5.102.8",
     "@tanstack/react-query-devtools": "^5.102.8",
-    "@tanstack/react-router": "^1.170.36",
+    "@tanstack/react-router": "^1.170.41",
     "@tanstack/react-router-devtools": "^1.167.2",
     "@tanstack/react-table": "^9.2.4",
     "@tanstack/react-table-devtools": "^9.2.0",
