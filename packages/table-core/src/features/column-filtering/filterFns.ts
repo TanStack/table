@@ -216,7 +216,8 @@ export const filterFn_greaterThan = constructFilterFn({
 /**
  * Keeps rows whose value is greater than or equal to the filter value.
  *
- * Delegates to the built-in greater-than and strict-equality comparisons.
+ * Equality uses the same normalization as greater-than, so `30` equals `'30'`
+ * and two `Date`s with the same time are equal.
  */
 export const filterFn_greaterThanOrEqualTo = constructFilterFn({
   filter: (dataValue, filterValue) =>
@@ -487,12 +488,16 @@ function toDateTimestamp(value: any): number {
   return new Date(value).getTime()
 }
 
-function compareGreaterThan(dataValue: any, filterValue: any): boolean {
+function compareValues(dataValue: any, filterValue: any): number {
   const numericDataValue = dataValue == null ? 0 : +dataValue
   const numericFilterValue = Number(filterValue)
 
   if (!isNaN(numericFilterValue) && !isNaN(numericDataValue)) {
     return numericDataValue > numericFilterValue
+      ? 1
+      : numericDataValue < numericFilterValue
+        ? -1
+        : 0
   }
 
   const stringDataValue = String(dataValue ?? '')
@@ -500,10 +505,18 @@ function compareGreaterThan(dataValue: any, filterValue: any): boolean {
     .trim()
   const stringFilterValue = String(filterValue).toLowerCase().trim()
   return stringDataValue > stringFilterValue
+    ? 1
+    : stringDataValue < stringFilterValue
+      ? -1
+      : 0
+}
+
+function compareGreaterThan(dataValue: any, filterValue: any): boolean {
+  return compareValues(dataValue, filterValue) > 0
 }
 
 function compareGreaterThanOrEqualTo(dataValue: any, filterValue: any) {
-  return dataValue === filterValue || compareGreaterThan(dataValue, filterValue)
+  return compareValues(dataValue, filterValue) >= 0
 }
 
 function compareBetween(
