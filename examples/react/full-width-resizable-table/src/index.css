@@ -5,6 +5,12 @@ html {
 
 table {
   border: 1px solid lightgray;
+  table-layout: fixed;
+}
+
+th,
+td {
+  overflow: hidden;
 }
 
 tbody {
