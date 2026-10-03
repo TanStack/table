@@ -79,7 +79,12 @@ function App() {
   return (
     <div className="p-2 block max-w-full overflow-x-scroll overflow-y-hidden">
       <div className="h-2" />
-      <table className="w-full ">
+      <table className="min-w-full" style={{ width: table.getTotalSize() }}>
+        <colgroup>
+          {table.getVisibleLeafColumns().map((column) => (
+            <col key={column.id} style={{ width: column.getSize() }} />
+          ))}
+        </colgroup>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -88,7 +93,7 @@ function App() {
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    style={{ position: 'relative', width: header.getSize() }}
+                    style={{ position: 'relative' }}
                   >
                     {header.isPlaceholder
                       ? null
@@ -117,7 +122,7 @@ function App() {
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => {
                   return (
-                    <td key={cell.id} style={{ width: cell.column.getSize() }}>
+                    <td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
