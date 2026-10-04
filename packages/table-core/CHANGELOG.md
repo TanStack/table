@@ -1,5 +1,13 @@
 # @tanstack/table-core
 
+## 9.2.6
+
+### Patch Changes
+
+- [#6611](https://github.com/TanStack/table/pull/6611) [`b9b007f`](https://github.com/TanStack/table/commit/b9b007fa038328a795d1f3b5e8f80cea8a55a3b4) - Refactor bundled Intent skills into smaller entry points with references loaded for the current task. Keep core feature architecture and shared state directly discoverable, and move individual features, adapter compositions, and detailed migration guidance into references.
+
+  Consumers with individual skill permissions or explicit agent mappings must replace retired feature/composition IDs with their owning entry points and refresh Intent mappings. See the Agent Skills guide for the replacement paths.
+
 ## 9.2.5
 
 ### Patch Changes

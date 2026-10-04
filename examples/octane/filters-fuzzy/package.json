@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@tanstack/match-sorter-utils": "^9.1.2",
-    "@tanstack/octane-table": "^9.2.5",
+    "@tanstack/match-sorter-utils": "^9.2.6",
+    "@tanstack/octane-table": "^9.2.6",
     "octane": "0.1.36"
   },
   "devDependencies": {

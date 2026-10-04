@@ -4,7 +4,7 @@ description: Create and render Table v9 with the solid adapter. Route reusable c
 metadata:
   type: framework
   library: '@tanstack/solid-table'
-  library_version: 9.2.5
+  library_version: '9.2.6'
   framework: solid
 requires:
   - '@tanstack/table-core#core'
