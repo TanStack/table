@@ -7,7 +7,7 @@ import type {
   FilterOperator,
   JoinOperator,
 } from '@/types'
-import type { Column, RowData } from '@tanstack/vue-table'
+import type { Column, RowData, VueTable } from '@tanstack/vue-table'
 import type { features } from '@/hooks/features'
 
 import { Badge } from '@/components/ui/badge'
@@ -37,7 +37,7 @@ import { cn } from '@/lib/utils'
 import { useTableContext } from '@/hooks/table'
 import DataTableFilterValueInput from '@/components/data-table/DataTableFilterValueInput.vue'
 
-const table = useTableContext()
+const table: VueTable<typeof features, RowData> = useTableContext()
 const columnFilters = computed(
   () => table.atoms.columnFilters.get() as Array<ExtendedColumnFilter>,
 )

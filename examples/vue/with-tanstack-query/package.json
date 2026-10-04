@@ -12,20 +12,20 @@
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
-    "@tanstack/vue-devtools": "^0.2.26",
-    "@tanstack/vue-query": "^5.102.8",
-    "@tanstack/vue-query-devtools": "^6.1.48",
+    "@tanstack/vue-devtools": "^0.2.27",
+    "@tanstack/vue-query": "^5.104.1",
+    "@tanstack/vue-query-devtools": "^6.3.1",
     "@tanstack/vue-table": "^9.2.4",
     "@tanstack/vue-table-devtools": "^9.2.0",
-    "vue": "^3.5.42"
+    "vue": "^3.5.43"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.8",
-    "@types/node": "^26.5.1",
-    "@vitejs/plugin-vue": "^6.0.8",
+    "@rolldown/binding-wasm32-wasi": "~1.2.12",
+    "@types/node": "^26.6.4",
+    "@vitejs/plugin-vue": "^6.0.9",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
     "typescript": "6.0.3",
-    "vite": "^8.3.0",
-    "vue-tsc": "^3.3.11"
+    "vite": "^8.3.2",
+    "vue-tsc": "^3.3.12"
   }
 }

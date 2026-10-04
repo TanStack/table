@@ -19,18 +19,18 @@
     }
   },
   "dependencies": {
-    "@tanstack/store": "^0.11.1",
-    "@tanstack/svelte-store": "^0.12.1",
+    "@tanstack/store": "^0.11.2",
+    "@tanstack/svelte-store": "^0.12.2",
     "@tanstack/svelte-table": "^9.2.4",
-    "@tanstack/svelte-virtual": "^3.13.38",
-    "svelte": "^5.57.0"
+    "@tanstack/svelte-virtual": "^3.13.39",
+    "svelte": "^5.57.1"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.8",
-    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "@rolldown/binding-wasm32-wasi": "~1.2.12",
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tsconfig/svelte": "^5.0.8",
     "svelte-check": "^4.7.6",
     "typescript": "6.0.3",
-    "vite": "^8.3.0"
+    "vite": "^8.3.2"
   }
 }

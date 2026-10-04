@@ -3,8 +3,9 @@ import { computed, ref } from 'vue'
 import { ArrowDownUp } from '@lucide/vue'
 import { DragDropProvider } from 'dnd-kit-vue'
 import { useId } from 'reka-ui'
-import type { ColumnSort } from '@tanstack/vue-table'
+import type { ColumnSort, RowData, VueTable } from '@tanstack/vue-table'
 import { useTableContext } from '@/hooks/table'
+import type { features } from '@/hooks/features'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,7 +17,7 @@ import {
 import { cn } from '@/lib/utils'
 import DataTableSortListItem from '@/components/data-table/DataTableSortListItem.vue'
 
-const table = useTableContext()
+const table: VueTable<typeof features, RowData> = useTableContext()
 const sorting = computed(() => table.atoms.sorting.get())
 
 const labelId = useId()

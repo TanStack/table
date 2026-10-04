@@ -6,6 +6,8 @@ import {
   ChevronsRight,
 } from '@lucide/vue'
 import { useTableContext } from '@/hooks/table'
+import type { RowData, VueTable } from '@tanstack/vue-table'
+import type { features } from '@/hooks/features'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -20,7 +22,7 @@ const props = withDefaults(defineProps<{ pageSizeOptions?: Array<number> }>(), {
   pageSizeOptions: () => [10, 20, 30, 40, 50, Infinity],
 })
 
-const table = useTableContext()
+const table: VueTable<typeof features, RowData> = useTableContext()
 </script>
 
 <template>

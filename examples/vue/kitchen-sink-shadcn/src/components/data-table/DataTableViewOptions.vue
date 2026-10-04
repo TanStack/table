@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { ChevronsUpDown, Settings2 } from '@lucide/vue'
 import { DragDropProvider } from 'dnd-kit-vue'
 import { useTableContext } from '@/hooks/table'
+import type { RowData, VueTable } from '@tanstack/vue-table'
+import type { features } from '@/hooks/features'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +23,7 @@ import {
 } from '@/components/ui/popover'
 import DataTableViewOptionsItem from '@/components/data-table/DataTableViewOptionsItem.vue'
 
-const table = useTableContext()
+const table: VueTable<typeof features, RowData> = useTableContext()
 const columnOrder = computed(() => table.atoms.columnOrder.get())
 
 const orderedToggleableColumns = computed(() =>
