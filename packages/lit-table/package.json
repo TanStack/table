@@ -48,12 +48,12 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/lit-store": "^0.14.1",
+    "@tanstack/lit-store": "^0.14.2",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",
-    "@testing-library/dom": "^10.4.1",
+    "@testing-library/dom": "^10.4.2",
     "lit": "^3.3.3"
   },
   "peerDependencies": {

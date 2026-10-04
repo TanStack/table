@@ -49,11 +49,11 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/react-store": "^0.11.1",
+    "@tanstack/react-store": "^0.11.2",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^5.19.0",
+    "@eslint-react/eslint-plugin": "^5.23.4",
     "@testing-library/react": "^16.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

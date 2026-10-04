@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "@tanstack/alpine-table": "^9.2.4",
-    "@tanstack/store": "^0.11.1",
-    "alpinejs": "^3.17.2"
+    "@tanstack/store": "^0.11.2",
+    "alpinejs": "^3.17.4"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.8",
-    "@types/alpinejs": "^3.13.11",
+    "@rolldown/binding-wasm32-wasi": "~1.2.12",
+    "@types/alpinejs": "^3.17.0",
     "typescript": "6.0.3",
-    "vite": "^8.3.0"
+    "vite": "^8.3.2"
   }
 }

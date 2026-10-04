@@ -17,12 +17,12 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@faker-js/faker": "^10.6.0",
-    "@mantine/core": "^9.6.1",
-    "@mantine/hooks": "^9.6.1",
-    "@tabler/icons-react": "^3.46.0",
+    "@mantine/core": "^9.6.3",
+    "@mantine/hooks": "^9.6.3",
+    "@tabler/icons-react": "^3.48.0",
     "@tanstack/match-sorter-utils": "^9.1.2",
-    "@tanstack/react-devtools": "^0.10.12",
-    "@tanstack/react-pacer": "^0.23.0",
+    "@tanstack/react-devtools": "^0.10.13",
+    "@tanstack/react-pacer": "^0.24.0",
     "@tanstack/react-table": "^9.2.4",
     "@tanstack/react-table-devtools": "^9.2.0",
     "date-fns": "^4.4.0",
@@ -30,7 +30,7 @@
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@rolldown/binding-wasm32-wasi": "~1.2.8",
+    "@rolldown/binding-wasm32-wasi": "~1.2.12",
     "@rolldown/plugin-babel": "^0.2.4",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.3.0",
@@ -41,6 +41,6 @@
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "typescript": "6.0.3",
-    "vite": "^8.3.0"
+    "vite": "^8.3.2"
   }
 }

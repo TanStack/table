@@ -56,11 +56,11 @@
     "build": "tsrx-tsc --noEmit"
   },
   "dependencies": {
-    "@tanstack/octane-store": "^0.12.2",
+    "@tanstack/octane-store": "^0.12.3",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@tsrx/typescript-plugin": "^0.3.138",
+    "@tsrx/typescript-plugin": "^0.6.0",
     "octane": "0.1.36",
     "typescript": "6.0.3"
   },

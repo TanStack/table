@@ -36,3 +36,6 @@ Ember, the Svelte kitchen-sink types, or are intentionally deferred.
 - **`@tanstack/preact-form`** — keep `1.30.5` in the Preact Form example.
   The 1.33.x line removes `createFormHookContexts` and `withForm`, requiring
   a separate example migration.
+- **Preact** — keep `^10.29.8`. Preact 11 fails the adapter's hook and SSR
+  tests and the devtools type check. The Store and Query adapters still require
+  Preact 10. Upgrade these together in a separate migration.
