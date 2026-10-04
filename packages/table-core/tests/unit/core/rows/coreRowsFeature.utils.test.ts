@@ -157,6 +157,35 @@ describe('row_getValue', () => {
     expect(row_getValue(row, 'derived')).toBe('a')
     expect(calls).toBe(1)
   })
+
+  it('should retry the accessor instead of serving a stale value after it throws', () => {
+    const data = generateTestData(1)
+    const table = constructTable({
+      features,
+      data,
+      columns: [{ id: 'derived', accessorFn: () => 'a' }],
+    })
+    const row = table.getRowModel().rows[0]!
+
+    expect(row_getValue(row, 'derived')).toBe('a')
+
+    let calls = 0
+    const flaky = () => {
+      calls++
+      if (calls === 1) throw new Error('boom')
+      return 'b'
+    }
+    table.setOptions((old) => ({
+      ...old,
+      columns: [{ id: 'derived', accessorFn: flaky }],
+    }))
+
+    expect(() => row_getValue(row, 'derived')).toThrow('boom')
+    // The failed attempt must not poison the cache: the next call retries
+    // the accessor instead of returning the stale 'a'.
+    expect(row_getValue(row, 'derived')).toBe('b')
+    expect(calls).toBe(2)
+  })
 })
 
 describe('row_getUniqueValues', () => {

@@ -97,10 +97,14 @@ export function row_getValue<
     return row._valuesCache[columnId]
   }
 
+  // Evaluate the accessor before touching either cache entry: if it throws,
+  // both entries keep their previous state so a later call retries the
+  // accessor instead of serving a stale value.
+  const value = column.accessorFn(row.original, row.index)
   row._accessorFnsCache[columnId] = column.accessorFn
-  row._valuesCache[columnId] = column.accessorFn(row.original, row.index)
+  row._valuesCache[columnId] = value
 
-  return row._valuesCache[columnId]
+  return value
 }
 
 /**
