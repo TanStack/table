@@ -39,3 +39,8 @@ Ember, the Svelte kitchen-sink types, or are intentionally deferred.
 - **Preact** — keep `^10.29.8`. Preact 11 fails the adapter's hook and SSR
   tests and the devtools type check. The Store and Query adapters still require
   Preact 10. Upgrade these together in a separate migration.
+- **`@tanstack/intent`** — keep `0.4.0`. The 0.5 checker compiles TS and JS
+  fences without framework TypeScript configuration or surrounding context. It
+  rejects valid Preact and Lit examples, class-member excerpts, and deliberately
+  wrong examples. Keep the repository's content and annotated-snippet checks
+  enabled while this migration is deferred.

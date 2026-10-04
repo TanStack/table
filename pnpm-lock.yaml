@@ -233,8 +233,8 @@ importers:
         specifier: 0.4.0
         version: 0.4.0(@typescript-eslint/utils@8.68.0(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(eslint-import-resolver-node@0.3.10(supports-color@7.2.0))(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@tanstack/intent':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: 0.4.0
+        version: 0.4.0
       '@tanstack/typedoc-config':
         specifier: 0.3.4
         version: 0.3.4(typescript@6.0.3)
@@ -22927,8 +22927,8 @@ packages:
     resolution: {integrity: sha512-Rp4OGFrelk9O67PtLr0I1fs5lO+c1OByN0ZkHOvmhdYsKfzMejAbxrBzbJlXJ1eVVmwrGJC11bHCaG2XD+M8xw==}
     engines: {node: '>=20'}
 
-  '@tanstack/intent@0.5.0':
-    resolution: {integrity: sha512-27zOOpQLfBTM5cQjqkASf6JH3jggMwr29UhK8dlAI1WP9rjzywJ87/I6meiH/khyPIFNRluh9Q8wlIVrpN4Jpg==}
+  '@tanstack/intent@0.4.0':
+    resolution: {integrity: sha512-tTmNJ3+R/J+g/aTikTya39W6jVLEoLQbow1xm7j/zIbTbSY+91ypZDFaPAe9wzeHmDopsKIJxzuUSi+yJnzS4Q==}
     engines: {node: '>=20.12.0'}
     hasBin: true
 
@@ -38582,7 +38582,14 @@ snapshots:
     dependencies:
       '@tanstack/store': 0.11.2
 
-  '@tanstack/intent@0.5.0': {}
+  '@tanstack/intent@0.4.0':
+    dependencies:
+      '@clack/prompts': 1.7.0
+      cac: 7.0.0
+      jsonc-parser: 3.3.1
+      semver: 7.8.5
+      std-env: 4.2.0
+      yaml: 2.9.0
 
   '@tanstack/lit-hotkeys@0.13.1(lit@3.3.3)':
     dependencies:
