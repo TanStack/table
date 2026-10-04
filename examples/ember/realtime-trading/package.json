@@ -33,7 +33,7 @@
     "@embroider/macros": "1.21.1",
     "@embroider/router": "3.0.6",
     "@glimmer/component": "2.1.1",
-    "@tanstack/ember-table": "^9.2.5",
+    "@tanstack/ember-table": "^9.2.6",
     "@tanstack/store": "^0.11.2",
     "decorator-transforms": "2.4.0",
     "ember-modifier": "^4.3.0",

@@ -5,7 +5,7 @@ metadata:
   type: framework
   library: '@tanstack/svelte-table'
   framework: svelte
-  library_version: 9.2.5
+  library_version: '9.2.6'
 requires:
   - '@tanstack/table-core#core'
 sources:

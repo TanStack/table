@@ -4,7 +4,7 @@ description: Create and render Table v9 with the preact adapter. Route reusable 
 metadata:
   type: framework
   library: '@tanstack/preact-table'
-  library_version: 9.2.5
+  library_version: '9.2.6'
   framework: preact
 requires:
   - '@tanstack/table-core#core'

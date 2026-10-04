@@ -4,7 +4,7 @@ description: Read and control Table v9 state in react. Use for tracked reads, su
 metadata:
   type: framework
   library: '@tanstack/react-table'
-  library_version: 9.2.5
+  library_version: '9.2.6'
   framework: react
 requires:
   - '@tanstack/table-core#table-state'
