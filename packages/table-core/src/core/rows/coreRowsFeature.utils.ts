@@ -68,7 +68,9 @@ export function table_getRowsInDisplayOrder<
  * Reads and caches this row's value for a column.
  *
  * The value is produced by the column accessor. Missing columns or display
- * columns without an accessor return `undefined`.
+ * columns without an accessor return `undefined`. The cached value is only
+ * reused while the column's accessor function is unchanged; replacing the
+ * column definitions with a new accessor invalidates the cache.
  *
  * @example
  * ```ts
@@ -79,16 +81,23 @@ export function row_getValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, columnId: string) {
-  if (hasOwn(row._valuesCache, columnId)) {
-    return row._valuesCache[columnId]
-  }
-
   const column = row.table.getColumn(columnId)
 
   if (!column?.accessorFn) {
     return undefined
   }
 
+  // Rows are rebuilt when `data` changes, but column definitions can be
+  // replaced independently. Compare the accessor identity so a value cached
+  // under a previous accessor is recomputed instead of served stale.
+  if (
+    hasOwn(row._valuesCache, columnId) &&
+    row._accessorFnsCache[columnId] === column.accessorFn
+  ) {
+    return row._valuesCache[columnId]
+  }
+
+  row._accessorFnsCache[columnId] = column.accessorFn
   row._valuesCache[columnId] = column.accessorFn(row.original, row.index)
 
   return row._valuesCache[columnId]

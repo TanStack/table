@@ -113,6 +113,50 @@ describe('row_getValue', () => {
 
     expect(row_getValue(row, 'not-a-column')).toBeUndefined()
   })
+
+  it('should invalidate the cached value when the column accessor changes', () => {
+    const data = generateTestData(1)
+    const table = constructTable({
+      features,
+      data,
+      columns: [{ id: 'derived', accessorFn: () => 'a' }],
+    })
+    const row = table.getRowModel().rows[0]!
+
+    expect(row_getValue(row, 'derived')).toBe('a')
+
+    // Rows are memoized on `data`, so replacing the column defs keeps the
+    // same row instances; the value cache must still pick up the new accessor.
+    table.setOptions((old) => ({
+      ...old,
+      columns: [{ id: 'derived', accessorFn: () => 'b' }],
+    }))
+
+    expect(row_getValue(row, 'derived')).toBe('b')
+  })
+
+  it('should not recompute the value while the accessor is unchanged', () => {
+    const data = generateTestData(1)
+    let calls = 0
+    const table = constructTable({
+      features,
+      data,
+      columns: [
+        {
+          id: 'derived',
+          accessorFn: () => {
+            calls++
+            return 'a'
+          },
+        },
+      ],
+    })
+    const row = table.getRowModel().rows[0]!
+
+    expect(row_getValue(row, 'derived')).toBe('a')
+    expect(row_getValue(row, 'derived')).toBe('a')
+    expect(calls).toBe(1)
+  })
 })
 
 describe('row_getUniqueValues', () => {
