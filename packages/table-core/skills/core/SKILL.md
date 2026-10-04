@@ -1,24 +1,32 @@
 ---
 name: core
-description: >
-  Use TanStack Table v9 as a headless data-grid state and row-processing engine. Load for first-table architecture, stable data and columns, row numbering with getDisplayIndex, semantic rendering, framework adapter choice, or deciding what Table owns versus the renderer.
+description:
+  Use TanStack Table v9 core architecture, stable data and columns, and inferred
+  types. Route setup, missing APIs, row models, state, features, and framework-specific work.
 metadata:
   type: core
   library: '@tanstack/table-core'
-  library_version: '9.2.5'
+  library_version: 9.2.5
 sources:
-  - 'TanStack/table:docs/overview.md'
-  - 'TanStack/table:docs/guide/tables.md'
-  - 'TanStack/table:docs/guide/data.md'
-  - 'TanStack/table:docs/guide/rows.md'
-  - 'TanStack/table:packages/table-core/src/index.ts'
+  - TanStack/table:docs/overview.md
+  - TanStack/table:docs/guide/tables.md
+  - TanStack/table:docs/guide/data.md
+  - TanStack/table:packages/table-core/src/index.ts
+  - TanStack/table:docs/guide/helpers.md
+  - TanStack/table:docs/guide/column-defs.md
+  - TanStack/table:docs/guide/table-and-column-meta.md
+  - TanStack/table:packages/table-core/src/helpers
+  - TanStack/table:packages/table-core/src/types/TableFeatures.ts
+  - TanStack/table:docs/framework/react/guide/migrating.md
+  - TanStack/table:docs/guide/rows.md
+  - TanStack/table:packages/table-core/src/core/rows/coreRowsFeature.utils.ts
 ---
 
-# TanStack Table Core
+# TanStack Table core
 
-TanStack Table creates a table instance, state, and row models. It does not render a component, choose a component library, apply CSS, or supply interaction accessibility. Use a framework adapter in UI code; use `constructTable` only for framework-neutral integrations.
+TanStack Table coordinates state and row processing. The renderer owns markup, styles, semantics, and interaction accessibility. Use the installed framework adapter in UI code; use `constructTable` for framework-neutral integrations.
 
-## Setup
+## Minimal setup
 
 <!-- skill-snippet:check -->
 
@@ -49,127 +57,28 @@ for (const row of table.getRowModel().rows) {
 }
 ```
 
-## Core Patterns
+## Essential constraints
 
-### Start with core, add only behavior used
+- The core row model is automatic. Optional APIs and state exist only after their feature is registered.
+- Keep `features`, `data`, and `columns` stable between meaningful changes. Derive changing arrays with the adapter's memo/computed mechanism; an inline `.map()`, `.filter()`, column factory, or fresh `[]` fallback invalidates model work and can cause render loops.
+- Let `createColumnHelper` and `helper.columns()` preserve accessor value types. Derive feature types from the concrete registry when an explicit boundary is needed.
+- Call row, cell, column, and header methods on their instance. Use `row.getValue('name')` or a callback that calls it; extracting `const { getValue } = row` loses its `this` receiver.
+- Render the final `table.getRowModel().rows`. The table object itself is not a DOM component.
 
-```ts
-const features = tableFeatures({
-  coreReactivityFeature: storeReactivityBindings(),
-})
-```
+## Read for the current task
 
-The core row model is automatic; filtering, sorting, pagination, and other optional behavior require their feature plugins.
+| Task                                                                | Read                                                                                    |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Add or repair optional features, processing slots, or prerequisites | [Feature architecture](../table-features/SKILL.md), then its relevant feature reference |
+| Choose state ownership, initialize or reset state                   | [Shared state](../table-state/SKILL.md)                                                 |
+| Fix `ColumnDef` inference, reusable options, or scoped meta         | [TypeScript inference](references/typescript.md)                                        |
+| Diagnose a missing export, option, state slice, or instance method  | [API discovery](references/api-not-found.md)                                            |
+| Implement row numbers, identity, or display-index behavior          | [Rows](references/rows.md)                                                              |
+| Author behavior beyond built-ins or typed meta                      | [Custom features](../custom-features/SKILL.md)                                          |
+| Migrate an existing v8 table                                        | [Migration audit](../migrate-v8-to-v9/SKILL.md)                                         |
 
-### Keep model inputs stable
+For framework construction and rendering, load the installed package's `getting-started` skill with `intent load <package>#getting-started`, replacing `<package>` with the actual adapter package, such as `@tanstack/react-table`. For reactive reads or controlled wiring, load that package's `table-state` skill directly.
 
-```ts
-const data: Person[] = [{ id: '1', name: 'Ada' }]
-const columns = helper.columns([helper.accessor('name', { header: 'Name' })])
-```
+## Installed API discovery
 
-Define static inputs once and preserve query/store references when data has not changed.
-
-### Number rows in current display order
-
-```ts
-const rowNumberColumn = helper.display({
-  id: 'rowNumber',
-  header: '#',
-  cell: ({ row }) => {
-    const displayIndex = row.getDisplayIndex()
-    return displayIndex === -1 ? '' : displayIndex + 1
-  },
-})
-```
-
-`row.getDisplayIndex()` follows the current filtering, grouping, sorting, and expansion order before pagination. `row.index` remains the row's creation-time position within its parent array.
-
-## Common Mistakes
-
-### [HIGH] Expecting Table to render a grid
-
-Wrong:
-
-```ts
-document.body.append(table as unknown as Node)
-```
-
-Correct:
-
-```ts
-const names = table
-  .getRowModel()
-  .rows.map((row) => row.getValue<string>('name'))
-document.body.textContent = names.join(', ')
-```
-
-The table instance is a model; markup, CSS, semantics, and accessibility are renderer responsibilities.
-
-Source: `docs/overview.md`
-
-### [HIGH] Recreating model inputs repeatedly
-
-Wrong:
-
-```ts
-const options = () => ({
-  data: source.map((item) => item),
-  columns: helper.columns([]),
-})
-```
-
-Correct:
-
-```ts
-const data = source.map((item) => item)
-const columns = helper.columns([])
-const options = () => ({ data, columns })
-```
-
-New references invalidate memoized row and column work and can create adapter render loops.
-
-Source: `docs/guide/data.md`
-
-### [HIGH] Detaching prototype-bound methods
-
-Wrong:
-
-```ts
-const { getValue } = table.getRowModel().rows[0]!
-getValue('name')
-```
-
-Correct:
-
-```ts
-const row = table.getRowModel().rows[0]!
-row.getValue('name')
-```
-
-V9 row, cell, column, and header methods use their instance as `this`.
-
-Source: `docs/framework/react/guide/migrating.md#instance-methods-must-be-called-on-their-instance`
-
-### [HIGH] Reading the display-index cache directly
-
-Wrong:
-
-```ts
-const rowNumber = row._displayIndexCache + 1
-```
-
-Correct:
-
-```ts
-const displayIndex = row.getDisplayIndex()
-const rowNumber = displayIndex === -1 ? undefined : displayIndex + 1
-```
-
-`_displayIndexCache` is internal and may be stale until display order is recomputed. The public method refreshes display order, validates that the cached slot still contains the row, and returns `-1` when it does not.
-
-Source: `docs/guide/rows.md#row-numbers-and-display-indexes`, `packages/table-core/src/core/rows/coreRowsFeature.utils.ts`
-
-## API Discovery
-
-Inspect `node_modules/@tanstack/table-core/dist/index.d.ts`, then follow the exported implementation. For UI creation and rendering, inspect `node_modules/@tanstack/<framework>-table/dist/index.d.ts` and load that adapter's getting-started skill.
+Start at `node_modules/@tanstack/table-core/dist/index.d.ts` and follow exported declarations. Adapter declaration layouts and missing-API diagnosis are in [API discovery](references/api-not-found.md); read it when the expected export or declaration path is absent.

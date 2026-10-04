@@ -27,14 +27,18 @@ TanStack Table publishes skills inside its packages so the guidance travels with
 
 The skills available to your agent depend on which packages your project installs:
 
-| Package                                                    | Skills                                               | What they teach                                                                                                                                                                                                         |
-| ---------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@tanstack/table-core`                                     | `core`, `table-features`, and focused feature skills | Headless table architecture, explicit feature registration, TypeScript, client/server boundaries, migration, and features such as sorting, filtering, grouping, pagination, pinning, sizing, selection, and aggregation |
-| `@tanstack/<framework>-table`                              | Framework-specific setup and state skills            | Creating, rendering, and controlling a table with your framework adapter; supported adapters also include migration and TanStack Query/Virtual composition skills                                                       |
-| `@tanstack/table-devtools` and framework devtools adapters | `devtools`                                           | Registering table instances and inspecting features, state, options, rows, and columns                                                                                                                                  |
-| `@tanstack/match-sorter-utils`                             | `fuzzy-ranking`                                      | Fuzzy filtering, ranking metadata, and rank-aware sorting                                                                                                                                                               |
+| Package                                                    | Skills                                                                         | What they teach                                                                                                                                                                  |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@tanstack/table-core`                                     | `core`, `table-features`, `table-state`, `custom-features`, `migrate-v8-to-v9` | Core architecture, feature registration, shared state ownership, plugin authoring, and migration. Each optional feature has an on-demand reference linked from `table-features`. |
+| `@tanstack/<framework>-table`                              | `getting-started`, `table-state`, and migration where supported                | Framework setup, rendering, and reactive state. References cover reusable app hooks, advanced reactivity, and maintained Query/Virtual integrations.                             |
+| `@tanstack/table-devtools` and framework devtools adapters | `devtools`                                                                     | Registering table instances and inspecting features, state, options, rows, and columns                                                                                           |
+| `@tanstack/match-sorter-utils`                             | `fuzzy-ranking`                                                                | Fuzzy filtering, ranking metadata, and rank-aware sorting                                                                                                                        |
 
-Each skill lives under `node_modules/<package>/skills/<skill-name>/SKILL.md` once the package is installed. Skills can declare prerequisites, so your agent can load the core guidance before a framework or feature-specific skill.
+Each skill lives under `node_modules/<package>/skills/<skill-name>/SKILL.md` once the package is installed. Its `references/` directory contains guidance for specific tasks. For example, row selection lives in `@tanstack/table-core/skills/table-features/references/row-selection.md`.
+
+The entry point tells the agent when to read each reference. A sorting change loads the sorting guidance; selection, resizing, and other unrelated feature references stay unloaded. Framework state skills load the shared state model and then explain their own reactive reads and updates.
+
+Intent lists entry points and loads one requested `SKILL.md` at a time. The agent follows its prerequisite instructions and reads relevant references. A React project with core installed has eight Table entry points. Devtools and other installed libraries add their own entries.
 
 ## Step 1: Install TanStack Table
 
@@ -89,8 +93,10 @@ You can inspect and load Table skills yourself with the same commands:
 ```bash
 npx @tanstack/intent@latest list
 npx @tanstack/intent@latest load @tanstack/react-table#getting-started
-npx @tanstack/intent@latest load @tanstack/table-core#sorting
+npx @tanstack/intent@latest load @tanstack/table-core#table-features
 ```
+
+For sorting, follow the loaded entry point's link to `references/sorting.md`. The load command resolves relative Markdown links to the installed package, including when your package manager uses nested dependency paths.
 
 If you prefer explicit task-to-skill entries, run `npx @tanstack/intent@latest install --map`. Mapping mode scans your installed intent-enabled packages and writes compact `id`, `run`, and `for` entries into the managed block.
 
@@ -111,6 +117,22 @@ If the agent still falls back to v8 patterns, reopen its config file and confirm
 ## Keeping Skills Current
 
 Skills are versioned with each package. When you update your TanStack Table packages, the `SKILL.md` files under `node_modules` update with them. No CLI rerun is needed. If you use explicit mappings, rerun `npx @tanstack/intent@latest install --map` after adding another intent-enabled package, such as a Table devtools adapter, or when you want to refresh the mappings.
+
+### Update older skill mappings
+
+The progressive-disclosure layout replaces individual feature and composition skill IDs with references. If your agent configuration contains the old IDs, update them as follows:
+
+| Old skill ID                                                                            | Replacement entry point and reference                                        |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `@tanstack/table-core#sorting`, `#row-selection`, and the other optional feature skills | `@tanstack/table-core#table-features`, then the matching feature reference   |
+| `@tanstack/table-core#client-vs-server`                                                 | `@tanstack/table-core#table-features`, then `references/client-vs-server.md` |
+| `@tanstack/table-core#typescript` or `#api-not-found`                                   | `@tanstack/table-core#core`, then the matching reference                     |
+| `@tanstack/<framework>-table#create-table-hook`                                         | The adapter's `getting-started`, then `references/create-table-hook.md`      |
+| `@tanstack/<framework>-table#with-tanstack-query` or `#with-tanstack-virtual`           | The adapter's `getting-started`, then the matching integration reference     |
+
+If `package.json#intent.skills` allows individual old skill IDs, run `npx @tanstack/intent@latest install --review` to select their replacements and the prerequisites they need. Package-level permissions include new entry points automatically. Regenerate explicit mappings with `npx @tanstack/intent@latest install --map` after updating permissions. Direct file pointers to moved skills also need their new paths.
+
+Core state guidance is available as `@tanstack/table-core#table-state`. Adapter state and migration skill IDs remain available. Migration skills retain a complete audit checklist and link to detailed mappings for the APIs your project uses.
 
 ## Using Skills Without the CLI
 

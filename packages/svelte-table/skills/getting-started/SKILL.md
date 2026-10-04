@@ -1,22 +1,31 @@
 ---
 name: getting-started
-description: >
-  Create a Svelte 5 TanStack Table v9 table with createTable, explicit tableFeatures, rune-backed data getters, stable static inputs, FlexRender, and headless markup. Load when replacing createSvelteTable or pre-rune patterns.
+description: Create and render Table v9 with the svelte adapter. Route reusable createTableHook components, Query and Virtual integration, and framework setup; use table-state for reactive ownership.
 metadata:
   type: framework
   library: '@tanstack/svelte-table'
   framework: svelte
-  library_version: '9.2.5'
+  library_version: 9.2.5
 requires:
   - '@tanstack/table-core#core'
-  - '@tanstack/table-core#table-features'
 sources:
-  - 'TanStack/table:docs/framework/svelte/guide/migrating.md'
-  - 'TanStack/table:examples/svelte/basic-create-table'
-  - 'TanStack/table:packages/svelte-table/src/index.ts'
+  - TanStack/table:docs/framework/svelte/guide/migrating.md
+  - TanStack/table:examples/svelte/basic-create-table
+  - TanStack/table:packages/svelte-table/src/index.ts
+  - TanStack/table:docs/framework/svelte/guide/composable-tables.md
+  - TanStack/table:examples/svelte/composable-tables
+  - TanStack/table:packages/svelte-table/src/createTableHook.svelte.ts
+  - TanStack/table:examples/svelte/with-tanstack-query
+  - TanStack/table:docs/framework/svelte/guide/pagination.md
+  - TanStack/table:docs/framework/svelte/guide/virtualization.md
+  - TanStack/table:examples/svelte/virtualized-rows
+  - TanStack/table:examples/svelte/virtualized-columns
+  - TanStack/table:examples/svelte/virtualized-infinite-scrolling
 ---
 
-This skill builds on `@tanstack/table-core#core` and `@tanstack/table-core#table-features`. Read them first for the headless model and feature registration.
+# Svelte Table setup and integration
+
+Before starting, run `intent load @tanstack/table-core#core` for the shared headless model and stable-input rules.
 
 ## Setup
 
@@ -69,104 +78,21 @@ Keep features and columns outside reactive work; expose changing rune values thr
 </table>
 ```
 
-## Core Patterns
+## Essential constraints
 
-### Add only the processing feature you need
+V9 requires Svelte 5 and `createTable`. Expose changing runes through getters; `data` captured once cannot follow reassignment. Keep features and columns outside reactive work and use `$derived` for transformed arrays.
 
-```ts
-import {
-  createSortedRowModel,
-  rowSortingFeature,
-  sortFn_alphanumeric,
-  tableFeatures,
-} from '@tanstack/svelte-table'
+Table owns models and state. The application owns markup, CSS, interactions, and accessibility. Core-only tables use `row.getAllCells()`; visibility-aware methods need `columnVisibilityFeature`. Optional state and APIs require their features. Put row-model slots after their prerequisite features in `tableFeatures()`.
 
-export const features = tableFeatures({
-  rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
-  sortFns: { alphanumeric: sortFn_alphanumeric },
-})
-```
+## Load by task
 
-The row-model slot follows its prerequisite feature in the same call. Import individual `sortFn_*` built-ins and register only the ones your columns reference; the full `sortFns` registry object still works but bundles every built-in.
+- For repeated features, defaults, typed contexts, or component registries, read [reusable app hooks](references/create-table-hook.md).
+- For Query-backed data, server pages, sorting, filtering, or request keys, read [TanStack Query integration](references/with-tanstack-query.md).
+- For virtual rows, columns, dynamic measurement, or infinite scrolling, read [TanStack Virtual integration](references/with-tanstack-virtual.md).
+- For controlled state, tracked reads, or render subscriptions, read [table state](../table-state/SKILL.md).
+- For feature registration, missing feature APIs, or processing ownership, run `intent load @tanstack/table-core#table-features` and read only references needed by the task.
+- For v8 code, read the [migration checklist](../migrate-v8-to-v9/SKILL.md).
 
-### Treat markup and styles as application code
+## API discovery
 
-With core-only `tableFeatures({})`, render `row.getAllCells()`. Use visibility-aware APIs such as `row.getVisibleCells()` only after registering `columnVisibilityFeature`. Call feature APIs from real Svelte event handlers. Table supplies no component-library markup, CSS, or accessibility behavior.
-
-## Common Mistakes
-
-### HIGH Passing a rune snapshot as data
-
-Wrong:
-
-```ts
-const table = createTable({ features, columns, data })
-```
-
-Correct:
-
-```ts
-const table = createTable({
-  features,
-  columns,
-  get data() {
-    return data
-  },
-})
-```
-
-The getter makes `$effect.pre` observe current rune data rather than the value captured at construction.
-
-Source: `packages/svelte-table/src/createTable.svelte.ts`
-
-### HIGH Using the removed v8 constructor
-
-Wrong:
-
-```ts
-const table = createSvelteTable({
-  data,
-  columns,
-  getCoreRowModel: getCoreRowModel(),
-})
-```
-
-Correct:
-
-```ts
-const table = createTable({
-  features,
-  columns,
-  get data() {
-    return data
-  },
-})
-```
-
-V9 requires Svelte 5, `createTable`, and explicit features; the core row model is automatic.
-
-Source: `docs/framework/svelte/guide/migrating.md`
-
-### HIGH Omitting a feature behind an API
-
-Wrong:
-
-```ts
-const features = tableFeatures({})
-table.setSorting([{ id: 'age', desc: true }])
-```
-
-Correct:
-
-```ts
-const features = tableFeatures({ rowSortingFeature })
-```
-
-Feature state and APIs exist only when that feature is registered.
-
-Source: `docs/framework/svelte/guide/migrating.md`
-
-## API Discovery
-
-Inspect `node_modules/@tanstack/svelte-table/dist/index.d.ts`, then the exported implementation. Inspect core and feature APIs through `node_modules/@tanstack/table-core/dist/index.d.ts` and `dist/features/<feature>/`.
+Inspect `node_modules/@tanstack/svelte-table/dist/index.d.ts`, then the exported adapter declarations for the installed version. Inspect optional core APIs under `node_modules/@tanstack/table-core/dist/features/`.

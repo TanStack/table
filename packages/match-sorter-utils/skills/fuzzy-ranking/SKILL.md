@@ -54,8 +54,9 @@ In a Table filterFn, call `addMeta?.({ itemRank })`. Register the corresponding
 meta shape with `filterMeta: metaHelper<{ itemRank: RankingInfo }>()`. A related
 sortFn reads `row.columnFiltersMeta[columnId]?.itemRank` and uses `compareItems`,
 falling back to an ordinary comparator for ties or absent metadata. For the
-primary Table composition, load `@tanstack/table-core#global-filtering` and
-register the fuzzy filter under `filterFns` for `globalFilterFn: 'fuzzy'`.
+primary Table composition, load `@tanstack/table-core#table-features` and read
+its global-filtering reference. Register the fuzzy filter under `filterFns`
+for `globalFilterFn: 'fuzzy'`.
 
 ## Common Mistakes
 
@@ -91,4 +92,4 @@ Source: TanStack/table:packages/match-sorter-utils/src/index.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/match-sorter-utils/dist/index.d.ts` for the installed `RankItemOptions`, accessor attributes, ranking constants, and comparator behavior. For TanStack Table metadata integration, load the global-filtering and sorting skills.
+Inspect `node_modules/@tanstack/match-sorter-utils/dist/index.d.ts` for the installed `RankItemOptions`, accessor attributes, ranking constants, and comparator behavior. For TanStack Table metadata integration, load `@tanstack/table-core#table-features` and read its global-filtering and sorting references.

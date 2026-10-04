@@ -1,23 +1,34 @@
 ---
 name: getting-started
-description: >
-  Create an Angular TanStack Table v9 table with injectTable inside injection context, explicit stable tableFeatures and columns, signal-backed data, and FlexRender structural directives or helpers.
+description:
+  Create and render Table v9 with the angular adapter. Route reusable createTableHook
+  components, Query and Virtual integration, and framework setup; use table-state for reactive
+  ownership.
 metadata:
   type: framework
   library: '@tanstack/angular-table'
   framework: angular
-  library_version: '9.2.5'
+  library_version: 9.2.5
 requires:
   - '@tanstack/table-core#core'
-  - '@tanstack/table-core#table-features'
 sources:
-  - 'TanStack/table:docs/framework/angular/guide/migrating.md'
-  - 'TanStack/table:docs/framework/angular/guide/rendering.md'
-  - 'TanStack/table:examples/angular/basic-inject-table'
-  - 'TanStack/table:packages/angular-table/src/index.ts'
+  - TanStack/table:docs/framework/angular/guide/migrating.md
+  - TanStack/table:docs/framework/angular/guide/flex-render.md
+  - TanStack/table:examples/angular/basic-inject-table
+  - TanStack/table:packages/angular-table/src/index.ts
+  - TanStack/table:docs/framework/angular/guide/composable-tables.md
+  - TanStack/table:examples/angular/composable-tables
+  - TanStack/table:packages/angular-table/src/helpers/createTableHook.ts
+  - TanStack/table:examples/angular/with-tanstack-query
+  - TanStack/table:docs/framework/angular/guide/table-state.md
+  - TanStack/table:docs/framework/angular/guide/pagination.md
+  - TanStack/table:docs/framework/angular/guide/virtualization.md
+  - TanStack/table:examples/angular/virtualized-rows
+  - TanStack/table:examples/angular/virtualized-columns
+  - TanStack/table:examples/angular/virtualized-infinite-scrolling
 ---
 
-This skill builds on `@tanstack/table-core#core` and `@tanstack/table-core#table-features`. Read them first for the headless model and explicit features.
+Load `intent load @tanstack/table-core#core` first for the headless model, stable inputs, and column inference.
 
 ## Setup
 
@@ -57,82 +68,23 @@ export class TableComponent {
 }
 ```
 
-## Core Patterns
+## Construction and rendering
 
-### Keep static inputs outside the initializer
+Call `injectTable` in a component, directive, or service field initializer, or another valid Angular injection context. The adapter binds its cleanup to that context.
 
-`injectTable` reruns its options initializer when a signal read changes. Define features, row-model factories, and columns at module or stable class scope; read only changing values inside.
+Signals read in the options initializer rerun it and call `setOptions`. Keep features, factories, and columns outside the initializer; return stable data references and derive transformed data with `computed` outside it.
 
-### Render each content kind correctly
+Import `FlexRender` for `*flexRender`, `*flexRenderCell`, `*flexRenderHeader`, and `*flexRenderFooter`. Render values can be primitives, `TemplateRef`, component types, or `flexRenderComponent(...)`. Use `flexRenderComponent` for Angular component types; ordinary render functions are already supported directly.
 
-Import `FlexRender` for `*flexRender`, `*flexRenderCell`, `*flexRenderHeader`, and `*flexRenderFooter`. Definitions may yield primitives, `TemplateRef`, component types, or `flexRenderComponent(...)`; Table does not supply markup or CSS.
+## Read for the task
 
-## Common Mistakes
+- When adding or configuring optional features, load `intent load @tanstack/table-core#table-features` and read only references for the requested behavior.
+- For state ownership or reactive reads, read [table-state](../table-state/SKILL.md).
+- When tables share features, defaults, or reusable UI, read [create-table-hook](references/create-table-hook.md).
+- When Query supplies data or server processing, read [with-tanstack-query](references/with-tanstack-query.md).
+- When virtualizing rows or columns, read [with-tanstack-virtual](references/with-tanstack-virtual.md).
+- When upgrading v8 code, read [migrate-v8-to-v9](../migrate-v8-to-v9/SKILL.md).
 
-### CRITICAL Calling injectTable outside DI
+## API discovery
 
-Wrong:
-
-```ts
-export function makeTable() {
-  return injectTable(() => ({ features, columns, data }))
-}
-```
-
-Correct:
-
-```ts
-export class TableComponent {
-  readonly table = injectTable(() => ({ features, columns, data: this.data() }))
-}
-```
-
-`injectTable` asserts an Angular injection context and registers lifecycle cleanup there.
-
-Source: `packages/angular-table/src/injectTable.ts`
-
-### HIGH Reallocating static options reactively
-
-Wrong:
-
-```ts
-injectTable(() => ({
-  features: tableFeatures({}),
-  columns: makeColumns(),
-  data: this.data(),
-}))
-```
-
-Correct:
-
-```ts
-const features = tableFeatures({})
-const columns = makeColumns()
-injectTable(() => ({ features, columns, data: this.data() }))
-```
-
-Every signal change reruns the initializer; rebuilding static inputs invalidates memoized Table work.
-
-Source: `packages/angular-table/src/injectTable.ts`
-
-### HIGH Treating a render function as a component
-
-Wrong:
-
-```ts
-cell: () => flexRenderComponent(() => 'value')
-```
-
-Correct:
-
-```ts
-cell: () => 'value'
-```
-
-`flexRenderComponent` wraps an Angular component type; ordinary functions and primitives are handled directly by FlexRender.
-
-Source: `docs/framework/angular/guide/rendering.md`
-
-## API Discovery
-
-Inspect `node_modules/@tanstack/angular-table/dist/types/` for the bundled public API; inspect optional feature APIs in installed `@tanstack/table-core/dist/features/`.
+Inspect `node_modules/@tanstack/angular-table/dist/types/` for the bundled public declarations. Inspect feature APIs under `node_modules/@tanstack/table-core/dist/features/`.

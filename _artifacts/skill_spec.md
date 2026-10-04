@@ -1,7 +1,7 @@
 # TanStack Table v9 skill specification
 
 Status: reviewed<br>
-Date: 2026-07-29<br>
+Date: 2026-10-04<br>
 Library target: TanStack Table v9, authored in stable-release voice<br>
 Package metadata target: exact workspace package versions; release automation keeps every shipped skill synchronized
 
@@ -9,7 +9,7 @@ This specification is the generation contract for a deliberately smaller, foot-g
 
 ## Outcome
 
-Generate 80 short package-local skills across all 18 public packages. A loaded skill should quickly do three things:
+Generate 39 package-local entry points across all 18 public packages, with the supporting references declared in skill_tree.yaml. A loaded skill should quickly do three things:
 
 1. Correct the user or agent mental model.
 2. Show the smallest reliable setup or decision pattern.
@@ -23,12 +23,12 @@ The skills should not enumerate every option or method. That duplicates generate
 - V9 optional features are plugins. A feature API, state slice, row model, or function registry exists only when the matching feature is registered through tableFeatures.
 - The client/server row-model boundary is a first-order architecture decision. Manual modes bypass Table processing; they do not perform server work.
 - Most userland TypeScript should be inferred through helpers, features, options, and app-hook factories. Deep manual generics are a smell.
-- createTableHook is important v9 guidance for reusable app-level table infrastructure. It deserves one dedicated skill in every framework package.
+- createTableHook is important v9 guidance for reusable app-level table infrastructure. It deserves one dedicated reference linked from every framework getting-started skill.
 - Framework table-state guidance is fundamental and should retain substantially more depth than ordinary feature skills.
 - Data and columns are model inputs and must retain stable references between meaningful changes in every adapter and composition example.
 - V8-to-v9 migration is a primary route. Deprecated useLegacyTable is not the destination and must not be promoted.
 - TanStack Query usually owns data before it reaches Table. TanStack Virtual is intertwined with Table rendering after the final row/column model exists.
-- CSS/layout failure modes belong in the relevant pinning, sizing, resizing, and virtualization skills. Component-library-specific skills do not.
+- CSS/layout failure modes belong in the relevant pinning, sizing, resizing, and virtualization references. Component-library-specific skills do not.
 - Worker row models are excluded.
 
 ## Source-of-truth hierarchy
@@ -68,54 +68,40 @@ Each generated SKILL.md must satisfy the current TanStack Intent validator:
 
 The metadata version must record the exact package version even though prose treats v9 as stable. Do not call ordinary v9 APIs experimental or advise waiting for stable.
 
-### Body shape
+### Artifacts before generated files
 
-Prefer 60-180 lines. Table-state, migration, createTableHook, and Virtual skills may be longer when the adapter genuinely differs.
+Use the installed Intent `tree-generator` and `generate-skill` Mode A workflows. The reviewed domain map contains the knowledge inventory and failure modes. This specification defines placement. Update `skill_tree.yaml` from both before generating any skill or reference.
 
-Use this default structure:
+Each item in `domain_map.yaml#skills` produces one `SKILL.md`. Its nested `references` entries retain their purpose, source evidence, and failure modes, and produce the paths listed in the corresponding tree entry. A moved topic remains covered through that reference. Do not restore its old discovery entry during regeneration.
 
-1. One-paragraph mental model.
-2. Setup: imports and the smallest valid configuration.
-3. Two to four decision or implementation patterns.
-4. Common mistakes: at least three concrete failures with correction.
-5. API discovery: exact installed declaration route (`.d.ts`) and identifiers to inspect.
-6. Cross-skill routing only when another skill owns the next decision.
+The maintainer approved the progressive-disclosure proposal and batch implementation on 2026-10-04. Preserve prior reviewed technical decisions while changing their placement. This is generation from existing reviewed artifacts, not a new-library discovery interview.
 
-Do not add a reference folder by default. Add one only when a large migration mapping or framework-specific content cannot stay concise in SKILL.md. Progressive disclosure is a size tool, not permission to recreate all docs as references.
+### Body shape and disclosure
 
-### Migration skill exception
+Keep shared purpose, essential constraints, the minimum valid setup, and routing in `SKILL.md`. Prefer 60-120 lines for ordinary entry points; preserve correctness when a framework needs more. The 500-line ceiling is a guard, not a reason to delay references.
 
-The table-core and seven adapter migrate-v8-to-v9 skills are intentionally comprehensive. They may approach the 500-line limit and must list every breaking change in the maintained migration guide, not merely three common mistakes or a short route to the docs.
+- Use the core overview and routing format for `core`, the standard procedure format for setup and state, and Intent's checklist format for migration.
+- Split conditional content by the task it serves. Optional features, Query, Virtual, reusable app hooks, advanced reactivity, and detailed migration maps belong in their declared references.
+- Give each reference a direct relative Markdown link in the owning `SKILL.md` and an explicit condition for reading it. A list of filenames without read conditions is insufficient.
+- Read references for the requested change and relevant existing registrations, including features being added. A feature being installed or registered alone does not require reading its reference.
+- Each reference is ordinary Markdown with a descriptive title, purpose, source provenance, and maintained examples. It has no skill frontmatter and inherits its owning package version.
+- Keep related feature references separate: row/cell selection, sizing/resizing, and each pinning feature have different behavior and prerequisites.
+- Keep shared essential gotchas inline. Retain concrete feature-specific failure modes in the matching reference. Use wrong/correct examples only when they explain a real failure; a router does not need three artificial mistakes.
+- Use `requires` only for unconditional skill prerequisites, and state those reads in prose. Intent load returns one entry point; it does not automatically load prerequisites or references.
+- Use Markdown links within a package. Resolve cross-package skills with `intent load <package>#<skill>`; do not assume a hoisted sibling package or a repository-only path exists in a consumer install.
+- Keep exact API discovery rooted in installed package declarations.
 
-Every adapter migration skill must be usable on its own and include:
+### Migration coverage
 
-- its framework-version prerequisite, package change, and construction entrypoint mapping;
-- the complete shared architecture changes for tableFeatures, all stock feature imports, row-model slots, function registries, and stockFeatures audit guidance;
-- the full logical start/end column-pinning mapping;
-- prototype-method binding and enumeration/spread consequences;
-- state access, selector/subscription, controlled-state, external-atom, precedence, and onStateChange changes for that adapter;
-- createColumnHelper/columns(), rendering, tableOptions, and createTableHook changes;
-- pinning-option, sizing/resizing, sorting, removed-internal, row, and row-selection API changes;
-- all TypeScript generic, meta, function-registry augmentation, StockFeatures, and RowData changes;
-- an exhaustive checkbox audit at the end.
+Core `migrate-v8-to-v9` owns the complete shared audit checklist. Its architecture, state, feature-apis, and typescript references preserve every shared breaking change from the reviewed domain map. Audit the whole checklist and read detailed mappings for affected code.
 
-Do not rely on the core migration skill to hide shared changes from an adapter migration. The requires relationship supplies context, but migration users commonly load only the adapter skill and need the full audit surface there. Keep detailed mappings in SKILL.md unless the file would exceed Intent's 500-line limit.
+Each adapter migration entry point explicitly loads the core migration skill and adds its framework-version, construction, rendering, state, and app-hook checks. Its adapter-migration reference contains framework-specific detail. Shared rename tables and inventories have one authoritative home in core. Preserve complete migration coverage across the entry point and referenced files.
 
-### Table-state skill exception
+### State coverage
 
-Every framework table-state skill must preserve substantially more of its guide than an ordinary feature skill because state coordination is the library's foundational behavior. Include:
+Core `table-state` owns internal/default ownership, feature-gated slices, baseAtoms/atoms/store, controlled-value/updater pairing, external-atom precedence, initialization, resets, and state inference. It routes reactive consumption to the installed adapter.
 
-- internal state as the default and the reasons to hoist only selected slices;
-- feature-gated state and typing;
-- `baseAtoms`, readonly derived `atoms`, the flat `store`, and any adapter-selected `table.state` surface;
-- snapshot reads versus the adapter's tracked/subscribed reads;
-- one owner per slice across internal state, `initialState`, external `atoms`, and `state` plus `on[State]Change`;
-- precedence, value-or-updater handling, and removal of the v8 global `onStateChange` option;
-- preferred feature-method writes, low-level base-atom writes, initial/reset semantics, and externally owned reset limitations;
-- feature-specific types and `TableState<typeof features>` inference;
-- framework-specific selector, subscription, compiler, signal, rune, ref, controller, or proxy behavior.
-
-Retain concrete wrong-versus-correct examples for the adapter's most likely subscription and controlled-state mistakes. Table-state skills may exceed the normal 180-line target while remaining below Intent's 500-line limit.
+Each adapter `table-state` requires the core state skill. Keep its essential snapshot-versus-tracked-read distinction, supported subscription APIs, controlled wiring, and adapter-specific correctness warnings inline. Its reactivity reference holds advanced boundaries and extended examples. State repair in an existing table does not require getting-started.
 
 ### Stable model-input invariant
 
@@ -123,11 +109,11 @@ Treat stable `data` and `columns` references as a correctness and performance in
 
 ### Custom-feature completeness exception
 
-The custom-features skill must enumerate all 10 public declaration-merge FeatureMaps: table state, table options, table, column definition, column, row, cell, header, row-model functions, and cached row models. Explain that `Plugins` registers the feature key and that declarations add types only; each advertised runtime surface needs matching lifecycle wiring.
+The custom-features plugin-example reference must enumerate all 10 public declaration-merge FeatureMaps: table state, table options, table, column definition, column, row, cell, header, row-model functions, and cached row models. Explain that `Plugins` registers the feature key and that declarations add types only; each advertised runtime surface needs matching lifecycle wiring.
 
 Enumerate both API utilities and every installation path: `assignTableAPIs` in `constructTableAPIs`, plus `assignPrototypeAPIs` in `assignColumnPrototype`, `assignRowPrototype`, `assignCellPrototype`, and `assignHeaderPrototype`. Include the static-name prefixes, prototype self argument, optional `memoDeps`, shared-prototype constraint, `initColumnInstanceData`/`initRowInstanceData`, and the fact that per-object `assignColumnAPIs`-style utilities do not exist. Clearly label row-model maps as advanced internal pipeline surfaces requiring explicit runtime/cache wiring.
 
-Use one annotated, authoritative feature example for the complete shape. Do not stack a minimal density example, a second FeatureMap example, a third API-installation example, and then repeat their distinction under Common Mistakes. Keep selection guidance and foot-guns as compact prose around the single example.
+Use one annotated, authoritative feature example for the complete shape. Do not stack a minimal density example, a second FeatureMap example, a third API-installation example, and then repeat their distinction under Common Mistakes. Keep the custom-features entry point focused on plugin selection and implementation steps, with a direct instruction to read the checked example before implementing lifecycle wiring.
 
 ### Code examples
 
@@ -161,8 +147,9 @@ Use Wrong/Correct only when the Wrong form is demonstrably broken or misleading.
 
 - `intent validate` checks structure, frontmatter, sources, requires, and artifacts.
 - `skills:versions:check` compares each skill's `metadata.library_version` with its package and verifies artifact overrides.
-- `test:skill-content` checks high-risk generated-content invariants, including Markdown table shape, package imports, feature gating, stable empty fallbacks, adapter subscription shapes, and resize input events.
-- Add `<!-- skill-snippet:check -->` immediately before a self-contained TypeScript/TSX fence when its exact code is load-bearing. `test:skill-snippets` compiles each marked fence against workspace source. A marker may specify `prelude=path` or `tsconfig=path` when the snippet needs an explicit checked context.
+- `test:skill-tree` checks artifact/file coverage, direct reference links, local link targets, skill dependencies, source provenance, Intent consumer discovery/loading, and packaged references.
+- `test:skill-content` checks high-risk generated-content invariants in entry points and references, including Markdown table shape, package imports, feature gating, stable empty fallbacks, adapter subscription shapes, and resize input events.
+- Add `<!-- skill-snippet:check -->` immediately before a self-contained TypeScript/TSX fence when its exact code is load-bearing. `test:skill-snippets` compiles each marked fence in entry points and references against workspace source. A marker may specify `prelude=path` or `tsconfig=path` when the snippet needs an explicit checked context.
 - Virtual composition guidance must be copied from or kept structurally faithful to the maintained adapter guide/example. When evidence is absent, route to the documented supported composition instead of inventing an adapter package or API.
 
 These checks run in `pnpm test:skills`. They supplement review; they do not justify expanding skills into API summaries.
@@ -173,84 +160,29 @@ Skill versions ship with package versions. After release tooling calculates pack
 
 ## Routing taxonomy
 
-### Foundations and migration — @tanstack/table-core (7)
+### Foundations and migration: @tanstack/table-core
 
-- core — headless philosophy, core model, stable inputs, renderer ownership.
-- table-features — explicit registration, prerequisites, row-model/function slots, tree-shaking.
-- client-vs-server — choose ownership for filtering/grouping/sorting/expanding/pagination.
-- typescript — columnHelper, meta helpers, tableOptions, inference, avoid manual generics.
-- api-not-found — inspect installed declarations, feature gating, version/adapter mismatch, prototypes.
-- custom-features — plugin lifecycle after exhausting built-in APIs and meta.
-- migrate-v8-to-v9 — shared breaking changes and adapter migration routing.
+Five entry points remain directly discoverable:
 
-### Stock feature plugins — @tanstack/table-core (16)
+- `core`: headless model, stable inputs, minimal typed setup, and routing. References own TypeScript troubleshooting, missing API diagnosis, and row/display-index details.
+- `table-features`: feature registration, prerequisites, row-model and function slots. References own client/server boundaries and each of the 17 optional features.
+- `table-state`: shared ownership, initialization, updates, reset semantics, and adapter-state routing.
+- `custom-features`: plugin authoring workflow and one complete checked plugin example in a reference.
+- `migrate-v8-to-v9`: complete shared audit checklist and conditional architecture, state, feature API, and TypeScript mappings.
 
-- aggregation
-- cell-selection
-- column-faceting
-- column-filtering
-- grouping
-- column-ordering
-- column-pinning
-- column-resizing
-- column-sizing
-- column-visibility
-- global-filtering
-- expanding
-- pagination
-- row-pinning
-- row-selection
-- sorting
+### Optional feature references
 
-Each feature skill must:
+The `table-features` entry point directly links aggregation, cell-selection, cell-spanning, column-faceting, column-filtering, column-ordering, column-pinning, column-resizing, column-sizing, column-visibility, expanding, global-filtering, grouping, pagination, row-pinning, row-selection, and sorting.
 
-- name the feature import;
-- name only row-model and registry slots relevant to that feature;
-- state its tableFeatures prerequisites;
-- distinguish state from row processing and renderer behavior;
-- route exact API discovery to its shipped feature directory under `dist/features/`;
-- include feature-specific edge cases from domain_map.yaml.
-
-Do not combine all column layout features into one summary. Their plugin prerequisites and CSS responsibilities differ enough to route independently.
+Each feature reference names its feature import, relevant row-model/registry slots, prerequisites, state/processing/renderer responsibilities, installed declaration directory, and the feature-specific failure modes retained in the domain map.
 
 ### Framework adapter set
 
-React, Preact, Solid, Svelte, Vue, and Angular each ship six skills:
+All ten adapters have `getting-started` and `table-state` entry points. React, Preact, Solid, Svelte, Vue, Angular, and Lit also retain `migrate-v8-to-v9`. State and migration entry points have their own conditional detailed references.
 
-- getting-started
-- table-state
-- migrate-v8-to-v9
-- create-table-hook
-- with-tanstack-query
-- with-tanstack-virtual
+Every getting-started skill directly links a `references/create-table-hook.md`. React, Preact, Solid, Svelte, Vue, and Angular also link `references/with-tanstack-query.md` and `references/with-tanstack-virtual.md`. Lit also links Virtual. Broaden the getting-started description to route ongoing adapter work and these supported integrations.
 
-Lit ships five:
-
-- getting-started
-- table-state
-- migrate-v8-to-v9
-- create-table-hook
-- with-tanstack-virtual
-
-Alpine ships three:
-
-- getting-started
-- table-state
-- create-table-hook
-
-Ember ships three:
-
-- getting-started
-- table-state
-- create-table-hook
-
-Octane ships three:
-
-- getting-started
-- table-state
-- create-table-hook
-
-Do not add Query where no maintained adapter example exists. Do not add Alpine, Ember, or Octane migration skills because none has a v8 adapter journey to teach. Do not add Ember or Octane Query or Virtual skills until maintained adapter examples exist. Do not invent Preact virtualization examples; its Virtual skill should rely on the maintained adapter guide and installed APIs.
+Keep framework-specific examples in their package. Do not add Query or Virtual guidance where no maintained adapter guide/example exists. Alpine, Ember, and Octane have no v8 adapter migration journey.
 
 ### Devtools set (6)
 
@@ -271,27 +203,29 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 
 ## Package coverage
 
-| Package                          | Skills |
-| -------------------------------- | -----: |
-| @tanstack/table-core             |     23 |
-| @tanstack/react-table            |      6 |
-| @tanstack/preact-table           |      6 |
-| @tanstack/octane-table           |      3 |
-| @tanstack/solid-table            |      6 |
-| @tanstack/svelte-table           |      6 |
-| @tanstack/vue-table              |      6 |
-| @tanstack/angular-table          |      6 |
-| @tanstack/lit-table              |      5 |
-| @tanstack/alpine-table           |      3 |
-| @tanstack/ember-table            |      3 |
-| @tanstack/table-devtools         |      1 |
-| @tanstack/react-table-devtools   |      1 |
-| @tanstack/preact-table-devtools  |      1 |
-| @tanstack/solid-table-devtools   |      1 |
-| @tanstack/vue-table-devtools     |      1 |
-| @tanstack/angular-table-devtools |      1 |
-| @tanstack/match-sorter-utils     |      1 |
-| Total                            |     80 |
+| Package                          | Entry points |
+| -------------------------------- | -----------: |
+| @tanstack/table-core             |            5 |
+| @tanstack/react-table            |            3 |
+| @tanstack/preact-table           |            3 |
+| @tanstack/octane-table           |            2 |
+| @tanstack/solid-table            |            3 |
+| @tanstack/svelte-table           |            3 |
+| @tanstack/vue-table              |            3 |
+| @tanstack/angular-table          |            3 |
+| @tanstack/lit-table              |            3 |
+| @tanstack/alpine-table           |            2 |
+| @tanstack/ember-table            |            2 |
+| @tanstack/table-devtools         |            1 |
+| @tanstack/react-table-devtools   |            1 |
+| @tanstack/preact-table-devtools  |            1 |
+| @tanstack/solid-table-devtools   |            1 |
+| @tanstack/vue-table-devtools     |            1 |
+| @tanstack/angular-table-devtools |            1 |
+| @tanstack/match-sorter-utils     |            1 |
+| Total                            |           39 |
+
+`pnpm test:skills` verifies the file inventory against the tree. A React consumer with core discovers eight Table entry points. Plain reference files never appear as independent Intent skills.
 
 ## Framework distinctions that must survive generation
 
@@ -364,12 +298,12 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 ## Cross-cutting placement rules
 
 - Performance: stable inputs in getting-started/core; adapter-specific fine-grained state reads or selectors in table-state; CSS variables in resizing; measurement/overscan in Virtual; row ownership in client-vs-server.
-- CSS: pinning, sizing, resizing, and Virtual skills only. Core may state that CSS is user-owned.
+- CSS: pinning, sizing, resizing, and Virtual references only. Core may state that CSS is user-owned.
 - Accessibility: core/getting-started may remind that headless rendering leaves semantics and interaction accessibility with the renderer; do not create a component-library integration skill.
 - Query: data source and manual processing boundaries, not Table rendering.
 - Virtual: final Table models and renderer geometry, never tableFeatures.
-- Context: createTableHook skills; mention context over prop drilling when a registered reusable component needs typed table/cell/header access.
-- API lookup: api-not-found establishes the workflow; every other skill includes its direct installed declaration route.
+- Context: createTableHook references; mention context over prop drilling when a registered reusable component needs typed table/cell/header access.
+- API lookup: core/references/api-not-found.md establishes the workflow; every other skill includes its direct installed declaration route.
 
 ## Anti-patterns forbidden during generation
 
@@ -393,7 +327,13 @@ The maintainer accepted these generation positions on 2026-07-10:
 3. createTableHook is recommended for recurring app conventions; standalone construction remains appropriate for one-offs.
 4. Typed context/injection helpers from createTableHook are preferred over prop drilling inside registered components.
 5. useLegacyTable is mentioned only when encountered, as a deprecated temporary bridge rather than a migration target.
-6. Virtual skills teach maintained examples and only identify unsupported combinations as user-owned composition.
+6. Virtual references teach maintained examples and only identify unsupported combinations as user-owned composition.
 7. Devtools guidance is development-only by default; production entrypoints are explained only when explicitly requested.
 
 Domain discovery is reviewed and tree generation may proceed.
+
+## Consumer compatibility and validation
+
+Moved topic IDs are intentionally removed from discovery. Document their owning entry points in docs/agent-skills.md. Consumers using explicit `install --map` mappings must regenerate them. Consumers allowing individual old IDs in `intent.skills` must select the replacement entry points. Preserve a small catalog by avoiding forwarding SKILL.md files.
+
+Verify the pinned Intent 0.4.0 behavior in an isolated consumer install: list/catalog counts, default and mapped guidance, single-file loading, conditional reference links, and prerequisites. Check that package tarballs contain the references. Measure discovery text and task-specific reads separately. Run the content and annotated-snippet checks after all moves, and include a changeset because these files ship inside published packages.

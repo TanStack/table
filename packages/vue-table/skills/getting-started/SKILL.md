@@ -1,22 +1,31 @@
 ---
 name: getting-started
-description: >
-  Create a Vue TanStack Table v9 table with useTable, explicit tableFeatures, stable columns/features, reactive ref or computed data, and Vue FlexRender without destructuring reactive snapshots.
+description: Create and render Table v9 with the vue adapter. Route reusable createTableHook components, Query and Virtual integration, and framework setup; use table-state for reactive ownership.
 metadata:
   type: framework
   library: '@tanstack/vue-table'
   framework: vue
-  library_version: '9.2.5'
+  library_version: 9.2.5
 requires:
   - '@tanstack/table-core#core'
-  - '@tanstack/table-core#table-features'
 sources:
-  - 'TanStack/table:docs/framework/vue/guide/migrating.md'
-  - 'TanStack/table:examples/vue/basic-use-table'
-  - 'TanStack/table:packages/vue-table/src/index.ts'
+  - TanStack/table:docs/framework/vue/guide/migrating.md
+  - TanStack/table:examples/vue/basic-use-table
+  - TanStack/table:packages/vue-table/src/index.ts
+  - TanStack/table:docs/framework/vue/guide/composable-tables.md
+  - TanStack/table:examples/vue/composable-tables
+  - TanStack/table:packages/vue-table/src/createTableHook.ts
+  - TanStack/table:examples/vue/with-tanstack-query
+  - TanStack/table:docs/framework/vue/guide/pagination.md
+  - TanStack/table:docs/framework/vue/guide/virtualization.md
+  - TanStack/table:examples/vue/virtualized-rows
+  - TanStack/table:examples/vue/virtualized-columns
+  - TanStack/table:examples/vue/virtualized-infinite-scrolling
 ---
 
-This skill builds on `@tanstack/table-core#core` and `@tanstack/table-core#table-features`. Read them first for the headless model and explicit feature registration.
+# Vue Table setup and integration
+
+Before starting, run `intent load @tanstack/table-core#core` for the shared headless model and stable-input rules.
 
 ## Setup
 
@@ -55,90 +64,21 @@ const table = useTable({ features, columns, data })
 </template>
 ```
 
-## Core Patterns
+## Essential constraints
 
-### Preserve Vue option shapes
+Use `useTable` with a ref, computed value, or reactive getter for changing data. Passing `data.value` captures one array and loses later updates. Keep static features and columns stable; derive transformed arrays with `computed`.
 
-`useTable` accepts refs/computed values and unwraps them while watching dependencies. Keep `data`, controlled state, and other reactive options as refs or computed values; keep static columns/features stable.
+Table owns models and state. The application owns markup, CSS, interactions, and accessibility. Core-only tables use `row.getAllCells()`; visibility-aware methods need `columnVisibilityFeature`. Optional state and APIs require their features. Put row-model slots after their prerequisite features in `tableFeatures()`.
 
-### Add a client row model explicitly
+## Load by task
 
-```ts
-import {
-  createSortedRowModel,
-  rowSortingFeature,
-  sortFn_alphanumeric,
-  tableFeatures,
-} from '@tanstack/vue-table'
+- For repeated features, defaults, typed contexts, or component registries, read [reusable app hooks](references/create-table-hook.md).
+- For Query-backed data, server pages, sorting, filtering, or request keys, read [TanStack Query integration](references/with-tanstack-query.md).
+- For virtual rows, columns, dynamic measurement, or infinite scrolling, read [TanStack Virtual integration](references/with-tanstack-virtual.md).
+- For controlled state, tracked reads, or render subscriptions, read [table state](../table-state/SKILL.md).
+- For feature registration, missing feature APIs, or processing ownership, run `intent load @tanstack/table-core#table-features` and read only references needed by the task.
+- For v8 code, read the [migration checklist](../migrate-v8-to-v9/SKILL.md).
 
-const features = tableFeatures({
-  rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
-  sortFns: { alphanumeric: sortFn_alphanumeric },
-})
-```
+## API discovery
 
-The slot follows its prerequisite feature in the same call. Import individual `sortFn_*` built-ins and register only the ones your columns reference; the full `sortFns` registry object still works but bundles every built-in.
-
-## Common Mistakes
-
-### HIGH Flattening a ref into a snapshot
-
-Wrong:
-
-```ts
-const table = useTable({ features, columns, data: data.value })
-```
-
-Correct:
-
-```ts
-const table = useTable({ features, columns, data })
-```
-
-Passing `.value` captures one array instead of letting the adapter watch the ref.
-
-Source: `packages/vue-table/src/useTable.ts`
-
-### HIGH Using the v8 entrypoint
-
-Wrong:
-
-```ts
-const table = useVueTable({ data, columns, getCoreRowModel: getCoreRowModel() })
-```
-
-Correct:
-
-```ts
-const table = useTable({ features, columns, data })
-```
-
-V9 uses `useTable`; core processing is automatic and optional row models live in `tableFeatures`.
-
-Source: `docs/framework/vue/guide/migrating.md`
-
-### HIGH Assuming headless means prebuilt UI
-
-Wrong:
-
-```vue
-<TanStackTable :table="table" />
-```
-
-Correct:
-
-```vue
-<td
-  v-for="cell in row.getAllCells()"
-  :key="cell.id"
-><FlexRender :cell="cell" /></td>
-```
-
-The adapter renders definitions but owns no table component, CSS, or design-system integration.
-
-Source: `examples/vue/basic-use-table/src/App.tsx`
-
-## API Discovery
-
-Inspect `node_modules/@tanstack/vue-table/dist/index.d.ts`, then `useTable.d.ts` and `FlexRender.d.ts`. Inspect core feature APIs in `node_modules/@tanstack/table-core/dist/features/<feature>/`.
+Inspect `node_modules/@tanstack/vue-table/dist/index.d.ts`, then the exported adapter declarations for the installed version. Inspect optional core APIs under `node_modules/@tanstack/table-core/dist/features/`.
