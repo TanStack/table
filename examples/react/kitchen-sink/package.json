@@ -24,8 +24,8 @@
     "@tanstack/react-router": "^1.170.41",
     "@tanstack/react-start": "^1.168.60",
     "@tanstack/react-store": "^0.11.2",
-    "@tanstack/react-table": "^9.2.4",
-    "@tanstack/react-table-devtools": "^9.2.0",
+    "@tanstack/react-table": "^9.2.5",
+    "@tanstack/react-table-devtools": "^9.2.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },

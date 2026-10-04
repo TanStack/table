@@ -19,7 +19,7 @@
     }
   },
   "dependencies": {
-    "@tanstack/vue-table": "^9.2.4",
+    "@tanstack/vue-table": "^9.2.5",
     "@tanstack/vue-virtual": "^3.13.39",
     "vue": "^3.5.43"
   },

@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@tanstack/octane-store": "^0.12.3",
-    "@tanstack/octane-table": "^9.2.4",
+    "@tanstack/octane-table": "^9.2.5",
     "octane": "0.1.36"
   },
   "devDependencies": {

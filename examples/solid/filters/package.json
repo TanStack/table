@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@tanstack/solid-pacer": "^0.23.0",
-    "@tanstack/solid-table": "^9.2.4",
+    "@tanstack/solid-table": "^9.2.5",
     "solid-js": "^1.9.15"
   }
 }
