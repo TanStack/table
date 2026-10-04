@@ -1,5 +1,13 @@
 # @tanstack/angular-table-devtools
 
+## 9.2.5
+
+### Patch Changes
+
+- Updated dependencies [[`e9158e7`](https://github.com/TanStack/table/commit/e9158e7be837525ab99abd78550266d7cdcc58b2)]:
+  - @tanstack/table-core@9.2.5
+  - @tanstack/table-devtools@9.2.5
+
 ## 9.2.4
 
 ### Patch Changes

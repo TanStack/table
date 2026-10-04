@@ -1,5 +1,11 @@
 # @tanstack/table-core
 
+## 9.2.5
+
+### Patch Changes
+
+- [#6609](https://github.com/TanStack/table/pull/6609) [`e9158e7`](https://github.com/TanStack/table/commit/e9158e7be837525ab99abd78550266d7cdcc58b2) - Update TanStack Store dependencies to the latest compatible patch releases.
+
 ## 9.2.4
 
 ### Patch Changes
