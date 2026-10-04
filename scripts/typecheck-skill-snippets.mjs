@@ -7,7 +7,7 @@ import { glob } from 'tinyglobby'
 import { packages, rootDir } from './config.js'
 
 const markerPattern = /<!--\s*skill-snippet:check(?:\s+([^]*?))?\s*-->/
-const skillPaths = await glob('packages/*/skills/**/SKILL.md', {
+const skillPaths = await glob('packages/*/skills/**/*.md', {
   cwd: rootDir,
   absolute: true,
 })

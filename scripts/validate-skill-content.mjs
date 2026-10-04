@@ -4,7 +4,7 @@ import { glob } from 'tinyglobby'
 
 import { packages, rootDir } from './config.js'
 
-const skillPaths = await glob('packages/*/skills/**/SKILL.md', {
+const skillPaths = await glob('packages/*/skills/**/*.md', {
   cwd: rootDir,
   absolute: true,
 })
@@ -139,7 +139,8 @@ for (const skillPath of skillPaths) {
       )
     }
     if (
-      relativePath.includes('lit-table/skills/with-tanstack-virtual') &&
+      relativePath.startsWith('packages/lit-table/skills/') &&
+      relativePath.endsWith('/with-tanstack-virtual.md') &&
       /columns:\s*\[\.\.\./.test(block.body)
     ) {
       errors.push(
@@ -169,5 +170,7 @@ if (errors.length) {
   console.error(errors.join('\n'))
   process.exitCode = 1
 } else {
-  console.log(`Validated content invariants for ${skillPaths.length} skills`)
+  console.log(
+    `Validated content invariants for ${skillPaths.length} skill documents`,
+  )
 }

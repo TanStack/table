@@ -1,235 +1,49 @@
 ---
 name: custom-features
-description: >
-  Author a TanStack Table v9 feature plugin across every FeatureMap and API installation surface: state, options, column definitions, table, column, row, cell, header, row-model functions/caches, defaults, prototypes, and table/row/column instance data lifecycles. Load for initTableInstanceData, resetTableInstanceData, constructTableAPIs, or reusable behavior not covered by built-ins, meta, or option composition.
+description:
+  Implement a Table v9 plugin when built-ins and typed meta are insufficient. Covers
+  FeatureMaps, runtime lifecycle hooks, prototypes, and a complete checked example.
 metadata:
-  type: sub-skill
+  type: core
   library: '@tanstack/table-core'
-  library_version: '9.2.5'
-requires: ['core', 'table-features', 'typescript']
+  library_version: 9.2.5
+requires:
+  - core
+  - table-features
 sources:
-  - 'TanStack/table:docs/framework/react/guide/custom-features.md'
-  - 'TanStack/table:packages/table-core/src/types'
-  - 'TanStack/table:packages/table-core/src/types/TableFeatures.ts'
-  - 'TanStack/table:packages/table-core/src/utils.ts'
-  - 'TanStack/table:packages/table-core/src/features'
-  - 'TanStack/table:examples/react/custom-plugin'
+  - TanStack/table:docs/framework/react/guide/custom-features.md
+  - TanStack/table:packages/table-core/src/types
+  - TanStack/table:packages/table-core/src/types/TableFeatures.ts
+  - TanStack/table:packages/table-core/src/utils.ts
+  - TanStack/table:packages/table-core/src/features
+  - TanStack/table:examples/react/custom-plugin
 ---
 
-This skill builds on `core`, `table-features`, and `typescript`. Prefer a built-in feature or typed `tableMeta`/`columnMeta` for application callbacks; create a feature only for reusable state or behavior that must augment Table objects.
+# Author a custom feature
 
-## Extension Surface
+Read [core](../core/SKILL.md) and [feature architecture](../table-features/SKILL.md) first. Use a plugin for reusable state or behavior that must augment Table objects. Built-in options and typed `tableMeta`/`columnMeta` are usually enough for renderer callbacks and application configuration.
 
-Declaration-merge `Plugins` to register the feature key, then merge only the maps backed by runtime behavior:
+## Implementation workflow
 
-| Feature map                                      | Contribution                              |
-| ------------------------------------------------ | ----------------------------------------- |
-| `TableState_FeatureMap`                          | State slices in options, atoms, and store |
-| `TableOptions_FeatureMap<TFeatures, TData>`      | Table options and change callbacks        |
-| `Table_FeatureMap<TFeatures, TData>`             | Public table APIs                         |
-| `ColumnDef_FeatureMap<TFeatures, TData, TValue>` | Column-definition options                 |
-| `Column_FeatureMap<TFeatures, TData>`            | Public column APIs/data                   |
-| `Row_FeatureMap<TFeatures, TData>`               | Public row APIs/data                      |
-| `Cell_FeatureMap`                                | Public cell APIs                          |
-| `Header_FeatureMap`                              | Public header APIs                        |
-| `RowModelFns_FeatureMap<TFeatures, TData>`       | Advanced `table._rowModelFns` registries  |
-| `CachedRowModels_FeatureMap<TFeatures, TData>`   | Advanced `table._rowModels` cache getters |
+1. Identify the state, options, and object methods the behavior owns. If it only passes callbacks or renderer data, read [scoped meta typing](../core/references/typescript.md) and use meta instead.
+2. Before declaring plugin types or writing lifecycle hooks, read the [complete plugin example](references/plugin-example.md). It enumerates all 10 public FeatureMaps, the API assignment helpers, lifecycle ordering, and the advanced row-model maps.
+3. Declare the feature key in `Plugins`. Merge only FeatureMaps with matching runtime implementations; declarations alone install no behavior.
+4. Preserve user state after defaults in `getInitialState`; connect state updaters in default options. Install table methods with `assignTableAPIs` and object methods with `assignPrototypeAPIs` inside the corresponding lifecycle hooks.
+5. Keep the feature object and `tableFeatures({ customFeature })` result stable. Register the plugin through `tableFeatures` so inference and composition include it.
+6. Verify the advertised state, options, methods, and resets on a constructed table. Each declared API must exist at runtime; reset behavior must respect the state owner.
 
-`assignTableAPIs` installs singleton table methods. Use `assignPrototypeAPIs` inside `assignColumnPrototype`, `assignRowPrototype`, `assignCellPrototype`, or `assignHeaderPrototype` for shared object methods. Use `initColumnInstanceData` and `initRowInstanceData` only for per-instance fields.
+## Lifecycle boundaries
 
-Use `initTableInstanceData` for mutable, non-reactive data owned by one table. It runs once after options, state atoms, and the store exist, and every feature initialization finishes before any `constructTableAPIs` hook runs. Use `resetTableInstanceData` to clear transient instance data after internal atoms reset during `table.reset()`; it does not own state slices or externally controlled state. Keep `constructTableAPIs` exclusively for method assignment.
+Use `initTableInstanceData` for mutable data owned by one table and `resetTableInstanceData` for clearing its transient contents. All feature initialization finishes before any `constructTableAPIs` hook. Keep method installation separate from data allocation.
 
-## Table Instance Lifecycle
+Prototype methods are shared across the table's rows, columns, cells, or headers. Read per-object values through the method's current instance, and use the supported instance-data hooks for mutable fields. Read the example's installation rules before adding memoized methods or advanced row-model/cache wiring.
 
-```ts
-import type { TableFeature } from '@tanstack/table-core'
+## Common failures
 
-interface InteractionData {
-  _interactionHistory: Set<string>
-}
+- Types without matching runtime hooks advertise APIs that do not exist.
+- Ad hoc mutation of constructed instances bypasses feature registration and inferred composition.
+- Treating the density example as the only extension pattern misses column definitions and the other public FeatureMaps. Choose the maps required by the behavior; advanced row-model declarations also require runtime pipeline/cache wiring.
 
-const interactionData = (table: object): InteractionData =>
-  table as unknown as InteractionData
+## Installed API discovery
 
-export const interactionFeature: TableFeature = {
-  initTableInstanceData: (table) => {
-    interactionData(table)._interactionHistory = new Set()
-  },
-  resetTableInstanceData: (table) => {
-    interactionData(table)._interactionHistory.clear()
-  },
-}
-```
-
-Initialization may allocate resources once while reset clears their transient contents. Do not rerun initialization during `table.reset()`.
-
-## Complete Example
-
-This single example shows every ordinary FeatureMap and API installation path. It names the two advanced row-model maps without enabling them because density does not own the row-model pipeline.
-
-<!-- skill-snippet:check -->
-
-```ts
-import {
-  assignPrototypeAPIs,
-  assignTableAPIs,
-  functionalUpdate,
-  makeStateUpdater,
-  tableFeatures,
-  type CellData,
-  type OnChangeFn,
-  type RowData,
-  type TableFeature,
-  type TableFeatures,
-  type Updater,
-} from '@tanstack/table-core'
-
-type Density = 'sm' | 'md'
-interface DensityState {
-  density: Density
-}
-interface DensityOptions {
-  onDensityChange?: OnChangeFn<Density>
-}
-interface DensityColumnDef {
-  enableDensity?: boolean
-}
-interface DensityAPI {
-  getDensity: () => Density
-}
-interface DensityTable extends DensityAPI {
-  setDensity: (updater: Updater<Density>) => void
-}
-interface DensityColumn extends DensityAPI {
-  densityAtCreation?: Density
-}
-interface DensityRow extends DensityAPI {
-  densityAtCreation?: Density
-}
-type DensityCell = DensityAPI
-type DensityHeader = DensityAPI
-
-declare module '@tanstack/table-core' {
-  interface Plugins {
-    densityFeature: TableFeature
-  }
-  interface TableState_FeatureMap {
-    densityFeature: DensityState
-  }
-  interface TableOptions_FeatureMap<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  > {
-    densityFeature: DensityOptions
-  }
-  interface Table_FeatureMap<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  > {
-    densityFeature: DensityTable
-  }
-  interface ColumnDef_FeatureMap<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData,
-  > {
-    densityFeature: DensityColumnDef
-  }
-  interface Column_FeatureMap<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  > {
-    densityFeature: DensityColumn
-  }
-  interface Row_FeatureMap<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  > {
-    densityFeature: DensityRow
-  }
-  interface Cell_FeatureMap {
-    densityFeature: DensityCell
-  }
-  interface Header_FeatureMap {
-    densityFeature: DensityHeader
-  }
-
-  // If this feature actually owned a row-model stage, it would also merge
-  // RowModelFns_FeatureMap and CachedRowModels_FeatureMap here, then populate
-  // table._rowModelFns/table._rowModels with matching runtime/cache wiring.
-}
-
-const readDensity = (table: unknown): Density =>
-  (
-    table as {
-      atoms: { density: { get: () => Density } }
-    }
-  ).atoms.density.get()
-
-export const densityFeature: TableFeature = {
-  getInitialState: (state) => ({ density: 'md', ...state }),
-  getDefaultTableOptions: (table) => ({
-    onDensityChange: makeStateUpdater('density', table),
-  }),
-  constructTableAPIs: (table) => {
-    assignTableAPIs('densityFeature', table, {
-      table_getDensity: { fn: () => readDensity(table) },
-      table_setDensity: {
-        fn: (updater: Updater<Density>) =>
-          (table.options as DensityOptions).onDensityChange?.((old) =>
-            functionalUpdate(updater, old),
-          ),
-      },
-    })
-  },
-  assignColumnPrototype: (prototype, table) => {
-    assignPrototypeAPIs('densityFeature', prototype, table, {
-      column_getDensity: { fn: (column) => readDensity(column.table) },
-    })
-  },
-  assignRowPrototype: (prototype, table) => {
-    assignPrototypeAPIs('densityFeature', prototype, table, {
-      row_getDensity: { fn: (row) => readDensity(row.table) },
-    })
-  },
-  assignCellPrototype: (prototype, table) => {
-    assignPrototypeAPIs('densityFeature', prototype, table, {
-      cell_getDensity: { fn: (cell) => readDensity(cell.table) },
-    })
-  },
-  assignHeaderPrototype: (prototype, table) => {
-    assignPrototypeAPIs('densityFeature', prototype, table, {
-      header_getDensity: { fn: (header) => readDensity(header.table) },
-    })
-  },
-  initColumnInstanceData: (column) => {
-    ;(column as unknown as DensityColumn).densityAtCreation = readDensity(
-      column.table,
-    )
-  },
-  initRowInstanceData: (row) => {
-    ;(row as unknown as DensityRow).densityAtCreation = readDensity(row.table)
-  },
-}
-
-export const features = tableFeatures({ densityFeature })
-```
-
-`getDefaultColumnDef` is also available for overridable column defaults; add it when the feature owns a real column-definition default. Do not add lifecycle hooks merely to fill the surface.
-
-## Guardrails
-
-- Keep the feature object and `tableFeatures({ densityFeature })` result stable.
-- Match every declaration-merged API with runtime installation. Types alone do nothing.
-- Preserve incoming state in `getInitialState`; put user state after defaults.
-- Method keys use `table_`, `column_`, `row_`, `cell_`, or `header_`; the prefix is removed on installation.
-- Table API `fn` receives declared arguments. Prototype API `fn` receives the current object first.
-- Initialize table-owned mutable data in `initTableInstanceData`, not `constructTableAPIs`; all feature data is initialized before any table API is assigned.
-- Clear transient table-owned data in `resetTableInstanceData`. Reset state slices through atoms/updaters, and do not expect this hook to reset externally controlled state.
-- Add `memoDeps` only for a genuinely derived method. Prototype methods are shared and must not close over per-object mutable data.
-- There are no `assignColumnAPIs`, `assignRowAPIs`, `assignCellAPIs`, or `assignHeaderAPIs`; use `assignPrototypeAPIs` in the matching hook.
-- Do not mutate constructed instances ad hoc or use a feature for renderer-only callbacks that belong in meta.
-
-## API Discovery
-
-Inspect exported `*_FeatureMap` interfaces under `node_modules/@tanstack/table-core/dist/types/`, `TableFeature` in `types/TableFeatures.d.ts`, and `assignTableAPIs`/`assignPrototypeAPIs` in `utils.d.ts`. Copy lifecycle shapes—not domain behavior—from the nearest stock feature under `dist/features/`.
+Inspect `node_modules/@tanstack/table-core/dist/types/TableFeatures.d.ts`, the exported `*_FeatureMap` interfaces in `dist/types/`, and `assignTableAPIs`/`assignPrototypeAPIs` in `dist/utils.d.ts`. Follow declarations under `dist/features/` for comparable stock lifecycle signatures.

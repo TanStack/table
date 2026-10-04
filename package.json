@@ -39,7 +39,8 @@
     "test:intent": "intent validate && intent stale",
     "test:skill-content": "node scripts/validate-skill-content.mjs",
     "test:skill-snippets": "node scripts/typecheck-skill-snippets.mjs",
-    "test:skills": "intent validate && pnpm skills:versions:check && pnpm test:skill-content && pnpm test:skill-snippets",
+    "test:skill-tree": "node scripts/validate-skill-tree.mjs && node --test scripts/tests/skill-tree.test.mjs",
+    "test:skills": "intent validate && pnpm skills:versions:check && pnpm test:skill-tree && pnpm test:skill-content && pnpm test:skill-snippets",
     "test:knip": "NODE_OPTIONS='--max-old-space-size=4096' knip",
     "test:lib": "nx affected --targets=test:lib",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
@@ -94,6 +95,7 @@
     "tsdown": "^0.23.0",
     "typescript": "6.0.3",
     "vite": "^8.3.2",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "yaml": "2.9.0"
   }
 }

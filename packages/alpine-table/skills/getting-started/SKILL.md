@@ -1,22 +1,25 @@
 ---
 name: getting-started
-description: >
-  Create an Alpine TanStack Table v9 table with createTable, explicit tableFeatures, Alpine.reactive data getters, x-for rendering, and FlexRender through x-html. Load for first-table setup, reactive options, or when nested Alpine directives rendered by x-html do not initialize.
+description:
+  Create and render Table v9 with the alpine adapter. Route reusable createTableHook
+  defaults, and framework setup; use table-state for reactive ownership.
 metadata:
   type: framework
   library: '@tanstack/alpine-table'
   framework: alpine
-  library_version: '9.2.5'
+  library_version: 9.2.5
 requires:
   - '@tanstack/table-core#core'
-  - '@tanstack/table-core#table-features'
 sources:
-  - 'TanStack/table:docs/framework/alpine/guide/table-state.md'
-  - 'TanStack/table:examples/alpine/basic-create-table'
-  - 'TanStack/table:packages/alpine-table/src/index.ts'
+  - TanStack/table:docs/framework/alpine/guide/table-state.md
+  - TanStack/table:examples/alpine/basic-create-table
+  - TanStack/table:packages/alpine-table/src/index.ts
+  - TanStack/table:docs/framework/alpine/guide/composable-tables.md
+  - TanStack/table:examples/alpine/basic-app-table
+  - TanStack/table:packages/alpine-table/src/createTableHook.ts
 ---
 
-This skill builds on @tanstack/table-core#core and @tanstack/table-core#table-features.
+Load `intent load @tanstack/table-core#core` first for the headless model, stable inputs, and column inference.
 
 ## Setup
 
@@ -57,52 +60,20 @@ Alpine.start()
 
 Render real table structure with `x-for`; use `x-html="FlexRender({ header })"` or `x-html="FlexRender({ cell })"` only for renderer output.
 
-## Core Patterns
+## Construction and rendering
 
-### Pass live options through getters
+Wrap changing data in `Alpine.reactive` and expose it with `get data()`. The adapter tracks option getters; `data: local.data` captures a snapshot and does not follow later array replacements. Keep static columns and features outside getters.
 
-Wrap changing data in an `Alpine.reactive({ data })` object and read `local.data` through `get data()`. The property read gives the adapter's effect a dependency to track before it calls `table.setOptions`.
+The returned table is a reactive proxy. Read Table APIs directly in `x-text`, `x-for`, `x-if`, or bound attributes; no Subscribe component is needed.
 
-### Read table APIs directly in bindings
+Build table structure and interactive controls as real Alpine markup. Use `x-html="FlexRender({ header })"` or `x-html="FlexRender({ cell })"` for renderer output. Alpine does not initialize directives inside `x-html` strings; use templates or `Alpine.bind` bundles for buttons and inputs.
 
-The adapter returns a reactive proxy. Expressions such as `x-text="table.getRowModel().rows.length"` update without a Subscribe component.
+## Read for the task
 
-### Render interaction controls as real markup
+- When adding or configuring optional features, load `intent load @tanstack/table-core#table-features` and read only references for the requested behavior.
+- For state ownership or reactive reads, read [table-state](../table-state/SKILL.md).
+- When tables share features, defaults, or reusable UI, read [create-table-hook](references/create-table-hook.md).
 
-Buttons, inputs, and directives belong in the template. Renderer strings are useful for cell content, but `x-html` does not initialize Alpine directives inside the injected HTML.
+## API discovery
 
-## Common Mistakes
-
-### HIGH Passing a data snapshot
-
-Wrong: `createTable({ features, columns, data: local.data })` when `local.data` will be replaced.
-
-Correct: expose `get data() { return local.data }`.
-
-The adapter tracks option getters; a captured array does not follow later replacements.
-
-Source: TanStack/table:packages/alpine-table/src/createTable.ts
-
-### HIGH Interactive directives hidden in x-html
-
-Wrong: return `'<button @click="remove()">Remove</button>'` from a cell renderer.
-
-Correct: render the button as real template markup and bind the row action there, or use an `Alpine.bind` bundle.
-
-Alpine does not initialize directives inside content inserted by `x-html`.
-
-Source: TanStack/table:docs/framework/alpine/guide/composable-tables.md
-
-### HIGH Expecting Table styling
-
-Wrong: enable sizing or pinning and assume widths/sticky positioning appear.
-
-Correct: apply widths, logical offsets, overflow, and sticky CSS in the Alpine template.
-
-Table exposes state and geometry; it does not own the renderer.
-
-Source: TanStack/table:docs/overview.md
-
-## API Discovery
-
-Inspect `node_modules/@tanstack/alpine-table/dist/index.d.ts` and `createTable.d.ts`. Exact core APIs live under `node_modules/@tanstack/table-core/dist/`.
+Inspect `node_modules/@tanstack/alpine-table/dist/index.d.ts`, `createTable.d.ts`, and `reactivity.d.ts`. Core feature APIs are in `node_modules/@tanstack/table-core/dist/features/`.

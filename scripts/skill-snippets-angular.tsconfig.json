@@ -1,0 +1,7 @@
+{
+  "extends": "../packages/angular-table/tsconfig.json",
+  "compilerOptions": {
+    // Snippets resolve core source, which does not enable this Angular-only rule.
+    "noPropertyAccessFromIndexSignature": false
+  }
+}
