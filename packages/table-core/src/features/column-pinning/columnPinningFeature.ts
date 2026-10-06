@@ -111,6 +111,12 @@ export const columnPinningFeature: TableFeature = {
     })
   },
 
+  initCellInstanceData: (cell) => {
+    // Declared up front so marking a cell with its pinned region never
+    // changes its hidden class.
+    ;(cell as any).position = undefined
+  },
+
   constructTableAPIs: (table) => {
     assignTableAPIs('columnPinningFeature', table, {
       table_setColumnPinning: {

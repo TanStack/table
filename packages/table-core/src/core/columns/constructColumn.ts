@@ -108,7 +108,9 @@ export function constructColumn<
     TValue
   >
 
-  // Only assign instance-specific properties
+  // Only assign instance-specific properties. `_memos` is declared up front
+  // so memoized API calls never change the column's hidden class.
+  column._memos = undefined
   column.accessorFn = accessorFn
   column.columnDef = resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>
   column.columns = []

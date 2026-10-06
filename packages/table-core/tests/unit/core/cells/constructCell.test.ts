@@ -75,11 +75,13 @@ describe('constructCell', () => {
         `${cell.row.id}_${cell.column.id}`,
       )
     }
-    expect(initCount).toBe(2)
+    // 2 real cells + the discarded shape-warmup cell constructed alongside
+    // the shared cell prototype.
+    expect(initCount).toBe(3)
 
     // Cells are cached per row/column pair, so re-access constructs no new cells
     const secondCells = rows.flatMap((row) => row.getAllCells())
     expect(secondCells[0]).toBe(firstCells[0])
-    expect(initCount).toBe(2)
+    expect(initCount).toBe(3)
   })
 })

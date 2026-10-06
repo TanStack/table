@@ -70,6 +70,9 @@ export const columnVisibilityFeature: TableFeature = {
           table.atoms.columnPinning?.get(),
           table.atoms.columnVisibility?.get(),
         ],
+        // Called for every rendered row; dedicated slots (declared in
+        // initRowInstanceData) keep these memo loads monomorphic.
+        memoSlot: '_memoGetVisibleCells',
       },
       row_getVisibleCellsByColumnId: {
         fn: (row) => row_getVisibleCellsByColumnId(row),
@@ -77,8 +80,17 @@ export const columnVisibilityFeature: TableFeature = {
           row.getAllCells(),
           table.atoms.columnVisibility?.get(),
         ],
+        memoSlot: '_memoGetVisibleCellsByColumnId',
       },
     })
+  },
+
+  initRowInstanceData: (row) => {
+    // Declared up front so first memoized calls never change the row's
+    // hidden class.
+    const visibilityRow = row as any
+    visibilityRow._memoGetVisibleCells = undefined
+    visibilityRow._memoGetVisibleCellsByColumnId = undefined
   },
 
   constructTableAPIs: (table) => {

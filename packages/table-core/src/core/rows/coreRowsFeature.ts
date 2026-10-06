@@ -28,10 +28,14 @@ export const coreRowsFeature: TableFeature = {
       row_getAllCellsByColumnId: {
         fn: (row) => row_getAllCellsByColumnId(row),
         memoDeps: (row) => [row.getAllCells()],
+        // Called per row by pinned-region cell reads; dedicated slots keep
+        // these render-hot memo loads monomorphic. Declared in constructRow.
+        memoSlot: '_memoGetAllCellsByColumnId',
       },
       row_getAllCells: {
         fn: (row) => row_getAllCells(row),
         memoDeps: (row) => [row.table.getAllLeafColumns()],
+        memoSlot: '_memoGetAllCells',
       },
       row_getLeafRows: {
         fn: (row) => row_getLeafRows(row),

@@ -129,11 +129,11 @@ describe('cloneState', () => {
 })
 
 describe('copyInstancePropertiesWithoutMemos', () => {
-  test('copies own properties but skips memo closures and the cells cache', () => {
+  test('copies own properties but skips the memo holder and the cells cache', () => {
     const source = {
       id: '0',
       depth: 1,
-      _memo_getAllCells: () => {},
+      _memos: { getAllCells: () => {} },
       _cellsCache: new WeakMap(),
     }
     const target: Record<string, unknown> = {}
@@ -142,7 +142,7 @@ describe('copyInstancePropertiesWithoutMemos', () => {
 
     expect(target['id']).toBe('0')
     expect(target['depth']).toBe(1)
-    expect(target['_memo_getAllCells']).toBeUndefined()
+    expect(target['_memos']).toBeUndefined()
     expect(target['_cellsCache']).toBeUndefined()
   })
 })

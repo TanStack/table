@@ -21,7 +21,7 @@ export interface Row_FeatureMap<
 > {
   rowAggregationFeature: Row_RowAggregation
   columnFilteringFeature: Row_ColumnFiltering<TFeatures, TData>
-  columnGroupingFeature: Row_ColumnGrouping
+  columnGroupingFeature: Row_ColumnGrouping<TFeatures, TData>
   columnPinningFeature: Row_ColumnPinning<TFeatures, TData>
   columnVisibilityFeature: Row_ColumnVisibility<TFeatures, TData>
   rowExpandingFeature: Row_RowExpanding

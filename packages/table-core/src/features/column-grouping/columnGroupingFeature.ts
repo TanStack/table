@@ -1,9 +1,9 @@
 import {
   assignPrototypeAPIs,
   assignTableAPIs,
-  makeObjectMap,
   makeStateUpdater,
 } from '../../utils'
+import { row_getValue } from '../../core/rows/coreRowsFeature.utils'
 import {
   cell_getIsGrouped,
   cell_getIsPlaceholder,
@@ -13,6 +13,7 @@ import {
   column_getToggleGroupingHandler,
   column_toggleGrouping,
   getDefaultGroupingState,
+  row_getGroupedValue,
   row_getGroupingValue,
   row_getIsGrouped,
   table_resetGrouping,
@@ -78,10 +79,30 @@ export const columnGroupingFeature: TableFeature = {
         fn: (row, columnId) => row_getGroupingValue(row, columnId),
       },
     })
+
+    // Overrides the core `row.getValue` (core features assign first) so
+    // grouped rows resolve grouping and aggregated values through the shared
+    // prototype instead of a per-row closure, which would fork the row's
+    // hidden class. Assigned directly with fixed arity: `getValue` is the
+    // hottest row API in grouped pipelines (groupBy and every aggregation
+    // read it), so it skips the generic rest-args wrapper.
+    prototype.getValue = function (this: any, columnId: string) {
+      return this.groupingColumnId === undefined
+        ? row_getValue(this, columnId)
+        : row_getGroupedValue(this, columnId)
+    }
   },
 
   initRowInstanceData: (row) => {
-    ;(row as any)._groupingValuesCache = makeObjectMap()
+    // Declared up front (`undefined` until the grouped row model assigns
+    // them) so grouped rows share the leaf rows' hidden class.
+    const groupingRow = row as any
+    groupingRow._aggregationValuesCache = undefined
+    groupingRow._groupedRows = undefined
+    groupingRow._groupingValuesCache = undefined
+    groupingRow.groupingColumnId = undefined
+    groupingRow.groupingValue = undefined
+    groupingRow.leafRows = undefined
   },
 
   constructTableAPIs: (table) => {

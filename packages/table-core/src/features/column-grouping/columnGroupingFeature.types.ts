@@ -55,8 +55,24 @@ export interface Column_ColumnGrouping {
   toggleGrouping: () => void
 }
 
-export interface Row_ColumnGrouping {
-  _groupingValuesCache: Record<string, any>
+export interface Row_ColumnGrouping<
+  in out TFeatures extends TableFeatures = TableFeatures,
+  in out TData extends RowData = RowData,
+> {
+  /**
+   * Cache of aggregated values computed for this grouped row, keyed by column
+   * id. Populated lazily by grouped `row.getValue` reads.
+   * @internal
+   */
+  _aggregationValuesCache?: Record<string, unknown>
+  /**
+   * The rows the grouped row model partitioned into this group, before
+   * aggregation normalization. Grouped `row.getValue` reads resolve grouping
+   * values and aggregations from these rows.
+   * @internal
+   */
+  _groupedRows?: Array<Row<TFeatures, TData>>
+  _groupingValuesCache?: Record<string, any>
   /**
    * Reads the value used to group this row for a column id.
    */
@@ -73,6 +89,11 @@ export interface Row_ColumnGrouping {
    * If this row is grouped, this is the unique/shared value for the `groupingColumnId` for all of the rows in this group.
    */
   groupingValue?: unknown
+  /**
+   * If this row is grouped, the normalized unique leaf rows this group
+   * aggregates over.
+   */
+  leafRows?: Array<Row<TFeatures, TData>>
 }
 
 export interface Cell_ColumnGrouping {

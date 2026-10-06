@@ -166,6 +166,11 @@ export interface Table_CoreProperties<
    */
   _cellInstanceInitFns: Array<NonNullable<TableFeature['initCellInstanceData']>>
   /**
+   * Constructor cache for Cell objects. Cells allocate through a per-table
+   * constructor so the engine stores their fields in-object.
+   */
+  _cellConstructor?: new (...args: Array<any>) => object
+  /**
    * Prototype cache for Cell objects - shared by all cells in this table
    */
   _cellPrototype?: object
@@ -207,6 +212,11 @@ export interface Table_CoreProperties<
    * The row models that are enabled for the table.
    */
   readonly _rowModels: CachedRowModels<TFeatures, TData>
+  /**
+   * Constructor cache for Row objects. Rows allocate through a per-table
+   * constructor so the engine stores their fields in-object.
+   */
+  _rowConstructor?: new (...args: Array<any>) => object
   /**
    * Prototype cache for Row objects - shared by all rows in this table
    */

@@ -21,6 +21,9 @@ export const coreCellsFeature: TableFeature = {
       cell_getContext: {
         fn: (cell) => cell_getContext(cell),
         memoDeps: (cell) => [cell],
+        // Called for every rendered cell; a dedicated slot keeps the memo
+        // load monomorphic. Declared in constructCell.
+        memoSlot: '_memoGetContext',
       },
     })
   },
