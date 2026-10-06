@@ -31,14 +31,11 @@ rendering headers, cells, or footers with custom markup. Mirrors the
 <table.FlexRender footer={footer} />
 ```
 
-### Subscribe()
+### ~~Subscribe~~
 
 ```ts
 Subscribe: (props) => JSX.Element;
 ```
-
-Creates a reactive render boundary. The child function reads the table
-atoms it needs, so Solid only tracks those atom reads.
 
 #### Parameters
 
@@ -51,6 +48,13 @@ atoms it needs, so Solid only tracks those atom reads.
 #### Returns
 
 `JSX.Element`
+
+#### Deprecated
+
+Read table APIs or `table.atoms` directly inside JSX,
+`createMemo`, or `createEffect`. Solid tracks those reads natively.
+This compatibility wrapper only passes atoms to its child function;
+it does not create a subscription or tracking scope.
 
 ## Type Parameters
 

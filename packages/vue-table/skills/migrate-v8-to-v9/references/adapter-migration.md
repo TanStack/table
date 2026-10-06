@@ -21,7 +21,7 @@ const table = useTable({ features, columns, data })
 - Pass a `ref` or `computed` as `data`; the adapter unwraps and syncs it. Do not pass `data.value`, which is only a snapshot. A getter returning `data.value` is also supported.
 - `table.getState().sorting` becomes the narrow `table.atoms.sorting.get()`. Use `table.store.get()` only for a full snapshot/debug output.
 - Wrap atom reads in Vue `computed` when deriving template values.
-- In JSX/render functions, `table.Subscribe` provides a fine-grained boundary. Pass the callback as the explicit `children` prop because Vue JSX element children become slots.
+- Replace deprecated `table.Subscribe` calls with direct atom reads inside templates, render functions, computed getters, or watcher sources. If it was used as a component to isolate rendering, move the reads into a child component.
 - Controlled refs need getter-backed state slices plus per-slice callbacks that resolve value-or-function `Updater`s.
 - The top-level `onStateChange` is removed. Use per-slice callbacks, external atoms, or `table.store.subscribe` to observe everything.
 - External atoms come from `@tanstack/vue-store` and are supplied through `atoms`. Never provide both `atoms.pagination` and `state.pagination`.

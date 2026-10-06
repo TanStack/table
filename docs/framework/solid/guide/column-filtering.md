@@ -133,7 +133,7 @@ Since the column filter state is an array of objects, you can have multiple colu
 
 #### Accessing Column Filter State
 
-In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.columnFilters.get()` is a reactive read when called inside a tracked scope (JSX, `createMemo`, `createEffect`, or `table.Subscribe`). In event handlers or other untracked code, the same call simply returns the current value.
+In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.columnFilters.get()` is a reactive read when called inside a tracked scope (JSX, `createMemo`, or `createEffect`). In event handlers or other untracked code, the same call simply returns the current value.
 
 ```tsx
 const table = createTable({

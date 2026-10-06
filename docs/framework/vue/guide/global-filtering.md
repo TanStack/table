@@ -145,7 +145,7 @@ You can also define your own custom global filter function and pass it directly 
 
 ### Global Filter State
 
-The `globalFilter` state slice holds the current global filter value, usually a search string (the slice is typed as `any` so custom global filter functions can accept other value shapes). You can read it from the table instance with `table.atoms.globalFilter.get()`. Because the Vue adapter backs table atoms with Vue refs and computed values, this read is reactive when it happens inside a template, `computed(...)`, `watch(...)`, or `table.Subscribe`. Outside of a Vue reactive context, it is a plain snapshot of the current value.
+The `globalFilter` state slice holds the current global filter value, usually a search string (the slice is typed as `any` so custom global filter functions can accept other value shapes). You can read it from the table instance with `table.atoms.globalFilter.get()`. Because the Vue adapter backs table atoms with Vue refs and computed values, this read is reactive when it happens inside a template, `computed(...)`, `watch(...)` sources, or render functions. Outside of a Vue reactive context, it is a plain snapshot of the current value.
 
 If you need access to the global filter state outside of the table, you can own the slice yourself. The recommended way in v9 is an external atom passed through the `atoms` table option. Atoms preserve fine-grained subscriptions, and the filter value can be used elsewhere (such as in a query key for server-side filtering) without depending on the table instance.
 

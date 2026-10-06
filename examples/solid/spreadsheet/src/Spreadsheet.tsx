@@ -228,6 +228,20 @@ export function Spreadsheet() {
     sheets().findIndex((sheet) => sheet.id === activeSheetId()),
   )
 
+  const active = () => table.atoms.cellSelection.get().at(-1)
+  const activeValue = () => {
+    const current = active()
+    return current
+      ? formatCellValue(
+          interactions.getValue(current.anchorRowId, current.anchorColumnId),
+        )
+      : ''
+  }
+  const summary = () => {
+    void table.atoms.cellSelection.get()
+    return interactions.getSelectionSummary()
+  }
+
   return (
     <main class="spreadsheet-app">
       <div class="excel-chrome">
@@ -425,29 +439,11 @@ export function Spreadsheet() {
         </div>
       </div>
 
-      <table.Subscribe>
-        {(atoms) => {
-          const active = () => atoms.cellSelection.get().at(-1)
-          const activeValue = () => {
-            const current = active()
-            return current
-              ? formatCellValue(
-                  interactions.getValue(
-                    current.anchorRowId,
-                    current.anchorColumnId,
-                  ),
-                )
-              : ''
-          }
-          return (
-            <SpreadsheetFormulaBar
-              active={active}
-              initialValue={activeValue}
-              interactions={interactions}
-            />
-          )
-        }}
-      </table.Subscribe>
+      <SpreadsheetFormulaBar
+        active={active}
+        initialValue={activeValue}
+        interactions={interactions}
+      />
 
       <SpreadsheetGrid
         onReady={(handle) => (gridRef = handle)}
@@ -512,28 +508,16 @@ export function Spreadsheet() {
           </div>
           <span class="status-ready">Ready</span>
         </div>
-        <table.Subscribe>
-          {(atoms) => {
-            const summary = () => {
-              void atoms.cellSelection.get()
-              return interactions.getSelectionSummary()
-            }
-            return (
-              <div class="selection-summary" aria-live="polite">
-                <span>{summary().count.toLocaleString()} selected</span>
-                {summary().numericCount ? (
-                  <>
-                    <span>
-                      Count: {summary().numericCount.toLocaleString()}
-                    </span>
-                    <span>Sum: {formatNumber(summary().sum)}</span>
-                    <span>Average: {formatNumber(summary().average)}</span>
-                  </>
-                ) : null}
-              </div>
-            )
-          }}
-        </table.Subscribe>
+        <div class="selection-summary" aria-live="polite">
+          <span>{summary().count.toLocaleString()} selected</span>
+          {summary().numericCount ? (
+            <>
+              <span>Count: {summary().numericCount.toLocaleString()}</span>
+              <span>Sum: {formatNumber(summary().sum)}</span>
+              <span>Average: {formatNumber(summary().average)}</span>
+            </>
+          ) : null}
+        </div>
         <div class="zoom-control">
           <button
             type="button"

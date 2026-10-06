@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:571](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L571)
+Defined in: [createTableHook.tsx:569](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L569)
 
 Creates a custom table hook with pre-bound components for composition.
 
@@ -81,9 +81,7 @@ const columnHelper = createAppColumnHelper<Person>()
 function PaginationControls() {
   const table = useTableContext() // TFeatures already known!
   return (
-    <table.Subscribe>
-      {(atoms) => <span>Page {atoms.pagination.get().pageIndex + 1}</span>}
-    </table.Subscribe>
+    <span>Page {table.atoms.pagination.get().pageIndex + 1}</span>
   )
 }
 

@@ -22,7 +22,7 @@ Before starting, run `intent load @tanstack/table-core#table-state` for shared o
 
 The adapter backs table atoms with Solid signals and memos. Read `table.atoms.<slice>.get()` inside JSX, `createMemo`, `createEffect`, or another tracked scope. A value captured once outside tracking is only a snapshot. Solid has no React-style selected `table.state`.
 
-`table.Subscribe` passes atoms to its child. The child component body is untracked; put reads inside JSX expressions or a thunk invoked by JSX. Track the required atoms instead of adding whole-store forced rerenders.
+`table.Subscribe` is deprecated and adds no subscription or tracking scope. Read `table.atoms` directly inside JSX, memos, or effects. Component bodies are untracked; keep reads inside tracked scopes. Track the required atoms instead of adding whole-store forced rerenders.
 
 ## Control a slice
 

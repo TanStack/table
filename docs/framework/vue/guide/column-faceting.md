@@ -153,7 +153,7 @@ If you want each count to represent rows, make sure `getUniqueValues` returns ea
 
 ### Reactive Facet Controls in Vue
 
-Read facet APIs inside a Vue reactive context such as `computed`, a template, or `table.Subscribe`. A filter component can derive its options from a stable `column` prop with `computed`.
+Read facet APIs inside a Vue reactive context such as `computed`, a template, or a render function. A filter component can derive its options from a stable `column` prop with `computed`.
 
 ```vue
 <script setup lang="ts">

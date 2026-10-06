@@ -69,7 +69,7 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should Vue render or computed work update when that value changes?
 
-Use direct atom reads for slice values. Use `table.store.get()` for the current flat state snapshot. Because Vue table atoms are backed by Vue refs and computed values, atom reads participate in Vue dependency tracking when they happen inside templates, `computed(...)`, `watch(...)`, or `table.Subscribe`.
+Use direct atom reads for slice values. Use `table.store.get()` for the current flat state snapshot. Because Vue table atoms are backed by Vue refs and computed values, atom reads participate in Vue dependency tracking when they happen inside templates, `computed(...)`, `watch(...)` sources, or render functions.
 
 #### Reading State
 
@@ -122,51 +122,31 @@ const table = useTable({
 data.value = makeData(200)
 ```
 
-#### Fine-grained Updates with table.Subscribe
+#### Fine-grained updates
 
-Use `table.Subscribe` in render functions or JSX when you want a specific part of the Vue tree to create a reactive render boundary. It receives `table.atoms` through a `children` function, and Vue tracks only the atom reads used inside that function. Note that `table.Subscribe` reads `children` as a prop, so pass it explicitly (Vue JSX delivers element children as slots, not props).
+Read table APIs and atoms directly inside templates or render functions. Vue tracks those reads natively. Use `computed` for derived values, and move reads into a child component when you need to isolate rendering from its parent.
 
-```tsx
-<table.Subscribe
-  children={(atoms) => {
-    void atoms.columnFilters.get()
-    void atoms.globalFilter.get()
-    void atoms.pagination.get()
+`table.Subscribe` is deprecated. It only passes atoms to its child function and adds no subscription logic. Replace plain function calls with direct reads. If you used it as a component to isolate rendering, put those reads in a child component instead.
 
-    return (
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>...</tr>
-        ))}
-      </tbody>
-    )
-  }}
-/>
-```
-
-You can also call it as a plain function inside a render function:
+For example, a component's render function can return:
 
 ```tsx
-{
-  table.Subscribe({
-    children: (atoms) => (
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>
-            <td>
-              <input
-                type="checkbox"
-                checked={!!atoms.rowSelection.get()[row.id]}
-                onClick={row.getToggleSelectedHandler()}
-              />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    ),
-  })
-}
+<tbody>
+  {table.getRowModel().rows.map((row) => (
+    <tr key={row.id}>
+      <td>
+        <input
+          type="checkbox"
+          checked={!!table.atoms.rowSelection.get()[row.id]}
+          onClick={row.getToggleSelectedHandler()}
+        />
+      </td>
+    </tr>
+  ))}
+</tbody>
 ```
+
+Reading an atom into a plain variable during `setup()` captures a snapshot. Keep the read inside the template, render function, computed getter, or watcher source to track updates.
 
 ### Setting Table State
 

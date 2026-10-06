@@ -21,8 +21,10 @@ export type SolidTable<
   TData extends RowData,
 > = Table<TFeatures, TData> & {
   /**
-   * Creates a reactive render boundary. The child function reads the table
-   * atoms it needs, so Solid only tracks those atom reads.
+   * @deprecated Read table APIs or `table.atoms` directly inside JSX,
+   * `createMemo`, or `createEffect`. Solid tracks those reads natively.
+   * This compatibility wrapper only passes atoms to its child function;
+   * it does not create a subscription or tracking scope.
    */
   Subscribe: (props: {
     children: (atoms: Table<TFeatures, TData>['atoms']) => JSX.Element
@@ -45,7 +47,8 @@ export type SolidTable<
  *
  * Table APIs and atom reads participate in Solid dependency tracking, so
  * computations that read a specific slice can update without invalidating
- * unrelated UI. Use `table.Subscribe` to create atom-tracked render boundaries.
+ * unrelated UI. Read table APIs or atoms inside JSX, `createMemo`, or
+ * `createEffect` to track updates.
  *
  * @example
  * ```tsx

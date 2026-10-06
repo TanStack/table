@@ -22,7 +22,7 @@ Before starting, run `intent load @tanstack/table-core#table-state` for shared o
 
 Vue-backed atom reads track dependencies inside templates, `computed`, `watch`, or a render boundary. `const page = table.atoms.pagination.get()` outside tracking captures a snapshot. Keep reactive option inputs as refs, computed values, or getters; passing `.value` once breaks later synchronization.
 
-`table.Subscribe` receives atoms in an explicit `children` prop. Vue JSX children become slots, so use `<table.Subscribe children={(atoms) => <span>{atoms.pagination.get().pageIndex}</span>} />`.
+`table.Subscribe` is deprecated. Read table APIs or atoms directly inside templates, render functions, computed getters, or watcher sources. Use a child component when reads need a separate component render boundary.
 
 ## Control a slice
 
@@ -58,7 +58,7 @@ const pageSize = computed(() => table.atoms.pagination.get().pageSize)
 
 Assign the resolved updater result to the ref. For shared atom ownership, use a stable `@tanstack/vue-store` atom in `atoms.<slice>` instead of mirroring the same slice in controlled refs.
 
-For computed-state synchronization failures, updater mistakes, or JSX subscription boundaries, read [reactivity details](references/reactivity.md). If this task changes processing features, run `intent load @tanstack/table-core#table-features` and read the relevant feature references.
+For computed-state synchronization failures, updater mistakes, or render boundaries, read [reactivity details](references/reactivity.md). If this task changes processing features, run `intent load @tanstack/table-core#table-features` and read the relevant feature references.
 
 ## API discovery
 

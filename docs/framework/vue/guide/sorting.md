@@ -66,7 +66,7 @@ Since the sorting state is an array, it is possible to sort by multiple columns 
 
 #### Accessing Sorting State
 
-You can read the sorting state from the table instance with `table.atoms.sorting.get()`. Because the Vue adapter backs table atoms with Vue refs and computed values, this read is reactive when it happens inside a template, `computed(...)`, `watch(...)`, or `table.Subscribe`. Outside of a Vue reactive context, it is a plain snapshot of the current value.
+You can read the sorting state from the table instance with `table.atoms.sorting.get()`. Because the Vue adapter backs table atoms with Vue refs and computed values, this read is reactive when it happens inside a template, `computed(...)`, `watch(...)` sources, or render functions. Outside of a Vue reactive context, it is a plain snapshot of the current value.
 
 ```ts
 const table = useTable({

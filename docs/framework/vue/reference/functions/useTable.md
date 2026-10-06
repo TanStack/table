@@ -9,14 +9,14 @@ title: useTable
 function useTable<TFeatures, TData>(tableOptions): VueTable<TFeatures, TData>;
 ```
 
-Defined in: [packages/vue-table/src/useTable.ts:77](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L77)
+Defined in: [useTable.ts:80](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L80)
 
 Creates a Vue table instance backed by Vue-aware TanStack Store atoms.
 
 Table options may contain Vue refs or computed values. The adapter unwraps
 those reactive inputs, watches them with synchronous flushing, and keeps the
-table options in sync. Use `table.Subscribe` or native Vue computed values
-around `table.atoms.<slice>.get()` for selected reactive reads.
+table options in sync. Read table APIs or atoms inside templates, render
+functions, computed values, or watcher sources to track updates.
 
 ## Type Parameters
 
@@ -32,7 +32,8 @@ around `table.atoms.<slice>.get()` for selected reactive reads.
 
 ### tableOptions
 
-`TableOptions`\<`TFeatures`, `TData`\> | [`TableOptionsWithReactiveData`](../type-aliases/TableOptionsWithReactiveData.md)\<`TFeatures`, `TData`\>
+  \| `TableOptions`\<`TFeatures`, `TData`\>
+  \| [`TableOptionsWithReactiveData`](../type-aliases/TableOptionsWithReactiveData.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

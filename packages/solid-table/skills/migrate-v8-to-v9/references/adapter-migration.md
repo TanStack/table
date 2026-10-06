@@ -35,7 +35,7 @@ Keep static features and columns outside reactive component work. Prefer explici
 | `table.getState()`             | `table.atoms.<slice>.get()` in tracked scopes, or broad `table.store.get()` |
 | Top-level `onStateChange`      | Per-slice callbacks or `table.store.subscribe()`                            |
 | Eager signal values in options | Getters for reactive `data` and controlled state slices                     |
-| Whole-state rendering          | Narrow atom reads, `createMemo`, or `table.Subscribe`                       |
+| Whole-state rendering          | Narrow atom reads in JSX, `createMemo`, or `createEffect`                   |
 
 ```tsx
 const [sorting, setSorting] = createSignal<SortingState>([])
@@ -54,12 +54,10 @@ const table = createTable({
 })
 ```
 
-`table.Subscribe` passes atoms to its child. A Solid component child body is untracked, so read atoms inside JSX expressions or a thunk invoked by JSX:
+`table.Subscribe` is deprecated and adds no subscription or tracking scope. Remove the wrapper and read `table.atoms` directly inside JSX, memos, or effects:
 
 ```tsx
-<table.Subscribe>
-  {(atoms) => <span>Page {atoms.pagination.get().pageIndex + 1}</span>}
-</table.Subscribe>
+<span>Page {table.atoms.pagination.get().pageIndex + 1}</span>
 ```
 
 Use `createAtom`/`useSelector` from `@tanstack/solid-store` for externally owned slices. An external atom wins over `state` for the same slice; do not combine ownership models accidentally.
