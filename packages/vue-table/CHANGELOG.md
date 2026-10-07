@@ -1,5 +1,11 @@
 # @tanstack/vue-table
 
+## 9.2.7
+
+### Patch Changes
+
+- [#6615](https://github.com/TanStack/table/pull/6615) [`ce5b45c`](https://github.com/TanStack/table/commit/ce5b45c2f4f46fd994dd686be20a3b1f3972c220) - Deprecate table.Subscribe in the Vue adapter. Read table APIs or atoms in native Vue reactive contexts, and use a child component when a separate render boundary is needed. Keep the wrapper for compatibility and update migration guidance.
+
 ## 9.2.6
 
 ### Patch Changes

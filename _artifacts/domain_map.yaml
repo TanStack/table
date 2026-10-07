@@ -10,8 +10,10 @@ library:
   package_version_overrides:
     '@tanstack/preact-table-devtools': '9.2.5'
     '@tanstack/react-table-devtools': '9.2.5'
+    '@tanstack/solid-table': '9.2.7'
     '@tanstack/solid-table-devtools': '9.2.5'
     '@tanstack/table-devtools': '9.2.5'
+    '@tanstack/vue-table': '9.2.7'
     '@tanstack/vue-table-devtools': '9.2.5'
 
 meta:

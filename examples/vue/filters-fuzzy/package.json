@@ -12,7 +12,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
     "@tanstack/match-sorter-utils": "^9.2.6",
-    "@tanstack/vue-table": "^9.2.6",
+    "@tanstack/vue-table": "^9.2.7",
     "vue": "^3.5.43"
   },
   "devDependencies": {

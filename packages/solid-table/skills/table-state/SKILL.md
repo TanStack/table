@@ -4,7 +4,7 @@ description: Read and control Table v9 state in solid. Use for tracked reads, su
 metadata:
   type: framework
   library: '@tanstack/solid-table'
-  library_version: '9.2.6'
+  library_version: '9.2.7'
   framework: solid
 requires:
   - '@tanstack/table-core#table-state'
