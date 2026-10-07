@@ -1,5 +1,11 @@
 # @tanstack/solid-table
 
+## 9.2.7
+
+### Patch Changes
+
+- [#6615](https://github.com/TanStack/table/pull/6615) [`ce5b45c`](https://github.com/TanStack/table/commit/ce5b45c2f4f46fd994dd686be20a3b1f3972c220) - Deprecate table.Subscribe in the Solid adapter. Read table APIs or atoms directly inside JSX, createMemo, or createEffect; Solid tracks these reads natively. Keep the wrapper for compatibility and update examples and guidance to use direct reads.
+
 ## 9.2.6
 
 ### Patch Changes
