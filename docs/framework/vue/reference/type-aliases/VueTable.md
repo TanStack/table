@@ -9,18 +9,15 @@ title: VueTable
 type VueTable<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [packages/vue-table/src/useTable.ts:46](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L46)
+Defined in: [useTable.ts:46](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L46)
 
 ## Type Declaration
 
-### Subscribe()
+### ~~Subscribe~~
 
 ```ts
 Subscribe: (props) => VNode | VNode[];
 ```
-
-Creates a reactive render boundary. The child function reads the table
-atoms it needs, so Vue only tracks those atom reads.
 
 #### Parameters
 
@@ -33,6 +30,13 @@ atoms it needs, so Vue only tracks those atom reads.
 #### Returns
 
 `VNode` \| `VNode`[]
+
+#### Deprecated
+
+Read table APIs or `table.atoms` directly inside templates,
+render functions, computed values, or watcher sources. Vue tracks those
+reads natively. This compatibility wrapper only passes atoms to its child
+function and adds no subscription logic.
 
 ## Type Parameters
 

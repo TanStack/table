@@ -78,7 +78,7 @@ const table = useTable({
 
 By default, the column resize mode is set to `"onEnd"`. This means that the `column.getSize()` API will not return the new column size until the user has finished resizing (dragging) the column. Usually a small UI indicator will be displayed while the user is resizing the column.
 
-Vue's reactivity tracks dependencies per component, so a drag that updates the `columnResizing` state on every mouse move re-renders every component whose template reads column sizes. For large or complex tables, the `"onEnd"` column resize mode can be a good default option to avoid stuttering or lagging while the user resizes columns. That is not to say that you cannot achieve 60 fps column resizing renders with the Vue adapter, but you may need to keep size reads scoped (computed values, `table.Subscribe`, or CSS variables) so each drag frame touches as little of the template as possible.
+Vue's reactivity tracks dependencies per component, so a drag that updates the `columnResizing` state on every mouse move re-renders every component whose template reads column sizes. For large or complex tables, the `"onEnd"` column resize mode can be a good default option to avoid stuttering or lagging while the user resizes columns. That is not to say that you cannot achieve 60 fps column resizing renders with the Vue adapter, but you may need to keep size reads scoped (computed values, child components, or CSS variables) so each drag frame touches as little of the template as possible.
 
 > Advanced column resizing performance tips will be discussed [down below](#advanced-column-resizing-performance).
 

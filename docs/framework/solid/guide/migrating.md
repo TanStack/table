@@ -15,7 +15,7 @@ TanStack Table V9 delivers major performance improvements, hundreds of bug fixes
 ### 2. State Management Overhaul
 
 - **TanStack Store foundation**: State is backed by TanStack Store atoms with Solid-aware reactivity.
-- **Solid-native reads**: Atom reads participate in Solid tracking when called inside JSX, `createMemo`, `createEffect`, or `table.Subscribe`.
+- **Solid-native reads**: Atom reads participate in Solid tracking when called inside JSX, `createMemo`, or `createEffect`.
 - **External atoms**: Apps can own individual slices with atoms from `@tanstack/solid-store`.
 
 ### 3. Type-Safety Improvements
@@ -295,12 +295,12 @@ Because these methods now live on the prototype, they also do not appear as own 
 
 Solid v9 uses table atoms backed by Solid primitives. Prefer narrow atom reads or Solid memos over broad whole-state reads.
 
-| Surface                     | Use                                                                                           |
-| --------------------------- | --------------------------------------------------------------------------------------------- |
-| `table.atoms.<slice>.get()` | Narrow reactive reads inside Solid tracking scopes.                                           |
-| `table.store.get()`         | Current full state snapshot. Use mostly for debug output or intentionally broad dependencies. |
-| `table.Subscribe`           | A Solid render boundary whose child reads the atoms it needs.                                 |
-| `table.baseAtoms.<slice>`   | Internal writable atoms. Prefer feature APIs or external atoms.                               |
+| Surface                     | Use                                                                                            |
+| --------------------------- | ---------------------------------------------------------------------------------------------- |
+| `table.atoms.<slice>.get()` | Narrow reactive reads inside Solid tracking scopes.                                            |
+| `table.store.get()`         | Current full state snapshot. Use mostly for debug output or intentionally broad dependencies.  |
+| `table.Subscribe`           | Deprecated compatibility wrapper. Read table APIs or atoms directly in JSX, memos, or effects. |
+| `table.baseAtoms.<slice>`   | Internal writable atoms. Prefer feature APIs or external atoms.                                |
 
 ### Accessing State
 
@@ -335,15 +335,15 @@ Atom reads can also be used directly in JSX:
 </span>
 ```
 
-### Fine-grained Updates with `table.Subscribe`
+### Replace `table.Subscribe`
 
-`table.Subscribe` passes `table.atoms` to its child function. As with any Solid component, the child function body runs once and is untracked, so read atoms inside JSX expressions (or thunks called from JSX) for Solid to track them.
+`table.Subscribe` is deprecated. It only passes `table.atoms` to its child function and creates no subscription or tracking scope. Remove the wrapper and read atoms directly inside JSX, `createMemo`, or `createEffect`:
 
 ```tsx
-<table.Subscribe>
-  {(atoms) => <span>Page {atoms.pagination.get().pageIndex + 1}</span>}
-</table.Subscribe>
+<span>Page {table.atoms.pagination.get().pageIndex + 1}</span>
 ```
+
+Solid tracks these reads natively. Component bodies run once, so keep reactive reads inside a tracked scope.
 
 ### Controlled State
 

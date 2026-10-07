@@ -36,7 +36,7 @@ The cell selection feature keeps track of spreadsheet-style rectangular selectio
 
 The table instance already manages the cell selection state for you. You can access the selection or values derived from it through a few APIs.
 
-- `table.atoms.cellSelection.get()` - returns the current cell selection (reactive inside templates, `computed(...)`, `watch(...)`, and `table.Subscribe`; a plain snapshot elsewhere)
+- `table.atoms.cellSelection.get()` - returns the current cell selection (reactive inside templates, `computed(...)`, `watch(...)` sources, and render functions; a plain snapshot elsewhere)
 - `getSelectedCellCount()` - returns how many cells are selected
 - `getSelectedCellIds()` - returns the ids of every selected cell
 - `getCellSelectionRowIds()` / `getCellSelectionColumnIds()` - returns the rows and columns the selection touches

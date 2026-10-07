@@ -102,25 +102,9 @@ The typed context exists only below the corresponding dynamic wrapper.
 
 Source: `packages/vue-table/src/createTableHook.ts`
 
-### MEDIUM Treating Subscribe children as slots
+### Read state in the consuming component
 
-Wrong:
-
-```tsx
-<table.Subscribe>
-  {(atoms) => <Pager page={atoms.pagination.get()} />}
-</table.Subscribe>
-```
-
-Correct:
-
-```tsx
-<table.Subscribe
-  children={(atoms) => <Pager page={atoms.pagination.get()} />}
-/>
-```
-
-Vue’s adapter expects an explicit `children` prop in JSX.
+Read table APIs and atoms inside the component's template or render function. Vue tracks those reads natively. Use a child component when you need a separate render boundary; `table.Subscribe` is deprecated.
 
 Source: `packages/vue-table/src/useTable.ts`
 

@@ -7,7 +7,7 @@ title: AppTableComponent
 
 Defined in: [createTableHook.tsx:337](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L337)
 
-Component type for AppTable - root wrapper with optional Subscribe
+Component type for AppTable - root wrapper that provides table context
 
 ## Type Parameters
 
@@ -21,7 +21,7 @@ AppTableComponent(props): Element;
 
 Defined in: [createTableHook.tsx:338](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L338)
 
-Component type for AppTable - root wrapper with optional Subscribe
+Component type for AppTable - root wrapper that provides table context
 
 ## Parameters
 

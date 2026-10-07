@@ -9,13 +9,14 @@ title: createTable
 function createTable<TFeatures, TData>(tableOptions): SolidTable<TFeatures, TData>;
 ```
 
-Defined in: [createTable.ts:61](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L61)
+Defined in: [createTable.ts:64](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L64)
 
 Creates a Solid table instance backed by Solid-aware TanStack Store atoms.
 
 Table APIs and atom reads participate in Solid dependency tracking, so
 computations that read a specific slice can update without invalidating
-unrelated UI. Use `table.Subscribe` to create atom-tracked render boundaries.
+unrelated UI. Read table APIs or atoms inside JSX, `createMemo`, or
+`createEffect` to track updates.
 
 ## Type Parameters
 

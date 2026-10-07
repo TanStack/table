@@ -332,7 +332,7 @@ export interface AppHeaderComponent<
 }
 
 /**
- * Component type for AppTable - root wrapper with optional Subscribe
+ * Component type for AppTable - root wrapper that provides table context
  */
 export interface AppTableComponent<_TFeatures extends TableFeatures> {
   (props: AppTableProps): JSXElement
@@ -510,9 +510,7 @@ export interface CreateTableHookResult<
  * function PaginationControls() {
  *   const table = useTableContext() // TFeatures already known!
  *   return (
- *     <table.Subscribe>
- *       {(atoms) => <span>Page {atoms.pagination.get().pageIndex + 1}</span>}
- *     </table.Subscribe>
+ *     <span>Page {table.atoms.pagination.get().pageIndex + 1}</span>
  *   )
  * }
  *
@@ -641,17 +639,11 @@ export function createTableHook<
    * function PaginationControls() {
    *   const table = useTableContext()
    *   return (
-   *     <table.Subscribe>
-   *       {(atoms) => {
-   *         const pagination = atoms.pagination.get()
-   *         return (
-   *         <div>
-   *           <button onClick={() => table.previousPage()}>Prev</button>
-   *           <span>Page {pagination.pageIndex + 1}</span>
-   *           <button onClick={() => table.nextPage()}>Next</button>
-   *         </div>
-   *       )}}
-   *     </table.Subscribe>
+   *     <div>
+   *       <button onClick={() => table.previousPage()}>Prev</button>
+   *       <span>Page {table.atoms.pagination.get().pageIndex + 1}</span>
+   *       <button onClick={() => table.nextPage()}>Next</button>
+   *     </div>
    *   )
    * }
    * ```

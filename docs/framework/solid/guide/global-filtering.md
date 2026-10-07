@@ -147,7 +147,7 @@ You can also define your own custom global filter function and pass it directly 
 
 ### Global Filter State
 
-The `globalFilter` state slice holds the current global filter value, usually a search string (the slice is typed as `any` so custom global filter functions can accept other value shapes). In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.globalFilter.get()` is a reactive read when called inside a tracked scope (JSX, `createMemo`, `createEffect`, or `table.Subscribe`). In event handlers, the same call simply returns the current value.
+The `globalFilter` state slice holds the current global filter value, usually a search string (the slice is typed as `any` so custom global filter functions can accept other value shapes). In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.globalFilter.get()` is a reactive read when called inside a tracked scope (JSX, `createMemo`, or `createEffect`). In event handlers, the same call simply returns the current value.
 
 If you need access to the global filter state outside of the table, you can own the slice yourself. The recommended way in v9 is an external atom passed through the `atoms` table option. Atoms preserve fine-grained subscriptions, and the filter value can be used elsewhere (such as in a query key for server-side filtering) without making the table depend on component-local state.
 

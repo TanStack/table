@@ -289,7 +289,7 @@ Vue v9 table state is atom-backed and Vue-aware. Prefer Vue `computed` values ar
 | --------------------------- | --------------------------------------------------------------------------------------------- |
 | `table.atoms.<slice>.get()` | Narrow reactive reads inside Vue tracking scopes.                                             |
 | `table.store.get()`         | Current full state snapshot. Use mostly for debug output or intentionally broad dependencies. |
-| `table.Subscribe`           | A render-function or JSX boundary whose child reads the atoms it needs.                       |
+| `table.Subscribe`           | Deprecated compatibility wrapper. Read table APIs or atoms in native Vue reactive contexts.   |
 | `table.baseAtoms.<slice>`   | Internal writable atoms. Prefer feature APIs or external atoms.                               |
 
 ### Accessing State
@@ -347,19 +347,17 @@ const table = useTable({
 })
 ```
 
-### Fine-grained Updates with `table.Subscribe`
+### Replace `table.Subscribe`
 
-Use `table.Subscribe` in render functions or JSX when a specific subtree should track selected atoms. Pass the function as an explicit `children` prop; `table.Subscribe` reads `props.children`, and Vue JSX delivers element children as slots instead.
+`table.Subscribe` is deprecated. It only passes `table.atoms` to its child function and adds no subscription logic. Read table APIs or atoms directly inside templates, render functions, computed values, or watcher sources.
+
+For example, return this JSX from a component's render function:
 
 ```tsx
-<table.Subscribe
-  children={(atoms) => {
-    const pagination = atoms.pagination.get()
-
-    return <span>Page {pagination.pageIndex + 1}</span>
-  }}
-/>
+<span>Page {table.atoms.pagination.get().pageIndex + 1}</span>
 ```
+
+If you used `table.Subscribe` as a component to isolate rendering, move those reads into a child component. Calling `table.Subscribe` as a plain function never created a separate component render boundary.
 
 ### Controlled State
 

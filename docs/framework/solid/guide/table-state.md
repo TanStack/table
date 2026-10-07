@@ -71,7 +71,7 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should a Solid computation update when that value changes?
 
-Use direct atom reads for slice values. Use `table.store.get()` for the current flat state snapshot. Because Solid table atoms are backed by Solid signals and memos, atom reads participate in Solid dependency tracking when they happen inside JSX, `createMemo(...)`, `createEffect(...)`, or `table.Subscribe`.
+Use direct atom reads for slice values. Use `table.store.get()` for the current flat state snapshot. Because Solid table atoms are backed by Solid signals and memos, atom reads participate in Solid dependency tracking when they happen inside JSX, `createMemo(...)`, or `createEffect(...)`.
 
 #### Reading State
 
@@ -120,55 +120,31 @@ You can use atom reads directly in JSX too:
 </span>
 ```
 
-#### Fine-grained Updates with table.Subscribe
+#### Fine-grained updates
 
-Use `table.Subscribe` when you want a specific part of the Solid tree to create a reactive render boundary. Its child function receives `table.atoms`. As with any Solid component, the child function body runs once and is untracked, so perform atom reads inside JSX expressions or in thunks called from JSX; Solid tracks only those reads.
+Read table APIs and atoms directly inside JSX. Solid tracks the reads and updates the expressions that depend on them. For derived values outside JSX, use `createMemo` or an accessor called from JSX.
 
-```tsx
-<table.Subscribe>
-  {(atoms) => {
-    // a thunk: the reads run (and track) when JSX calls it, not in the body
-    const rows = () => {
-      atoms.columnFilters.get()
-      atoms.globalFilter.get()
-      atoms.pagination.get()
-      return table.getRowModel().rows
-    }
-
-    return (
-      <tbody>
-        <For each={rows()}>{(row) => <tr>{/* ... */}</tr>}</For>
-      </tbody>
-    )
-  }}
-</table.Subscribe>
-```
+`table.Subscribe` is deprecated. It only passes atoms to its child function and creates no subscription or tracking scope. Remove the wrapper and replace the child function's `atoms` parameter with `table.atoms`.
 
 ```tsx
-<table.Subscribe>
-  {(atoms) => (
-    <tbody>
-      <For each={table.getRowModel().rows}>
-        {(row) => {
-          const isSelected = () => atoms.rowSelection.get()[row.id]
-
-          return (
-            <tr>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={!!isSelected()}
-                  onClick={row.getToggleSelectedHandler()}
-                />
-              </td>
-            </tr>
-          )
-        }}
-      </For>
-    </tbody>
-  )}
-</table.Subscribe>
+<tbody>
+  <For each={table.getRowModel().rows}>
+    {(row) => (
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            checked={!!table.atoms.rowSelection.get()[row.id]}
+            onClick={row.getToggleSelectedHandler()}
+          />
+        </td>
+      </tr>
+    )}
+  </For>
+</tbody>
 ```
+
+Keep reactive reads inside JSX, memos, or effects. Reading an atom into a plain variable in a component body captures its current value and does not track updates.
 
 ### Setting Table State
 

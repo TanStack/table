@@ -47,8 +47,11 @@ export type VueTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Table<TFeatures, TData> & {
-  /** Creates a reactive render boundary. The child function reads the table
-   * atoms it needs, so Vue only tracks those atom reads.
+  /**
+   * @deprecated Read table APIs or `table.atoms` directly inside templates,
+   * render functions, computed values, or watcher sources. Vue tracks those
+   * reads natively. This compatibility wrapper only passes atoms to its child
+   * function and adds no subscription logic.
    */
   Subscribe: (props: {
     children: (atoms: Table<TFeatures, TData>['atoms']) => VNode | Array<VNode>
@@ -60,8 +63,8 @@ export type VueTable<
  *
  * Table options may contain Vue refs or computed values. The adapter unwraps
  * those reactive inputs, watches them with synchronous flushing, and keeps the
- * table options in sync. Use `table.Subscribe` or native Vue computed values
- * around `table.atoms.<slice>.get()` for selected reactive reads.
+ * table options in sync. Read table APIs or atoms inside templates, render
+ * functions, computed values, or watcher sources to track updates.
  *
  * @example
  * ```ts

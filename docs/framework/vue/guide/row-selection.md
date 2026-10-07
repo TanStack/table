@@ -38,7 +38,7 @@ The row selection feature keeps track of which rows are selected and allows you 
 
 The table instance already manages the row selection state for you. You can access the row selection state or the selected rows from a few APIs.
 
-- `table.atoms.rowSelection.get()` - returns the current row selection state (reactive inside templates, `computed(...)`, `watch(...)`, and `table.Subscribe`; a plain snapshot elsewhere)
+- `table.atoms.rowSelection.get()` - returns the current row selection state (reactive inside templates, `computed(...)`, `watch(...)` sources, and render functions; a plain snapshot elsewhere)
 - `getSelectedRowModel()` - returns selected rows
 - `getFilteredSelectedRowModel()` - returns selected rows after filtering
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting

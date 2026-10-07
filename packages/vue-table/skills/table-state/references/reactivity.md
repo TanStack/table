@@ -40,15 +40,15 @@ const onPaginationChange = (
 
 Pass `state: controlledState` and `onPaginationChange` to `useTable`.
 
-### Use Subscribe as a render boundary
+### Read atoms in a render function
+
+Return JSX that reads the atom directly from the component's render function:
 
 ```tsx
-table.Subscribe({
-  children: (atoms) => <span>{atoms.pagination.get().pageIndex + 1}</span>,
-})
+<span>{table.atoms.pagination.get().pageIndex + 1}</span>
 ```
 
-In Vue JSX, `children` is an explicit prop, not a slot child.
+`table.Subscribe` is deprecated and adds no subscription logic. Use a child component to isolate rendering when needed.
 
 ## Common mistakes
 
@@ -114,28 +114,6 @@ const onPaginationChange = (next) => {
 Table callbacks accept either a value or a function of the previous value.
 
 Source: `examples/vue/basic-external-state/src/App.tsx`
-
-### MEDIUM Supplying JSX children as a slot
-
-Wrong:
-
-```tsx
-<table.Subscribe>
-  {(atoms) => <span>{atoms.pagination.get().pageIndex}</span>}
-</table.Subscribe>
-```
-
-Correct:
-
-```tsx
-<table.Subscribe
-  children={(atoms) => <span>{atoms.pagination.get().pageIndex}</span>}
-/>
-```
-
-The Vue adapter declares `Subscribe(props: { children })` and expects the explicit prop.
-
-Source: `packages/vue-table/src/useTable.ts`
 
 ## API discovery
 

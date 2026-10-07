@@ -222,7 +222,7 @@ The `pagination` state is an object that contains the following properties:
 - `pageIndex`: The current page index (zero-based).
 - `pageSize`: The current page size.
 
-In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.pagination.get()` is a reactive read when called inside a tracked scope (JSX, `createMemo`, `createEffect`, or `table.Subscribe`). In event handlers, the same call simply returns the current value.
+In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.pagination.get()` is a reactive read when called inside a tracked scope (JSX, `createMemo`, or `createEffect`). In event handlers, the same call simply returns the current value.
 
 If you need access to the `pagination` state outside of the table (a server-side query key is the most common case), you can own the slice yourself. The recommended way in v9 is an external atom passed through the `atoms` table option. Atoms preserve fine-grained subscriptions, and the pagination value can be used in a query key without making the table depend on component-local state.
 
