@@ -1,4 +1,4 @@
-import { getContext, setContext } from 'svelte'
+import { getContext } from 'svelte'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { createTable } from './createTable.svelte'
 import { mergeObjects } from './merge-objects'
@@ -647,17 +647,14 @@ export function createTableHook<
     }
 
     // Create wrapper components using the svelte-form (internal, props) => pattern.
-    // setContext is called in the closure — this runs during component
-    // initialization, so Svelte's context API works correctly.
-    // With keyed {#each} blocks, components are recreated on reorder,
-    // so context is always fresh.
+    // They only add props: each App*Svelte component sets its own context while
+    // it initializes. Calling setContext here would run before that component
+    // exists and write into the context of the component rendering it.
     const AppTable = ((internal: any, props: any) => {
-      setContext(tableContextKey, table)
-      return AppTableSvelte(internal, { ...props })
+      return AppTableSvelte(internal, { ...props, table })
     }) as Component<{ children: Snippet }>
 
     const AppCell = ((internal: any, { children, cell }: any) => {
-      setContext(cellContextKey, cell)
       return AppCellSvelte(internal, {
         cell,
         cellComponents: cellComponentsWithFlexRender,
@@ -669,7 +666,6 @@ export function createTableHook<
     }>
 
     const AppHeader = ((internal: any, { children, header }: any) => {
-      setContext(headerContextKey, header)
       return AppHeaderSvelte(internal, {
         header,
         headerComponents: headerComponentsWithFlexRender,
@@ -682,7 +678,6 @@ export function createTableHook<
 
     // AppFooter reuses AppHeaderSvelte (footers use Header type in table-core)
     const AppFooter = ((internal: any, { children, header }: any) => {
-      setContext(headerContextKey, header)
       return AppHeaderSvelte(internal, {
         header,
         headerComponents: headerComponentsWithFlexRender,
