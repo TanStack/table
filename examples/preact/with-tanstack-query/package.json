@@ -16,8 +16,8 @@
     "@tanstack/preact-devtools": "^0.10.13",
     "@tanstack/preact-query": "^5.104.1",
     "@tanstack/preact-query-devtools": "^5.104.1",
-    "@tanstack/preact-table": "^9.2.6",
-    "@tanstack/preact-table-devtools": "^9.2.5",
+    "@tanstack/preact-table": "^9.2.8",
+    "@tanstack/preact-table-devtools": "^9.2.8",
     "preact": "^10.29.8"
   },
   "devDependencies": {

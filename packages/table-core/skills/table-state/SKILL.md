@@ -7,7 +7,7 @@ description:
 metadata:
   type: core
   library: '@tanstack/table-core'
-  library_version: '9.2.6'
+  library_version: '9.2.8'
 requires:
   - core
 sources:
