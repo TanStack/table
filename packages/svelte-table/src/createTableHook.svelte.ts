@@ -1,4 +1,4 @@
-import { getContext, setContext } from 'svelte'
+import { getContext } from 'svelte'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { createTable } from './createTable.svelte'
 import { mergeObjects } from './merge-objects'
@@ -647,20 +647,21 @@ export function createTableHook<
     }
 
     // Create wrapper components using the svelte-form (internal, props) => pattern.
-    // setContext is called in the closure — this runs during component
-    // initialization, so Svelte's context API works correctly.
-    // With keyed {#each} blocks, components are recreated on reorder,
-    // so context is always fresh.
+    // contextKey is passed to the component, which calls setContext during its
+    // own initialization to avoid calling setContext in the parent's context.
     const AppTable = ((internal: any, props: any) => {
-      setContext(tableContextKey, table)
-      return AppTableSvelte(internal, { ...props })
+      return AppTableSvelte(internal, {
+        ...props,
+        contextKey: tableContextKey,
+        table,
+      })
     }) as Component<{ children: Snippet }>
 
     const AppCell = ((internal: any, { children, cell }: any) => {
-      setContext(cellContextKey, cell)
       return AppCellSvelte(internal, {
         cell,
         cellComponents: cellComponentsWithFlexRender,
+        contextKey: cellContextKey,
         children,
       })
     }) as Component<{
@@ -669,10 +670,10 @@ export function createTableHook<
     }>
 
     const AppHeader = ((internal: any, { children, header }: any) => {
-      setContext(headerContextKey, header)
       return AppHeaderSvelte(internal, {
         header,
         headerComponents: headerComponentsWithFlexRender,
+        contextKey: headerContextKey,
         children,
       })
     }) as Component<{
@@ -682,10 +683,10 @@ export function createTableHook<
 
     // AppFooter reuses AppHeaderSvelte (footers use Header type in table-core)
     const AppFooter = ((internal: any, { children, header }: any) => {
-      setContext(headerContextKey, header)
       return AppHeaderSvelte(internal, {
         header,
         headerComponents: headerComponentsWithFlexRender,
+        contextKey: headerContextKey,
         children,
       })
     }) as Component<{

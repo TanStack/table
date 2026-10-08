@@ -1,11 +1,17 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte'
+  import { setContext, type Snippet } from 'svelte'
 
   interface Props {
     children: Snippet
+    contextKey?: any
+    table?: any
   }
 
-  let { children }: Props = $props()
+  let { children, contextKey, table }: Props = $props()
+
+  if (contextKey) {
+    setContext(contextKey, table)
+  }
 </script>
 
 {@render children?.()}
