@@ -76,21 +76,6 @@ export interface AggregationFnDef<
   ) => TResult
 }
 
-/**
- * Creates a typed context-based aggregation definition for a column or
- * aggregation-function registry.
- */
-export function constructAggregationFn<
-  TFeatures extends TableFeatures = any,
-  TData extends RowData = any,
-  TValue = unknown,
-  TResult = unknown,
->(
-  definition: AggregationFnDef<TFeatures, TData, TValue, TResult>,
-): AggregationFnDef<TFeatures, TData, TValue, TResult> {
-  return definition
-}
-
 /** Aggregation-definition registry carried by a table feature set. */
 export interface RowModelFns_RowAggregation<
   in out TFeatures extends TableFeatures,

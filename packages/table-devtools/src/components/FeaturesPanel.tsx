@@ -1,18 +1,46 @@
 import { For, Show, createMemo } from 'solid-js'
-import { coreFeatures, stockFeatures } from '@tanstack/table-core'
+import {
+  aggregationFns as builtInAggregationFns,
+  filterFns as builtInFilterFns,
+  sortFns as builtInSortFns,
+  coreFeatures,
+  stockFeatures,
+} from '@tanstack/table-core'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
+import { bundleSizes } from '../bundleSizes'
+import { estimateBundleSize } from '../estimateBundleSize'
 import { NoTableConnected } from './NoTableConnected'
 import { ResizableSplit } from './ResizableSplit'
+import type { BundleSizeSelection } from '../estimateBundleSize'
 import type { TableDevtoolsTable } from '../tableTarget'
 
-type FnBuckets = Partial<
-  Record<'filterFns' | 'sortFns' | 'aggregationFns', Record<string, unknown>>
->
+type FnKind = 'filterFns' | 'sortFns' | 'aggregationFns'
+
+type FnBuckets = Partial<Record<FnKind, Record<string, unknown>>>
+
+interface RegisteredFn {
+  name: string
+  /** The built-in this function is, when it is one */
+  builtInName?: string
+}
 
 function toFnBuckets(value: unknown): FnBuckets {
   return typeof value === 'object' && value != null ? value : {}
+}
+
+/** Maps each built-in fn back to its registry name to size registered fns */
+const BUILT_IN_FN_NAMES: Record<FnKind, Map<unknown, string>> = {
+  filterFns: new Map(
+    Object.entries(builtInFilterFns).map(([name, fn]) => [fn, name]),
+  ),
+  sortFns: new Map(
+    Object.entries(builtInSortFns).map(([name, fn]) => [fn, name]),
+  ),
+  aggregationFns: new Map(
+    Object.entries(builtInAggregationFns).map(([name, fn]) => [fn, name]),
+  ),
 }
 
 const CORE_REACTIVITY_FEATURE_NAME = 'coreReactivityFeature'
@@ -25,39 +53,13 @@ const CORE_FEATURE_NAMES: Array<string> = [
 ]
 const STOCK_FEATURE_NAMES: Array<string> = Object.keys(stockFeatures)
 
-const PACKAGE_SIZE_LIMIT_BYTES = 16_987
-
-const FEATURE_SIZE_ESTIMATES_BYTES: Record<string, number> = {
-  rowAggregationFeature: 1500,
-  coreCellsFeature: 358,
-  coreColumnsFeature: 803,
-  coreHeadersFeature: 1012,
-  coreRowModelsFeature: 633,
-  coreRowsFeature: 695,
-  coreTablesFeature: 508,
-  columnFacetingFeature: 953,
-  columnFilteringFeature: 1266,
-  columnGroupingFeature: 1141,
-  columnOrderingFeature: 511,
-  columnPinningFeature: 995,
-  columnResizingFeature: 779,
-  columnSizingFeature: 678,
-  columnVisibilityFeature: 612,
-  globalFilteringFeature: 435,
-  rowExpandingFeature: 650,
-  rowPaginationFeature: 605,
-  rowPinningFeature: 671,
-  rowSelectionFeature: 883,
-  rowSortingFeature: 798,
-}
-
-const ROW_MODEL_SIZE_ESTIMATES_BYTES: Record<string, number> = {
-  coreRowModel: 223,
-  filteredRowModel: 588,
-  groupedRowModel: 459,
-  sortedRowModel: 341,
-  expandedRowModel: 181,
-  paginatedRowModel: 209,
+const CORE_FEATURE_SIZES: Record<string, number> = bundleSizes.coreFeatures
+const FEATURE_SIZES: Record<string, number> = bundleSizes.features
+const ROW_MODEL_SIZES: Record<string, number> = bundleSizes.rowModels
+const FN_SIZES: Record<FnKind, Record<string, number>> = {
+  filterFns: bundleSizes.filterFns,
+  sortFns: bundleSizes.sortFns,
+  aggregationFns: bundleSizes.aggregationFns,
 }
 
 // Row model factories live as slots on the `features` option alongside the
@@ -80,10 +82,7 @@ const ROW_MODEL_SHARED_SIZE_LABELS: Record<string, string> = {
   preSortedRowModel: 'shared',
 }
 
-const ROW_MODEL_TO_FN_KIND: Record<
-  string,
-  'filterFns' | 'sortFns' | 'aggregationFns' | null
-> = {
+const ROW_MODEL_TO_FN_KIND: Record<string, FnKind | null> = {
   filteredRowModel: 'filterFns',
   preFilteredRowModel: 'filterFns',
   sortedRowModel: 'sortFns',
@@ -137,12 +136,16 @@ function getRowCountForModel(
   return result.rows?.length ?? 0
 }
 
-function formatEstimatedSize(sizeInBytes: number | undefined): string {
+function formatSize(sizeInBytes: number | undefined): string {
   if (typeof sizeInBytes !== 'number') return 'n/a'
-  return `~${(sizeInBytes / 1000).toFixed(2)} kB brotli`
+  return `${(sizeInBytes / 1000).toFixed(2)} kB`
 }
 
-function normalizeRowModelEstimateKey(rowModelName: string): string {
+function formatRegisteredFnSize(kind: FnKind, fn: RegisteredFn): string {
+  return fn.builtInName ? formatSize(FN_SIZES[kind][fn.builtInName]) : 'custom'
+}
+
+function normalizeRowModelSizeKey(rowModelName: string): string {
   if (rowModelName === 'preFilteredRowModel') return 'filteredRowModel'
   if (rowModelName === 'preGroupedRowModel') return 'groupedRowModel'
   if (rowModelName === 'preSortedRowModel') return 'sortedRowModel'
@@ -180,9 +183,7 @@ export function FeaturesPanel() {
     )
   })
 
-  const getFnNames = (
-    kind: 'filterFns' | 'sortFns' | 'aggregationFns',
-  ): Array<string> => {
+  const getRegisteredFns = (kind: FnKind): Array<RegisteredFn> => {
     const tableInstance = table()
     if (!tableInstance) return []
 
@@ -190,7 +191,11 @@ export function FeaturesPanel() {
 
     const rowModelFns = toFnBuckets(tableInstance._rowModelFns)
     const optionFns = toFnBuckets(tableInstance.options)
-    return Object.keys(rowModelFns[kind] ?? optionFns[kind] ?? {})
+    const registry = rowModelFns[kind] ?? optionFns[kind] ?? {}
+    return Object.entries(registry).map(([name, fn]) => ({
+      name,
+      builtInName: BUILT_IN_FN_NAMES[kind].get(fn),
+    }))
   }
 
   const additionalPlugins = createMemo((): Array<string> => {
@@ -202,32 +207,53 @@ export function FeaturesPanel() {
     return [...currentFeatures].filter((f) => !knownFeatures.has(f)).sort()
   })
 
-  const aggregationFunctionNames = createMemo(() =>
-    getFnNames('aggregationFns'),
-  )
+  const registeredFns = createMemo((): Record<FnKind, Array<RegisteredFn>> => ({
+    filterFns: getRegisteredFns('filterFns'),
+    sortFns: getRegisteredFns('sortFns'),
+    aggregationFns: getRegisteredFns('aggregationFns'),
+  }))
 
-  const getRowModelFunctions = (rowModelName: string): Array<string> => {
+  const getRowModelFunctions = (rowModelName: string): Array<RegisteredFn> => {
     const fnKind = ROW_MODEL_TO_FN_KIND[rowModelName]
     if (!fnKind) return []
-    return getFnNames(fnKind)
+    return registeredFns()[fnKind]
   }
 
-  const enabledFeatureEstimate = createMemo(() =>
-    [...tableFeatures()].reduce((total, featureName) => {
-      return total + (FEATURE_SIZE_ESTIMATES_BYTES[featureName] ?? 0)
-    }, 0),
-  )
-  const enabledRowModelEstimate = createMemo(() =>
-    [...new Set(rowModelNames())]
-      .map((rowModelName) => normalizeRowModelEstimateKey(rowModelName))
-      .filter((rowModelName, index, all) => all.indexOf(rowModelName) === index)
-      .reduce((total, rowModelName) => {
-        return total + (ROW_MODEL_SIZE_ESTIMATES_BYTES[rowModelName] ?? 0)
-      }, 0),
-  )
-  const totalEstimatedBundleSize = createMemo(
-    () => enabledFeatureEstimate() + enabledRowModelEstimate(),
-  )
+  // Estimates stack up cumulatively (core, then features, then row models,
+  // then fns) so the breakdown rows add up to the total even though items
+  // share code
+  const sizeEstimate = createMemo(() => {
+    const builtInNames = (kind: FnKind) =>
+      registeredFns()[kind].flatMap((fn) =>
+        fn.builtInName ? [fn.builtInName] : [],
+      )
+    const withFeatures: BundleSizeSelection = {
+      features: [...tableFeatures()],
+    }
+    const withRowModels: BundleSizeSelection = {
+      ...withFeatures,
+      rowModels: rowModelNames(),
+    }
+    const withFns: BundleSizeSelection = {
+      ...withRowModels,
+      filterFns: builtInNames('filterFns'),
+      sortFns: builtInNames('sortFns'),
+      aggregationFns: builtInNames('aggregationFns'),
+    }
+
+    const core = bundleSizes.core
+    const features = estimateBundleSize(withFeatures)
+    const rowModels = estimateBundleSize(withRowModels)
+    const total = estimateBundleSize(withFns)
+
+    return {
+      core,
+      features: features - core,
+      rowModels: rowModels - features,
+      fns: total - rowModels,
+      total,
+    }
+  })
 
   const rowModels = createMemo(() => {
     const tableInstance = table()
@@ -237,18 +263,16 @@ export function FeaturesPanel() {
 
     return rowModelNames().map((rowModelName) => {
       const sharedLabel = ROW_MODEL_SHARED_SIZE_LABELS[rowModelName]
+      const fnKind = ROW_MODEL_TO_FN_KIND[rowModelName] ?? null
 
       return {
         rowModelName,
+        fnKind,
         fns: getRowModelFunctions(rowModelName),
         rowCount: getRowCountForModel(tableInstance, rowModelName),
-        estimateLabel:
+        sizeLabel:
           sharedLabel ??
-          formatEstimatedSize(
-            ROW_MODEL_SIZE_ESTIMATES_BYTES[
-              normalizeRowModelEstimateKey(rowModelName)
-            ],
-          ),
+          formatSize(ROW_MODEL_SIZES[normalizeRowModelSizeKey(rowModelName)]),
       }
     })
   })
@@ -276,23 +300,33 @@ export function FeaturesPanel() {
               <div class={styles().sectionTitle}>Features</div>
               <div class={styles().featureEstimateSummary}>
                 <div class={styles().featureEstimateSummaryTitle}>
-                  Estimated table-core package
+                  Estimated @tanstack/table-core bundle
+                </div>
+                <div class={styles().featureEstimateSummaryRow}>
+                  <span>Core</span>
+                  <span>{formatSize(sizeEstimate().core)}</span>
                 </div>
                 <div class={styles().featureEstimateSummaryRow}>
                   <span>Registered features</span>
-                  <span>{formatEstimatedSize(enabledFeatureEstimate())}</span>
+                  <span>+{formatSize(sizeEstimate().features)}</span>
                 </div>
                 <div class={styles().featureEstimateSummaryRow}>
                   <span>Client row models</span>
-                  <span>{formatEstimatedSize(enabledRowModelEstimate())}</span>
+                  <span>+{formatSize(sizeEstimate().rowModels)}</span>
+                </div>
+                <div class={styles().featureEstimateSummaryRow}>
+                  <span>Built-in fns</span>
+                  <span>+{formatSize(sizeEstimate().fns)}</span>
                 </div>
                 <div class={styles().featureEstimateSummaryTotal}>
                   <span>Total</span>
-                  <span>{formatEstimatedSize(totalEstimatedBundleSize())}</span>
+                  <span>{formatSize(sizeEstimate().total)}</span>
                 </div>
                 <div class={styles().featureEstimateSummaryNote}>
-                  Allocated from the current `size-limit` metric: minified and
-                  Brotli-compressed.
+                  Minified + brotli, the metric `pnpm size` reports, measured
+                  for v{bundleSizes.tableCoreVersion}. Each item shows what it
+                  adds on its own; the total counts code that items share once.
+                  Excludes the framework adapter and custom features.
                 </div>
               </div>
 
@@ -303,7 +337,9 @@ export function FeaturesPanel() {
                     renderFeatureItem(
                       name,
                       tableFeatures().has(name),
-                      formatEstimatedSize(FEATURE_SIZE_ESTIMATES_BYTES[name]),
+                      name === CORE_REACTIVITY_FEATURE_NAME
+                        ? 'adapter'
+                        : formatSize(CORE_FEATURE_SIZES[name]),
                     )
                   }
                 </For>
@@ -318,7 +354,7 @@ export function FeaturesPanel() {
                     renderFeatureItem(
                       name,
                       tableFeatures().has(name),
-                      formatEstimatedSize(FEATURE_SIZE_ESTIMATES_BYTES[name]),
+                      `+${formatSize(FEATURE_SIZES[name])}`,
                     )
                   }
                 </For>
@@ -349,12 +385,19 @@ export function FeaturesPanel() {
                         {rowModel.rowModelName}
                       </span>
                       <span class={styles().featureMeta}>
-                        {rowModel.rowCount} rows, {rowModel.estimateLabel}
+                        {rowModel.rowCount} rows, {rowModel.sizeLabel}
                       </span>
                     </div>
                     <For each={rowModel.fns}>
-                      {(fnName) => (
-                        <div class={styles().rowModelFnItem}>{fnName}</div>
+                      {(fn) => (
+                        <div class={styles().rowModelFnItem}>
+                          <span class={styles().featureLabel}>{fn.name}</span>
+                          <span class={styles().featureMeta}>
+                            {rowModel.fnKind
+                              ? formatRegisteredFnSize(rowModel.fnKind, fn)
+                              : ''}
+                          </span>
+                        </div>
                       )}
                     </For>
                   </div>
@@ -365,12 +408,17 @@ export function FeaturesPanel() {
                   <div class={styles().rowModelItem}>
                     <span class={styles().featureLabel}>aggregationFns</span>
                     <span class={styles().featureMeta}>
-                      {aggregationFunctionNames().length} registered
+                      {registeredFns().aggregationFns.length} registered
                     </span>
                   </div>
-                  <For each={aggregationFunctionNames()}>
-                    {(fnName) => (
-                      <div class={styles().rowModelFnItem}>{fnName}</div>
+                  <For each={registeredFns().aggregationFns}>
+                    {(fn) => (
+                      <div class={styles().rowModelFnItem}>
+                        <span class={styles().featureLabel}>{fn.name}</span>
+                        <span class={styles().featureMeta}>
+                          {formatRegisteredFnSize('aggregationFns', fn)}
+                        </span>
+                      </div>
                     )}
                   </For>
                 </div>
@@ -381,8 +429,7 @@ export function FeaturesPanel() {
                 </div>
               )}
               <div class={styles().featureEstimateSummaryNote}>
-                Full package reference:{' '}
-                {formatEstimatedSize(PACKAGE_SIZE_LIMIT_BYTES)}
+                Full package: {formatSize(bundleSizes.package)}
               </div>
               <div class={styles().rowModelExecutionOrder}>
                 <div class={styles().featureSubsectionTitle}>

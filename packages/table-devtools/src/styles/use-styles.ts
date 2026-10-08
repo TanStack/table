@@ -239,6 +239,9 @@ const stylesFactory = (theme: 'light' | 'dark') => {
       color: ${t(colors.gray[700], colors.gray[200])};
     `,
     rowModelFnItem: css`
+      display: flex;
+      align-items: baseline;
+      gap: ${size[2]};
       padding: ${size[1]} 0 ${size[1]} ${size[4]};
       font-size: ${font.size.sm};
       font-family: ${font.family.mono};

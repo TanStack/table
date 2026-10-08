@@ -1,12 +1,12 @@
 import { hasOwn, makeObjectMap, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
-import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
-import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
+import { normalizeUniqueAggregationRows } from '../row-aggregation/rowAggregationFeature.utils'
 import {
-  aggregateColumnValue,
-  normalizeUniqueAggregationRows,
-} from '../row-aggregation/rowAggregationFeature.utils'
+  autoResetExpanded,
+  autoResetPageIndex,
+  getAggregateColumnValue,
+} from '../../core/featureStubs'
 import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
 import type { Column_Internal } from '../../types/Column'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -62,8 +62,8 @@ export function createGroupedRowModel<
         // reference does not change which rows belong on the current page or
         // which group ids are expanded.
         if (rowInputsChanged) {
-          table_autoResetExpanded(table)
-          table_autoResetPageIndex(table)
+          autoResetExpanded(table)
+          autoResetPageIndex(table)
         }
       },
     })
@@ -188,12 +188,17 @@ function _createGroupedRowModel<
               return aggregationCache[colId]
             }
 
+            // rowAggregationFeature provides the executor, so grouping
+            // without aggregation never bundles it
+            const aggregate = getAggregateColumnValue(table)
             const column = table.getColumn(colId) as any
-            if (typeof column.getAggregationFns !== 'function') return undefined
+            if (!aggregate || typeof column.getAggregationFns !== 'function') {
+              return undefined
+            }
 
             const cache = ((row as any)._aggregationValuesCache ??=
               makeObjectMap())
-            cache[colId] = aggregateColumnValue({
+            cache[colId] = aggregate({
               subRows,
               column,
               groupingRow: row,

@@ -73,6 +73,12 @@ export interface Table_RowExpanding<
   in out _TFeatures extends TableFeatures,
   in out _TData extends RowData,
 > {
+  /**
+   * Resets expanded state after the table data or grouping changes.
+   *
+   * Honors `autoResetAll`, `autoResetExpanded`, and `manualExpanding`. Called
+   * by the row models; you rarely need to invoke it yourself.
+   */
   autoResetExpanded: () => void
   /**
    * Checks whether at least one row can be expanded.

@@ -1,0 +1,524 @@
+[
+  {
+    "selection": {
+      "rowModels": [
+        "groupedRowModel",
+        "facetedMinMaxValues",
+        "filteredRowModel"
+      ],
+      "filterFns": ["inNumberRange"],
+      "aggregationFns": ["min"],
+      "features": [
+        "columnGroupingFeature",
+        "columnFacetingFeature",
+        "columnFilteringFeature",
+        "rowAggregationFeature"
+      ]
+    },
+    "actual": 9927
+  },
+  {
+    "selection": {
+      "features": [
+        "columnOrderingFeature",
+        "rowPaginationFeature",
+        "columnFilteringFeature",
+        "rowSortingFeature",
+        "rowAggregationFeature"
+      ],
+      "rowModels": ["paginatedRowModel", "filteredRowModel", "sortedRowModel"],
+      "filterFns": ["equals", "equalsStringSensitive", "weakEquals"],
+      "sortFns": ["text"],
+      "aggregationFns": ["extent", "sum"]
+    },
+    "actual": 11216
+  },
+  {
+    "selection": {
+      "features": [
+        "globalFilteringFeature",
+        "rowAggregationFeature",
+        "rowPinningFeature",
+        "columnFilteringFeature"
+      ],
+      "filterFns": [
+        "empty",
+        "equalsString",
+        "notEmpty",
+        "startsWith",
+        "weakEquals"
+      ],
+      "aggregationFns": ["count", "max", "median"],
+      "rowModels": ["filteredRowModel"]
+    },
+    "actual": 9537
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSpanningFeature",
+        "columnFilteringFeature",
+        "columnOrderingFeature",
+        "columnPinningFeature",
+        "columnResizingFeature",
+        "columnVisibilityFeature",
+        "rowPaginationFeature",
+        "rowSortingFeature",
+        "rowExpandingFeature",
+        "rowAggregationFeature"
+      ],
+      "rowModels": [
+        "coreRowModel",
+        "sortedRowModel",
+        "expandedRowModel",
+        "filteredRowModel"
+      ],
+      "filterFns": [
+        "arrIncludesSome",
+        "betweenInclusive",
+        "endsWith",
+        "equalsStringSensitive",
+        "inDateRange"
+      ],
+      "sortFns": ["alphanumericCaseSensitive"],
+      "aggregationFns": ["first", "mean", "sum"]
+    },
+    "actual": 15586
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSelectionFeature",
+        "cellSpanningFeature",
+        "columnFacetingFeature",
+        "columnFilteringFeature",
+        "columnSizingFeature",
+        "rowExpandingFeature",
+        "rowSelectionFeature",
+        "columnGroupingFeature",
+        "rowSortingFeature",
+        "rowAggregationFeature"
+      ],
+      "rowModels": [
+        "coreRowModel",
+        "groupedRowModel",
+        "sortedRowModel",
+        "facetedUniqueValues",
+        "filteredRowModel"
+      ],
+      "filterFns": [
+        "arrHas",
+        "betweenInclusive",
+        "equalsString",
+        "equalsStringSensitive",
+        "includesString",
+        "includesStringSensitive",
+        "notEmpty",
+        "weakEquals"
+      ],
+      "sortFns": ["alphanumericCaseSensitive", "basic", "datetime"],
+      "aggregationFns": ["extent", "first", "last", "mean", "median", "sum"]
+    },
+    "actual": 19192
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSpanningFeature",
+        "columnFilteringFeature",
+        "columnPinningFeature",
+        "columnResizingFeature",
+        "columnSizingFeature",
+        "globalFilteringFeature",
+        "rowAggregationFeature",
+        "rowExpandingFeature",
+        "rowPinningFeature",
+        "rowSortingFeature",
+        "columnFacetingFeature"
+      ],
+      "rowModels": [
+        "filteredRowModel",
+        "sortedRowModel",
+        "expandedRowModel",
+        "facetedMinMaxValues"
+      ],
+      "filterFns": [
+        "between",
+        "empty",
+        "equalsStringSensitive",
+        "includesString",
+        "notEmpty",
+        "startsWith",
+        "weakEquals"
+      ],
+      "sortFns": ["basic", "datetime", "text"],
+      "aggregationFns": ["first", "max", "mean", "sum"]
+    },
+    "actual": 15827
+  },
+  {
+    "selection": {
+      "features": [
+        "columnFilteringFeature",
+        "columnGroupingFeature",
+        "columnOrderingFeature",
+        "columnPinningFeature",
+        "columnSizingFeature",
+        "rowPaginationFeature",
+        "rowSelectionFeature",
+        "rowSortingFeature",
+        "columnFacetingFeature",
+        "rowAggregationFeature"
+      ],
+      "rowModels": [
+        "filteredRowModel",
+        "sortedRowModel",
+        "facetedRowModel",
+        "facetedMinMaxValues",
+        "facetedUniqueValues"
+      ],
+      "filterFns": [
+        "arrHas",
+        "empty",
+        "endsWith",
+        "equals",
+        "equalsString",
+        "equalsStringSensitive",
+        "inDateRange",
+        "includesString",
+        "notEmpty",
+        "startsWith",
+        "weakEquals"
+      ],
+      "sortFns": ["alphanumeric", "alphanumericCaseSensitive", "datetime"],
+      "aggregationFns": [
+        "first",
+        "last",
+        "max",
+        "mean",
+        "median",
+        "min",
+        "unique"
+      ]
+    },
+    "actual": 15789
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSelectionFeature",
+        "cellSpanningFeature",
+        "columnFacetingFeature",
+        "columnFilteringFeature",
+        "columnPinningFeature",
+        "columnResizingFeature",
+        "columnSizingFeature",
+        "columnVisibilityFeature",
+        "rowPaginationFeature",
+        "rowPinningFeature",
+        "columnGroupingFeature",
+        "rowSortingFeature",
+        "rowAggregationFeature"
+      ],
+      "rowModels": [
+        "groupedRowModel",
+        "sortedRowModel",
+        "paginatedRowModel",
+        "facetedUniqueValues",
+        "filteredRowModel"
+      ],
+      "filterFns": [
+        "arrHas",
+        "arrIncludes",
+        "arrIncludesAll",
+        "betweenInclusive",
+        "endsWith",
+        "equals",
+        "equalsString",
+        "inNumberRange",
+        "notEmpty"
+      ],
+      "sortFns": [
+        "alphanumeric",
+        "basic",
+        "datetime",
+        "text",
+        "textCaseSensitive"
+      ],
+      "aggregationFns": [
+        "count",
+        "extent",
+        "first",
+        "last",
+        "max",
+        "mean",
+        "min"
+      ]
+    },
+    "actual": 20663
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSelectionFeature",
+        "columnFacetingFeature",
+        "columnFilteringFeature",
+        "columnOrderingFeature",
+        "columnPinningFeature",
+        "columnResizingFeature",
+        "columnSizingFeature",
+        "columnVisibilityFeature",
+        "rowAggregationFeature",
+        "rowExpandingFeature",
+        "rowPinningFeature",
+        "rowSelectionFeature",
+        "rowSortingFeature",
+        "rowPaginationFeature"
+      ],
+      "rowModels": [
+        "coreRowModel",
+        "filteredRowModel",
+        "sortedRowModel",
+        "expandedRowModel",
+        "paginatedRowModel",
+        "facetedRowModel",
+        "facetedMinMaxValues"
+      ],
+      "filterFns": [
+        "arrHas",
+        "arrIncludes",
+        "arrIncludesAll",
+        "arrIncludesSome",
+        "betweenInclusive",
+        "empty",
+        "equals",
+        "equalsString",
+        "inDateRange",
+        "includesString",
+        "startsWith"
+      ],
+      "sortFns": ["alphanumeric", "text", "textCaseSensitive"],
+      "aggregationFns": [
+        "count",
+        "extent",
+        "max",
+        "mean",
+        "min",
+        "sum",
+        "unique",
+        "uniqueCount"
+      ]
+    },
+    "actual": 21215
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSelectionFeature",
+        "cellSpanningFeature",
+        "columnFacetingFeature",
+        "columnFilteringFeature",
+        "columnGroupingFeature",
+        "columnPinningFeature",
+        "columnResizingFeature",
+        "columnSizingFeature",
+        "columnVisibilityFeature",
+        "globalFilteringFeature",
+        "rowAggregationFeature",
+        "rowExpandingFeature",
+        "rowPaginationFeature",
+        "rowPinningFeature",
+        "rowSelectionFeature",
+        "rowSortingFeature"
+      ],
+      "rowModels": [
+        "coreRowModel",
+        "filteredRowModel",
+        "groupedRowModel",
+        "sortedRowModel",
+        "expandedRowModel",
+        "paginatedRowModel",
+        "facetedRowModel",
+        "facetedUniqueValues"
+      ],
+      "filterFns": [
+        "arrHas",
+        "arrIncludes",
+        "arrIncludesAll",
+        "arrIncludesSome",
+        "between",
+        "betweenInclusive",
+        "empty",
+        "endsWith",
+        "equals",
+        "equalsString",
+        "equalsStringSensitive",
+        "inDateRange",
+        "includesString",
+        "includesStringSensitive",
+        "startsWith",
+        "weakEquals"
+      ],
+      "sortFns": [
+        "alphanumericCaseSensitive",
+        "basic",
+        "datetime",
+        "text",
+        "textCaseSensitive"
+      ],
+      "aggregationFns": [
+        "extent",
+        "first",
+        "max",
+        "mean",
+        "median",
+        "min",
+        "unique",
+        "uniqueCount"
+      ]
+    },
+    "actual": 23038
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSelectionFeature",
+        "cellSpanningFeature",
+        "columnFacetingFeature",
+        "columnFilteringFeature",
+        "columnPinningFeature",
+        "columnResizingFeature",
+        "columnSizingFeature",
+        "globalFilteringFeature",
+        "rowAggregationFeature",
+        "rowExpandingFeature",
+        "rowPinningFeature",
+        "rowSelectionFeature",
+        "columnGroupingFeature",
+        "rowSortingFeature",
+        "rowPaginationFeature"
+      ],
+      "rowModels": [
+        "coreRowModel",
+        "filteredRowModel",
+        "groupedRowModel",
+        "sortedRowModel",
+        "expandedRowModel",
+        "paginatedRowModel",
+        "facetedRowModel",
+        "facetedMinMaxValues",
+        "facetedUniqueValues"
+      ],
+      "filterFns": [
+        "arrHas",
+        "arrIncludes",
+        "arrIncludesAll",
+        "arrIncludesSome",
+        "betweenInclusive",
+        "empty",
+        "endsWith",
+        "equals",
+        "equalsString",
+        "equalsStringSensitive",
+        "inDateRange",
+        "inNumberRange",
+        "includesString",
+        "includesStringSensitive",
+        "notEmpty",
+        "startsWith",
+        "weakEquals"
+      ],
+      "sortFns": [
+        "alphanumeric",
+        "alphanumericCaseSensitive",
+        "basic",
+        "datetime",
+        "text",
+        "textCaseSensitive"
+      ],
+      "aggregationFns": [
+        "first",
+        "last",
+        "max",
+        "mean",
+        "median",
+        "min",
+        "sum",
+        "unique"
+      ]
+    },
+    "actual": 22794
+  },
+  {
+    "selection": {
+      "features": [
+        "cellSelectionFeature",
+        "columnFacetingFeature",
+        "columnFilteringFeature",
+        "columnGroupingFeature",
+        "columnOrderingFeature",
+        "columnPinningFeature",
+        "columnResizingFeature",
+        "columnSizingFeature",
+        "columnVisibilityFeature",
+        "globalFilteringFeature",
+        "rowAggregationFeature",
+        "rowExpandingFeature",
+        "rowPaginationFeature",
+        "rowPinningFeature",
+        "rowSelectionFeature",
+        "rowSortingFeature"
+      ],
+      "rowModels": [
+        "coreRowModel",
+        "filteredRowModel",
+        "groupedRowModel",
+        "sortedRowModel",
+        "expandedRowModel",
+        "paginatedRowModel",
+        "facetedRowModel",
+        "facetedUniqueValues"
+      ],
+      "filterFns": [
+        "arrHas",
+        "arrIncludes",
+        "arrIncludesAll",
+        "arrIncludesSome",
+        "between",
+        "betweenInclusive",
+        "empty",
+        "endsWith",
+        "equals",
+        "equalsString",
+        "equalsStringSensitive",
+        "inDateRange",
+        "inNumberRange",
+        "includesString",
+        "includesStringSensitive",
+        "notEmpty",
+        "startsWith",
+        "weakEquals"
+      ],
+      "sortFns": [
+        "alphanumeric",
+        "alphanumericCaseSensitive",
+        "basic",
+        "datetime",
+        "text",
+        "textCaseSensitive"
+      ],
+      "aggregationFns": [
+        "extent",
+        "last",
+        "max",
+        "mean",
+        "median",
+        "min",
+        "sum",
+        "unique",
+        "uniqueCount"
+      ]
+    },
+    "actual": 22443
+  }
+]

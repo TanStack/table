@@ -268,6 +268,14 @@ export interface Table_RowSorting<
   in out _TData extends RowData,
 > {
   /**
+   * Resets sorting after the table data changes when explicitly enabled.
+   *
+   * Honors `autoResetAll` and `autoResetSorting`; sorting is preserved by
+   * default. Called by the core row model; you rarely need to invoke it
+   * yourself.
+   */
+  autoResetSorting: () => void
+  /**
    * Resets `sorting` to `initialState.sorting`.
    *
    * Pass `true` to ignore initial state and reset to `[]`.

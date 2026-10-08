@@ -1,4 +1,22 @@
-import { constructAggregationFn } from './rowAggregationFeature.types'
+import type { AggregationFnDef } from './rowAggregationFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+
+/**
+ * Creates a typed context-based aggregation definition for a column or
+ * aggregation-function registry.
+ */
+/* @__NO_SIDE_EFFECTS__ */
+export function constructAggregationFn<
+  TFeatures extends TableFeatures = any,
+  TData extends RowData = any,
+  TValue = unknown,
+  TResult = unknown,
+>(
+  definition: AggregationFnDef<TFeatures, TData, TValue, TResult>,
+): AggregationFnDef<TFeatures, TData, TValue, TResult> {
+  return definition
+}
 
 type RangeValue = Date | number
 
@@ -31,7 +49,7 @@ function toRangeNumber(value: RangeValue): number {
  * Sums numeric selected-row values. Non-number values contribute zero. As in
  * the previous API, `NaN` is a number and therefore propagates through the sum.
  */
-export const aggregationFn_sum = constructAggregationFn<
+export const aggregationFn_sum = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -60,7 +78,7 @@ export const aggregationFn_sum = constructAggregationFn<
  * Finds the minimum numeric or Date value from the selected rows. Invalid value
  * types are ignored; `NaN` preserves the legacy numeric seeding behavior.
  */
-export const aggregationFn_min = constructAggregationFn<
+export const aggregationFn_min = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -109,7 +127,7 @@ export const aggregationFn_min = constructAggregationFn<
  * Finds the maximum numeric or Date value from the selected rows. Invalid value
  * types are ignored; `NaN` preserves the legacy numeric seeding behavior.
  */
-export const aggregationFn_max = constructAggregationFn<
+export const aggregationFn_max = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -159,7 +177,7 @@ export const aggregationFn_max = constructAggregationFn<
  * Empty inputs return
  * `[undefined, undefined]`, preserving the previous built-in result shape.
  */
-export const aggregationFn_extent = constructAggregationFn<
+export const aggregationFn_extent = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -232,7 +250,7 @@ export const aggregationFn_extent = constructAggregationFn<
  * Averages number and number-like row values. Nullish and non-numeric values
  * are ignored; other values retain the legacy unary-plus coercion behavior.
  */
-export const aggregationFn_mean = constructAggregationFn<
+export const aggregationFn_mean = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -260,7 +278,7 @@ export const aggregationFn_mean = constructAggregationFn<
  * ignored, matching the `sum`/`min`/`max`/`mean` aggregations. Returns
  * `undefined` when no numeric values remain.
  */
-export const aggregationFn_median = constructAggregationFn<
+export const aggregationFn_median = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -283,7 +301,7 @@ export const aggregationFn_median = constructAggregationFn<
 })
 
 /** Collects distinct row values using JavaScript `Set` semantics. */
-export const aggregationFn_unique = constructAggregationFn<
+export const aggregationFn_unique = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -300,7 +318,7 @@ export const aggregationFn_unique = constructAggregationFn<
 })
 
 /** Counts distinct row values using JavaScript `Set` semantics. */
-export const aggregationFn_uniqueCount = constructAggregationFn<
+export const aggregationFn_uniqueCount = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -317,7 +335,7 @@ export const aggregationFn_uniqueCount = constructAggregationFn<
 })
 
 /** Counts rows, independently of the column's values. */
-export const aggregationFn_count = constructAggregationFn<
+export const aggregationFn_count = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -335,7 +353,7 @@ export const aggregationFn_count = constructAggregationFn<
 })
 
 /** Returns the first row's value, including a nullish value. */
-export const aggregationFn_first = constructAggregationFn<
+export const aggregationFn_first = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
@@ -347,7 +365,7 @@ export const aggregationFn_first = constructAggregationFn<
 })
 
 /** Returns the last row's value, including a nullish value. */
-export const aggregationFn_last = constructAggregationFn<
+export const aggregationFn_last = /* @__PURE__ */ constructAggregationFn<
   any,
   any,
   unknown,
