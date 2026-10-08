@@ -265,6 +265,22 @@ function ensurePublicTypeImports(source, file) {
   return next
 }
 
+// A declaration file without an export statement exports every top-level
+// declaration, including private helpers that are only reachable through deep
+// paths blocked by the package `exports` map. Consumers emitting declarations
+// then fail with TS2883 when an inferred type references one of them.
+// rolldown-plugin-dts 0.28.2+ inlines `export` modifiers and drops the
+// trailing `export { … }`, so restore the marker here.
+const exportStatementPattern = /^\s*export\s*(?:type\s*)?(?:\{[^}]*\}|\*|=)/m
+
+function ensureExportStatement(source) {
+  if (exportStatementPattern.test(source)) {
+    return source
+  }
+
+  return `${source.trimEnd()}\nexport {};\n`
+}
+
 function rewriteDeclaration(source, file) {
   let next = source
 
@@ -282,6 +298,7 @@ function rewriteDeclaration(source, file) {
   next = next.replaceAll('Column_Internal', 'Column')
 
   next = ensurePublicTypeImports(next, file)
+  next = ensureExportStatement(next)
 
   return next
 }
