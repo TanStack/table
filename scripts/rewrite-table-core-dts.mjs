@@ -282,8 +282,20 @@ function rewriteDeclaration(source, file) {
   next = next.replaceAll('Column_Internal', 'Column')
 
   next = ensurePublicTypeImports(next, file)
+  next = ensureModuleScope(next)
 
   return next
+}
+
+function ensureModuleScope(source) {
+  if (
+    !/\bexport\s*(?:\{|\*|default|type|interface|function|class|const|let|var|enum)\b/.test(
+      source,
+    )
+  ) {
+    return `${source.trimEnd()}\n\nexport {};\n`
+  }
+  return source
 }
 
 const files = walkDeclarationFiles(distDir)

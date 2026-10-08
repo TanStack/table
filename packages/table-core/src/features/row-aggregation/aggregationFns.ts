@@ -1,6 +1,6 @@
 import { constructAggregationFn } from './rowAggregationFeature.types'
 
-type RangeValue = Date | number
+export type RangeValue = Date | number
 
 function isNumber(value: unknown): value is number {
   return typeof value === 'number'
