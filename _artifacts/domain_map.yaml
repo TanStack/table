@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.2.6'
+  version: '9.2.8'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing
@@ -8,13 +8,7 @@ library:
   primary_framework: 'framework-agnostic'
   monorepo: true
   package_version_overrides:
-    '@tanstack/preact-table-devtools': '9.2.5'
-    '@tanstack/react-table-devtools': '9.2.5'
-    '@tanstack/solid-table': '9.2.7'
-    '@tanstack/solid-table-devtools': '9.2.5'
-    '@tanstack/table-devtools': '9.2.5'
-    '@tanstack/vue-table': '9.2.7'
-    '@tanstack/vue-table-devtools': '9.2.5'
+    '@tanstack/match-sorter-utils': '9.2.6'
 
 meta:
   generated_by: '@tanstack/intent scaffold domain discovery'

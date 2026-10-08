@@ -4,7 +4,7 @@ description: Migrate react Table v8 to v9. Audit framework construction, renderi
 metadata:
   type: lifecycle
   library: '@tanstack/react-table'
-  library_version: '9.2.6'
+  library_version: '9.2.8'
   framework: react
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'

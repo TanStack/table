@@ -14,7 +14,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
     "@tailwindcss/vite": "^4.3.3",
-    "@tanstack/react-table": "^9.2.6",
+    "@tanstack/react-table": "^9.2.8",
     "react": "^19.3.0",
     "react-aria-components": "^1.21.1",
     "react-dom": "^19.3.0",

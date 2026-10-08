@@ -4,7 +4,7 @@ description: Migrate solid Table v8 to v9. Audit framework construction, renderi
 metadata:
   type: lifecycle
   library: '@tanstack/solid-table'
-  library_version: '9.2.7'
+  library_version: '9.2.8'
   framework: solid
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'

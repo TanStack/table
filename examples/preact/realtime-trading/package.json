@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@tanstack/preact-store": "^0.13.4",
-    "@tanstack/preact-table": "^9.2.6",
+    "@tanstack/preact-table": "^9.2.8",
     "preact": "^10.29.8"
   },
   "devDependencies": {

@@ -15,8 +15,8 @@
     "@tanstack/vue-devtools": "^0.2.27",
     "@tanstack/vue-query": "^5.104.1",
     "@tanstack/vue-query-devtools": "^6.3.1",
-    "@tanstack/vue-table": "^9.2.7",
-    "@tanstack/vue-table-devtools": "^9.2.5",
+    "@tanstack/vue-table": "^9.2.8",
+    "@tanstack/vue-table-devtools": "^9.2.8",
     "vue": "^3.5.43"
   },
   "devDependencies": {
