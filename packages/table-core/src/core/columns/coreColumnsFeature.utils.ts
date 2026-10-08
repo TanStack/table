@@ -57,7 +57,7 @@ export function column_getLeafColumns<
 
     return callMemoOrStaticFn(
       column.table,
-      'getOrderColumns',
+      'getOrderColumnsFn',
       table_getOrderColumnsFn,
     )(leafColumns as any) as any
   }
@@ -229,7 +229,7 @@ export function table_getAllLeafColumns<
   )
   return callMemoOrStaticFn(
     table,
-    'getOrderColumns',
+    'getOrderColumnsFn',
     table_getOrderColumnsFn,
   )(leafColumns) as Array<Column<TFeatures, TData, unknown>>
 }

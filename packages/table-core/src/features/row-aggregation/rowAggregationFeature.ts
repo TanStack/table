@@ -1,5 +1,6 @@
 import { assignPrototypeAPIs } from '../../utils'
 import {
+  aggregateColumnValue,
   cell_getIsAggregated,
   column_getAggregationFns,
   column_getAggregationValue,
@@ -22,6 +23,13 @@ export const rowAggregationFeature: TableFeature = {
   getDefaultTableOptions: () => ({
     manualAggregation: false,
   }),
+
+  initTableInstanceData: (table) => {
+    // @ts-ignore - _aggregateColumnValue is row aggregation table instance
+    // data. The grouped row model reads the executor from here so tables that
+    // group without aggregating don't bundle it.
+    table._aggregateColumnValue = aggregateColumnValue
+  },
 
   assignCellPrototype: (prototype, table) => {
     assignPrototypeAPIs('rowAggregationFeature', prototype, table, {

@@ -1,9 +1,4 @@
-import { getDefaultColumnPinningState } from '../../features/column-pinning/columnPinningFeature.utils'
-import {
-  column_getIsVisible,
-  table_getVisibleLeafColumns,
-} from '../../features/column-visibility/columnVisibilityFeature.utils'
-import { callMemoOrStaticFn } from '../../utils'
+import { getIsColumnVisible, getVisibleLeafColumns } from '../featureStubs'
 import { buildHeaderGroups } from './buildHeaderGroups'
 import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
@@ -86,14 +81,13 @@ export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { start, end } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+  // Pinning and visibility are optional features; without them nothing is
+  // pinned and every leaf column is visible
+  const columnPinning = table.atoms.columnPinning?.get()
+  const start = columnPinning?.start ?? []
+  const end = columnPinning?.end ?? []
   const allColumns = table.getAllColumns()
-  const leafColumns = callMemoOrStaticFn(
-    table,
-    'getVisibleLeafColumns',
-    table_getVisibleLeafColumns,
-  )
+  const leafColumns = getVisibleLeafColumns(table)
 
   // Fast path: no columns are pinned — skip per-side lookups, partition, and spread.
   if (!start.length && !end.length) {
@@ -105,10 +99,7 @@ export function table_getHeaderGroups<
   const leftColumns: typeof leafColumns = []
   for (let i = 0; i < start.length; i++) {
     const column = leafColumnsById[start[i]!]
-    if (
-      column &&
-      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
-    ) {
+    if (column && getIsColumnVisible(column)) {
       leftColumns.push(column)
     }
   }
@@ -116,10 +107,7 @@ export function table_getHeaderGroups<
   const rightColumns: typeof leafColumns = []
   for (let i = 0; i < end.length; i++) {
     const column = leafColumnsById[end[i]!]
-    if (
-      column &&
-      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
-    ) {
+    if (column && getIsColumnVisible(column)) {
       rightColumns.push(column)
     }
   }
