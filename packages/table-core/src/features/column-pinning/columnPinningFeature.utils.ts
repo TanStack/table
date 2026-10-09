@@ -1,10 +1,10 @@
-import {
-  column_getIsVisible,
-  row_getVisibleCells,
-  row_getVisibleCellsByColumnId,
-  table_getVisibleLeafColumns,
-} from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
+import {
+  getIsColumnVisible,
+  getVisibleCells,
+  getVisibleCellsByColumnId,
+  getVisibleLeafColumns,
+} from '../../core/featureStubs'
 import { callMemoOrStaticFn, cloneState, setStateSlice } from '../../utils'
 import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
@@ -205,11 +205,7 @@ export function row_getCenterVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const allCells = callMemoOrStaticFn(
-    row,
-    'getVisibleCells',
-    row_getVisibleCells,
-  )
+  const allCells = getVisibleCells(row)
   const { start, end } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (!start.length && !end.length) {
@@ -237,11 +233,7 @@ export function row_getStartVisibleCells<
   const { start } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (!start.length) return []
-  const allVisibleCells = callMemoOrStaticFn(
-    row,
-    'getVisibleCellsByColumnId',
-    row_getVisibleCellsByColumnId,
-  )
+  const allVisibleCells = getVisibleCellsByColumnId(row)
   const cells: Array<Cell<TFeatures, TData, unknown>> = []
   for (let i = 0; i < start.length; i++) {
     const columnId = start[i]!
@@ -273,11 +265,7 @@ export function row_getEndVisibleCells<
   const { end } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (!end.length) return [] as Array<Cell<TFeatures, TData, unknown>>
-  const allVisibleCells = callMemoOrStaticFn(
-    row,
-    'getVisibleCellsByColumnId',
-    row_getVisibleCellsByColumnId,
-  )
+  const allVisibleCells = getVisibleCellsByColumnId(row)
   const cells: Array<Cell<TFeatures, TData, unknown>> = []
   for (let i = 0; i < end.length; i++) {
     const columnId = end[i]!
@@ -389,10 +377,7 @@ export function table_getStartHeaderGroups<
   const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < start.length; i++) {
     const column = leafColumnsById[start[i]!]
-    if (
-      column &&
-      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
-    ) {
+    if (column && getIsColumnVisible(column)) {
       orderedLeafColumns.push(column)
     }
   }
@@ -423,10 +408,7 @@ export function table_getEndHeaderGroups<
   const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < end.length; i++) {
     const column = leafColumnsById[end[i]!]
-    if (
-      column &&
-      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
-    ) {
+    if (column && getIsColumnVisible(column)) {
       orderedLeafColumns.push(column)
     }
   }
@@ -452,11 +434,7 @@ export function table_getCenterHeaderGroups<
   table: Table_Internal<TFeatures, TData>,
 ): Array<HeaderGroup<TFeatures, TData>> {
   const allColumns = table.getAllColumns()
-  let leafColumns = callMemoOrStaticFn(
-    table,
-    'getVisibleLeafColumns',
-    table_getVisibleLeafColumns,
-  )
+  let leafColumns = getVisibleLeafColumns(table)
   const { start, end } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (start.length || end.length) {
@@ -826,9 +804,7 @@ export function table_getStartVisibleLeafColumns<
     table,
     'getStartLeafColumns',
     table_getStartLeafColumns,
-  ).filter((column) =>
-    callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
-  )
+  ).filter((column) => getIsColumnVisible(column))
 }
 
 /**
@@ -849,9 +825,7 @@ export function table_getEndVisibleLeafColumns<
     table,
     'getEndLeafColumns',
     table_getEndLeafColumns,
-  ).filter((column) =>
-    callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
-  )
+  ).filter((column) => getIsColumnVisible(column))
 }
 
 /**
@@ -873,9 +847,7 @@ export function table_getCenterVisibleLeafColumns<
     table,
     'getCenterLeafColumns',
     table_getCenterLeafColumns,
-  ).filter((column) =>
-    callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
-  )
+  ).filter((column) => getIsColumnVisible(column))
 }
 
 /**
@@ -897,11 +869,7 @@ export function table_getPinnedVisibleLeafColumns<
   position?: ColumnPinningPosition | 'center',
 ) {
   return !position
-    ? callMemoOrStaticFn(
-        table,
-        'getVisibleLeafColumns',
-        table_getVisibleLeafColumns,
-      )
+    ? getVisibleLeafColumns(table)
     : position === 'start'
       ? callMemoOrStaticFn(
           table,

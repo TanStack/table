@@ -635,4 +635,55 @@ describe('total sizes', () => {
     expect(table_getEndTotalSize(table)).toBe(0)
     expect(table_getCenterTotalSize(table)).toBe(100)
   })
+
+  it('should match the width of each region header row with groups and hidden columns', () => {
+    const groupedFeatures = testFeatures({
+      columnPinningFeature,
+      columnSizingFeature,
+      columnVisibilityFeature,
+      coreRowModel: createCoreRowModel(),
+    })
+    const table = constructTable({
+      features: groupedFeatures,
+      columns: [
+        {
+          id: 'group',
+          header: 'Group',
+          columns: [
+            { id: 'a', accessorKey: 'a', size: 100 },
+            { id: 'b', accessorKey: 'b', size: 200 },
+          ],
+        },
+        { id: 'c', accessorKey: 'c', size: 50 },
+        { id: 'd', accessorKey: 'd', size: 75 },
+      ] as Array<ColumnDef<typeof groupedFeatures, Item, any>>,
+      data,
+      initialState: {
+        columnPinning: { start: ['b', 'd'], end: ['c'] },
+        columnVisibility: { d: false },
+      },
+    })
+
+    function headerRowWidth(
+      headerGroups: ReturnType<typeof table.getStartHeaderGroups>,
+    ) {
+      return (headerGroups[0]?.headers ?? []).reduce(
+        (sum, header) => sum + header.getSize(),
+        0,
+      )
+    }
+
+    expect(table_getStartTotalSize(table)).toBe(200)
+    expect(table_getCenterTotalSize(table)).toBe(100)
+    expect(table_getEndTotalSize(table)).toBe(50)
+    expect(table_getStartTotalSize(table)).toBe(
+      headerRowWidth(table.getStartHeaderGroups()),
+    )
+    expect(table_getCenterTotalSize(table)).toBe(
+      headerRowWidth(table.getCenterHeaderGroups()),
+    )
+    expect(table_getEndTotalSize(table)).toBe(
+      headerRowWidth(table.getEndHeaderGroups()),
+    )
+  })
 })

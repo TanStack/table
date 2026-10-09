@@ -457,14 +457,12 @@ export function tableMemo<
     console.groupEnd()
   }
 
-  const onAfterUpdateHandler = () => {
-    if (!onAfterUpdate) {
-      return
-    }
-
-    const { schedule, untrack } = table._reactivity
-    schedule(() => untrack(() => onAfterUpdate()))
-  }
+  const onAfterUpdateHandler = onAfterUpdate
+    ? () => {
+        const { schedule, untrack } = table._reactivity
+        schedule(() => untrack(() => onAfterUpdate()))
+      }
+    : undefined
 
   const debugOptions =
     process.env.NODE_ENV === 'development'
@@ -496,14 +494,10 @@ export function tableMemo<
                 Math.round((endCalcTime - startCalcTime) * 100) / 100
               logTime(executionTime, true)
             }
-            onAfterUpdateHandler()
+            onAfterUpdateHandler?.()
           },
         }
-      : {
-          onAfterUpdate: () => {
-            onAfterUpdateHandler()
-          },
-        }
+      : { onAfterUpdate: onAfterUpdateHandler }
 
   return memo({
     ...memoOptions,

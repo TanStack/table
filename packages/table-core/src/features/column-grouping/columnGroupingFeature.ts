@@ -4,6 +4,7 @@ import {
   makeObjectMap,
   makeStateUpdater,
 } from '../../utils'
+import { orderColumns } from '../column-ordering/columnOrderingFeature.utils'
 import {
   cell_getIsGrouped,
   cell_getIsPlaceholder,
@@ -36,6 +37,14 @@ export const columnGroupingFeature: TableFeature = {
       onGroupingChange: makeStateUpdater('grouping', table),
       groupedColumnMode: 'reorder',
     }
+  },
+
+  initTableInstanceData: (table) => {
+    // @ts-ignore - _orderGroupedColumns is column grouping table instance
+    // data. Leaf column ordering falls back to it when the column ordering
+    // feature is not registered, so tables without either feature don't
+    // bundle it.
+    table._orderGroupedColumns = orderColumns
   },
 
   assignCellPrototype: (prototype, table) => {
