@@ -32,6 +32,12 @@ export function getDefaultPaginationState(): PaginationState {
  * client-side pagination behavior allows it. Manual pagination opts out unless
  * the reset options explicitly opt back in.
  *
+ * When the reset is disabled for client-side pagination, an out-of-range
+ * page index is clamped to the last existing page instead, so a data,
+ * filter, or grouping change that shrinks the rows never leaves the table
+ * on a page that no longer exists. An in-range page index is left
+ * untouched.
+ *
  * @example
  * ```ts
  * table_autoResetPageIndex(table)
@@ -41,6 +47,9 @@ export function table_autoResetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
+  const currentPageIndex =
+    table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+
   if (
     table.options.autoResetAll ??
     table.options.autoResetPageIndex ??
@@ -50,11 +59,34 @@ export function table_autoResetPageIndex<
     // already on the default page. Routing a no-op through the pagination
     // handler would still run user `onPaginationChange` side effects (such
     // as refetching) on every data, filter, sort, or grouping change.
-    const currentPageIndex =
-      table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
     if (currentPageIndex === defaultPageIndex) return
     table_resetPageIndex(table, true)
+    return
   }
+
+  clampPageIndex(table, currentPageIndex)
+}
+
+function clampPageIndex<TFeatures extends TableFeatures, TData extends RowData>(
+  table: Table_Internal<TFeatures, TData>,
+  currentPageIndex: number,
+) {
+  // Manual pagination owns its page range, so only client-side pagination
+  // is clamped. Page 0 always exists, so skip computing the page count
+  // (and the row-model stages behind it) there.
+  if (table.options.manualPagination || currentPageIndex <= defaultPageIndex) {
+    return
+  }
+
+  const pageCount = table_getPageCount(table)
+  // A negative or non-finite count means the page range is unknown.
+  if (!Number.isFinite(pageCount) || pageCount < 0) return
+
+  const lastPageIndex = Math.max(0, pageCount - 1)
+  // Same no-op guard as the reset path: only route through the handler when
+  // the index actually has to move.
+  if (currentPageIndex <= lastPageIndex) return
+  table_setPageIndex(table, lastPageIndex)
 }
 
 /**
