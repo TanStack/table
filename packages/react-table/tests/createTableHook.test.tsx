@@ -53,6 +53,7 @@ const columns = columnHelper.columns([
     id: 'name',
     header: ({ header }) => <header.NameHeader />,
     cell: ({ cell }) => <cell.NameCell />,
+    aggregatedCell: ({ cell }) => <cell.NameCell />,
     footer: 'Name footer',
   }),
 ])
