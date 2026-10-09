@@ -391,6 +391,17 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
     showColumnFilters,
     showGlobalFilter,
     showToolbarDropZone,
+    // The controlled-only loading slices have no internal state — they only ever
+    // arrive via `options.state` — so they must be re-injected here too, or every
+    // component reads `isLoading: undefined` and e.g. body cells render real Cells
+    // over the blank skeleton rows instead of <Skeleton>s.
+    isLoading: statefulTableOptions.state.isLoading ?? false,
+    isSaving: statefulTableOptions.state.isSaving ?? false,
+    showLoadingOverlay: statefulTableOptions.state.showLoadingOverlay ?? false,
+    showProgressBars: statefulTableOptions.state.showProgressBars ?? false,
+    // not defaulted: `false` means "suppress skeletons even while loading"
+    // (MRT_TableBodyCell checks `showSkeletons !== false`), undefined means "auto"
+    showSkeletons: statefulTableOptions.state.showSkeletons!,
   }
 
   // v8-style `getState()` alias for any consumer that still calls it.
