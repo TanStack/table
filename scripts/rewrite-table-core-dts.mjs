@@ -141,9 +141,9 @@ function removeNamedSpecifiers(source, names) {
     )
 }
 
-function rewriteInternalImportSpecifiers(source) {
+function rewriteInternalImportSpecifiers(source, tableReplacement) {
   const replacements = new Map([
-    ['Table_Internal', 'Table'],
+    ['Table_Internal', tableReplacement],
     ['Column_Internal', 'Column'],
   ])
 
@@ -251,14 +251,33 @@ function ensureNamedImport(source, name, importPath) {
   return `import { ${name} } from "${importPath}";\n${source}`
 }
 
-function ensurePublicTypeImports(source, file) {
+function isDeclarationPath(file, suffix) {
+  return file.replaceAll('\\', '/').endsWith(suffix)
+}
+
+function ensurePublicTypeImports(source, file, tableReplacement) {
   let next = source
 
-  if (!file.endsWith('/types/Table.d.ts') && /\bTable</.test(next)) {
+  if (!isDeclarationPath(file, '/types/Table.d.ts') && /\bTable</.test(next)) {
     next = ensureNamedImport(next, 'Table', getImportPath(file, 'Table'))
   }
 
-  if (!file.endsWith('/types/Column.d.ts') && /\bColumn</.test(next)) {
+  if (
+    tableReplacement !== 'Table' &&
+    !isDeclarationPath(file, '/types/Table.d.ts') &&
+    new RegExp(String.raw`\b${tableReplacement}<`).test(next)
+  ) {
+    next = ensureNamedImport(
+      next,
+      tableReplacement,
+      getImportPath(file, 'Table'),
+    )
+  }
+
+  if (
+    !isDeclarationPath(file, '/types/Column.d.ts') &&
+    /\bColumn</.test(next)
+  ) {
     next = ensureNamedImport(next, 'Column', getImportPath(file, 'Column'))
   }
 
@@ -268,20 +287,27 @@ function ensurePublicTypeImports(source, file) {
 function rewriteDeclaration(source, file) {
   let next = source
 
+  // `TableFeature` hooks are the plugin-authoring surface, so they keep the
+  // all-features table. Everywhere else narrows to `Table` so ordinary
+  // consumers are not handed optional state slices.
+  const tableReplacement = isDeclarationPath(file, '/types/TableFeatures.d.ts')
+    ? 'Table_All'
+    : 'Table'
+
   for (const typeName of forbiddenTypeNames) {
     next = removeExportedInterface(next, typeName)
   }
 
   next = removeTypeAlias(next, 'Table_InternalBroadenedKeys')
-  next = rewriteInternalImportSpecifiers(next)
+  next = rewriteInternalImportSpecifiers(next, tableReplacement)
   next = removeNamedSpecifiers(next, forbiddenTypeNames)
 
-  next = next.replaceAll('Table_Internal<', 'Table<')
+  next = next.replaceAll('Table_Internal<', `${tableReplacement}<`)
   next = next.replaceAll('Column_Internal<', 'Column<')
-  next = next.replaceAll('Table_Internal', 'Table')
+  next = next.replaceAll('Table_Internal', tableReplacement)
   next = next.replaceAll('Column_Internal', 'Column')
 
-  next = ensurePublicTypeImports(next, file)
+  next = ensurePublicTypeImports(next, file, tableReplacement)
 
   return next
 }

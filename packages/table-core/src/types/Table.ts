@@ -81,6 +81,32 @@ export type Table<
   ExtractFeatureMapTypes<TFeatures, Table_FeatureMap<TFeatures, TData>>
 
 /**
+ * `Table` with the options, state, and row models widened to their
+ * all-features types.
+ *
+ * `TableFeature` hooks receive this so a feature can read the options and state
+ * it contributes itself, which `Table` alone cannot describe because its
+ * members are narrowed to `TFeatures`.
+ */
+export type Table_All<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+> = Table<TFeatures, TData> & {
+  _rowModels: CachedRowModel_All<TFeatures, TData>
+  _rowModelFns: RowModelFns_All<TFeatures, TData>
+  options: DebugOptions<TableFeatures> &
+    TableOptions_All<TFeatures, TData> & {
+      state?: TableState_All
+      initialState?: TableState_All
+      atoms?: ExternalAtoms_All
+    }
+  initialState: TableState<TFeatures> & TableState_All
+  baseAtoms: BaseAtoms<TFeatures> & BaseAtoms_All
+  atoms: Atoms<TFeatures> & Atoms_All
+  store: ReadonlyStore<TableState<TFeatures>> & ReadonlyStore<TableState_All>
+}
+
+/**
  * `Table_Table` members that `Table_Internal` re-declares with broadened
  * (all-features) types so internal code can read any feature's slots and
  * construction code can assign them.
