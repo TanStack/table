@@ -1,5 +1,5 @@
-import { callMemoOrStaticFn, makeObjectMap } from '../../utils'
-import { table_getOrderColumnsFn } from '../../features/column-ordering/columnOrderingFeature.utils'
+import { makeObjectMap } from '../../utils'
+import { orderLeafColumns } from '../featureStubs'
 import { constructColumn } from './constructColumn'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -55,11 +55,7 @@ export function column_getLeafColumns<
       (col) => col.getLeafColumns(), // recursive
     )
 
-    return callMemoOrStaticFn(
-      column.table,
-      'getOrderColumnsFn',
-      table_getOrderColumnsFn,
-    )(leafColumns as any) as any
+    return orderLeafColumns(column.table, leafColumns)
   }
 
   return [column]
@@ -227,11 +223,7 @@ export function table_getAllLeafColumns<
   const leafColumns = table.getAllColumns().flatMap(
     (c) => c.getLeafColumns(), // recursive
   )
-  return callMemoOrStaticFn(
-    table,
-    'getOrderColumnsFn',
-    table_getOrderColumnsFn,
-  )(leafColumns) as Array<Column<TFeatures, TData, unknown>>
+  return orderLeafColumns(table, leafColumns)
 }
 
 /**

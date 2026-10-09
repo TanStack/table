@@ -5,7 +5,7 @@ import {
   makeObjectMap,
   setStateSlice,
 } from '../../utils'
-import { getDefaultColumnPinningState } from '../column-pinning/columnPinningFeature.utils'
+import { orderByColumnPinning } from '../../core/featureStubs'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -170,37 +170,17 @@ export function row_getVisibleCells<
     }
   }
 
-  const { start, end } =
-    row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (!start.length && !end.length) return visibleCells // no pinning, return early
-
-  const visibleCellsByColumnId = callMemoOrStaticFn(
-    row,
-    'getVisibleCellsByColumnId',
-    row_getVisibleCellsByColumnId,
+  return orderByColumnPinning(
+    row.table,
+    visibleCells,
+    (cell) => cell.column.id,
+    () =>
+      callMemoOrStaticFn(
+        row,
+        'getVisibleCellsByColumnId',
+        row_getVisibleCellsByColumnId,
+      ),
   )
-
-  const startCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < start.length; i++) {
-    const cell = visibleCellsByColumnId[start[i]!]
-    if (cell) startCells.push(cell)
-  }
-
-  const endCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < end.length; i++) {
-    const cell = visibleCellsByColumnId[end[i]!]
-    if (cell) endCells.push(cell)
-  }
-
-  // Center cells: visible cells in natural column order, minus pinned ones.
-  const centerCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < visibleCells.length; i++) {
-    const cell = visibleCells[i]!
-    const id = cell.column.id
-    if (!start.includes(id) && !end.includes(id)) centerCells.push(cell)
-  }
-
-  return [...startCells, ...centerCells, ...endCells]
 }
 
 /**

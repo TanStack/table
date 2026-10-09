@@ -20,6 +20,7 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './rowExpandingFeature.utils'
+import { expandRows } from './createExpandedRowModel'
 import type { TableFeature } from '../../types/TableFeatures'
 
 /**
@@ -38,6 +39,13 @@ export const rowExpandingFeature: TableFeature = {
       onExpandedChange: makeStateUpdater('expanded', table),
       paginateExpandedRows: true,
     }
+  },
+
+  initTableInstanceData: (table) => {
+    // @ts-ignore - _expandRows is row expanding table instance data. Row
+    // display order and the paginated row model expand rows through it, so
+    // tables without row expanding don't bundle it.
+    table._expandRows = expandRows
   },
 
   assignRowPrototype: (prototype, table) => {

@@ -1,11 +1,11 @@
 import { flattenBy, hasOwn, makeObjectMap } from '../../utils'
 import { constructCell } from '../cells/constructCell'
+import { expandRowModel } from '../featureStubs'
 import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
-import type { Row_RowExpanding } from '../../features/row-expanding/rowExpandingFeature.types'
 
 /**
  * Returns this row's zero-based position in the current pre-pagination row
@@ -33,29 +33,14 @@ export function table_getRowsInDisplayOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const rows = table.getPrePaginatedRowModel().rows
+  const rowModel = table.getPrePaginatedRowModel()
 
-  if (table.options.paginateExpandedRows === false) {
-    const displayRows: Array<Row<TFeatures, TData>> = []
-
-    const handleRow = (row: Row<TFeatures, TData>) => {
-      row._displayIndexCache = displayRows.length
-      displayRows.push(row)
-
-      if (
-        row.subRows.length &&
-        (
-          row as Row<TFeatures, TData> & Partial<Row_RowExpanding>
-        ).getIsExpanded?.()
-      ) {
-        row.subRows.forEach(handleRow)
-      }
-    }
-
-    rows.forEach(handleRow)
-
-    return displayRows
-  }
+  // With `paginateExpandedRows: false`, expanded sub-rows are not in the
+  // pre-paginated rows; they display inline below their parents.
+  const rows =
+    table.options.paginateExpandedRows === false
+      ? expandRowModel(table, rowModel).rows
+      : rowModel.rows
 
   for (let i = 0; i < rows.length; i++) {
     rows[i]!._displayIndexCache = i
