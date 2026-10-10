@@ -111,7 +111,7 @@ function Table({
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th key={header.id} colspan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
                         <table.FlexRender header={header} />
@@ -140,7 +140,7 @@ function Table({
                 {row.getIsExpanded() && (
                   <tr>
                     {/* 2nd row is a custom 1 cell row */}
-                    <td colSpan={row.getAllCells().length}>
+                    <td colspan={row.getAllCells().length}>
                       {renderSubComponent({ row })}
                     </td>
                   </tr>

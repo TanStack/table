@@ -263,7 +263,7 @@ function App() @{
               {basicTable.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colspan={header.colSpan}>
                       <basicTable.FlexRender header={header} />
                     </th>
                   ))}
@@ -295,7 +295,7 @@ function App() @{
                 .map((footerGroup) => (
                   <tr key={footerGroup.id}>
                     {footerGroup.headers.map((header) => (
-                      <th key={header.id} colSpan={header.colSpan}>
+                      <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <basicTable.FlexRender footer={header} />
                         )}
@@ -314,7 +314,7 @@ function App() @{
               {nestedTable.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colspan={header.colSpan}>
                       <nestedTable.FlexRender header={header} />
                     </th>
                   ))}
@@ -342,7 +342,7 @@ function App() @{
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colspan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <table.FlexRender header={header} />
                       )}
@@ -366,7 +366,7 @@ function App() @{
               {table.getFooterGroups().map((footerGroup) => (
                 <tr key={footerGroup.id}>
                   {footerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colspan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <table.FlexRender footer={header} />
                       )}
@@ -388,8 +388,8 @@ function App() @{
                     header.rowSpan === 0 ? null : (
                       <th
                         key={header.id}
-                        colSpan={header.colSpan}
-                        rowSpan={header.rowSpan}
+                        colspan={header.colSpan}
+                        rowspan={header.rowSpan}
                       >
                         <unevenTable.FlexRender header={header} />
                       </th>

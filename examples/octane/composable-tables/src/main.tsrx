@@ -114,7 +114,7 @@ function UsersTable() @{
                     <table.AppHeader header={h} key={h.id}>
                       {(header) => (
                         <th
-                          colSpan={header.colSpan}
+                          colspan={header.colSpan}
                           className={
                             header.column.getCanSort() ? 'sortable-header' : ''
                           }
@@ -173,7 +173,7 @@ function UsersTable() @{
                         )
 
                         return (
-                          <td colSpan={footer.colSpan}>
+                          <td colspan={footer.colSpan}>
                             {footer.isPlaceholder ? null : (
                               <>
                                 {/* Use FooterSum for numeric columns, FooterColumnId for others */}
@@ -314,7 +314,7 @@ function ProductsTable() @{
                     <table.AppHeader header={h} key={h.id}>
                       {(header) => (
                         <th
-                          colSpan={header.colSpan}
+                          colspan={header.colSpan}
                           className={
                             header.column.getCanSort() ? 'sortable-header' : ''
                           }
@@ -372,7 +372,7 @@ function ProductsTable() @{
                         )
 
                         return (
-                          <td colSpan={footer.colSpan}>
+                          <td colspan={footer.colSpan}>
                             {footer.isPlaceholder ? null : (
                               <>
                                 {/* Use FooterSum for numeric columns, FooterColumnId for others */}

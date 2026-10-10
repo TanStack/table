@@ -37,9 +37,11 @@ test('advances controlled pagination repeatedly without render-phase errors', as
     const status = page.getByText(/^Page$/).locator('..')
     await expect(status).toContainText('1 of 100')
     const first = await firstRow(page)
-    const timing = await next.evaluate((button) => {
+    const timing = await next.evaluate(async (button) => {
       const started = performance.now()
       ;(button as HTMLButtonElement).click()
+      // Octane commits a click's updates in the next microtask.
+      await Promise.resolve()
       return {
         elapsed: performance.now() - started,
         status: document.querySelector('.controls strong')?.textContent,
@@ -56,9 +58,10 @@ test('advances controlled pagination repeatedly without render-phase errors', as
     const sortTiming = await page
       .locator('.sortable-header')
       .first()
-      .evaluate((header) => {
+      .evaluate(async (header) => {
         const started = performance.now()
         ;(header as HTMLElement).click()
+        await Promise.resolve()
         return {
           elapsed: performance.now() - started,
           text: header.textContent,

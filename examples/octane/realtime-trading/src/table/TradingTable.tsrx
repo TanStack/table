@@ -161,7 +161,7 @@ export function TradingTable({ controller, feed }: TradingTableProps) @{
                 const leaf = header.subHeaders.length === 0
                 const sorted = header.column.getIsSorted()
                 <th
-                  colSpan={header.colSpan}
+                  colspan={header.colSpan}
                   style={{ width: `calc(var(--header-${header.id}-size) * 1px)` }}
                   aria-sort={leaf ? sortAriaValue(sorted) : undefined}
                   className={`${!leaf ? 'column-group-header' : ''} ${leaf && !['market', 'name', 'symbol'].includes(header.column.id) ? 'numeric-header' : ''}`}

@@ -155,7 +155,7 @@ function App() @{
             {table.getStartHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th key={header.id} colspan={header.colSpan}>
                     <div className="nowrap">
                       {header.isPlaceholder ? null : (
                         <table.FlexRender header={header} />
@@ -224,7 +224,7 @@ function App() @{
             {table.getCenterHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th key={header.id} colspan={header.colSpan}>
                     <div className="nowrap">
                       {header.isPlaceholder ? null : (
                         <table.FlexRender header={header} />
@@ -293,7 +293,7 @@ function App() @{
             {table.getEndHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th key={header.id} colspan={header.colSpan}>
                     <div className="nowrap">
                       {header.isPlaceholder ? null : (
                         <table.FlexRender header={header} />

@@ -139,7 +139,7 @@ function App() @{
         @for (const headerGroup of table.getHeaderGroups(); key headerGroup.id) {
           <tr>
             @for (const header of headerGroup.headers; key header.id) {
-              <th colSpan={header.colSpan}>
+              <th colspan={header.colSpan}>
                 {header.isPlaceholder ? null : <>
                   <table.FlexRender header={header} />
                   {header.column.getCanFilter()
@@ -175,7 +175,7 @@ function App() @{
               />}
             </table.Subscribe>
           </td>
-          <td colSpan={20}>
+          <td colspan={20}>
             Page Rows ({String(table.getRowModel().rows.length)})
           </td>
         </tr>

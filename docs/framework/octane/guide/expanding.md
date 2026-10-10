@@ -146,7 +146,7 @@ const table = useTable({
       {row.getIsExpanded() && (
         <tr>
           {/* span however many columns the expanded data needs if it does not share the parent row's columns */}
-          <td colSpan={row.getAllCells().length}>
+          <td colspan={row.getAllCells().length}>
             {/* Your custom UI goes here */}
           </td>
         </tr>
