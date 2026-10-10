@@ -30,7 +30,7 @@ import {
 } from '@tanstack/preact-table-devtools'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
-import type { JSX } from 'preact'
+import type { CSSProperties, ComponentProps, InputHTMLAttributes } from 'preact'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type {
@@ -119,7 +119,7 @@ const features = tableFeatures({
 
 const getCommonPinningStyles = (
   column: Column<typeof features, Person>,
-): JSX.CSSProperties => {
+): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
     isPinned === 'start' && column.getIsLastColumn('start')
@@ -146,7 +146,10 @@ function IndeterminateCheckbox({
   indeterminate,
   className = '',
   ...rest
-}: { indeterminate?: boolean } & JSX.InputHTMLAttributes<HTMLInputElement>) {
+}: { indeterminate?: boolean } & Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'role' | 'list'
+>) {
   const ref = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -158,6 +161,11 @@ function IndeterminateCheckbox({
   return <input type="checkbox" ref={ref} className={className} {...rest} />
 }
 
+// Keeps Preact's per-`type` <input> prop union intact.
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
+  ? Omit<T, K>
+  : never
+
 function DebouncedInput({
   value: initialValue,
   onChange,
@@ -167,7 +175,7 @@ function DebouncedInput({
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
-} & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'>) {
+} & DistributiveOmit<ComponentProps<'input'>, 'onChange' | 'value'>) {
   const [value, setValue] = useState(initialValue)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
@@ -283,7 +291,7 @@ function TableHeader({
   table: PreactTable<typeof features, Person>
 }) {
   const column = header.column
-  const style: JSX.CSSProperties = {
+  const style: CSSProperties = {
     ...getCommonPinningStyles(column),
     whiteSpace: 'nowrap',
     width: `calc(var(--header-${header.id}-size) * 1px)`,
