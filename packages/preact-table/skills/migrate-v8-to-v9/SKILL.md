@@ -4,7 +4,7 @@ description: Migrate preact Table v8 to v9. Audit framework construction, render
 metadata:
   type: lifecycle
   library: '@tanstack/preact-table'
-  library_version: '9.2.8'
+  library_version: '9.3.0'
   framework: preact
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'

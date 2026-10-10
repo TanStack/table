@@ -11,7 +11,7 @@
     "test:types": "tsrx-tsc --noEmit"
   },
   "dependencies": {
-    "@tanstack/octane-table": "^9.2.8",
+    "@tanstack/octane-table": "^9.3.0",
     "octane": "0.12.1"
   },
   "devDependencies": {

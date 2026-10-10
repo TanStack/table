@@ -15,8 +15,8 @@
     "@faker-js/faker": "^10.6.0",
     "@tanstack/preact-devtools": "^0.10.13",
     "@tanstack/preact-pacer": "^0.24.0",
-    "@tanstack/preact-table": "^9.2.8",
-    "@tanstack/preact-table-devtools": "^9.2.8",
+    "@tanstack/preact-table": "^9.3.0",
+    "@tanstack/preact-table-devtools": "^9.3.0",
     "preact": "^11.0.1"
   },
   "devDependencies": {
