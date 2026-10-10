@@ -436,7 +436,9 @@ describe('Preact adapter reactivity and lifecycle', () => {
 
     expect(text('Lifecycle selection')).toBe('true')
 
-    act(() => view.unmount())
+    act(() => {
+      view.unmount()
+    })
 
     const rootCallsAfterUnmount = rootStoreSelectorCaptor.mock.calls.length
     const isolatedCallsAfterUnmount = isolatedStoreCaptor.mock.calls.length
