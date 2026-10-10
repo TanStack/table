@@ -18,7 +18,7 @@
     "@tanstack/preact-store": "^0.13.5",
     "@tanstack/preact-table": "^9.2.8",
     "@tanstack/preact-table-devtools": "^9.2.8",
-    "preact": "^10.29.8"
+    "preact": "^11.0.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
