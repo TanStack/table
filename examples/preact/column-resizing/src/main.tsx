@@ -129,7 +129,7 @@ function App() {
         <div className="spacer-md" />
         <div className="section-title">{'<table/>'}</div>
         <div className="scroll-container">
-          <table style={{ width: table.getCenterTotalSize() }}>
+          <table style={{ width: `${table.getCenterTotalSize()}px` }}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -138,7 +138,7 @@ function App() {
                       key={header.id}
                       colSpan={header.colSpan}
                       style={{
-                        width: header.getSize(),
+                        width: `${header.getSize()}px`,
                       }}
                     >
                       {header.isPlaceholder ? null : (
@@ -176,7 +176,7 @@ function App() {
                     <td
                       key={cell.id}
                       style={{
-                        width: cell.column.getSize(),
+                        width: `${cell.column.getSize()}px`,
                       }}
                     >
                       <table.FlexRender cell={cell} />
@@ -190,7 +190,10 @@ function App() {
         <div className="spacer-md" />
         <div className="section-title">{'<div/> (relative)'}</div>
         <div className="scroll-container">
-          <div className="divTable" style={{ width: table.getTotalSize() }}>
+          <div
+            className="divTable"
+            style={{ width: `${table.getTotalSize()}px` }}
+          >
             <div className="thead">
               {table.getHeaderGroups().map((headerGroup) => (
                 <div key={headerGroup.id} className="tr">
@@ -199,7 +202,7 @@ function App() {
                       key={header.id}
                       className="th"
                       style={{
-                        width: header.getSize(),
+                        width: `${header.getSize()}px`,
                       }}
                     >
                       {header.isPlaceholder ? null : (
@@ -238,7 +241,7 @@ function App() {
                       key={cell.id}
                       className="td"
                       style={{
-                        width: cell.column.getSize(),
+                        width: `${cell.column.getSize()}px`,
                       }}
                     >
                       <table.FlexRender cell={cell} />
@@ -255,7 +258,7 @@ function App() {
           <div
             className="divTable"
             style={{
-              width: table.getTotalSize(),
+              width: `${table.getTotalSize()}px`,
             }}
           >
             <div className="thead">
@@ -273,8 +276,8 @@ function App() {
                       className="th"
                       style={{
                         position: 'absolute',
-                        left: header.getStart(),
-                        width: header.getSize(),
+                        left: `${header.getStart()}px`,
+                        width: `${header.getSize()}px`,
                       }}
                     >
                       {header.isPlaceholder ? null : (
@@ -320,8 +323,8 @@ function App() {
                       className="td"
                       style={{
                         position: 'absolute',
-                        left: cell.column.getStart(),
-                        width: cell.column.getSize(),
+                        left: `${cell.column.getStart()}px`,
+                        width: `${cell.column.getSize()}px`,
                       }}
                     >
                       <table.FlexRender cell={cell} />

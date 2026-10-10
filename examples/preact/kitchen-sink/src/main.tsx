@@ -691,7 +691,9 @@ function App() {
         </details>
       </div>
       <div className="table-container">
-        <table style={{ ...columnSizeVars, width: table.getTotalSize() }}>
+        <table
+          style={{ ...columnSizeVars, width: `${table.getTotalSize()}px` }}
+        >
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

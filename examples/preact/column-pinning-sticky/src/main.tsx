@@ -50,7 +50,7 @@ const getCommonPinningStyles = (
       isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
-    width: column.getSize(),
+    width: `${column.getSize()}px`,
     zIndex: isPinned ? 1 : 0,
   }
 }
@@ -180,7 +180,7 @@ function App() {
       <div className="table-container">
         <table
           style={{
-            width: table.getTotalSize(),
+            width: `${table.getTotalSize()}px`,
           }}
         >
           <thead>
