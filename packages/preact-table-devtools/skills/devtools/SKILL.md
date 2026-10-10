@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/preact-table-devtools'
   framework: preact
-  library_version: '9.2.8'
+  library_version: '9.3.0'
 requires:
   - '@tanstack/table-core#core'
   - '@tanstack/table-devtools#devtools'

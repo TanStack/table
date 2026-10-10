@@ -1,5 +1,11 @@
 # @tanstack/preact-table
 
+## 9.3.0
+
+### Patch Changes
+
+- [#6629](https://github.com/TanStack/table/pull/6629) [`1446ddd`](https://github.com/TanStack/table/commit/1446ddd5ee3926f85e17281e7a53f617865349f9) - Require `@tanstack/preact-store` `^0.13.5`, the first version whose `preact` peer range allows Preact 11.
+
 ## 9.2.8
 
 ### Patch Changes
