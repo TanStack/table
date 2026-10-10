@@ -88,7 +88,8 @@ export type AppColumnDefTemplate<TProps extends object> =
   string | ((props: TProps) => any)
 
 /**
- * Enhanced column definition base with pre-bound components in cell/header/footer contexts.
+ * Enhanced column definition base with pre-bound components in
+ * cell/aggregatedCell/header/footer contexts.
  */
 export type AppColumnDefBase<
   TFeatures extends TableFeatures,
@@ -98,9 +99,12 @@ export type AppColumnDefBase<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   IdentifiedColumnDef<TFeatures, TData, TValue>,
-  'cell' | 'header' | 'footer'
+  'cell' | 'aggregatedCell' | 'header' | 'footer'
 > & {
   cell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, TValue, TCellComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, TValue, TCellComponents>
   >
   header?: AppColumnDefTemplate<
@@ -121,9 +125,12 @@ export type AppDisplayColumnDef<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   DisplayColumnDef<TFeatures, TData, unknown>,
-  'cell' | 'header' | 'footer'
+  'cell' | 'aggregatedCell' | 'header' | 'footer'
 > & {
   cell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, unknown, TCellComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, unknown, TCellComponents>
   >
   header?: AppColumnDefTemplate<
@@ -144,9 +151,12 @@ export type AppGroupColumnDef<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > = Omit<
   GroupColumnDef<TFeatures, TData, unknown>,
-  'cell' | 'header' | 'footer' | 'columns'
+  'cell' | 'aggregatedCell' | 'header' | 'footer' | 'columns'
 > & {
   cell?: AppColumnDefTemplate<
+    AppCellContext<TFeatures, TData, unknown, TCellComponents>
+  >
+  aggregatedCell?: AppColumnDefTemplate<
     AppCellContext<TFeatures, TData, unknown, TCellComponents>
   >
   header?: AppColumnDefTemplate<
