@@ -1,4 +1,4 @@
-import type { JSX } from 'preact'
+import type { AriaAttributes, TargetedKeyboardEvent } from 'preact'
 
 export type CellDirection = 'up' | 'down' | 'left' | 'right'
 
@@ -153,7 +153,7 @@ export class TradingGridPointerController {
 
 export function handleCellNavigation(
   table: CellNavigationTable,
-  event: JSX.TargetedKeyboardEvent<HTMLElement>,
+  event: TargetedKeyboardEvent<HTMLElement>,
 ): void {
   if (event.key === 'Escape') {
     event.preventDefault()
@@ -183,7 +183,7 @@ export function sortIndicator(direction: false | 'asc' | 'desc'): string {
 
 export function sortAriaValue(
   direction: false | 'asc' | 'desc',
-): JSX.AriaAttributes['aria-sort'] {
+): AriaAttributes['aria-sort'] {
   if (direction === 'asc') return 'ascending'
   if (direction === 'desc') return 'descending'
   return 'none'

@@ -20,7 +20,7 @@
     "@tanstack/preact-table": "^9.2.8",
     "@tanstack/preact-table-devtools": "^9.2.8",
     "@tanstack/react-form-devtools": "^0.2.34",
-    "preact": "^10.29.8",
+    "preact": "^11.0.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
