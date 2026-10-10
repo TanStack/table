@@ -65,14 +65,14 @@ Reach for `createTableHookContexts` instead of hand-rolling `createContext`. It 
 
 ```tsx
 // cell-slot-context.ts
-export const { cellContext, useCellContext } =
+export const { cellContext: CellContext, useCellContext } =
   createTableHookContexts<typeof features>()
 
 // provide the (stable) cell once, near where you render it
 function CellSlot({ cell }: { cell: Cell<typeof features, Person, unknown> }) @{
-  <cellContext.Provider value={cell}>
+  <CellContext value={cell}>
     <DeeplyNestedCellUI />
-  </cellContext.Provider>
+  </CellContext>
 }
 
 // read it anywhere below, no prop drilling
