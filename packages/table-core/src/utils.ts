@@ -405,7 +405,10 @@ export function tableMemo<
   let debug: boolean | undefined
   let debugCache: boolean | undefined
 
-  if (process.env.NODE_ENV === 'development') {
+  if (
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV === 'development'
+  ) {
     const { debugAll } = table.options
     const { parentName } = getFunctionNameInfo(fnName, '.')
 
@@ -467,7 +470,7 @@ export function tableMemo<
   }
 
   const debugOptions =
-    process.env.NODE_ENV === 'development'
+    typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
       ? {
           onBeforeCompare: () => {
             if (debugCache) {
