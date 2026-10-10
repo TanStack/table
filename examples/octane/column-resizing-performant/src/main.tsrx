@@ -153,7 +153,7 @@ function App() @{
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    colSpan={header.colSpan}
+                    colspan={header.colSpan}
                     style={{
                       display: 'flex',
                       flexShrink: 0,

@@ -148,7 +148,7 @@ function App() @{
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
+                <th key={header.id} colspan={header.colSpan}>
                   {header.isPlaceholder ? null : (
                     <table.FlexRender header={header} />
                   )}
@@ -172,7 +172,7 @@ function App() @{
           {table.getFooterGroups().map((footerGroup) => (
             <tr key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
+                <th key={header.id} colspan={header.colSpan}>
                   {header.isPlaceholder ? null : (
                     <table.FlexRender footer={header} />
                   )}
