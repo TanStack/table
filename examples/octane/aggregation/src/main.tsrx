@@ -218,7 +218,7 @@ function App() @{
           {table.getFooterGroups().map((group) => (
             <tr key={group.id}>
               {group.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
+                <th key={header.id} colspan={header.colSpan}>
                   {header.isPlaceholder ? null : (
                     <table.FlexRender footer={header} />
                   )}

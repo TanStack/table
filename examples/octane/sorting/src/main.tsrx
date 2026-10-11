@@ -132,7 +132,7 @@ function App() @{
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colspan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <div
                           className={

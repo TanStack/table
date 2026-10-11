@@ -193,7 +193,7 @@ function App() @{
                   return (
                     <th
                       key={header.id}
-                      colSpan={header.colSpan}
+                      colspan={header.colSpan}
                       // IMPORTANT: This is where the magic happens!
                       style={{ ...getCommonPinningStyles(column) }}
                     >

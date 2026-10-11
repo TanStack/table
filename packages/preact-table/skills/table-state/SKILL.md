@@ -4,7 +4,7 @@ description: Read and control Table v9 state in preact. Use for tracked reads, s
 metadata:
   type: framework
   library: '@tanstack/preact-table'
-  library_version: '9.2.8'
+  library_version: '9.3.0'
   framework: preact
 requires:
   - '@tanstack/table-core#table-state'

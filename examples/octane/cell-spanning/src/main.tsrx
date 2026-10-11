@@ -175,7 +175,7 @@ function App() @{
       {table.getHeaderGroups().map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => (
-            <th key={header.id} colSpan={header.colSpan}>
+            <th key={header.id} colspan={header.colSpan}>
               <button
                 type="button"
                 className="sortable-header header-sort-button"
@@ -315,7 +315,7 @@ function App() @{
                     const colSpan = cell.getColSpan()
 
                     // A span of 0 means this cell is covered by a cell above
-                    // or to its left. Skip it. Do NOT render `rowSpan={0}`:
+                    // or to its left. Skip it. Do NOT render `rowspan={0}`:
                     // in HTML that means "span to the end of the row group",
                     // so forgetting this check merges the cell down the whole
                     // tbody instead of rendering nothing.
@@ -324,8 +324,8 @@ function App() @{
                     return (
                       <td
                         key={cell.id}
-                        rowSpan={rowSpan}
-                        colSpan={colSpan}
+                        rowspan={rowSpan}
+                        colspan={colSpan}
                         className={getCellClassName(cell)}
                         onMouseDown={cell.getSelectionStartHandler()}
                         onMouseEnter={cell.getSelectionExtendHandler()}
@@ -368,7 +368,7 @@ function App() @{
               {summaryTable.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colspan={header.colSpan}>
                       <summaryTable.FlexRender header={header} />
                     </th>
                   ))}
@@ -392,7 +392,7 @@ function App() @{
                     if (rowSpan === 0 || colSpan === 0) return null
 
                     return (
-                      <td key={cell.id} rowSpan={rowSpan} colSpan={colSpan}>
+                      <td key={cell.id} rowspan={rowSpan} colspan={colSpan}>
                         <summaryTable.FlexRender cell={cell} />
                       </td>
                     )

@@ -219,7 +219,7 @@ function App() @{
                 return (
                   <th
                     key={header.id}
-                    colSpan={header.colSpan}
+                    colspan={header.colSpan}
                     style={{
                       // using our new feature
                       padding:
