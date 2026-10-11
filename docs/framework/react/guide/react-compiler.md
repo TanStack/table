@@ -192,6 +192,8 @@ function TableBody({ table }) {
 
 The selector must include every state slice that can change the result of `table.getRowModel()` for this table. That may include filtering, sorting, grouping, expansion, or pagination, depending on the features in use.
 
+State is not the only input to `table.getRowModel()`. Replacing `data` from outside the table, such as a `setState` call, a query refetch, or a WebSocket message, does not change any state slice, so a `Subscribe` selector cannot detect it. When the body reads the table from `useTableContext()` inside `<table.AppTable>`, `AppTable` provides a new table value whenever the owner of `useAppTable` renders with new options, so the body updates without extra wiring. When you pass `table` as a prop through components that the compiler may skip, also pass `data` (or the rows you render) as a prop so the body renders again when the data changes.
+
 Use `table.Subscribe` when `table` is the React-facing value returned by `useTable`. In a cell or header render context, `table` is the core Table instead. Import the standalone `Subscribe` component and pass `table.store` or one of the values in `table.atoms` as its source.
 
 Do not add a subscription to every cell by default. Add one when a nested component reads state that is not represented by its props, or when profiling shows that moving an update lower in the tree would help.

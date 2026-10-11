@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
-import { useEffect, useState } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
 import { act } from 'preact/test-utils'
 import { rowSelectionFeature, tableFeatures } from '@tanstack/table-core'
 import { afterEach, describe, expect, test, vi } from 'vitest'
@@ -215,6 +215,76 @@ describe('createTableHook runtime', () => {
     expect(mountCaptor).toHaveBeenCalledOnce()
     expect(unmountCaptor).not.toHaveBeenCalled()
   })
+
+  test.each([
+    ['cached', true],
+    ['uncached', false],
+  ])(
+    'refreshes the AppTable context once when the owner replaces data under a %s element',
+    (_label, cacheTree) => {
+      const renderCaptor = vi.fn()
+
+      function RowNames() {
+        const table = appTable.useTableContext<Person>()
+        renderCaptor()
+
+        return (
+          <output aria-label="Context row names">
+            {table
+              .getRowModel()
+              .rows.map((row) => row.original.name)
+              .join(',')}
+          </output>
+        )
+      }
+
+      function TableHarness() {
+        const [data, setData] = useState([{ id: '1', name: 'Ada' }])
+        const table = appTable.useAppTable(
+          { data, columns, getRowId: (row) => row.id },
+          () => null,
+        )
+        // The React Compiler caches this element because `table.AppTable` is
+        // stable, so React skips AppTable when only `data` changes.
+        const cachedTree = useMemo(
+          () => (
+            <table.AppTable>
+              <RowNames />
+            </table.AppTable>
+          ),
+          [table.AppTable],
+        )
+        const tree = cacheTree ? (
+          cachedTree
+        ) : (
+          <table.AppTable>
+            <RowNames />
+          </table.AppTable>
+        )
+
+        return (
+          <>
+            {tree}
+            <button onClick={() => setData([{ id: '1', name: 'Grace' }])}>
+              Replace data
+            </button>
+          </>
+        )
+      }
+
+      render(<TableHarness />)
+
+      expect(outputText('Context row names')).toBe('Ada')
+      expect(renderCaptor).toHaveBeenCalledTimes(1)
+
+      act(() => {
+        click('Replace data')
+      })
+
+      expect(outputText('Context row names')).toBe('Grace')
+      expect(renderCaptor).toHaveBeenCalledTimes(2)
+    },
+  )
 
   test('throws focused errors when context hooks are used outside wrappers', () => {
     function MissingTableContext() {
