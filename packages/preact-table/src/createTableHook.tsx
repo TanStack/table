@@ -1,6 +1,14 @@
 'use client'
 import { createContext } from 'preact'
-import { useContext, useMemo, useRef } from 'preact/hooks'
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'preact/hooks'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import { FlexRender } from './FlexRender'
@@ -29,6 +37,9 @@ import type {
 } from '@tanstack/table-core'
 import type { ComponentChildren, ComponentType, Context } from 'preact'
 import type { PreactTable } from './useTable'
+
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 const sharedTableContext = createContext<PreactTable<any, any> | null>(null)
 const sharedCellContext = createContext<Cell<any, any, any> | null>(null)
@@ -944,12 +955,16 @@ export function createTableHook<
     TCellComponents,
     THeaderComponents
   > {
-    // Merge default options with provided options (provided takes precedence)
+    // Merge default options with provided options (provided takes precedence).
+    // Memoize the merge so stable caller options keep `table` stable; otherwise
+    // every owner render would refresh the AppTable context and re-render all
+    // `useTableContext()` consumers, even under a cached AppTable element.
+    const mergedTableOptions = useMemo(
+      () => ({ ...defaultTableOptions, ...tableOptions }),
+      [tableOptions],
+    )
     const table = useTable<TFeatures, TData, TSelected>(
-      { ...defaultTableOptions, ...tableOptions } as TableOptions<
-        TFeatures,
-        TData
-      >,
+      mergedTableOptions as TableOptions<TFeatures, TData>,
       selector,
     )
 
@@ -962,6 +977,15 @@ export function createTableHook<
     // ref that we refresh on every render.
     const tableRef = useRef(table)
     tableRef.current = table
+
+    // When the owner's output is cached (`useMemo`, `memo`), Preact skips the
+    // stable `AppTable` vnode, so its provider would keep the table from an
+    // earlier render. AppTable subscribes to owner commits and re-renders only
+    // when the table it last provided is outdated.
+    const [tableListeners] = useState(() => new Set<() => void>())
+    useIsomorphicLayoutEffect(() => {
+      tableListeners.forEach((listener) => listener())
+    }, [table])
 
     // AppTable - Root wrapper that provides table context with optional Subscribe
     const AppTable = useMemo(() => {
@@ -978,6 +1002,21 @@ export function createTableHook<
       ): ComponentChildren {
         const { children, selector: appTableSelector } = props as any
         const currentTable = tableRef.current
+        const providedTableRef = useRef(currentTable)
+        providedTableRef.current = currentTable
+        const [, forceRender] = useReducer((count: number) => count + 1, 0)
+
+        useIsomorphicLayoutEffect(() => {
+          const listener = () => {
+            if (providedTableRef.current !== tableRef.current) {
+              forceRender(undefined)
+            }
+          }
+          tableListeners.add(listener)
+          return () => {
+            tableListeners.delete(listener)
+          }
+        }, [])
 
         return (
           <TableContext.Provider value={currentTable}>
