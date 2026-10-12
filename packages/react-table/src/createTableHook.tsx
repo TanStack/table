@@ -1,6 +1,15 @@
 'use client'
 /* eslint-disable @eslint-react/no-context-provider */
-import React, { createContext, useContext, useMemo, useRef } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import { FlexRender } from './FlexRender'
@@ -29,6 +38,9 @@ import type {
 } from '@tanstack/table-core'
 import type { ComponentType, Context, ReactNode } from 'react'
 import type { ReactTable } from './useTable'
+
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 // eslint-disable-next-line @eslint-react/naming-convention-context-name
 const sharedTableContext = createContext<ReactTable<any, any> | null>(null)
@@ -948,12 +960,16 @@ export function createTableHook<
     TCellComponents,
     THeaderComponents
   > {
-    // Merge default options with provided options (provided takes precedence)
+    // Merge default options with provided options (provided takes precedence).
+    // Memoize the merge so stable caller options keep `table` stable; otherwise
+    // every owner render would refresh the AppTable context and re-render all
+    // `useTableContext()` consumers, even under a cached AppTable element.
+    const mergedTableOptions = useMemo(
+      () => ({ ...defaultTableOptions, ...tableOptions }),
+      [tableOptions],
+    )
     const table = useTable<TFeatures, TData, TSelected>(
-      { ...defaultTableOptions, ...tableOptions } as TableOptions<
-        TFeatures,
-        TData
-      >,
+      mergedTableOptions as TableOptions<TFeatures, TData>,
       selector,
     )
 
@@ -967,6 +983,21 @@ export function createTableHook<
     const tableRef = useRef(table)
     tableRef.current = table
 
+    // When the owner's output is cached (React Compiler, `useMemo`, `memo`),
+    // React skips the stable `AppTable` element, so its provider would keep
+    // the table from an earlier render. AppTable subscribes to owner commits
+    // and re-renders only when the table it last provided is outdated.
+    const [tableListeners] = useState(() => new Set<() => void>())
+    const [subscribeToTable] = useState(() => (listener: () => void) => {
+      tableListeners.add(listener)
+      return () => {
+        tableListeners.delete(listener)
+      }
+    })
+    useIsomorphicLayoutEffect(() => {
+      tableListeners.forEach((listener) => listener())
+    }, [table])
+
     // AppTable - Root wrapper that provides table context with optional Subscribe
     const AppTable = useMemo(() => {
       function AppTableImpl(props: AppTablePropsWithoutSelector): ReactNode
@@ -979,7 +1010,12 @@ export function createTableHook<
           | AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
       ): ReactNode {
         const { children, selector: appTableSelector } = props
-        const currentTable = tableRef.current
+        const getTable = () => tableRef.current
+        const currentTable = useSyncExternalStore(
+          subscribeToTable,
+          getTable,
+          getTable,
+        )
 
         return (
           <TableContext.Provider value={currentTable}>
@@ -996,7 +1032,7 @@ export function createTableHook<
         )
       }
       return AppTableImpl as AppTableComponent<TFeatures>
-    }, [])
+    }, [subscribeToTable])
 
     // AppCell - Wraps cell with context, pre-bound cellComponents, and optional Subscribe
     const AppCell = useMemo(() => {
