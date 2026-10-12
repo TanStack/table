@@ -960,12 +960,16 @@ export function createTableHook<
     TCellComponents,
     THeaderComponents
   > {
-    // Merge default options with provided options (provided takes precedence)
+    // Merge default options with provided options (provided takes precedence).
+    // Memoize the merge so stable caller options keep `table` stable; otherwise
+    // every owner render would refresh the AppTable context and re-render all
+    // `useTableContext()` consumers, even under a cached AppTable element.
+    const mergedTableOptions = useMemo(
+      () => ({ ...defaultTableOptions, ...tableOptions }),
+      [tableOptions],
+    )
     const table = useTable<TFeatures, TData, TSelected>(
-      { ...defaultTableOptions, ...tableOptions } as TableOptions<
-        TFeatures,
-        TData
-      >,
+      mergedTableOptions as TableOptions<TFeatures, TData>,
       selector,
     )
 

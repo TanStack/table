@@ -285,6 +285,67 @@ describe('createTableHook runtime', () => {
     },
   )
 
+  test('keeps the AppTable context stable when the owner re-renders with the same options', () => {
+    const renderCaptor = vi.fn()
+
+    function RowNames() {
+      const table = appTable.useTableContext<Person>()
+      renderCaptor()
+
+      return (
+        <output aria-label="Context row names">
+          {table
+            .getRowModel()
+            .rows.map((row) => row.original.name)
+            .join(',')}
+        </output>
+      )
+    }
+
+    const data = [{ id: '1', name: 'Ada' }]
+
+    function TableHarness() {
+      const [count, setCount] = React.useState(0)
+      // The React Compiler memoizes these options because their inputs are
+      // stable, so an unrelated owner render should not refresh the context.
+      const tableOptions = React.useMemo(
+        () => ({ data, columns, getRowId: (row: Person) => row.id }),
+        [],
+      )
+      const table = appTable.useAppTable(tableOptions, () => null)
+      const cachedTree = React.useMemo(
+        () => (
+          <table.AppTable>
+            <RowNames />
+          </table.AppTable>
+        ),
+        [table.AppTable],
+      )
+
+      return (
+        <>
+          {cachedTree}
+          <button onClick={() => setCount(count + 1)}>Render owner</button>
+        </>
+      )
+    }
+
+    render(<TableHarness />)
+
+    expect(text('Context row names')).toBe('Ada')
+    expect(renderCaptor).toHaveBeenCalledTimes(1)
+
+    act(() => {
+      click('Render owner')
+    })
+    act(() => {
+      click('Render owner')
+    })
+
+    expect(text('Context row names')).toBe('Ada')
+    expect(renderCaptor).toHaveBeenCalledTimes(1)
+  })
+
   test('throws focused errors when context hooks are used outside wrappers', () => {
     function MissingTableContext() {
       appTable.useTableContext<Person>()
