@@ -3,15 +3,13 @@ id: table_getCenterTotalSize
 title: table_getCenterTotalSize
 ---
 
-# Function: table\_getCenterTotalSize()
-
 ```ts
 function table_getCenterTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L430)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:432](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L432)
 
-Sums the rendered size of the center, unpinned header region.
+Sums the sizes of the visible leaf columns that are not pinned.
 
 An empty center region returns `0`.
 

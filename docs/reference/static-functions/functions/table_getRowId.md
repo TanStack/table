@@ -3,8 +3,6 @@ id: table_getRowId
 title: table_getRowId
 ---
 
-# Function: table\_getRowId()
-
 ```ts
 function table_getRowId<TFeatures, TData>(
    originalRow,
@@ -13,7 +11,7 @@ function table_getRowId<TFeatures, TData>(
    parent?): string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:310](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L310)
+Defined in: [core/rows/coreRowsFeature.utils.ts:295](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L295)
 
 Resolves the stable id for a row.
 

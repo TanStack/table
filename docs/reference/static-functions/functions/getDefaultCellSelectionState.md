@@ -3,13 +3,11 @@ id: getDefaultCellSelectionState
 title: getDefaultCellSelectionState
 ---
 
-# Function: getDefaultCellSelectionState()
-
 ```ts
 function getDefaultCellSelectionState(): CellSelectionState;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L42)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L45)
 
 Creates the default cell selection state.
 

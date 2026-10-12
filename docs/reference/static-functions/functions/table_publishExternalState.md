@@ -3,13 +3,11 @@ id: table_publishExternalState
 title: table_publishExternalState
 ---
 
-# Function: table\_publishExternalState()
-
 ```ts
 function table_publishExternalState<TFeatures, TData>(
    table,
    state,
-   compare): void;
+   compare?): void;
 ```
 
 Defined in: [core/table/coreTablesFeature.utils.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L73)
@@ -38,9 +36,10 @@ invalidates ownership changes when no base atom was written.
 
 ### state
 
-`Partial`\<[`TableState`](../../index/type-aliases/TableState.md)\<`TFeatures`\>\> | `null`
+  \| `Partial`\<[`TableState`](../../index/type-aliases/TableState.md)\<`TFeatures`\>\>
+  \| `null`
 
-### compare
+### compare?
 
 (`currentState`, `externalState`) => `boolean`
 

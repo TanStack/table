@@ -3,8 +3,6 @@ id: TableState_FeatureMap
 title: TableState_FeatureMap
 ---
 
-# Interface: TableState\_FeatureMap
-
 Defined in: [types/TableState.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L17)
 
 ## Properties
@@ -155,4 +153,4 @@ Defined in: [types/TableState.ts:31](https://github.com/TanStack/table/blob/main
 workerRowModelsFeature: TableState_WorkerRowModels;
 ```
 
-Defined in: [worker/createTableWorker.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L28)
+Defined in: [worker/createTableWorker.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L29)

@@ -3,13 +3,11 @@ id: Column_ColumnSizing
 title: Column_ColumnSizing
 ---
 
-# Interface: Column\_ColumnSizing
-
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L112)
 
 ## Properties
 
-### getAfter()
+### getAfter
 
 ```ts
 getAfter: (position?) => number;
@@ -26,7 +24,8 @@ the sum of visible leaf column sizes after this column.
 
 ##### position?
 
-[`ColumnPinningPosition`](../type-aliases/ColumnPinningPosition.md) | `"center"`
+  \| [`ColumnPinningPosition`](../type-aliases/ColumnPinningPosition.md)
+  \| `"center"`
 
 #### Returns
 
@@ -34,7 +33,7 @@ the sum of visible leaf column sizes after this column.
 
 ***
 
-### getSize()
+### getSize
 
 ```ts
 getSize: () => number;
@@ -50,7 +49,7 @@ Resolves the column's current size after state and min/max constraints.
 
 ***
 
-### getStart()
+### getStart
 
 ```ts
 getStart: (position?) => number;
@@ -68,7 +67,8 @@ the sum of visible leaf column sizes before this column.
 
 ##### position?
 
-[`ColumnPinningPosition`](../type-aliases/ColumnPinningPosition.md) | `"center"`
+  \| [`ColumnPinningPosition`](../type-aliases/ColumnPinningPosition.md)
+  \| `"center"`
 
 #### Returns
 
@@ -76,7 +76,7 @@ the sum of visible leaf column sizes before this column.
 
 ***
 
-### resetSize()
+### resetSize
 
 ```ts
 resetSize: () => void;

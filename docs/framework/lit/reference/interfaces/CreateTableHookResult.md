@@ -3,8 +3,6 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
-# Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 Defined in: [packages/lit-table/src/createTableHook.ts:358](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L358)
 
 ## Type Parameters
@@ -39,7 +37,7 @@ The features object that was passed to `createTableHook`.
 
 ***
 
-### createAppColumnHelper()
+### createAppColumnHelper
 
 ```ts
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
@@ -62,7 +60,7 @@ the cell/header/footer render props expose the bound components.
 
 ***
 
-### useAppTable()
+### useAppTable
 
 ```ts
 useAppTable: <TData, TSelected>(host, tableOptions, selector?) => object;
@@ -102,7 +100,7 @@ the `App*` wrapper functions, a bound `FlexRender`, and the registered
 
 `object`
 
-##### table()
+##### table
 
 ```ts
 table: () => AppLitTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
@@ -114,7 +112,7 @@ table: () => AppLitTable<TFeatures, TData, TSelected, TTableComponents, TCellCom
 
 ***
 
-### useCellContext()
+### useCellContext
 
 ```ts
 useCellContext: <TValue>(host) => ContextConsumer<Context<symbol, Cell<TFeatures, any, TValue>>, ReactiveControllerHost & HTMLElement>;
@@ -143,7 +141,7 @@ provides an extended cell through context, so this is a BARE `Cell`.
 
 ***
 
-### useHeaderContext()
+### useHeaderContext
 
 ```ts
 useHeaderContext: <TValue>(host) => ContextConsumer<Context<symbol, Header<TFeatures, any, TValue>>, ReactiveControllerHost & HTMLElement>;
@@ -172,7 +170,7 @@ provides an extended header through context, so this is a BARE `Header`.
 
 ***
 
-### useTableContext()
+### useTableContext
 
 ```ts
 useTableContext: <TData>(host) => ContextConsumer<Context<symbol, LitTable<TFeatures, TData, any>>, ReactiveControllerHost & HTMLElement>;

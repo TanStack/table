@@ -3,8 +3,6 @@ id: FlexRender
 title: FlexRender
 ---
 
-# Function: FlexRender()
-
 ```ts
 function FlexRender<TFeatures, TData, TValue>(props): Element;
 ```

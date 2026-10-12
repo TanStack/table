@@ -3,13 +3,11 @@ id: table_selectAllCells
 title: table_selectAllCells
 ---
 
-# Function: table\_selectAllCells()
-
 ```ts
 function table_selectAllCells<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:858](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L858)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:826](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L826)
 
 Selects every selectable cell in the table as one range.
 

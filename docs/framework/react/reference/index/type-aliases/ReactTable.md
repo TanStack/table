@@ -3,17 +3,15 @@ id: ReactTable
 title: ReactTable
 ---
 
-# Type Alias: ReactTable\<TFeatures, TData, TSelected\>
-
 ```ts
 type ReactTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
-Defined in: [react-table/src/useTable.ts:29](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L29)
+Defined in: [src/useTable.ts:29](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L29)
 
 ## Type Declaration
 
-### FlexRender()
+### FlexRender
 
 ```ts
 FlexRender: <TValue>(props) => ReactNode;
@@ -85,7 +83,7 @@ Prefer `table.state` for render reads,
 subscriptions. `table.store.state` is a current-value snapshot and is easy
 to misuse in render code.
 
-### Subscribe()
+### Subscribe
 
 ```ts
 Subscribe: {
@@ -122,7 +120,7 @@ The **source** overloads are listed first so `TSourceValue` is inferred from `so
 
 ###### children
 
-(`state`) => `ReactNode` \| `ReactNode`
+((`state`) => `ReactNode`) \| `ReactNode`
 
 ###### selector?
 
@@ -158,7 +156,7 @@ The **source** overloads are listed first so `TSourceValue` is inferred from `so
 
 ###### children
 
-(`state`) => `ReactNode` \| `ReactNode`
+((`state`) => `ReactNode`) \| `ReactNode`
 
 ###### selector
 

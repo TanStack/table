@@ -3,8 +3,6 @@ id: Header_CoreProperties
 title: Header_CoreProperties
 ---
 
-# Interface: Header\_CoreProperties\<TFeatures, TData, TValue\>
-
 Defined in: [core/headers/coreHeadersFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L51)
 
 ## Extended by
@@ -118,7 +116,7 @@ into one vertically spanning header cell.
 ### placeholderId?
 
 ```ts
-optional placeholderId: string;
+optional placeholderId?: string;
 ```
 
 Defined in: [core/headers/coreHeadersFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L91)

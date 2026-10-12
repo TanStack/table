@@ -1,4 +1,4 @@
-import { assignPrototypeAPIs } from '../../utils'
+import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
 import {
   aggregateColumnValue,
   cell_getIsAggregated,
@@ -23,13 +23,6 @@ export const rowAggregationFeature: TableFeature = {
   getDefaultTableOptions: () => ({
     manualAggregation: false,
   }),
-
-  initTableInstanceData: (table) => {
-    // @ts-ignore - _aggregateColumnValue is row aggregation table instance
-    // data. The grouped row model reads the executor from here so tables that
-    // group without aggregating don't bundle it.
-    table._aggregateColumnValue = aggregateColumnValue
-  },
 
   assignCellPrototype: (prototype, table) => {
     assignPrototypeAPIs('rowAggregationFeature', prototype, table, {
@@ -60,5 +53,15 @@ export const rowAggregationFeature: TableFeature = {
   initColumnInstanceData: (column) => {
     ;(column as any)._aggregationValueCache = undefined
     ;(column as any)._resolvedAggregationFnsCache = undefined
+  },
+
+  constructTableAPIs: (table) => {
+    assignTableAPIs('rowAggregationFeature', table, {
+      // Internal: the grouped row model aggregates through this, so tables
+      // that group without this feature don't bundle the executor
+      table__aggregateColumnValue: {
+        fn: aggregateColumnValue,
+      },
+    })
   },
 }

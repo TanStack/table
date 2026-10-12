@@ -3,9 +3,7 @@ id: AggregationValueOptions
 title: AggregationValueOptions
 ---
 
-# Interface: AggregationValueOptions\<TFeatures, TData\>
-
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:286](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L286)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:272](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L272)
 
 Options for a caller-requested column aggregation value.
 
@@ -24,10 +22,10 @@ Options for a caller-requested column aggregation value.
 ### maxDepth?
 
 ```ts
-optional maxDepth: number;
+optional maxDepth?: number;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:291](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L291)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:277](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L277)
 
 Overrides the column's `maxAggregationDepth` for this request.
 
@@ -36,9 +34,9 @@ Overrides the column's `maxAggregationDepth` for this request.
 ### rows?
 
 ```ts
-optional rows: readonly Row<TFeatures, TData>[];
+optional rows?: readonly Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:293](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L293)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:279](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L279)
 
 Rows to aggregate instead of the default pre-grouped row model.

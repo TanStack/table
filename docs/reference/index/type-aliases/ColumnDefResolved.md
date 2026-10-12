@@ -3,8 +3,6 @@ id: ColumnDefResolved
 title: ColumnDefResolved
 ---
 
-# Type Alias: ColumnDefResolved\<TFeatures, TData, TValue\>
-
 ```ts
 type ColumnDefResolved<TFeatures, TData, TValue> = Partial<UnionToIntersection<ColumnDef<TFeatures, TData, TValue>>> & object;
 ```
@@ -16,7 +14,7 @@ Defined in: [types/ColumnDef.ts:257](https://github.com/TanStack/table/blob/main
 ### accessorKey?
 
 ```ts
-optional accessorKey: string & object | keyof TData;
+optional accessorKey?: string & object | keyof TData;
 ```
 
 ## Type Parameters

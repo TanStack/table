@@ -3,8 +3,6 @@ id: constructTable
 title: constructTable
 ---
 
-# Function: constructTable()
-
 ```ts
 function constructTable<TFeatures, TData>(tableOptions): Table<TFeatures, TData>;
 ```

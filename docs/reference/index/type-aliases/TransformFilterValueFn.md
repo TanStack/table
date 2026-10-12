@@ -3,8 +3,6 @@ id: TransformFilterValueFn
 title: TransformFilterValueFn
 ---
 
-# Type Alias: TransformFilterValueFn()\<TFeatures, TData, TValue\>
-
 ```ts
 type TransformFilterValueFn<TFeatures, TData, TValue> = (value, column?) => TValue;
 ```

@@ -3,13 +3,11 @@ id: row_getUniqueValues
 title: row_getUniqueValues
 ---
 
-# Function: row\_getUniqueValues()
-
 ```ts
 function row_getUniqueValues<TFeatures, TData>(row, columnId): unknown;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L108)
+Defined in: [core/rows/coreRowsFeature.utils.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L93)
 
 Reads and caches the values used by faceting/grouping for a column.
 

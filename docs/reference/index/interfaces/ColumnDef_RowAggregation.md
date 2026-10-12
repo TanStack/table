@@ -3,9 +3,7 @@ id: ColumnDef_RowAggregation
 title: ColumnDef_RowAggregation
 ---
 
-# Interface: ColumnDef\_RowAggregation\<TFeatures, TData, TValue\>
-
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L233)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L219)
 
 Column-definition options installed by `rowAggregationFeature`.
 
@@ -28,10 +26,10 @@ Column-definition options installed by `rowAggregationFeature`.
 ### aggregatedCell?
 
 ```ts
-optional aggregatedCell: ColumnDefTemplate<ReturnType<Cell<TFeatures, TData, TValue>["getContext"]>>;
+optional aggregatedCell?: ColumnDefTemplate<ReturnType<Cell<TFeatures, TData, TValue>["getContext"]>>;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:239](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L239)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:225](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L225)
 
 Renderer used for a grouped row's aggregated cell.
 
@@ -40,25 +38,25 @@ Renderer used for a grouped row's aggregated cell.
 ### aggregationFn?
 
 ```ts
-optional aggregationFn: AggregationFnOption<TFeatures, TData, TValue>;
+optional aggregationFn?: AggregationFnOption<TFeatures, TData, TValue>;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:246](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L246)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:232](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L232)
 
 One aggregation reference for a scalar result, or an array for a keyed
 result object. Inline definitions in an array require an explicit `id`.
 
 ***
 
-### getAggregationValue()?
+### getAggregationValue?
 
 ```ts
-optional getAggregationValue: (context) =>
+optional getAggregationValue?: (context) =>
   | AggregationValueResult<unknown>
   | undefined;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:258](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L258)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:244](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L244)
 
 Optionally supplies a precomputed aggregation value for this column.
 Return `{ value }` to handle the request, including `{ value: undefined }`;
@@ -80,10 +78,10 @@ return `undefined` to use the local aggregation fallback.
 ### maxAggregationDepth?
 
 ```ts
-optional maxAggregationDepth: number;
+optional maxAggregationDepth?: number;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:252](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L252)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:238](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L238)
 
 Maximum relative sub-row depth used for grouped aggregation and cached
 default totals. `0` selects the supplied root rows, `1` their direct

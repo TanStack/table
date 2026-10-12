@@ -3,8 +3,6 @@ id: table_previousPage
 title: table_previousPage
 ---
 
-# Function: table\_previousPage()
-
 ```ts
 function table_previousPage<TFeatures, TData>(table): void;
 ```

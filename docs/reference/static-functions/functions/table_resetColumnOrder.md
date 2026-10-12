@@ -3,8 +3,6 @@ id: table_resetColumnOrder
 title: table_resetColumnOrder
 ---
 
-# Function: table\_resetColumnOrder()
-
 ```ts
 function table_resetColumnOrder<TFeatures, TData>(table, defaultState?): void;
 ```

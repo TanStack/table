@@ -3,8 +3,6 @@ id: TableHookContexts
 title: TableHookContexts
 ---
 
-# Interface: TableHookContexts\<TFeatures, TData\>
-
 Defined in: [createTableHookContexts.tsx:18](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHookContexts.tsx#L18)
 
 The object returned by [createTableHookContexts](../functions/createTableHookContexts.md): three scoped Preact
@@ -52,7 +50,7 @@ Defined in: [createTableHookContexts.tsx:22](https://github.com/TanStack/table/b
 
 ***
 
-### useCellContext()
+### useCellContext
 
 ```ts
 useCellContext: <TValue>() => Cell<TFeatures, any, TValue>;
@@ -72,7 +70,7 @@ Defined in: [createTableHookContexts.tsx:29](https://github.com/TanStack/table/b
 
 ***
 
-### useHeaderContext()
+### useHeaderContext
 
 ```ts
 useHeaderContext: <TValue>() => Header<TFeatures, any, TValue>;
@@ -92,7 +90,7 @@ Defined in: [createTableHookContexts.tsx:34](https://github.com/TanStack/table/b
 
 ***
 
-### useTableContext()
+### useTableContext
 
 ```ts
 useTableContext: <TTableData>() => PreactTable<TFeatures, TTableData>;

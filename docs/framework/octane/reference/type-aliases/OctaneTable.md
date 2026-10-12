@@ -3,8 +3,6 @@ id: OctaneTable
 title: OctaneTable
 ---
 
-# Type Alias: OctaneTable\<TFeatures, TData, TSelected\>
-
 ```ts
 type OctaneTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
@@ -17,7 +15,7 @@ and the selected `state`.
 
 ## Type Declaration
 
-### FlexRender()
+### FlexRender
 
 ```ts
 FlexRender: <TValue>(props) => OctaneNode;
@@ -90,7 +88,7 @@ Prefer `table.state` for render reads,
 subscriptions. `table.store.state` is a current-value snapshot and is easy
 to misuse in render code.
 
-### Subscribe()
+### Subscribe
 
 ```ts
 Subscribe: {
@@ -130,7 +128,7 @@ from `source`.
 
 ###### children
 
-  \| (`state`) => `OctaneNode`
+  \| ((`state`) => `OctaneNode`)
   \| [`SubscribeStaticChild`](SubscribeStaticChild.md)
 
 ###### selector?
@@ -167,7 +165,7 @@ from `source`.
 
 ###### children
 
-  \| (`state`) => `OctaneNode`
+  \| ((`state`) => `OctaneNode`)
   \| [`SubscribeStaticChild`](SubscribeStaticChild.md)
 
 ###### selector

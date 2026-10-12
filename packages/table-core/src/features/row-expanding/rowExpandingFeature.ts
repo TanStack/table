@@ -41,13 +41,6 @@ export const rowExpandingFeature: TableFeature = {
     }
   },
 
-  initTableInstanceData: (table) => {
-    // @ts-ignore - _expandRows is row expanding table instance data. Row
-    // display order and the paginated row model expand rows through it, so
-    // tables without row expanding don't bundle it.
-    table._expandRows = expandRows
-  },
-
   assignRowPrototype: (prototype, table) => {
     assignPrototypeAPIs('rowExpandingFeature', prototype, table, {
       row_toggleExpanded: {
@@ -96,6 +89,11 @@ export const rowExpandingFeature: TableFeature = {
       },
       table_getExpandedDepth: {
         fn: () => table_getExpandedDepth(table),
+      },
+      // Internal: row display order and the paginated row model expand rows
+      // through this
+      table__expandRows: {
+        fn: expandRows,
       },
     })
   },

@@ -3,8 +3,6 @@ id: Table_RowModels_Faceted
 title: Table_RowModels_Faceted
 ---
 
-# Interface: Table\_RowModels\_Faceted\<TFeatures, TData\>
-
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L26)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:26](https:/
 
 ## Properties
 
-### getFacetedMinMaxValues()
+### getFacetedMinMaxValues
 
 ```ts
 getFacetedMinMaxValues: () => [number, number] | undefined;
@@ -37,7 +35,7 @@ Requires a `facetedMinMaxValues` row-model factory on the `features` option.
 
 ***
 
-### getFacetedRowModel()
+### getFacetedRowModel
 
 ```ts
 getFacetedRowModel: () => RowModel<TFeatures, TData>;
@@ -55,7 +53,7 @@ Requires a `facetedRowModel` row-model factory on the `features` option.
 
 ***
 
-### getFacetedUniqueValues()
+### getFacetedUniqueValues
 
 ```ts
 getFacetedUniqueValues: () => Map<any, number>;

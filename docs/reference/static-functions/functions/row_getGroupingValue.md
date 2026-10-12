@@ -3,8 +3,6 @@ id: row_getGroupingValue
 title: row_getGroupingValue
 ---
 
-# Function: row\_getGroupingValue()
-
 ```ts
 function row_getGroupingValue<TFeatures, TData>(row, columnId): any;
 ```

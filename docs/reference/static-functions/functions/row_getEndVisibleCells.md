@@ -3,13 +3,11 @@ id: row_getEndVisibleCells
 title: row_getEndVisibleCells
 ---
 
-# Function: row\_getEndVisibleCells()
-
 ```ts
 function row_getEndVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L269)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L261)
 
 Collects visible cells for columns pinned to the end region.
 

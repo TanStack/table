@@ -3,8 +3,6 @@ id: getDefaultPaginationState
 title: getDefaultPaginationState
 ---
 
-# Function: getDefaultPaginationState()
-
 ```ts
 function getDefaultPaginationState(): PaginationState;
 ```

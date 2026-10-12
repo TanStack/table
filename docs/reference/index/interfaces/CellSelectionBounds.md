@@ -3,8 +3,6 @@ id: CellSelectionBounds
 title: CellSelectionBounds
 ---
 
-# Interface: CellSelectionBounds
-
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L53)
 
 A range resolved into inclusive display-order indexes.

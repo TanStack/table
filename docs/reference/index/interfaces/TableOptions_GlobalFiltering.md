@@ -3,8 +3,6 @@ id: TableOptions_GlobalFiltering
 title: TableOptions_GlobalFiltering
 ---
 
-# Interface: TableOptions\_GlobalFiltering\<TFeatures, TData\>
-
 Defined in: [features/global-filtering/globalFilteringFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L35)
 
 ## Type Parameters
@@ -22,7 +20,7 @@ Defined in: [features/global-filtering/globalFilteringFeature.types.ts:35](https
 ### enableGlobalFilter?
 
 ```ts
-optional enableGlobalFilter: boolean;
+optional enableGlobalFilter?: boolean;
 ```
 
 Defined in: [features/global-filtering/globalFilteringFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L42)
@@ -31,10 +29,10 @@ Enables global filtering across columns that allow it.
 
 ***
 
-### getColumnCanGlobalFilter()?
+### getColumnCanGlobalFilter?
 
 ```ts
-optional getColumnCanGlobalFilter: <TFeatures, TData, TValue>(column) => boolean;
+optional getColumnCanGlobalFilter?: <TFeatures, TData, TValue>(column) => boolean;
 ```
 
 Defined in: [features/global-filtering/globalFilteringFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L47)
@@ -71,7 +69,7 @@ This is useful if the column can contain data that is not `string` or `number` (
 ### globalFilterFn?
 
 ```ts
-optional globalFilterFn: FilterFnOption<TFeatures, TData>;
+optional globalFilterFn?: FilterFnOption<TFeatures, TData>;
 ```
 
 Defined in: [features/global-filtering/globalFilteringFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L60)
@@ -86,7 +84,7 @@ The filter function to use for global filtering.
 ### onGlobalFilterChange?
 
 ```ts
-optional onGlobalFilterChange: OnChangeFn<any>;
+optional onGlobalFilterChange?: OnChangeFn<any>;
 ```
 
 Defined in: [features/global-filtering/globalFilteringFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L66)

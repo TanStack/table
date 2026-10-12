@@ -3,8 +3,6 @@ id: SubscribePropsWithStore
 title: SubscribePropsWithStore
 ---
 
-# Type Alias: SubscribePropsWithStore\<TFeatures, TSelected\>
-
 ```ts
 type SubscribePropsWithStore<TFeatures, TSelected> = object;
 ```
@@ -29,14 +27,14 @@ TableState.
 ### children
 
 ```ts
-children: (state) => ComponentChildren | ComponentChildren;
+children: ((state) => ComponentChildren) | ComponentChildren;
 ```
 
 Defined in: [Subscribe.ts:31](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L31)
 
 ***
 
-### selector()
+### selector
 
 ```ts
 selector: (state) => TSelected;

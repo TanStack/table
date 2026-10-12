@@ -3,13 +3,11 @@ id: getDefaultColumnSizingState
 title: getDefaultColumnSizingState
 ---
 
-# Function: getDefaultColumnSizingState()
-
 ```ts
 function getDefaultColumnSizingState(): ColumnSizingState;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L36)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L31)
 
 Creates the default committed column sizing state.
 

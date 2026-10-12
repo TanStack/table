@@ -3,14 +3,12 @@ id: setStateSlice
 title: setStateSlice
 ---
 
-# Function: setStateSlice()
-
 ```ts
 function setStateSlice<K>(
    instance,
    key,
    updater,
-   isEqual): void;
+   isEqual?): void;
 ```
 
 Defined in: [utils.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L223)
@@ -39,7 +37,7 @@ structural default.
 
 ### K
 
-`K` *extends* `string` & `object` \| keyof TableState\_All
+`K` *extends* keyof TableState\_All \| `string` & `object`
 
 ## Parameters
 
@@ -57,7 +55,7 @@ structural default.
 
 [`Updater`](../type-aliases/Updater.md)\<`StateSliceForKey`\<`K`\>\>
 
-### isEqual
+### isEqual?
 
 [`StateSliceEqualityFn`](../type-aliases/StateSliceEqualityFn.md)\<`StateSliceForKey`\<`K`\>\> = `stateSlicesEqual`
 

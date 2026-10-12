@@ -3,8 +3,6 @@ id: AccessorKeyColumnDef
 title: AccessorKeyColumnDef
 ---
 
-# Type Alias: AccessorKeyColumnDef\<TFeatures, TData, TValue\>
-
 ```ts
 type AccessorKeyColumnDef<TFeatures, TData, TValue> = AccessorKeyColumnDefBase<TFeatures, TData, TValue> & Partial<ColumnIdentifiers<TFeatures, TData, TValue>>;
 ```

@@ -3,8 +3,6 @@ id: createGroupedRowModel
 title: createGroupedRowModel
 ---
 
-# Function: createGroupedRowModel()
-
 ```ts
 function createGroupedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
@@ -30,22 +28,4 @@ executor for non-group values. Grouping remains useful without aggregation.
 
 ## Returns
 
-```ts
-(table): () => RowModel<TFeatures, TData>;
-```
-
-### Parameters
-
-#### table
-
-[`Table`](../type-aliases/Table.md)\<`TFeatures`, `TData`\>
-
-### Returns
-
-```ts
-(): RowModel<TFeatures, TData>;
-```
-
-#### Returns
-
-[`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+(`table`) => () => [`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>

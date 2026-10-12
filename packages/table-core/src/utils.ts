@@ -517,18 +517,22 @@ export type APIObject<TDeps extends ReadonlyArray<any>, TDepArgs> = Record<
 
 /**
  * Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
+ *
+ * Splits on the first separator only, so an internal API name such as
+ * `table__expandRows` has the `fnKey` `_expandRows`.
  */
 export function getFunctionNameInfo(
   staticFnName: string,
   splitBy: '_' | '.' = '_',
 ) {
-  const [parentName, fnKey] = staticFnName.split(splitBy)
+  // `replace` with a string pattern only replaces the first separator, and
+  // function names never contain spaces
+  const [parentName, fnKey] = staticFnName.replace(splitBy, ' ').split(' ') as [
+    string,
+    string,
+  ]
   const fnName = `${parentName}.${fnKey}`
-  return { fnKey, fnName, parentName } as {
-    fnKey: string
-    fnName: string
-    parentName: string
-  }
+  return { fnKey, fnName, parentName }
 }
 
 /**

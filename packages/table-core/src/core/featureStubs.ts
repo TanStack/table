@@ -1,4 +1,6 @@
 import type { Table_CellSelection } from '../features/cell-selection/cellSelectionFeature.types'
+import type { Table_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
+import type { Table_ColumnOrdering } from '../features/column-ordering/columnOrderingFeature.types'
 import type {
   ColumnPinningPosition,
   Table_ColumnPinning,
@@ -13,9 +15,7 @@ import type {
   Table_GlobalFiltering,
 } from '../features/global-filtering/globalFilteringFeature.types'
 import type { FilterFn } from '../features/column-filtering/columnFilteringFeature.types'
-import type { orderByColumnPinning as orderByColumnPinningImpl } from '../features/column-pinning/orderByColumnPinning'
-import type { aggregateColumnValue } from '../features/row-aggregation/rowAggregationFeature.utils'
-import type { expandRows } from '../features/row-expanding/createExpandedRowModel'
+import type { Table_RowAggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type {
   Row_RowExpanding,
   Table_RowExpanding,
@@ -34,12 +34,27 @@ import type { RowModel } from './row-models/coreRowModelsFeature.types'
  * Stubs for optional features, used by the core and by any feature or row
  * model that reads another feature.
  *
- * Importing a feature's utils from shared code would bundle that feature into
- * every table that uses the shared code, registered or not. Each stub calls
- * what the feature registers when it is present, either an API on the table,
- * column, or row or a `_`-prefixed function the feature stores on the table
- * in `initTableInstanceData`, and otherwise behaves as if the feature were
- * absent.
+ * Importing a feature's code from shared code would bundle that feature into
+ * every table that uses the shared code, registered or not. A stub instead
+ * calls a member the feature declares on its table, column, or row type and
+ * assigns when it is registered, and otherwise behaves as if the feature were
+ * absent. Members that only other features use are `_`-prefixed and marked
+ * `@internal`, such as `table._expandRows`.
+ *
+ * How code in this package reaches other code:
+ *
+ * - Its own feature: call the static function, or `callMemoOrStaticFn` to use
+ *   the feature's memoized API.
+ * - The core: import it. Every table bundles the core.
+ * - Another feature's state: read `table.atoms.<slice>?.get()`.
+ * - Another feature's APIs: call a stub from this file, adding one if needed.
+ * - A feature it requires, such as column resizing requiring column sizing:
+ *   import it.
+ *
+ * Features assign functions, internal ones included, with `assignTableAPIs` or
+ * `assignPrototypeAPIs`, and keep the `init*InstanceData` hooks for mutable
+ * per-instance state. The `import/no-restricted-paths` lint rule rejects value
+ * imports between feature folders outside an explicit list.
  *
  * Internal: not exported from any package entry point.
  */
@@ -107,18 +122,14 @@ export function orderLeafColumns<
   table: Table_Internal<TFeatures, TData>,
   columns: Array<TColumn>,
 ): Array<TColumn> {
-  const orderedTable = table as {
-    getOrderColumnsFn?: () => (columns: Array<TColumn>) => Array<TColumn>
-    _orderGroupedColumns?: (
-      table: Table_Internal<TFeatures, TData>,
-      columns: Array<TColumn>,
-    ) => Array<TColumn>
-  }
-  return (
-    orderedTable.getOrderColumnsFn?.()(columns) ??
-    orderedTable._orderGroupedColumns?.(table, columns) ??
-    columns
-  )
+  const orderedTable = table as Partial<
+    Table_ColumnOrdering<TFeatures, TData> &
+      Table_ColumnGrouping<TFeatures, TData>
+  >
+  const leafColumns = columns as Array<Column<TFeatures, TData, unknown>>
+  return (orderedTable.getOrderColumnsFn?.()(leafColumns) ??
+    orderedTable._orderGroupedColumns?.(leafColumns) ??
+    columns) as Array<TColumn>
 }
 
 // Column pinning
@@ -140,9 +151,8 @@ export function orderByColumnPinning<
 ): Array<TItem> {
   return (
     (
-      table as { _orderByColumnPinning?: typeof orderByColumnPinningImpl }
-    )._orderByColumnPinning?.(table, items, getColumnId, getItemsByColumnId) ??
-    items
+      table as Partial<Table_ColumnPinning<TFeatures, TData>>
+    )._orderByColumnPinning?.(items, getColumnId, getItemsByColumnId) ?? items
   )
 }
 
@@ -201,8 +211,9 @@ export function expandRowModel<
   rowModel: RowModel<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   return (
-    (table as { _expandRows?: typeof expandRows })._expandRows?.(rowModel) ??
-    rowModel
+    (table as Partial<Table_RowExpanding<TFeatures, TData>>)._expandRows?.(
+      rowModel,
+    ) ?? rowModel
   )
 }
 
@@ -260,7 +271,7 @@ export function autoResetCellSelection<
 // Row aggregation
 
 /**
- * The aggregation executor `rowAggregationFeature` stores on the table, or
+ * The aggregation executor `rowAggregationFeature` assigns to the table, or
  * `undefined` when the feature is not registered.
  */
 export function getAggregateColumnValue<
@@ -268,7 +279,6 @@ export function getAggregateColumnValue<
   TData extends RowData,
 >(
   table: Table_Internal<TFeatures, TData>,
-): typeof aggregateColumnValue | undefined {
-  return (table as { _aggregateColumnValue?: typeof aggregateColumnValue })
-    ._aggregateColumnValue
+): Table_RowAggregation['_aggregateColumnValue'] | undefined {
+  return (table as Partial<Table_RowAggregation>)._aggregateColumnValue
 }

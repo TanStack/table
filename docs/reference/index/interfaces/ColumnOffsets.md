@@ -3,8 +3,6 @@ id: ColumnOffsets
 title: ColumnOffsets
 ---
 
-# Interface: ColumnOffsets
-
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L10)
 
 ## Properties

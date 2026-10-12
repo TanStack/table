@@ -3,13 +3,11 @@ id: table_getCellSelectionColumnIds
 title: table_getCellSelectionColumnIds
 ---
 
-# Function: table\_getCellSelectionColumnIds()
-
 ```ts
 function table_getCellSelectionColumnIds<TFeatures, TData>(table): string[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1361](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1361)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1329](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1329)
 
 Returns the ids of all columns intersected by the selection.
 

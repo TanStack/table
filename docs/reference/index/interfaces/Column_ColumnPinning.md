@@ -3,13 +3,11 @@ id: Column_ColumnPinning
 title: Column_ColumnPinning
 ---
 
-# Interface: Column\_ColumnPinning
-
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L60)
 
 ## Properties
 
-### getCanPin()
+### getCanPin
 
 ```ts
 getCanPin: () => boolean;
@@ -25,7 +23,7 @@ Checks whether this column or any of its leaves can be pinned.
 
 ***
 
-### getIsPinned()
+### getIsPinned
 
 ```ts
 getIsPinned: () => ColumnPinningPosition;
@@ -41,7 +39,7 @@ Reads the column's logical pinned position: `'start'`, `'end'`, or `false`.
 
 ***
 
-### getPinnedIndex()
+### getPinnedIndex
 
 ```ts
 getPinnedIndex: () => number;
@@ -57,7 +55,7 @@ Finds this column's index within its pinned region.
 
 ***
 
-### pin()
+### pin
 
 ```ts
 pin: (position) => void;

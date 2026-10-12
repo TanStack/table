@@ -3,8 +3,6 @@ id: TableOptions_ColumnVisibility
 title: TableOptions_ColumnVisibility
 ---
 
-# Interface: TableOptions\_ColumnVisibility
-
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L12)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:12](htt
 ### enableHiding?
 
 ```ts
-optional enableHiding: boolean;
+optional enableHiding?: boolean;
 ```
 
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L16)
@@ -24,7 +22,7 @@ Whether to enable column hiding. Defaults to `true`.
 ### onColumnVisibilityChange?
 
 ```ts
-optional onColumnVisibilityChange: OnChangeFn<ColumnVisibilityState>;
+optional onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>;
 ```
 
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L22)

@@ -3,13 +3,11 @@ id: Column_ColumnVisibility
 title: Column_ColumnVisibility
 ---
 
-# Interface: Column\_ColumnVisibility
-
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L95)
 
 ## Properties
 
-### getCanHide()
+### getCanHide
 
 ```ts
 getCanHide: () => boolean;
@@ -25,7 +23,7 @@ Checks whether this column is allowed to be hidden.
 
 ***
 
-### getIsVisible()
+### getIsVisible
 
 ```ts
 getIsVisible: () => boolean;
@@ -41,7 +39,7 @@ Checks whether this column is currently visible.
 
 ***
 
-### getToggleVisibilityHandler()
+### getToggleVisibilityHandler
 
 ```ts
 getToggleVisibilityHandler: () => (event) => void;
@@ -53,23 +51,11 @@ Creates a checkbox-style handler that toggles this column's visibility.
 
 #### Returns
 
-```ts
-(event): void;
-```
-
-##### Parameters
-
-###### event
-
-`unknown`
-
-##### Returns
-
-`void`
+(`event`) => `void`
 
 ***
 
-### toggleVisibility()
+### toggleVisibility
 
 ```ts
 toggleVisibility: (value?) => void;

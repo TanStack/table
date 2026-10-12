@@ -3,8 +3,6 @@ id: column_getFilterIndex
 title: column_getFilterIndex
 ---
 
-# Function: column\_getFilterIndex()
-
 ```ts
 function column_getFilterIndex<TFeatures, TData, TValue>(column): number;
 ```

@@ -3,13 +3,11 @@ id: Row_RowExpanding
 title: Row_RowExpanding
 ---
 
-# Interface: Row\_RowExpanding
-
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L13)
 
 ## Properties
 
-### getCanExpand()
+### getCanExpand
 
 ```ts
 getCanExpand: () => boolean;
@@ -25,7 +23,7 @@ Checks whether this row can be expanded.
 
 ***
 
-### getIsAllParentsExpanded()
+### getIsAllParentsExpanded
 
 ```ts
 getIsAllParentsExpanded: () => boolean;
@@ -41,7 +39,7 @@ Checks whether every ancestor of this row is expanded.
 
 ***
 
-### getIsExpanded()
+### getIsExpanded
 
 ```ts
 getIsExpanded: () => boolean;
@@ -57,7 +55,7 @@ Checks whether this row is currently expanded.
 
 ***
 
-### getToggleExpandedHandler()
+### getToggleExpandedHandler
 
 ```ts
 getToggleExpandedHandler: () => () => void;
@@ -69,17 +67,11 @@ Creates a handler that toggles this row's expanded state.
 
 #### Returns
 
-```ts
-(): void;
-```
-
-##### Returns
-
-`void`
+() => `void`
 
 ***
 
-### toggleExpanded()
+### toggleExpanded
 
 ```ts
 toggleExpanded: (expanded?) => void;

@@ -3,13 +3,11 @@ id: row_getValue
 title: row_getValue
 ---
 
-# Function: row\_getValue()
-
 ```ts
 function row_getValue<TFeatures, TData>(row, columnId): unknown;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L78)
+Defined in: [core/rows/coreRowsFeature.utils.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L63)
 
 Reads and caches this row's value for a column.
 

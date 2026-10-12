@@ -66,13 +66,6 @@ export const columnPinningFeature: TableFeature = {
     }
   },
 
-  initTableInstanceData: (table) => {
-    // @ts-ignore - _orderByColumnPinning is column pinning table instance
-    // data. The core headers, row visible cells, and cell selection order by
-    // pinning through it, so tables without column pinning don't bundle it.
-    table._orderByColumnPinning = orderByColumnPinning
-  },
-
   assignColumnPrototype: (prototype, table) => {
     assignPrototypeAPIs('columnPinningFeature', prototype, table, {
       column_pin: {
@@ -129,6 +122,12 @@ export const columnPinningFeature: TableFeature = {
       },
       table_getIsSomeColumnsPinned: {
         fn: (position) => table_getIsSomeColumnsPinned(table, position),
+      },
+      // Internal: the core headers, row visible cells, and cell selection
+      // order by pinning through this
+      table__orderByColumnPinning: {
+        fn: (items, getColumnId, getItemsByColumnId) =>
+          orderByColumnPinning(table, items, getColumnId, getItemsByColumnId),
       },
       // header groups
       table_getStartHeaderGroups: {

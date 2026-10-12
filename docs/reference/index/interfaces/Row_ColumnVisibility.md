@@ -3,8 +3,6 @@ id: Row_ColumnVisibility
 title: Row_ColumnVisibility
 ---
 
-# Interface: Row\_ColumnVisibility\<TFeatures, TData\>
-
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L78)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:78](htt
 
 ## Properties
 
-### getVisibleCells()
+### getVisibleCells
 
 ```ts
 getVisibleCells: () => Cell<TFeatures, TData, unknown>[];
@@ -35,7 +33,7 @@ Gets this row's cells for currently visible columns.
 
 ***
 
-### getVisibleCellsByColumnId()
+### getVisibleCellsByColumnId
 
 ```ts
 getVisibleCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>;

@@ -3,13 +3,11 @@ id: row_renderValue
 title: row_renderValue
 ---
 
-# Function: row\_renderValue()
-
 ```ts
 function row_renderValue<TFeatures, TData>(row, columnId): any;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L146)
+Defined in: [core/rows/coreRowsFeature.utils.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L131)
 
 Returns a renderable row value for a column.
 

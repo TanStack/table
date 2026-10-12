@@ -3,13 +3,11 @@ id: column_getAggregationFns
 title: column_getAggregationFns
 ---
 
-# Function: column\_getAggregationFns()
-
 ```ts
 function column_getAggregationFns<TFeatures, TData, TValue>(column): readonly ResolvedAggregationFn<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:231](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L231)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:225](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L225)
 
 Resolves and validates a column's scalar or multiple aggregation option.
 

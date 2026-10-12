@@ -3,8 +3,6 @@ id: table_syncExternalStateToBaseAtoms
 title: table_syncExternalStateToBaseAtoms
 ---
 
-# Function: table\_syncExternalStateToBaseAtoms()
-
 ```ts
 function table_syncExternalStateToBaseAtoms<TFeatures, TData>(
    table,
@@ -45,7 +43,8 @@ writes; the default remains reference equality.
 
 ### capturedState?
 
-`Partial`\<[`TableState`](../../index/type-aliases/TableState.md)\<`TFeatures`\>\> | `null`
+  \| `Partial`\<[`TableState`](../../index/type-aliases/TableState.md)\<`TFeatures`\>\>
+  \| `null`
 
 ### compare?
 

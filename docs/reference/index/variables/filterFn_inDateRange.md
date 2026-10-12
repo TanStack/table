@@ -3,13 +3,11 @@ id: filterFn_inDateRange
 title: filterFn_inDateRange
 ---
 
-# Variable: filterFn\_inDateRange
-
 ```ts
 const filterFn_inDateRange: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [features/column-filtering/filterFns.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L331)
+Defined in: [features/column-filtering/filterFns.ts:336](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L336)
 
 Keeps rows whose date value is inside an inclusive `[min, max]` date range.
 

@@ -3,8 +3,6 @@ id: AppCellPropsWithoutSelector
 title: AppCellPropsWithoutSelector
 ---
 
-# Interface: AppCellPropsWithoutSelector\<TFeatures, TData, TValue, TCellComponents\>
-
 Defined in: [createTableHook.tsx:395](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L395)
 
 Props for AppCell component - without selector
@@ -39,7 +37,7 @@ Defined in: [createTableHook.tsx:401](https://github.com/TanStack/table/blob/mai
 
 ***
 
-### children()
+### children
 
 ```ts
 children: (cell) => ComponentChildren;
@@ -62,7 +60,7 @@ Defined in: [createTableHook.tsx:402](https://github.com/TanStack/table/blob/mai
 ### selector?
 
 ```ts
-optional selector: undefined;
+optional selector?: undefined;
 ```
 
 Defined in: [createTableHook.tsx:406](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L406)

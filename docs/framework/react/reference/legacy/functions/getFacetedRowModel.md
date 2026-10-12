@@ -3,13 +3,11 @@ id: getFacetedRowModel
 title: getFacetedRowModel
 ---
 
-# ~~Function: getFacetedRowModel()~~
-
 ```ts
 function getFacetedRowModel<TData>(): FacetedRowModelFactory<TData>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:115](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L115)
+Defined in: [src/useLegacyTable.ts:115](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L115)
 
 ## Type Parameters
 

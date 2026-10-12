@@ -3,8 +3,6 @@ id: table_resetGrouping
 title: table_resetGrouping
 ---
 
-# Function: table\_resetGrouping()
-
 ```ts
 function table_resetGrouping<TFeatures, TData>(table, defaultState?): void;
 ```

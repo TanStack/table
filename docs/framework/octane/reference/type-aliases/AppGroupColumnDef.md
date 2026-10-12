@@ -3,8 +3,6 @@ id: AppGroupColumnDef
 title: AppGroupColumnDef
 ---
 
-# Type Alias: AppGroupColumnDef\<TFeatures, TData, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppGroupColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<GroupColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer" | "columns"> & object;
 ```
@@ -18,25 +16,25 @@ Enhanced group column definition with pre-bound components.
 ### cell?
 
 ```ts
-optional cell: AppColumnDefTemplate<AppCellContext<TFeatures, TData, unknown, TCellComponents>>;
+optional cell?: AppColumnDefTemplate<AppCellContext<TFeatures, TData, unknown, TCellComponents>>;
 ```
 
 ### columns?
 
 ```ts
-optional columns: ColumnDef<TFeatures, TData, unknown>[];
+optional columns?: ColumnDef<TFeatures, TData, unknown>[];
 ```
 
 ### footer?
 
 ```ts
-optional footer: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
+optional footer?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
 ```
 
 ### header?
 
 ```ts
-optional header: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
+optional header?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
 ```
 
 ## Type Parameters

@@ -3,9 +3,7 @@ id: ColumnIndexes
 title: ColumnIndexes
 ---
 
-# Interface: ColumnIndexes
-
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L7)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L8)
 
 ## Properties
 
@@ -15,7 +13,7 @@ Defined in: [features/column-ordering/columnOrderingFeature.types.ts:7](https://
 all: Record<string, number>;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L11)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L12)
 
 Maps each visible leaf column id to its index in the full visible column list.
 
@@ -27,7 +25,7 @@ Maps each visible leaf column id to its index in the full visible column list.
 center: Record<string, number>;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L15)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L16)
 
 Maps each unpinned visible leaf column id to its index within the center region.
 
@@ -39,7 +37,7 @@ Maps each unpinned visible leaf column id to its index within the center region.
 end: Record<string, number>;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L23)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L24)
 
 Maps each end-pinned visible leaf column id to its index within the end region.
 
@@ -51,6 +49,6 @@ Maps each end-pinned visible leaf column id to its index within the end region.
 start: Record<string, number>;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L19)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L20)
 
 Maps each start-pinned visible leaf column id to its index within the start region.

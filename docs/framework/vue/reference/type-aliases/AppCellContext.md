@@ -3,13 +3,11 @@ id: AppCellContext
 title: AppCellContext
 ---
 
-# Type Alias: AppCellContext\<TFeatures, TData, TValue, TCellComponents\>
-
 ```ts
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:33](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L33)
+Defined in: [createTableHook.ts:33](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L33)
 
 ## Type Parameters
 
@@ -37,7 +35,7 @@ Defined in: [packages/vue-table/src/createTableHook.ts:33](https://github.com/Ta
 cell: Cell<TFeatures, TData, TValue> & TCellComponents & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:39](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L39)
+Defined in: [createTableHook.ts:39](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L39)
 
 #### Type Declaration
 
@@ -55,7 +53,7 @@ FlexRender: Component;
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:41](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L41)
+Defined in: [createTableHook.ts:41](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L41)
 
 ***
 
@@ -65,7 +63,7 @@ Defined in: [packages/vue-table/src/createTableHook.ts:41](https://github.com/Ta
 getValue: CellContext<TFeatures, TData, TValue>["getValue"];
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:42](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L42)
+Defined in: [createTableHook.ts:42](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L42)
 
 ***
 
@@ -75,7 +73,7 @@ Defined in: [packages/vue-table/src/createTableHook.ts:42](https://github.com/Ta
 renderValue: CellContext<TFeatures, TData, TValue>["renderValue"];
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:43](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L43)
+Defined in: [createTableHook.ts:43](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L43)
 
 ***
 
@@ -85,7 +83,7 @@ Defined in: [packages/vue-table/src/createTableHook.ts:43](https://github.com/Ta
 row: Row<TFeatures, TData>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:44](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L44)
+Defined in: [createTableHook.ts:44](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L44)
 
 ***
 
@@ -95,4 +93,4 @@ Defined in: [packages/vue-table/src/createTableHook.ts:44](https://github.com/Ta
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:45](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L45)
+Defined in: [createTableHook.ts:45](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L45)

@@ -3,8 +3,6 @@ id: makeObjectMap
 title: makeObjectMap
 ---
 
-# Function: makeObjectMap()
-
 ```ts
 function makeObjectMap<TValue>(): Record<string, TValue>;
 ```

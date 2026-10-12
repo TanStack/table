@@ -39,14 +39,6 @@ export const columnGroupingFeature: TableFeature = {
     }
   },
 
-  initTableInstanceData: (table) => {
-    // @ts-ignore - _orderGroupedColumns is column grouping table instance
-    // data. Leaf column ordering falls back to it when the column ordering
-    // feature is not registered, so tables without either feature don't
-    // bundle it.
-    table._orderGroupedColumns = orderColumns
-  },
-
   assignCellPrototype: (prototype, table) => {
     assignPrototypeAPIs('columnGroupingFeature', prototype, table, {
       cell_getIsGrouped: {
@@ -100,6 +92,11 @@ export const columnGroupingFeature: TableFeature = {
       },
       table_resetGrouping: {
         fn: (defaultState) => table_resetGrouping(table, defaultState),
+      },
+      // Internal: leaf column ordering falls back to this when the column
+      // ordering feature is not registered
+      table__orderGroupedColumns: {
+        fn: (columns) => orderColumns(table, columns),
       },
     })
   },

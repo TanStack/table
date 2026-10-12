@@ -3,8 +3,6 @@ id: column_getNextSortingOrder
 title: column_getNextSortingOrder
 ---
 
-# Function: column\_getNextSortingOrder()
-
 ```ts
 function column_getNextSortingOrder<TFeatures, TData, TValue>(column, multi?): false | "asc" | "desc";
 ```

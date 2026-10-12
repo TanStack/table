@@ -3,8 +3,6 @@ id: table_setOptions
 title: table_setOptions
 ---
 
-# Function: table\_setOptions()
-
 ```ts
 function table_setOptions<TFeatures, TData>(
    table,

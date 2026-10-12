@@ -3,13 +3,11 @@ id: column_getStart
 title: column_getStart
 ---
 
-# Function: column\_getStart()
-
 ```ts
 function column_getStart<TFeatures, TData, TValue>(column, position?): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:186](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L186)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L181)
 
 Computes the offset from the start edge of a pinning region to this column.
 
@@ -42,7 +40,8 @@ usually corresponds to left and `end` to right. In RTL languages/layouts,
 
 ### position?
 
-[`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md) | `"center"`
+  \| [`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md)
+  \| `"center"`
 
 ## Returns
 

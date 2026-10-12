@@ -3,13 +3,11 @@ id: table_getCenterHeaderGroups
 title: table_getCenterHeaderGroups
 ---
 
-# Function: table\_getCenterHeaderGroups()
-
 ```ts
 function table_getCenterHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:448](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L448)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L430)
 
 Builds header groups for visible columns that are not pinned.
 

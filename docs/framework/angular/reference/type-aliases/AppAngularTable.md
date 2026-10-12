@@ -3,8 +3,6 @@ id: AppAngularTable
 title: AppAngularTable
 ---
 
-# Type Alias: AppAngularTable\<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppAngularTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = AngularTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
@@ -15,7 +13,7 @@ Extended table API returned by useAppTable with all App wrapper components
 
 ## Type Declaration
 
-### appCell()
+### appCell
 
 ```ts
 appCell: <TValue>(cell) => Cell<TFeatures, TData, TValue> & NoInfer<TCellComponents>;
@@ -37,7 +35,7 @@ appCell: <TValue>(cell) => Cell<TFeatures, TData, TValue> & NoInfer<TCellCompone
 
 `Cell`\<`TFeatures`, `TData`, `TValue`\> & `NoInfer`\<`TCellComponents`\>
 
-### appFooter()
+### appFooter
 
 ```ts
 appFooter: <TValue>(footer) => Header<TFeatures, TData, TValue> & NoInfer<THeaderComponents>;
@@ -59,7 +57,7 @@ appFooter: <TValue>(footer) => Header<TFeatures, TData, TValue> & NoInfer<THeade
 
 `Header`\<`TFeatures`, `TData`, `TValue`\> & `NoInfer`\<`THeaderComponents`\>
 
-### appHeader()
+### appHeader
 
 ```ts
 appHeader: <TValue>(header) => Header<TFeatures, TData, TValue> & NoInfer<THeaderComponents>;

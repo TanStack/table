@@ -3,13 +3,11 @@ id: cell_getSelectionExtendHandler
 title: cell_getSelectionExtendHandler
 ---
 
-# Function: cell\_getSelectionExtendHandler()
-
 ```ts
 function cell_getSelectionExtendHandler<TFeatures, TData, TValue>(cell): (_e) => void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1490](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1490)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1458](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1458)
 
 Creates a handler that extends the active range to this cell during a drag.
 
@@ -39,19 +37,7 @@ it by a frame would only delay the highlight.
 
 ## Returns
 
-```ts
-(_e): void;
-```
-
-### Parameters
-
-#### \_e
-
-`unknown`
-
-### Returns
-
-`void`
+(`_e`) => `void`
 
 ## Example
 

@@ -3,8 +3,6 @@ id: AppHeaderContext
 title: AppHeaderContext
 ---
 
-# Type Alias: AppHeaderContext\<TFeatures, TData, TValue, THeaderComponents\>
-
 ```ts
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```
@@ -54,7 +52,7 @@ Defined in: [packages/lit-table/src/createTableHook.ts:77](https://github.com/Ta
 
 #### Type Declaration
 
-##### FlexRender()
+##### FlexRender
 
 ```ts
 FlexRender: () => LitRenderable;

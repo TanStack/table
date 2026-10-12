@@ -3,13 +3,11 @@ id: cell_getIsSelected
 title: cell_getIsSelected
 ---
 
-# Function: cell\_getIsSelected()
-
 ```ts
 function cell_getIsSelected<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:589](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L589)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:557](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L557)
 
 Checks whether this cell falls inside the final positive selection.
 

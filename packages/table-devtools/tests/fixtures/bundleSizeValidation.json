@@ -15,7 +15,7 @@
         "rowAggregationFeature"
       ]
     },
-    "actual": 9754
+    "actual": 9733
   },
   {
     "selection": {
@@ -31,7 +31,7 @@
       "sortFns": ["text"],
       "aggregationFns": ["extent", "sum"]
     },
-    "actual": 10857
+    "actual": 10860
   },
   {
     "selection": {
@@ -51,7 +51,7 @@
       "aggregationFns": ["count", "max", "median"],
       "rowModels": ["filteredRowModel"]
     },
-    "actual": 9213
+    "actual": 9219
   },
   {
     "selection": {
@@ -119,7 +119,7 @@
       "sortFns": ["alphanumericCaseSensitive", "basic", "datetime"],
       "aggregationFns": ["extent", "first", "last", "mean", "median", "sum"]
     },
-    "actual": 18775
+    "actual": 18739
   },
   {
     "selection": {
@@ -154,7 +154,7 @@
       "sortFns": ["basic", "datetime", "text"],
       "aggregationFns": ["first", "max", "mean", "sum"]
     },
-    "actual": 15647
+    "actual": 15631
   },
   {
     "selection": {
@@ -201,7 +201,7 @@
         "unique"
       ]
     },
-    "actual": 15695
+    "actual": 15668
   },
   {
     "selection": {
@@ -255,7 +255,7 @@
         "min"
       ]
     },
-    "actual": 20477
+    "actual": 20451
   },
   {
     "selection": {
@@ -309,7 +309,7 @@
         "uniqueCount"
       ]
     },
-    "actual": 21208
+    "actual": 21165
   },
   {
     "selection": {
@@ -377,7 +377,7 @@
         "uniqueCount"
       ]
     },
-    "actual": 23033
+    "actual": 22964
   },
   {
     "selection": {
@@ -447,7 +447,7 @@
         "unique"
       ]
     },
-    "actual": 22544
+    "actual": 22552
   },
   {
     "selection": {
@@ -519,6 +519,6 @@
         "uniqueCount"
       ]
     },
-    "actual": 22405
+    "actual": 22403
   }
 ]

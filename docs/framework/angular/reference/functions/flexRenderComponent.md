@@ -3,13 +3,11 @@ id: flexRenderComponent
 title: flexRenderComponent
 ---
 
-# Function: flexRenderComponent()
-
 ```ts
 function flexRenderComponent<TComponent>(component, options?): FlexRenderComponent<TComponent>;
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:150](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L150)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:184](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L184)
 
 Helper function to create a [FlexRenderComponent](../interfaces/FlexRenderComponent.md) instance, with better type-safety.
 

@@ -3,8 +3,6 @@ id: row_getToggleExpandedHandler
 title: row_getToggleExpandedHandler
 ---
 
-# Function: row\_getToggleExpandedHandler()
-
 ```ts
 function row_getToggleExpandedHandler<TFeatures, TData>(row): () => void;
 ```
@@ -33,13 +31,7 @@ The handler is a no-op when the row cannot expand.
 
 ## Returns
 
-```ts
-(): void;
-```
-
-### Returns
-
-`void`
+() => `void`
 
 ## Example
 

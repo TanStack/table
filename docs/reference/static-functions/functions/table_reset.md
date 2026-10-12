@@ -3,8 +3,6 @@ id: table_reset
 title: table_reset
 ---
 
-# Function: table\_reset()
-
 ```ts
 function table_reset<TFeatures, TData>(table): void;
 ```
