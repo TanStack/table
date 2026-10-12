@@ -149,7 +149,7 @@ function App() {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                style={{ display: 'flex', width: '100%', height: 30 }}
+                style={{ display: 'flex', width: '100%', height: '30px' }}
               >
                 {headerGroup.headers.map((header) => (
                   <th
@@ -209,7 +209,7 @@ function TableBody({ table }: TableBodyProps) {
           style={{
             display: 'flex',
             width: '100%',
-            height: 30,
+            height: '30px',
             // Offscreen rows skip style recalc and layout entirely, so a live
             // column resize only lays out the rows actually on screen.
             contentVisibility: 'auto',

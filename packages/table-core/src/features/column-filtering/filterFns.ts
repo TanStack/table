@@ -37,6 +37,7 @@ import type { Row } from '../../types/Row'
  * are tested. When calling a filter function directly (outside of a table),
  * apply it yourself: `fn(row, columnId, fn.resolveFilterValue?.(value) ?? value)`.
  */
+/* @__NO_SIDE_EFFECTS__ */
 export function constructFilterFn<
   TFeatures extends TableFeatures = any,
   TData extends RowData = any,
@@ -74,7 +75,7 @@ export function constructFilterFn<
  *
  * Uses JavaScript `===` comparison and auto-removes empty filter values.
  */
-export const filterFn_equals = constructFilterFn({
+export const filterFn_equals = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) => dataValue === filterValue,
   autoRemove: (val: any) => testFalsy(val),
 })
@@ -85,7 +86,7 @@ export const filterFn_equals = constructFilterFn({
  * Uses JavaScript `==` comparison and auto-removes empty filter values. This is
  * useful for matching string input against numeric row values.
  */
-export const filterFn_weakEquals = constructFilterFn({
+export const filterFn_weakEquals = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) => dataValue == filterValue,
   autoRemove: (val: any) => testFalsy(val),
 })
@@ -97,12 +98,14 @@ export const filterFn_weakEquals = constructFilterFn({
  *
  * Matching is case-sensitive and empty filter values are auto-removed.
  */
-export const filterFn_includesStringSensitive = constructFilterFn({
-  filter: (dataValue, filterValue) => Boolean(dataValue?.includes(filterValue)),
-  autoRemove: (val: any) => testFalsy(val),
-  resolveFilterValue: (val: any) => String(val),
-  resolveDataValue: (val: any) => (val == null ? undefined : String(val)),
-})
+export const filterFn_includesStringSensitive =
+  /* @__PURE__ */ constructFilterFn({
+    filter: (dataValue, filterValue) =>
+      Boolean(dataValue?.includes(filterValue)),
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => String(val),
+    resolveDataValue: (val: any) => (val == null ? undefined : String(val)),
+  })
 
 /**
  * Keeps rows whose stringified column value includes the filter text.
@@ -110,7 +113,7 @@ export const filterFn_includesStringSensitive = constructFilterFn({
  * Both values are lowercased before comparison, and empty filter values are
  * auto-removed.
  */
-export const filterFn_includesString = constructFilterFn({
+export const filterFn_includesString = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) => Boolean(dataValue?.includes(filterValue)),
   autoRemove: (val: any) => testFalsy(val),
   resolveFilterValue: (val: any) => String(val).toLowerCase(),
@@ -124,7 +127,7 @@ export const filterFn_includesString = constructFilterFn({
  * Both values are lowercased before comparison, and empty filter values are
  * auto-removed.
  */
-export const filterFn_equalsString = constructFilterFn({
+export const filterFn_equalsString = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) => dataValue === filterValue,
   autoRemove: (val: any) => testFalsy(val),
   resolveFilterValue: (val: any) => String(val).toLowerCase(),
@@ -137,12 +140,14 @@ export const filterFn_equalsString = constructFilterFn({
  *
  * Matching is case-sensitive and empty filter values are auto-removed.
  */
-export const filterFn_equalsStringSensitive = constructFilterFn({
-  filter: (dataValue, filterValue) => dataValue === filterValue,
-  autoRemove: (val: any) => testFalsy(val),
-  resolveFilterValue: (val: any) => String(val),
-  resolveDataValue: (val: any) => (val == null ? undefined : String(val)),
-})
+export const filterFn_equalsStringSensitive = /* @__PURE__ */ constructFilterFn(
+  {
+    filter: (dataValue, filterValue) => dataValue === filterValue,
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => String(val),
+    resolveDataValue: (val: any) => (val == null ? undefined : String(val)),
+  },
+)
 
 /**
  * Keeps rows whose stringified column value starts with the filter text.
@@ -150,7 +155,7 @@ export const filterFn_equalsStringSensitive = constructFilterFn({
  * Both values are lowercased before comparison, and empty filter values are
  * auto-removed.
  */
-export const filterFn_startsWith = constructFilterFn({
+export const filterFn_startsWith = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) =>
     Boolean(dataValue?.startsWith(filterValue)),
   autoRemove: (val: any) => testFalsy(val),
@@ -165,7 +170,7 @@ export const filterFn_startsWith = constructFilterFn({
  * Both values are lowercased before comparison, and empty filter values are
  * auto-removed.
  */
-export const filterFn_endsWith = constructFilterFn({
+export const filterFn_endsWith = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) => Boolean(dataValue?.endsWith(filterValue)),
   autoRemove: (val: any) => testFalsy(val),
   resolveFilterValue: (val: any) => String(val).toLowerCase(),
@@ -182,7 +187,7 @@ export const filterFn_endsWith = constructFilterFn({
  * filter value acts as an on/off flag: `false` and blank values are
  * auto-removed.
  */
-export const filterFn_empty = constructFilterFn({
+export const filterFn_empty = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue) => testValueEmpty(dataValue),
   autoRemove: (val: any) => testFalsy(val) || val === false,
 })
@@ -194,7 +199,7 @@ export const filterFn_empty = constructFilterFn({
  * filter value acts as an on/off flag: `false` and blank values are
  * auto-removed.
  */
-export const filterFn_notEmpty = constructFilterFn({
+export const filterFn_notEmpty = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue) => !testValueEmpty(dataValue),
   autoRemove: (val: any) => testFalsy(val) || val === false,
 })
@@ -207,7 +212,7 @@ export const filterFn_notEmpty = constructFilterFn({
  * Numeric values are compared numerically when both sides can be coerced to
  * numbers; otherwise normalized strings are compared.
  */
-export const filterFn_greaterThan = constructFilterFn({
+export const filterFn_greaterThan = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) =>
     compareGreaterThan(dataValue, filterValue),
   autoRemove: (val: any) => testFalsy(val),
@@ -218,7 +223,7 @@ export const filterFn_greaterThan = constructFilterFn({
  *
  * Delegates to the built-in greater-than and strict-equality comparisons.
  */
-export const filterFn_greaterThanOrEqualTo = constructFilterFn({
+export const filterFn_greaterThanOrEqualTo = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) =>
     compareGreaterThanOrEqualTo(dataValue, filterValue),
   autoRemove: (val: any) => testFalsy(val),
@@ -229,7 +234,7 @@ export const filterFn_greaterThanOrEqualTo = constructFilterFn({
  *
  * This is implemented as the inverse of greater-than-or-equal comparison.
  */
-export const filterFn_lessThan = constructFilterFn({
+export const filterFn_lessThan = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) =>
     !compareGreaterThanOrEqualTo(dataValue, filterValue),
   autoRemove: (val: any) => testFalsy(val),
@@ -240,7 +245,7 @@ export const filterFn_lessThan = constructFilterFn({
  *
  * This is implemented as the inverse of greater-than comparison.
  */
-export const filterFn_lessThanOrEqualTo = constructFilterFn({
+export const filterFn_lessThanOrEqualTo = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue) =>
     !compareGreaterThan(dataValue, filterValue),
   autoRemove: (val: any) => testFalsy(val),
@@ -253,7 +258,7 @@ export const filterFn_lessThanOrEqualTo = constructFilterFn({
  *
  * Blank range endpoints are treated as open-ended.
  */
-export const filterFn_between = constructFilterFn({
+export const filterFn_between = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValues: [unknown, unknown]) =>
     compareBetween(dataValue, filterValues, false),
   autoRemove: (val: any) =>
@@ -266,7 +271,7 @@ export const filterFn_between = constructFilterFn({
  *
  * Blank range endpoints are treated as open-ended.
  */
-export const filterFn_betweenInclusive = constructFilterFn({
+export const filterFn_betweenInclusive = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValues: [unknown, unknown]) =>
     compareBetween(dataValue, filterValues, true),
   autoRemove: (val: any) =>
@@ -282,7 +287,7 @@ export const filterFn_betweenInclusive = constructFilterFn({
  * range: non-numeric row values (`null`, `undefined`, strings, booleans)
  * never match.
  */
-export const filterFn_inNumberRange = constructFilterFn({
+export const filterFn_inNumberRange = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue: number, filterValue: [number, number]) => {
     // Guard against non-numeric values: JavaScript's loose relational
     // coercion would otherwise let values such as `null`, `''` and booleans
@@ -328,7 +333,7 @@ export const filterFn_inNumberRange = constructFilterFn({
  * parseable date strings. Blank or invalid endpoints become open-ended and
  * reversed endpoints are swapped. Rows without a valid date never match.
  */
-export const filterFn_inDateRange = constructFilterFn({
+export const filterFn_inDateRange = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue: number, filterValue: [number, number]) => {
     const [min, max] = filterValue
     return dataValue >= min && dataValue <= max
@@ -361,7 +366,7 @@ export const filterFn_inDateRange = constructFilterFn({
 /**
  * Keeps rows whose scalar column value equals at least one filter value.
  */
-export const filterFn_arrHas = constructFilterFn({
+export const filterFn_arrHas = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue: Array<unknown>) => {
     for (let i = 0; i < filterValue.length; i++) {
       if (dataValue === filterValue[i]) {
@@ -376,7 +381,7 @@ export const filterFn_arrHas = constructFilterFn({
 /**
  * Keeps rows whose array or string column value includes at least one filter value.
  */
-export const filterFn_arrIncludes = constructFilterFn({
+export const filterFn_arrIncludes = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue: Array<unknown>) => {
     if (typeof dataValue !== 'string' && !Array.isArray(dataValue)) {
       return false
@@ -395,7 +400,7 @@ export const filterFn_arrIncludes = constructFilterFn({
 /**
  * Keeps rows whose array column value includes every filter value.
  */
-export const filterFn_arrIncludesAll = constructFilterFn({
+export const filterFn_arrIncludesAll = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue: Array<unknown>) => {
     if (!Array.isArray(dataValue)) return false
     for (let i = 0; i < filterValue.length; i++) {
@@ -411,7 +416,7 @@ export const filterFn_arrIncludesAll = constructFilterFn({
 /**
  * Keeps rows whose array column value includes at least one filter value.
  */
-export const filterFn_arrIncludesSome = constructFilterFn({
+export const filterFn_arrIncludesSome = /* @__PURE__ */ constructFilterFn({
   filter: (dataValue, filterValue: Array<unknown>) => {
     if (!Array.isArray(dataValue)) return false
     for (let i = 0; i < filterValue.length; i++) {

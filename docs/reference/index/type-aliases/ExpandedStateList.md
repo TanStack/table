@@ -3,8 +3,6 @@ id: ExpandedStateList
 title: ExpandedStateList
 ---
 
-# Type Alias: ExpandedStateList
-
 ```ts
 type ExpandedStateList = Record<string, boolean>;
 ```

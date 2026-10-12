@@ -135,7 +135,7 @@ function App() @{
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      colSpan={header.colSpan}
+                      colspan={header.colSpan}
                       style={{
                         width: header.getSize(),
                       }}

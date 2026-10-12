@@ -3,8 +3,6 @@ id: row_getToggleSelectedHandler
 title: row_getToggleSelectedHandler
 ---
 
-# Function: row\_getToggleSelectedHandler()
-
 ```ts
 function row_getToggleSelectedHandler<TFeatures, TData>(row, opts?): (e) => void;
 ```
@@ -42,19 +40,7 @@ ids from the selection when rows are deselected.
 
 ## Returns
 
-```ts
-(e): void;
-```
-
-### Parameters
-
-#### e
-
-`unknown`
-
-### Returns
-
-`void`
+(`e`) => `void`
 
 ## Example
 

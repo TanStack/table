@@ -3,19 +3,17 @@ id: Column_ColumnGrouping
 title: Column_ColumnGrouping
 ---
 
-# Interface: Column\_ColumnGrouping
-
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L35)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L36)
 
 ## Properties
 
-### getCanGroup()
+### getCanGroup
 
 ```ts
 getCanGroup: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L39)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L40)
 
 Checks whether this column can currently be grouped.
 
@@ -25,13 +23,13 @@ Checks whether this column can currently be grouped.
 
 ***
 
-### getGroupedIndex()
+### getGroupedIndex
 
 ```ts
 getGroupedIndex: () => number;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L43)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L44)
 
 Finds this column's position in the ordered grouping state.
 
@@ -41,13 +39,13 @@ Finds this column's position in the ordered grouping state.
 
 ***
 
-### getIsGrouped()
+### getIsGrouped
 
 ```ts
 getIsGrouped: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L47)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L48)
 
 Checks whether this column id is present in grouping state.
 
@@ -57,35 +55,29 @@ Checks whether this column id is present in grouping state.
 
 ***
 
-### getToggleGroupingHandler()
+### getToggleGroupingHandler
 
 ```ts
 getToggleGroupingHandler: () => () => void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L51)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L52)
 
 Returns a function that toggles the grouping state of the column. This is useful for passing to the `onClick` prop of a button.
 
 #### Returns
 
-```ts
-(): void;
-```
-
-##### Returns
-
-`void`
+() => `void`
 
 ***
 
-### toggleGrouping()
+### toggleGrouping
 
 ```ts
 toggleGrouping: () => void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L55)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L56)
 
 Toggles the grouping state of the column.
 

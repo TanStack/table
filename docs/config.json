@@ -716,7 +716,7 @@
         { "label": "DisplayColumnDef", "to": "reference/index/type-aliases/DisplayColumnDef" },
         { "label": "GroupColumnDef", "to": "reference/index/type-aliases/GroupColumnDef" },
         { "label": "ColumnDefTemplate", "to": "reference/index/type-aliases/ColumnDefTemplate" },
-        { "label": "ColumnHelper", "to": "reference/index/type-aliases/ColumnHelper" },
+        { "label": "ColumnHelper", "to": "reference/index/interfaces/ColumnHelper" },
         { "label": "ColumnMeta", "to": "reference/index/interfaces/ColumnMeta" },
         { "label": "createColumnHelper", "to": "reference/index/functions/createColumnHelper" },
         { "label": "constructColumn", "to": "reference/index/functions/constructColumn" },
@@ -807,7 +807,6 @@
         { "label": "createFacetedUniqueValues", "to": "reference/index/functions/createFacetedUniqueValues" },
         { "label": "expandRows", "to": "reference/index/functions/expandRows" },
         { "label": "RowModelFns", "to": "reference/index/type-aliases/RowModelFns" },
-        { "label": "CreateRowModels", "to": "reference/index/type-aliases/CreateRowModels" },
         { "label": "CachedRowModels", "to": "reference/index/type-aliases/CachedRowModels" }
       ]
     },
@@ -878,7 +877,7 @@
       "label": "Header API Reference",
       "children": [
         { "label": "Header", "to": "reference/index/type-aliases/Header" },
-        { "label": "HeaderGroup", "to": "reference/index/type-aliases/HeaderGroup" },
+        { "label": "HeaderGroup", "to": "reference/index/interfaces/HeaderGroup" },
         { "label": "HeaderContext", "to": "reference/index/interfaces/HeaderContext" },
         { "label": "constructHeader", "to": "reference/index/functions/constructHeader" },
         { "label": "buildHeaderGroups", "to": "reference/index/functions/buildHeaderGroups" }

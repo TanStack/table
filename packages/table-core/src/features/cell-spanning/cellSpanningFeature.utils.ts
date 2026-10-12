@@ -14,8 +14,10 @@ import type {
 
 // Span index
 
-const EMPTY_ROW_SPANS: Record<string, Int32Array> = makeObjectMap()
-const EMPTY_COLUMN_INDEXES: Record<string, number> = makeObjectMap()
+const EMPTY_ROW_SPANS: Record<string, Int32Array> =
+  /* @__PURE__ */ makeObjectMap()
+const EMPTY_COLUMN_INDEXES: Record<string, number> =
+  /* @__PURE__ */ makeObjectMap()
 const EMPTY_COL_SPANS: Array<Int32Array | undefined> = []
 const NO_SECTION_STARTS: ReadonlyArray<number> = []
 

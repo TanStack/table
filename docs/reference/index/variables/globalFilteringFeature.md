@@ -3,8 +3,6 @@ id: globalFilteringFeature
 title: globalFilteringFeature
 ---
 
-# Variable: globalFilteringFeature
-
 ```ts
 const globalFilteringFeature: TableFeature;
 ```

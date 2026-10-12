@@ -3,8 +3,6 @@ id: createTableHookContexts
 title: createTableHookContexts
 ---
 
-# Function: createTableHookContexts()
-
 ```ts
 function createTableHookContexts<TFeatures, TData>(): TableHookContexts<TFeatures, TData>;
 ```

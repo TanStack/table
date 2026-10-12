@@ -285,10 +285,10 @@ function TableHeader({
   }
 
   if (header.isPlaceholder) {
-    return <th style={style} colSpan={header.colSpan} />
+    return <th style={style} colspan={header.colSpan} />
   }
 
-  <th style={style} colSpan={header.colSpan}>
+  <th style={style} colspan={header.colSpan}>
       <div className="header-row">
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="header-controls">

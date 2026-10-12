@@ -3,13 +3,11 @@ id: table_extendCellSelection
 title: table_extendCellSelection
 ---
 
-# Function: table\_extendCellSelection()
-
 ```ts
 function table_extendCellSelection<TFeatures, TData>(table, direction): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1076](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1076)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1044](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1044)
 
 Extends the active range one step in a direction, keeping its anchor fixed.
 

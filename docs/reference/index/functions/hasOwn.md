@@ -3,8 +3,6 @@ id: hasOwn
 title: hasOwn
 ---
 
-# Function: hasOwn()
-
 ```ts
 function hasOwn(obj, key): boolean;
 ```

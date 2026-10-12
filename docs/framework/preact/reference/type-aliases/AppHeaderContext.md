@@ -3,8 +3,6 @@ id: AppHeaderContext
 title: AppHeaderContext
 ---
 
-# Type Alias: AppHeaderContext\<TFeatures, TData, TValue, THeaderComponents\>
-
 ```ts
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```
@@ -54,7 +52,7 @@ Defined in: [createTableHook.tsx:71](https://github.com/TanStack/table/blob/main
 
 #### Type Declaration
 
-##### FlexRender()
+##### FlexRender
 
 ```ts
 FlexRender: () => ComponentChildren;

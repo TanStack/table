@@ -3,19 +3,17 @@ id: Cell_ColumnGrouping
 title: Cell_ColumnGrouping
 ---
 
-# Interface: Cell\_ColumnGrouping
-
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L78)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L79)
 
 ## Properties
 
-### getIsGrouped()
+### getIsGrouped
 
 ```ts
 getIsGrouped: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L82)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L83)
 
 Checks whether this cell represents the active grouping column.
 
@@ -25,13 +23,13 @@ Checks whether this cell represents the active grouping column.
 
 ***
 
-### getIsPlaceholder()
+### getIsPlaceholder
 
 ```ts
 getIsPlaceholder: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L86)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L87)
 
 Checks whether this cell is hidden as a grouping placeholder.
 

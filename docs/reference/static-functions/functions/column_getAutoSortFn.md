@@ -3,8 +3,6 @@ id: column_getAutoSortFn
 title: column_getAutoSortFn
 ---
 
-# Function: column\_getAutoSortFn()
-
 ```ts
 function column_getAutoSortFn<TFeatures, TData, TValue>(column): SortFn<TFeatures, TData>;
 ```

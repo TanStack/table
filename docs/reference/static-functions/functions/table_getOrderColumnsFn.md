@@ -3,8 +3,6 @@ id: table_getOrderColumnsFn
 title: table_getOrderColumnsFn
 ---
 
-# Function: table\_getOrderColumnsFn()
-
 ```ts
 function table_getOrderColumnsFn<TFeatures, TData>(table): (columns) => Column_Internal<TFeatures, TData, unknown>[];
 ```
@@ -34,19 +32,7 @@ columns in their original order, then delegates to grouping rules.
 
 ## Returns
 
-```ts
-(columns): Column_Internal<TFeatures, TData, unknown>[];
-```
-
-### Parameters
-
-#### columns
-
-[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
-
-### Returns
-
-[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
+(`columns`) => [`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 

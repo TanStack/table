@@ -3,8 +3,6 @@ id: AppColumnHelper
 title: AppColumnHelper
 ---
 
-# Interface: AppColumnHelper\<TFeatures, TData, TCellComponents, THeaderComponents\>
-
 Defined in: [types.ts:455](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L455)
 
 Enhanced column helper with pre-bound components in cell/header/footer
@@ -31,7 +29,7 @@ when defining columns.
 
 ## Properties
 
-### accessor()
+### accessor
 
 ```ts
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
@@ -68,7 +66,7 @@ The cell, header, and footer contexts include pre-bound components.
 
 ***
 
-### columns()
+### columns
 
 ```ts
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns[]];
@@ -97,7 +95,7 @@ TValue type.
 
 ***
 
-### display()
+### display
 
 ```ts
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
@@ -120,7 +118,7 @@ The cell, header, and footer contexts include pre-bound components.
 
 ***
 
-### group()
+### group
 
 ```ts
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;

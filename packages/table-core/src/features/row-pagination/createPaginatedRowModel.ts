@@ -1,5 +1,5 @@
 import { tableMemo } from '../../utils'
-import { expandRows } from '../row-expanding/createExpandedRowModel'
+import { expandRowModel } from '../../core/featureStubs'
 import { getDefaultPaginationState } from './rowPaginationFeature.utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -59,7 +59,7 @@ function _createPaginatedRowModel<
   let paginatedRowModel: RowModel<TFeatures, TData>
 
   if (!table.options.paginateExpandedRows) {
-    paginatedRowModel = expandRows({
+    paginatedRowModel = expandRowModel(table, {
       rows: paginatedRows,
       flatRows,
       rowsById,

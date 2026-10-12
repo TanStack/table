@@ -3,13 +3,11 @@ id: cell_getSelectionStartHandler
 title: cell_getSelectionStartHandler
 ---
 
-# Function: cell\_getSelectionStartHandler()
-
 ```ts
 function cell_getSelectionStartHandler<TFeatures, TData, TValue>(cell, _contextDocument?): (e) => void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1411](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1411)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1379](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1379)
 
 Creates a handler that begins a selection at this cell.
 
@@ -44,19 +42,7 @@ listener is attached here so a drag released outside the table still ends.
 
 ## Returns
 
-```ts
-(e): void;
-```
-
-### Parameters
-
-#### e
-
-`unknown`
-
-### Returns
-
-`void`
+(`e`) => `void`
 
 ## Example
 

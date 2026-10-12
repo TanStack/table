@@ -3,8 +3,6 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
-# Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 Defined in: [types.ts:807](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L807)
 
 ## Type Parameters
@@ -39,7 +37,7 @@ The features object that was passed to `createTableHook`.
 
 ***
 
-### createAppColumnHelper()
+### createAppColumnHelper
 
 ```ts
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
@@ -62,7 +60,7 @@ the cell/header/footer render props expose the bound components.
 
 ***
 
-### useAppTable()
+### useAppTable
 
 ```ts
 useAppTable: <TData, TSelected>(tableOptions, selector?) => AppOctaneTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
@@ -99,7 +97,7 @@ Creates a table with the `App*` wrapper components and registered
 
 ***
 
-### useCellContext()
+### useCellContext
 
 ```ts
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
@@ -122,7 +120,7 @@ your `cellComponents` and a context-bound `FlexRender`.
 
 ***
 
-### useHeaderContext()
+### useHeaderContext
 
 ```ts
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
@@ -146,7 +144,7 @@ context-bound `FlexRender`.
 
 ***
 
-### useTableContext()
+### useTableContext
 
 ```ts
 useTableContext: <TData, TSelected>() => AppOctaneTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;

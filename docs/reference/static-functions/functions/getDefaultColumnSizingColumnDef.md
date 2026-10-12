@@ -3,13 +3,11 @@ id: getDefaultColumnSizingColumnDef
 title: getDefaultColumnSizingColumnDef
 ---
 
-# Function: getDefaultColumnSizingColumnDef()
-
 ```ts
 function getDefaultColumnSizingColumnDef(): object;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L52)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L47)
 
 Creates the built-in sizing defaults for column definitions.
 

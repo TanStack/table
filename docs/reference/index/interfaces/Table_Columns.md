@@ -3,8 +3,6 @@ id: Table_Columns
 title: Table_Columns
 ---
 
-# Interface: Table\_Columns\<TFeatures, TData\>
-
 Defined in: [core/columns/coreColumnsFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L76)
 
 ## Extended by
@@ -24,7 +22,7 @@ Defined in: [core/columns/coreColumnsFeature.types.ts:76](https://github.com/Tan
 
 ## Properties
 
-### getAllColumns()
+### getAllColumns
 
 ```ts
 getAllColumns: () => Column<TFeatures, TData, unknown>[];
@@ -40,7 +38,7 @@ Normalizes `options.columns` into the table's nested column hierarchy.
 
 ***
 
-### getAllFlatColumns()
+### getAllFlatColumns
 
 ```ts
 getAllFlatColumns: () => Column<TFeatures, TData, unknown>[];
@@ -56,7 +54,7 @@ Flattens the nested column hierarchy, including parent/group columns.
 
 ***
 
-### getAllFlatColumnsById()
+### getAllFlatColumnsById
 
 ```ts
 getAllFlatColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
@@ -72,7 +70,7 @@ Returns a map of all flat columns by their ID.
 
 ***
 
-### getAllLeafColumns()
+### getAllLeafColumns
 
 ```ts
 getAllLeafColumns: () => Column<TFeatures, TData, unknown>[];
@@ -88,7 +86,7 @@ Collects all terminal leaf columns, excluding parent/group columns.
 
 ***
 
-### getAllLeafColumnsById()
+### getAllLeafColumnsById
 
 ```ts
 getAllLeafColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
@@ -104,7 +102,7 @@ Returns a map of all leaf-node columns by their ID. This does not include parent
 
 ***
 
-### getColumn()
+### getColumn
 
 ```ts
 getColumn: (columnId) =>
@@ -129,7 +127,7 @@ Returns a single column by its ID.
 
 ***
 
-### getDefaultColumnDef()
+### getDefaultColumnDef
 
 ```ts
 getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>;

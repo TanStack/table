@@ -20,7 +20,7 @@ import {
   useTable,
 } from '@tanstack/preact-table'
 import { makeData } from './makeData'
-import type { JSX } from 'preact'
+import type { InputHTMLAttributes } from 'preact'
 import type { Person } from './makeData'
 import type { Column, Table } from '@tanstack/preact-table'
 import './index.css'
@@ -354,7 +354,10 @@ function IndeterminateCheckbox({
   indeterminate?: boolean
   checked?: boolean
   onChange?: (event: Event) => void
-} & Omit<JSX.HTMLAttributes<HTMLInputElement>, 'checked' | 'onChange'>) {
+} & Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'checked' | 'onChange' | 'type' | 'role' | 'list'
+>) {
   const ref = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {

@@ -3,13 +3,11 @@ id: table_getSelectedCellCount
 title: table_getSelectedCellCount
 ---
 
-# Function: table\_getSelectedCellCount()
-
 ```ts
 function table_getSelectedCellCount<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1264](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1264)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1232](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1232)
 
 Returns the number of selected cells.
 

@@ -1,5 +1,18 @@
 # @tanstack/octane-table
 
+## 9.3.0
+
+### Minor Changes
+
+- [#6627](https://github.com/TanStack/table/pull/6627) [`47733cb`](https://github.com/TanStack/table/commit/47733cb2ca56398486d43d8d4724f8ac795666fb) - Require octane `>=0.12.0` and depend on `@tanstack/octane-store` `^0.13.0`. `AppTable`, `AppCell` and `AppHeader` now render their contexts directly as providers, since octane removed `Context.Provider`.
+
+## 9.2.8
+
+### Patch Changes
+
+- Updated dependencies [[`f1c3409`](https://github.com/TanStack/table/commit/f1c3409bb4aae6c07ebb1cb0a0723372ed64223e)]:
+  - @tanstack/table-core@9.2.8
+
 ## 9.2.6
 
 ### Patch Changes

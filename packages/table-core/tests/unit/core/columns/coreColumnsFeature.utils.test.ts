@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { constructTable } from '../../../../src'
+import {
+  columnGroupingFeature,
+  columnOrderingFeature,
+  constructTable,
+} from '../../../../src'
 import {
   column_getFlatColumns,
   column_getLeafColumns,
@@ -169,6 +173,78 @@ describe('table_getAllLeafColumns / table_getAllLeafColumnsById', () => {
     const byId = table_getAllLeafColumnsById(table)
     expect(Object.keys(byId)).toEqual(['a', 'b', 'c'])
     expect(byId['group']).toBeUndefined()
+  })
+})
+
+describe('leaf column order across optional features', () => {
+  function leafIds(table: { getAllLeafColumns: () => Array<{ id: string }> }) {
+    return table.getAllLeafColumns().map((column) => column.id)
+  }
+
+  it('should keep definition order without the ordering or grouping features', () => {
+    expect(leafIds(makeTable())).toEqual(['a', 'b', 'c'])
+    expect(
+      makeTable()
+        .getColumn('group')!
+        .getLeafColumns()
+        .map((column) => column.id),
+    ).toEqual(['a', 'b'])
+  })
+
+  it('should move grouped columns with only the grouping feature', () => {
+    const groupingFeatures = testFeatures({ columnGroupingFeature })
+    const table = constructTable<typeof groupingFeatures, Item>({
+      features: groupingFeatures,
+      columns: [
+        {
+          id: 'group',
+          header: 'Group',
+          columns: [
+            { accessorKey: 'a', id: 'a' },
+            { accessorKey: 'b', id: 'b' },
+          ],
+        },
+        { accessorKey: 'c', id: 'c' },
+      ],
+      data,
+      initialState: { grouping: ['b'] },
+    })
+
+    expect(leafIds(table)).toEqual(['b', 'a', 'c'])
+    expect(
+      table
+        .getColumn('group')!
+        .getLeafColumns()
+        .map((column) => column.id),
+    ).toEqual(['b', 'a'])
+
+    table.setOptions((old) => ({ ...old, groupedColumnMode: 'remove' }))
+    expect(leafIds(table)).toEqual(['a', 'c'])
+  })
+
+  it('should apply column order before moving grouped columns', () => {
+    const orderingFeatures = testFeatures({
+      columnGroupingFeature,
+      columnOrderingFeature,
+    })
+    const table = constructTable<typeof orderingFeatures, Item>({
+      features: orderingFeatures,
+      columns: [
+        {
+          id: 'group',
+          header: 'Group',
+          columns: [
+            { accessorKey: 'a', id: 'a' },
+            { accessorKey: 'b', id: 'b' },
+          ],
+        },
+        { accessorKey: 'c', id: 'c' },
+      ],
+      data,
+      initialState: { columnOrder: ['c', 'b', 'a'], grouping: ['a'] },
+    })
+
+    expect(leafIds(table)).toEqual(['a', 'c', 'b'])
   })
 })
 

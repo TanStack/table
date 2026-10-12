@@ -3,8 +3,6 @@ id: TableOptions_RowExpanding
 title: TableOptions_RowExpanding
 ---
 
-# Interface: TableOptions\_RowExpanding\<TFeatures, TData\>
-
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L36)
 
 ## Type Parameters
@@ -22,7 +20,7 @@ Defined in: [features/row-expanding/rowExpandingFeature.types.ts:36](https://git
 ### autoResetExpanded?
 
 ```ts
-optional autoResetExpanded: boolean;
+optional autoResetExpanded?: boolean;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L43)
@@ -34,7 +32,7 @@ Enables automatic expanded-state resets when page-altering table state changes.
 ### enableExpanding?
 
 ```ts
-optional enableExpanding: boolean;
+optional enableExpanding?: boolean;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L47)
@@ -43,10 +41,10 @@ Allows rows with subRows to be expanded.
 
 ***
 
-### getIsRowExpanded()?
+### getIsRowExpanded?
 
 ```ts
-optional getIsRowExpanded: (row) => boolean;
+optional getIsRowExpanded?: (row) => boolean;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L51)
@@ -65,10 +63,10 @@ If provided, allows you to override the default behavior of determining whether 
 
 ***
 
-### getRowCanExpand()?
+### getRowCanExpand?
 
 ```ts
-optional getRowCanExpand: (row) => boolean;
+optional getRowCanExpand?: (row) => boolean;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L55)
@@ -90,7 +88,7 @@ If provided, allows you to override the default behavior of determining whether 
 ### manualExpanding?
 
 ```ts
-optional manualExpanding: boolean;
+optional manualExpanding?: boolean;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L59)
@@ -102,7 +100,7 @@ Enables manual row expansion. If this is set to `true`, `getExpandedRowModel` wi
 ### onExpandedChange?
 
 ```ts
-optional onExpandedChange: OnChangeFn<ExpandedState>;
+optional onExpandedChange?: OnChangeFn<ExpandedState>;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L65)
@@ -116,7 +114,7 @@ slice without this callback.
 ### paginateExpandedRows?
 
 ```ts
-optional paginateExpandedRows: boolean;
+optional paginateExpandedRows?: boolean;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L69)

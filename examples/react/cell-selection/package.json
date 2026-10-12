@@ -16,8 +16,8 @@
     "@tanstack/react-devtools": "^0.10.13",
     "@tanstack/react-hotkeys": "^0.12.1",
     "@tanstack/react-store": "^0.11.2",
-    "@tanstack/react-table": "^9.2.6",
-    "@tanstack/react-table-devtools": "^9.2.5",
+    "@tanstack/react-table": "^9.2.8",
+    "@tanstack/react-table-devtools": "^9.2.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },

@@ -4,7 +4,7 @@ import {
   callMemoOrStaticFn,
   makeStateUpdater,
 } from '../../utils'
-import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
+import { getVisibleLeafColumns } from '../../core/featureStubs'
 import {
   column_getCanPin,
   column_getIsPinned,
@@ -38,6 +38,7 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './columnPinningFeature.utils'
+import { orderByColumnPinning } from './orderByColumnPinning'
 import type { TableFeature } from '../../types/TableFeatures'
 
 /**
@@ -122,16 +123,18 @@ export const columnPinningFeature: TableFeature = {
       table_getIsSomeColumnsPinned: {
         fn: (position) => table_getIsSomeColumnsPinned(table, position),
       },
+      // Internal: the core headers, row visible cells, and cell selection
+      // order by pinning through this
+      table__orderByColumnPinning: {
+        fn: (items, getColumnId, getItemsByColumnId) =>
+          orderByColumnPinning(table, items, getColumnId, getItemsByColumnId),
+      },
       // header groups
       table_getStartHeaderGroups: {
         fn: () => table_getStartHeaderGroups(table),
         memoDeps: () => [
           table.getAllColumns(),
-          callMemoOrStaticFn(
-            table,
-            'getVisibleLeafColumns',
-            table_getVisibleLeafColumns,
-          ),
+          getVisibleLeafColumns(table),
           table.atoms.columnPinning?.get()?.start,
           table.atoms.columnOrder?.get(),
         ],
@@ -140,11 +143,7 @@ export const columnPinningFeature: TableFeature = {
         fn: () => table_getCenterHeaderGroups(table),
         memoDeps: () => [
           table.getAllColumns(),
-          callMemoOrStaticFn(
-            table,
-            'getVisibleLeafColumns',
-            table_getVisibleLeafColumns,
-          ),
+          getVisibleLeafColumns(table),
           table.atoms.columnPinning?.get(),
           table.atoms.columnOrder?.get(),
         ],
@@ -153,11 +152,7 @@ export const columnPinningFeature: TableFeature = {
         fn: () => table_getEndHeaderGroups(table),
         memoDeps: () => [
           table.getAllColumns(),
-          callMemoOrStaticFn(
-            table,
-            'getVisibleLeafColumns',
-            table_getVisibleLeafColumns,
-          ),
+          getVisibleLeafColumns(table),
           table.atoms.columnPinning?.get()?.end,
           table.atoms.columnOrder?.get(),
         ],

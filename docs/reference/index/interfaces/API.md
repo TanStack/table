@@ -3,9 +3,7 @@ id: API
 title: API
 ---
 
-# Interface: API\<_TDeps, _TDepArgs\>
-
-Defined in: [utils.ts:514](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L514)
+Defined in: [utils.ts:508](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L508)
 
 ## Type Parameters
 
@@ -19,13 +17,13 @@ Defined in: [utils.ts:514](https://github.com/TanStack/table/blob/main/packages/
 
 ## Properties
 
-### fn()
+### fn
 
 ```ts
 fn: (...args) => any;
 ```
 
-Defined in: [utils.ts:515](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L515)
+Defined in: [utils.ts:509](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L509)
 
 #### Parameters
 
@@ -39,13 +37,13 @@ Defined in: [utils.ts:515](https://github.com/TanStack/table/blob/main/packages/
 
 ***
 
-### memoDeps()?
+### memoDeps?
 
 ```ts
-optional memoDeps: (depArgs?) => any[] | undefined;
+optional memoDeps?: (depArgs?) => any[] | undefined;
 ```
 
-Defined in: [utils.ts:516](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L516)
+Defined in: [utils.ts:510](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L510)
 
 #### Parameters
 

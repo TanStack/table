@@ -4,7 +4,7 @@ description: Create and render Table v9 with the react adapter. Route reusable c
 metadata:
   type: framework
   library: '@tanstack/react-table'
-  library_version: '9.2.6'
+  library_version: '9.2.8'
   framework: react
 requires:
   - '@tanstack/table-core#core'

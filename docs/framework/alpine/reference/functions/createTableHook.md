@@ -3,8 +3,6 @@ id: createTableHook
 title: createTableHook
 ---
 
-# Function: createTableHook()
-
 ```ts
 function createTableHook<TFeatures>(__namedParameters): object;
 ```
@@ -33,7 +31,7 @@ Defined in: [createTableHook.ts:26](https://github.com/TanStack/table/blob/main/
 appFeatures: TFeatures;
 ```
 
-### createAppColumnHelper()
+### createAppColumnHelper
 
 ```ts
 createAppColumnHelper: <TData>() => ColumnHelper<TFeatures, TData>;
@@ -49,7 +47,7 @@ createAppColumnHelper: <TData>() => ColumnHelper<TFeatures, TData>;
 
 `ColumnHelper`\<`TFeatures`, `TData`\>
 
-### createAppTable()
+### createAppTable
 
 ```ts
 createAppTable: <TData>(tableOptions, selector?) => AppAlpineTable<TFeatures, TData>;

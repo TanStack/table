@@ -3,8 +3,6 @@ id: LitTable
 title: LitTable
 ---
 
-# Type Alias: LitTable\<TFeatures, TData, TSelected\>
-
 ```ts
 type LitTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```

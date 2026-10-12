@@ -3,13 +3,11 @@ id: table_getFlatHeaders
 title: table_getFlatHeaders
 ---
 
-# Function: table\_getFlatHeaders()
-
 ```ts
 function table_getFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L168)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L127)
 
 Flattens every header from every header group into one array.
 

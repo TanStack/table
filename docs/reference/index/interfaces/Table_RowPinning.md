@@ -3,8 +3,6 @@ id: Table_RowPinning
 title: Table_RowPinning
 ---
 
-# Interface: Table\_RowPinning\<TFeatures, TData\>
-
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L65)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:65](https://github.
 
 ## Properties
 
-### getBottomRows()
+### getBottomRows
 
 ```ts
 getBottomRows: () => Row<TFeatures, TData>[];
@@ -35,7 +33,7 @@ Gets rows pinned to the bottom region.
 
 ***
 
-### getCenterRows()
+### getCenterRows
 
 ```ts
 getCenterRows: () => Row<TFeatures, TData>[];
@@ -51,7 +49,7 @@ Gets rows that are not pinned to the top or bottom region.
 
 ***
 
-### getIsSomeRowsPinned()
+### getIsSomeRowsPinned
 
 ```ts
 getIsSomeRowsPinned: (position?) => boolean;
@@ -73,7 +71,7 @@ Checks whether any rows are pinned, optionally limited to one region.
 
 ***
 
-### getTopRows()
+### getTopRows
 
 ```ts
 getTopRows: () => Row<TFeatures, TData>[];
@@ -89,7 +87,7 @@ Gets rows pinned to the top region.
 
 ***
 
-### resetRowPinning()
+### resetRowPinning
 
 ```ts
 resetRowPinning: (defaultState?) => void;
@@ -113,7 +111,7 @@ Pass `true` to ignore initial state and reset to empty top/bottom arrays.
 
 ***
 
-### setRowPinning()
+### setRowPinning
 
 ```ts
 setRowPinning: (updater) => void;

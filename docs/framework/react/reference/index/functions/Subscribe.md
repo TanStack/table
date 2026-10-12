@@ -3,15 +3,13 @@ id: Subscribe
 title: Subscribe
 ---
 
-# Function: Subscribe()
-
 ## Call Signature
 
 ```ts
 function Subscribe<TSourceValue>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [react-table/src/Subscribe.ts:122](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L122)
+Defined in: [src/Subscribe.ts:122](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L122)
 
 A React component that allows you to subscribe to the table state.
 
@@ -79,7 +77,7 @@ contextual typing works. This standalone component uses a union `props` type.
 function Subscribe<TSourceValue, TSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [react-table/src/Subscribe.ts:125](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L125)
+Defined in: [src/Subscribe.ts:125](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L125)
 
 A React component that allows you to subscribe to the table state.
 
@@ -151,7 +149,7 @@ contextual typing works. This standalone component uses a union `props` type.
 function Subscribe<TFeatures, TSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [react-table/src/Subscribe.ts:128](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L128)
+Defined in: [src/Subscribe.ts:128](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L128)
 
 A React component that allows you to subscribe to the table state.
 

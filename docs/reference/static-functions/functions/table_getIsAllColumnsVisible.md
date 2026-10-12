@@ -3,13 +3,11 @@ id: table_getIsAllColumnsVisible
 title: table_getIsAllColumnsVisible
 ---
 
-# Function: table\_getIsAllColumnsVisible()
-
 ```ts
 function table_getIsAllColumnsVisible<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:360](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L360)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:340](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L340)
 
 Checks whether every leaf column is currently visible.
 

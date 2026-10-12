@@ -3,8 +3,6 @@ id: RowSpanContext
 title: RowSpanContext
 ---
 
-# Interface: RowSpanContext\<TFeatures, TData, TValue\>
-
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L51)
 
 Context passed to a `spanRows` predicate for each candidate row.

@@ -48,7 +48,14 @@ export interface Table_RowPagination<
   in out _TFeatures extends TableFeatures,
   in out _TData extends RowData,
 > {
-  _autoResetPageIndex: () => void
+  /**
+   * Resets the page index to `0` after page-altering changes such as new
+   * data, filtering, sorting, or grouping.
+   *
+   * Honors `autoResetAll`, `autoResetPageIndex`, and `manualPagination`.
+   * Called by the row models; you rarely need to invoke it yourself.
+   */
+  autoResetPageIndex: () => void
   /**
    * Checks whether the current page index can move forward.
    */

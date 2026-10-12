@@ -3,8 +3,6 @@ id: row_getIsSelected
 title: row_getIsSelected
 ---
 
-# Function: row\_getIsSelected()
-
 ```ts
 function row_getIsSelected<TFeatures, TData>(row): boolean;
 ```

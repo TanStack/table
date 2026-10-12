@@ -158,7 +158,7 @@ function App() @{
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th key={header.id} colspan={header.colSpan}>
                     <div className="nowrap">
                       {header.isPlaceholder ? null : (
                         <table.FlexRender header={header} />

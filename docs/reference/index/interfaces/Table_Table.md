@@ -3,8 +3,6 @@ id: Table_Table
 title: Table_Table
 ---
 
-# Interface: Table\_Table\<TFeatures, TData\>
-
 Defined in: [core/table/coreTablesFeature.types.ts:250](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L250)
 
 ## Extends
@@ -70,7 +68,7 @@ Cache of the `initCellInstanceData` functions for features that define one.
 ### \_cellPrototype?
 
 ```ts
-optional _cellPrototype: object;
+optional _cellPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:171](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L171)
@@ -126,7 +124,7 @@ Cache of the `initColumnInstanceData` functions for features that define one.
 ### \_columnPrototype?
 
 ```ts
-optional _columnPrototype: object;
+optional _columnPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L181)
@@ -234,7 +232,7 @@ Cache of the `initHeaderInstanceData` functions for features that define one.
 ### \_headerPrototype?
 
 ```ts
-optional _headerPrototype: object;
+optional _headerPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L201)
@@ -334,7 +332,7 @@ The row models that are enabled for the table.
 ### \_rowPrototype?
 
 ```ts
-optional _rowPrototype: object;
+optional _rowPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L213)
@@ -417,7 +415,7 @@ A read-only reference to the table's current options.
 ### optionsStore?
 
 ```ts
-readonly optional optionsStore: Atom<TableOptions<TFeatures, TData>>;
+readonly optional optionsStore?: Atom<TableOptions<TFeatures, TData>>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:242](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L242)
@@ -432,7 +430,7 @@ options as plain resolved data instead of backing them with an atom.
 
 ***
 
-### reset()
+### reset
 
 ```ts
 reset: () => void;
@@ -453,7 +451,7 @@ reset hooks for mutable, transient table-instance data.
 
 ***
 
-### setOptions()
+### setOptions
 
 ```ts
 setOptions: (newOptions) => void;

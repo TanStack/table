@@ -3,8 +3,6 @@ id: table_firstPage
 title: table_firstPage
 ---
 
-# Function: table\_firstPage()
-
 ```ts
 function table_firstPage<TFeatures, TData>(table): void;
 ```

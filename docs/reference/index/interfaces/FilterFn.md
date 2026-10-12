@@ -3,8 +3,6 @@ id: FilterFn
 title: FilterFn
 ---
 
-# Interface: FilterFn()\<TFeatures, TData\>
-
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L60)
 
 ## Type Parameters
@@ -54,7 +52,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:64](https
 ### autoRemove?
 
 ```ts
-optional autoRemove: ColumnFilterAutoRemoveTestFn<TFeatures, TData, unknown>;
+optional autoRemove?: ColumnFilterAutoRemoveTestFn<TFeatures, TData, unknown>;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L79)
@@ -72,7 +70,7 @@ regardless.
 ### resolveDataValue?
 
 ```ts
-optional resolveDataValue: TransformDataValueFn;
+optional resolveDataValue?: TransformDataValueFn;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L92)
@@ -86,7 +84,7 @@ value. Only honored by filter functions built with `constructFilterFn`
 ### resolveFilterValue?
 
 ```ts
-optional resolveFilterValue: TransformFilterValueFn<TFeatures, TData, unknown>;
+optional resolveFilterValue?: TransformFilterValueFn<TFeatures, TData, unknown>;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L86)

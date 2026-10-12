@@ -3,8 +3,6 @@ id: AppSvelteTable
 title: AppSvelteTable
 ---
 
-# Type Alias: AppSvelteTable\<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppSvelteTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = SvelteTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```

@@ -195,7 +195,7 @@ export function VisibilityTable() @{
 				@for (const hg of table.getHeaderGroups(); key hg.id) {
 					<tr>
 						@for (const header of hg.headers; key header.id) {
-							<th id={'v-th-' + header.id} colSpan={header.colSpan}>
+							<th id={'v-th-' + header.id} colspan={header.colSpan}>
 								{header.isPlaceholder
 									? null
 									: flexRender(header.column.columnDef.header, header.getContext())}

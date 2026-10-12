@@ -3,13 +3,11 @@ id: cell_getCanSelect
 title: cell_getCanSelect
 ---
 
-# Function: cell\_getCanSelect()
-
 ```ts
 function cell_getCanSelect<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:515](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L515)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:483](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L483)
 
 Checks whether this cell can currently be selected.
 

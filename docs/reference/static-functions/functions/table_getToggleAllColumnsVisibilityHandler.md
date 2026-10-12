@@ -3,13 +3,11 @@ id: table_getToggleAllColumnsVisibilityHandler
 title: table_getToggleAllColumnsVisibilityHandler
 ---
 
-# Function: table\_getToggleAllColumnsVisibilityHandler()
-
 ```ts
 function table_getToggleAllColumnsVisibilityHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:404](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L404)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:384](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L384)
 
 Creates a checkbox-style handler that shows or hides all columns.
 
@@ -34,19 +32,7 @@ checked state means "all columns visible".
 
 ## Returns
 
-```ts
-(e): void;
-```
-
-### Parameters
-
-#### e
-
-`unknown`
-
-### Returns
-
-`void`
+(`e`) => `void`
 
 ## Example
 

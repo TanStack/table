@@ -3,8 +3,6 @@ id: tableMemo
 title: tableMemo
 ---
 
-# Function: tableMemo()
-
 ```ts
 function tableMemo<TFeatures, TDeps, TDepArgs, TResult>(__namedParameters): (depArgs?) => TResult;
 ```
@@ -41,16 +39,4 @@ This wraps `memo` with table debug options and feature metadata so row models an
 
 ## Returns
 
-```ts
-(depArgs?): TResult;
-```
-
-### Parameters
-
-#### depArgs?
-
-`TDepArgs`
-
-### Returns
-
-`TResult`
+(`depArgs?`) => `TResult`

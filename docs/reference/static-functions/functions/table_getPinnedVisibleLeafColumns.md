@@ -3,15 +3,13 @@ id: table_getPinnedVisibleLeafColumns
 title: table_getPinnedVisibleLeafColumns
 ---
 
-# Function: table\_getPinnedVisibleLeafColumns()
-
 ```ts
 function table_getPinnedVisibleLeafColumns<TFeatures, TData>(table, position?):
   | Column<TFeatures, TData, unknown>[]
   | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:892](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L892)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:864](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L864)
 
 Resolves visible leaf columns for a requested pinning region.
 
@@ -36,7 +34,8 @@ or `'end'` to get one partition.
 
 ### position?
 
-[`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md) | `"center"`
+  \| [`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md)
+  \| `"center"`
 
 ## Returns
 

@@ -3,8 +3,6 @@ id: AppHeaderPropsWithoutSelector
 title: AppHeaderPropsWithoutSelector
 ---
 
-# Interface: AppHeaderPropsWithoutSelector\<TFeatures, TData, TValue, THeaderComponents\>
-
 Defined in: [types.ts:635](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L635)
 
 Props for AppHeader/AppFooter component — without selector.
@@ -29,7 +27,7 @@ Props for AppHeader/AppFooter component — without selector.
 
 ## Properties
 
-### children()
+### children
 
 ```ts
 children: (header) => unknown;
@@ -62,7 +60,7 @@ Defined in: [types.ts:641](https://github.com/TanStack/table/blob/main/packages/
 ### selector?
 
 ```ts
-optional selector: undefined;
+optional selector?: undefined;
 ```
 
 Defined in: [types.ts:646](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L646)

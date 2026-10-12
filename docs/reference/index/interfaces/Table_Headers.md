@@ -3,8 +3,6 @@ id: Table_Headers
 title: Table_Headers
 ---
 
-# Interface: Table\_Headers\<TFeatures, TData\>
-
 Defined in: [core/headers/coreHeadersFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L8)
 
 ## Extended by
@@ -24,7 +22,7 @@ Defined in: [core/headers/coreHeadersFeature.types.ts:8](https://github.com/TanS
 
 ## Properties
 
-### getFlatHeaders()
+### getFlatHeaders
 
 ```ts
 getFlatHeaders: () => Header<TFeatures, TData, unknown>[];
@@ -41,7 +39,7 @@ placeholder headers.
 
 ***
 
-### getFooterGroups()
+### getFooterGroups
 
 ```ts
 getFooterGroups: () => HeaderGroup<TFeatures, TData>[];
@@ -57,7 +55,7 @@ Builds footer groups by reversing the current header group order.
 
 ***
 
-### getHeaderGroups()
+### getHeaderGroups
 
 ```ts
 getHeaderGroups: () => HeaderGroup<TFeatures, TData>[];
@@ -74,7 +72,7 @@ and pinning state.
 
 ***
 
-### getLeafHeaders()
+### getLeafHeaders
 
 ```ts
 getLeafHeaders: () => Header<TFeatures, TData, unknown>[];

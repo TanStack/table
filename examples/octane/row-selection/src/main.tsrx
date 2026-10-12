@@ -149,7 +149,7 @@ function App() @{
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th key={header.id} colspan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
                           <table.FlexRender header={header} />
@@ -190,7 +190,7 @@ function App() @{
                   onChange={table.getToggleAllPageRowsSelectedHandler()}
                 />
               </td>
-              <td colSpan={20}>
+              <td colspan={20}>
                 Page Rows ({table.getRowModel().rows.length.toLocaleString()})
               </td>
             </tr>

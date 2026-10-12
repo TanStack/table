@@ -3,8 +3,6 @@ id: AppCellContext
 title: AppCellContext
 ---
 
-# Type Alias: AppCellContext\<TFeatures, TData, TValue, TCellComponents\>
-
 ```ts
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
@@ -44,7 +42,7 @@ Defined in: [createTableHook.tsx:51](https://github.com/TanStack/table/blob/main
 
 #### Type Declaration
 
-##### FlexRender()
+##### FlexRender
 
 ```ts
 FlexRender: () => ComponentChildren;

@@ -3,8 +3,6 @@ id: table_getToggleAllRowsExpandedHandler
 title: table_getToggleAllRowsExpandedHandler
 ---
 
-# Function: table\_getToggleAllRowsExpandedHandler()
-
 ```ts
 function table_getToggleAllRowsExpandedHandler<TFeatures, TData>(table): (_e) => void;
 ```
@@ -31,19 +29,7 @@ Creates an event handler that toggles all rows expanded.
 
 ## Returns
 
-```ts
-(_e): void;
-```
-
-### Parameters
-
-#### \_e
-
-`unknown`
-
-### Returns
-
-`void`
+(`_e`) => `void`
 
 ## Example
 

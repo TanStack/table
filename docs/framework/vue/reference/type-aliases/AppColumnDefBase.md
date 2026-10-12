@@ -3,32 +3,30 @@ id: AppColumnDefBase
 title: AppColumnDefBase
 ---
 
-# Type Alias: AppColumnDefBase\<TFeatures, TData, TValue, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:63](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L63)
+Defined in: [createTableHook.ts:63](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L63)
 
 ## Type Declaration
 
 ### cell?
 
 ```ts
-optional cell: AppColumnDefTemplate<AppCellContext<TFeatures, TData, TValue, TCellComponents>>;
+optional cell?: AppColumnDefTemplate<AppCellContext<TFeatures, TData, TValue, TCellComponents>>;
 ```
 
 ### footer?
 
 ```ts
-optional footer: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
+optional footer?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
 ```
 
 ### header?
 
 ```ts
-optional header: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
+optional header?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
 ```
 
 ## Type Parameters

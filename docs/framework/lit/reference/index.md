@@ -3,8 +3,6 @@ id: "@tanstack/lit-table"
 title: "@tanstack/lit-table"
 ---
 
-# @tanstack/lit-table
-
 ## Classes
 
 - [SubscribeDirective](classes/SubscribeDirective.md)

@@ -3,8 +3,6 @@ id: TableOptions_Core
 title: TableOptions_Core
 ---
 
-# Interface: TableOptions\_Core\<TFeatures, TData\>
-
 Defined in: [types/TableOptions.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L33)
 
 Core options that are always available on a table, before optional feature
@@ -29,7 +27,7 @@ options are mixed in.
 ### atoms?
 
 ```ts
-readonly optional atoms: Partial<{ [K in string | number | symbol]: Atom<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>[K]> }>;
+readonly optional atoms?: Partial<{ [K in string | number | symbol]: Atom<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>[K]> }>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L109)
@@ -49,7 +47,7 @@ model for app-managed table state slices.
 ### autoResetAll?
 
 ```ts
-readonly optional autoResetAll: boolean;
+readonly optional autoResetAll?: boolean;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L113)
@@ -97,7 +95,7 @@ The data for the table to display. When the `data` option changes reference, the
 ### defaultColumn?
 
 ```ts
-optional defaultColumn: Partial<ColumnDef<TFeatures, TData, unknown>>;
+optional defaultColumn?: Partial<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
 Defined in: [core/columns/coreColumnsFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L73)
@@ -132,10 +130,10 @@ slots (`tableMeta`, `columnMeta`).
 
 ***
 
-### getRowId()?
+### getRowId?
 
 ```ts
-optional getRowId: (originalRow, index, parent?) => string;
+optional getRowId?: (originalRow, index, parent?) => string;
 ```
 
 Defined in: [core/rows/coreRowsFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L115)
@@ -172,10 +170,10 @@ getRowId: row => row.userId
 
 ***
 
-### getSubRows()?
+### getSubRows?
 
 ```ts
-optional getSubRows: (originalRow, index) => readonly TData[] | undefined;
+optional getSubRows?: (originalRow, index) => readonly TData[] | undefined;
 ```
 
 Defined in: [core/rows/coreRowsFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L124)
@@ -211,7 +209,7 @@ getSubRows: row => row.subRows
 ### initialState?
 
 ```ts
-readonly optional initialState: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
+readonly optional initialState?: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L131)
@@ -230,7 +228,7 @@ object later does not reset table state, so it does not need to be stable.
 ### key?
 
 ```ts
-readonly optional key: string;
+readonly optional key?: string;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L124)
@@ -246,10 +244,10 @@ not required unless the table is passed to devtools.
 
 ***
 
-### mergeOptions()?
+### mergeOptions?
 
 ```ts
-readonly optional mergeOptions: (defaultOptions, options) => TableOptions<TFeatures, TData>;
+readonly optional mergeOptions?: (defaultOptions, options) => TableOptions<TFeatures, TData>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L135)
@@ -279,7 +277,7 @@ This option is used to optionally implement the merging of table options.
 ### meta?
 
 ```ts
-readonly optional meta: ExtractTableMeta<TFeatures, TData>;
+readonly optional meta?: ExtractTableMeta<TFeatures, TData>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L145)
@@ -298,7 +296,7 @@ Declare its type per-table via the `tableMeta` type-only slot on the
 ### renderFallbackValue?
 
 ```ts
-optional renderFallbackValue: any;
+optional renderFallbackValue?: any;
 ```
 
 Defined in: [core/cells/coreCellsFeature.types.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L67)
@@ -314,7 +312,7 @@ Value used when the desired value is not found in the data.
 ### state?
 
 ```ts
-readonly optional state: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
+readonly optional state?: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L153)

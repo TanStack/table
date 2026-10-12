@@ -3,13 +3,11 @@ id: AppColumnHelper
 title: AppColumnHelper
 ---
 
-# Type Alias: AppColumnHelper\<TFeatures, TData, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:125](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L125)
+Defined in: [createTableHook.ts:125](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L125)
 
 ## Type Parameters
 
@@ -31,13 +29,13 @@ Defined in: [packages/vue-table/src/createTableHook.ts:125](https://github.com/T
 
 ## Properties
 
-### accessor()
+### accessor
 
 ```ts
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:131](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L131)
+Defined in: [createTableHook.ts:131](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L131)
 
 #### Type Parameters
 
@@ -65,13 +63,13 @@ Defined in: [packages/vue-table/src/createTableHook.ts:131](https://github.com/T
 
 ***
 
-### columns()
+### columns
 
 ```ts
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:158](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L158)
+Defined in: [createTableHook.ts:158](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L158)
 
 #### Type Parameters
 
@@ -91,13 +89,13 @@ Defined in: [packages/vue-table/src/createTableHook.ts:158](https://github.com/T
 
 ***
 
-### display()
+### display
 
 ```ts
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:161](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L161)
+Defined in: [createTableHook.ts:161](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L161)
 
 #### Parameters
 
@@ -111,13 +109,13 @@ Defined in: [packages/vue-table/src/createTableHook.ts:161](https://github.com/T
 
 ***
 
-### group()
+### group
 
 ```ts
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:169](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L169)
+Defined in: [createTableHook.ts:169](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L169)
 
 #### Parameters
 

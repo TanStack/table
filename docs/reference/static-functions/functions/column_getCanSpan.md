@@ -3,13 +3,11 @@ id: column_getCanSpan
 title: column_getCanSpan
 ---
 
-# Function: column\_getCanSpan()
-
 ```ts
 function column_getCanSpan<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L124)
+Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L126)
 
 Checks whether this column takes part in cell spanning.
 

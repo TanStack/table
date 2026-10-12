@@ -3,13 +3,11 @@ id: table_getHeaderGroups
 title: table_getHeaderGroups
 ---
 
-# Function: table\_getHeaderGroups()
-
 ```ts
 function table_getHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L85)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L80)
 
 Builds visible header groups for the current column tree.
 

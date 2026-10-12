@@ -3,13 +3,11 @@ id: table_getIsSomeColumnsPinned
 title: table_getIsSomeColumnsPinned
 ---
 
-# Function: table\_getIsSomeColumnsPinned()
-
 ```ts
 function table_getIsSomeColumnsPinned<TFeatures, TData>(table, position?): boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:355](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L355)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:343](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L343)
 
 Checks whether any columns are pinned.
 

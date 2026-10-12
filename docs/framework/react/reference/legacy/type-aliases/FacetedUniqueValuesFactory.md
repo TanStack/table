@@ -3,13 +3,11 @@ id: FacetedUniqueValuesFactory
 title: FacetedUniqueValuesFactory
 ---
 
-# Type Alias: FacetedUniqueValuesFactory()\<TData\>
-
 ```ts
 type FacetedUniqueValuesFactory<TData> = (table, columnId) => () => Map<any, number>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:200](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L200)
+Defined in: [src/useLegacyTable.ts:200](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L200)
 
 Faceted unique values factory function type from v8 API
 
@@ -31,10 +29,4 @@ Faceted unique values factory function type from v8 API
 
 ## Returns
 
-```ts
-(): Map<any, number>;
-```
-
-### Returns
-
-`Map`\<`any`, `number`\>
+() => `Map`\<`any`, `number`\>

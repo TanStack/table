@@ -3,8 +3,6 @@ id: ColumnDef_CellSelection
 title: ColumnDef_CellSelection
 ---
 
-# Interface: ColumnDef\_CellSelection
-
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L151)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:151](https://
 ### enableCellSelection?
 
 ```ts
-optional enableCellSelection: boolean;
+optional enableCellSelection?: boolean;
 ```
 
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L155)

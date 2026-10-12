@@ -3,8 +3,6 @@ id: AppFlexRender
 title: AppFlexRender
 ---
 
-# Variable: AppFlexRender
-
 ```ts
 const AppFlexRender: DefineComponent<ExtractPropTypes<{
   cell: {
@@ -52,4 +50,4 @@ const AppFlexRender: DefineComponent<ExtractPropTypes<{
 }, any>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:295](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L295)
+Defined in: [createTableHook.ts:295](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L295)

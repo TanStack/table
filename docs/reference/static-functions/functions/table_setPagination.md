@@ -3,8 +3,6 @@ id: table_setPagination
 title: table_setPagination
 ---
 
-# Function: table\_setPagination()
-
 ```ts
 function table_setPagination<TFeatures, TData>(table, updater): void;
 ```

@@ -3,13 +3,11 @@ id: table_getDefaultColumnDef
 title: table_getDefaultColumnDef
 ---
 
-# Function: table\_getDefaultColumnDef()
-
 ```ts
 function table_getDefaultColumnDef<TFeatures, TData>(table): Partial<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L80)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L76)
 
 Merges built-in, feature, and user default column definitions.
 

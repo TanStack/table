@@ -3,8 +3,6 @@ id: flexRenderComponent
 title: flexRenderComponent
 ---
 
-# Function: flexRenderComponent()
-
 ## Call Signature
 
 ```ts

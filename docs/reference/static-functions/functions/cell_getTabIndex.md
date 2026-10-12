@@ -3,13 +3,11 @@ id: cell_getTabIndex
 title: cell_getTabIndex
 ---
 
-# Function: cell\_getTabIndex()
-
 ```ts
 function cell_getTabIndex<TFeatures, TData, TValue>(cell): number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:637](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L637)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:605](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L605)
 
 Returns `0` for the focused cell and `-1` otherwise, for roving tabindex.
 

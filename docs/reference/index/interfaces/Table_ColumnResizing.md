@@ -3,13 +3,11 @@ id: Table_ColumnResizing
 title: Table_ColumnResizing
 ---
 
-# Interface: Table\_ColumnResizing
-
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L48)
 
 ## Properties
 
-### resetHeaderSizeInfo()
+### resetHeaderSizeInfo
 
 ```ts
 resetHeaderSizeInfo: (defaultState?) => void;
@@ -33,7 +31,7 @@ Pass `true` to ignore initial state and reset to the no-drag default state.
 
 ***
 
-### setColumnResizing()
+### setColumnResizing
 
 ```ts
 setColumnResizing: (updater) => void;

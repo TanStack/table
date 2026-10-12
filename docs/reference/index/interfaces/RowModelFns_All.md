@@ -3,8 +3,6 @@ id: RowModelFns_All
 title: RowModelFns_All
 ---
 
-# Interface: RowModelFns\_All\<TFeatures, TData\>
-
 Defined in: [types/RowModelFns.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L25)
 
 ## Extends
@@ -26,10 +24,10 @@ Defined in: [types/RowModelFns.ts:25](https://github.com/TanStack/table/blob/mai
 ### aggregationFns?
 
 ```ts
-optional aggregationFns: Record<string, AggregationFnDef<TFeatures, TData, any, any>>;
+optional aggregationFns?: Record<string, AggregationFnDef<TFeatures, TData, any, any>>;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L99)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L85)
 
 #### Inherited from
 
@@ -42,7 +40,7 @@ Partial.aggregationFns
 ### filterFns?
 
 ```ts
-optional filterFns: Record<string, FilterFn<TFeatures, TData>>;
+optional filterFns?: Record<string, FilterFn<TFeatures, TData>>;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L57)
@@ -58,7 +56,7 @@ Partial.filterFns
 ### sortFns?
 
 ```ts
-optional sortFns: Record<string, SortFn<TFeatures, TData>>;
+optional sortFns?: Record<string, SortFn<TFeatures, TData>>;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L29)

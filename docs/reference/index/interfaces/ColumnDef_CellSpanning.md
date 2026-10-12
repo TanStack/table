@@ -3,8 +3,6 @@ id: ColumnDef_CellSpanning
 title: ColumnDef_CellSpanning
 ---
 
-# Interface: ColumnDef\_CellSpanning\<TFeatures, TData, TValue\>
-
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L78)
 
 ## Type Parameters
@@ -26,7 +24,7 @@ Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:78](https://git
 ### enableCellSpanning?
 
 ```ts
-optional enableCellSpanning: boolean;
+optional enableCellSpanning?: boolean;
 ```
 
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L87)
@@ -39,7 +37,7 @@ Defaults to `true`.
 ### spanColumns?
 
 ```ts
-optional spanColumns: number | (context) => number;
+optional spanColumns?: number | ((context) => number);
 ```
 
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L102)
@@ -63,7 +61,7 @@ region". Hidden columns are not counted.
 ### spanRows?
 
 ```ts
-optional spanRows: boolean | (context) => boolean;
+optional spanRows?: boolean | ((context) => boolean);
 ```
 
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L127)

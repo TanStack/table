@@ -3,8 +3,6 @@ id: TableOptions_ColumnSizing
 title: TableOptions_ColumnSizing
 ---
 
-# Interface: TableOptions\_ColumnSizing
-
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L48)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/column-sizing/columnSizingFeature.types.ts:48](https://git
 ### onColumnSizingChange?
 
 ```ts
-optional onColumnSizingChange: OnChangeFn<ColumnSizingState>;
+optional onColumnSizingChange?: OnChangeFn<ColumnSizingState>;
 ```
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L54)

@@ -3,9 +3,7 @@ id: Table_RowModels_Grouped
 title: Table_RowModels_Grouped
 ---
 
-# Interface: Table\_RowModels\_Grouped\<TFeatures, TData\>
-
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L133)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L143)
 
 ## Type Parameters
 
@@ -19,13 +17,13 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:133](https:
 
 ## Properties
 
-### getGroupedRowModel()
+### getGroupedRowModel
 
 ```ts
 getGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L140)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L150)
 
 Resolves the row model after grouping has been applied.
 
@@ -35,13 +33,13 @@ Resolves the row model after grouping has been applied.
 
 ***
 
-### getPreGroupedRowModel()
+### getPreGroupedRowModel
 
 ```ts
 getPreGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L144)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L154)
 
 Reads the row model immediately before grouping.
 

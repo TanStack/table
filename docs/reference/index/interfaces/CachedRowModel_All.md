@@ -3,8 +3,6 @@ id: CachedRowModel_All
 title: CachedRowModel_All
 ---
 
-# Interface: CachedRowModel\_All\<TFeatures, TData\>
-
 Defined in: [types/RowModel.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L32)
 
 ## Extends
@@ -23,10 +21,10 @@ Defined in: [types/RowModel.ts:32](https://github.com/TanStack/table/blob/main/p
 
 ## Properties
 
-### coreRowModel()?
+### coreRowModel?
 
 ```ts
-optional coreRowModel: () => RowModel<TFeatures, TData>;
+optional coreRowModel?: () => RowModel<TFeatures, TData>;
 ```
 
 Defined in: [core/row-models/coreRowModelsFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L24)
@@ -43,13 +41,13 @@ Partial.coreRowModel
 
 ***
 
-### expandedRowModel()?
+### expandedRowModel?
 
 ```ts
-optional expandedRowModel: () => RowModel<TFeatures, TData>;
+optional expandedRowModel?: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L131)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L146)
 
 #### Returns
 
@@ -66,7 +64,7 @@ Partial.expandedRowModel
 ### facetedMinMaxValues?
 
 ```ts
-optional facetedMinMaxValues: Record<string, () => [number, number] | undefined>;
+optional facetedMinMaxValues?: Record<string, () => [number, number] | undefined>;
 ```
 
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L55)
@@ -82,7 +80,7 @@ Partial.facetedMinMaxValues
 ### facetedRowModels?
 
 ```ts
-optional facetedRowModels: Record<string, () => RowModel<TFeatures, TData>>;
+optional facetedRowModels?: Record<string, () => RowModel<TFeatures, TData>>;
 ```
 
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L54)
@@ -98,7 +96,7 @@ Partial.facetedRowModels
 ### facetedUniqueValues?
 
 ```ts
-optional facetedUniqueValues: Record<string, () => Map<any, number>>;
+optional facetedUniqueValues?: Record<string, () => Map<any, number>>;
 ```
 
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L56)
@@ -111,10 +109,10 @@ Partial.facetedUniqueValues
 
 ***
 
-### filteredRowModel()?
+### filteredRowModel?
 
 ```ts
-optional filteredRowModel: () => RowModel<TFeatures, TData>;
+optional filteredRowModel?: () => RowModel<TFeatures, TData>;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:312](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L312)
@@ -131,10 +129,10 @@ Partial.filteredRowModel
 
 ***
 
-### globalFacetedMinMaxValues()?
+### globalFacetedMinMaxValues?
 
 ```ts
-optional globalFacetedMinMaxValues: () => [number, number] | undefined;
+optional globalFacetedMinMaxValues?: () => [number, number] | undefined;
 ```
 
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L58)
@@ -151,10 +149,10 @@ Partial.globalFacetedMinMaxValues
 
 ***
 
-### globalFacetedRowModel()?
+### globalFacetedRowModel?
 
 ```ts
-optional globalFacetedRowModel: () => RowModel<TFeatures, TData>;
+optional globalFacetedRowModel?: () => RowModel<TFeatures, TData>;
 ```
 
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L57)
@@ -171,10 +169,10 @@ Partial.globalFacetedRowModel
 
 ***
 
-### globalFacetedUniqueValues()?
+### globalFacetedUniqueValues?
 
 ```ts
-optional globalFacetedUniqueValues: () => Map<any, number>;
+optional globalFacetedUniqueValues?: () => Map<any, number>;
 ```
 
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L59)
@@ -191,13 +189,13 @@ Partial.globalFacetedUniqueValues
 
 ***
 
-### groupedRowModel()?
+### groupedRowModel?
 
 ```ts
-optional groupedRowModel: () => RowModel<TFeatures, TData>;
+optional groupedRowModel?: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L151)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L161)
 
 #### Returns
 
@@ -211,13 +209,13 @@ Partial.groupedRowModel
 
 ***
 
-### paginatedRowModel()?
+### paginatedRowModel?
 
 ```ts
-optional paginatedRowModel: () => RowModel<TFeatures, TData>;
+optional paginatedRowModel?: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L145)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L152)
 
 #### Returns
 
@@ -231,13 +229,13 @@ Partial.paginatedRowModel
 
 ***
 
-### sortedRowModel()?
+### sortedRowModel?
 
 ```ts
-optional sortedRowModel: () => RowModel<TFeatures, TData>;
+optional sortedRowModel?: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L300)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:308](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L308)
 
 #### Returns
 

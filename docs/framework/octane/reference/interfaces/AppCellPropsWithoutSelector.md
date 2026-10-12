@@ -3,8 +3,6 @@ id: AppCellPropsWithoutSelector
 title: AppCellPropsWithoutSelector
 ---
 
-# Interface: AppCellPropsWithoutSelector\<TFeatures, TData, TValue, TCellComponents\>
-
 Defined in: [types.ts:603](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L603)
 
 Props for AppCell component — without selector.
@@ -39,7 +37,7 @@ Defined in: [types.ts:609](https://github.com/TanStack/table/blob/main/packages/
 
 ***
 
-### children()
+### children
 
 ```ts
 children: (cell) => unknown;
@@ -62,7 +60,7 @@ Defined in: [types.ts:610](https://github.com/TanStack/table/blob/main/packages/
 ### selector?
 
 ```ts
-optional selector: undefined;
+optional selector?: undefined;
 ```
 
 Defined in: [types.ts:614](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L614)

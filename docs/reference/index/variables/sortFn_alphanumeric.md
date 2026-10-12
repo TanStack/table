@@ -3,13 +3,11 @@ id: sortFn_alphanumeric
 title: sortFn_alphanumeric
 ---
 
-# Variable: sortFn\_alphanumeric
-
 ```ts
 const sortFn_alphanumeric: CreatedSortFn<any, any>;
 ```
 
-Defined in: [features/row-sorting/sortFns.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L75)
+Defined in: [features/row-sorting/sortFns.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L76)
 
 Sorts rows with the built-in alphanumeric strategy.
 

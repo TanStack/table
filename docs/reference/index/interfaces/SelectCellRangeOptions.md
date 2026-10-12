@@ -3,8 +3,6 @@ id: SelectCellRangeOptions
 title: SelectCellRangeOptions
 ---
 
-# Interface: SelectCellRangeOptions
-
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L74)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:74](https://g
 ### ~~additive?~~
 
 ```ts
-optional additive: boolean;
+optional additive?: boolean;
 ```
 
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L86)
@@ -29,7 +27,7 @@ Use `mode: 'include'` instead.
 ### mode?
 
 ```ts
-optional mode: CellSelectionRangeMode;
+optional mode?: CellSelectionRangeMode;
 ```
 
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L79)

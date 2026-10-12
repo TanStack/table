@@ -3,8 +3,6 @@ id: Renderable
 title: Renderable
 ---
 
-# Type Alias: Renderable\<TProps\>
-
 ```ts
 type Renderable<TProps> = ComponentChild | ComponentType<TProps>;
 ```

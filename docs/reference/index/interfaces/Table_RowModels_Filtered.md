@@ -3,8 +3,6 @@ id: Table_RowModels_Filtered
 title: Table_RowModels_Filtered
 ---
 
-# Interface: Table\_RowModels\_Filtered\<TFeatures, TData\>
-
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:294](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L294)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:294](http
 
 ## Properties
 
-### getFilteredRowModel()
+### getFilteredRowModel
 
 ```ts
 getFilteredRowModel: () => RowModel<TFeatures, TData>;
@@ -35,7 +33,7 @@ Resolves the row model after column and global filters have been applied.
 
 ***
 
-### getPreFilteredRowModel()
+### getPreFilteredRowModel
 
 ```ts
 getPreFilteredRowModel: () => RowModel<TFeatures, TData>;

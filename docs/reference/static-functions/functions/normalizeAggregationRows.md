@@ -3,13 +3,11 @@ id: normalizeAggregationRows
 title: normalizeAggregationRows
 ---
 
-# Function: normalizeAggregationRows()
-
 ```ts
-function normalizeAggregationRows<TFeatures, TData>(rows, maxDepth): Row<TFeatures, TData>[];
+function normalizeAggregationRows<TFeatures, TData>(rows, maxDepth?): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L114)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L108)
 
 Selects unique rows at a maximum relative depth in encounter order.
 Branches that end before the requested depth contribute their deepest row.
@@ -30,7 +28,7 @@ Branches that end before the requested depth contribute their deepest row.
 
 readonly [`Row`](../../index/type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
 
-### maxDepth
+### maxDepth?
 
 `number` = `0`
 

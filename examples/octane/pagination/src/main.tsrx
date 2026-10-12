@@ -106,7 +106,7 @@ function MyTable({
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th key={header.id} colspan={header.colSpan}>
                     <div>
                       <table.FlexRender header={header} />
                     </div>

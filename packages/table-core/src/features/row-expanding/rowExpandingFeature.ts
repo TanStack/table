@@ -20,6 +20,7 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './rowExpandingFeature.utils'
+import { expandRows } from './createExpandedRowModel'
 import type { TableFeature } from '../../types/TableFeatures'
 
 /**
@@ -88,6 +89,11 @@ export const rowExpandingFeature: TableFeature = {
       },
       table_getExpandedDepth: {
         fn: () => table_getExpandedDepth(table),
+      },
+      // Internal: row display order and the paginated row model expand rows
+      // through this
+      table__expandRows: {
+        fn: expandRows,
       },
     })
   },
