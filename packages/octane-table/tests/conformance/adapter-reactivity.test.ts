@@ -40,10 +40,12 @@ beforeEach(() => {
 })
 
 describe('render-phase state publication', () => {
-  it('commits owner and isolated controlled updates in the discrete event', () => {
+  it('commits owner and isolated controlled updates in the discrete event', async () => {
     const view = mount(PhaseHarness, {})
 
     ;(view.find('#phase-next') as HTMLButtonElement).click()
+    // Octane flushes a discrete event's updates in the next microtask.
+    await Promise.resolve()
 
     expect(view.find('#phase-page').textContent).toBe('1')
     expect(view.find('#phase-island').textContent).toBe('1')

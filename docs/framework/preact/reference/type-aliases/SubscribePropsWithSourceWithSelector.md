@@ -3,8 +3,6 @@ id: SubscribePropsWithSourceWithSelector
 title: SubscribePropsWithSourceWithSelector
 ---
 
-# Type Alias: SubscribePropsWithSourceWithSelector\<TSourceValue, TSelected\>
-
 ```ts
 type SubscribePropsWithSourceWithSelector<TSourceValue, TSelected> = object;
 ```
@@ -28,14 +26,14 @@ Subscribe to a projected value from a source (atom or store).
 ### children
 
 ```ts
-children: (state) => ComponentChildren | ComponentChildren;
+children: ((state) => ComponentChildren) | ComponentChildren;
 ```
 
 Defined in: [Subscribe.ts:51](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L51)
 
 ***
 
-### selector()
+### selector
 
 ```ts
 selector: (state) => TSelected;

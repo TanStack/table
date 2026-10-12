@@ -3,13 +3,11 @@ id: Cell_CellSpanning
 title: Cell_CellSpanning
 ---
 
-# Interface: Cell\_CellSpanning
-
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L139)
 
 ## Properties
 
-### getColSpan()
+### getColSpan
 
 ```ts
 getColSpan: () => number;
@@ -29,7 +27,7 @@ Never render a `0` as a `colSpan` attribute; skip the cell instead. See
 
 ***
 
-### getIsCovered()
+### getIsCovered
 
 ```ts
 getIsCovered: () => boolean;
@@ -47,7 +45,7 @@ attributes.
 
 ***
 
-### getRowSpan()
+### getRowSpan
 
 ```ts
 getRowSpan: () => number;

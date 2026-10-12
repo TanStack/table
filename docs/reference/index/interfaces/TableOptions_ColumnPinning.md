@@ -3,8 +3,6 @@ id: TableOptions_ColumnPinning
 title: TableOptions_ColumnPinning
 ---
 
-# Interface: TableOptions\_ColumnPinning
-
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L26)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:26](https://g
 ### enableColumnPinning?
 
 ```ts
-optional enableColumnPinning: boolean;
+optional enableColumnPinning?: boolean;
 ```
 
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L37)
@@ -31,7 +29,7 @@ columns out.
 ### onColumnPinningChange?
 
 ```ts
-optional onColumnPinningChange: OnChangeFn<ColumnPinningState>;
+optional onColumnPinningChange?: OnChangeFn<ColumnPinningState>;
 ```
 
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L43)

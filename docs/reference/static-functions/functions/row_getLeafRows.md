@@ -3,13 +3,11 @@ id: row_getLeafRows
 title: row_getLeafRows
 ---
 
-# Function: row\_getLeafRows()
-
 ```ts
 function row_getLeafRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L163)
+Defined in: [core/rows/coreRowsFeature.utils.ts:148](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L148)
 
 Flattens this row's descendant tree into leaf rows.
 

@@ -5,7 +5,6 @@
  * directly on the table object, e.g., <table.PaginationControls />
  */
 import { useTableContext } from '../hooks/table'
-import type { PaginationState } from '@tanstack/octane-table'
 
 /**
  * Pagination controls for the table

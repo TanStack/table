@@ -3,8 +3,6 @@ id: ToggleSelectedOptions
 title: ToggleSelectedOptions
 ---
 
-# Interface: ToggleSelectedOptions
-
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L11)
 
 Controls how toggling a row affects its descendants and ancestors.
@@ -14,7 +12,7 @@ Controls how toggling a row affects its descendants and ancestors.
 ### deselectParents?
 
 ```ts
-optional deselectParents: boolean;
+optional deselectParents?: boolean;
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L27)
@@ -33,7 +31,7 @@ non-selectable rows.
 ### selectChildren?
 
 ```ts
-optional selectChildren: boolean;
+optional selectChildren?: boolean;
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L16)

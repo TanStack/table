@@ -3,8 +3,6 @@ id: createTableHook
 title: createTableHook
 ---
 
-# Function: createTableHook()
-
 ```ts
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(options): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```

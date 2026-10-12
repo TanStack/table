@@ -3,8 +3,6 @@ id: TanStackTableHeader
 title: TanStackTableHeader
 ---
 
-# Class: TanStackTableHeader\<TFeatures, TData, TValue\>
-
 Defined in: [packages/angular-table/src/helpers/header.ts:71](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L71)
 
 Provides a TanStack Table `Header` instance in Angular DI.

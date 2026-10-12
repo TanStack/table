@@ -3,13 +3,11 @@ id: table_getStartVisibleLeafColumns
 title: table_getStartVisibleLeafColumns
 ---
 
-# Function: table\_getStartVisibleLeafColumns()
-
 ```ts
 function table_getStartVisibleLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:821](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L821)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:799](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L799)
 
 Resolves visible leaf columns pinned to the start region.
 

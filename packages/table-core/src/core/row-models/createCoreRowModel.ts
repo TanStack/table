@@ -1,9 +1,11 @@
 import { constructRow } from '../rows/constructRow'
 import { makeObjectMap, skipFirstRun, tableMemo } from '../../utils'
-import { table_autoResetCellSelection } from '../../features/cell-selection/cellSelectionFeature.utils'
-import { table_autoResetExpanded } from '../../features/row-expanding/rowExpandingFeature.utils'
-import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
-import { table_autoResetSorting } from '../../features/row-sorting/rowSortingFeature.utils'
+import {
+  autoResetCellSelection,
+  autoResetExpanded,
+  autoResetPageIndex,
+  autoResetSorting,
+} from '../featureStubs'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -29,10 +31,10 @@ export function createCoreRowModel<
       memoDeps: () => [table.options.data],
       fn: () => _createCoreRowModel(table, table.options.data),
       onAfterUpdate: skipFirstRun(() => {
-        table_autoResetExpanded(table)
-        table_autoResetPageIndex(table)
-        table_autoResetSorting(table)
-        table_autoResetCellSelection(table)
+        autoResetExpanded(table)
+        autoResetPageIndex(table)
+        autoResetSorting(table)
+        autoResetCellSelection(table)
       }),
     })
   }

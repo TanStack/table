@@ -3,8 +3,6 @@ id: injectTableContext
 title: injectTableContext
 ---
 
-# Function: injectTableContext()
-
 ```ts
 function injectTableContext<TFeatures, TData>(): Signal<AngularTable<TFeatures, TData>>;
 ```

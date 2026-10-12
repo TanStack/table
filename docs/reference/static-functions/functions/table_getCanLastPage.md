@@ -3,8 +3,6 @@ id: table_getCanLastPage
 title: table_getCanLastPage
 ---
 
-# Function: table\_getCanLastPage()
-
 ```ts
 function table_getCanLastPage<TFeatures, TData>(table): boolean;
 ```

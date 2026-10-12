@@ -3,13 +3,11 @@ id: table_resetCellSelection
 title: table_resetCellSelection
 ---
 
-# Function: table\_resetCellSelection()
-
 ```ts
 function table_resetCellSelection<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L77)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L80)
 
 Resets `cellSelection` to the configured initial state or feature default.
 

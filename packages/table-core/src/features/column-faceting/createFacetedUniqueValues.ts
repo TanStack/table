@@ -1,5 +1,5 @@
 import { callMemoOrStaticFn, tableMemo } from '../../utils'
-import { column_getCanGlobalFilter } from '../global-filtering/globalFilteringFeature.utils'
+import { getCanGlobalFilter } from '../../core/featureStubs'
 import {
   column_getFacetedRowModel,
   table_getGlobalFacetedRowModel,
@@ -67,7 +67,7 @@ function _createFacetedUniqueValues<
     columnId === '__global__'
       ? table
           .getAllLeafColumns()
-          .filter((column) => column_getCanGlobalFilter(column))
+          .filter((column) => getCanGlobalFilter(column))
           .map((column) => column.id)
       : [columnId]
 

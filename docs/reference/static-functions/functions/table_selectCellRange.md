@@ -3,8 +3,6 @@ id: table_selectCellRange
 title: table_selectCellRange
 ---
 
-# Function: table\_selectCellRange()
-
 ```ts
 function table_selectCellRange<TFeatures, TData>(
    table,
@@ -12,7 +10,7 @@ function table_selectCellRange<TFeatures, TData>(
    opts?): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:808](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L808)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:776](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L776)
 
 Selects a rectangle using replace, include, or exclude semantics.
 

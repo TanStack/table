@@ -3,13 +3,11 @@ id: table_getCenterFlatHeaders
 title: table_getCenterFlatHeaders
 ---
 
-# Function: table\_getCenterFlatHeaders()
-
 ```ts
 function table_getCenterFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:609](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L609)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:587](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L587)
 
 Flattens every header from the center header groups.
 

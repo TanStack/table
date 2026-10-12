@@ -3,8 +3,6 @@ id: expandRows
 title: expandRows
 ---
 
-# Function: expandRows()
-
 ```ts
 function expandRows<TFeatures, TData>(rowModel): RowModel<TFeatures, TData>;
 ```

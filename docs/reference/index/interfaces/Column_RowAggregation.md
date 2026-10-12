@@ -3,9 +3,7 @@ id: Column_RowAggregation
 title: Column_RowAggregation
 ---
 
-# Interface: Column\_RowAggregation\<TFeatures, TData\>
-
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:264](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L264)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:250](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L250)
 
 Column instance APIs installed by `rowAggregationFeature`.
 
@@ -21,13 +19,13 @@ Column instance APIs installed by `rowAggregationFeature`.
 
 ## Properties
 
-### getAggregationFns()
+### getAggregationFns
 
 ```ts
 getAggregationFns: () => readonly ResolvedAggregationFn<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L269)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:255](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L255)
 
 Resolves the configured scalar or multiple aggregation definitions.
 
@@ -37,13 +35,13 @@ readonly [`ResolvedAggregationFn`](ResolvedAggregationFn.md)\<`TFeatures`, `TDat
 
 ***
 
-### getAggregationValue()
+### getAggregationValue
 
 ```ts
 getAggregationValue: <TResult>(options?) => TResult;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:277](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L277)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L263)
 
 Aggregates this column over the default pre-grouped row model, or over a
 caller-provided array of rows. `options.maxDepth` overrides the column's
@@ -67,7 +65,7 @@ caller-provided array of rows. `options.maxDepth` overrides the column's
 
 ***
 
-### getAutoAggregationFn()
+### getAutoAggregationFn
 
 ```ts
 getAutoAggregationFn: () =>
@@ -75,7 +73,7 @@ getAutoAggregationFn: () =>
   | undefined;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:281](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L281)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L267)
 
 Infers `sum` for a numeric first row and `extent` for a Date first row.
 

@@ -68,12 +68,12 @@ A covered cell reports a span of `0`, and the renderer skips it. This is the sam
     const colSpan = cell.getColSpan()
 
     // A span of 0 means the cell is covered by a cell above or to its left.
-    // Skip it. Do not render `rowSpan={0}`: in HTML that means "span to the
+    // Skip it. Do not render `rowspan={0}`: in HTML that means "span to the
     // end of the row group", which merges the cell down the entire tbody.
     if (rowSpan === 0 || colSpan === 0) return null
 
     return (
-      <td key={cell.id} rowSpan={rowSpan} colSpan={colSpan}>
+      <td key={cell.id} rowspan={rowSpan} colspan={colSpan}>
         <table.FlexRender cell={cell} />
       </td>
     )

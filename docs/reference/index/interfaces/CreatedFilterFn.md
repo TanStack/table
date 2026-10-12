@@ -3,8 +3,6 @@ id: CreatedFilterFn
 title: CreatedFilterFn
 ---
 
-# Interface: CreatedFilterFn()\<TFeatures, TData\>
-
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L126)
 
 The shape returned by `constructFilterFn`: a `FilterFn` with its definition
@@ -79,10 +77,10 @@ any table's rows, regardless of the feature set it was defined against.
 
 ## Properties
 
-### autoRemove()?
+### autoRemove?
 
 ```ts
-optional autoRemove: (filterValue) => boolean;
+optional autoRemove?: (filterValue) => boolean;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L113)
@@ -103,7 +101,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:113](http
 
 ***
 
-### filter()
+### filter
 
 ```ts
 filter: (dataValue, filterValue, row, columnId, addMeta?) => boolean;
@@ -146,7 +144,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:106](http
 ### resolveDataValue?
 
 ```ts
-optional resolveDataValue: TransformDataValueFn;
+optional resolveDataValue?: TransformDataValueFn;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L115)
@@ -157,10 +155,10 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:115](http
 
 ***
 
-### resolveFilterValue()?
+### resolveFilterValue?
 
 ```ts
-optional resolveFilterValue: (filterValue) => any;
+optional resolveFilterValue?: (filterValue) => any;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L114)

@@ -3,8 +3,6 @@ id: FilterFnDef
 title: FilterFnDef
 ---
 
-# Interface: FilterFnDef\<TFeatures, TData\>
-
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L102)
 
 The definition object accepted by `constructFilterFn`.
@@ -29,10 +27,10 @@ normalization concerns stay in `resolveDataValue`/`resolveFilterValue`.
 
 ## Properties
 
-### autoRemove()?
+### autoRemove?
 
 ```ts
-optional autoRemove: (filterValue) => boolean;
+optional autoRemove?: (filterValue) => boolean;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L113)
@@ -49,7 +47,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:113](http
 
 ***
 
-### filter()
+### filter
 
 ```ts
 filter: (dataValue, filterValue, row, columnId, addMeta?) => boolean;
@@ -88,17 +86,17 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:106](http
 ### resolveDataValue?
 
 ```ts
-optional resolveDataValue: TransformDataValueFn;
+optional resolveDataValue?: TransformDataValueFn;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L115)
 
 ***
 
-### resolveFilterValue()?
+### resolveFilterValue?
 
 ```ts
-optional resolveFilterValue: (filterValue) => any;
+optional resolveFilterValue?: (filterValue) => any;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L114)

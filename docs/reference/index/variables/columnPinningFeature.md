@@ -3,13 +3,11 @@ id: columnPinningFeature
 title: columnPinningFeature
 ---
 
-# Variable: columnPinningFeature
-
 ```ts
 const columnPinningFeature: TableFeature;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L51)
+Defined in: [features/column-pinning/columnPinningFeature.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L52)
 
 Feature that adds column pinning state and APIs for logical start, center,
 and end regions.

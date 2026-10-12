@@ -3,9 +3,7 @@ id: AggregationFnDef
 title: AggregationFnDef
 ---
 
-# Interface: AggregationFnDef\<TFeatures, TData, TValue, TResult\>
-
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L62)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L63)
 
 A context-based aggregation definition and optional grouped-result merge.
 
@@ -29,13 +27,13 @@ A context-based aggregation definition and optional grouped-result merge.
 
 ## Properties
 
-### aggregate()
+### aggregate
 
 ```ts
 aggregate: (context) => TResult;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L69)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L70)
 
 Computes a result directly from the selected `rows`.
 
@@ -51,13 +49,13 @@ Computes a result directly from the selected `rows`.
 
 ***
 
-### merge()?
+### merge?
 
 ```ts
-optional merge: (context) => TResult;
+optional merge?: (context) => TResult;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L74)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L75)
 
 Combines already-computed immediate sub-row results. When omitted,
 nested grouping falls back to `aggregate` over the group's selected rows.

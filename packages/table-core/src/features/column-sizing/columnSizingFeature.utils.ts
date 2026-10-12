@@ -1,9 +1,4 @@
-import {
-  table_getCenterHeaderGroups,
-  table_getEndHeaderGroups,
-  table_getPinnedVisibleLeafColumns,
-  table_getStartHeaderGroups,
-} from '../column-pinning/columnPinningFeature.utils'
+import { getPinnedVisibleLeafColumns } from '../../core/featureStubs'
 import {
   callMemoOrStaticFn,
   cloneState,
@@ -15,7 +10,7 @@ import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
-import type { Column_Internal } from '../../types/Column'
+import type { Column, Column_Internal } from '../../types/Column'
 import type {
   ColumnOffsets,
   ColumnOffsetsByPosition,
@@ -134,22 +129,22 @@ export function table_getColumnOffsets<
 >(table: Table_Internal<TFeatures, TData>): ColumnOffsetsByPosition {
   return {
     all: buildColumnOffsets(
-      table_getPinnedVisibleLeafColumns(table) as Array<
+      getPinnedVisibleLeafColumns(table) as Array<
         Column_Internal<TFeatures, TData, unknown>
       >,
     ),
     center: buildColumnOffsets(
-      table_getPinnedVisibleLeafColumns(table, 'center') as Array<
+      getPinnedVisibleLeafColumns(table, 'center') as Array<
         Column_Internal<TFeatures, TData, unknown>
       >,
     ),
     start: buildColumnOffsets(
-      table_getPinnedVisibleLeafColumns(table, 'start') as Array<
+      getPinnedVisibleLeafColumns(table, 'start') as Array<
         Column_Internal<TFeatures, TData, unknown>
       >,
     ),
     end: buildColumnOffsets(
-      table_getPinnedVisibleLeafColumns(table, 'end') as Array<
+      getPinnedVisibleLeafColumns(table, 'end') as Array<
         Column_Internal<TFeatures, TData, unknown>
       >,
     ),
@@ -371,6 +366,20 @@ export function table_resetColumnSizing<
   )
 }
 
+function sumColumnSizes<TFeatures extends TableFeatures, TData extends RowData>(
+  columns: Array<Column<TFeatures, TData, unknown>>,
+): number {
+  let sum = 0
+  for (let i = 0; i < columns.length; i++) {
+    sum += callMemoOrStaticFn(
+      columns[i] as Column_Internal<TFeatures, TData, unknown>,
+      'getSize',
+      column_getSize,
+    )
+  }
+  return sum
+}
+
 /**
  * Sums the rendered size of the full table header row.
  *
@@ -393,7 +402,8 @@ export function table_getTotalSize<
 }
 
 /**
- * Sums the rendered size of the logical start pinned header region.
+ * Sums the sizes of the visible leaf columns pinned to the logical start
+ * region.
  *
  * An empty start pinning region returns `0`.
  *
@@ -406,19 +416,11 @@ export function table_getStartTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (
-    callMemoOrStaticFn(
-      table,
-      'getStartHeaderGroups',
-      table_getStartHeaderGroups,
-    )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
-      return sum + header_getSize(header)
-    }, 0) ?? 0
-  )
+  return sumColumnSizes(getPinnedVisibleLeafColumns(table, 'start'))
 }
 
 /**
- * Sums the rendered size of the center, unpinned header region.
+ * Sums the sizes of the visible leaf columns that are not pinned.
  *
  * An empty center region returns `0`.
  *
@@ -431,19 +433,11 @@ export function table_getCenterTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (
-    callMemoOrStaticFn(
-      table,
-      'getCenterHeaderGroups',
-      table_getCenterHeaderGroups,
-    )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
-      return sum + header_getSize(header)
-    }, 0) ?? 0
-  )
+  return sumColumnSizes(getPinnedVisibleLeafColumns(table, 'center'))
 }
 
 /**
- * Sums the rendered size of the logical end pinned header region.
+ * Sums the sizes of the visible leaf columns pinned to the logical end region.
  *
  * An empty end pinning region returns `0`.
  *
@@ -456,13 +450,5 @@ export function table_getEndTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (
-    callMemoOrStaticFn(
-      table,
-      'getEndHeaderGroups',
-      table_getEndHeaderGroups,
-    )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
-      return sum + header_getSize(header)
-    }, 0) ?? 0
-  )
+  return sumColumnSizes(getPinnedVisibleLeafColumns(table, 'end'))
 }

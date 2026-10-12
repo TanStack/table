@@ -3,13 +3,11 @@ id: table_getCenterLeafHeaders
 title: table_getCenterLeafHeaders
 ---
 
-# Function: table\_getCenterLeafHeaders()
-
 ```ts
 function table_getCenterLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:682](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L682)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:660](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L660)
 
 Collects leaf headers for the center, unpinned region.
 

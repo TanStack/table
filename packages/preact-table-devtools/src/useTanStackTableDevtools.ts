@@ -16,8 +16,9 @@ export function useTanStackTableDevtools<
   options?: UseTanStackTableDevtoolsOptions,
 ): void {
   const enabled = options?.enabled ?? true
-  const registrationRef =
-    useRef<ReturnType<typeof createTableDevtoolsRegistrationManager>>()
+  const registrationRef = useRef<
+    ReturnType<typeof createTableDevtoolsRegistrationManager> | undefined
+  >(undefined)
   registrationRef.current ??= createTableDevtoolsRegistrationManager()
   const registration = registrationRef.current
 

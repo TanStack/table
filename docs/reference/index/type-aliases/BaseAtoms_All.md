@@ -3,8 +3,6 @@ id: BaseAtoms_All
 title: BaseAtoms_All
 ---
 
-# Type Alias: BaseAtoms\_All
-
 ```ts
 type BaseAtoms_All = { [K in keyof TableState_All]?: Atom<Exclude<TableState_All[K], undefined>> };
 ```

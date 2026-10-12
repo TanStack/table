@@ -3,8 +3,6 @@ id: FlexRenderCell
 title: FlexRenderCell
 ---
 
-# Class: FlexRenderCell\<TFeatures, TData, TValue\>
-
 Defined in: packages/ember-table/declarations/FlexRender.d.ts:26
 
 ## Extends
@@ -65,7 +63,7 @@ Component<FlexRenderCellSignature<TFeatures, TData, TValue>>.constructor
 [Context]: ComponentContext<FlexRenderCell<TFeatures, TData, TValue>, FlexRenderCellSignature<TFeatures, TData, TValue>>;
 ```
 
-Defined in: node\_modules/.pnpm/@glint+ember-tsc@1.8.14\_ember-source@7.1.0\_@glimmer+component@2.1.1\_supports-color@8.1.\_8bece6e70d52a2dcadad1882db996878/node\_modules/@glint/ember-tsc/types/-private/dsl/integration-declarations.d.ts:33
+Defined in: node\_modules/.pnpm/@glint+ember-tsc@1.11.6\_ember-source@7.3.0\_@glimmer+component@2.1.1\_supports-color@8.1.\_d43e58650df066498b315aea8cf7f9bf/node\_modules/@glint/ember-tsc/types/-private/dsl/integration-declarations.d.ts:33
 
 #### Inherited from
 
@@ -75,14 +73,14 @@ Component.[Context]
 
 ***
 
-### \[Invoke\]()
+### \[Invoke\]
 
 ```ts
 [Invoke]: (...args) => ComponentReturn<FlattenBlockParams<{
 }>, unknown>;
 ```
 
-Defined in: node\_modules/.pnpm/@glint+template@1.7.10/node\_modules/@glint/template/-private/integration.d.ts:22
+Defined in: node\_modules/.pnpm/@glint+template@1.9.0/node\_modules/@glint/template/-private/integration.d.ts:22
 
 #### Parameters
 

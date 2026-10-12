@@ -35,6 +35,7 @@ export const reSplitAlphaNumeric = /([0-9]+)/gm
  * })
  * ```
  */
+/* @__NO_SIDE_EFFECTS__ */
 export function constructSortFn<
   TFeatures extends TableFeatures = any,
   TData extends RowData = any,
@@ -72,7 +73,7 @@ export function constructSortFn<
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_alphanumeric = constructSortFn({
+export const sortFn_alphanumeric = /* @__PURE__ */ constructSortFn({
   resolveDataValue: (dataValue) => toString(dataValue).toLowerCase(),
   sort: (dataValueA, dataValueB) => compareAlphanumeric(dataValueA, dataValueB),
 })
@@ -82,10 +83,13 @@ export const sortFn_alphanumeric = constructSortFn({
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_alphanumericCaseSensitive = constructSortFn({
-  resolveDataValue: (dataValue) => toString(dataValue),
-  sort: (dataValueA, dataValueB) => compareAlphanumeric(dataValueA, dataValueB),
-})
+export const sortFn_alphanumericCaseSensitive = /* @__PURE__ */ constructSortFn(
+  {
+    resolveDataValue: (dataValue) => toString(dataValue),
+    sort: (dataValueA, dataValueB) =>
+      compareAlphanumeric(dataValueA, dataValueB),
+  },
+)
 
 // The text sort is more basic (less numeric support)
 // but is much faster
@@ -94,7 +98,7 @@ export const sortFn_alphanumericCaseSensitive = constructSortFn({
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_text = constructSortFn({
+export const sortFn_text = /* @__PURE__ */ constructSortFn({
   resolveDataValue: (dataValue) => toString(dataValue).toLowerCase(),
   sort: (dataValueA, dataValueB) => compareBasic(dataValueA, dataValueB),
 })
@@ -106,7 +110,7 @@ export const sortFn_text = constructSortFn({
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_textCaseSensitive = constructSortFn({
+export const sortFn_textCaseSensitive = /* @__PURE__ */ constructSortFn({
   resolveDataValue: (dataValue) => toString(dataValue),
   sort: (dataValueA, dataValueB) => compareBasic(dataValueA, dataValueB),
 })
@@ -116,7 +120,7 @@ export const sortFn_textCaseSensitive = constructSortFn({
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_datetime = constructSortFn({
+export const sortFn_datetime = /* @__PURE__ */ constructSortFn({
   resolveDataValue: (dataValue) => toDateSortValue(dataValue),
   // Can handle nullish values
   // Use > and < because == (and ===) doesn't work with
@@ -130,7 +134,7 @@ export const sortFn_datetime = constructSortFn({
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_basic = constructSortFn({
+export const sortFn_basic = /* @__PURE__ */ constructSortFn({
   sort: (dataValueA, dataValueB) => compareBasic(dataValueA, dataValueB),
 })
 

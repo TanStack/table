@@ -3,13 +3,11 @@ id: table_getAllLeafColumnsById
 title: table_getAllLeafColumnsById
 ---
 
-# Function: table\_getAllLeafColumnsById()
-
 ```ts
 function table_getAllLeafColumnsById<TFeatures, TData>(table): Record<string, Column<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:248](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L248)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L240)
 
 Builds an id lookup for terminal leaf columns only.
 

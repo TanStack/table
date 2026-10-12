@@ -3,13 +3,11 @@ id: row_getAllCells
 title: row_getAllCells
 ---
 
-# Function: row\_getAllCells()
-
 ```ts
 function row_getAllCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:250](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L250)
+Defined in: [core/rows/coreRowsFeature.utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L235)
 
 Constructs one cell for each leaf column in this row.
 

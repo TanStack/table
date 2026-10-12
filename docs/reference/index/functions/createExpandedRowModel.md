@@ -3,8 +3,6 @@ id: createExpandedRowModel
 title: createExpandedRowModel
 ---
 
-# Function: createExpandedRowModel()
-
 ```ts
 function createExpandedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
@@ -27,22 +25,4 @@ The factory reads the relevant table state atoms and options, then returns a row
 
 ## Returns
 
-```ts
-(table): () => RowModel<TFeatures, TData>;
-```
-
-### Parameters
-
-#### table
-
-[`Table`](../type-aliases/Table.md)\<`TFeatures`, `TData`\>
-
-### Returns
-
-```ts
-(): RowModel<TFeatures, TData>;
-```
-
-#### Returns
-
-[`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+(`table`) => () => [`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>

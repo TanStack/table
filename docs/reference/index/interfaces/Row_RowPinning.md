@@ -3,13 +3,11 @@ id: Row_RowPinning
 title: Row_RowPinning
 ---
 
-# Interface: Row\_RowPinning
-
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L42)
 
 ## Properties
 
-### getCanPin()
+### getCanPin
 
 ```ts
 getCanPin: () => boolean;
@@ -25,7 +23,7 @@ Checks whether this row can be pinned.
 
 ***
 
-### getIsPinned()
+### getIsPinned
 
 ```ts
 getIsPinned: () => RowPinningPosition;
@@ -41,7 +39,7 @@ Returns the pinned position of the row. (`'top'`, `'bottom'` or `false`)
 
 ***
 
-### getPinnedIndex()
+### getPinnedIndex
 
 ```ts
 getPinnedIndex: () => number;
@@ -57,7 +55,7 @@ Returns the numeric pinned index of the row within a pinned row group.
 
 ***
 
-### pin()
+### pin
 
 ```ts
 pin: (position, includeLeafRows?, includeParentRows?) => void;

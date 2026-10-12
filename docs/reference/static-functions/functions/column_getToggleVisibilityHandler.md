@@ -3,8 +3,6 @@ id: column_getToggleVisibilityHandler
 title: column_getToggleVisibilityHandler
 ---
 
-# Function: column\_getToggleVisibilityHandler()
-
 ```ts
 function column_getToggleVisibilityHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```
@@ -38,19 +36,7 @@ controls whose checked state means "visible".
 
 ## Returns
 
-```ts
-(e): void;
-```
-
-### Parameters
-
-#### e
-
-`unknown`
-
-### Returns
-
-`void`
+(`e`) => `void`
 
 ## Example
 

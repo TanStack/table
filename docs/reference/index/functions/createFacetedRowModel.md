@@ -3,8 +3,6 @@ id: createFacetedRowModel
 title: createFacetedRowModel
 ---
 
-# Function: createFacetedRowModel()
-
 ```ts
 function createFacetedRowModel<TFeatures, TData>(): (table, columnId) => () => RowModel<TFeatures, TData>;
 ```
@@ -27,26 +25,4 @@ The factory reads the relevant table state atoms and options, then returns a row
 
 ## Returns
 
-```ts
-(table, columnId): () => RowModel<TFeatures, TData>;
-```
-
-### Parameters
-
-#### table
-
-[`Table`](../type-aliases/Table.md)\<`TFeatures`, `TData`\>
-
-#### columnId
-
-`string`
-
-### Returns
-
-```ts
-(): RowModel<TFeatures, TData>;
-```
-
-#### Returns
-
-[`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+(`table`, `columnId`) => () => [`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>

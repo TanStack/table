@@ -3,13 +3,11 @@ id: table_getStartLeafHeaders
 title: table_getStartLeafHeaders
 ---
 
-# Function: table\_getStartLeafHeaders()
-
 ```ts
 function table_getStartLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:640](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L640)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:618](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L618)
 
 Collects leaf headers for the start pinned region.
 

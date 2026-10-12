@@ -3,8 +3,6 @@ id: cell_getContext
 title: cell_getContext
 ---
 
-# Function: cell\_getContext()
-
 ```ts
 function cell_getContext<TFeatures, TData, TValue>(cell): object;
 ```
@@ -52,7 +50,7 @@ cell: Cell<TFeatures, TData, TValue>;
 column: Column<TFeatures, TData, TValue> = cell.column;
 ```
 
-### getValue()
+### getValue
 
 ```ts
 getValue: () => NoInfer<TValue>;
@@ -62,7 +60,7 @@ getValue: () => NoInfer<TValue>;
 
 [`NoInfer`](../../index/type-aliases/NoInfer.md)\<`TValue`\>
 
-### renderValue()
+### renderValue
 
 ```ts
 renderValue: () => NoInfer<TValue | null>;

@@ -3,13 +3,11 @@ id: table_getEndHeaderGroups
 title: table_getEndHeaderGroups
 ---
 
-# Function: table\_getEndHeaderGroups()
-
 ```ts
 function table_getEndHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:414](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L414)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:399](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L399)
 
 Builds header groups for visible columns pinned to the end region.
 

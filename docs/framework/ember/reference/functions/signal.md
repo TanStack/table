@@ -3,8 +3,6 @@ id: signal
 title: signal
 ---
 
-# Function: signal()
-
 ```ts
 function signal<T>(value, options): Signal<T>;
 ```
@@ -25,7 +23,7 @@ Defined in: packages/ember-table/declarations/signal.d.ts:26
 
 ### options
 
-`AtomOptions`\<`T`\> | `undefined`
+`AtomOptions`\<`T`\> \| `undefined`
 
 ## Returns
 

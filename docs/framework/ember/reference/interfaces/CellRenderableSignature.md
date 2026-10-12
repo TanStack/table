@@ -3,8 +3,6 @@ id: CellRenderableSignature
 title: CellRenderableSignature
 ---
 
-# Interface: CellRenderableSignature\<TFeatures, TData, TValue, TOptions\>
-
 Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:11
 
 ## Type Parameters
@@ -44,5 +42,5 @@ ctx: CellContext<TFeatures, TData, TValue>;
 #### options?
 
 ```ts
-optional options: TOptions;
+optional options?: TOptions;
 ```

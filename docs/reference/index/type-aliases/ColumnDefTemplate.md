@@ -3,10 +3,8 @@ id: ColumnDefTemplate
 title: ColumnDefTemplate
 ---
 
-# Type Alias: ColumnDefTemplate\<TProps\>
-
 ```ts
-type ColumnDefTemplate<TProps> = string | (props) => any;
+type ColumnDefTemplate<TProps> = string | ((props) => any);
 ```
 
 Defined in: [types/ColumnDef.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L64)

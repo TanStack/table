@@ -3,8 +3,6 @@ id: Table_RowSelection
 title: Table_RowSelection
 ---
 
-# Interface: Table\_RowSelection\<TFeatures, TData\>
-
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L129)
 
 ## Type Parameters
@@ -33,7 +31,7 @@ The most recent row interacted with through the row selection handler.
 
 ***
 
-### getFilteredSelectedRowModel()
+### getFilteredSelectedRowModel
 
 ```ts
 getFilteredSelectedRowModel: () => RowModel<TFeatures, TData>;
@@ -49,7 +47,7 @@ Builds a selected-row model from rows after filtering.
 
 ***
 
-### getGroupedSelectedRowModel()
+### getGroupedSelectedRowModel
 
 ```ts
 getGroupedSelectedRowModel: () => RowModel<TFeatures, TData>;
@@ -65,7 +63,7 @@ Builds a selected-row model from rows after grouping.
 
 ***
 
-### getIsAllPageRowsSelected()
+### getIsAllPageRowsSelected
 
 ```ts
 getIsAllPageRowsSelected: () => boolean;
@@ -82,7 +80,7 @@ Sub-rows whose ancestors block sub-row selection are ignored.
 
 ***
 
-### getIsAllRowsSelected()
+### getIsAllRowsSelected
 
 ```ts
 getIsAllRowsSelected: () => boolean;
@@ -99,7 +97,7 @@ Sub-rows whose ancestors block sub-row selection are ignored.
 
 ***
 
-### getIsSomePageRowsSelected()
+### getIsSomePageRowsSelected
 
 ```ts
 getIsSomePageRowsSelected: () => boolean;
@@ -115,7 +113,7 @@ Checks whether at least one selectable row on the current page is selected.
 
 ***
 
-### getIsSomeRowsSelected()
+### getIsSomeRowsSelected
 
 ```ts
 getIsSomeRowsSelected: () => boolean;
@@ -131,7 +129,7 @@ Checks whether at least one row id is selected.
 
 ***
 
-### getPreSelectedRowModel()
+### getPreSelectedRowModel
 
 ```ts
 getPreSelectedRowModel: () => RowModel<TFeatures, TData>;
@@ -147,7 +145,7 @@ Returns the core row model of all rows before row selection has been applied.
 
 ***
 
-### getSelectedRowIds()
+### getSelectedRowIds
 
 ```ts
 getSelectedRowIds: () => string[];
@@ -163,7 +161,7 @@ Returns the ids of all selected rows.
 
 ***
 
-### getSelectedRowModel()
+### getSelectedRowModel
 
 ```ts
 getSelectedRowModel: () => RowModel<TFeatures, TData>;
@@ -179,7 +177,7 @@ Builds a selected-row model from the core row model.
 
 ***
 
-### getToggleAllPageRowsSelectedHandler()
+### getToggleAllPageRowsSelectedHandler
 
 ```ts
 getToggleAllPageRowsSelectedHandler: () => (event) => void;
@@ -191,23 +189,11 @@ Creates a checkbox-style handler that toggles all current-page rows.
 
 #### Returns
 
-```ts
-(event): void;
-```
-
-##### Parameters
-
-###### event
-
-`unknown`
-
-##### Returns
-
-`void`
+(`event`) => `void`
 
 ***
 
-### getToggleAllRowsSelectedHandler()
+### getToggleAllRowsSelectedHandler
 
 ```ts
 getToggleAllRowsSelectedHandler: () => (event) => void;
@@ -219,23 +205,11 @@ Creates a checkbox-style handler that toggles all selectable rows.
 
 #### Returns
 
-```ts
-(event): void;
-```
-
-##### Parameters
-
-###### event
-
-`unknown`
-
-##### Returns
-
-`void`
+(`event`) => `void`
 
 ***
 
-### resetRowSelection()
+### resetRowSelection
 
 ```ts
 resetRowSelection: (defaultState?) => void;
@@ -259,7 +233,7 @@ Pass `true` to ignore initial state and reset to `{}`.
 
 ***
 
-### setRowSelection()
+### setRowSelection
 
 ```ts
 setRowSelection: (updater) => void;
@@ -281,7 +255,7 @@ Updates row selection state with a next map or updater function.
 
 ***
 
-### toggleAllPageRowsSelected()
+### toggleAllPageRowsSelected
 
 ```ts
 toggleAllPageRowsSelected: (value?, opts?) => void;
@@ -309,7 +283,7 @@ Selects/deselects all rows on the current page.
 
 ***
 
-### toggleAllRowsSelected()
+### toggleAllRowsSelected
 
 ```ts
 toggleAllRowsSelected: (value?, opts?) => void;

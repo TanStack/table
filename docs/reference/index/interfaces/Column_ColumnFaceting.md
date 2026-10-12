@@ -3,8 +3,6 @@ id: Column_ColumnFaceting
 title: Column_ColumnFaceting
 ---
 
-# Interface: Column\_ColumnFaceting\<TFeatures, TData\>
-
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L5)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:5](https://
 
 ## Properties
 
-### getFacetedMinMaxValues()
+### getFacetedMinMaxValues
 
 ```ts
 getFacetedMinMaxValues: () => [number, number] | undefined;
@@ -35,7 +33,7 @@ Computes min/max numeric facet values for this column.
 
 ***
 
-### getFacetedRowModel()
+### getFacetedRowModel
 
 ```ts
 getFacetedRowModel: () => RowModel<TFeatures, TData>;
@@ -54,7 +52,7 @@ excluded.
 
 ***
 
-### getFacetedUniqueValues()
+### getFacetedUniqueValues
 
 ```ts
 getFacetedUniqueValues: () => Map<any, number>;

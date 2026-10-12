@@ -3,8 +3,6 @@ id: column_getIsLastColumn
 title: column_getIsLastColumn
 ---
 
-# Function: column\_getIsLastColumn()
-
 ```ts
 function column_getIsLastColumn<TFeatures, TData, TValue>(column, position?): boolean;
 ```
@@ -37,7 +35,8 @@ The same `position` semantics as `column_getIndex` apply.
 
 ### position?
 
-[`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md) | `"center"`
+  \| [`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md)
+  \| `"center"`
 
 ## Returns
 

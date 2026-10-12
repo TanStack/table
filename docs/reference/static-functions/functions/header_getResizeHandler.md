@@ -3,8 +3,6 @@ id: header_getResizeHandler
 title: header_getResizeHandler
 ---
 
-# Function: header\_getResizeHandler()
-
 ```ts
 function header_getResizeHandler<TFeatures, TData, TValue>(header, _contextDocument?): (event) => void;
 ```
@@ -43,19 +41,7 @@ depending on `columnResizeMode`.
 
 ## Returns
 
-```ts
-(event): void;
-```
-
-### Parameters
-
-#### event
-
-`unknown`
-
-### Returns
-
-`void`
+(`event`) => `void`
 
 ## Example
 

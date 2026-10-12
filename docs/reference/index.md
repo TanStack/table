@@ -3,8 +3,6 @@ id: "@tanstack/table-core"
 title: "@tanstack/table-core"
 ---
 
-# @tanstack/table-core
-
 ## Modules
 
 - [index](index/index.md)

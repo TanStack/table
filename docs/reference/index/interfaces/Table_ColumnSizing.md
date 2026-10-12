@@ -3,13 +3,11 @@ id: Table_ColumnSizing
 title: Table_ColumnSizing
 ---
 
-# Interface: Table\_ColumnSizing
-
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L62)
 
 ## Properties
 
-### getCenterTotalSize()
+### getCenterTotalSize
 
 ```ts
 getCenterTotalSize: () => number;
@@ -25,7 +23,7 @@ Sums the current sizes of visible center-region leaf columns.
 
 ***
 
-### getColumnOffsets()
+### getColumnOffsets
 
 ```ts
 getColumnOffsets: () => ColumnOffsetsByPosition;
@@ -44,7 +42,7 @@ Backs `column.getStart()` and `column.getAfter()` with O(1) lookups.
 
 ***
 
-### getEndTotalSize()
+### getEndTotalSize
 
 ```ts
 getEndTotalSize: () => number;
@@ -60,7 +58,7 @@ Sums the current sizes of visible logical end-pinned leaf columns.
 
 ***
 
-### getStartTotalSize()
+### getStartTotalSize
 
 ```ts
 getStartTotalSize: () => number;
@@ -76,7 +74,7 @@ Sums the current sizes of visible logical start-pinned leaf columns.
 
 ***
 
-### getTotalSize()
+### getTotalSize
 
 ```ts
 getTotalSize: () => number;
@@ -92,7 +90,7 @@ Sums the current sizes of all visible leaf columns.
 
 ***
 
-### resetColumnSizing()
+### resetColumnSizing
 
 ```ts
 resetColumnSizing: (defaultState?) => void;
@@ -115,7 +113,7 @@ to the feature default of `{}`.
 
 ***
 
-### setColumnSizing()
+### setColumnSizing
 
 ```ts
 setColumnSizing: (updater) => void;

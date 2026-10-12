@@ -3,13 +3,11 @@ id: useLegacyTable
 title: useLegacyTable
 ---
 
-# ~~Function: useLegacyTable()~~
-
 ```ts
 function useLegacyTable<TData>(options): LegacyReactTable<TData>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:405](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L405)
+Defined in: [src/useLegacyTable.ts:405](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L405)
 
 ## Type Parameters
 

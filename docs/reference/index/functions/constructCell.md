@@ -3,8 +3,6 @@ id: constructCell
 title: constructCell
 ---
 
-# Function: constructCell()
-
 ```ts
 function constructCell<TFeatures, TData, TValue>(
    column,

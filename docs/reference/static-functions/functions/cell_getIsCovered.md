@@ -3,13 +3,11 @@ id: cell_getIsCovered
 title: cell_getIsCovered
 ---
 
-# Function: cell\_getIsCovered()
-
 ```ts
 function cell_getIsCovered<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:423](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L423)
+Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:425](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L425)
 
 Checks whether another cell's span covers this cell.
 

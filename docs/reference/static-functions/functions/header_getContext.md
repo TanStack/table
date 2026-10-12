@@ -3,13 +3,11 @@ id: header_getContext
 title: header_getContext
 ---
 
-# Function: header\_getContext()
-
 ```ts
 function header_getContext<TFeatures, TData, TValue>(header): object;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L62)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L57)
 
 Builds the render context passed to a column's `header` or `footer` template.
 

@@ -3,8 +3,6 @@ id: "@tanstack/vue-table"
 title: "@tanstack/vue-table"
 ---
 
-# @tanstack/vue-table
-
 ## Interfaces
 
 - [AppCellProps](interfaces/AppCellProps.md)

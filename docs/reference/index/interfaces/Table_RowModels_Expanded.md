@@ -3,9 +3,7 @@ id: Table_RowModels_Expanded
 title: Table_RowModels_Expanded
 ---
 
-# Interface: Table\_RowModels\_Expanded\<TFeatures, TData\>
-
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L113)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L128)
 
 ## Type Parameters
 
@@ -19,13 +17,13 @@ Defined in: [features/row-expanding/rowExpandingFeature.types.ts:113](https://gi
 
 ## Properties
 
-### getExpandedRowModel()
+### getExpandedRowModel
 
 ```ts
 getExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L120)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L135)
 
 Resolves the row model after expanded rows have been flattened into view.
 
@@ -35,13 +33,13 @@ Resolves the row model after expanded rows have been flattened into view.
 
 ***
 
-### getPreExpandedRowModel()
+### getPreExpandedRowModel
 
 ```ts
 getPreExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L124)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L139)
 
 Reads the row model immediately before expansion.
 

@@ -3,8 +3,6 @@ id: ExtractFeatureMapTypes
 title: ExtractFeatureMapTypes
 ---
 
-# Type Alias: ExtractFeatureMapTypes\<TFeatures, TFeatureMap\>
-
 ```ts
 type ExtractFeatureMapTypes<TFeatures, TFeatureMap> = IsAny<TFeatures> extends true ? UnionToIntersection<TFeatureMap[keyof TFeatureMap]> : UnionToIntersectionOrEmpty<TFeatureMap[Extract<keyof TFeatures, keyof TFeatureMap>]>;
 ```

@@ -1,5 +1,6 @@
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
+import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 
 export type ColumnOrderState = Array<string>
@@ -63,8 +64,8 @@ export interface ColumnOrderDefaultOptions {
 }
 
 export interface Table_ColumnOrdering<
-  in out _TFeatures extends TableFeatures,
-  in out _TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Builds column-id to index records for each visible pinning region.
@@ -73,6 +74,15 @@ export interface Table_ColumnOrdering<
    * will not need to call it directly.
    */
   getColumnIndexes: () => ColumnIndexes
+  /**
+   * Returns a function that orders leaf columns by `columnOrder`, after moving
+   * grouped columns as `groupedColumnMode` sets.
+   *
+   * Leaf column order reads it; most apps will not need to call it directly.
+   */
+  getOrderColumnsFn: () => (
+    columns: Array<Column<TFeatures, TData, unknown>>,
+  ) => Array<Column<TFeatures, TData, unknown>>
   /**
    * Resets `columnOrder` to `initialState.columnOrder`.
    *

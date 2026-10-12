@@ -3,13 +3,11 @@ id: table_setColumnPinning
 title: table_setColumnPinning
 ---
 
-# Function: table\_setColumnPinning()
-
 ```ts
 function table_setColumnPinning<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:307](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L307)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:295](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L295)
 
 Routes a column pinning updater through the table's pinning change handler.
 

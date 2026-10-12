@@ -3,13 +3,11 @@ id: table_getEndLeafHeaders
 title: table_getEndLeafHeaders
 ---
 
-# Function: table\_getEndLeafHeaders()
-
 ```ts
 function table_getEndLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:661](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L661)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:639](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L639)
 
 Collects leaf headers for the end pinned region.
 

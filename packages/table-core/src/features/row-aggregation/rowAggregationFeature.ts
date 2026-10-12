@@ -1,5 +1,6 @@
-import { assignPrototypeAPIs } from '../../utils'
+import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
 import {
+  aggregateColumnValue,
   cell_getIsAggregated,
   column_getAggregationFns,
   column_getAggregationValue,
@@ -52,5 +53,15 @@ export const rowAggregationFeature: TableFeature = {
   initColumnInstanceData: (column) => {
     ;(column as any)._aggregationValueCache = undefined
     ;(column as any)._resolvedAggregationFnsCache = undefined
+  },
+
+  constructTableAPIs: (table) => {
+    assignTableAPIs('rowAggregationFeature', table, {
+      // Internal: the grouped row model aggregates through this, so tables
+      // that group without this feature don't bundle the executor
+      table__aggregateColumnValue: {
+        fn: aggregateColumnValue,
+      },
+    })
   },
 }

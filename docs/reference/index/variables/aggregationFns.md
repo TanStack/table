@@ -3,13 +3,11 @@ id: aggregationFns
 title: aggregationFns
 ---
 
-# ~~Variable: aggregationFns~~
-
 ```ts
 const aggregationFns: object;
 ```
 
-Defined in: [features/row-aggregation/aggregationFns.ts:369](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/aggregationFns.ts#L369)
+Defined in: [features/row-aggregation/aggregationFns.ts:387](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/aggregationFns.ts#L387)
 
 Full built-in registry. Register individual definitions for tree-shaking.
 

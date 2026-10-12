@@ -47,12 +47,6 @@ function isAggregationFnDescriptor(
   )
 }
 
-function warn(message: string) {
-  if (process.env.NODE_ENV === 'development') {
-    console.warn(message)
-  }
-}
-
 function resolveMaxAggregationDepth(maxDepth: number | undefined) {
   return maxDepth === undefined || Number.isNaN(maxDepth)
     ? 0
@@ -198,8 +192,8 @@ export function column_getAutoAggregationFn<
 
   const aggregationFn = column.table._rowModelFns.aggregationFns?.[name]
 
-  if (!aggregationFn) {
-    warn(
+  if (process.env.NODE_ENV === 'development' && !aggregationFn) {
+    console.warn(
       `aggregationFn '${name}' (auto) for column '${column.id}' is not registered`,
     )
   }
@@ -219,8 +213,8 @@ function resolveAggregationFn<
 
   const aggregationFn =
     column.table._rowModelFns.aggregationFns?.[ref as string]
-  if (!aggregationFn) {
-    warn(
+  if (process.env.NODE_ENV === 'development' && !aggregationFn) {
+    console.warn(
       `aggregationFn '${String(ref)}' for column '${column.id}' is not registered`,
     )
   }
@@ -297,15 +291,21 @@ export function column_getAggregationFns<
           : undefined
 
     if (id === undefined) {
-      warn(
-        `aggregationFn at index ${i} for column '${column.id}' needs a stable id`,
-      )
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          `aggregationFn at index ${i} for column '${column.id}' needs a stable id`,
+        )
+      }
       resolved.push({ aggregationFn: undefined, id: undefined })
       continue
     }
 
     if (ids[id]! > 1) {
-      warn(`aggregationFn id '${id}' for column '${column.id}' is duplicated`)
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          `aggregationFn id '${id}' for column '${column.id}' is duplicated`,
+        )
+      }
       resolved.push({ aggregationFn: undefined, id })
       continue
     }

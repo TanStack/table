@@ -17,6 +17,7 @@ import {
   column_getToggleSortingHandler,
   column_toggleSorting,
   getDefaultSortingState,
+  table_autoResetSorting,
   table_resetSorting,
   table_setSorting,
 } from './rowSortingFeature.utils'
@@ -93,6 +94,9 @@ export const rowSortingFeature: TableFeature = {
 
   constructTableAPIs(table) {
     assignTableAPIs('rowSortingFeature', table, {
+      table_autoResetSorting: {
+        fn: () => table_autoResetSorting(table),
+      },
       table_setSorting: {
         fn: (updater) => table_setSorting(table, updater),
       },

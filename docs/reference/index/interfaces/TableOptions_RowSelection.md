@@ -3,8 +3,6 @@ id: TableOptions_RowSelection
 title: TableOptions_RowSelection
 ---
 
-# Interface: TableOptions\_RowSelection\<TFeatures, TData\>
-
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L34)
 
 ## Type Parameters
@@ -22,7 +20,7 @@ Defined in: [features/row-selection/rowSelectionFeature.types.ts:34](https://git
 ### enableMultiRowSelection?
 
 ```ts
-optional enableMultiRowSelection: boolean | (row) => boolean;
+optional enableMultiRowSelection?: boolean | ((row) => boolean);
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L48)
@@ -36,7 +34,7 @@ Provide a predicate to decide per row. Defaults to `true`.
 ### enableRowRangeSelection?
 
 ```ts
-optional enableRowRangeSelection: boolean;
+optional enableRowRangeSelection?: boolean;
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L42)
@@ -49,7 +47,7 @@ Enables inclusive row range selection through
 ### enableRowSelection?
 
 ```ts
-optional enableRowSelection: boolean | (row) => boolean;
+optional enableRowSelection?: boolean | ((row) => boolean);
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L54)
@@ -63,7 +61,7 @@ Provide a predicate to decide per row. Defaults to `true`.
 ### enableSubRowSelection?
 
 ```ts
-optional enableSubRowSelection: boolean | (row) => boolean;
+optional enableSubRowSelection?: boolean | ((row) => boolean);
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L62)
@@ -76,10 +74,10 @@ getters also skip descendants of parents that block sub-row selection.
 
 ***
 
-### isRowRangeSelectionEvent()?
+### isRowRangeSelectionEvent?
 
 ```ts
-optional isRowRangeSelectionEvent: (event) => boolean;
+optional isRowRangeSelectionEvent?: (event) => boolean;
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L70)
@@ -105,7 +103,7 @@ By default, events with `shiftKey` directly on the event or on
 ### onRowSelectionChange?
 
 ```ts
-optional onRowSelectionChange: OnChangeFn<RowSelectionState>;
+optional onRowSelectionChange?: OnChangeFn<RowSelectionState>;
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L76)

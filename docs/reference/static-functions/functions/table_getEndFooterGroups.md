@@ -3,13 +3,11 @@ id: table_getEndFooterGroups
 title: table_getEndFooterGroups
 ---
 
-# Function: table\_getEndFooterGroups()
-
 ```ts
 function table_getEndFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:505](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L505)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:483](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L483)
 
 Builds footer groups for the end pinned region.
 

@@ -3,8 +3,6 @@ id: buildHeaderGroups
 title: buildHeaderGroups
 ---
 
-# Function: buildHeaderGroups()
-
 ```ts
 function buildHeaderGroups<TFeatures, TData, TValue>(
    allColumns,
@@ -13,7 +11,7 @@ function buildHeaderGroups<TFeatures, TData, TValue>(
    headerFamily?): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [core/headers/buildHeaderGroups.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/buildHeaderGroups.ts#L235)
+Defined in: [core/headers/buildHeaderGroups.ts:227](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/buildHeaderGroups.ts#L227)
 
 Builds the nested header group structure for a table.
 
@@ -49,7 +47,7 @@ The result accounts for visible leaf columns, pinned column groups, and placehol
 
 ### headerFamily?
 
-`"start"` | `"end"` | `"center"`
+`"start"` \| `"end"` \| `"center"`
 
 ## Returns
 

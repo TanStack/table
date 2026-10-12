@@ -3,13 +3,11 @@ id: legacyCreateColumnHelper
 title: legacyCreateColumnHelper
 ---
 
-# ~~Function: legacyCreateColumnHelper()~~
-
 ```ts
 function legacyCreateColumnHelper<TData>(): ColumnHelper<LegacyFeatures, TData>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:360](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L360)
+Defined in: [src/useLegacyTable.ts:360](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L360)
 
 ## Type Parameters
 

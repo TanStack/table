@@ -3,8 +3,6 @@ id: table_setRowSelection
 title: table_setRowSelection
 ---
 
-# Function: table\_setRowSelection()
-
 ```ts
 function table_setRowSelection<TFeatures, TData>(table, updater): void;
 ```

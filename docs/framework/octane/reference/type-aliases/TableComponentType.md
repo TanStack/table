@@ -3,8 +3,6 @@ id: TableComponentType
 title: TableComponentType
 ---
 
-# Type Alias: TableComponentType()\<TProps\>
-
 ```ts
 type TableComponentType<TProps> = (props) => OctaneNode;
 ```

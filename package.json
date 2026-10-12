@@ -27,6 +27,7 @@
     "lint:fix:all": "pnpm run format && nx run-many --targets=lint --fix",
     "lint:fix": "nx affected --target=lint:fix --exclude=examples/**",
     "size": "size-limit",
+    "size:devtools": "node scripts/generate-bundle-sizes.mjs",
     "test": "pnpm run test:ci",
     "test:build": "nx affected --target=test:build",
     "test:ci": "pnpm run test:compiler-examples && nx run-many --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",
@@ -62,8 +63,33 @@
   },
   "size-limit": [
     {
+      "name": "@tanstack/table-core (everything)",
       "path": "packages/table-core/dist/index.js",
       "limit": "30 KB"
+    },
+    {
+      "name": "constructTable (core features only)",
+      "path": "packages/table-core/dist/index.js",
+      "import": "{ constructTable }",
+      "limit": "6 KB"
+    },
+    {
+      "name": "filterFn_includesString (tree-shaking)",
+      "path": "packages/table-core/dist/index.js",
+      "import": "{ filterFn_includesString }",
+      "limit": "300 B"
+    },
+    {
+      "name": "sortFn_text (tree-shaking)",
+      "path": "packages/table-core/dist/index.js",
+      "import": "{ sortFn_text }",
+      "limit": "300 B"
+    },
+    {
+      "name": "aggregationFn_sum (tree-shaking)",
+      "path": "packages/table-core/dist/index.js",
+      "import": "{ aggregationFn_sum }",
+      "limit": "300 B"
     }
   ],
   "devDependencies": {

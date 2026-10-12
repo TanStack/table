@@ -3,8 +3,6 @@ id: AppColumnHelper
 title: AppColumnHelper
 ---
 
-# Type Alias: AppColumnHelper\<TFeatures, TData, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```
@@ -34,7 +32,7 @@ This enables TypeScript to know about the registered components when defining co
 
 ## Properties
 
-### accessor()
+### accessor
 
 ```ts
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
@@ -71,7 +69,7 @@ The cell, header, and footer contexts include pre-bound components.
 
 ***
 
-### columns()
+### columns
 
 ```ts
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
@@ -99,7 +97,7 @@ Wraps an array of column definitions to preserve each column's individual TValue
 
 ***
 
-### display()
+### display
 
 ```ts
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
@@ -122,7 +120,7 @@ The cell, header, and footer contexts include pre-bound components.
 
 ***
 
-### group()
+### group
 
 ```ts
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;

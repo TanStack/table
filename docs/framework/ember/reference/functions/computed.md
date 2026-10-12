@@ -3,8 +3,6 @@ id: computed
 title: computed
 ---
 
-# Function: computed()
-
 ```ts
 function computed<T>(fn): ComputedSignal<T>;
 ```

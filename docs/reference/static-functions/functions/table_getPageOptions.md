@@ -3,8 +3,6 @@ id: table_getPageOptions
 title: table_getPageOptions
 ---
 
-# Function: table\_getPageOptions()
-
 ```ts
 function table_getPageOptions<TFeatures, TData>(table): number[];
 ```

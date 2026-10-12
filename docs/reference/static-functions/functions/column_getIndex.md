@@ -3,8 +3,6 @@ id: column_getIndex
 title: column_getIndex
 ---
 
-# Function: column\_getIndex()
-
 ```ts
 function column_getIndex<TFeatures, TData, TValue>(column, position?): number;
 ```
@@ -38,7 +36,8 @@ position to search the full visible leaf column list.
 
 ### position?
 
-[`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md) | `"center"`
+  \| [`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md)
+  \| `"center"`
 
 ## Returns
 

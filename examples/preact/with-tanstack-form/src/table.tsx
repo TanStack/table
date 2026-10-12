@@ -14,7 +14,7 @@ import {
   tableFeatures,
 } from '@tanstack/preact-table'
 import { useDebouncedCallback } from '@tanstack/preact-pacer/debouncer'
-import type { JSX } from 'preact'
+import type { ComponentProps } from 'preact'
 import type { Column, PreactTable } from '@tanstack/preact-table'
 
 function SortIndicator() {
@@ -183,6 +183,11 @@ function Filter({
   )
 }
 
+// Keeps Preact's per-`type` <input> prop union intact.
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
+  ? Omit<T, K>
+  : never
+
 function DebouncedInput({
   value: initialValue,
   onChange,
@@ -194,7 +199,7 @@ function DebouncedInput({
   onChange: (value: string | number) => void
   debounce?: number
   devtoolsKey: string
-} & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+} & DistributiveOmit<ComponentProps<'input'>, 'onChange' | 'value'>) {
   const [value, setValue] = useState(initialValue)
 
   useEffect(() => {

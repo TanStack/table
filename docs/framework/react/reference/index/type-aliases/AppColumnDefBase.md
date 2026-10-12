@@ -3,13 +3,11 @@ id: AppColumnDefBase
 title: AppColumnDefBase
 ---
 
-# Type Alias: AppColumnDefBase\<TFeatures, TData, TValue, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:92](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L92)
+Defined in: [src/createTableHook.tsx:92](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L92)
 
 Enhanced column definition base with pre-bound components in cell/header/footer contexts.
 
@@ -18,19 +16,19 @@ Enhanced column definition base with pre-bound components in cell/header/footer 
 ### cell?
 
 ```ts
-optional cell: AppColumnDefTemplate<AppCellContext<TFeatures, TData, TValue, TCellComponents>>;
+optional cell?: AppColumnDefTemplate<AppCellContext<TFeatures, TData, TValue, TCellComponents>>;
 ```
 
 ### footer?
 
 ```ts
-optional footer: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
+optional footer?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
 ```
 
 ### header?
 
 ```ts
-optional header: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
+optional header?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, TValue, THeaderComponents>>;
 ```
 
 ## Type Parameters

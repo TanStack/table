@@ -3,8 +3,6 @@ id: CellSelectionRange
 title: CellSelectionRange
 ---
 
-# Interface: CellSelectionRange
-
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L19)
 
 A single rectangular cell selection, stored as its two defining corners.
@@ -60,7 +58,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:23](https://g
 ### operation?
 
 ```ts
-optional operation: CellSelectionRangeOperation;
+optional operation?: CellSelectionRangeOperation;
 ```
 
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L28)

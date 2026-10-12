@@ -3,9 +3,7 @@ id: Table_Core
 title: Table_Core
 ---
 
-# Interface: Table\_Core\<TFeatures, TData\>
-
-Defined in: [types/Table.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L41)
+Defined in: [types/Table.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L42)
 
 The core table object that only includes the core table functionality such as column, header, row, and table APIS.
 No features are included.
@@ -69,7 +67,7 @@ Cache of the `initCellInstanceData` functions for features that define one.
 ### \_cellPrototype?
 
 ```ts
-optional _cellPrototype: object;
+optional _cellPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:171](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L171)
@@ -125,7 +123,7 @@ Cache of the `initColumnInstanceData` functions for features that define one.
 ### \_columnPrototype?
 
 ```ts
-optional _columnPrototype: object;
+optional _columnPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L181)
@@ -233,7 +231,7 @@ Cache of the `initHeaderInstanceData` functions for features that define one.
 ### \_headerPrototype?
 
 ```ts
-optional _headerPrototype: object;
+optional _headerPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L201)
@@ -333,7 +331,7 @@ The row models that are enabled for the table.
 ### \_rowPrototype?
 
 ```ts
-optional _rowPrototype: object;
+optional _rowPrototype?: object;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L213)
@@ -381,7 +379,7 @@ single write surface — all state mutations from features land here.
 
 ***
 
-### getAllColumns()
+### getAllColumns
 
 ```ts
 getAllColumns: () => Column<TFeatures, TData, unknown>[];
@@ -401,7 +399,7 @@ Normalizes `options.columns` into the table's nested column hierarchy.
 
 ***
 
-### getAllFlatColumns()
+### getAllFlatColumns
 
 ```ts
 getAllFlatColumns: () => Column<TFeatures, TData, unknown>[];
@@ -421,7 +419,7 @@ Flattens the nested column hierarchy, including parent/group columns.
 
 ***
 
-### getAllFlatColumnsById()
+### getAllFlatColumnsById
 
 ```ts
 getAllFlatColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
@@ -441,7 +439,7 @@ Returns a map of all flat columns by their ID.
 
 ***
 
-### getAllLeafColumns()
+### getAllLeafColumns
 
 ```ts
 getAllLeafColumns: () => Column<TFeatures, TData, unknown>[];
@@ -461,7 +459,7 @@ Collects all terminal leaf columns, excluding parent/group columns.
 
 ***
 
-### getAllLeafColumnsById()
+### getAllLeafColumnsById
 
 ```ts
 getAllLeafColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
@@ -481,7 +479,7 @@ Returns a map of all leaf-node columns by their ID. This does not include parent
 
 ***
 
-### getColumn()
+### getColumn
 
 ```ts
 getColumn: (columnId) =>
@@ -510,7 +508,7 @@ Returns a single column by its ID.
 
 ***
 
-### getCoreRowModel()
+### getCoreRowModel
 
 ```ts
 getCoreRowModel: () => RowModel<TFeatures, TData>;
@@ -532,7 +530,7 @@ Table_RowModels.getCoreRowModel
 
 ***
 
-### getDefaultColumnDef()
+### getDefaultColumnDef
 
 ```ts
 getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>;
@@ -552,13 +550,13 @@ Resolves built-in, feature-level, and user-defined default column options.
 
 ***
 
-### getExpandedRowModel()
+### getExpandedRowModel
 
 ```ts
 getExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L120)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L135)
 
 Resolves the row model after expanded rows have been flattened into view.
 
@@ -574,7 +572,7 @@ Table_RowModels.getExpandedRowModel
 
 ***
 
-### getFacetedMinMaxValues()
+### getFacetedMinMaxValues
 
 ```ts
 getFacetedMinMaxValues: () => [number, number] | undefined;
@@ -598,7 +596,7 @@ Table_RowModels.getFacetedMinMaxValues
 
 ***
 
-### getFacetedRowModel()
+### getFacetedRowModel
 
 ```ts
 getFacetedRowModel: () => RowModel<TFeatures, TData>;
@@ -622,7 +620,7 @@ Table_RowModels.getFacetedRowModel
 
 ***
 
-### getFacetedUniqueValues()
+### getFacetedUniqueValues
 
 ```ts
 getFacetedUniqueValues: () => Map<any, number>;
@@ -646,7 +644,7 @@ Table_RowModels.getFacetedUniqueValues
 
 ***
 
-### getFilteredRowModel()
+### getFilteredRowModel
 
 ```ts
 getFilteredRowModel: () => RowModel<TFeatures, TData>;
@@ -668,7 +666,7 @@ Table_RowModels.getFilteredRowModel
 
 ***
 
-### getFlatHeaders()
+### getFlatHeaders
 
 ```ts
 getFlatHeaders: () => Header<TFeatures, TData, unknown>[];
@@ -689,7 +687,7 @@ placeholder headers.
 
 ***
 
-### getFooterGroups()
+### getFooterGroups
 
 ```ts
 getFooterGroups: () => HeaderGroup<TFeatures, TData>[];
@@ -709,13 +707,13 @@ Builds footer groups by reversing the current header group order.
 
 ***
 
-### getGroupedRowModel()
+### getGroupedRowModel
 
 ```ts
 getGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L140)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L150)
 
 Resolves the row model after grouping has been applied.
 
@@ -731,7 +729,7 @@ Table_RowModels.getGroupedRowModel
 
 ***
 
-### getHeaderGroups()
+### getHeaderGroups
 
 ```ts
 getHeaderGroups: () => HeaderGroup<TFeatures, TData>[];
@@ -752,7 +750,7 @@ and pinning state.
 
 ***
 
-### getLeafHeaders()
+### getLeafHeaders
 
 ```ts
 getLeafHeaders: () => Header<TFeatures, TData, unknown>[];
@@ -772,7 +770,7 @@ Collects only leaf headers, excluding parent/group headers.
 
 ***
 
-### getMaxSubRowDepth()
+### getMaxSubRowDepth
 
 ```ts
 getMaxSubRowDepth: () => number;
@@ -793,13 +791,13 @@ Root rows are depth `0`, direct sub-rows are depth `1`, and so on.
 
 ***
 
-### getPaginatedRowModel()
+### getPaginatedRowModel
 
 ```ts
 getPaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L134)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L141)
 
 Resolves the row model after pagination has sliced the current page.
 
@@ -815,13 +813,13 @@ Table_RowModels.getPaginatedRowModel
 
 ***
 
-### getPreExpandedRowModel()
+### getPreExpandedRowModel
 
 ```ts
 getPreExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L124)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L139)
 
 Reads the row model immediately before expansion.
 
@@ -837,7 +835,7 @@ Table_RowModels.getPreExpandedRowModel
 
 ***
 
-### getPreFilteredRowModel()
+### getPreFilteredRowModel
 
 ```ts
 getPreFilteredRowModel: () => RowModel<TFeatures, TData>;
@@ -859,13 +857,13 @@ Table_RowModels.getPreFilteredRowModel
 
 ***
 
-### getPreGroupedRowModel()
+### getPreGroupedRowModel
 
 ```ts
 getPreGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L144)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L154)
 
 Reads the row model immediately before grouping.
 
@@ -881,13 +879,13 @@ Table_RowModels.getPreGroupedRowModel
 
 ***
 
-### getPrePaginatedRowModel()
+### getPrePaginatedRowModel
 
 ```ts
 getPrePaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L138)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L145)
 
 Reads the row model immediately before pagination.
 
@@ -903,13 +901,13 @@ Table_RowModels.getPrePaginatedRowModel
 
 ***
 
-### getPreSortedRowModel()
+### getPreSortedRowModel
 
 ```ts
 getPreSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L289)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:297](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L297)
 
 Reads the row model immediately before sorting.
 
@@ -925,7 +923,7 @@ Table_RowModels.getPreSortedRowModel
 
 ***
 
-### getRow()
+### getRow
 
 ```ts
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
@@ -955,7 +953,7 @@ Returns the row with the given ID.
 
 ***
 
-### getRowId()
+### getRowId
 
 ```ts
 getRowId: (_, index, parent?) => string;
@@ -989,7 +987,7 @@ Returns the row id for a given row.
 
 ***
 
-### getRowModel()
+### getRowModel
 
 ```ts
 getRowModel: () => RowModel<TFeatures, TData>;
@@ -1011,7 +1009,7 @@ Table_RowModels.getRowModel
 
 ***
 
-### getRowsInDisplayOrder()
+### getRowsInDisplayOrder
 
 ```ts
 getRowsInDisplayOrder: () => Row<TFeatures, TData>[];
@@ -1034,13 +1032,13 @@ included in this order. This is the memoized source for
 
 ***
 
-### getSortedRowModel()
+### getSortedRowModel
 
 ```ts
 getSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:293](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L293)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L301)
 
 Resolves the row model after sorting has been applied.
 
@@ -1091,7 +1089,7 @@ A read-only reference to the table's current options.
 ### optionsStore?
 
 ```ts
-readonly optional optionsStore: Atom<TableOptions<TFeatures, TData>>;
+readonly optional optionsStore?: Atom<TableOptions<TFeatures, TData>>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:242](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L242)
@@ -1106,7 +1104,7 @@ options as plain resolved data instead of backing them with an atom.
 
 ***
 
-### reset()
+### reset
 
 ```ts
 reset: () => void;
@@ -1131,7 +1129,7 @@ reset hooks for mutable, transient table-instance data.
 
 ***
 
-### setOptions()
+### setOptions
 
 ```ts
 setOptions: (newOptions) => void;

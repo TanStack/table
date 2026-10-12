@@ -31,9 +31,11 @@ test('updates pagination atom and row model without errors', async ({
     await expect(status).toContainText('1 of 100')
     const timing = await page
       .getByRole('button', { name: '>', exact: true })
-      .evaluate((button) => {
+      .evaluate(async (button) => {
         const started = performance.now()
         ;(button as HTMLButtonElement).click()
+        // Octane commits a click's updates in the next microtask.
+        await Promise.resolve()
         return {
           elapsed: performance.now() - started,
           status: document.querySelector('.controls strong')?.textContent,
@@ -48,9 +50,10 @@ test('updates pagination atom and row model without errors', async ({
     const sortTiming = await page
       .locator('.sortable-header')
       .first()
-      .evaluate((header) => {
+      .evaluate(async (header) => {
         const started = performance.now()
         ;(header as HTMLElement).click()
+        await Promise.resolve()
         return {
           elapsed: performance.now() - started,
           text: header.textContent,

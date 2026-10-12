@@ -3,8 +3,6 @@ id: AppOctaneTable
 title: AppOctaneTable
 ---
 
-# Type Alias: AppOctaneTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppOctaneTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = OctaneTable<TFeatures, TData, TSelected> & CoreNoInfer<TTableComponents> & object;
 ```

@@ -1,10 +1,10 @@
 import { makeObjectMap, skipFirstRun, tableMemo } from '../../utils'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import {
-  column_getCanGlobalFilter,
-  table_getGlobalFilterFn,
-} from '../global-filtering/globalFilteringFeature.utils'
-import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
+  autoResetPageIndex,
+  getCanGlobalFilter,
+  getGlobalFilterFn,
+} from '../../core/featureStubs'
 import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './columnFilteringFeature.utils'
 import type { RowData } from '../../types/type-utils'
@@ -45,7 +45,7 @@ export function createFilteredRowModel<
         table.atoms.globalFilter?.get(),
       ],
       fn: () => _createFilteredRowModel(table),
-      onAfterUpdate: skipFirstRun(() => table_autoResetPageIndex(table)),
+      onAfterUpdate: skipFirstRun(() => autoResetPageIndex(table)),
     })
   }
 }
@@ -102,23 +102,27 @@ function _createFilteredRowModel<
 
   const filterableIds = columnFilters?.map((d) => d.id) ?? []
 
-  const globalFilterFn = table_getGlobalFilterFn(table)
+  // A global filter value only exists when globalFilteringFeature is
+  // registered, so its global filter fn is resolved only when one is set
+  if (hasGlobalFilter) {
+    const globalFilterFn = getGlobalFilterFn(table)
 
-  const globallyFilterableColumns = table
-    .getAllLeafColumns()
-    .filter((column) => column_getCanGlobalFilter(column))
+    const globallyFilterableColumns = globalFilterFn
+      ? table.getAllLeafColumns().filter(getCanGlobalFilter)
+      : []
 
-  if (hasGlobalFilter && globalFilterFn && globallyFilterableColumns.length) {
-    filterableIds.push('__global__')
+    if (globalFilterFn && globallyFilterableColumns.length) {
+      filterableIds.push('__global__')
 
-    globallyFilterableColumns.forEach((column) => {
-      resolvedGlobalFilters.push({
-        id: column.id,
-        filterFn: globalFilterFn,
-        resolvedValue:
-          globalFilterFn.resolveFilterValue?.(globalFilter) ?? globalFilter,
+      globallyFilterableColumns.forEach((column) => {
+        resolvedGlobalFilters.push({
+          id: column.id,
+          filterFn: globalFilterFn,
+          resolvedValue:
+            globalFilterFn.resolveFilterValue?.(globalFilter) ?? globalFilter,
+        })
       })
-    })
+    }
   }
 
   // Flag the pre-filtered row model with each filter state

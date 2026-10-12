@@ -3,8 +3,6 @@ id: table_resetPageIndex
 title: table_resetPageIndex
 ---
 
-# Function: table\_resetPageIndex()
-
 ```ts
 function table_resetPageIndex<TFeatures, TData>(table, defaultState?): void;
 ```

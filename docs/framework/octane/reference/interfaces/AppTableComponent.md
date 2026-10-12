@@ -3,8 +3,6 @@ id: AppTableComponent
 title: AppTableComponent
 ---
 
-# Interface: AppTableComponent()\<TFeatures\>
-
 Defined in: [types.ts:723](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L723)
 
 Component type for AppTable — root wrapper with optional Subscribe.

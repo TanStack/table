@@ -119,7 +119,7 @@ How you apply these size styles to your markup is up to you, but it is pretty co
 ```tsx
 <th
   key={header.id}
-  colSpan={header.colSpan}
+  colspan={header.colSpan}
   style={{ width: `${header.getSize()}px` }}
 >
 ```

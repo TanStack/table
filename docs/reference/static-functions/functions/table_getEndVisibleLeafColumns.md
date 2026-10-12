@@ -3,13 +3,11 @@ id: table_getEndVisibleLeafColumns
 title: table_getEndVisibleLeafColumns
 ---
 
-# Function: table\_getEndVisibleLeafColumns()
-
 ```ts
 function table_getEndVisibleLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:844](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L844)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:820](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L820)
 
 Resolves visible leaf columns pinned to the end region.
 

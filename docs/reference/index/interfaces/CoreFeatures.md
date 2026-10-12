@@ -3,8 +3,6 @@ id: CoreFeatures
 title: CoreFeatures
 ---
 
-# Interface: CoreFeatures
-
 Defined in: [core/coreFeatures.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L9)
 
 ## Properties
@@ -42,7 +40,7 @@ Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/mai
 ### coreReactivityFeature?
 
 ```ts
-optional coreReactivityFeature: TableReactivityBindings;
+optional coreReactivityFeature?: TableReactivityBindings;
 ```
 
 Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L10)

@@ -1,5 +1,4 @@
-import { callMemoOrStaticFn } from '../../utils'
-import { column_getIsVisible } from '../../features/column-visibility/columnVisibilityFeature.utils'
+import { getIsColumnVisible } from '../featureStubs'
 import { constructHeader } from './constructHeader'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -19,10 +18,7 @@ function getMaxHeaderDepth<
 
   for (let i = 0; i < columns.length; i++) {
     const column = columns[i]!
-    if (
-      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible) &&
-      column.columns.length
-    ) {
+    if (getIsColumnVisible(column) && column.columns.length) {
       maxDepth = Math.max(
         maxDepth,
         getMaxHeaderDepth(column.columns, depth + 1),
@@ -168,9 +164,7 @@ function updateHeaderSpans<
 >(headers: Array<Header<TFeatures, TData, TValue>>): void {
   for (let i = 0; i < headers.length; i++) {
     const header = headers[i]!
-    if (
-      !callMemoOrStaticFn(header.column, 'getIsVisible', column_getIsVisible)
-    ) {
+    if (!getIsColumnVisible(header.column)) {
       continue
     }
 
@@ -181,9 +175,7 @@ function updateHeaderSpans<
 
       for (let j = 0; j < header.subHeaders.length; j++) {
         const child = header.subHeaders[j]!
-        if (
-          !callMemoOrStaticFn(child.column, 'getIsVisible', column_getIsVisible)
-        ) {
+        if (!getIsColumnVisible(child.column)) {
           continue
         }
 

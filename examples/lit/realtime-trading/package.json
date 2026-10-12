@@ -19,7 +19,7 @@
     }
   },
   "dependencies": {
-    "@tanstack/lit-table": "^9.2.6",
+    "@tanstack/lit-table": "^9.2.8",
     "@tanstack/lit-virtual": "^3.14.2",
     "@tanstack/store": "^0.11.2",
     "lit": "^3.3.3"

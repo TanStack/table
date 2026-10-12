@@ -3,8 +3,6 @@ id: createFacetedMinMaxValues
 title: createFacetedMinMaxValues
 ---
 
-# Function: createFacetedMinMaxValues()
-
 ```ts
 function createFacetedMinMaxValues<TFeatures, TData>(): (table, columnId) => () => [number, number] | undefined;
 ```
@@ -27,26 +25,4 @@ The returned function derives facet data from the table row model and relevant f
 
 ## Returns
 
-```ts
-(table, columnId): () => [number, number] | undefined;
-```
-
-### Parameters
-
-#### table
-
-[`Table`](../type-aliases/Table.md)\<`TFeatures`, `TData`\>
-
-#### columnId
-
-`string`
-
-### Returns
-
-```ts
-(): [number, number] | undefined;
-```
-
-#### Returns
-
-\[`number`, `number`\] \| `undefined`
+(`table`, `columnId`) => () => \[`number`, `number`\] \| `undefined`

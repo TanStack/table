@@ -3,13 +3,11 @@ id: createTableHookContexts
 title: createTableHookContexts
 ---
 
-# Function: createTableHookContexts()
-
 ```ts
 function createTableHookContexts<TFeatures, TData>(): TableHookContexts<TFeatures, TData>;
 ```
 
-Defined in: [react-table/src/createTableHookContexts.tsx:83](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L83)
+Defined in: [src/createTableHookContexts.tsx:83](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHookContexts.tsx#L83)
 
 Creates a fresh, scoped set of table/cell/header contexts (plus matching
 context hooks) that you can pass into [createTableHook](createTableHook.md). This mirrors

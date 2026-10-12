@@ -3,8 +3,6 @@ id: Cell_FeatureMap
 title: Cell_FeatureMap
 ---
 
-# Interface: Cell\_FeatureMap
-
 Defined in: [types/Cell.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L15)
 
 ## Properties

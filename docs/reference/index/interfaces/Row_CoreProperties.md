@@ -3,8 +3,6 @@ id: Row_CoreProperties
 title: Row_CoreProperties
 ---
 
-# Interface: Row\_CoreProperties\<TFeatures, TData\>
-
 Defined in: [core/rows/coreRowsFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L8)
 
 ## Extended by
@@ -26,7 +24,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:8](https://github.com/TanStack/t
 ### \_cellsCache?
 
 ```ts
-optional _cellsCache: WeakMap<Column<TFeatures, TData, unknown>, Cell<TFeatures, TData, unknown>>;
+optional _cellsCache?: WeakMap<Column<TFeatures, TData, unknown>, Cell<TFeatures, TData, unknown>>;
 ```
 
 Defined in: [core/rows/coreRowsFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L12)
@@ -122,7 +120,7 @@ The original row object provided to the table. If the row is a grouped row, the 
 ### originalSubRows?
 
 ```ts
-optional originalSubRows: readonly TData[];
+optional originalSubRows?: readonly TData[];
 ```
 
 Defined in: [core/rows/coreRowsFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L47)
@@ -134,7 +132,7 @@ An array of the original subRows as returned by the `options.getSubRows` option.
 ### parentId?
 
 ```ts
-optional parentId: string;
+optional parentId?: string;
 ```
 
 Defined in: [core/rows/coreRowsFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L51)

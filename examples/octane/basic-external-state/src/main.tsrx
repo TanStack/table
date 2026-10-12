@@ -93,7 +93,7 @@ function App() @{
         @for (const headerGroup of table.getHeaderGroups(); key headerGroup.id) {
           <tr>
             @for (const header of headerGroup.headers; key header.id) {
-              <th colSpan={header.colSpan}>
+              <th colspan={header.colSpan}>
                 {header.isPlaceholder ? null : <div
                   className={header.column.getCanSort() ? 'sortable-header' : ''}
                   onClick={header.column.getToggleSortingHandler()}

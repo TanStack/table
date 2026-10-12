@@ -3,8 +3,6 @@ id: Header_Core
 title: Header_Core
 ---
 
-# Interface: Header\_Core\<TFeatures, TData, TValue\>
-
 Defined in: [types/Header.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Header.ts#L7)
 
 ## Extends
@@ -75,7 +73,7 @@ The depth of the header, zero-indexed.
 
 ***
 
-### getContext()
+### getContext
 
 ```ts
 getContext: () => HeaderContext<TFeatures, TData, TValue>;
@@ -95,7 +93,7 @@ Returns the rendering context (or props) for column-based components like header
 
 ***
 
-### getLeafHeaders()
+### getLeafHeaders
 
 ```ts
 getLeafHeaders: () => Header<TFeatures, TData, TValue>[];
@@ -186,7 +184,7 @@ into one vertically spanning header cell.
 ### placeholderId?
 
 ```ts
-optional placeholderId: string;
+optional placeholderId?: string;
 ```
 
 Defined in: [core/headers/coreHeadersFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L91)

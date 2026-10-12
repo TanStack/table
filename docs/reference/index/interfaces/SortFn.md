@@ -3,8 +3,6 @@ id: SortFn
 title: SortFn
 ---
 
-# Interface: SortFn()\<TFeatures, TData\>
-
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L34)
 
 ## Type Parameters
@@ -49,7 +47,7 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:38](https://github.
 ### resolveDataValue?
 
 ```ts
-optional resolveDataValue: TransformDataValueFn;
+optional resolveDataValue?: TransformDataValueFn;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L48)
