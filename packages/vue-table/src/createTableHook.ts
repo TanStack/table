@@ -1,6 +1,7 @@
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
-import { defineComponent, h, inject, provide } from 'vue'
+import { computed, defineComponent, h, inject, provide } from 'vue'
 import { FlexRender } from './FlexRender'
+import { createLiveProxy } from './live-proxy'
 import { mergeProxy } from './merge-proxy'
 import { useTable } from './useTable'
 import type { TableOptionsWithReactiveData, VueTable } from './useTable'
@@ -439,7 +440,8 @@ export function createTableHook<
     }
 
     // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
-    // the same cell instance it provides, so this asserts the runtime shape.
+    // its cell and provides a live view of the current cell, so this asserts
+    // the runtime shape.
     return cell as unknown as Cell<TFeatures, any, TValue> &
       TCellComponents & { FlexRender: Component }
   }
@@ -459,7 +461,7 @@ export function createTableHook<
     }
 
     // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
-    // and `FlexRender` onto the same header instance they provide.
+    // and `FlexRender` onto their header and provide a live view of it.
     return header as unknown as Header<TFeatures, any, TValue> &
       THeaderComponents & { FlexRender: Component }
   }
@@ -526,18 +528,25 @@ export function createTableHook<
         },
       },
       setup(props, { slots }) {
-        const cell = props.cell as Cell<TFeatures, TData, any>
+        // A keyed `v-for` reuses this component when `data` is replaced, passing
+        // a new cell with the same id. Read the prop reactively and provide a
+        // live view so consumers never keep the cell from the first render.
+        const extendedCell = computed(
+          () =>
+            Object.assign(props.cell as Cell<TFeatures, TData, any>, {
+              FlexRender: CellFlexRender,
+              ...(cellComponents ?? {}),
+            }) as Cell<TFeatures, TData, any> &
+              TCellComponents & { FlexRender: Component },
+        )
 
-        provide(CellContext, cell)
-
-        const extendedCell = Object.assign(cell, {
-          FlexRender: CellFlexRender,
-          ...(cellComponents ?? {}),
-        }) as Cell<TFeatures, TData, any> &
-          TCellComponents & { FlexRender: Component }
+        provide(
+          CellContext,
+          createLiveProxy(() => extendedCell.value),
+        )
 
         return () => {
-          return slots.default?.({ cell: extendedCell })
+          return slots.default?.({ cell: extendedCell.value })
         }
       },
     })
@@ -551,18 +560,22 @@ export function createTableHook<
         },
       },
       setup(props, { slots }) {
-        const header = props.header as Header<TFeatures, TData, any>
+        const extendedHeader = computed(
+          () =>
+            Object.assign(props.header as Header<TFeatures, TData, any>, {
+              FlexRender: HeaderFlexRender,
+              ...(headerComponents ?? {}),
+            }) as Header<TFeatures, TData, any> &
+              THeaderComponents & { FlexRender: Component },
+        )
 
-        provide(HeaderContext, header)
-
-        const extendedHeader = Object.assign(header, {
-          FlexRender: HeaderFlexRender,
-          ...(headerComponents ?? {}),
-        }) as Header<TFeatures, TData, any> &
-          THeaderComponents & { FlexRender: Component }
+        provide(
+          HeaderContext,
+          createLiveProxy(() => extendedHeader.value),
+        )
 
         return () => {
-          return slots.default?.({ header: extendedHeader })
+          return slots.default?.({ header: extendedHeader.value })
         }
       },
     })
@@ -576,18 +589,22 @@ export function createTableHook<
         },
       },
       setup(props, { slots }) {
-        const header = props.header as Header<TFeatures, TData, any>
+        const extendedHeader = computed(
+          () =>
+            Object.assign(props.header as Header<TFeatures, TData, any>, {
+              FlexRender: FooterFlexRender,
+              ...(headerComponents ?? {}),
+            }) as Header<TFeatures, TData, any> &
+              THeaderComponents & { FlexRender: Component },
+        )
 
-        provide(HeaderContext, header)
-
-        const extendedHeader = Object.assign(header, {
-          FlexRender: FooterFlexRender,
-          ...(headerComponents ?? {}),
-        }) as Header<TFeatures, TData, any> &
-          THeaderComponents & { FlexRender: Component }
+        provide(
+          HeaderContext,
+          createLiveProxy(() => extendedHeader.value),
+        )
 
         return () => {
-          return slots.default?.({ header: extendedHeader })
+          return slots.default?.({ header: extendedHeader.value })
         }
       },
     })

@@ -577,8 +577,8 @@ export function createTableHook<
     }
 
     // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
-    // the same cell instance it puts in context, so this asserts the runtime
-    // shape.
+    // its cell and puts a live view of the current cell in context, so this
+    // asserts the runtime shape.
     return cell as unknown as Cell<TFeatures, any, TValue> &
       TCellComponents & { FlexRender: typeof FlexRenderSvelte }
   }
@@ -603,7 +603,7 @@ export function createTableHook<
     }
 
     // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
-    // and `FlexRender` onto the same header instance they put in context.
+    // and `FlexRender` onto their header and put a live view of it in context.
     return header as unknown as Header<TFeatures, any, TValue> &
       THeaderComponents & { FlexRender: typeof FlexRenderSvelte }
   }
@@ -650,26 +650,41 @@ export function createTableHook<
     // They only add props: each App*Svelte component sets its own context while
     // it initializes. Calling setContext here would run before that component
     // exists and write into the context of the component rendering it.
+    // Props are forwarded through getters: Svelte props are getters, and reading
+    // them here would pass the first value to the inner component forever.
     const AppTable = ((internal: any, props: any) => {
-      return AppTableSvelte(internal, { ...props, table })
+      return AppTableSvelte(internal, {
+        get children() {
+          return props.children
+        },
+        table,
+      })
     }) as Component<{ children: Snippet }>
 
-    const AppCell = ((internal: any, { children, cell }: any) => {
+    const AppCell = ((internal: any, props: any) => {
       return AppCellSvelte(internal, {
-        cell,
+        get cell() {
+          return props.cell
+        },
         cellComponents: cellComponentsWithFlexRender,
-        children,
+        get children() {
+          return props.children
+        },
       })
     }) as Component<{
       cell: Cell<TFeatures, TData, any>
       children: Snippet<[any]>
     }>
 
-    const AppHeader = ((internal: any, { children, header }: any) => {
+    const AppHeader = ((internal: any, props: any) => {
       return AppHeaderSvelte(internal, {
-        header,
+        get header() {
+          return props.header
+        },
         headerComponents: headerComponentsWithFlexRender,
-        children,
+        get children() {
+          return props.children
+        },
       })
     }) as Component<{
       header: Header<TFeatures, TData, any>
@@ -677,11 +692,15 @@ export function createTableHook<
     }>
 
     // AppFooter reuses AppHeaderSvelte (footers use Header type in table-core)
-    const AppFooter = ((internal: any, { children, header }: any) => {
+    const AppFooter = ((internal: any, props: any) => {
       return AppHeaderSvelte(internal, {
-        header,
+        get header() {
+          return props.header
+        },
         headerComponents: headerComponentsWithFlexRender,
-        children,
+        get children() {
+          return props.children
+        },
       })
     }) as Component<{
       header: Header<TFeatures, TData, any>

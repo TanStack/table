@@ -342,6 +342,92 @@ describe('createTableHook', () => {
     )
   })
 
+  test('keyed wrappers follow new cells and headers with the same id', async () => {
+    function titleColumns(label: string) {
+      return columnHelper.columns([
+        columnHelper.accessor('title', { header: 'Title', meta: { label } }),
+      ])
+    }
+
+    const CellConsumer = defineComponent({
+      setup() {
+        const cell = hook.useCellContext<string>()
+        return () =>
+          h('output', { 'aria-label': 'Context cell' }, cell.getValue())
+      },
+    })
+    const HeaderConsumer = defineComponent({
+      setup() {
+        const header = hook.useHeaderContext<string>()
+        return () =>
+          h(
+            'output',
+            { 'aria-label': 'Context header' },
+            (header.column.columnDef.meta as { label: string }).label,
+          )
+      },
+    })
+    const data = ref<Array<Data>>([{ id: '1', title: 'First' }])
+    const tableColumns = ref(titleColumns('Before'))
+    const Root = defineComponent({
+      setup() {
+        const table = hook.useAppTable({
+          data,
+          get columns() {
+            return tableColumns.value
+          },
+        })
+
+        return () => [
+          ...table
+            .getHeaderGroups()[0]!
+            .headers.map((header) =>
+              h(
+                table.AppHeader,
+                { header, key: header.id },
+                { default: () => h(HeaderConsumer) },
+              ),
+            ),
+          ...table.getRowModel().rows.flatMap((row) =>
+            row.getAllCells().map((cell) =>
+              h(
+                table.AppCell,
+                { cell, key: cell.id },
+                {
+                  default: ({ cell: slotCell }: { cell: typeof cell }) => [
+                    h(
+                      'output',
+                      { 'aria-label': 'Slot cell' },
+                      slotCell.getValue() as string,
+                    ),
+                    h(CellConsumer),
+                  ],
+                },
+              ),
+            ),
+          ),
+        ]
+      },
+    })
+
+    render(Root)
+
+    expect(outputText('Slot cell')).toBe('First')
+    expect(outputText('Context cell')).toBe('First')
+    expect(outputText('Context header')).toBe('Before')
+
+    data.value = [{ id: '1', title: 'Second' }]
+    await nextTick()
+
+    expect(outputText('Slot cell')).toBe('Second')
+    expect(outputText('Context cell')).toBe('Second')
+
+    tableColumns.value = titleColumns('After')
+    await nextTick()
+
+    expect(outputText('Context header')).toBe('After')
+  })
+
   test('bound cell render helpers preserve aggregate and placeholder modes', async () => {
     const mode = ref<'aggregate' | 'placeholder'>('aggregate')
     const CellConsumer = defineComponent({
