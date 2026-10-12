@@ -7,6 +7,7 @@ import { renderComponent } from '../src/render-component'
 import ContextFailure from './fixtures/ContextFailure.svelte'
 import FlexRenderHarness from './fixtures/FlexRenderHarness.svelte'
 import HookContextScope from './fixtures/HookContextScope.svelte'
+import HookDataRefresh from './fixtures/HookDataRefresh.svelte'
 import HookHarness from './fixtures/HookHarness.svelte'
 import RenderBadge from './fixtures/RenderBadge.svelte'
 import { hook } from './fixtures/hook-fixture'
@@ -218,6 +219,25 @@ describe('createTableHook', () => {
     expect(screen.getByText('cell-component:First')).toBeTruthy()
     expect(screen.getAllByText('header-component:title')).toHaveLength(2)
     expect(outputText('Contexts outside the wrappers')).toBe('')
+  })
+
+  test('keyed wrappers follow new cells and headers with the same id', async () => {
+    render(HookDataRefresh)
+
+    expect(outputText('Snippet cell')).toBe('First')
+    expect(screen.getByText('cell-component:First')).toBeTruthy()
+    expect(screen.getByText('header-label:Before')).toBeTruthy()
+
+    await fireEvent.click(screen.getByRole('button', { name: 'Replace data' }))
+
+    expect(outputText('Snippet cell')).toBe('Second')
+    expect(screen.getByText('cell-component:Second')).toBeTruthy()
+
+    await fireEvent.click(
+      screen.getByRole('button', { name: 'Replace columns' }),
+    )
+
+    expect(screen.getByText('header-label:After')).toBeTruthy()
   })
 
   test.each([
