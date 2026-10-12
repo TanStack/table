@@ -9,6 +9,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
+  functionalUpdate,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -19,6 +20,7 @@ import { testFeatures } from '../../fixtures/features'
 import type {
   ColumnDef,
   ExpandedState,
+  PaginationState,
   SortingState,
   TableOptions,
 } from '../../../src'
@@ -221,9 +223,12 @@ describe('autoResetPageIndex end-to-end wiring', () => {
   })
 
   describe('option precedence', () => {
+    // Page 1 stays valid after the `even` filter (3 rows / pageSize 2 = 2
+    // pages), so "skipped" (stays 1) is distinguishable from "reset" (0)
+    // without landing on a page that no longer exists.
     async function triggerReset(table: ReturnType<typeof makeTable>) {
       await primeTable(table)
-      table.setPageIndex(2)
+      table.setPageIndex(1)
       table.setColumnFilters([{ id: 'group', value: 'even' }])
       table.getRowModel()
       await flushMicrotasks()
@@ -232,7 +237,7 @@ describe('autoResetPageIndex end-to-end wiring', () => {
     it('should skip the reset when autoResetAll is false', async () => {
       const table = makeTable({ autoResetAll: false })
       await triggerReset(table)
-      expect(table.atoms.pagination.get().pageIndex).toBe(2)
+      expect(table.atoms.pagination.get().pageIndex).toBe(1)
     })
 
     it('should force the reset when autoResetAll is true even with manualPagination', async () => {
@@ -244,7 +249,7 @@ describe('autoResetPageIndex end-to-end wiring', () => {
     it('should skip the reset when autoResetPageIndex is false', async () => {
       const table = makeTable({ autoResetPageIndex: false })
       await triggerReset(table)
-      expect(table.atoms.pagination.get().pageIndex).toBe(2)
+      expect(table.atoms.pagination.get().pageIndex).toBe(1)
     })
 
     it('should opt back in with autoResetPageIndex true despite manualPagination', async () => {
@@ -259,8 +264,190 @@ describe('autoResetPageIndex end-to-end wiring', () => {
     it('should skip the reset by default when manualPagination is true', async () => {
       const table = makeTable({ manualPagination: true })
       await triggerReset(table)
-      expect(table.atoms.pagination.get().pageIndex).toBe(2)
+      expect(table.atoms.pagination.get().pageIndex).toBe(1)
     })
+  })
+})
+
+describe('pageIndex clamp when the page-index auto-reset is disabled (#4994)', () => {
+  // makeTable(): 6 rows, pageSize 2 -> 3 pages (0, 1, 2).
+  async function onLastPage(table: ReturnType<typeof makeTable>) {
+    await primeTable(table)
+    table.setPageIndex(2)
+    expect(table.atoms.pagination.get().pageIndex).toBe(2)
+  }
+
+  it('clamps to the last page when data shrinks', async () => {
+    const table = makeTable({ autoResetPageIndex: false })
+    await onLastPage(table)
+
+    // 3 rows -> 2 pages (0, 1)
+    table.setOptions((old) => ({ ...old, data: makeData().slice(0, 3) }))
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(1)
+    expect(table.getRowModel().rows.length).toBeGreaterThan(0)
+  })
+
+  it('clamps to the last page when a filter shrinks the rows', async () => {
+    const table = makeTable({ autoResetPageIndex: false })
+    await onLastPage(table)
+
+    // `even` keeps 3 rows -> 2 pages (0, 1)
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(1)
+    expect(table.getRowModel().rows.length).toBeGreaterThan(0)
+  })
+
+  it('clamps when autoResetAll is false', async () => {
+    const table = makeTable({ autoResetAll: false })
+    await onLastPage(table)
+
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(1)
+  })
+
+  it('clamps to page 0 when every row is removed', async () => {
+    const table = makeTable({ autoResetPageIndex: false })
+    await onLastPage(table)
+
+    table.setOptions((old) => ({ ...old, data: [] }))
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(0)
+  })
+
+  it('does not touch an in-range pageIndex', async () => {
+    const table = makeTable({ autoResetPageIndex: false })
+    await primeTable(table)
+    table.setPageIndex(1)
+
+    // `even` keeps 2 pages, so page 1 still exists
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(1)
+  })
+
+  it('does not call onPaginationChange for an in-range pageIndex', async () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable({
+      autoResetPageIndex: false,
+      state: { pagination: { pageIndex: 2, pageSize: 2 } },
+      onPaginationChange,
+    })
+    await primeTable(table)
+
+    // New data reference, same 6 rows -> still 3 pages, page 2 is valid
+    table.setOptions((old) => ({ ...old, data: makeData() }))
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(onPaginationChange).not.toHaveBeenCalled()
+  })
+
+  it('pushes the clamp through onPaginationChange for controlled state', async () => {
+    const onPaginationChange = vi.fn()
+    const table = makeTable({
+      autoResetPageIndex: false,
+      state: { pagination: { pageIndex: 2, pageSize: 2 } },
+      onPaginationChange,
+    })
+    await primeTable(table)
+
+    table.setOptions((old) => ({ ...old, data: makeData().slice(0, 3) }))
+    table.getRowModel()
+    await flushMicrotasks()
+
+    // Each row-model stage that recomputes schedules the hook; with
+    // non-echoing controlled state every call carries the same clamp.
+    expect(onPaginationChange).toHaveBeenCalled()
+    for (const [updater] of onPaginationChange.mock.calls) {
+      expect(
+        functionalUpdate<PaginationState>(updater, {
+          pageIndex: 2,
+          pageSize: 2,
+        }),
+      ).toEqual({ pageIndex: 1, pageSize: 2 })
+    }
+  })
+
+  it('does not clamp with manualPagination (server owns the page range)', async () => {
+    const table = makeTable({ manualPagination: true })
+    await onLastPage(table)
+
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(2)
+  })
+
+  it('does not clamp with manualPagination and autoResetPageIndex false', async () => {
+    const table = makeTable({
+      manualPagination: true,
+      autoResetPageIndex: false,
+    })
+    await onLastPage(table)
+
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(2)
+  })
+
+  it('does not clamp when the page count is unknown', async () => {
+    const table = makeTable({ autoResetPageIndex: false, pageCount: -1 })
+    await onLastPage(table)
+
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(2)
+  })
+
+  it('does not compute downstream row models on page 0', async () => {
+    const filterSpy = vi.fn(() => true)
+    const table = constructTable<typeof features, Person>({
+      features,
+      columns: [
+        { accessorKey: 'name', id: 'name' },
+        { accessorKey: 'age', id: 'age' },
+        { accessorKey: 'group', id: 'group', filterFn: filterSpy },
+      ],
+      data: makeData(),
+      getSubRows: (row) => row.subRows,
+      initialState: {
+        pagination: { pageIndex: 0, pageSize: 2 },
+        columnFilters: [{ id: 'group', value: 'even' }],
+      },
+      autoResetPageIndex: false,
+    })
+
+    table.getCoreRowModel()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    filterSpy.mockClear()
+
+    table.setOptions((old) => ({ ...old, data: makeData() }))
+    table.getCoreRowModel()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(0)
+    expect(filterSpy).not.toHaveBeenCalled()
   })
 })
 
