@@ -60,7 +60,11 @@ export function createWorkerRowModel(
     let warned = false
 
     const warnOnce = (message: string) => {
-      if (process.env.NODE_ENV === 'development' && !warned) {
+      if (
+        typeof process !== 'undefined' &&
+        process.env.NODE_ENV === 'development' &&
+        !warned
+      ) {
         warned = true
         console.warn(`[table-worker] ${message}`)
       }

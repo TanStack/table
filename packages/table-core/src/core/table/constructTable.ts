@@ -223,6 +223,7 @@ export function constructTable<
   }
 
   if (
+    typeof process !== 'undefined' &&
     process.env.NODE_ENV === 'development' &&
     (tableOptions.debugAll || tableOptions.debugTable)
   ) {
