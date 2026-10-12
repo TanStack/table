@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.2.8'
+  version: '9.3.1'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing
@@ -9,9 +9,6 @@ library:
   monorepo: true
   package_version_overrides:
     '@tanstack/match-sorter-utils': '9.2.6'
-    '@tanstack/octane-table': '9.3.0'
-    '@tanstack/preact-table': '9.3.0'
-    '@tanstack/preact-table-devtools': '9.3.0'
 
 meta:
   generated_by: '@tanstack/intent scaffold domain discovery'

@@ -1,5 +1,13 @@
 # @tanstack/table-devtools
 
+## 9.3.1
+
+### Patch Changes
+
+- [#6626](https://github.com/TanStack/table/pull/6626) [`87c6bcc`](https://github.com/TanStack/table/commit/87c6bcc52a5cd614d83d698c76048b4c1c2bb8f7) - Improve tree-shaking further. The core no longer bundles the column ordering, column pinning, or row expanding code it used for leaf column order, pinned header order, and row display order, so a minimal table is about 0.27 kB (brotli) smaller. Features no longer bundle code from other features a table doesn't register: column sizing, column ordering, and cell selection without column pinning or column visibility, column pinning without column visibility, row pinning without row expanding, the paginated row model without row expanding, and the faceted unique and min/max values without global filtering. Without `globalFilteringFeature`, global facets now include no columns, the same as the filtered row model. Memoized row, column, header, and cell APIs also allocate less: each memo no longer creates an `onAfterUpdate` wrapper it doesn't need. `table.getOrderColumnsFn()`, which column ordering already assigned, is now declared on its table type.
+
+  The devtools Features panel sizes are regenerated for these changes.
+
 ## 9.2.8
 
 ### Patch Changes
