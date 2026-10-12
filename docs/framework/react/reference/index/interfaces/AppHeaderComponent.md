@@ -3,9 +3,7 @@ id: AppHeaderComponent
 title: AppHeaderComponent
 ---
 
-# Interface: AppHeaderComponent()\<TFeatures, TData, THeaderComponents\>
-
-Defined in: [react-table/src/createTableHook.tsx:497](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L497)
+Defined in: [src/createTableHook.tsx:497](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L497)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
 
@@ -29,7 +27,7 @@ Component type for AppHeader/AppFooter - wraps a header and provides header cont
 AppHeaderComponent<TValue>(props): ReactNode;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:502](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L502)
+Defined in: [src/createTableHook.tsx:502](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L502)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
 
@@ -55,7 +53,7 @@ Component type for AppHeader/AppFooter - wraps a header and provides header cont
 AppHeaderComponent<TValue, TSelected>(props): ReactNode;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:510](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L510)
+Defined in: [src/createTableHook.tsx:510](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L510)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
 

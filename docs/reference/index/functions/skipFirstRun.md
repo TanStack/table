@@ -3,8 +3,6 @@ id: skipFirstRun
 title: skipFirstRun
 ---
 
-# Function: skipFirstRun()
-
 ```ts
 function skipFirstRun(fn): () => void;
 ```
@@ -26,10 +24,4 @@ would wipe initial or controlled state.
 
 ## Returns
 
-```ts
-(): void;
-```
-
-### Returns
-
-`void`
+() => `void`

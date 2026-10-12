@@ -3,13 +3,11 @@ id: header_getLeafHeaders
 title: header_getLeafHeaders
 ---
 
-# Function: header\_getLeafHeaders()
-
 ```ts
 function header_getLeafHeaders<TFeatures, TData, TValue>(header): Header<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L40)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L35)
 
 Walks a header tree and collects all descendant leaf headers.
 

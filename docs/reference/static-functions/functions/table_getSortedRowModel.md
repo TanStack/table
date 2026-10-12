@@ -3,8 +3,6 @@ id: table_getSortedRowModel
 title: table_getSortedRowModel
 ---
 
-# Function: table\_getSortedRowModel()
-
 ```ts
 function table_getSortedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

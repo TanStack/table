@@ -3,8 +3,6 @@ id: createFacetedUniqueValues
 title: createFacetedUniqueValues
 ---
 
-# Function: createFacetedUniqueValues()
-
 ```ts
 function createFacetedUniqueValues<TFeatures, TData>(): (table, columnId) => () => Map<any, number>;
 ```
@@ -27,26 +25,4 @@ The returned function derives facet data from the table row model and relevant f
 
 ## Returns
 
-```ts
-(table, columnId): () => Map<any, number>;
-```
-
-### Parameters
-
-#### table
-
-[`Table`](../type-aliases/Table.md)\<`TFeatures`, `TData`\>
-
-#### columnId
-
-`string`
-
-### Returns
-
-```ts
-(): Map<any, number>;
-```
-
-#### Returns
-
-`Map`\<`any`, `number`\>
+(`table`, `columnId`) => () => `Map`\<`any`, `number`\>

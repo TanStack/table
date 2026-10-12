@@ -3,13 +3,11 @@ id: table_getEndFlatHeaders
 title: table_getEndFlatHeaders
 ---
 
-# Function: table\_getEndFlatHeaders()
-
 ```ts
 function table_getEndFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:580](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L580)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:558](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L558)
 
 Flattens every header from the end pinned header groups.
 

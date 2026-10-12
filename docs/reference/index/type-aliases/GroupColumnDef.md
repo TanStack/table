@@ -3,8 +3,6 @@ id: GroupColumnDef
 title: GroupColumnDef
 ---
 
-# Type Alias: GroupColumnDef\<TFeatures, TData, TValue\>
-
 ```ts
 type GroupColumnDef<TFeatures, TData, TValue> = GroupColumnDefBase<TFeatures, TData, TValue> & ColumnIdentifiers<TFeatures, TData, TValue>;
 ```

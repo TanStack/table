@@ -10,6 +10,7 @@ import type { Table_ColumnOrdering } from '../features/column-ordering/columnOrd
 import type { Table_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
 import type { Table_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
 import type { Table_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
+import type { Table_RowAggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type { Table_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { Table_RowExpanding } from '../features/row-expanding/rowExpandingFeature.types'
 import type { Table_RowPagination } from '../features/row-pagination/rowPaginationFeature.types'
@@ -64,6 +65,7 @@ export interface Table_FeatureMap<
   columnSizingFeature: Table_ColumnSizing
   columnVisibilityFeature: Table_ColumnVisibility<TFeatures, TData>
   globalFilteringFeature: Table_GlobalFiltering<TFeatures, TData>
+  rowAggregationFeature: Table_RowAggregation
   rowExpandingFeature: Table_RowExpanding<TFeatures, TData>
   rowPaginationFeature: Table_RowPagination<TFeatures, TData>
   rowPinningFeature: Table_RowPinning<TFeatures, TData>

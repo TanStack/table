@@ -3,13 +3,11 @@ id: filterFns
 title: filterFns
 ---
 
-# ~~Variable: filterFns~~
-
 ```ts
 const filterFns: object;
 ```
 
-Defined in: [features/column-filtering/filterFns.ts:442](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L442)
+Defined in: [features/column-filtering/filterFns.ts:447](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L447)
 
 The built-in filter function registry.
 

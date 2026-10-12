@@ -3,8 +3,6 @@ id: PreactTable
 title: PreactTable
 ---
 
-# Type Alias: PreactTable\<TFeatures, TData, TSelected\>
-
 ```ts
 type PreactTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
@@ -13,7 +11,7 @@ Defined in: [useTable.ts:27](https://github.com/TanStack/table/blob/main/package
 
 ## Type Declaration
 
-### FlexRender()
+### FlexRender
 
 ```ts
 FlexRender: <TValue>(props) => ComponentChildren;
@@ -62,7 +60,7 @@ Prefer `table.state` for render reads,
 subscriptions. `table.store.state` is a current-value snapshot and is easy
 to misuse in render code.
 
-### Subscribe()
+### Subscribe
 
 ```ts
 Subscribe: {
@@ -93,7 +91,7 @@ Source without `selector` is separate so children infer `TSourceValue` (identity
 
 ###### children
 
-(`state`) => `ComponentChildren` \| `ComponentChildren`
+((`state`) => `ComponentChildren`) \| `ComponentChildren`
 
 ###### selector?
 
@@ -129,7 +127,7 @@ Source without `selector` is separate so children infer `TSourceValue` (identity
 
 ###### children
 
-(`state`) => `ComponentChildren` \| `ComponentChildren`
+((`state`) => `ComponentChildren`) \| `ComponentChildren`
 
 ###### selector
 

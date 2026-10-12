@@ -3,8 +3,6 @@ id: AppHeaderPropsWithoutSelector
 title: AppHeaderPropsWithoutSelector
 ---
 
-# Interface: AppHeaderPropsWithoutSelector\<TFeatures, TData, TValue, THeaderComponents\>
-
 Defined in: [createTableHook.tsx:431](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L431)
 
 Props for AppHeader/AppFooter component - without selector
@@ -29,7 +27,7 @@ Props for AppHeader/AppFooter component - without selector
 
 ## Properties
 
-### children()
+### children
 
 ```ts
 children: (header) => ComponentChildren;
@@ -62,7 +60,7 @@ Defined in: [createTableHook.tsx:437](https://github.com/TanStack/table/blob/mai
 ### selector?
 
 ```ts
-optional selector: undefined;
+optional selector?: undefined;
 ```
 
 Defined in: [createTableHook.tsx:442](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L442)

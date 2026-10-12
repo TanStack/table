@@ -3,8 +3,6 @@ id: FlexRender
 title: FlexRender
 ---
 
-# Variable: FlexRender
-
 ```ts
 const FlexRender: DefineComponent<{
   cell?: FlexRenderCell;
@@ -36,7 +34,7 @@ const FlexRender: DefineComponent<{
 }, any>;
 ```
 
-Defined in: [packages/vue-table/src/FlexRender.ts:75](https://github.com/TanStack/table/blob/main/packages/vue-table/src/FlexRender.ts#L75)
+Defined in: [FlexRender.ts:75](https://github.com/TanStack/table/blob/main/packages/vue-table/src/FlexRender.ts#L75)
 
 Simplified component for rendering headers, cells, or footers.
 

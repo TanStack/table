@@ -3,32 +3,30 @@ id: CreateTableHookOptions
 title: CreateTableHookOptions
 ---
 
-# Type Alias: CreateTableHookOptions\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptionsWithReactiveData<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:179](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L179)
+Defined in: [createTableHook.ts:179](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L179)
 
 ## Type Declaration
 
 ### cellComponents?
 
 ```ts
-optional cellComponents: TCellComponents;
+optional cellComponents?: TCellComponents;
 ```
 
 ### headerComponents?
 
 ```ts
-optional headerComponents: THeaderComponents;
+optional headerComponents?: THeaderComponents;
 ```
 
 ### tableComponents?
 
 ```ts
-optional tableComponents: TTableComponents;
+optional tableComponents?: TTableComponents;
 ```
 
 ## Type Parameters

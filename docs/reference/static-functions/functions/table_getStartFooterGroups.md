@@ -3,13 +3,11 @@ id: table_getStartFooterGroups
 title: table_getStartFooterGroups
 ---
 
-# Function: table\_getStartFooterGroups()
-
 ```ts
 function table_getStartFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:483](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L483)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:461](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L461)
 
 Builds footer groups for the start pinned region.
 

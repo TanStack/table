@@ -3,13 +3,11 @@ id: cell_getRowSpan
 title: cell_getRowSpan
 ---
 
-# Function: cell\_getRowSpan()
-
 ```ts
 function cell_getRowSpan<TFeatures, TData, TValue>(cell): number;
 ```
 
-Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:364](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L364)
+Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:366](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L366)
 
 Returns how many rows this cell spans.
 

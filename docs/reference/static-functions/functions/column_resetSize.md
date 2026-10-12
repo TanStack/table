@@ -3,13 +3,11 @@ id: column_resetSize
 title: column_resetSize
 ---
 
-# Function: column\_resetSize()
-
 ```ts
 function column_resetSize<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L240)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L235)
 
 Removes this column's committed size override.
 

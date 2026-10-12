@@ -3,13 +3,11 @@ id: sortFns
 title: sortFns
 ---
 
-# ~~Variable: sortFns~~
-
 ```ts
 const sortFns: object;
 ```
 
-Defined in: [features/row-sorting/sortFns.ts:357](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L357)
+Defined in: [features/row-sorting/sortFns.ts:361](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L361)
 
 The built-in sorting function registry.
 

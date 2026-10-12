@@ -3,8 +3,6 @@ id: Table_ColumnFaceting
 title: Table_ColumnFaceting
 ---
 
-# Interface: Table\_ColumnFaceting\<TFeatures, TData\>
-
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L62)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:62](https:/
 
 ## Properties
 
-### getGlobalFacetedMinMaxValues()
+### getGlobalFacetedMinMaxValues
 
 ```ts
 getGlobalFacetedMinMaxValues: () => [number, number] | undefined;
@@ -35,7 +33,7 @@ Returns the min and max values for the global filter.
 
 ***
 
-### getGlobalFacetedRowModel()
+### getGlobalFacetedRowModel
 
 ```ts
 getGlobalFacetedRowModel: () => RowModel<TFeatures, TData>;
@@ -51,7 +49,7 @@ Computes the row model used to derive global facet values.
 
 ***
 
-### getGlobalFacetedUniqueValues()
+### getGlobalFacetedUniqueValues
 
 ```ts
 getGlobalFacetedUniqueValues: () => Map<any, number>;

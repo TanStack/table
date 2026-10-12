@@ -3,15 +3,13 @@ id: table_getFocusedCell
 title: table_getFocusedCell
 ---
 
-# Function: table\_getFocusedCell()
-
 ```ts
 function table_getFocusedCell<TFeatures, TData>(table):
   | Cell<TFeatures, TData, any>
   | undefined;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:760](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L760)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:728](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L728)
 
 Returns the active cell, i.e. the anchor of the most recent operation.
 

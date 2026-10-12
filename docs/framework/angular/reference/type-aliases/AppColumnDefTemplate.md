@@ -3,10 +3,8 @@ id: AppColumnDefTemplate
 title: AppColumnDefTemplate
 ---
 
-# Type Alias: AppColumnDefTemplate\<TProps\>
-
 ```ts
-type AppColumnDefTemplate<TProps> = string | (props) => any;
+type AppColumnDefTemplate<TProps> = string | ((props) => any);
 ```
 
 Defined in: [packages/angular-table/src/helpers/createTableHook.ts:84](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L84)

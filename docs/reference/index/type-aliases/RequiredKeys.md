@@ -3,8 +3,6 @@ id: RequiredKeys
 title: RequiredKeys
 ---
 
-# Type Alias: RequiredKeys\<T, K\>
-
 ```ts
 type RequiredKeys<T, K> = Omit<T, K> & Required<Pick<T, K>>;
 ```

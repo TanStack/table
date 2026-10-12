@@ -3,13 +3,11 @@ id: Row_RowSelection
 title: Row_RowSelection
 ---
 
-# Interface: Row\_RowSelection
-
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L89)
 
 ## Properties
 
-### getCanMultiSelect()
+### getCanMultiSelect
 
 ```ts
 getCanMultiSelect: () => boolean;
@@ -25,7 +23,7 @@ Checks whether this row can be selected alongside other rows.
 
 ***
 
-### getCanSelect()
+### getCanSelect
 
 ```ts
 getCanSelect: () => boolean;
@@ -41,7 +39,7 @@ Checks whether this row can currently be selected.
 
 ***
 
-### getCanSelectSubRows()
+### getCanSelectSubRows
 
 ```ts
 getCanSelectSubRows: () => boolean;
@@ -57,7 +55,7 @@ Checks whether selecting this row should also select its subRows.
 
 ***
 
-### getIsAllSubRowsSelected()
+### getIsAllSubRowsSelected
 
 ```ts
 getIsAllSubRowsSelected: () => boolean;
@@ -73,7 +71,7 @@ Checks whether all selectable descendants are selected.
 
 ***
 
-### getIsSelected()
+### getIsSelected
 
 ```ts
 getIsSelected: () => boolean;
@@ -89,7 +87,7 @@ Checks whether this row id is selected.
 
 ***
 
-### getIsSomeSelected()
+### getIsSomeSelected
 
 ```ts
 getIsSomeSelected: () => boolean;
@@ -105,7 +103,7 @@ Checks whether some selectable descendants are selected.
 
 ***
 
-### getToggleSelectedHandler()
+### getToggleSelectedHandler
 
 ```ts
 getToggleSelectedHandler: (opts?) => (event) => void;
@@ -126,23 +124,11 @@ modifier key.
 
 #### Returns
 
-```ts
-(event): void;
-```
-
-##### Parameters
-
-###### event
-
-`unknown`
-
-##### Returns
-
-`void`
+(`event`) => `void`
 
 ***
 
-### toggleSelected()
+### toggleSelected
 
 ```ts
 toggleSelected: (value?, opts?) => void;

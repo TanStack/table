@@ -3,8 +3,6 @@ id: table_setPageSize
 title: table_setPageSize
 ---
 
-# Function: table\_setPageSize()
-
 ```ts
 function table_setPageSize<TFeatures, TData>(table, updater): void;
 ```

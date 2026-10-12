@@ -3,8 +3,6 @@ id: createTableState
 title: createTableState
 ---
 
-# Function: createTableState()
-
 ```ts
 function createTableState<TState>(initialValue): [() => TState, (updater) => void];
 ```

@@ -3,8 +3,6 @@ id: DebugOptions
 title: DebugOptions
 ---
 
-# Type Alias: DebugOptions\<TFeatures\>
-
 ```ts
 type DebugOptions<TFeatures> = object & DebugKeysFor<CoreFeatures & TFeatures>;
 ```
@@ -16,43 +14,43 @@ Defined in: [types/TableOptions.ts:52](https://github.com/TanStack/table/blob/ma
 ### debugAll?
 
 ```ts
-optional debugAll: boolean;
+optional debugAll?: boolean;
 ```
 
 ### debugCache?
 
 ```ts
-optional debugCache: boolean;
+optional debugCache?: boolean;
 ```
 
 ### debugCells?
 
 ```ts
-optional debugCells: boolean;
+optional debugCells?: boolean;
 ```
 
 ### debugColumns?
 
 ```ts
-optional debugColumns: boolean;
+optional debugColumns?: boolean;
 ```
 
 ### debugHeaders?
 
 ```ts
-optional debugHeaders: boolean;
+optional debugHeaders?: boolean;
 ```
 
 ### debugRows?
 
 ```ts
-optional debugRows: boolean;
+optional debugRows?: boolean;
 ```
 
 ### debugTable?
 
 ```ts
-optional debugTable: boolean;
+optional debugTable?: boolean;
 ```
 
 ## Type Parameters

@@ -3,8 +3,6 @@ id: ColumnHelper
 title: ColumnHelper
 ---
 
-# Interface: ColumnHelper\<TFeatures, TData\>
-
 Defined in: [helpers/columnHelper.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L13)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [helpers/columnHelper.ts:13](https://github.com/TanStack/table/blob/
 
 ## Properties
 
-### accessor()
+### accessor
 
 ```ts
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
@@ -62,7 +60,7 @@ helper.accessor((row) => row.lastName, { id: 'lastName' })
 
 ***
 
-### columns()
+### columns
 
 ```ts
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns[]];
@@ -97,7 +95,7 @@ helper.columns([helper.accessor('firstName', {}), helper.accessor('age', {})])
 
 ***
 
-### display()
+### display
 
 ```ts
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
@@ -125,7 +123,7 @@ helper.display({ id: 'actions', header: 'Actions', cell: () => <button>Edit</but
 
 ***
 
-### group()
+### group
 
 ```ts
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;

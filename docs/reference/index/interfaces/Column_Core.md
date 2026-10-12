@@ -3,8 +3,6 @@ id: Column_Core
 title: Column_Core
 ---
 
-# Interface: Column\_Core\<TFeatures, TData, TValue\>
-
 Defined in: [types/Column.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L18)
 
 ## Extends
@@ -30,7 +28,7 @@ Defined in: [types/Column.ts:18](https://github.com/TanStack/table/blob/main/pac
 ### accessorFn?
 
 ```ts
-optional accessorFn: AccessorFn<TData, TValue>;
+optional accessorFn?: AccessorFn<TData, TValue>;
 ```
 
 Defined in: [core/columns/coreColumnsFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L15)
@@ -91,7 +89,7 @@ The depth of the column (if grouped) relative to the root column def array.
 
 ***
 
-### getFlatColumns()
+### getFlatColumns
 
 ```ts
 getFlatColumns: () => Column<TFeatures, TData, TValue>[];
@@ -111,7 +109,7 @@ Flattens this column and every descendant column into a single array.
 
 ***
 
-### getLeafColumns()
+### getLeafColumns
 
 ```ts
 getLeafColumns: () => Column<TFeatures, TData, TValue>[];
@@ -154,7 +152,7 @@ The resolved unique identifier for the column resolved in this priority:
 ### parent?
 
 ```ts
-optional parent: Column<TFeatures, TData, TValue>;
+optional parent?: Column<TFeatures, TData, TValue>;
 ```
 
 Defined in: [core/columns/coreColumnsFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L38)

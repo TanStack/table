@@ -3,9 +3,7 @@ id: AppCellProps
 title: AppCellProps
 ---
 
-# Interface: AppCellProps\<TFeatures, TData, TValue\>
-
-Defined in: [packages/vue-table/src/createTableHook.ts:195](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L195)
+Defined in: [createTableHook.ts:195](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L195)
 
 ## Type Parameters
 
@@ -29,4 +27,4 @@ Defined in: [packages/vue-table/src/createTableHook.ts:195](https://github.com/T
 cell: Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:200](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L200)
+Defined in: [createTableHook.ts:200](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L200)

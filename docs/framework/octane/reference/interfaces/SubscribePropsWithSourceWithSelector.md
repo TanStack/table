@@ -3,8 +3,6 @@ id: SubscribePropsWithSourceWithSelector
 title: SubscribePropsWithSourceWithSelector
 ---
 
-# Interface: SubscribePropsWithSourceWithSelector\<TSourceValue, TSelected\>
-
 Defined in: [types.ts:144](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L144)
 
 Subscribe to a projected value from a source (atom or store). The selector
@@ -27,14 +25,14 @@ receives the source value; children receive the projected `TSelected`.
 ```ts
 children:
   | SubscribeStaticChild
-  | (state) => unknown;
+  | ((state) => unknown);
 ```
 
 Defined in: [types.ts:147](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L147)
 
 ***
 
-### selector()
+### selector
 
 ```ts
 selector: (state) => TSelected;

@@ -3,13 +3,11 @@ id: getFilteredRowModel
 title: getFilteredRowModel
 ---
 
-# ~~Function: getFilteredRowModel()~~
-
 ```ts
 function getFilteredRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:55](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L55)
+Defined in: [src/useLegacyTable.ts:55](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L55)
 
 ## Type Parameters
 

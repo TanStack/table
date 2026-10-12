@@ -3,13 +3,11 @@ id: createTableHook
 title: createTableHook
 ---
 
-# Function: createTableHook()
-
 ```ts
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:353](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L353)
+Defined in: [createTableHook.ts:353](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L353)
 
 Creates app-scoped Vue table helpers with features, row models, and
 renderable component maps pre-bound.

@@ -3,13 +3,11 @@ id: table_getStartFlatHeaders
 title: table_getStartFlatHeaders
 ---
 
-# Function: table\_getStartFlatHeaders()
-
 ```ts
 function table_getStartFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:551](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L551)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:529](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L529)
 
 Flattens every header from the start pinned header groups.
 

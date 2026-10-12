@@ -100,6 +100,23 @@ export interface Table_ColumnPinning<
   in out TData extends RowData,
 > {
   /**
+   * Orders items that each belong to a leaf column, such as visible leaf
+   * columns or a row's visible cells: start-pinned items in pinning order, then
+   * unpinned items in their given order, then end-pinned items in pinning
+   * order. The core headers, row visible cells, and cell selection order
+   * through it.
+   *
+   * `getItemsByColumnId` can return an existing lookup of the same items. It
+   * is only read when something is pinned.
+   *
+   * @internal
+   */
+  _orderByColumnPinning: <TItem>(
+    items: Array<TItem>,
+    getColumnId: (item: TItem) => string,
+    getItemsByColumnId?: () => Record<string, TItem | undefined>,
+  ) => Array<TItem>
+  /**
    * Builds flat center-region headers for columns that are not pinned,
    * including parent headers.
    */

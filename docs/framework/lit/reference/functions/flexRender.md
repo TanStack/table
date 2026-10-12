@@ -3,8 +3,6 @@ id: flexRender
 title: flexRender
 ---
 
-# Function: flexRender()
-
 ```ts
 function flexRender<TProps>(Comp, props): LitRenderable;
 ```
@@ -27,7 +25,8 @@ convenience wrapper for table cell/header/footer objects.
 
 ### Comp
 
-[`LitRenderable`](../type-aliases/LitRenderable.md) | (`props`) => [`LitRenderable`](../type-aliases/LitRenderable.md)
+  \| [`LitRenderable`](../type-aliases/LitRenderable.md)
+  \| ((`props`) => [`LitRenderable`](../type-aliases/LitRenderable.md))
 
 ### props
 

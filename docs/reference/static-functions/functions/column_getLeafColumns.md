@@ -3,8 +3,6 @@ id: column_getLeafColumns
 title: column_getLeafColumns
 ---
 
-# Function: column\_getLeafColumns()
-
 ```ts
 function column_getLeafColumns<TFeatures, TData, TValue>(column): Column<TFeatures, TData, TValue>[];
 ```

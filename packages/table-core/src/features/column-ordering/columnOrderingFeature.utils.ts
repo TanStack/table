@@ -1,4 +1,4 @@
-import { table_getPinnedVisibleLeafColumns } from '../column-pinning/columnPinningFeature.utils'
+import { getPinnedVisibleLeafColumns } from '../../core/featureStubs'
 import {
   callMemoOrStaticFn,
   cloneState,
@@ -60,10 +60,10 @@ export function table_getColumnIndexes<
   }
 
   return {
-    all: buildIndexes(table_getPinnedVisibleLeafColumns(table)),
-    center: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'center')),
-    start: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'start')),
-    end: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'end')),
+    all: buildIndexes(getPinnedVisibleLeafColumns(table)),
+    center: buildIndexes(getPinnedVisibleLeafColumns(table, 'center')),
+    start: buildIndexes(getPinnedVisibleLeafColumns(table, 'start')),
+    end: buildIndexes(getPinnedVisibleLeafColumns(table, 'end')),
   }
 }
 
@@ -120,7 +120,7 @@ export function column_getIsFirstColumn<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
+  const columns = getPinnedVisibleLeafColumns(column.table, position)
   return columns[0]?.id === column.id
 }
 
@@ -142,7 +142,7 @@ export function column_getIsLastColumn<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
+  const columns = getPinnedVisibleLeafColumns(column.table, position)
   return columns[columns.length - 1]?.id === column.id
 }
 

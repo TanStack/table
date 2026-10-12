@@ -3,10 +3,8 @@ id: getInitialTableState
 title: getInitialTableState
 ---
 
-# Function: getInitialTableState()
-
 ```ts
-function getInitialTableState<TFeatures>(features, initialState): TableState<TFeatures>;
+function getInitialTableState<TFeatures>(features, initialState?): TableState<TFeatures>;
 ```
 
 Defined in: [core/table/constructTable.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L18)
@@ -27,9 +25,10 @@ Each feature contributes its default state before user-provided `initialState` v
 
 `TFeatures`
 
-### initialState
+### initialState?
 
-`Partial`\<[`TableState`](../type-aliases/TableState.md)\<`TFeatures`\>\> | `undefined`
+  \| `Partial`\<[`TableState`](../type-aliases/TableState.md)\<`TFeatures`\>\>
+  \| `undefined`
 
 ## Returns
 

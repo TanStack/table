@@ -3,8 +3,6 @@ id: IdentifiedColumnDef
 title: IdentifiedColumnDef
 ---
 
-# Type Alias: IdentifiedColumnDef\<TFeatures, TData, TValue\>
-
 ```ts
 type IdentifiedColumnDef<TFeatures, TData, TValue> = ColumnDefBase<TFeatures, TData, TValue> & object;
 ```
@@ -16,13 +14,13 @@ Defined in: [types/ColumnDef.ts:179](https://github.com/TanStack/table/blob/main
 ### header?
 
 ```ts
-optional header: StringOrTemplateHeader<TFeatures, TData, TValue>;
+optional header?: StringOrTemplateHeader<TFeatures, TData, TValue>;
 ```
 
 ### id?
 
 ```ts
-optional id: string;
+optional id?: string;
 ```
 
 ## Type Parameters

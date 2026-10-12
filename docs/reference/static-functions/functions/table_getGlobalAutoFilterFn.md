@@ -3,8 +3,6 @@ id: table_getGlobalAutoFilterFn
 title: table_getGlobalAutoFilterFn
 ---
 
-# Function: table\_getGlobalAutoFilterFn()
-
 ```ts
 function table_getGlobalAutoFilterFn(): CreatedFilterFn<any, any>;
 ```

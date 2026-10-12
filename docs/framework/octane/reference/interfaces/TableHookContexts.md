@@ -3,8 +3,6 @@ id: TableHookContexts
 title: TableHookContexts
 ---
 
-# Interface: TableHookContexts\<TFeatures, TData\>
-
 Defined in: [types.ts:310](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L310)
 
 The object returned by `createTableHookContexts`: three scoped octane
@@ -52,7 +50,7 @@ Defined in: [types.ts:314](https://github.com/TanStack/table/blob/main/packages/
 
 ***
 
-### useCellContext()
+### useCellContext
 
 ```ts
 useCellContext: <TValue>() => Cell<TFeatures, any, TValue>;
@@ -72,7 +70,7 @@ Defined in: [types.ts:321](https://github.com/TanStack/table/blob/main/packages/
 
 ***
 
-### useHeaderContext()
+### useHeaderContext
 
 ```ts
 useHeaderContext: <TValue>() => Header<TFeatures, any, TValue>;
@@ -92,7 +90,7 @@ Defined in: [types.ts:326](https://github.com/TanStack/table/blob/main/packages/
 
 ***
 
-### useTableContext()
+### useTableContext
 
 ```ts
 useTableContext: <TTableData>() => OctaneTable<TFeatures, TTableData>;

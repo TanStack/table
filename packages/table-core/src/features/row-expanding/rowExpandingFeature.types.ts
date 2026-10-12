@@ -70,9 +70,18 @@ export interface TableOptions_RowExpanding<
 }
 
 export interface Table_RowExpanding<
-  in out _TFeatures extends TableFeatures,
-  in out _TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
+  /**
+   * Lists expanded sub-rows inline below their parents. Row display order and
+   * the paginated row model expand rows through it.
+   *
+   * @internal
+   */
+  _expandRows: (
+    rowModel: RowModel<TFeatures, TData>,
+  ) => RowModel<TFeatures, TData>
   /**
    * Resets expanded state after the table data or grouping changes.
    *

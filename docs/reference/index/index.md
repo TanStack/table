@@ -3,8 +3,6 @@ id: index
 title: index
 ---
 
-# index
-
 ## Interfaces
 
 - [AggregationContext](interfaces/AggregationContext.md)
@@ -149,6 +147,7 @@ title: index
 - [Table\_GlobalFiltering](interfaces/Table_GlobalFiltering.md)
 - [Table\_Headers](interfaces/Table_Headers.md)
 - [Table\_Internal](interfaces/Table_Internal.md)
+- [Table\_RowAggregation](interfaces/Table_RowAggregation.md)
 - [Table\_RowExpanding](interfaces/Table_RowExpanding.md)
 - [Table\_RowModels\_Core](interfaces/Table_RowModels_Core.md)
 - [Table\_RowModels\_Expanded](interfaces/Table_RowModels_Expanded.md)

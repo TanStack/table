@@ -3,8 +3,6 @@ id: ColumnDefBase
 title: ColumnDefBase
 ---
 
-# Type Alias: ColumnDefBase\<TFeatures, TData, TValue\>
-
 ```ts
 type ColumnDefBase<TFeatures, TData, TValue> = ColumnDefBase_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, ColumnDef_FeatureMap<TFeatures, TData, TValue>>;
 ```

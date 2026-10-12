@@ -3,13 +3,11 @@ id: AppGroupColumnDef
 title: AppGroupColumnDef
 ---
 
-# Type Alias: AppGroupColumnDef\<TFeatures, TData, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppGroupColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<GroupColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer" | "columns"> & object;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:139](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L139)
+Defined in: [src/createTableHook.tsx:139](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L139)
 
 Enhanced group column definition with pre-bound components.
 
@@ -18,25 +16,25 @@ Enhanced group column definition with pre-bound components.
 ### cell?
 
 ```ts
-optional cell: AppColumnDefTemplate<AppCellContext<TFeatures, TData, unknown, TCellComponents>>;
+optional cell?: AppColumnDefTemplate<AppCellContext<TFeatures, TData, unknown, TCellComponents>>;
 ```
 
 ### columns?
 
 ```ts
-optional columns: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>;
+optional columns?: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
 ### footer?
 
 ```ts
-optional footer: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
+optional footer?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
 ```
 
 ### header?
 
 ```ts
-optional header: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
+optional header?: AppColumnDefTemplate<AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>>;
 ```
 
 ## Type Parameters

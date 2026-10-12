@@ -3,15 +3,13 @@ id: table_getPinnedLeafColumns
 title: table_getPinnedLeafColumns
 ---
 
-# Function: table\_getPinnedLeafColumns()
-
 ```ts
 function table_getPinnedLeafColumns<TFeatures, TData>(table, position):
   | Column<TFeatures, TData, unknown>[]
   | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:781](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L781)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:759](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L759)
 
 Resolves leaf columns for a requested pinning region.
 
@@ -36,7 +34,8 @@ read all leaf columns without partitioning.
 
 ### position
 
-[`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md) | `"center"`
+  \| [`ColumnPinningPosition`](../../index/type-aliases/ColumnPinningPosition.md)
+  \| `"center"`
 
 ## Returns
 

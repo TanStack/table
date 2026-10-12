@@ -3,8 +3,6 @@ id: AppHeaderPropsWithSelector
 title: AppHeaderPropsWithSelector
 ---
 
-# Interface: AppHeaderPropsWithSelector\<TFeatures, TData, TValue, THeaderComponents, TSelected\>
-
 Defined in: [types.ts:650](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L650)
 
 Props for AppHeader/AppFooter component — with selector.
@@ -33,7 +31,7 @@ Props for AppHeader/AppFooter component — with selector.
 
 ## Properties
 
-### children()
+### children
 
 ```ts
 children: (header, state) => unknown;
@@ -67,7 +65,7 @@ Defined in: [types.ts:657](https://github.com/TanStack/table/blob/main/packages/
 
 ***
 
-### selector()
+### selector
 
 ```ts
 selector: (state) => TSelected;

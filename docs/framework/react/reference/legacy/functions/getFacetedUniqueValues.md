@@ -3,13 +3,11 @@ id: getFacetedUniqueValues
 title: getFacetedUniqueValues
 ---
 
-# ~~Function: getFacetedUniqueValues()~~
-
 ```ts
 function getFacetedUniqueValues<TData>(): FacetedUniqueValuesFactory<TData>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:139](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L139)
+Defined in: [src/useLegacyTable.ts:139](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L139)
 
 ## Type Parameters
 

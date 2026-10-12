@@ -3,10 +3,8 @@ id: AppColumnDefTemplate
 title: AppColumnDefTemplate
 ---
 
-# Type Alias: AppColumnDefTemplate\<TProps\>
-
 ```ts
-type AppColumnDefTemplate<TProps> = string | (props) => any;
+type AppColumnDefTemplate<TProps> = string | ((props) => any);
 ```
 
 Defined in: [createTableHook.tsx:83](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L83)

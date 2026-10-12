@@ -3,13 +3,11 @@ id: table_getTotalSize
 title: table_getTotalSize
 ---
 
-# Function: table\_getTotalSize()
-
 ```ts
 function table_getTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:384](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L384)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:393](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L393)
 
 Sums the rendered size of the full table header row.
 

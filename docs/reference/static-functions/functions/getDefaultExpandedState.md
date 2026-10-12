@@ -3,8 +3,6 @@ id: getDefaultExpandedState
 title: getDefaultExpandedState
 ---
 
-# Function: getDefaultExpandedState()
-
 ```ts
 function getDefaultExpandedState(): ExpandedState;
 ```

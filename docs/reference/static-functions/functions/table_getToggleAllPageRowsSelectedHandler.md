@@ -3,8 +3,6 @@ id: table_getToggleAllPageRowsSelectedHandler
 title: table_getToggleAllPageRowsSelectedHandler
 ---
 
-# Function: table\_getToggleAllPageRowsSelectedHandler()
-
 ```ts
 function table_getToggleAllPageRowsSelectedHandler<TFeatures, TData>(table): (e) => void;
 ```
@@ -34,19 +32,7 @@ checked state means "all page rows selected".
 
 ## Returns
 
-```ts
-(e): void;
-```
-
-### Parameters
-
-#### e
-
-`unknown`
-
-### Returns
-
-`void`
+(`e`) => `void`
 
 ## Example
 

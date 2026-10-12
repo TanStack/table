@@ -3,13 +3,11 @@ id: CreateTableHookOptions
 title: CreateTableHookOptions
 ---
 
-# Type Alias: CreateTableHookOptions\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:248](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L248)
+Defined in: [src/createTableHook.tsx:248](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L248)
 
 Options for creating a table hook with pre-bound components and default table options.
 Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initialState'.
@@ -19,7 +17,7 @@ Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initia
 ### cellComponents?
 
 ```ts
-optional cellComponents: TCellComponents;
+optional cellComponents?: TCellComponents;
 ```
 
 Cell-level components that need access to the cell instance.
@@ -35,7 +33,7 @@ Use `useCellContext()` inside these components.
 ### cellContext?
 
 ```ts
-optional cellContext: Context<Cell<any, any, any>>;
+optional cellContext?: Context<Cell<any, any, any>>;
 ```
 
 A custom React context for the cell instance, used inside your `cellComponents`.
@@ -47,7 +45,7 @@ CreateTableHookOptions.tableContext
 ### headerComponents?
 
 ```ts
-optional headerComponents: THeaderComponents;
+optional headerComponents?: THeaderComponents;
 ```
 
 Header-level components that need access to the header instance.
@@ -63,7 +61,7 @@ Use `useHeaderContext()` inside these components.
 ### headerContext?
 
 ```ts
-optional headerContext: Context<Header<any, any, any>>;
+optional headerContext?: Context<Header<any, any, any>>;
 ```
 
 A custom React context for the header instance, used inside your
@@ -76,7 +74,7 @@ CreateTableHookOptions.tableContext
 ### tableComponents?
 
 ```ts
-optional tableComponents: TTableComponents;
+optional tableComponents?: TTableComponents;
 ```
 
 Table-level components that need access to the table instance.
@@ -92,7 +90,7 @@ Use `useTableContext()` inside these components.
 ### tableContext?
 
 ```ts
-optional tableContext: Context<ReactTable<any, any>>;
+optional tableContext?: Context<ReactTable<any, any>>;
 ```
 
 A custom React context for the table instance (read with `useContext` inside

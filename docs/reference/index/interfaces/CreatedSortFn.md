@@ -3,8 +3,6 @@ id: CreatedSortFn
 title: CreatedSortFn
 ---
 
-# Interface: CreatedSortFn()\<TFeatures, TData\>
-
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L81)
 
 The shape returned by `constructSortFn`: a `SortFn` with its definition
@@ -79,7 +77,7 @@ against.
 ### resolveDataValue?
 
 ```ts
-optional resolveDataValue: TransformDataValueFn;
+optional resolveDataValue?: TransformDataValueFn;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L69)
@@ -90,7 +88,7 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:69](https://github.
 
 ***
 
-### sort()
+### sort
 
 ```ts
 sort: (dataValueA, dataValueB, rowA, rowB, columnId) => number;

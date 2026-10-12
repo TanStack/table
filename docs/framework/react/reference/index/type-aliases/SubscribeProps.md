@@ -3,8 +3,6 @@ id: SubscribeProps
 title: SubscribeProps
 ---
 
-# Type Alias: SubscribeProps\<TFeatures, TSelected, TSourceValue\>
-
 ```ts
 type SubscribeProps<TFeatures, TSelected, TSourceValue> =
   | SubscribePropsWithStore<TFeatures, TSelected>
@@ -12,7 +10,7 @@ type SubscribeProps<TFeatures, TSelected, TSourceValue> =
 | SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>;
 ```
 
-Defined in: [react-table/src/Subscribe.ts:66](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L66)
+Defined in: [src/Subscribe.ts:66](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L66)
 
 ## Type Parameters
 

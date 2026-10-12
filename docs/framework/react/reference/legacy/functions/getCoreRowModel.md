@@ -3,13 +3,11 @@ id: getCoreRowModel
 title: getCoreRowModel
 ---
 
-# ~~Function: getCoreRowModel()~~
-
 ```ts
 function getCoreRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:151](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L151)
+Defined in: [src/useLegacyTable.ts:151](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L151)
 
 ## Type Parameters
 

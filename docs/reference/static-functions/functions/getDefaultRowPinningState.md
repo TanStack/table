@@ -3,8 +3,6 @@ id: getDefaultRowPinningState
 title: getDefaultRowPinningState
 ---
 
-# Function: getDefaultRowPinningState()
-
 ```ts
 function getDefaultRowPinningState(): RowPinningState;
 ```

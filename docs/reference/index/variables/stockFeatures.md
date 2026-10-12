@@ -3,8 +3,6 @@ id: stockFeatures
 title: stockFeatures
 ---
 
-# Variable: stockFeatures
-
 ```ts
 const stockFeatures: StockFeatures;
 ```

@@ -3,13 +3,11 @@ id: table_getAllFlatColumns
 title: table_getAllFlatColumns
 ---
 
-# Function: table\_getAllFlatColumns()
-
 ```ts
 function table_getAllFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L175)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:171](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L171)
 
 Flattens every table column, including group columns and leaf columns.
 

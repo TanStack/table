@@ -3,8 +3,6 @@ id: column_getFlatColumns
 title: column_getFlatColumns
 ---
 
-# Function: column\_getFlatColumns()
-
 ```ts
 function column_getFlatColumns<TFeatures, TData, TValue>(column): Column<TFeatures, TData, TValue>[];
 ```

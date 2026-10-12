@@ -3,8 +3,6 @@ id: Table_ColumnVisibility
 title: Table_ColumnVisibility
 ---
 
-# Interface: Table\_ColumnVisibility\<TFeatures, TData\>
-
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L30)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:30](htt
 
 ## Properties
 
-### getIsAllColumnsVisible()
+### getIsAllColumnsVisible
 
 ```ts
 getIsAllColumnsVisible: () => boolean;
@@ -35,7 +33,7 @@ Checks whether every leaf column is currently visible.
 
 ***
 
-### getIsSomeColumnsVisible()
+### getIsSomeColumnsVisible
 
 ```ts
 getIsSomeColumnsVisible: () => boolean;
@@ -51,7 +49,7 @@ Checks whether at least one leaf column is currently visible.
 
 ***
 
-### getToggleAllColumnsVisibilityHandler()
+### getToggleAllColumnsVisibilityHandler
 
 ```ts
 getToggleAllColumnsVisibilityHandler: () => (event) => void;
@@ -63,23 +61,11 @@ Creates a checkbox-style handler that shows or hides all columns.
 
 #### Returns
 
-```ts
-(event): void;
-```
-
-##### Parameters
-
-###### event
-
-`unknown`
-
-##### Returns
-
-`void`
+(`event`) => `void`
 
 ***
 
-### getVisibleFlatColumns()
+### getVisibleFlatColumns
 
 ```ts
 getVisibleFlatColumns: () => Column<TFeatures, TData, unknown>[];
@@ -96,7 +82,7 @@ have visible descendants.
 
 ***
 
-### getVisibleLeafColumns()
+### getVisibleLeafColumns
 
 ```ts
 getVisibleLeafColumns: () => Column<TFeatures, TData, unknown>[];
@@ -112,7 +98,7 @@ Lists visible leaf columns in the order used for row cells and headers.
 
 ***
 
-### resetColumnVisibility()
+### resetColumnVisibility
 
 ```ts
 resetColumnVisibility: (defaultState?) => void;
@@ -136,7 +122,7 @@ Pass `true` to ignore initial state and reset to `{}`.
 
 ***
 
-### setColumnVisibility()
+### setColumnVisibility
 
 ```ts
 setColumnVisibility: (updater) => void;
@@ -158,7 +144,7 @@ Updates column visibility state with a next map or updater function.
 
 ***
 
-### toggleAllColumnsVisible()
+### toggleAllColumnsVisible
 
 ```ts
 toggleAllColumnsVisible: (value?) => void;

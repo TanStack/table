@@ -3,8 +3,6 @@ id: table_getExpandedRowModel
 title: table_getExpandedRowModel
 ---
 
-# Function: table\_getExpandedRowModel()
-
 ```ts
 function table_getExpandedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

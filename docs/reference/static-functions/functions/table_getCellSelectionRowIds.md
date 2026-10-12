@@ -3,13 +3,11 @@ id: table_getCellSelectionRowIds
 title: table_getCellSelectionRowIds
 ---
 
-# Function: table\_getCellSelectionRowIds()
-
 ```ts
 function table_getCellSelectionRowIds<TFeatures, TData>(table): string[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1324](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1324)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1292](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1292)
 
 Returns the ids of all rows intersected by the selection.
 

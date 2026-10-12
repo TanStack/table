@@ -1,4 +1,4 @@
-import { row_getIsAllParentsExpanded } from '../row-expanding/rowExpandingFeature.utils'
+import { getIsAllParentsExpanded } from '../../core/featureStubs'
 import { callMemoOrStaticFn, cloneState, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -126,7 +126,7 @@ function table_getPinnedRows<
       const fullRow =
         table.getPrePaginatedRowModel().rowsById[rowId] ??
         table.getCoreRowModel().rowsById[rowId]
-      if (fullRow && row_getIsAllParentsExpanded(fullRow)) row = fullRow
+      if (fullRow && getIsAllParentsExpanded(fullRow)) row = fullRow
     } else {
       // else get only visible rows that are pinned
       row = visibleRows.find((r) => r.id === rowId)

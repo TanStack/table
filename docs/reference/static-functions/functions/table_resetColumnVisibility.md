@@ -3,13 +3,11 @@ id: table_resetColumnVisibility
 title: table_resetColumnVisibility
 ---
 
-# Function: table\_resetColumnVisibility()
-
 ```ts
 function table_resetColumnVisibility<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:308](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L308)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:288](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L288)
 
 Resets `columnVisibility` to the configured initial state or feature default.
 

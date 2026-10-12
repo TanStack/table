@@ -3,8 +3,6 @@ id: Column_ColumnFiltering
 title: Column_ColumnFiltering
 ---
 
-# Interface: Column\_ColumnFiltering\<TFeatures, TData\>
-
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L194)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:194](http
 
 ## Properties
 
-### getAutoFilterFn()
+### getAutoFilterFn
 
 ```ts
 getAutoFilterFn: () => FilterFn<TFeatures, TData>;
@@ -35,7 +33,7 @@ Returns an automatically calculated filter function for the column based off of 
 
 ***
 
-### getCanFilter()
+### getCanFilter
 
 ```ts
 getCanFilter: () => boolean;
@@ -51,7 +49,7 @@ Checks whether this accessor column can currently be column-filtered.
 
 ***
 
-### getFilterFn()
+### getFilterFn
 
 ```ts
 getFilterFn: () => FilterFn<TFeatures, TData>;
@@ -67,7 +65,7 @@ Returns the filter function (either user-defined or automatic, depending on conf
 
 ***
 
-### getFilterIndex()
+### getFilterIndex
 
 ```ts
 getFilterIndex: () => number;
@@ -83,7 +81,7 @@ Returns the index (including `-1`) of the column filter in the table's `state.co
 
 ***
 
-### getFilterValue()
+### getFilterValue
 
 ```ts
 getFilterValue: () => unknown;
@@ -99,7 +97,7 @@ Reads this column's current value from `state.columnFilters`.
 
 ***
 
-### getIsFiltered()
+### getIsFiltered
 
 ```ts
 getIsFiltered: () => boolean;
@@ -115,7 +113,7 @@ Checks whether this column has an active entry in `state.columnFilters`.
 
 ***
 
-### setFilterValue()
+### setFilterValue
 
 ```ts
 setFilterValue: (updater) => void;

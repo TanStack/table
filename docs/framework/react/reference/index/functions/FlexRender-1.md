@@ -3,8 +3,6 @@ id: FlexRender
 title: FlexRender
 ---
 
-# Function: FlexRender()
-
 ```ts
 function FlexRender<TFeatures, TData, TValue>(props):
   | string
@@ -18,7 +16,7 @@ function FlexRender<TFeatures, TData, TValue>(props):
   | undefined;
 ```
 
-Defined in: [react-table/src/FlexRender.tsx:97](https://github.com/TanStack/table/blob/main/packages/react-table/src/FlexRender.tsx#L97)
+Defined in: [src/FlexRender.tsx:97](https://github.com/TanStack/table/blob/main/packages/react-table/src/FlexRender.tsx#L97)
 
 Simplified component wrapper of `flexRender`. Use this utility component to render headers, cells, or footers with custom markup.
 Only one prop (`cell`, `header`, or `footer`) may be passed.

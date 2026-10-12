@@ -3,8 +3,6 @@ id: TanStackTableHeaderToken
 title: TanStackTableHeaderToken
 ---
 
-# Variable: TanStackTableHeaderToken
-
 ```ts
 const TanStackTableHeaderToken: InjectionToken<Signal<Header<TableFeatures, RowData, unknown>>>;
 ```

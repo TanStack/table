@@ -3,8 +3,6 @@ id: Table_CellSelection
 title: Table_CellSelection
 ---
 
-# Interface: Table\_CellSelection\<TFeatures, TData\>
-
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L207)
 
 ## Type Parameters
@@ -37,7 +35,7 @@ selection persisted mid-drag cannot rehydrate into a stuck drag.
 
 ***
 
-### autoResetCellSelection()
+### autoResetCellSelection
 
 ```ts
 autoResetCellSelection: () => void;
@@ -56,7 +54,7 @@ model; you rarely need to invoke it yourself.
 
 ***
 
-### extendCellSelection()
+### extendCellSelection
 
 ```ts
 extendCellSelection: (direction) => void;
@@ -78,7 +76,7 @@ Extends the active range one step in a direction, keeping its anchor fixed.
 
 ***
 
-### getCellSelectionBounds()
+### getCellSelectionBounds
 
 ```ts
 getCellSelectionBounds: () => CellSelectionBounds[];
@@ -98,7 +96,7 @@ corners no longer resolve are omitted.
 
 ***
 
-### getCellSelectionColumnIds()
+### getCellSelectionColumnIds
 
 ```ts
 getCellSelectionColumnIds: () => string[];
@@ -114,7 +112,7 @@ Returns the ids of all columns intersected by the selection.
 
 ***
 
-### getCellSelectionColumnIndexes()
+### getCellSelectionColumnIndexes
 
 ```ts
 getCellSelectionColumnIndexes: () => Record<string, number>;
@@ -135,7 +133,7 @@ is absent, since its `getColumnIndexes` static rebuilds on every call.
 
 ***
 
-### getCellSelectionMergeBounds()
+### getCellSelectionMergeBounds
 
 ```ts
 getCellSelectionMergeBounds: () => CellSelectionBounds[];
@@ -156,7 +154,7 @@ always entirely selected or entirely unselected.
 
 ***
 
-### getCellSelectionRowIds()
+### getCellSelectionRowIds
 
 ```ts
 getCellSelectionRowIds: () => string[];
@@ -172,7 +170,7 @@ Returns the ids of all rows intersected by the selection.
 
 ***
 
-### getFocusedCell()
+### getFocusedCell
 
 ```ts
 getFocusedCell: () =>
@@ -192,7 +190,7 @@ An exclusion's active cell is focused even though it is not selected.
 
 ***
 
-### getSelectedCellCount()
+### getSelectedCellCount
 
 ```ts
 getSelectedCellCount: () => number;
@@ -211,7 +209,7 @@ Computed with rectangle arithmetic unless a per-cell
 
 ***
 
-### getSelectedCellIds()
+### getSelectedCellIds
 
 ```ts
 getSelectedCellIds: () => string[];
@@ -230,7 +228,7 @@ It is memoized and never runs unless called.
 
 ***
 
-### getSelectedCellRangesData()
+### getSelectedCellRangesData
 
 ```ts
 getSelectedCellRangesData: () => unknown[][][];
@@ -250,7 +248,7 @@ representation, and any quoting rules are application decisions.
 
 ***
 
-### moveCellSelection()
+### moveCellSelection
 
 ```ts
 moveCellSelection: (direction) => void;
@@ -273,7 +271,7 @@ cell. Columns that cannot be selected are skipped over.
 
 ***
 
-### resetCellSelection()
+### resetCellSelection
 
 ```ts
 resetCellSelection: (defaultState?) => void;
@@ -297,7 +295,7 @@ Pass `true` to ignore initial state and reset to an empty selection.
 
 ***
 
-### selectAllCells()
+### selectAllCells
 
 ```ts
 selectAllCells: () => void;
@@ -313,7 +311,7 @@ Selects every selectable cell in the table as one range.
 
 ***
 
-### selectCellRange()
+### selectCellRange
 
 ```ts
 selectCellRange: (range, opts?) => void;
@@ -339,7 +337,7 @@ Selects a rectangle using the requested replace/include/exclude mode.
 
 ***
 
-### setCellSelection()
+### setCellSelection
 
 ```ts
 setCellSelection: (updater) => void;
@@ -361,7 +359,7 @@ Updates cell selection state with a next value or updater function.
 
 ***
 
-### setFocusedCell()
+### setFocusedCell
 
 ```ts
 setFocusedCell: (rowId, columnId) => void;

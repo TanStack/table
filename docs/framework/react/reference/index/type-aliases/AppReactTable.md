@@ -3,13 +3,11 @@ id: AppReactTable
 title: AppReactTable
 ---
 
-# Type Alias: AppReactTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppReactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = ReactTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:532](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L532)
+Defined in: [src/createTableHook.tsx:532](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L532)
 
 Extended table API returned by useAppTable with all App wrapper components
 

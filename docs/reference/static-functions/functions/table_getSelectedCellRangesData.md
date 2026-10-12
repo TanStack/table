@@ -3,13 +3,11 @@ id: table_getSelectedCellRangesData
 title: table_getSelectedCellRangesData
 ---
 
-# Function: table\_getSelectedCellRangesData()
-
 ```ts
 function table_getSelectedCellRangesData<TFeatures, TData>(table): unknown[][][];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1238](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1238)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1206](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1206)
 
 Returns each final positive region's values as a row-major grid.
 

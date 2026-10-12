@@ -3,8 +3,6 @@ id: Row_ColumnPinning
 title: Row_ColumnPinning
 ---
 
-# Interface: Row\_ColumnPinning\<TFeatures, TData\>
-
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L80)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:80](https://g
 
 ## Properties
 
-### getCenterVisibleCells()
+### getCenterVisibleCells
 
 ```ts
 getCenterVisibleCells: () => Cell<TFeatures, TData, unknown>[];
@@ -35,7 +33,7 @@ Gets visible row cells whose columns are not pinned start or end.
 
 ***
 
-### getEndVisibleCells()
+### getEndVisibleCells
 
 ```ts
 getEndVisibleCells: () => Cell<TFeatures, TData, unknown>[];
@@ -51,7 +49,7 @@ Gets visible row cells whose columns are pinned to logical end.
 
 ***
 
-### getStartVisibleCells()
+### getStartVisibleCells
 
 ```ts
 getStartVisibleCells: () => Cell<TFeatures, TData, unknown>[];

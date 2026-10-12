@@ -3,15 +3,13 @@ id: table_getEndTotalSize
 title: table_getEndTotalSize
 ---
 
-# Function: table\_getEndTotalSize()
-
 ```ts
 function table_getEndTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:455](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L455)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:449](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L449)
 
-Sums the rendered size of the logical end pinned header region.
+Sums the sizes of the visible leaf columns pinned to the logical end region.
 
 An empty end pinning region returns `0`.
 

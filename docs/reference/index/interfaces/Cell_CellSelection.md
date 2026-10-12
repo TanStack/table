@@ -3,13 +3,11 @@ id: Cell_CellSelection
 title: Cell_CellSelection
 ---
 
-# Interface: Cell\_CellSelection
-
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:158](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L158)
 
 ## Properties
 
-### getCanSelect()
+### getCanSelect
 
 ```ts
 getCanSelect: () => boolean;
@@ -25,7 +23,7 @@ Checks whether this cell can currently be selected.
 
 ***
 
-### getIsFocused()
+### getIsFocused
 
 ```ts
 getIsFocused: () => boolean;
@@ -42,7 +40,7 @@ recent range.
 
 ***
 
-### getIsSelected()
+### getIsSelected
 
 ```ts
 getIsSelected: () => boolean;
@@ -58,7 +56,7 @@ Checks whether this cell falls inside the final positive selection.
 
 ***
 
-### getSelectionEdges()
+### getSelectionEdges
 
 ```ts
 getSelectionEdges: () => CellSelectionEdges;
@@ -78,7 +76,7 @@ All sides are `false` when the cell is not selected.
 
 ***
 
-### getSelectionExtendHandler()
+### getSelectionExtendHandler
 
 ```ts
 getSelectionExtendHandler: () => (event) => void;
@@ -94,23 +92,11 @@ the active range already focuses this cell.
 
 #### Returns
 
-```ts
-(event): void;
-```
-
-##### Parameters
-
-###### event
-
-`unknown`
-
-##### Returns
-
-`void`
+(`event`) => `void`
 
 ***
 
-### getSelectionStartHandler()
+### getSelectionStartHandler
 
 ```ts
 getSelectionStartHandler: (contextDocument?) => (event) => void;
@@ -135,23 +121,11 @@ another document, such as an iframe or popout window.
 
 #### Returns
 
-```ts
-(event): void;
-```
-
-##### Parameters
-
-###### event
-
-`unknown`
-
-##### Returns
-
-`void`
+(`event`) => `void`
 
 ***
 
-### getTabIndex()
+### getTabIndex
 
 ```ts
 getTabIndex: () => number;

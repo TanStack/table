@@ -3,8 +3,6 @@ id: AggregationFnListItem
 title: AggregationFnListItem
 ---
 
-# Type Alias: AggregationFnListItem\<TFeatures, TData, TValue\>
-
 ```ts
 type AggregationFnListItem<TFeatures, TData, TValue> =
   | "auto"
@@ -12,7 +10,7 @@ type AggregationFnListItem<TFeatures, TData, TValue> =
 | AggregationFnDescriptor<TFeatures, TData, TValue, any>;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L141)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L127)
 
 One named or explicitly keyed entry in a multiple aggregation option.
 

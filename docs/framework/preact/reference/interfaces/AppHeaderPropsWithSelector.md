@@ -3,8 +3,6 @@ id: AppHeaderPropsWithSelector
 title: AppHeaderPropsWithSelector
 ---
 
-# Interface: AppHeaderPropsWithSelector\<TFeatures, TData, TValue, THeaderComponents, TSelected\>
-
 Defined in: [createTableHook.tsx:448](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L448)
 
 Props for AppHeader/AppFooter component - with selector
@@ -33,7 +31,7 @@ Props for AppHeader/AppFooter component - with selector
 
 ## Properties
 
-### children()
+### children
 
 ```ts
 children: (header, state) => ComponentChildren;
@@ -67,7 +65,7 @@ Defined in: [createTableHook.tsx:455](https://github.com/TanStack/table/blob/mai
 
 ***
 
-### selector()
+### selector
 
 ```ts
 selector: (state) => TSelected;

@@ -3,13 +3,11 @@ id: normalizeUniqueAggregationRows
 title: normalizeUniqueAggregationRows
 ---
 
-# Function: normalizeUniqueAggregationRows()
-
 ```ts
-function normalizeUniqueAggregationRows<TFeatures, TData>(rows, maxDepth): readonly Row<TFeatures, TData>[];
+function normalizeUniqueAggregationRows<TFeatures, TData>(rows, maxDepth?): readonly Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L145)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L139)
 
 Frontier selection for rows that are distinct nodes of a single row tree —
 the row models the table builds itself. Skips `normalizeAggregationRows`'
@@ -33,7 +31,7 @@ costs nothing per aggregation.
 
 readonly [`Row`](../../index/type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
 
-### maxDepth
+### maxDepth?
 
 `number` = `0`
 
