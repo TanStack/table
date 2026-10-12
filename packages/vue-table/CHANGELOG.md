@@ -1,5 +1,13 @@
 # @tanstack/vue-table
 
+## 9.3.1
+
+### Patch Changes
+
+- [#6633](https://github.com/TanStack/table/pull/6633) [`67e8251`](https://github.com/TanStack/table/commit/67e8251a34edc96c3d68c3bbba88bf26f9103844) - Keep `AppCell`, `AppHeader`, and `AppFooter` in sync with their `cell`/`header` prop. When `data` or `columns` are replaced, a keyed `{#each}` or `v-for` reuses the wrapper with a new instance that has the same id. The wrapper kept the first instance, so the snippet/slot value and `useCellContext()`/`useHeaderContext()` showed stale values. The wrappers now read the current prop, and the context forwards to it.
+- Updated dependencies [[`2d5f5b6`](https://github.com/TanStack/table/commit/2d5f5b65a98350949ac9ce7397a29ee9bbe2fd5e), [`87c6bcc`](https://github.com/TanStack/table/commit/87c6bcc52a5cd614d83d698c76048b4c1c2bb8f7)]:
+  - @tanstack/table-core@9.3.1
+
 ## 9.2.8
 
 ### Patch Changes

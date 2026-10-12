@@ -1,5 +1,12 @@
 # @tanstack/preact-table-devtools
 
+## 9.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`87c6bcc`](https://github.com/TanStack/table/commit/87c6bcc52a5cd614d83d698c76048b4c1c2bb8f7)]:
+  - @tanstack/table-devtools@9.3.1
+
 ## 9.3.0
 
 ### Patch Changes

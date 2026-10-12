@@ -1,5 +1,12 @@
 # @tanstack/lit-table
 
+## 9.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`2d5f5b6`](https://github.com/TanStack/table/commit/2d5f5b65a98350949ac9ce7397a29ee9bbe2fd5e), [`87c6bcc`](https://github.com/TanStack/table/commit/87c6bcc52a5cd614d83d698c76048b4c1c2bb8f7)]:
+  - @tanstack/table-core@9.3.1
+
 ## 9.2.8
 
 ### Patch Changes

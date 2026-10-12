@@ -8,7 +8,7 @@ metadata:
   type: framework
   library: '@tanstack/angular-table'
   framework: angular
-  library_version: '9.2.8'
+  library_version: '9.3.1'
 requires:
   - '@tanstack/table-core#core'
 sources:

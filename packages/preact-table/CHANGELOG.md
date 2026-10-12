@@ -1,5 +1,13 @@
 # @tanstack/preact-table
 
+## 9.3.1
+
+### Patch Changes
+
+- [#6631](https://github.com/TanStack/table/pull/6631) [`3d3648f`](https://github.com/TanStack/table/commit/3d3648f788310465e135c09fd3f803ef25a92c18) - Refresh the `AppTable` context when the `useAppTable` owner renders with new options or state, so `useTableContext()` consumers no longer show stale rows after `data` is replaced under a cached (React Compiler, `useMemo`, `memo`) `AppTable` element.
+- Updated dependencies [[`2d5f5b6`](https://github.com/TanStack/table/commit/2d5f5b65a98350949ac9ce7397a29ee9bbe2fd5e), [`87c6bcc`](https://github.com/TanStack/table/commit/87c6bcc52a5cd614d83d698c76048b4c1c2bb8f7)]:
+  - @tanstack/table-core@9.3.1
+
 ## 9.3.0
 
 ### Patch Changes

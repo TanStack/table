@@ -7,7 +7,7 @@ metadata:
   type: framework
   library: '@tanstack/alpine-table'
   framework: alpine
-  library_version: '9.2.8'
+  library_version: '9.3.1'
 requires:
   - '@tanstack/table-core#table-state'
 sources:
