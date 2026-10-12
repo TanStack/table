@@ -3,13 +3,11 @@ id: table_getStartHeaderGroups
 title: table_getStartHeaderGroups
 ---
 
-# Function: table\_getStartHeaderGroups()
-
 ```ts
 function table_getStartHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:380](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L380)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:368](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L368)
 
 Builds header groups for visible columns pinned to the start region.
 

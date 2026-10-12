@@ -3,13 +3,11 @@ id: createCoreRowModel
 title: createCoreRowModel
 ---
 
-# Function: createCoreRowModel()
-
 ```ts
 function createCoreRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/createCoreRowModel.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/createCoreRowModel.ts#L18)
+Defined in: [core/row-models/createCoreRowModel.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/createCoreRowModel.ts#L20)
 
 Creates a memoized core row model factory.
 
@@ -27,22 +25,4 @@ The factory reads the relevant table state atoms and options, then returns a row
 
 ## Returns
 
-```ts
-(table): () => RowModel<TFeatures, TData>;
-```
-
-### Parameters
-
-#### table
-
-[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
-
-### Returns
-
-```ts
-(): RowModel<TFeatures, TData>;
-```
-
-#### Returns
-
-[`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+(`table`) => () => [`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>

@@ -3,8 +3,6 @@ id: table_getGroupedSelectedRowModel
 title: table_getGroupedSelectedRowModel
 ---
 
-# Function: table\_getGroupedSelectedRowModel()
-
 ```ts
 function table_getGroupedSelectedRowModel<TFeatures, TData>(table):
   | RowModel<TFeatures, TData>

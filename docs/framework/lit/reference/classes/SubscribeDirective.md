@@ -3,8 +3,6 @@ id: SubscribeDirective
 title: SubscribeDirective
 ---
 
-# Class: SubscribeDirective
-
 Defined in: [packages/lit-table/src/subscribe-directive.ts:43](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L43)
 
 An asynchronous Lit directive that subscribes to a `@tanstack/lit-store`
@@ -109,7 +107,7 @@ Initialize the part with internal fields
 
 ##### attributeIndex
 
-`number` | `undefined`
+`number` \| `undefined`
 
 #### Returns
 
@@ -314,7 +312,8 @@ Defined in: [packages/lit-table/src/subscribe-directive.ts:87](https://github.co
 
 ##### args
 
-\[[`SelectionSource`](../type-aliases/SelectionSource.md)\<`any`\>, `TemplateFunction`\<`any`\>\] | \[[`SelectionSource`](../type-aliases/SelectionSource.md)\<`any`\>, `Selector`\<`any`, `any`\>, `TemplateFunction`\<`any`\>\]
+  \| \[[`SelectionSource`](../type-aliases/SelectionSource.md)\<`any`\>, `TemplateFunction`\<`any`\>\]
+  \| \[[`SelectionSource`](../type-aliases/SelectionSource.md)\<`any`\>, `Selector`\<`any`, `any`\>, `TemplateFunction`\<`any`\>\]
 
 #### Returns
 

@@ -3,8 +3,6 @@ id: TableFeature
 title: TableFeature
 ---
 
-# Interface: TableFeature
-
 Defined in: [types/TableFeatures.ts:319](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L319)
 
 Lifecycle hooks and defaults contributed by a table feature.
@@ -16,10 +14,10 @@ for tables, columns, rows, headers, header groups, and cells.
 
 ## Properties
 
-### assignCellPrototype()?
+### assignCellPrototype?
 
 ```ts
-optional assignCellPrototype: <TFeatures, TData>(prototype, table) => void;
+optional assignCellPrototype?: <TFeatures, TData>(prototype, table) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:328](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L328)
@@ -57,10 +55,10 @@ per-cell mutable data.
 
 ***
 
-### assignColumnPrototype()?
+### assignColumnPrototype?
 
 ```ts
-optional assignColumnPrototype: <TFeatures, TData>(prototype, table) => void;
+optional assignColumnPrototype?: <TFeatures, TData>(prototype, table) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:343](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L343)
@@ -98,10 +96,10 @@ than per-column mutable data.
 
 ***
 
-### assignHeaderPrototype()?
+### assignHeaderPrototype?
 
 ```ts
-optional assignHeaderPrototype: <TFeatures, TData>(prototype, table) => void;
+optional assignHeaderPrototype?: <TFeatures, TData>(prototype, table) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:358](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L358)
@@ -139,10 +137,10 @@ than per-header mutable data.
 
 ***
 
-### assignRowPrototype()?
+### assignRowPrototype?
 
 ```ts
-optional assignRowPrototype: <TFeatures, TData>(prototype, table) => void;
+optional assignRowPrototype?: <TFeatures, TData>(prototype, table) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:373](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L373)
@@ -180,10 +178,10 @@ mutable data.
 
 ***
 
-### constructTableAPIs()?
+### constructTableAPIs?
 
 ```ts
-optional constructTableAPIs: <TFeatures, TData>(table) => void;
+optional constructTableAPIs?: <TFeatures, TData>(table) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:386](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L386)
@@ -218,10 +216,10 @@ feature's `initTableInstanceData` hook has completed.
 
 ***
 
-### getDefaultColumnDef()?
+### getDefaultColumnDef?
 
 ```ts
-optional getDefaultColumnDef: <TFeatures, TData, TValue>() => ColumnDefBase_All<TFeatures, TData, TValue>;
+optional getDefaultColumnDef?: <TFeatures, TData, TValue>() => ColumnDefBase_All<TFeatures, TData, TValue>;
 ```
 
 Defined in: [types/TableFeatures.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L396)
@@ -252,10 +250,10 @@ resolved, so users can override values supplied here.
 
 ***
 
-### getDefaultTableOptions()?
+### getDefaultTableOptions?
 
 ```ts
-optional getDefaultTableOptions: <TFeatures, TData>(table) => Partial<TableOptions_All<TFeatures, TData>>;
+optional getDefaultTableOptions?: <TFeatures, TData>(table) => Partial<TableOptions_All<TFeatures, TData>>;
 ```
 
 Defined in: [types/TableFeatures.ts:409](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L409)
@@ -289,10 +287,10 @@ here.
 
 ***
 
-### getInitialState()?
+### getInitialState?
 
 ```ts
-optional getInitialState: (initialState) => TableState_All;
+optional getInitialState?: (initialState) => TableState_All;
 ```
 
 Defined in: [types/TableFeatures.ts:423](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L423)
@@ -316,10 +314,10 @@ override feature defaults.
 
 ***
 
-### initCellInstanceData()?
+### initCellInstanceData?
 
 ```ts
-optional initCellInstanceData: <TFeatures, TData, TValue>(cell) => void;
+optional initCellInstanceData?: <TFeatures, TData, TValue>(cell) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:452](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L452)
@@ -358,10 +356,10 @@ Shared methods should be assigned via `assignCellPrototype` instead.
 
 ***
 
-### initColumnInstanceData()?
+### initColumnInstanceData?
 
 ```ts
-optional initColumnInstanceData: <TFeatures, TData, TValue>(column) => void;
+optional initColumnInstanceData?: <TFeatures, TData, TValue>(column) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:467](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L467)
@@ -399,10 +397,10 @@ methods should be assigned via `assignColumnPrototype` instead.
 
 ***
 
-### initHeaderGroupInstanceData()?
+### initHeaderGroupInstanceData?
 
 ```ts
-optional initHeaderGroupInstanceData: <TFeatures, TData>(headerGroup) => void;
+optional initHeaderGroupInstanceData?: <TFeatures, TData>(headerGroup) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:483](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L483)
@@ -437,10 +435,10 @@ visibility, order, or pinning changes), so this reruns on every rebuild.
 
 ***
 
-### initHeaderInstanceData()?
+### initHeaderInstanceData?
 
 ```ts
-optional initHeaderInstanceData: <TFeatures, TData, TValue>(header) => void;
+optional initHeaderInstanceData?: <TFeatures, TData, TValue>(header) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:500](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L500)
@@ -481,10 +479,10 @@ instead.
 
 ***
 
-### initRowInstanceData()?
+### initRowInstanceData?
 
 ```ts
-optional initRowInstanceData: <TFeatures, TData>(row) => void;
+optional initRowInstanceData?: <TFeatures, TData>(row) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:515](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L515)
@@ -518,10 +516,10 @@ should be assigned via `assignRowPrototype` instead.
 
 ***
 
-### initTableInstanceData()?
+### initTableInstanceData?
 
 ```ts
-optional initTableInstanceData: <TFeatures, TData>(table) => void;
+optional initTableInstanceData?: <TFeatures, TData>(table) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:437](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L437)
@@ -560,10 +558,10 @@ instead.
 
 ***
 
-### resetTableInstanceData()?
+### resetTableInstanceData?
 
 ```ts
-optional resetTableInstanceData: <TFeatures, TData>(table) => void;
+optional resetTableInstanceData?: <TFeatures, TData>(table) => void;
 ```
 
 Defined in: [types/TableFeatures.ts:528](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L528)

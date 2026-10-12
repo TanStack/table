@@ -2,6 +2,7 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
+import type { Column } from '../../types/Column'
 
 export type GroupingState = Array<string>
 
@@ -115,9 +116,18 @@ export interface TableOptions_ColumnGrouping {
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export interface Table_ColumnGrouping<
-  in out _TFeatures extends TableFeatures,
-  in out _TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
+  /**
+   * Moves grouped leaf columns as `groupedColumnMode` sets. Leaf column order
+   * falls back to it when the column ordering feature is not registered.
+   *
+   * @internal
+   */
+  _orderGroupedColumns: (
+    columns: Array<Column<TFeatures, TData, unknown>>,
+  ) => Array<Column<TFeatures, TData, unknown>>
   /**
    * Resets `grouping` to `initialState.grouping`.
    *

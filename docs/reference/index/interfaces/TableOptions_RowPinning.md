@@ -3,8 +3,6 @@ id: TableOptions_RowPinning
 title: TableOptions_RowPinning
 ---
 
-# Interface: TableOptions\_RowPinning\<TFeatures, TData\>
-
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L16)
 
 ## Type Parameters
@@ -22,7 +20,7 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:16](https://github.
 ### enableRowPinning?
 
 ```ts
-optional enableRowPinning: boolean | (row) => boolean;
+optional enableRowPinning?: boolean | ((row) => boolean);
 ```
 
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L25)
@@ -36,7 +34,7 @@ Provide a predicate to decide per row. Defaults to `true`.
 ### keepPinnedRows?
 
 ```ts
-optional keepPinnedRows: boolean;
+optional keepPinnedRows?: boolean;
 ```
 
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L29)
@@ -48,7 +46,7 @@ When `false`, pinned rows will not be visible if they are filtered or paginated 
 ### onRowPinningChange?
 
 ```ts
-optional onRowPinningChange: OnChangeFn<RowPinningState>;
+optional onRowPinningChange?: OnChangeFn<RowPinningState>;
 ```
 
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L35)

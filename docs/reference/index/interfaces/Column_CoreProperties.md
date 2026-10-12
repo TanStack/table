@@ -3,8 +3,6 @@ id: Column_CoreProperties
 title: Column_CoreProperties
 ---
 
-# Interface: Column\_CoreProperties\<TFeatures, TData, TValue\>
-
 Defined in: [core/columns/coreColumnsFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L7)
 
 ## Extended by
@@ -30,7 +28,7 @@ Defined in: [core/columns/coreColumnsFeature.types.ts:7](https://github.com/TanS
 ### accessorFn?
 
 ```ts
-optional accessorFn: AccessorFn<TData, TValue>;
+optional accessorFn?: AccessorFn<TData, TValue>;
 ```
 
 Defined in: [core/columns/coreColumnsFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L15)
@@ -93,7 +91,7 @@ The resolved unique identifier for the column resolved in this priority:
 ### parent?
 
 ```ts
-optional parent: Column<TFeatures, TData, TValue>;
+optional parent?: Column<TFeatures, TData, TValue>;
 ```
 
 Defined in: [core/columns/coreColumnsFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L38)

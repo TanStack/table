@@ -3,13 +3,11 @@ id: table_getCellSpanIndex
 title: table_getCellSpanIndex
 ---
 
-# Function: table\_getCellSpanIndex()
-
 ```ts
 function table_getCellSpanIndex<TFeatures, TData>(table): CellSpanIndex<TFeatures, TData>;
 ```
 
-Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L150)
+Defined in: [features/cell-spanning/cellSpanningFeature.utils.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.utils.ts#L152)
 
 Builds the table's cell span index for the rows that are currently rendered.
 

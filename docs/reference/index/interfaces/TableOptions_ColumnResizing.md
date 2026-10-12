@@ -3,8 +3,6 @@ id: TableOptions_ColumnResizing
 title: TableOptions_ColumnResizing
 ---
 
-# Interface: TableOptions\_ColumnResizing
-
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L20)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/column-resizing/columnResizingFeature.types.ts:20](https:/
 ### columnResizeDirection?
 
 ```ts
-optional columnResizeDirection: ColumnResizeDirection;
+optional columnResizeDirection?: ColumnResizeDirection;
 ```
 
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L34)
@@ -24,7 +22,7 @@ Sets the resize direction used to calculate drag offsets. Defaults to `ltr`.
 ### columnResizeMode?
 
 ```ts
-optional columnResizeMode: ColumnResizeMode;
+optional columnResizeMode?: ColumnResizeMode;
 ```
 
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L26)
@@ -38,7 +36,7 @@ resize interaction finishes.
 ### enableColumnResizing?
 
 ```ts
-optional enableColumnResizing: boolean;
+optional enableColumnResizing?: boolean;
 ```
 
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L30)
@@ -50,7 +48,7 @@ Enables or disables column resizing for the whole table.
 ### onColumnResizingChange?
 
 ```ts
-optional onColumnResizingChange: OnChangeFn<columnResizingState>;
+optional onColumnResizingChange?: OnChangeFn<columnResizingState>;
 ```
 
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L40)

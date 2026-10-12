@@ -3,8 +3,6 @@ id: CreateTableContextOptions
 title: CreateTableContextOptions
 ---
 
-# Type Alias: CreateTableContextOptions\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type CreateTableContextOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
@@ -19,7 +17,7 @@ Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initia
 ### cellComponents?
 
 ```ts
-optional cellComponents: TCellComponents;
+optional cellComponents?: TCellComponents;
 ```
 
 Cell-level components that need access to the cell instance.
@@ -35,7 +33,7 @@ Use `useCellContext()` inside these components.
 ### headerComponents?
 
 ```ts
-optional headerComponents: THeaderComponents;
+optional headerComponents?: THeaderComponents;
 ```
 
 Header-level components that need access to the header instance.
@@ -51,7 +49,7 @@ Use `useHeaderContext()` inside these components.
 ### tableComponents?
 
 ```ts
-optional tableComponents: TTableComponents;
+optional tableComponents?: TTableComponents;
 ```
 
 Table-level components that need access to the table instance.

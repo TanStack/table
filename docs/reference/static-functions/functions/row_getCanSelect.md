@@ -3,8 +3,6 @@ id: row_getCanSelect
 title: row_getCanSelect
 ---
 
-# Function: row\_getCanSelect()
-
 ```ts
 function row_getCanSelect<TFeatures, TData>(row): boolean;
 ```

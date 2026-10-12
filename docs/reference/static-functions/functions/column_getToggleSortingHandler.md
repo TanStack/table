@@ -3,8 +3,6 @@ id: column_getToggleSortingHandler
 title: column_getToggleSortingHandler
 ---
 
-# Function: column\_getToggleSortingHandler()
-
 ```ts
 function column_getToggleSortingHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```
@@ -38,19 +36,7 @@ The handler ignores events when the column cannot sort, and asks
 
 ## Returns
 
-```ts
-(e): void;
-```
-
-### Parameters
-
-#### e
-
-`unknown`
-
-### Returns
-
-`void`
+(`e`) => `void`
 
 ## Example
 

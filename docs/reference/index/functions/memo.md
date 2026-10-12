@@ -3,8 +3,6 @@ id: memo
 title: memo
 ---
 
-# Function: memo()
-
 ```ts
 function memo<TDeps, TDepArgs, TResult>(__namedParameters): (depArgs?) => TResult;
 ```
@@ -37,16 +35,4 @@ The memo recomputes only when its dependency tuple changes and can emit debug ti
 
 ## Returns
 
-```ts
-(depArgs?): TResult;
-```
-
-### Parameters
-
-#### depArgs?
-
-`TDepArgs`
-
-### Returns
-
-`TResult`
+(`depArgs?`) => `TResult`

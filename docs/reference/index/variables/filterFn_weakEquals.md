@@ -3,13 +3,11 @@ id: filterFn_weakEquals
 title: filterFn_weakEquals
 ---
 
-# Variable: filterFn\_weakEquals
-
 ```ts
 const filterFn_weakEquals: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [features/column-filtering/filterFns.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L88)
+Defined in: [features/column-filtering/filterFns.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L89)
 
 Keeps rows whose column value is loosely equal to the filter value.
 

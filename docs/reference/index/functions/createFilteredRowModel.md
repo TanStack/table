@@ -3,8 +3,6 @@ id: createFilteredRowModel
 title: createFilteredRowModel
 ---
 
-# Function: createFilteredRowModel()
-
 ```ts
 function createFilteredRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
@@ -34,22 +32,4 @@ option need no registration at all.
 
 ## Returns
 
-```ts
-(table): () => RowModel<TFeatures, TData>;
-```
-
-### Parameters
-
-#### table
-
-[`Table`](../type-aliases/Table.md)\<`TFeatures`, `TData`\>
-
-### Returns
-
-```ts
-(): RowModel<TFeatures, TData>;
-```
-
-#### Returns
-
-[`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+(`table`) => () => [`RowModel`](../interfaces/RowModel.md)\<`TFeatures`, `TData`\>

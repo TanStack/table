@@ -3,8 +3,6 @@ id: TableState_All
 title: TableState_All
 ---
 
-# Interface: TableState\_All
-
 Defined in: [types/TableState.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L49)
 
 Internal broad state shape containing every registered feature state slice.
@@ -21,7 +19,7 @@ by other features.
 ### cellSelection?
 
 ```ts
-optional cellSelection: CellSelectionState;
+optional cellSelection?: CellSelectionState;
 ```
 
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L44)
@@ -35,7 +33,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:44](https://g
 ### columnFilters?
 
 ```ts
-optional columnFilters: ColumnFiltersState;
+optional columnFilters?: ColumnFiltersState;
 ```
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L34)
@@ -49,10 +47,10 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:34](https
 ### columnOrder?
 
 ```ts
-optional columnOrder: ColumnOrderState;
+optional columnOrder?: ColumnOrderState;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L27)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L28)
 
 #### Inherited from
 
@@ -63,7 +61,7 @@ Defined in: [features/column-ordering/columnOrderingFeature.types.ts:27](https:/
 ### columnPinning?
 
 ```ts
-optional columnPinning: ColumnPinningState;
+optional columnPinning?: ColumnPinningState;
 ```
 
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L23)
@@ -77,7 +75,7 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:23](https://g
 ### columnResizing?
 
 ```ts
-optional columnResizing: columnResizingState;
+optional columnResizing?: columnResizingState;
 ```
 
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:4](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L4)
@@ -91,7 +89,7 @@ Defined in: [features/column-resizing/columnResizingFeature.types.ts:4](https://
 ### columnSizing?
 
 ```ts
-optional columnSizing: ColumnSizingState;
+optional columnSizing?: ColumnSizingState;
 ```
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L5)
@@ -105,7 +103,7 @@ Defined in: [features/column-sizing/columnSizingFeature.types.ts:5](https://gith
 ### columnVisibility?
 
 ```ts
-optional columnVisibility: ColumnVisibilityState;
+optional columnVisibility?: ColumnVisibilityState;
 ```
 
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L9)
@@ -119,7 +117,7 @@ Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:9](http
 ### expanded?
 
 ```ts
-optional expanded: ExpandedState;
+optional expanded?: ExpandedState;
 ```
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L10)
@@ -133,7 +131,7 @@ Defined in: [features/row-expanding/rowExpandingFeature.types.ts:10](https://git
 ### globalFilter?
 
 ```ts
-optional globalFilter: any;
+optional globalFilter?: any;
 ```
 
 Defined in: [features/global-filtering/globalFilteringFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L15)
@@ -147,10 +145,10 @@ Defined in: [features/global-filtering/globalFilteringFeature.types.ts:15](https
 ### grouping?
 
 ```ts
-optional grouping: GroupingState;
+optional grouping?: GroupingState;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L9)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L10)
 
 #### Inherited from
 
@@ -161,7 +159,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:9](https://
 ### pagination?
 
 ```ts
-optional pagination: PaginationState;
+optional pagination?: PaginationState;
 ```
 
 Defined in: [features/row-pagination/rowPaginationFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L15)
@@ -175,7 +173,7 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:15](https://g
 ### rowPinning?
 
 ```ts
-optional rowPinning: RowPinningState;
+optional rowPinning?: RowPinningState;
 ```
 
 Defined in: [features/row-pinning/rowPinningFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L13)
@@ -189,7 +187,7 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:13](https://github.
 ### rowSelection?
 
 ```ts
-optional rowSelection: RowSelectionState;
+optional rowSelection?: RowSelectionState;
 ```
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L31)
@@ -203,7 +201,7 @@ Defined in: [features/row-selection/rowSelectionFeature.types.ts:31](https://git
 ### sorting?
 
 ```ts
-optional sorting: SortingState;
+optional sorting?: SortingState;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L22)

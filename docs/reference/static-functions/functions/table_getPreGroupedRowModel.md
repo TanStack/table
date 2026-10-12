@@ -3,8 +3,6 @@ id: table_getPreGroupedRowModel
 title: table_getPreGroupedRowModel
 ---
 
-# Function: table\_getPreGroupedRowModel()
-
 ```ts
 function table_getPreGroupedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```

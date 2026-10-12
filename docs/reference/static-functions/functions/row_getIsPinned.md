@@ -3,8 +3,6 @@ id: row_getIsPinned
 title: row_getIsPinned
 ---
 
-# Function: row\_getIsPinned()
-
 ```ts
 function row_getIsPinned<TFeatures, TData>(row): RowPinningPosition;
 ```

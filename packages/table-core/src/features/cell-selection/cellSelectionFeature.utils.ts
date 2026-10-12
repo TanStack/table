@@ -4,7 +4,10 @@ import {
   makeObjectMap,
   setStateSlice,
 } from '../../utils'
-import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
+import {
+  getVisibleLeafColumns,
+  orderByColumnPinning,
+} from '../../core/featureStubs'
 import {
   applyCellSelectionBoundsOperations,
   expandCellSelectionBounds,
@@ -142,46 +145,11 @@ function getDisplayOrderedColumns<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): ReadonlyArray<Column<TFeatures, TData, unknown>> {
-  const columns = callMemoOrStaticFn(
+  return orderByColumnPinning(
     table,
-    'getVisibleLeafColumns',
-    table_getVisibleLeafColumns,
+    getVisibleLeafColumns(table),
+    (column) => column.id,
   )
-  const pinning = table.atoms.columnPinning?.get()
-
-  if (!pinning || (!pinning.start.length && !pinning.end.length)) {
-    return columns
-  }
-
-  const byId = makeObjectMap<Column<TFeatures, TData, unknown>>()
-  for (let i = 0; i < columns.length; i++) {
-    byId[columns[i]!.id] = columns[i]!
-  }
-
-  const start: Array<Column<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < pinning.start.length; i++) {
-    const column = byId[pinning.start[i]!]
-    if (column) start.push(column)
-  }
-
-  const end: Array<Column<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < pinning.end.length; i++) {
-    const column = byId[pinning.end[i]!]
-    if (column) end.push(column)
-  }
-
-  const center: Array<Column<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < columns.length; i++) {
-    const column = columns[i]!
-    if (
-      !pinning.start.includes(column.id) &&
-      !pinning.end.includes(column.id)
-    ) {
-      center.push(column)
-    }
-  }
-
-  return [...start, ...center, ...end]
 }
 
 /**

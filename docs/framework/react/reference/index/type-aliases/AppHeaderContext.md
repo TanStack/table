@@ -3,13 +3,11 @@ id: AppHeaderContext
 title: AppHeaderContext
 ---
 
-# Type Alias: AppHeaderContext\<TFeatures, TData, TValue, THeaderComponents\>
-
 ```ts
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:67](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L67)
+Defined in: [src/createTableHook.tsx:67](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L67)
 
 Enhanced HeaderContext with pre-bound header components.
 The `header` property includes the registered headerComponents.
@@ -40,7 +38,7 @@ The `header` property includes the registered headerComponents.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:73](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L73)
+Defined in: [src/createTableHook.tsx:73](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L73)
 
 ***
 
@@ -50,11 +48,11 @@ Defined in: [react-table/src/createTableHook.tsx:73](https://github.com/TanStack
 header: Header<TFeatures, TData, TValue> & THeaderComponents & object;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:74](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L74)
+Defined in: [src/createTableHook.tsx:74](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L74)
 
 #### Type Declaration
 
-##### FlexRender()
+##### FlexRender
 
 ```ts
 FlexRender: () => ReactNode;
@@ -72,4 +70,4 @@ FlexRender: () => ReactNode;
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:76](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L76)
+Defined in: [src/createTableHook.tsx:76](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L76)

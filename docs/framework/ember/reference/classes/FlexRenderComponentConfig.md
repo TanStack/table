@@ -3,8 +3,6 @@ id: FlexRenderComponentConfig
 title: FlexRenderComponentConfig
 ---
 
-# Class: FlexRenderComponentConfig\<TFeatures, TData, TValue, TOptions\>
-
 Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:18
 
 ## Type Parameters
@@ -64,7 +62,7 @@ Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:19
 ### options?
 
 ```ts
-readonly optional options: TOptions;
+readonly optional options?: TOptions;
 ```
 
 Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:20

@@ -3,8 +3,6 @@ id: AppHeaderContext
 title: AppHeaderContext
 ---
 
-# Type Alias: AppHeaderContext\<TFeatures, TData, TValue, THeaderComponents\>
-
 ```ts
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```

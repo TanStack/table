@@ -3,8 +3,6 @@ id: createTableHook
 title: createTableHook
 ---
 
-# Function: createTableHook()
-
 ```ts
 function createTableHook<TFeatures>(__namedParameters): object;
 ```
@@ -41,7 +39,7 @@ components onto the table; render with the `FlexRenderCell`,
 appFeatures: TFeatures;
 ```
 
-### createAppColumnHelper()
+### createAppColumnHelper
 
 ```ts
 createAppColumnHelper: <TData>() => ColumnHelper<TFeatures, TData>;
@@ -57,7 +55,7 @@ createAppColumnHelper: <TData>() => ColumnHelper<TFeatures, TData>;
 
 `ColumnHelper`\<`TFeatures`, `TData`\>
 
-### createAppTable()
+### createAppTable
 
 ```ts
 createAppTable: {

@@ -3,13 +3,11 @@ id: table_getAllLeafColumns
 title: table_getAllLeafColumns
 ---
 
-# Function: table\_getAllLeafColumns()
-
 ```ts
 function table_getAllLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L221)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:217](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L217)
 
 Collects all terminal leaf columns in their current table order.
 

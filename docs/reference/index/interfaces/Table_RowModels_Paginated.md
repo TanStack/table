@@ -3,9 +3,7 @@ id: Table_RowModels_Paginated
 title: Table_RowModels_Paginated
 ---
 
-# Interface: Table\_RowModels\_Paginated\<TFeatures, TData\>
-
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L127)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L134)
 
 ## Type Parameters
 
@@ -19,13 +17,13 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:127](https://
 
 ## Properties
 
-### getPaginatedRowModel()
+### getPaginatedRowModel
 
 ```ts
 getPaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L134)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L141)
 
 Resolves the row model after pagination has sliced the current page.
 
@@ -35,13 +33,13 @@ Resolves the row model after pagination has sliced the current page.
 
 ***
 
-### getPrePaginatedRowModel()
+### getPrePaginatedRowModel
 
 ```ts
 getPrePaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L138)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L145)
 
 Reads the row model immediately before pagination.
 

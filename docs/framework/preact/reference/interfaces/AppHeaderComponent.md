@@ -3,8 +3,6 @@ id: AppHeaderComponent
 title: AppHeaderComponent
 ---
 
-# Interface: AppHeaderComponent()\<TFeatures, TData, THeaderComponents\>
-
 Defined in: [createTableHook.tsx:494](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L494)
 
 Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe

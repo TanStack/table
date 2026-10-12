@@ -3,8 +3,6 @@ id: Getter
 title: Getter
 ---
 
-# Type Alias: Getter()\<TValue\>
-
 ```ts
 type Getter<TValue> = <TTValue>() => NoInfer<TTValue>;
 ```

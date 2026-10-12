@@ -3,8 +3,6 @@ id: table_getSelectedRowIds
 title: table_getSelectedRowIds
 ---
 
-# Function: table\_getSelectedRowIds()
-
 ```ts
 function table_getSelectedRowIds<TFeatures, TData>(table): string[];
 ```

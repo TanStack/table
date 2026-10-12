@@ -3,10 +3,8 @@ id: injectTable
 title: injectTable
 ---
 
-# Function: injectTable()
-
 ```ts
-function injectTable<TFeatures, TData>(options): AngularTable<TFeatures, TData>;
+function injectTable<TFeatures, TData>(optionsFactory): AngularTable<TFeatures, TData>;
 ```
 
 Defined in: [packages/angular-table/src/injectTable.ts:90](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L90)
@@ -34,7 +32,7 @@ The returned table is also signal-reactive: table state and table APIs are wired
 
 ## Parameters
 
-### options
+### optionsFactory
 
 () => `TableOptions`\<`TFeatures`, `TData`\>
 

@@ -1,4 +1,5 @@
 import type { BuiltInAggregationFn } from './aggregationFns'
+import type { aggregateColumnValue } from './rowAggregationFeature.utils'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type { ColumnDefTemplate } from '../../types/ColumnDef'
@@ -288,6 +289,18 @@ export interface Cell_RowAggregation {
 export interface Row_RowAggregation {
   /** Cached aggregate results keyed by column id; created lazily on grouped rows. */
   _aggregationValuesCache?: Record<string, unknown>
+}
+
+/** Table APIs installed by `rowAggregationFeature`. */
+export interface Table_RowAggregation {
+  /**
+   * Runs a column's configured aggregations over a set of rows. The grouped
+   * row model aggregates through it, so tables that group without
+   * `rowAggregationFeature` don't bundle the aggregation executor.
+   *
+   * @internal
+   */
+  _aggregateColumnValue: typeof aggregateColumnValue
 }
 
 /** Values passed to a column-level aggregation-value provider. */

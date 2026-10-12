@@ -3,8 +3,6 @@ id: createAtom
 title: createAtom
 ---
 
-# Function: createAtom()
-
 ```ts
 function createAtom<T>(initialValue, options?): Atom<T>;
 ```

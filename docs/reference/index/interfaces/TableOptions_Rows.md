@@ -3,8 +3,6 @@ id: TableOptions_Rows
 title: TableOptions_Rows
 ---
 
-# Interface: TableOptions\_Rows\<TFeatures, TData\>
-
 Defined in: [core/rows/coreRowsFeature.types.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L107)
 
 ## Extended by
@@ -23,10 +21,10 @@ Defined in: [core/rows/coreRowsFeature.types.ts:107](https://github.com/TanStack
 
 ## Properties
 
-### getRowId()?
+### getRowId?
 
 ```ts
-optional getRowId: (originalRow, index, parent?) => string;
+optional getRowId?: (originalRow, index, parent?) => string;
 ```
 
 Defined in: [core/rows/coreRowsFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L115)
@@ -59,10 +57,10 @@ getRowId: row => row.userId
 
 ***
 
-### getSubRows()?
+### getSubRows?
 
 ```ts
-optional getSubRows: (originalRow, index) => readonly TData[] | undefined;
+optional getSubRows?: (originalRow, index) => readonly TData[] | undefined;
 ```
 
 Defined in: [core/rows/coreRowsFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L124)

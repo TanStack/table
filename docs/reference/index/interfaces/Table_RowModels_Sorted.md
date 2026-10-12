@@ -3,9 +3,7 @@ id: Table_RowModels_Sorted
 title: Table_RowModels_Sorted
 ---
 
-# Interface: Table\_RowModels\_Sorted\<TFeatures, TData\>
-
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:282](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L282)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:290](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L290)
 
 ## Type Parameters
 
@@ -19,13 +17,13 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:282](https://github
 
 ## Properties
 
-### getPreSortedRowModel()
+### getPreSortedRowModel
 
 ```ts
 getPreSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L289)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:297](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L297)
 
 Reads the row model immediately before sorting.
 
@@ -35,13 +33,13 @@ Reads the row model immediately before sorting.
 
 ***
 
-### getSortedRowModel()
+### getSortedRowModel
 
 ```ts
 getSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:293](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L293)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L301)
 
 Resolves the row model after sorting has been applied.
 

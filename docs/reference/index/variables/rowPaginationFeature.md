@@ -3,8 +3,6 @@ id: rowPaginationFeature
 title: rowPaginationFeature
 ---
 
-# Variable: rowPaginationFeature
-
 ```ts
 const rowPaginationFeature: TableFeature;
 ```

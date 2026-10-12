@@ -163,6 +163,14 @@ describe('getFunctionNameInfo', () => {
       fnName: 'column.getSize',
     })
   })
+
+  test('splits on the first separator only, keeping internal API keys', () => {
+    expect(getFunctionNameInfo('table__expandRows')).toEqual({
+      parentName: 'table',
+      fnKey: '_expandRows',
+      fnName: 'table._expandRows',
+    })
+  })
 })
 
 describe('callMemoOrStaticFn', () => {

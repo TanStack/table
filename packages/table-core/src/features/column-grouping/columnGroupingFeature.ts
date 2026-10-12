@@ -4,6 +4,7 @@ import {
   makeObjectMap,
   makeStateUpdater,
 } from '../../utils'
+import { orderColumns } from '../column-ordering/columnOrderingFeature.utils'
 import {
   cell_getIsGrouped,
   cell_getIsPlaceholder,
@@ -91,6 +92,11 @@ export const columnGroupingFeature: TableFeature = {
       },
       table_resetGrouping: {
         fn: (defaultState) => table_resetGrouping(table, defaultState),
+      },
+      // Internal: leaf column ordering falls back to this when the column
+      // ordering feature is not registered
+      table__orderGroupedColumns: {
+        fn: (columns) => orderColumns(table, columns),
       },
     })
   },

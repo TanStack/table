@@ -3,13 +3,11 @@ id: getSortedRowModel
 title: getSortedRowModel
 ---
 
-# ~~Function: getSortedRowModel()~~
-
 ```ts
 function getSortedRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [react-table/src/useLegacyTable.ts:67](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L67)
+Defined in: [src/useLegacyTable.ts:67](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L67)
 
 ## Type Parameters
 

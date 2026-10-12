@@ -3,8 +3,6 @@ id: table_setFocusedCell
 title: table_setFocusedCell
 ---
 
-# Function: table\_setFocusedCell()
-
 ```ts
 function table_setFocusedCell<TFeatures, TData>(
    table,
@@ -12,7 +10,7 @@ function table_setFocusedCell<TFeatures, TData>(
    columnId): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:786](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L786)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:754](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L754)
 
 Collapses the selection to a single cell at the given coordinates.
 

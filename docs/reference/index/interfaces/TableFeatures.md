@@ -3,8 +3,6 @@ id: TableFeatures
 title: TableFeatures
 ---
 
-# Interface: TableFeatures
-
 Defined in: [types/TableFeatures.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L184)
 
 Complete feature registry for a table.
@@ -24,7 +22,7 @@ options, and state types.
 ### aggregationFns?
 
 ```ts
-optional aggregationFns: Record<string, AggregationFnDef<any, any, any, any>>;
+optional aggregationFns?: Record<string, AggregationFnDef<any, any, any, any>>;
 ```
 
 Defined in: [types/TableFeatures.ts:196](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L196)
@@ -43,7 +41,7 @@ every built-in aggregation function in your bundle.
 ### cellSelectionFeature?
 
 ```ts
-optional cellSelectionFeature: TableFeature;
+optional cellSelectionFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
@@ -57,7 +55,7 @@ Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blo
 ### cellSpanningFeature?
 
 ```ts
-optional cellSpanningFeature: TableFeature;
+optional cellSpanningFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
@@ -71,7 +69,7 @@ Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blo
 ### columnFacetingFeature?
 
 ```ts
-optional columnFacetingFeature: TableFeature;
+optional columnFacetingFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
@@ -85,7 +83,7 @@ Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blo
 ### columnFilteringFeature?
 
 ```ts
-optional columnFilteringFeature: TableFeature;
+optional columnFilteringFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
@@ -99,7 +97,7 @@ Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blo
 ### columnGroupingFeature?
 
 ```ts
-optional columnGroupingFeature: TableFeature;
+optional columnGroupingFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
@@ -113,7 +111,7 @@ Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blo
 ### columnMeta?
 
 ```ts
-optional columnMeta: object;
+optional columnMeta?: object;
 ```
 
 Defined in: [types/TableFeatures.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L207)
@@ -132,7 +130,7 @@ When omitted, the global declaration-merged `ColumnMeta` interface applies.
 ### columnOrderingFeature?
 
 ```ts
-optional columnOrderingFeature: TableFeature;
+optional columnOrderingFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
@@ -146,7 +144,7 @@ Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blo
 ### columnPinningFeature?
 
 ```ts
-optional columnPinningFeature: TableFeature;
+optional columnPinningFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
@@ -160,7 +158,7 @@ Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blo
 ### columnResizingFeature?
 
 ```ts
-optional columnResizingFeature: TableFeature;
+optional columnResizingFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
@@ -174,7 +172,7 @@ Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blo
 ### columnSizingFeature?
 
 ```ts
-optional columnSizingFeature: TableFeature;
+optional columnSizingFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
@@ -188,7 +186,7 @@ Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blo
 ### columnVisibilityFeature?
 
 ```ts
-optional columnVisibilityFeature: TableFeature;
+optional columnVisibilityFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
@@ -202,7 +200,7 @@ Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blo
 ### coreCellsFeature?
 
 ```ts
-optional coreCellsFeature: TableFeature;
+optional coreCellsFeature?: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L11)
@@ -216,7 +214,7 @@ Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/mai
 ### coreColumnsFeature?
 
 ```ts
-optional coreColumnsFeature: TableFeature;
+optional coreColumnsFeature?: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L12)
@@ -230,7 +228,7 @@ Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/mai
 ### coreHeadersFeature?
 
 ```ts
-optional coreHeadersFeature: TableFeature;
+optional coreHeadersFeature?: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L13)
@@ -244,7 +242,7 @@ Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/mai
 ### coreReactivityFeature?
 
 ```ts
-optional coreReactivityFeature: TableReactivityBindings;
+optional coreReactivityFeature?: TableReactivityBindings;
 ```
 
 Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L10)
@@ -255,10 +253,10 @@ Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/mai
 
 ***
 
-### coreRowModel()?
+### coreRowModel?
 
 ```ts
-optional coreRowModel: (table) => () => RowModel<any, any>;
+optional coreRowModel?: (table) => () => RowModel<any, any>;
 ```
 
 Defined in: [types/TableFeatures.ts:212](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L212)
@@ -274,20 +272,14 @@ built-in `createCoreRowModel()` when omitted.
 
 #### Returns
 
-```ts
-(): RowModel<any, any>;
-```
-
-##### Returns
-
-[`RowModel`](RowModel.md)\<`any`, `any`\>
+() => [`RowModel`](RowModel.md)\<`any`, `any`\>
 
 ***
 
 ### coreRowModelsFeature?
 
 ```ts
-optional coreRowModelsFeature: TableFeature;
+optional coreRowModelsFeature?: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L14)
@@ -301,7 +293,7 @@ Defined in: [core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/mai
 ### coreRowsFeature?
 
 ```ts
-optional coreRowsFeature: TableFeature;
+optional coreRowsFeature?: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L15)
@@ -315,7 +307,7 @@ Defined in: [core/coreFeatures.ts:15](https://github.com/TanStack/table/blob/mai
 ### coreTablesFeature?
 
 ```ts
-optional coreTablesFeature: TableFeature;
+optional coreTablesFeature?: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L16)
@@ -326,10 +318,10 @@ Defined in: [core/coreFeatures.ts:16](https://github.com/TanStack/table/blob/mai
 
 ***
 
-### expandedRowModel()?
+### expandedRowModel?
 
 ```ts
-optional expandedRowModel: (table) => () => RowModel<any, any>;
+optional expandedRowModel?: (table) => () => RowModel<any, any>;
 ```
 
 Defined in: [types/TableFeatures.ts:218](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L218)
@@ -346,20 +338,14 @@ server-side expansion.
 
 #### Returns
 
-```ts
-(): RowModel<any, any>;
-```
-
-##### Returns
-
-[`RowModel`](RowModel.md)\<`any`, `any`\>
+() => [`RowModel`](RowModel.md)\<`any`, `any`\>
 
 ***
 
-### facetedMinMaxValues()?
+### facetedMinMaxValues?
 
 ```ts
-optional facetedMinMaxValues: (table, columnId) => () => [number, number] | undefined;
+optional facetedMinMaxValues?: (table, columnId) => () => [number, number] | undefined;
 ```
 
 Defined in: [types/TableFeatures.ts:224](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L224)
@@ -380,20 +366,14 @@ server-side faceting.
 
 #### Returns
 
-```ts
-(): [number, number] | undefined;
-```
-
-##### Returns
-
-\[`number`, `number`\] \| `undefined`
+() => \[`number`, `number`\] \| `undefined`
 
 ***
 
-### facetedRowModel()?
+### facetedRowModel?
 
 ```ts
-optional facetedRowModel: (table, columnId) => () => RowModel<any, any>;
+optional facetedRowModel?: (table, columnId) => () => RowModel<any, any>;
 ```
 
 Defined in: [types/TableFeatures.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L233)
@@ -414,20 +394,14 @@ server-side faceting.
 
 #### Returns
 
-```ts
-(): RowModel<any, any>;
-```
-
-##### Returns
-
-[`RowModel`](RowModel.md)\<`any`, `any`\>
+() => [`RowModel`](RowModel.md)\<`any`, `any`\>
 
 ***
 
-### facetedUniqueValues()?
+### facetedUniqueValues?
 
 ```ts
-optional facetedUniqueValues: (table, columnId) => () => Map<any, number>;
+optional facetedUniqueValues?: (table, columnId) => () => Map<any, number>;
 ```
 
 Defined in: [types/TableFeatures.ts:239](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L239)
@@ -448,20 +422,14 @@ server-side faceting.
 
 #### Returns
 
-```ts
-(): Map<any, number>;
-```
-
-##### Returns
-
-`Map`\<`any`, `number`\>
+() => `Map`\<`any`, `number`\>
 
 ***
 
-### filteredRowModel()?
+### filteredRowModel?
 
 ```ts
-optional filteredRowModel: (table) => () => RowModel<any, any>;
+optional filteredRowModel?: (table) => () => RowModel<any, any>;
 ```
 
 Defined in: [types/TableFeatures.ts:245](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L245)
@@ -478,20 +446,14 @@ server-side filtering.
 
 #### Returns
 
-```ts
-(): RowModel<any, any>;
-```
-
-##### Returns
-
-[`RowModel`](RowModel.md)\<`any`, `any`\>
+() => [`RowModel`](RowModel.md)\<`any`, `any`\>
 
 ***
 
 ### filterFns?
 
 ```ts
-optional filterFns: Record<string, FilterFn<any, any>>;
+optional filterFns?: Record<string, FilterFn<any, any>>;
 ```
 
 Defined in: [types/TableFeatures.ts:257](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L257)
@@ -511,7 +473,7 @@ built-in filter function in your bundle.
 ### filterMeta?
 
 ```ts
-optional filterMeta: object;
+optional filterMeta?: object;
 ```
 
 Defined in: [types/TableFeatures.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L269)
@@ -531,7 +493,7 @@ When omitted, the global declaration-merged `FilterMeta` interface applies.
 ### globalFilteringFeature?
 
 ```ts
-optional globalFilteringFeature: TableFeature;
+optional globalFilteringFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)
@@ -542,10 +504,10 @@ Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blo
 
 ***
 
-### groupedRowModel()?
+### groupedRowModel?
 
 ```ts
-optional groupedRowModel: (table) => () => RowModel<any, any>;
+optional groupedRowModel?: (table) => () => RowModel<any, any>;
 ```
 
 Defined in: [types/TableFeatures.ts:275](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L275)
@@ -562,20 +524,14 @@ server-side grouping.
 
 #### Returns
 
-```ts
-(): RowModel<any, any>;
-```
-
-##### Returns
-
-[`RowModel`](RowModel.md)\<`any`, `any`\>
+() => [`RowModel`](RowModel.md)\<`any`, `any`\>
 
 ***
 
-### paginatedRowModel()?
+### paginatedRowModel?
 
 ```ts
-optional paginatedRowModel: (table) => () => RowModel<any, any>;
+optional paginatedRowModel?: (table) => () => RowModel<any, any>;
 ```
 
 Defined in: [types/TableFeatures.ts:281](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L281)
@@ -592,20 +548,14 @@ server-side pagination.
 
 #### Returns
 
-```ts
-(): RowModel<any, any>;
-```
-
-##### Returns
-
-[`RowModel`](RowModel.md)\<`any`, `any`\>
+() => [`RowModel`](RowModel.md)\<`any`, `any`\>
 
 ***
 
 ### rowAggregationFeature?
 
 ```ts
-optional rowAggregationFeature: TableFeature;
+optional rowAggregationFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L31)
@@ -619,7 +569,7 @@ Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blo
 ### rowExpandingFeature?
 
 ```ts
-optional rowExpandingFeature: TableFeature;
+optional rowExpandingFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L32)
@@ -633,7 +583,7 @@ Defined in: [features/stockFeatures.ts:32](https://github.com/TanStack/table/blo
 ### rowPaginationFeature?
 
 ```ts
-optional rowPaginationFeature: TableFeature;
+optional rowPaginationFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L33)
@@ -647,7 +597,7 @@ Defined in: [features/stockFeatures.ts:33](https://github.com/TanStack/table/blo
 ### rowPinningFeature?
 
 ```ts
-optional rowPinningFeature: TableFeature;
+optional rowPinningFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L34)
@@ -661,7 +611,7 @@ Defined in: [features/stockFeatures.ts:34](https://github.com/TanStack/table/blo
 ### rowSelectionFeature?
 
 ```ts
-optional rowSelectionFeature: TableFeature;
+optional rowSelectionFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L35)
@@ -675,7 +625,7 @@ Defined in: [features/stockFeatures.ts:35](https://github.com/TanStack/table/blo
 ### rowSortingFeature?
 
 ```ts
-optional rowSortingFeature: TableFeature;
+optional rowSortingFeature?: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L36)
@@ -686,10 +636,10 @@ Defined in: [features/stockFeatures.ts:36](https://github.com/TanStack/table/blo
 
 ***
 
-### sortedRowModel()?
+### sortedRowModel?
 
 ```ts
-optional sortedRowModel: (table) => () => RowModel<any, any>;
+optional sortedRowModel?: (table) => () => RowModel<any, any>;
 ```
 
 Defined in: [types/TableFeatures.ts:287](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L287)
@@ -706,20 +656,14 @@ server-side sorting.
 
 #### Returns
 
-```ts
-(): RowModel<any, any>;
-```
-
-##### Returns
-
-[`RowModel`](RowModel.md)\<`any`, `any`\>
+() => [`RowModel`](RowModel.md)\<`any`, `any`\>
 
 ***
 
 ### sortFns?
 
 ```ts
-optional sortFns: Record<string, SortFn<any, any>>;
+optional sortFns?: Record<string, SortFn<any, any>>;
 ```
 
 Defined in: [types/TableFeatures.ts:298](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L298)
@@ -738,7 +682,7 @@ sorting function in your bundle.
 ### tableMeta?
 
 ```ts
-optional tableMeta: object;
+optional tableMeta?: object;
 ```
 
 Defined in: [types/TableFeatures.ts:308](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L308)
@@ -756,10 +700,10 @@ When omitted, the global declaration-merged `TableMeta` interface applies.
 ### workerRowModelsFeature?
 
 ```ts
-optional workerRowModelsFeature: TableFeature;
+optional workerRowModelsFeature?: TableFeature;
 ```
 
-Defined in: [worker/createTableWorker.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L23)
+Defined in: [worker/createTableWorker.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L24)
 
 #### Inherited from
 

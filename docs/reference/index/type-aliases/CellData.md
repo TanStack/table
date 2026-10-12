@@ -3,8 +3,6 @@ id: CellData
 title: CellData
 ---
 
-# Type Alias: CellData
-
 ```ts
 type CellData = unknown;
 ```

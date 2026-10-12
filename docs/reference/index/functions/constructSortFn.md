@@ -3,13 +3,11 @@ id: constructSortFn
 title: constructSortFn
 ---
 
-# Function: constructSortFn()
-
 ```ts
 function constructSortFn<TFeatures, TData>(def): CreatedSortFn<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/sortFns.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L38)
+Defined in: [features/row-sorting/sortFns.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L39)
 
 Builds a `SortFn` from a value-level comparator plus an optional
 `resolveDataValue` normalizer.

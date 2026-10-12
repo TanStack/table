@@ -3,13 +3,11 @@ id: createTableHook
 title: createTableHook
 ---
 
-# Function: createTableHook()
-
 ```ts
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [react-table/src/createTableHook.tsx:692](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L692)
+Defined in: [src/createTableHook.tsx:692](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L692)
 
 Creates a custom table hook with pre-bound components for composition.
 

@@ -3,13 +3,11 @@ id: FlexRenderComponentInstance
 title: FlexRenderComponentInstance
 ---
 
-# Class: FlexRenderComponentInstance\<TComponent\>
-
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:259](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L259)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:297](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L297)
 
 Wrapper class for a component that will be used as content for [FlexRenderDirective](FlexRenderDirective.md)
 
-Prefer [flexRenderComponent](../functions/flexRenderComponent.md) helper for better type-safety
+Prefer [flexRenderComponent](../functions/flexRenderComponent.md) for better type-safety.
 
 ## Type Parameters
 
@@ -32,10 +30,11 @@ new FlexRenderComponentInstance<TComponent>(
    injector?,
    outputs?,
    directives?,
-bindings?): FlexRenderComponentInstance<TComponent>;
+   bindings?,
+key?): FlexRenderComponentInstance<TComponent>;
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:266](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L266)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:303](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L303)
 
 #### Parameters
 
@@ -63,51 +62,23 @@ Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:266](
 
 `Binding`[]
 
+##### key?
+
+`string` \| `number`
+
 #### Returns
 
 `FlexRenderComponentInstance`\<`TComponent`\>
 
 ## Properties
 
-### allowedInputNames
-
-```ts
-readonly allowedInputNames: string[] = [];
-```
-
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:263](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L263)
-
-List of allowed input names.
-
-#### Implementation of
-
-[`FlexRenderComponent`](../interfaces/FlexRenderComponent.md).[`allowedInputNames`](../interfaces/FlexRenderComponent.md#allowedinputnames)
-
-***
-
-### allowedOutputNames
-
-```ts
-readonly allowedOutputNames: string[] = [];
-```
-
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:264](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L264)
-
-List of allowed output names.
-
-#### Implementation of
-
-[`FlexRenderComponent`](../interfaces/FlexRenderComponent.md).[`allowedOutputNames`](../interfaces/FlexRenderComponent.md#allowedoutputnames)
-
-***
-
 ### bindings?
 
 ```ts
-readonly optional bindings: Binding[];
+readonly optional bindings?: Binding[];
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:272](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L272)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:309](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L309)
 
 Bindings to apply to the root component
 
@@ -127,7 +98,7 @@ FlexRenderOptions#bindings
 readonly component: Type<TComponent>;
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:267](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L267)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:304](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L304)
 
 The component type
 
@@ -140,10 +111,10 @@ The component type
 ### directives?
 
 ```ts
-readonly optional directives: (Type<unknown> | DirectiveWithBindings<unknown>)[];
+readonly optional directives?: (Type<unknown> | DirectiveWithBindings<unknown>)[];
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:271](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L271)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:308](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L308)
 
 Directives that should be applied to the component.
 
@@ -158,10 +129,10 @@ Directives that should be applied to the component.
 ### injector?
 
 ```ts
-readonly optional injector: Injector;
+readonly optional injector?: Injector;
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:269](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L269)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:306](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L306)
 
 Optional Injector that will be used when rendering the component.
 
@@ -178,10 +149,10 @@ FlexRenderOptions#injector
 ### inputs?
 
 ```ts
-readonly optional inputs: Inputs<TComponent>;
+readonly optional inputs?: Inputs<TComponent>;
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:268](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L268)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:305](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L305)
 
 Component instance inputs. Set via [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput))
 
@@ -195,13 +166,50 @@ FlexRenderOptions#inputs
 
 ***
 
+### key?
+
+```ts
+readonly optional key?: string | number;
+```
+
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:310](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L310)
+
+Optional identity used together with the component type to decide whether
+an existing component instance can be reused.
+
+#### See
+
+FlexRenderOptions#key
+
+#### Implementation of
+
+[`FlexRenderComponent`](../interfaces/FlexRenderComponent.md).[`key`](../interfaces/FlexRenderComponent.md#key)
+
+***
+
+### metadata
+
+```ts
+readonly metadata: ResolvedComponentMetadata<TComponent>;
+```
+
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:301](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L301)
+
+Cached component metadata used by the flex renderer.
+
+#### Implementation of
+
+[`FlexRenderComponent`](../interfaces/FlexRenderComponent.md).[`metadata`](../interfaces/FlexRenderComponent.md#metadata)
+
+***
+
 ### mirror
 
 ```ts
 readonly mirror: ComponentMirror<TComponent>;
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:262](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L262)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:300](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L300)
 
 Reflected metadata about the component.
 
@@ -214,10 +222,10 @@ Reflected metadata about the component.
 ### outputs?
 
 ```ts
-readonly optional outputs: Outputs<TComponent>;
+readonly optional outputs?: Outputs<TComponent>;
 ```
 
-Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:270](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L270)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:307](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L307)
 
 Component instance outputs. Subscribed via OutputEmitterRef#subscribe
 

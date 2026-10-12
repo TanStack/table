@@ -3,8 +3,6 @@ id: TableOptions
 title: TableOptions
 ---
 
-# Type Alias: TableOptions\<TFeatures, TData\>
-
 ```ts
 type TableOptions<TFeatures, TData> = TableOptions_Core<TFeatures, TData> & ExtractFeatureMapTypes<TFeatures, TableOptions_FeatureMap<TFeatures, TData>> & DebugOptions<TFeatures>;
 ```

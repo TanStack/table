@@ -3,8 +3,6 @@ id: CreateTableHookResult
 title: CreateTableHookResult
 ---
 
-# Type Alias: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = object;
 ```
@@ -31,7 +29,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:302](https://
 
 ## Properties
 
-### createAppColumnHelper()
+### createAppColumnHelper
 
 ```ts
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
@@ -51,7 +49,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:308](https://
 
 ***
 
-### injectAppTable()
+### injectAppTable
 
 ```ts
 injectAppTable: <TData>(tableOptions) => AppAngularTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
@@ -77,7 +75,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:333](https://
 
 ***
 
-### injectFlexRenderCellContext()
+### injectFlexRenderCellContext
 
 ```ts
 injectFlexRenderCellContext: <TData, TValue>() => CellContext<TFeatures, TData, TValue>;
@@ -101,7 +99,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:329](https://
 
 ***
 
-### injectFlexRenderHeaderContext()
+### injectFlexRenderHeaderContext
 
 ```ts
 injectFlexRenderHeaderContext: <TData, TValue>() => HeaderContext<TFeatures, TData, TValue>;
@@ -125,7 +123,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:325](https://
 
 ***
 
-### injectTableCellContext()
+### injectTableCellContext
 
 ```ts
 injectTableCellContext: <TValue, TRowData>() => Signal<Cell<TFeatures, TRowData, TValue> & TCellComponents>;
@@ -149,7 +147,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:321](https://
 
 ***
 
-### injectTableContext()
+### injectTableContext
 
 ```ts
 injectTableContext: <TData>() => Signal<AngularTable<TFeatures, TData> & TTableComponents>;
@@ -169,7 +167,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:314](https://
 
 ***
 
-### injectTableHeaderContext()
+### injectTableHeaderContext
 
 ```ts
 injectTableHeaderContext: <TValue, TRowData>() => Signal<Header<TFeatures, TRowData, TValue> & THeaderComponents>;

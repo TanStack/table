@@ -3,8 +3,6 @@ id: Plugins
 title: Plugins
 ---
 
-# Interface: Plugins
-
 Defined in: [types/TableFeatures.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L60)
 
 Declaration-merge target for custom table features.
@@ -21,4 +19,4 @@ features.
 workerRowModelsFeature: TableFeature;
 ```
 
-Defined in: [worker/createTableWorker.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L23)
+Defined in: [worker/createTableWorker.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L24)

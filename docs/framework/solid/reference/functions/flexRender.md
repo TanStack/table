@@ -3,8 +3,6 @@ id: flexRender
 title: flexRender
 ---
 
-# Function: flexRender()
-
 ```ts
 function flexRender<TProps>(Comp, props): Element;
 ```
@@ -27,7 +25,7 @@ instead.
 
 ### Comp
 
-`Element` | (`_props`) => `Element`
+`Element` \| ((`_props`) => `Element`)
 
 ### props
 

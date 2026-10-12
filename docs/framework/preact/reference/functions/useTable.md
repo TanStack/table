@@ -3,8 +3,6 @@ id: useTable
 title: useTable
 ---
 
-# Function: useTable()
-
 ```ts
 function useTable<TFeatures, TData, TSelected>(tableOptions, selector?): PreactTable<TFeatures, TData, TSelected>;
 ```

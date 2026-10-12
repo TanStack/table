@@ -3,8 +3,6 @@ id: AppHeaderContext
 title: AppHeaderContext
 ---
 
-# Type Alias: AppHeaderContext\<TFeatures, TData, TValue, THeaderComponents\>
-
 ```ts
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```
@@ -54,7 +52,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:72](https://g
 
 #### Type Declaration
 
-##### FlexRender()
+##### FlexRender
 
 ```ts
 FlexRender: () => unknown;

@@ -3,8 +3,6 @@ id: TableOptions_RowSorting
 title: TableOptions_RowSorting
 ---
 
-# Interface: TableOptions\_RowSorting
-
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:216](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L216)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:216](https://github
 ### autoResetSorting?
 
 ```ts
-optional autoResetSorting: boolean;
+optional autoResetSorting?: boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L223)
@@ -27,7 +25,7 @@ is explicitly set.
 ### enableMultiRemove?
 
 ```ts
-optional enableMultiRemove: boolean;
+optional enableMultiRemove?: boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:227](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L227)
@@ -39,7 +37,7 @@ Allows multi-sort toggles to remove a column from sorting state.
 ### enableMultiSort?
 
 ```ts
-optional enableMultiSort: boolean;
+optional enableMultiSort?: boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:231](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L231)
@@ -51,7 +49,7 @@ Enables/Disables multi-sorting for the table.
 ### enableSorting?
 
 ```ts
-optional enableSorting: boolean;
+optional enableSorting?: boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L235)
@@ -63,7 +61,7 @@ Enables/Disables sorting for the table.
 ### enableSortingRemoval?
 
 ```ts
-optional enableSortingRemoval: boolean;
+optional enableSortingRemoval?: boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L241)
@@ -74,10 +72,10 @@ Enables/Disables the ability to remove sorting for the table.
 
 ***
 
-### isMultiSortEvent()?
+### isMultiSortEvent?
 
 ```ts
-optional isMultiSortEvent: (e) => boolean;
+optional isMultiSortEvent?: (e) => boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:245](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L245)
@@ -99,7 +97,7 @@ Pass a custom function that will be used to determine if a multi-sort event shou
 ### manualSorting?
 
 ```ts
-optional manualSorting: boolean;
+optional manualSorting?: boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:249](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L249)
@@ -111,7 +109,7 @@ Enables manual sorting for the table. If this is `true`, you will be expected to
 ### maxMultiSortColCount?
 
 ```ts
-optional maxMultiSortColCount: number;
+optional maxMultiSortColCount?: number;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:253](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L253)
@@ -123,7 +121,7 @@ Set a maximum number of columns that can be multi-sorted.
 ### onSortingChange?
 
 ```ts
-optional onSortingChange: OnChangeFn<SortingState>;
+optional onSortingChange?: OnChangeFn<SortingState>;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:259](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L259)
@@ -137,7 +135,7 @@ without this callback.
 ### sortDescFirst?
 
 ```ts
-optional sortDescFirst: boolean;
+optional sortDescFirst?: boolean;
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L263)

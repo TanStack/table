@@ -3,8 +3,6 @@ id: table_setColumnOrder
 title: table_setColumnOrder
 ---
 
-# Function: table\_setColumnOrder()
-
 ```ts
 function table_setColumnOrder<TFeatures, TData>(table, updater): void;
 ```

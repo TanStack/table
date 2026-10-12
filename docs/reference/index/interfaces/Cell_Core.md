@@ -3,8 +3,6 @@ id: Cell_Core
 title: Cell_Core
 ---
 
-# Interface: Cell\_Core\<TFeatures, TData, TValue\>
-
 Defined in: [types/Cell.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L9)
 
 ## Extends
@@ -43,7 +41,7 @@ The associated Column object for the cell.
 
 ***
 
-### getContext()
+### getContext
 
 ```ts
 getContext: () => CellContext<TFeatures, TData, TValue>;

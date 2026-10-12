@@ -3,8 +3,6 @@ id: table_getRow
 title: table_getRow
 ---
 
-# Function: table\_getRow()
-
 ```ts
 function table_getRow<TFeatures, TData>(
    table,
@@ -12,7 +10,7 @@ function table_getRow<TFeatures, TData>(
 searchAll?): Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:336](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L336)
+Defined in: [core/rows/coreRowsFeature.utils.ts:321](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L321)
 
 Looks up a row by id from the current or full row model.
 

@@ -3,13 +3,11 @@ id: table_getCellSelectionColumnIndexes
 title: table_getCellSelectionColumnIndexes
 ---
 
-# Function: table\_getCellSelectionColumnIndexes()
-
 ```ts
 function table_getCellSelectionColumnIndexes<TFeatures, TData>(table): Record<string, number>;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L200)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L168)
 
 Builds a column id to render-order index map.
 

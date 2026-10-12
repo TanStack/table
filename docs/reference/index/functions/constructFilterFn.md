@@ -3,13 +3,11 @@ id: constructFilterFn
 title: constructFilterFn
 ---
 
-# Function: constructFilterFn()
-
 ```ts
 function constructFilterFn<TFeatures, TData>(def): CreatedFilterFn<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/filterFns.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L40)
+Defined in: [features/column-filtering/filterFns.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L41)
 
 Builds a `FilterFn` from a value-level comparator plus optional resolvers.
 

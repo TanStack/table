@@ -3,13 +3,11 @@ id: AppVueTable
 title: AppVueTable
 ---
 
-# Type Alias: AppVueTable\<TFeatures, TData, TTableComponents, _TCellComponents, _THeaderComponents\>
-
 ```ts
 type AppVueTable<TFeatures, TData, TTableComponents, _TCellComponents, _THeaderComponents> = VueTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:211](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L211)
+Defined in: [createTableHook.ts:211](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L211)
 
 ## Type Declaration
 

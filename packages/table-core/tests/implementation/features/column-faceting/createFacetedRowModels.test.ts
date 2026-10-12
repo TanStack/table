@@ -237,6 +237,31 @@ describe('global faceted models (real factories)', () => {
     // 30, 25, 40 ('40' coerced) and 0 (Number(null) is 0, existing behavior)
     expect(table.getGlobalFacetedMinMaxValues()).toEqual([0, 40])
   })
+
+  it('should treat no column as globally filterable without globalFilteringFeature', () => {
+    // Global facets describe the global filter, so like the filtered row
+    // model they include no columns when global filtering is not registered
+    const noGlobalFilteringFeatures = testFeatures({
+      columnFacetingFeature,
+      columnFilteringFeature,
+      facetedMinMaxValues: createFacetedMinMaxValues(),
+      facetedRowModel: createFacetedRowModel(),
+      facetedUniqueValues: createFacetedUniqueValues(),
+      filteredRowModel: createFilteredRowModel(),
+      filterFns,
+    })
+    const table = constructTable<typeof noGlobalFilteringFeatures, Person>({
+      data,
+      columns: [
+        { accessorKey: 'name', id: 'name' },
+        { accessorKey: 'age', id: 'age' },
+      ],
+      features: noGlobalFilteringFeatures,
+    })
+
+    expect(table.getGlobalFacetedUniqueValues()).toEqual(new Map())
+    expect(table.getGlobalFacetedMinMaxValues()).toBeUndefined()
+  })
 })
 
 describe('recompute and reference stability', () => {

@@ -3,8 +3,6 @@ id: Table_RowModels_Core
 title: Table_RowModels_Core
 ---
 
-# Interface: Table\_RowModels\_Core\<TFeatures, TData\>
-
 Defined in: [core/row-models/coreRowModelsFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L27)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [core/row-models/coreRowModelsFeature.types.ts:27](https://github.co
 
 ## Properties
 
-### getCoreRowModel()
+### getCoreRowModel
 
 ```ts
 getCoreRowModel: () => RowModel<TFeatures, TData>;
@@ -35,7 +33,7 @@ Returns the core row model before any processing has been applied.
 
 ***
 
-### getRowModel()
+### getRowModel
 
 ```ts
 getRowModel: () => RowModel<TFeatures, TData>;

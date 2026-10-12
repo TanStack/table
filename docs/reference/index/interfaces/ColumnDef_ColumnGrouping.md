@@ -3,9 +3,7 @@ id: ColumnDef_ColumnGrouping
 title: ColumnDef_ColumnGrouping
 ---
 
-# Interface: ColumnDef\_ColumnGrouping\<TFeatures, TData\>
-
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L12)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L13)
 
 ## Type Parameters
 
@@ -22,10 +20,10 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:12](https:/
 ### enableGrouping?
 
 ```ts
-optional enableGrouping: boolean;
+optional enableGrouping?: boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L21)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L22)
 
 Allows this column to be added to grouping state.
 
@@ -33,13 +31,13 @@ Defaults to `true`; table-level `enableGrouping` must also allow grouping.
 
 ***
 
-### getGroupingValue()?
+### getGroupingValue?
 
 ```ts
-optional getGroupingValue: (originalRow, index, row) => any;
+optional getGroupingValue?: (originalRow, index, row) => any;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L28)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L29)
 
 Returns the value used to group rows for this column.
 

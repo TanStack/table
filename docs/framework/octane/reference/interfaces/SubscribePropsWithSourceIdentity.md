@@ -3,8 +3,6 @@ id: SubscribePropsWithSourceIdentity
 title: SubscribePropsWithSourceIdentity
 ---
 
-# Interface: SubscribePropsWithSourceIdentity\<TSourceValue\>
-
 Defined in: [types.ts:134](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L134)
 
 Subscribe to the full value of a source (e.g. `table.atoms.rowSelection` or
@@ -24,7 +22,7 @@ selector — children receive `TSourceValue`.
 ```ts
 children:
   | SubscribeStaticChild
-  | (state) => unknown;
+  | ((state) => unknown);
 ```
 
 Defined in: [types.ts:137](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L137)
@@ -34,7 +32,7 @@ Defined in: [types.ts:137](https://github.com/TanStack/table/blob/main/packages/
 ### selector?
 
 ```ts
-optional selector: undefined;
+optional selector?: undefined;
 ```
 
 Defined in: [types.ts:136](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L136)

@@ -3,8 +3,6 @@ id: AppLitTable
 title: AppLitTable
 ---
 
-# Type Alias: AppLitTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
-
 ```ts
 type AppLitTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = LitTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
 ```
@@ -15,7 +13,7 @@ Extended table API returned by useAppTable with all App wrapper functions
 
 ## Type Declaration
 
-### AppCell()
+### AppCell
 
 ```ts
 AppCell: <TValue>(cell, renderFn) => LitRenderable;
@@ -49,7 +47,7 @@ Wraps a cell and provides cell context with pre-bound cellComponents.
 ${table.AppCell(cell, (c) => html`<td>${c.FlexRender()}</td>`)}
 ```
 
-### AppFooter()
+### AppFooter
 
 ```ts
 AppFooter: <TValue>(header, renderFn) => LitRenderable;
@@ -83,7 +81,7 @@ Wraps a footer and provides header context with pre-bound headerComponents.
 ${table.AppFooter(footer, (f) => html`<td>${f.FlexRender()}</td>`)}
 ```
 
-### AppHeader()
+### AppHeader
 
 ```ts
 AppHeader: <TValue>(header, renderFn) => LitRenderable;

@@ -3,8 +3,6 @@ id: getDefaultRowSelectionState
 title: getDefaultRowSelectionState
 ---
 
-# Function: getDefaultRowSelectionState()
-
 ```ts
 function getDefaultRowSelectionState(): RowSelectionState;
 ```

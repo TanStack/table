@@ -3,15 +3,13 @@ id: row_getParentRow
 title: row_getParentRow
 ---
 
-# Function: row\_getParentRow()
-
 ```ts
 function row_getParentRow<TFeatures, TData>(row):
   | Row<TFeatures, TData>
   | undefined;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L199)
+Defined in: [core/rows/coreRowsFeature.utils.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L184)
 
 Looks up this row's direct parent, if it has one.
 

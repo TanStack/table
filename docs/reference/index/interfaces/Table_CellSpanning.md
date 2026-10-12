@@ -3,8 +3,6 @@ id: Table_CellSpanning
 title: Table_CellSpanning
 ---
 
-# Interface: Table\_CellSpanning\<TFeatures, TData\>
-
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:166](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L166)
 
 ## Type Parameters
@@ -19,7 +17,7 @@ Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:166](https://gi
 
 ## Properties
 
-### getCellSpanIndex()
+### getCellSpanIndex
 
 ```ts
 getCellSpanIndex: () => CellSpanIndex<TFeatures, TData>;

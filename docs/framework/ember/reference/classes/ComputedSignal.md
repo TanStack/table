@@ -3,8 +3,6 @@ id: ComputedSignal
 title: ComputedSignal
 ---
 
-# Class: ComputedSignal\<T\>
-
 Defined in: packages/ember-table/declarations/signal.d.ts:19
 
 ## Type Parameters
@@ -35,7 +33,7 @@ Defined in: packages/ember-table/declarations/signal.d.ts:21
 
 ## Properties
 
-### subscribe()
+### subscribe
 
 ```ts
 subscribe: () => Subscription;

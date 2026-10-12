@@ -3,8 +3,6 @@ id: column_getToggleGroupingHandler
 title: column_getToggleGroupingHandler
 ---
 
-# Function: column\_getToggleGroupingHandler()
-
 ```ts
 function column_getToggleGroupingHandler<TFeatures, TData, TValue>(column): () => void;
 ```
@@ -37,13 +35,7 @@ The handler is a no-op when `column_getCanGroup(column)` is false.
 
 ## Returns
 
-```ts
-(): void;
-```
-
-### Returns
-
-`void`
+() => `void`
 
 ## Example
 

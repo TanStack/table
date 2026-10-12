@@ -3,13 +3,11 @@ id: Column_ColumnResizing
 title: Column_ColumnResizing
 ---
 
-# Interface: Column\_ColumnResizing
-
 Defined in: [features/column-resizing/columnResizingFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L68)
 
 ## Properties
 
-### getCanResize()
+### getCanResize
 
 ```ts
 getCanResize: () => boolean;
@@ -25,7 +23,7 @@ Checks whether this column can start a resize interaction.
 
 ***
 
-### getIsResizing()
+### getIsResizing
 
 ```ts
 getIsResizing: () => boolean;

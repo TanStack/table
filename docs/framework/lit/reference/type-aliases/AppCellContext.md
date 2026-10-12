@@ -3,8 +3,6 @@ id: AppCellContext
 title: AppCellContext
 ---
 
-# Type Alias: AppCellContext\<TFeatures, TData, TValue, TCellComponents\>
-
 ```ts
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
@@ -44,7 +42,7 @@ Defined in: [packages/lit-table/src/createTableHook.ts:55](https://github.com/Ta
 
 #### Type Declaration
 
-##### FlexRender()
+##### FlexRender
 
 ```ts
 FlexRender: () => LitRenderable;

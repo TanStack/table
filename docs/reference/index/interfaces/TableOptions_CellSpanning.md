@@ -3,8 +3,6 @@ id: TableOptions_CellSpanning
 title: TableOptions_CellSpanning
 ---
 
-# Interface: TableOptions\_CellSpanning
-
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L131)
 
 ## Properties
@@ -12,7 +10,7 @@ Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:131](https://gi
 ### enableCellSpanning?
 
 ```ts
-optional enableCellSpanning: boolean;
+optional enableCellSpanning?: boolean;
 ```
 
 Defined in: [features/cell-spanning/cellSpanningFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-spanning/cellSpanningFeature.types.ts#L136)
