@@ -22,6 +22,8 @@ import type {
 import type { TableProps, TableTrProps } from '@mantine/core'
 import type { DragEvent } from 'react'
 
+export const MRT_EMPTY_ROW_ID = 'mrt-row-empty'
+
 interface Props<TData extends MRT_RowData> extends TableTrProps {
   columnVirtualizer?: MRT_ColumnVirtualizer
   numRows?: number
@@ -236,17 +238,19 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
           <Box component="td" display="flex" w={virtualPaddingRight} />
         ) : null}
       </TableTr>
-      {renderDetailPanel && !row.getIsGrouped() && (
-        <MRT_TableDetailPanel
-          parentRowRef={rowRef}
-          renderedRowIndex={renderedRowIndex}
-          row={row}
-          rowVirtualizer={rowVirtualizer}
-          striped={striped}
-          table={table}
-          virtualRow={virtualRow}
-        />
-      )}
+      {renderDetailPanel &&
+        !row.getIsGrouped() &&
+        row.id !== MRT_EMPTY_ROW_ID && (
+          <MRT_TableDetailPanel
+            parentRowRef={rowRef}
+            renderedRowIndex={renderedRowIndex}
+            row={row}
+            rowVirtualizer={rowVirtualizer}
+            striped={striped}
+            table={table}
+            virtualRow={virtualRow}
+          />
+        )}
     </>
   )
 }
