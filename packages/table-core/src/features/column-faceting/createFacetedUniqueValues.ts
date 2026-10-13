@@ -83,9 +83,10 @@ function _createFacetedUniqueValues<
 
       for (let j = 0; j < values.length; j++) {
         const value = values[j]
-        const previousValue = facetedUniqueValues.get(value)
+        const mapKey = Array.isArray(value) ? JSON.stringify(value) : value
+        const previousValue = facetedUniqueValues.get(mapKey)
         facetedUniqueValues.set(
-          value,
+          mapKey,
           previousValue === undefined ? 1 : previousValue + 1,
         )
       }
