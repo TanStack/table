@@ -71,7 +71,7 @@ function _createFacetedUniqueValues<
           .map((column) => column.id)
       : [columnId]
 
-  const facetedUniqueValues = new Map<any, number>()
+  const facetedUniqueValues = new ArrayKeyMap()
 
   for (let i = 0; i < flatRows.length; i++) {
     for (let c = 0; c < columnIds.length; c++) {
@@ -83,10 +83,9 @@ function _createFacetedUniqueValues<
 
       for (let j = 0; j < values.length; j++) {
         const value = values[j]
-        const mapKey = Array.isArray(value) ? JSON.stringify(value) : value
-        const previousValue = facetedUniqueValues.get(mapKey)
+        const previousValue = facetedUniqueValues.get(value)
         facetedUniqueValues.set(
-          mapKey,
+          value,
           previousValue === undefined ? 1 : previousValue + 1,
         )
       }
@@ -94,4 +93,27 @@ function _createFacetedUniqueValues<
   }
 
   return facetedUniqueValues
+}
+
+/**
+ * A Map subclass that normalises array keys so that:
+ * - Two distinct array instances with the same contents map to the same entry.
+ * - A serialised string like `'["a","b"]'` never collides with an array `['a','b']`.
+ *
+ * Internally arrays are stored under a null-byte-prefixed JSON key, which cannot
+ * appear in ordinary strings.
+ */
+class ArrayKeyMap extends Map<any, number> {
+  static toKey(key: unknown): unknown {
+    return Array.isArray(key) ? '\0' + JSON.stringify(key) : key
+  }
+  override get(key: unknown): number | undefined {
+    return super.get(ArrayKeyMap.toKey(key))
+  }
+  override set(key: unknown, value: number): this {
+    return super.set(ArrayKeyMap.toKey(key), value)
+  }
+  override has(key: unknown): boolean {
+    return super.has(ArrayKeyMap.toKey(key))
+  }
 }
