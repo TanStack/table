@@ -171,6 +171,54 @@ describe('createSortedRowModel', () => {
     ])
   })
 
+  it('points rowsById at sorted branch clones', () => {
+    const table = makeTable(
+      [{ id: 'age', desc: false }],
+      [
+        {
+          firstName: 'parent',
+          age: 20,
+          subRows: [
+            {
+              firstName: 'child-b',
+              age: 15,
+              subRows: [
+                { firstName: 'grandchild-b', age: 4 },
+                { firstName: 'grandchild-a', age: 2 },
+              ],
+            },
+            { firstName: 'child-a', age: 10 },
+          ],
+        },
+        { firstName: 'leaf', age: 30 },
+      ],
+    )
+
+    const preSortedRowModel = table.getPreSortedRowModel()
+    const sortedRowModel = table.getSortedRowModel()
+
+    expect(sortedRowModel.rowsById).not.toBe(preSortedRowModel.rowsById)
+    expect(Object.keys(sortedRowModel.rowsById)).toEqual(
+      Object.keys(preSortedRowModel.rowsById),
+    )
+    for (const row of sortedRowModel.flatRows) {
+      expect(sortedRowModel.rowsById[row.id]).toBe(row)
+    }
+    expect(
+      table.getRow('0').subRows.map((row) => row.original.firstName),
+    ).toEqual(['child-a', 'child-b'])
+    // Rows the sort did not clone keep their identity.
+    expect(sortedRowModel.rowsById['1']).toBe(preSortedRowModel.rowsById['1'])
+  })
+
+  it('reuses rowsById when no branch rows are cloned', () => {
+    const table = makeTable([{ id: 'age', desc: true }])
+
+    expect(table.getSortedRowModel().rowsById).toBe(
+      table.getPreSortedRowModel().rowsById,
+    )
+  })
+
   it('does not copy memoized row APIs from the original row to sorted branch clones', () => {
     const table = makeTable(
       [{ id: 'age', desc: false }],
