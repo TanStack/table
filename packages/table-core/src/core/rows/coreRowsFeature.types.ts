@@ -26,6 +26,18 @@ export interface Row_CoreProperties<
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
   /**
+   * Records the column `accessorFn` identity that produced each entry in
+   * `_valuesCache`.
+   *
+   * Rows are rebuilt when `data` changes, but column definitions can be
+   * replaced independently. A cached value is only served while the column's
+   * current accessor is the same function that produced it, so updating
+   * column defs invalidates stale values instead of returning them.
+   *
+   * @internal
+   */
+  _accessorFnsCache: Record<string, unknown>
+  /**
    * The depth of the row (if nested or grouped) relative to the root row array.
    */
   depth: number

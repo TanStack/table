@@ -49,6 +49,7 @@ export const constructRow = <
 
   // Only assign instance-specific properties
   row._displayIndexCache = -1
+  row._accessorFnsCache = makeObjectMap()
   row._uniqueValuesCache = makeObjectMap()
   row._valuesCache = makeObjectMap()
   row.depth = depth
