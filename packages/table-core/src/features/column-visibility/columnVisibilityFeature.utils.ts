@@ -61,6 +61,7 @@ export function column_toggleVisibility<
           next[leafColumn.id] = nextVisible
         }
       }
+      next[column.id] = nextVisible
 
       return next
     })
