@@ -103,6 +103,34 @@ describe('columnVisibilityFeature.utils', () => {
 
       expect(result).toBe(true)
     })
+
+    it('should return false when parent column visibility is explicitly set to false even if child columns are visible', () => {
+      const columns: Array<ColumnDef<typeof features, Person, any>> = [
+        {
+          id: 'name',
+          header: 'Name',
+          columns: [
+            { accessorKey: 'firstName', id: 'firstName' },
+            { accessorKey: 'lastName', id: 'lastName' },
+          ],
+        },
+      ]
+      const table = constructTable({
+        features,
+        data: generateTestData(1),
+        columns,
+        initialState: {
+          columnVisibility: {
+            name: false,
+          },
+        },
+      })
+      const parentColumn = table.getAllColumns()[0]!
+
+      const result = column_getIsVisible(parentColumn)
+
+      expect(result).toBe(false)
+    })
   })
 
   describe('column_getCanHide', () => {
