@@ -103,6 +103,34 @@ describe('columnVisibilityFeature.utils', () => {
 
       expect(result).toBe(true)
     })
+
+    it('should return false when parent column visibility is explicitly set to false even if child columns are visible', () => {
+      const columns: Array<ColumnDef<typeof features, Person, any>> = [
+        {
+          id: 'name',
+          header: 'Name',
+          columns: [
+            { accessorKey: 'firstName', id: 'firstName' },
+            { accessorKey: 'lastName', id: 'lastName' },
+          ],
+        },
+      ]
+      const table = constructTable({
+        features,
+        data: generateTestData(1),
+        columns,
+        initialState: {
+          columnVisibility: {
+            name: false,
+          },
+        },
+      })
+      const parentColumn = table.getAllColumns()[0]!
+
+      const result = column_getIsVisible(parentColumn)
+
+      expect(result).toBe(false)
+    })
   })
 
   describe('column_getCanHide', () => {
@@ -196,8 +224,57 @@ describe('columnVisibilityFeature.utils', () => {
       column_toggleVisibility(groupColumn, false)
 
       const result = getUpdaterResult(onColumnVisibilityChange, {})
-      expect(result).toEqual({ firstName: false })
-      expect(result).not.toHaveProperty('name')
+      expect(result).toEqual({ firstName: false, name: false })
+    })
+
+    it('should update an explicit parent entry when toggling a group column', () => {
+      const onColumnVisibilityChange = vi.fn()
+      const columns: Array<ColumnDef<typeof features, Person, any>> = [
+        {
+          id: 'name',
+          columns: [
+            { accessorKey: 'firstName', id: 'firstName' },
+            { accessorKey: 'lastName', id: 'lastName' },
+          ],
+        },
+      ]
+      const table = constructTable({
+        features,
+        data: generateTestData(1),
+        columns,
+        onColumnVisibilityChange,
+        initialState: {
+          columnVisibility: { name: true, firstName: false, lastName: false },
+        },
+      })
+      const groupColumn = table.getColumn('name')!
+
+      column_toggleVisibility(groupColumn, false)
+
+      let result = getUpdaterResult(onColumnVisibilityChange, {
+        name: true,
+        firstName: false,
+        lastName: false,
+      })
+      expect(result).toEqual({
+        name: false,
+        firstName: false,
+        lastName: false,
+      })
+
+      onColumnVisibilityChange.mockClear()
+      column_toggleVisibility(groupColumn, true)
+
+      result = getUpdaterResult(onColumnVisibilityChange, {
+        name: false,
+        firstName: false,
+        lastName: false,
+      })
+      expect(result).toEqual({
+        name: true,
+        firstName: true,
+        lastName: true,
+      })
     })
 
     it('should infer group visibility toggles from its leaf columns', () => {
@@ -222,7 +299,7 @@ describe('columnVisibilityFeature.utils', () => {
       column_toggleVisibility(groupColumn)
 
       const result = getUpdaterResult(onColumnVisibilityChange, {})
-      expect(result).toEqual({ firstName: false, lastName: false })
+      expect(result).toEqual({ firstName: false, lastName: false, name: false })
     })
 
     it('should not toggle when column cannot be hidden', () => {
