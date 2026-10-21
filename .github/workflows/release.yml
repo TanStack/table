@@ -32,7 +32,7 @@ jobs:
       - name: Start Nx Agents
         run: npx nx-cloud start-ci-run --distribute-on=".nx/workflows/dynamic-changesets.yaml"
       - name: Setup Tools
-        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+        uses: tanstack/config/.github/setup@466151b2d479656b38942cd84a0a3dce29d48de3 # main
       - name: Run Tests
         run: pnpm run test:ci --parallel=4
       - name: Stop Nx Agents
@@ -49,7 +49,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment on PRs about release
         if: steps.changesets.outputs.published == 'true'
-        uses: TanStack/config/.github/comment-on-release@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+        uses: TanStack/config/.github/comment-on-release@466151b2d479656b38942cd84a0a3dce29d48de3 # main
         with:
           published-packages: ${{ steps.changesets.outputs.published-packages }}
 
@@ -66,7 +66,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Setup Tools
-        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+        uses: tanstack/config/.github/setup@466151b2d479656b38942cd84a0a3dce29d48de3 # main
       - name: Build Packages
         run: pnpm run build:all
       - name: Install Playwright Browsers
