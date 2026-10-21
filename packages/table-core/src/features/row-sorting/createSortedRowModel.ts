@@ -1,5 +1,6 @@
 import {
   copyInstancePropertiesWithoutMemos,
+  makeObjectMap,
   skipFirstRun,
   tableMemo,
 } from '../../utils'
@@ -57,6 +58,8 @@ function _createSortedRowModel<
   }
 
   const sortedFlatRows: Array<Row<TFeatures, TData>> = []
+  // Copied on the first branch clone so lookups resolve to the sorted rows
+  let rowsById = preSortedRowModel.rowsById
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sorting.filter((sort) => {
@@ -178,6 +181,10 @@ function _createSortedRowModel<
           cloned.subRows = sortedSubRows.rows
           sortedData[i] = cloned
           sortedFlatRows[flatIndex] = cloned
+          if (rowsById === preSortedRowModel.rowsById) {
+            rowsById = Object.assign(makeObjectMap(), rowsById)
+          }
+          rowsById[cloned.id] = cloned
           changed = true
         }
       }
@@ -186,9 +193,11 @@ function _createSortedRowModel<
     return { rows: sortedData, changed }
   }
 
+  const sortedRows = sortData(preSortedRowModel.rows).rows
+
   return {
-    rows: sortData(preSortedRowModel.rows).rows,
+    rows: sortedRows,
     flatRows: sortedFlatRows,
-    rowsById: preSortedRowModel.rowsById,
+    rowsById,
   }
 }
