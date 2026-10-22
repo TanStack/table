@@ -4,6 +4,7 @@ import { describe, expect, test, vi } from 'vitest'
 import { act, fireEvent, render, screen } from '@testing-library/svelte'
 import { createAtom } from '@tanstack/svelte-store'
 import CallbackHarness from './fixtures/CallbackHarness.svelte'
+import ExpandingHarness from './fixtures/ExpandingHarness.svelte'
 import PaginationHarness from './fixtures/PaginationHarness.svelte'
 import ReactivityHarness from './fixtures/ReactivityHarness.svelte'
 import RuneStateHarness from './fixtures/RuneStateHarness.svelte'
@@ -142,6 +143,26 @@ describe('Svelte adapter lifecycle and reactive options', () => {
     )
 
     expect(outputText('Paginated row ids')).toBe('0,1,2')
+  })
+
+  test('createTableState-controlled pagination is not reset by its own change', async () => {
+    render(PaginationHarness)
+
+    await fireEvent.click(screen.getByRole('button', { name: 'Next page' }))
+    await act()
+
+    expect(outputText('Paginated row ids')).toBe('5,6,7,8,9')
+  })
+
+  test('createTableState-controlled expanded state is not reset by its own change', async () => {
+    render(ExpandingHarness)
+
+    await fireEvent.click(
+      screen.getByRole('button', { name: 'Expand first row' }),
+    )
+    await act()
+
+    expect(outputText('Expanded row ids')).toBe('1')
   })
 
   test('native rune projections only rerun for their tracked dependency', async () => {
