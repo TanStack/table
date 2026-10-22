@@ -18,6 +18,8 @@ export interface TableState_RowPagination {
 export interface TableOptions_RowPagination {
   /**
    * If set to `true`, pagination will be reset to the first page when page-altering state changes e.g. `data` is updated, filters change, grouping changes, etc.
+   *
+   * If set to `false` with client-side pagination, the current page is kept, but when a data, filter, or grouping change reduces the row count, a now-out-of-range page index is clamped to the last page.
    */
   autoResetPageIndex?: boolean
   /**
