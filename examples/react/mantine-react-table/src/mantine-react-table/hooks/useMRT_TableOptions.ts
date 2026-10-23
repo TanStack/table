@@ -171,12 +171,6 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     manualPagination = true
   }
 
-  if (!rest.data?.length) {
-    manualFiltering = true
-    manualGrouping = true
-    manualPagination = true
-    manualSorting = true
-  }
 
   return {
     aggregationFns,
