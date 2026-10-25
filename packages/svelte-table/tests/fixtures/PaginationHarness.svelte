@@ -43,3 +43,4 @@
     .join(',')}</output
 >
 <button onclick={() => table.setPageSize(3)}>Show three rows</button>
+<button onclick={() => table.nextPage()}>Next page</button>
