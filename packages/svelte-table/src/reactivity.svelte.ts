@@ -31,6 +31,12 @@ function subscribeToRune<T>(
   return { unsubscribe }
 }
 
+/**
+ * Backs the options store. Uses `$state.raw` because `set` always replaces the
+ * whole options object: a deep `$state` would wrap `options.data` in a new proxy
+ * on every set, which the row model treats as new data and resets controlled
+ * pagination/expanded state (#6640).
+ */
 function createRuneWritableAtom<T>(initialValue: T): Atom<T> {
   let value = $state.raw(initialValue)
 
