@@ -195,6 +195,36 @@ test('returns a column to the centre table when unpinned', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
+test('offers pin buttons for the region a split group header is in', async ({
+  page,
+}) => {
+  const errors = await openExample(page)
+
+  await pinButton(page, CENTER_TABLE, 'firstName', '<=').click()
+  await expect.poll(() => leafCount(page, START_TABLE)).toBe(1)
+  await pinButton(page, CENTER_TABLE, 'Last Name', '=>').click()
+  await expect.poll(() => leafCount(page, END_TABLE)).toBe(1)
+
+  // The "Name" group is split, so the start and end tables each render a
+  // "Name" header for the same group column. Each must act on its own region.
+  const groupPinButton = (tableIndex: number, label: '<=' | 'X' | '=>') =>
+    tableAt(page, tableIndex)
+      .locator('thead tr')
+      .first()
+      .locator('th')
+      .filter({ hasText: 'Name' })
+      .getByRole('button', { name: label, exact: true })
+
+  await expect(groupPinButton(START_TABLE, '<=')).toHaveCount(0)
+  await expect(groupPinButton(START_TABLE, 'X')).toHaveCount(1)
+  await expect(groupPinButton(START_TABLE, '=>')).toHaveCount(1)
+  await expect(groupPinButton(END_TABLE, '<=')).toHaveCount(1)
+  await expect(groupPinButton(END_TABLE, 'X')).toHaveCount(1)
+  await expect(groupPinButton(END_TABLE, '=>')).toHaveCount(0)
+
+  expect(errors).toEqual([])
+})
+
 test('keeps every table showing the same rows', async ({ page }) => {
   const errors = await openExample(page)
 

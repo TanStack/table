@@ -164,7 +164,7 @@ function App() {
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="pin-actions">
-                        {header.column.getIsPinned() !== 'start' ? (
+                        {header.getIsPinned() !== 'start' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -174,7 +174,7 @@ function App() {
                             {'<='}
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() ? (
+                        {header.getIsPinned() ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -184,7 +184,7 @@ function App() {
                             X
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() !== 'end' ? (
+                        {header.getIsPinned() !== 'end' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -233,7 +233,7 @@ function App() {
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="pin-actions">
-                        {header.column.getIsPinned() !== 'start' ? (
+                        {header.getIsPinned() !== 'start' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -243,7 +243,7 @@ function App() {
                             {'<='}
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() ? (
+                        {header.getIsPinned() ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -253,7 +253,7 @@ function App() {
                             X
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() !== 'end' ? (
+                        {header.getIsPinned() !== 'end' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -302,7 +302,7 @@ function App() {
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="pin-actions">
-                        {header.column.getIsPinned() !== 'start' ? (
+                        {header.getIsPinned() !== 'start' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -312,7 +312,7 @@ function App() {
                             {'<='}
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() ? (
+                        {header.getIsPinned() ? (
                           <button
                             className="pin-button"
                             onClick={() => {
@@ -322,7 +322,7 @@ function App() {
                             X
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() !== 'end' ? (
+                        {header.getIsPinned() !== 'end' ? (
                           <button
                             className="pin-button"
                             onClick={() => {

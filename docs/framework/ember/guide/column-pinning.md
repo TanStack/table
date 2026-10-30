@@ -139,6 +139,7 @@ There are a handful of useful Column API methods to help you implement column pi
 - `column.getCanPin`: Use to determine if a column can be pinned.
 - `column.pin`: Use to pin a column to the start or end. Or use to unpin a column.
 - `column.getIsPinned`: Use to determine where a column is pinned.
+- `header.getIsPinned`: Use to determine where a header is pinned. A group header split across pinned regions reports the region it is rendered in, which `header.column.getIsPinned` cannot.
 - `column.getPinnedIndex`: Use to read the column's index within its pinned column group.
 - `column.getStart`: Use to provide the correct `start` CSS value for a pinned column.
 - `column.getAfter`: Use to provide the correct `end` CSS value for a pinned column.
@@ -202,20 +203,26 @@ Use `table.getIsSomeColumnsPinned()` to check if any columns are pinned, or pass
 Because Ember templates extract method references without binding them, wrap these Column and Table method calls in small module-scope helper functions (or getters), then call the helpers from your markup:
 
 ```ts
-import { type Column, type ColumnPinningPosition } from '@tanstack/ember-table'
+import {
+  type Column,
+  type ColumnPinningPosition,
+  type Header,
+} from '@tanstack/ember-table'
 
 const getCanPin = (column: Column<typeof features, Person>): boolean =>
   column.getCanPin()
 
+// Read pin state from the header, so a group split across pinned regions
+// reports the region this header is rendered in
 const getIsPinned = (
-  column: Column<typeof features, Person>,
-): ColumnPinningPosition => column.getIsPinned()
+  header: Header<typeof features, Person>,
+): ColumnPinningPosition => header.getIsPinned()
 
-const isPinnedStart = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'start'
+const isPinnedStart = (header: Header<typeof features, Person>): boolean =>
+  header.getIsPinned() === 'start'
 
-const isPinnedEnd = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'end'
+const isPinnedEnd = (header: Header<typeof features, Person>): boolean =>
+  header.getIsPinned() === 'end'
 
 const pin = (
   column: Column<typeof features, Person>,
@@ -228,19 +235,19 @@ const pin = (
 ```hbs
 {{#if (getCanPin header.column)}}
   <div class='pin-actions'>
-    {{#unless (isPinnedStart header.column)}}
+    {{#unless (isPinnedStart header)}}
       <button
         class='pin-button'
         {{on 'click' (pin header.column 'start')}}
       >◀</button>
     {{/unless}}
-    {{#if (getIsPinned header.column)}}
+    {{#if (getIsPinned header)}}
       <button
         class='pin-button'
         {{on 'click' (pin header.column false)}}
       >✕</button>
     {{/if}}
-    {{#unless (isPinnedEnd header.column)}}
+    {{#unless (isPinnedEnd header)}}
       <button
         class='pin-button'
         {{on 'click' (pin header.column 'end')}}

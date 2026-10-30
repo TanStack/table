@@ -11,6 +11,7 @@ import {
   column_getPinnedIndex,
   column_pin,
   getDefaultColumnPinningState,
+  header_getIsPinned,
   row_getCenterVisibleCells,
   row_getEndVisibleCells,
   row_getStartVisibleCells,
@@ -79,6 +80,14 @@ export const columnPinningFeature: TableFeature = {
       },
       column_getIsPinned: {
         fn: (column) => column_getIsPinned(column),
+      },
+    })
+  },
+
+  assignHeaderPrototype: (prototype, table) => {
+    assignPrototypeAPIs('columnPinningFeature', prototype, table, {
+      header_getIsPinned: {
+        fn: (header) => header_getIsPinned(header),
       },
     })
   },

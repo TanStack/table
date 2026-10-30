@@ -140,6 +140,7 @@ There are a handful of useful Column API methods to help you implement column pi
 - `column.getCanPin`: Use to determine if a column can be pinned.
 - `column.pin`: Use to pin a column to the start or end. Or use to unpin a column.
 - `column.getIsPinned`: Use to determine where a column is pinned.
+- `header.getIsPinned`: Use to determine where a header is pinned. A group header split across pinned regions reports the region it is rendered in, which `header.column.getIsPinned` cannot.
 - `column.getPinnedIndex`: Use to read the column's index within its pinned column group.
 - `column.getStart`: Use to provide the correct `start` CSS value for a pinned column.
 - `column.getAfter`: Use to provide the correct `end` CSS value for a pinned column.
@@ -214,19 +215,16 @@ Because Alpine does not initialize directives inside content set with `x-html`, 
   <template x-if="!header.isPlaceholder && header.column.getCanPin()">
     <div class="pin-actions">
       <button
-        x-show="header.column.getIsPinned() !== 'start'"
+        x-show="header.getIsPinned() !== 'start'"
         @click="header.column.pin('start')"
       >
         &lt;=
       </button>
-      <button
-        x-show="header.column.getIsPinned()"
-        @click="header.column.pin(false)"
-      >
+      <button x-show="header.getIsPinned()" @click="header.column.pin(false)">
         X
       </button>
       <button
-        x-show="header.column.getIsPinned() !== 'end'"
+        x-show="header.getIsPinned() !== 'end'"
         @click="header.column.pin('end')"
       >
         =&gt;
