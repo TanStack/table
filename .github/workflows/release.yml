@@ -31,10 +31,10 @@ jobs:
           persist-credentials: false
       - name: Start Nx Agents
         run: npx nx-cloud start-ci-run --distribute-on=".nx/workflows/dynamic-changesets.yaml"
-      - name: Setup Tools
-        uses: tanstack/config/.github/setup@466151b2d479656b38942cd84a0a3dce29d48de3 # main
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
       - name: Run Tests
-        run: pnpm run test:ci --parallel=4
+        run: vp run test:ci --parallel=4
       - name: Stop Nx Agents
         if: ${{ always() }}
         run: npx nx-cloud stop-all-agents
@@ -42,11 +42,10 @@ jobs:
         id: changesets
         uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
-          version-script: pnpm run changeset:version
-          publish-script: pnpm run changeset:publish
+          version-script: vp run changeset:version
+          publish-script: vp run changeset:publish
           commit-message: 'ci: Version Packages'
           pr-title: 'ci: Version Packages'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment on PRs about release
         if: steps.changesets.outputs.published == 'true'
         uses: TanStack/config/.github/comment-on-release@466151b2d479656b38942cd84a0a3dce29d48de3 # main
@@ -65,14 +64,14 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Setup Tools
-        uses: tanstack/config/.github/setup@466151b2d479656b38942cd84a0a3dce29d48de3 # main
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
       - name: Build Packages
-        run: pnpm run build:all
+        run: vp run build:all
       - name: Install Playwright Browsers
-        run: pnpm run test:e2e:install
+        run: vp run test:e2e:install
       - name: Run E2E Tests
-        run: pnpm run test:e2e
+        run: vp run test:e2e
       - name: Upload E2E failure artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
