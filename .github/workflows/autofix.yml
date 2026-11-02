@@ -20,10 +20,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Setup Tools
-        uses: tanstack/config/.github/setup@466151b2d479656b38942cd84a0a3dce29d48de3 # main
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
       - name: Fix formatting
-        run: pnpm format
+        run: vp run format
       - name: Apply fixes
         uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
         with:
