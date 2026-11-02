@@ -536,10 +536,8 @@ export function column_getToggleSortingHandler<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const canSort = column_getCanSort(column)
-
   return (e: unknown) => {
-    if (!canSort) return
+    if (!column_getCanSort(column)) return
     column_toggleSorting(
       column,
 

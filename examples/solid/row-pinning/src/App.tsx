@@ -11,7 +11,7 @@ import {
   rowPinningFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { For, Show, createMemo, createSignal } from 'solid-js'
+import { For, Show, createMemo, createSignal, untrack } from 'solid-js'
 import { makeData } from './makeData'
 import type {
   Column,
@@ -175,7 +175,7 @@ function App() {
                 <tr>
                   <For each={headerGroup.headers}>
                     {(header) => (
-                      <th colSpan={header.colSpan}>
+                      <th colspan={header.colSpan}>
                         <Show when={!header.isPlaceholder}>
                           <>
                             <table.FlexRender header={header} />
@@ -374,9 +374,10 @@ function Filter({
   column: Column<typeof features, Person>
   table: Table<typeof features, Person>
 }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
+  // The filter type is picked once, from the first row's value.
+  const firstValue = untrack(() =>
+    table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id),
+  )
 
   return typeof firstValue === 'number' ? (
     <div class="filter-row">

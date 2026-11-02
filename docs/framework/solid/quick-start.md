@@ -7,8 +7,10 @@ TanStack Table is a headless table library. It manages your table's state and lo
 ## Installation
 
 ```bash
-npm install @tanstack/solid-table
+npm install @tanstack/solid-table solid-js @solidjs/web
 ```
+
+`@tanstack/solid-table` v10 supports Solid 2. For Solid 1, install `@tanstack/solid-table@9`.
 
 ## Your First Table
 
@@ -113,7 +115,7 @@ A few things to note:
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
 - The `get data()` getter keeps the table reactive. When the signal updates, the table sees the new data. Passing `data: data()` would capture a one-time snapshot.
 - `FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values or Solid components. It is also available on the table instance as `table.FlexRender`.
-- The `key` option is optional unless you use the [TanStack Table Devtools](../../devtools). The devtools identify tables by `key`, and you register a table by calling `useTanStackTableDevtools(table)` from `@tanstack/solid-table-devtools`.
+- The `key` option is optional unless you use the [TanStack Table Devtools](../../devtools). The devtools identify tables by `key`. The Solid devtools adapter does not support Solid 2 yet.
 
 See the full [Basic createTable example](./examples/basic-use-table) for a runnable version with more columns and a footer.
 
@@ -192,7 +194,7 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 
 ## Where to Go Next
 
-**Table state.** In v9, table state is backed by TanStack Store atoms that plug directly into Solid's fine-grained reactivity. You usually do not need to manage it yourself. Set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state.md). It is the foundational guide for everything else.
+**Table state.** Table state is backed by TanStack Store atoms that plug directly into Solid's fine-grained reactivity. Like any Solid 2 signal, a state write is applied at the next flush, so a read straight after `table.setSorting(...)` in the same event handler still returns the previous value. You usually do not need to manage it yourself. Set `initialState` for starting values and call feature APIs like `table.setSorting(...)` or `table.nextPage()`. When your app should own a state slice, or you want fine-grained subscriptions, read the [Table State Guide](./guide/table-state.md). It is the foundational guide for everything else.
 
 **Feature guides.** Each feature has its own guide, such as [Column Filtering](./guide/column-filtering.md), [Pagination](./guide/pagination.md), [Row Selection](./guide/row-selection.md), and [Column Visibility](./guide/column-visibility.md).
 

@@ -16,9 +16,9 @@ import {
   sortFn_text,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { For, createEffect, createSignal } from 'solid-js'
+import { createDebouncer } from './debouncer'
 import { makeData } from './makeData'
 import type {
   Column,
@@ -134,13 +134,14 @@ function App() {
     debugColumns: false,
   })
 
-  createEffect(() => {
-    if (table.atoms.columnFilters.get()[0]?.id === 'fullName') {
-      if (table.atoms.sorting.get()[0]?.id !== 'fullName') {
-        table.setSorting([{ id: 'fullName', desc: false }])
-      }
-    }
-  })
+  createEffect(
+    () =>
+      table.atoms.columnFilters.get()[0]?.id === 'fullName' &&
+      table.atoms.sorting.get()[0]?.id !== 'fullName',
+    (sortByFullName) => {
+      if (sortByFullName) table.setSorting([{ id: 'fullName', desc: false }])
+    },
+  )
 
   return (
     <div class="demo-root">
@@ -164,7 +165,7 @@ function App() {
               <tr>
                 <For each={headerGroup.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
                           <div
@@ -305,20 +306,15 @@ function DebouncedInput(props: {
   placeholder?: string
   class?: string
 }) {
-  const [value, setValue] = createSignal(props.value)
-
-  createEffect(() => {
-    setValue(props.value)
-  })
+  // The input shows the typed value, and resets when `props.value` changes.
+  const [value, setValue] = createSignal(() => props.value)
 
   const onChangeDebouncer = createDebouncer(
     (nextValue: string | number) => props.onChange(nextValue),
     { wait: () => props.debounce ?? 500 },
   )
 
-  createEffect(() => {
-    onChangeDebouncer.maybeExecute(value())
-  })
+  createEffect(value, (nextValue) => onChangeDebouncer.maybeExecute(nextValue))
 
   return (
     <input

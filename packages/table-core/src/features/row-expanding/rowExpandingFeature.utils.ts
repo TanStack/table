@@ -429,10 +429,8 @@ export function row_getToggleExpandedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const canExpand = row_getCanExpand(row)
-
   return () => {
-    if (!canExpand) return
+    if (!row_getCanExpand(row)) return
     row_toggleExpanded(row)
   }
 }

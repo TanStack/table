@@ -93,11 +93,9 @@ export function header_getResizeHandler<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(header: Header<TFeatures, TData, TValue>, _contextDocument?: Document) {
-  const column = header.table.getColumn(header.column.id)!
-  const canResize = column_getCanResize(column)
-
   return (event: unknown) => {
-    if (!canResize) {
+    const column = header.table.getColumn(header.column.id)!
+    if (!column_getCanResize(column)) {
       return
     }
 

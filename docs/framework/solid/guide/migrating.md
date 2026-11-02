@@ -2,6 +2,21 @@
 title: Migrating to TanStack Table V9 (Solid)
 ---
 
+## Solid 2
+
+`@tanstack/solid-table` v10 is the Solid 2 adapter. It has the same API as v9. Solid 1 apps stay on v9, and everything else in this guide applies to both.
+
+To move a v9 Solid table to v10:
+
+- Install `solid-js` and `@solidjs/web` 2.0 alongside `@tanstack/solid-table@10`.
+- Follow the Solid 2 migration for your own code: `solid-js/web` becomes `@solidjs/web`, `mergeProps`/`splitProps` become `merge`/`omit`, effects take a compute function and an apply function, `<Index>` becomes `<For keyed={false}>`, `classList` becomes `class`, and `colSpan`/`rowSpan` become `colspan`/`rowspan`.
+- Type cell and header renderers as `Element` from `solid-js` instead of `JSX.Element`.
+- Table state writes are batched like any Solid 2 write. A read straight after a write returns the previous value until Solid flushes. Updates built on the previous value still compose, because table APIs use updater functions. Call `flush()` from `solid-js` if you need the new value right away.
+- `FlexRender` calls `cell`, `header` and `footer` templates where they render, so a template's reads are tracked and it updates when they change. In your own components, read table state in JSX, a memo or an accessor, not in the component body: Solid 2 warns in development about a body read, because it won't update.
+- A Solid store passed as `data`, such as Solid Query v6 data, updates the table when it changes in place.
+- `createTableHook` contexts are their own providers in Solid 2, which the hook handles for you. `useHeaderContext()` returns a view of the header that also carries the pre-bound header components, so compare its prototype, not the object itself, with the original header.
+- The Solid devtools (`@tanstack/solid-table-devtools`) do not support Solid 2 yet.
+
 ## What's New in TanStack Table V9
 
 TanStack Table V9 delivers major performance improvements, hundreds of bug fixes, new and refreshed features, and optional helpers for composing and managing tables. Despite the scale of the release, the headless model, core table logic, column definitions, and rendering patterns remain familiar. Here are the key changes:

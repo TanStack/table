@@ -46,7 +46,7 @@
     "test:lib": "nx affected --targets=test:lib",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:pr": "pnpm run test:compiler-examples && nx affected --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",
-    "test:sherif": "sherif",
+    "test:sherif": "sherif -i solid-js",
     "test:types": "nx affected --targets=test:types",
     "skills:versions:check": "node scripts/sync-skill-versions.mjs",
     "skills:versions:fix": "node scripts/sync-skill-versions.mjs --write",

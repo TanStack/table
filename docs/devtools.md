@@ -44,6 +44,8 @@ npm install @tanstack/vue-devtools @tanstack/vue-table-devtools
 npm install @tanstack/solid-devtools @tanstack/solid-table-devtools
 ```
 
+The Solid devtools currently support Solid 1, so they work with `@tanstack/solid-table` v9. Solid 2 support (`@tanstack/solid-table` v10) will follow TanStack Devtools.
+
 # Angular
 
 ```sh
@@ -195,7 +197,7 @@ See the [Vue row-selection example](./framework/vue/examples/row-selection).
 # Solid
 
 ```tsx
-import { render } from 'solid-js/web'
+import { render } from 'solid-js/web' // Solid 1, with @tanstack/solid-table v9
 import { createTable } from '@tanstack/solid-table'
 import { TanStackDevtools } from '@tanstack/solid-devtools'
 import {

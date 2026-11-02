@@ -4,7 +4,7 @@
  * These components can be used via the pre-bound headerComponents
  * in AppHeader children, e.g., <header.SortIndicator />
  */
-import { Show } from 'solid-js'
+import { Show, createMemo } from 'solid-js'
 import { useHeaderContext } from '../hooks/table'
 
 /**
@@ -60,15 +60,17 @@ export function FooterColumnId() {
  */
 export function FooterSum() {
   const header = useHeaderContext()
-  const table = header.getContext().table
-  const rows = table.getFilteredRowModel().rows
 
-  // Calculate sum for numeric columns
-  const sum = () =>
-    rows.reduce((acc, row) => {
-      const value = row.getValue(header.column.id)
-      return acc + (typeof value === 'number' ? value : 0)
-    }, 0)
+  // Calculate sum for numeric columns, over the rows the filters keep
+  const sum = createMemo(() =>
+    header
+      .getContext()
+      .table.getFilteredRowModel()
+      .rows.reduce((acc, row) => {
+        const value = row.getValue(header.column.id)
+        return acc + (typeof value === 'number' ? value : 0)
+      }, 0),
+  )
 
   return (
     <span class="footer-sum">{sum() > 0 ? sum().toLocaleString() : '—'}</span>

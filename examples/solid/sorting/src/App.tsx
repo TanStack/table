@@ -124,7 +124,7 @@ function App() {
               <tr>
                 <For each={headerGroup.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
                         <div
                           class={

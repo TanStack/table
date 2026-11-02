@@ -18,7 +18,7 @@ sources:
 
 Before starting, run `intent load @tanstack/table-core#migrate-v8-to-v9`. Audit its entire shared checklist and read the detailed core mappings for APIs present in the application. This checklist adds the Solid-specific changes.
 
-Framework prerequisite: Solid 1.3 or newer (`solid-js >=1.3`).
+Framework prerequisite: Solid 2 (`solid-js` and `@solidjs/web` 2.0 or newer) for `@tanstack/solid-table` v10. Solid 1 apps stay on v9.
 
 ## Adapter audit
 

@@ -41,7 +41,7 @@ The `@tanstack/vue-table` package works with Vue 3.2 or newer.
 
 # Solid
 
-The `@tanstack/solid-table` package works with Solid 1.3 or newer.
+The `@tanstack/solid-table` package works with Solid 2 (`solid-js` and `@solidjs/web` 2.0 or newer). For Solid 1, use `@tanstack/solid-table` v9.
 
 # Svelte
 
