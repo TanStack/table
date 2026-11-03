@@ -698,10 +698,8 @@ export function row_getToggleSelectedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, opts?: ToggleSelectedOptions) {
-  const canSelect = row_getCanSelect(row)
-
   return (e: unknown) => {
-    if (!canSelect) return
+    if (!row_getCanSelect(row)) return
 
     const event = e as {
       target: { checked: boolean }

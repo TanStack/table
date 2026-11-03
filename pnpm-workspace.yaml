@@ -1,6 +1,14 @@
 packages:
   - examples/**/*
   - packages/*
+  # These Solid examples need TanStack libraries that don't support Solid 2 yet
+  # (Virtual, Form), so they stay on the published Solid 1 adapter for now.
+  - '!examples/solid/realtime-trading'
+  - '!examples/solid/spreadsheet'
+  - '!examples/solid/virtualized-columns'
+  - '!examples/solid/virtualized-infinite-scrolling'
+  - '!examples/solid/virtualized-rows'
+  - '!examples/solid/with-tanstack-form'
 
 overrides:
   '@internationalized/date': '3.12.4'

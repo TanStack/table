@@ -1,4 +1,4 @@
-import { For, createSignal } from 'solid-js'
+import { For, Loading, createSignal } from 'solid-js'
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -14,14 +14,15 @@ import {
   rowSortingFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { fetchData, fetchInfiniteData } from './fetchData'
 import type {
   PaginationState,
   SolidTable,
   SortingState,
 } from '@tanstack/solid-table'
-import type { Person } from './fetchData'
+import type { InfiniteDataPage, Person } from './fetchData'
+
+const defaultData: Array<Person> = []
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -43,8 +44,6 @@ const columns = columnHelper.columns([
   columnHelper.accessor('progress', { header: 'Profile Progress' }),
 ])
 
-const defaultData: Array<Person> = []
-
 function PersonTable(props: { table: SolidTable<typeof features, Person> }) {
   return (
     <table>
@@ -54,7 +53,7 @@ function PersonTable(props: { table: SolidTable<typeof features, Person> }) {
             <tr>
               <For each={headerGroup.headers}>
                 {(header) => (
-                  <th colSpan={header.colSpan}>
+                  <th colspan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div
                         class={
@@ -121,33 +120,40 @@ function UseQueryApp() {
     pageSize: 10,
   })
 
-  const dataQuery = useQuery(() => ({
-    queryKey: [
-      'people',
-      'offset',
-      pagination().pageIndex,
-      pagination().pageSize === Infinity ? 'all' : pagination().pageSize,
-      sorting(),
-      globalFilter(),
-    ],
-    queryFn: () =>
-      fetchData({
-        pagination: pagination(),
-        sorting: sorting(),
-        globalFilter: globalFilter(),
-      }),
-    placeholderData: keepPreviousData,
-  }))
+  // Query data is async in Solid 2: reads wait under the `<Loading>` boundary
+  // in `App` until the first page arrives.
+  const dataQuery = useQuery(() => {
+    // Read the query inputs here, where they are tracked, not in `queryFn`.
+    const variables = {
+      pagination: pagination(),
+      sorting: sorting(),
+      globalFilter: globalFilter(),
+    }
+    return {
+      queryKey: [
+        'people',
+        'offset',
+        variables.pagination.pageIndex,
+        variables.pagination.pageSize === Infinity
+          ? 'all'
+          : variables.pagination.pageSize,
+        variables.sorting,
+        variables.globalFilter,
+      ],
+      queryFn: () => fetchData(variables),
+      placeholderData: keepPreviousData,
+    }
+  })
 
   const table = createTable({
     key: 'with-tanstack-query-offset',
     features,
     columns,
     get data() {
-      return dataQuery.data?.rows ?? defaultData
+      return dataQuery.data.rows
     },
     get rowCount() {
-      return dataQuery.data?.rowCount
+      return dataQuery.data.rowCount
     },
     getRowId: (row) => String(row.id),
     state: {
@@ -174,8 +180,6 @@ function UseQueryApp() {
     manualPagination: true,
     manualSorting: true,
   })
-
-  useTanStackTableDevtools(table)
 
   return (
     <div>
@@ -251,7 +255,7 @@ function UseQueryApp() {
       </div>
       <div data-testid="offset-status">
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-        {dataQuery.data?.rowCount.toLocaleString() ?? 0} rows
+        {dataQuery.data.rowCount.toLocaleString()} rows
       </div>
       <pre data-testid="use-query-table-state">
         {JSON.stringify(table.store.get(), null, 2)}
@@ -267,27 +271,33 @@ function UseInfiniteQueryApp() {
     pageIndex: 0,
     pageSize: 10,
   })
-  const dataQuery = useInfiniteQuery(() => ({
-    queryKey: [
-      'people',
-      'cursor',
-      pagination().pageSize === Infinity ? 'all' : pagination().pageSize,
-      sorting(),
-      globalFilter(),
-    ],
-    queryFn: ({ pageParam }) =>
-      fetchInfiniteData({
-        cursor: pageParam,
-        pageSize: pagination().pageSize,
-        sorting: sorting(),
-        globalFilter: globalFilter(),
-      }),
-    initialPageParam: null as number | null,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-  }))
-  const currentPage = () => dataQuery.data?.pages[pagination().pageIndex]
+  const dataQuery = useInfiniteQuery(() => {
+    // Read the query inputs here, where they are tracked, not in `queryFn`.
+    const variables = {
+      pageSize: pagination().pageSize,
+      sorting: sorting(),
+      globalFilter: globalFilter(),
+    }
+    return {
+      queryKey: [
+        'people',
+        'cursor',
+        variables.pageSize === Infinity ? 'all' : variables.pageSize,
+        variables.sorting,
+        variables.globalFilter,
+      ],
+      queryFn: ({ pageParam }: { pageParam: number | null }) =>
+        fetchInfiniteData({ cursor: pageParam, ...variables }),
+      initialPageParam: null as number | null,
+      getNextPageParam: (lastPage: InfiniteDataPage) => lastPage.nextCursor,
+    }
+  })
+  // A page index past the loaded pages has no page yet.
+  const pageAt = (index: number): InfiniteDataPage | undefined =>
+    dataQuery.data.pages[index]
+  const currentPage = () => pageAt(pagination().pageIndex)
   const canNextPage = () =>
-    Boolean(dataQuery.data?.pages[pagination().pageIndex + 1]) ||
+    Boolean(pageAt(pagination().pageIndex + 1)) ||
     Boolean(currentPage()?.hasNextPage)
 
   const table = createTable({
@@ -324,11 +334,9 @@ function UseInfiniteQueryApp() {
     manualSorting: true,
   })
 
-  useTanStackTableDevtools(table)
-
   const goToNextPage = async () => {
     const nextPageIndex = pagination().pageIndex + 1
-    if (dataQuery.data?.pages[nextPageIndex]) return table.nextPage()
+    if (pageAt(nextPageIndex)) return table.nextPage()
     if (!currentPage()?.hasNextPage || dataQuery.isFetchingNextPage) return
     const result = await dataQuery.fetchNextPage()
     if (result.data?.pages[nextPageIndex]) table.nextPage()
@@ -407,7 +415,9 @@ export default function App() {
       <section class="query-example" data-testid="use-query-example">
         <h1>useQuery</h1>
         <p>Page-index pagination with a known total row count.</p>
-        <UseQueryApp />
+        <Loading fallback={<p>Loading...</p>}>
+          <UseQueryApp />
+        </Loading>
       </section>
       <section class="query-example" data-testid="use-infinite-query-example">
         <h1>useInfiniteQuery</h1>
@@ -415,7 +425,9 @@ export default function App() {
           Cursor pagination with an unknown total. Each next cursor is the last
           row ID from the current page.
         </p>
-        <UseInfiniteQueryApp />
+        <Loading fallback={<p>Loading...</p>}>
+          <UseInfiniteQueryApp />
+        </Loading>
       </section>
     </main>
   )

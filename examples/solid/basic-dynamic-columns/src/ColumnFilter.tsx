@@ -1,12 +1,12 @@
-import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { For, Match, Show, Switch, createMemo } from 'solid-js'
+import { createDebouncer } from './debouncer'
 import type { DataType, DynamicRow, features } from './App'
 import type { Column, Table } from '@tanstack/solid-table'
 
 // A different filter UI per data type. Solid's fine-grained reactivity keeps the
 // reads (getFilterValue, the faceted values) fresh on their own, so unlike the React
 // version there's no Subscribe wrapper needed. Text / range inputs are debounced via
-// the solid-pacer debouncer; the enum and boolean selects apply immediately.
+// a small local debouncer; the enum and boolean selects apply immediately.
 function ColumnFilter(props: {
   column: Column<typeof features, DynamicRow>
   table: Table<typeof features, DynamicRow>

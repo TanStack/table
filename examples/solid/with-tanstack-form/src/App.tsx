@@ -134,8 +134,6 @@ function FullTableFormExample() {
     debugTable: true,
   })
 
-  useTanStackTableDevtools(table)
-
   const refreshData = () => {
     setData(makeData(100))
   }
@@ -317,8 +315,6 @@ function RowSubmitFormExample() {
     },
     debugTable: true,
   })
-
-  useTanStackTableDevtools(table)
 
   const refreshData = () => {
     setData(makeData(100))

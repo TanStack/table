@@ -137,13 +137,19 @@ export function table_mergeOptions<
 >(
   table: Table_Internal<TFeatures, TData>,
   newOptions: TableOptions<TFeatures, TData>,
+  // The options being replaced. Defaults to `table.options`; `setOptions`
+  // passes the pending value so back-to-back updates compose.
+  baseOptions: TableOptions<TFeatures, TData> = table.options as TableOptions<
+    TFeatures,
+    TData
+  >,
 ) {
-  const { features, atoms, initialState } = table.options
+  const { features, atoms, initialState } = baseOptions
 
   // simple merge if no mergeOptions is provided - performant
-  if (!table.options.mergeOptions) {
+  if (!baseOptions.mergeOptions) {
     return {
-      ...table.options,
+      ...baseOptions,
       ...newOptions,
       features,
       atoms,
@@ -152,10 +158,7 @@ export function table_mergeOptions<
   }
 
   // else use the mergeOptions function and preserve getters/setters
-  const mergedOptions = table.options.mergeOptions(
-    table.options as TableOptions<TFeatures, TData>,
-    newOptions,
-  )
+  const mergedOptions = baseOptions.mergeOptions(baseOptions, newOptions)
   const descriptors: PropertyDescriptorMap = {
     ...Object.getOwnPropertyDescriptors(mergedOptions),
   }
@@ -208,16 +211,21 @@ export function table_setOptions<
     syncExternalState?: boolean
   },
 ): void {
-  const newOptions = functionalUpdate(
-    updater,
-    table.options as TableOptions<TFeatures, TData>,
-  )
-  const mergedOptions = table_mergeOptions(table, newOptions)
+  let mergedOptions!: TableOptions<TFeatures, TData>
+  const update = (prev: TableOptions<TFeatures, TData>) =>
+    (mergedOptions = table_mergeOptions(
+      table,
+      functionalUpdate(updater, prev),
+      prev,
+    ))
 
+  // The options store gets an updater, not a value, so a store that applies
+  // writes lazily still hands back-to-back `setOptions` calls the latest
+  // options instead of the last committed ones.
   if (table.optionsStore) {
-    table.optionsStore.set(() => mergedOptions)
+    table.optionsStore.set(update as never)
   } else {
-    table.options = mergedOptions
+    table.options = update(table.options as TableOptions<TFeatures, TData>)
   }
   if (options?.syncExternalState !== false) {
     table_publishExternalState(table, mergedOptions.state ?? null)

@@ -151,7 +151,7 @@ function App() {
                 <tr>
                   <For each={headerGroup.headers}>
                     {(header) => (
-                      <th colSpan={header.colSpan}>
+                      <th colspan={header.colSpan}>
                         <div class="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />

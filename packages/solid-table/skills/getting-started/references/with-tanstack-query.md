@@ -1,6 +1,6 @@
 # Solid Table with TanStack Query
 
-Use this reference when Query owns server data for a Solid table. Read [table state](../../table-state/SKILL.md) for reactive ownership. Run `intent load @tanstack/table-core#table-features` and read its client/server reference before choosing manual processing stages. Query fetches rows already processed by every server-owned stage; manual flags only bypass Table processing.
+Use this reference when Query owns server data for a Solid table. It uses `@tanstack/solid-query` v6 (Solid 2): query data is async, so render the table under `<Loading>`, and query data is a store that updates in place, which the table handles. Read [table state](../../table-state/SKILL.md) for reactive ownership. Run `intent load @tanstack/table-core#table-features` and read its client/server reference before choosing manual processing stages. Query fetches rows already processed by every server-owned stage; manual flags only bypass Table processing.
 
 ## Setup
 
@@ -14,22 +14,24 @@ import {
 } from '@tanstack/solid-table'
 
 const features = tableFeatures({ rowPaginationFeature })
-const emptyRows: Array<{ id: string }> = []
 const paginationAtom = createAtom({ pageIndex: 0, pageSize: 20 })
 const pagination = useSelector(paginationAtom)
-const result = useQuery(() => ({
-  queryKey: ['people', pagination()],
-  queryFn: () => fetchPeople(pagination()),
-  placeholderData: keepPreviousData,
-}))
+const result = useQuery(() => {
+  const page = pagination()
+  return {
+    queryKey: ['people', page],
+    queryFn: () => fetchPeople(page),
+    placeholderData: keepPreviousData,
+  }
+})
 const table = createTable({
   features,
   columns,
   get data() {
-    return result.data?.rows ?? emptyRows
+    return result.data.rows
   },
   get rowCount() {
-    return result.data?.rowCount
+    return result.data.rowCount
   },
   atoms: { pagination: paginationAtom },
   manualPagination: true,
@@ -41,10 +43,13 @@ const table = createTable({
 ### Track every server-owned slice
 
 ```tsx
-const result = useQuery(() => ({
-  queryKey: ['people', pagination(), sorting()],
-  queryFn: () => fetchPeople({ pagination: pagination(), sorting: sorting() }),
-}))
+const result = useQuery(() => {
+  const variables = { pagination: pagination(), sorting: sorting() }
+  return {
+    queryKey: ['people', variables],
+    queryFn: () => fetchPeople(variables),
+  }
+})
 ```
 
 ### Expose query results through getters
@@ -54,7 +59,7 @@ const table = createTable({
   features,
   columns,
   get data() {
-    return result.data?.rows ?? emptyRows
+    return result.data.rows
   },
 })
 ```
@@ -72,13 +77,13 @@ useQuery({ queryKey: ['people', pagination()], queryFn: fetchPeople })
 Correct:
 
 ```tsx
-useQuery(() => ({
-  queryKey: ['people', pagination()],
-  queryFn: () => fetchPeople(pagination()),
-}))
+useQuery(() => {
+  const page = pagination()
+  return { queryKey: ['people', page], queryFn: () => fetchPeople(page) }
+})
 ```
 
-Solid Query's options factory tracks signals read while constructing the key and request.
+Solid Query's options factory tracks signals read while constructing the key and request. Read them there, not inside `queryFn`, which runs untracked.
 
 Source: `examples/solid/with-tanstack-query`
 
@@ -93,7 +98,7 @@ useEffect(() => setRows(result.data?.rows ?? []), [result.data])
 Correct:
 
 ```tsx
-get data() { return result.data?.rows ?? emptyRows }
+get data() { return result.data.rows }
 ```
 
 Solid getters connect the query result directly without a second synchronization layer.
@@ -115,10 +120,10 @@ createTable({
   features,
   columns,
   get data() {
-    return result.data?.rows ?? emptyRows
+    return result.data.rows
   },
   get rowCount() {
-    return result.data?.rowCount
+    return result.data.rowCount
   },
   manualPagination: true,
 })

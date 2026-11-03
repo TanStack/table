@@ -1,14 +1,17 @@
 import { constructTable } from '@tanstack/table-core'
+import { table_syncExternalStateToBaseAtoms } from '@tanstack/table-core/static-functions'
 import {
-  createComputed,
+  $PROXY,
+  createMemo,
+  createRenderEffect,
   getOwner,
-  mergeProps,
+  merge,
   onCleanup,
   untrack,
 } from 'solid-js'
 import { FlexRender } from './FlexRender'
 import { solidReactivity } from './reactivity'
-import type { JSX } from 'solid-js'
+import type { Element } from 'solid-js'
 import type {
   RowData,
   Table,
@@ -27,8 +30,8 @@ export type SolidTable<
    * it does not create a subscription or tracking scope.
    */
   Subscribe: (props: {
-    children: (atoms: Table<TFeatures, TData>['atoms']) => JSX.Element
-  }) => JSX.Element
+    children: (atoms: Table<TFeatures, TData>['atoms']) => Element
+  }) => Element
   /**
    * Convenience FlexRender component attached to the table instance for
    * rendering headers, cells, or footers with custom markup. Mirrors the
@@ -68,49 +71,60 @@ export function createTable<
   const owner = getOwner()!
   const reactivity = solidReactivity(owner)
 
-  const mergedOptions = mergeProps(tableOptions, {
+  // A Solid store keeps its identity when it changes in place, like the data
+  // of a Solid Query query, but table-core memoizes row models by reference.
+  // So a store array is passed on as a fresh copy each time its items change.
+  const data = createMemo(() => {
+    const value = tableOptions.data as any
+    return value?.[$PROXY] ? [...value] : value
+  })
+
+  const mergedOptions = merge(tableOptions, {
+    get data() {
+      return data()
+    },
     features: {
       coreReactivityFeature: reactivity,
       ...tableOptions.features,
     },
   }) as any
 
-  const resolvedOptions = mergeProps(
+  const resolvedOptions = merge(
     {
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         options: TableOptions<TFeatures, TData>,
       ) => {
-        return mergeProps(defaultOptions, options)
+        return merge(defaultOptions, options)
       },
     },
     mergedOptions,
   ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(resolvedOptions) as unknown as SolidTable<
-    TFeatures,
-    TData
-  >
+  // Construction reads options and state once; the atoms and memos it creates
+  // do the tracking from then on.
+  const table = untrack(() =>
+    constructTable(resolvedOptions),
+  ) as unknown as SolidTable<TFeatures, TData>
 
-  createComputed(() => {
-    const userState = tableOptions.state
-    if (userState) {
-      for (const key in userState) {
-        void (userState as Record<string, unknown>)[key]
-      }
-    }
-
-    untrack(() => {
-      table.setOptions((prev) => {
-        return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
-      })
-    })
-  })
+  // Keep the table's base atoms in step with controlled `state`. The state
+  // atoms already read controlled values through the merged options proxy,
+  // so this doesn't rewrite the options, which would make every row model
+  // recompute a second time.
+  createRenderEffect(
+    // A fresh snapshot each run, so a change to any slice reaches the apply.
+    () => (tableOptions.state ? { ...tableOptions.state } : undefined),
+    (state) => {
+      untrack(() =>
+        table_syncExternalStateToBaseAtoms(table as never, state ?? null),
+      )
+    },
+  )
 
   onCleanup(() => reactivity.unmount?.())
 
   table.Subscribe = (props: {
-    children: (atoms: Table<TFeatures, TData>['atoms']) => JSX.Element
+    children: (atoms: Table<TFeatures, TData>['atoms']) => Element
   }) => {
     return props.children(table.atoms as Table<TFeatures, TData>['atoms'])
   }

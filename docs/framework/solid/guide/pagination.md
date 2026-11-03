@@ -117,30 +117,34 @@ const table = createTable({
 
 TanStack Query can own the request lifecycle while TanStack Table owns the controlled pagination state. See the complete [With TanStack Query example](../examples/with-tanstack-query), which includes both patterns below.
 
+These snippets use `@tanstack/solid-query` v6, the Solid 2 version. Query data is async in Solid 2, so render the table under a `<Loading>` boundary; reads wait there until the first page arrives, and `keepPreviousData` keeps the current page on screen while the next one loads. Read the query inputs in the options function, where they are tracked, rather than inside `queryFn`. Query data is a Solid store that updates in place, which the table handles.
+
 ##### Page-Index Pagination with `useQuery`
 
 Include the pagination state in the query key, return the requested rows plus a total `rowCount`, and pass both to the table:
 
 ```tsx
-const dataQuery = useQuery(() => ({
-  queryKey: ['people', 'offset', pagination(), sorting(), globalFilter()],
-  queryFn: () =>
-    fetchPeople({
-      pagination: pagination(),
-      sorting: sorting(),
-      globalFilter: globalFilter(),
-    }),
-  placeholderData: keepPreviousData,
-}))
+const dataQuery = useQuery(() => {
+  const variables = {
+    pagination: pagination(),
+    sorting: sorting(),
+    globalFilter: globalFilter(),
+  }
+  return {
+    queryKey: ['people', 'offset', variables],
+    queryFn: () => fetchPeople(variables),
+    placeholderData: keepPreviousData,
+  }
+})
 
 const table = createTable({
   features,
   columns,
   get data() {
-    return dataQuery.data?.rows ?? []
+    return dataQuery.data.rows
   },
   get rowCount() {
-    return dataQuery.data?.rowCount
+    return dataQuery.data.rowCount
   },
   state: {
     get pagination() {
@@ -159,35 +163,35 @@ This supports page counts, page-number navigation, and `lastPage()` because the 
 For a cursor API, return the current rows, a `nextCursor`, and `hasNextPage`. The cursor can be the last row ID when IDs are unique and the server's ordering is stable:
 
 ```tsx
-const dataQuery = useInfiniteQuery(() => ({
-  queryKey: [
-    'people',
-    'cursor',
-    pagination().pageSize,
-    sorting(),
-    globalFilter(),
-  ],
-  queryFn: ({ pageParam }) =>
-    fetchPeople({
-      cursor: pageParam,
-      pageSize: pagination().pageSize,
-      sorting: sorting(),
-      globalFilter: globalFilter(),
-    }),
-  initialPageParam: null,
-  getNextPageParam: (lastPage) => lastPage.nextCursor,
-}))
+const dataQuery = useInfiniteQuery(() => {
+  const variables = {
+    pageSize: pagination().pageSize,
+    sorting: sorting(),
+    globalFilter: globalFilter(),
+  }
+  return {
+    queryKey: ['people', 'cursor', variables],
+    queryFn: ({ pageParam }) =>
+      fetchPeople({ cursor: pageParam, ...variables }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  }
+})
 
-const currentPage = () => dataQuery.data?.pages[pagination().pageIndex]
+const pageAt = (index: number): PeoplePage | undefined =>
+  dataQuery.data.pages[index]
+const currentPage = () => pageAt(pagination().pageIndex)
 const canNextPage = () =>
-  Boolean(dataQuery.data?.pages[pagination().pageIndex + 1]) ||
+  Boolean(pageAt(pagination().pageIndex + 1)) ||
   Boolean(currentPage()?.hasNextPage)
+
+const emptyRows: Array<Person> = []
 
 const table = createTable({
   features,
   columns,
   get data() {
-    return currentPage()?.rows ?? []
+    return currentPage()?.rows ?? emptyRows
   },
   pageCount: -1,
   state: {
@@ -202,7 +206,7 @@ const table = createTable({
 async function goToNextPage() {
   const nextPageIndex = pagination().pageIndex + 1
 
-  if (!dataQuery.data?.pages[nextPageIndex]) {
+  if (!pageAt(nextPageIndex)) {
     const result = await dataQuery.fetchNextPage()
     if (!result.data?.pages[nextPageIndex]) return
   }

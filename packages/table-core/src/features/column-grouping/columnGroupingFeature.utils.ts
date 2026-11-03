@@ -126,10 +126,8 @@ export function column_getToggleGroupingHandler<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const canGroup = column_getCanGroup(column)
-
   return () => {
-    if (!canGroup) return
+    if (!column_getCanGroup(column)) return
     column_toggleGrouping(column)
   }
 }

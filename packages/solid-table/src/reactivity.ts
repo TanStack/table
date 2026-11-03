@@ -1,8 +1,8 @@
 import {
-  batch,
+  createEffect,
   createMemo,
+  createRoot,
   createSignal,
-  observable,
   runWithOwner,
   untrack,
 } from 'solid-js'
@@ -12,11 +12,39 @@ import type {
   ReadonlyAtom,
   Subscription,
 } from '@tanstack/store'
-import type { Accessor, Owner, Setter } from 'solid-js'
+import type { Accessor, Owner } from 'solid-js'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
+
+/**
+ * Subscribes an observer to a Solid accessor. The observer hears each change
+ * once it commits, not the value the accessor had when subscribing.
+ */
+function subscribeToSignal<T>(
+  signal: Accessor<T>,
+  owner: Owner,
+  observer: Observer<T> | ((value: T) => void),
+): Subscription {
+  const next = (value: T) =>
+    typeof observer === 'function' ? observer(value) : observer.next?.(value)
+  let dispose!: () => void
+  runWithOwner(owner, () =>
+    createRoot((d) => {
+      dispose = d
+      // Like a TanStack Store subscription, report changes only, starting
+      // from the value at subscribe time.
+      let last = untrack(signal)
+      createEffect(signal, (value) => {
+        if (value === last) return
+        last = value
+        next(value)
+      })
+    }),
+  )
+  return { unsubscribe: () => dispose() }
+}
 
 function signalToReadonlyAtom<T>(
   signal: Accessor<T>,
@@ -24,36 +52,20 @@ function signalToReadonlyAtom<T>(
 ): ReadonlyAtom<T> {
   return Object.assign(signal, {
     get: () => signal(),
-    subscribe: (observer: Observer<T>) => {
-      return runWithOwner(owner, () => observable(signal))!.subscribe(observer)
-    },
-  })
-}
-
-function signalToWritableAtom<T>(
-  signalTuple: [Accessor<T>, Setter<T>],
-  owner: Owner,
-): Atom<T> {
-  const [signal, setSignal] = signalTuple
-  return Object.assign(signal, {
-    set: (updater: T | ((prevVal: T) => T)) => {
-      typeof updater === 'function'
-        ? setSignal(updater as unknown as (prev: T) => T)
-        : setSignal(updater as Exclude<T, Function>)
-    },
-    get: () => signal(),
-    subscribe: (observer: Observer<T>) => {
-      return runWithOwner(owner, () => observable(signal))!.subscribe(observer)
-    },
+    subscribe: (observer: Observer<T> | ((value: T) => void)) =>
+      subscribeToSignal(signal, owner, observer),
   })
 }
 
 /**
  * Creates the table-core reactivity bindings used by the Solid adapter.
  *
- * Table state atoms are backed by TanStack Store atoms. The options store stays
- * framework-native because row-model APIs read `table.options` directly during
- * render. Readonly table atoms bridge Store dependency tracking into Solid memos.
+ * Table state atoms are Solid signals, and derived atoms are Solid memos, so
+ * table APIs read inside JSX, memos and effects track exactly what they use.
+ *
+ * Solid 2 applies writes when it flushes, so a read straight after a write in
+ * the same tick sees the committed value. Table-core writes through updater
+ * functions, which do see the pending value, so its own updates compose.
  */
 export function solidReactivity(owner: Owner): TableReactivityBindings {
   const subscriptions = new Set<Subscription>()
@@ -80,13 +92,28 @@ export function solidReactivity(owner: Owner): TableReactivityBindings {
       value: T,
       options?: TableAtomOptions<T>,
     ): Atom<T> => {
-      const writableSignal = createSignal(value, {
-        equals: options?.compare,
-        name: options?.debugName,
+      // Solid reads a function passed to `createSignal` as a compute
+      // function, so a function value is wrapped to stay a plain value.
+      const [signal, setSignal] = createSignal<T>(
+        (typeof value === 'function' ? () => value : value) as never,
+        {
+          equals: options?.compare,
+          name: options?.debugName,
+          // Table-core writes state from inside computations: syncing
+          // controlled state and options, and syncing external atoms.
+          ownedWrite: true,
+        },
+      )
+      return Object.assign(signalToReadonlyAtom(signal, owner), {
+        set: (updater: T | ((prevVal: T) => T)) => {
+          setSignal(
+            (typeof updater === 'function' ? updater : () => updater) as never,
+          )
+        },
       })
-      return signalToWritableAtom(writableSignal, owner)
     },
-    untrack: untrack,
-    batch: batch,
+    untrack,
+    // Solid 2 batches every write until the next flush.
+    batch: (fn) => fn(),
   }
 }

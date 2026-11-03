@@ -9,7 +9,7 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "fixed": [],
-  "linked": [["@tanstack/*"]],
+  "linked": [["@tanstack/*", "!@tanstack/solid-table"]],
   "ignore": [],
   "privatePackages": { "version": false, "tag": false },
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
