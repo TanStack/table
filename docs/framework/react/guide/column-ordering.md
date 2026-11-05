@@ -128,11 +128,11 @@ const table = useTable({
 
 ### Reordering Columns
 
-If the table has UI that allows the user to reorder columns, hook the drop event of your drag-and-drop solution up to `table.setColumnOrder`. The official [Column DnD example](../examples/column-dnd) does this with DnD Kit's `arrayMove` utility:
+If the table has UI that allows the user to reorder columns, hook the drop event of your drag-and-drop solution up to `table.setColumnOrder`. The official [Column DnD example](../examples/column-dnd) does this with DnD Kit's `move` utility:
 
 ```tsx
-import { arrayMove } from '@dnd-kit/sortable'
-import type { DragEndEvent } from '@dnd-kit/core'
+import { move } from '@dnd-kit/helpers'
+import type { DragEndEvent } from '@dnd-kit/react'
 
 // reorder columns after drag & drop
 function handleDragEnd(event: DragEndEvent) {
@@ -141,7 +141,7 @@ function handleDragEnd(event: DragEndEvent) {
     table.setColumnOrder((prevColumnOrder) => {
       const oldIndex = prevColumnOrder.indexOf(active.id as string)
       const newIndex = prevColumnOrder.indexOf(over.id as string)
-      return arrayMove(prevColumnOrder, oldIndex, newIndex) // splice util
+      return move(prevColumnOrder, oldIndex, newIndex) // splice util
     })
   }
 }
@@ -177,7 +177,7 @@ These helpers are useful for styling column boundaries or building drag-and-drop
 
 TanStack Table is not opinionated about which drag-and-drop solution you use. Here are a few suggestions:
 
-1. Use [DnD Kit](https://dndkit.com/) if you want a library. It is what the official [Column DnD](../examples/column-dnd) and [Row DnD](../examples/row-dnd) examples use (the `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/modifiers`, and `@dnd-kit/utilities` packages). It is modular, works with React Strict Mode, and plays well with semantic `<table>` markup.
+1. Use [DnD Kit](https://dndkit.com/) if you want a library. It is what the official [Column DnD](../examples/column-dnd) and [Row DnD](../examples/row-dnd) examples use (the `@dnd-kit/react` and `@dnd-kit/helpers` packages). It is modular, works with React Strict Mode, and plays well with semantic `<table>` markup.
 
 2. Consider native browser drag events (`onDragStart`, `onDragEnter`, `onDragEnd`) with your own state if you want zero dependencies. This can be very lightweight, but you will need to do extra work for proper touch support on mobile. [Material React Table](https://www.material-react-table.com/docs/examples/column-ordering) implements TanStack Table column ordering this way with no DnD dependencies, and its source code is a good reference.
 
