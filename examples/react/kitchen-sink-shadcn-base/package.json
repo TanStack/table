@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@dnd-kit/abstract": "^0.5.3",
+    "@dnd-kit/collision": "^0.5.3",
     "@dnd-kit/helpers": "^0.5.3",
     "@dnd-kit/react": "^0.5.3",
     "@faker-js/faker": "^10.6.0",
