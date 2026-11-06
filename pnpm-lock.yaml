@@ -11366,6 +11366,9 @@ importers:
 
   examples/react/row-dnd:
     dependencies:
+      '@dnd-kit/abstract':
+        specifier: ^0.5.3
+        version: 0.5.3
       '@dnd-kit/helpers':
         specifier: ^0.5.3
         version: 0.5.3
