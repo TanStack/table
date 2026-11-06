@@ -131,20 +131,18 @@ const table = useTable({
 If the table has UI that allows the user to reorder columns, hook the drop event of your drag-and-drop solution up to `table.setColumnOrder`. The official [Column DnD example](../examples/column-dnd) does this with DnD Kit's `move` utility:
 
 ```tsx
+import { DragDropProvider } from '@dnd-kit/react'
 import { move } from '@dnd-kit/helpers'
-import type { DragEndEvent } from '@dnd-kit/react'
 
 // reorder columns after drag & drop
-function handleDragEnd(event: DragEndEvent) {
-  const { active, over } = event
-  if (over && active.id !== over.id) {
-    table.setColumnOrder((prevColumnOrder) => {
-      const oldIndex = prevColumnOrder.indexOf(active.id as string)
-      const newIndex = prevColumnOrder.indexOf(over.id as string)
-      return move(prevColumnOrder, oldIndex, newIndex) // splice util
-    })
-  }
-}
+<DragDropProvider
+  onDragEnd={(event) => {
+    if (event.canceled) return // dropped with Escape, so do nothing
+    table.setColumnOrder((prevColumnOrder) => move(prevColumnOrder, event))
+  }}
+>
+  {/* your table */}
+</DragDropProvider>
 ```
 
 `table.setColumnOrder` works the same whether the table manages the `columnOrder` state internally, you control it with `state` + `onColumnOrderChange`, or you own it with an external atom.
