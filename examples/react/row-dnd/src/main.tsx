@@ -6,8 +6,7 @@ import {
   createTableHook,
 } from '@tanstack/react-table'
 import { DragDropProvider } from '@dnd-kit/react'
-import { useSortable } from '@dnd-kit/react/sortable'
-import { move } from '@dnd-kit/helpers'
+import { isSortable, useSortable } from '@dnd-kit/react/sortable'
 import { RestrictToVerticalAxis } from '@dnd-kit/abstract/modifiers'
 import { makeData } from './makeData'
 import type { CSSProperties } from 'react'
@@ -129,8 +128,18 @@ function App() {
       modifiers={[RestrictToVerticalAxis]}
       onDragEnd={(event) => {
         if (event.canceled) return // dropped with Escape, so do nothing
+        const { source } = event.operation
+        if (!isSortable(source)) return
+
         // reorder rows after drag & drop
-        setData((prevData) => move(prevData, event))
+        const { initialIndex, index } = source.sortable
+        if (initialIndex === index) return
+        setData((prevData) => {
+          const next = [...prevData]
+          const [moved] = next.splice(initialIndex, 1)
+          next.splice(index, 0, moved as Person)
+          return next
+        })
       }}
     >
       <div className="demo-root">
