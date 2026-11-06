@@ -240,7 +240,18 @@ export function header_getResizeHandler<
       _contextDocument || (typeof document !== 'undefined' ? document : null)
 
     const mouseEvents = {
-      moveHandler: (e: MouseEvent) => onMove(e.clientX),
+      moveHandler: (e: MouseEvent) => {
+        // A resize can lose its `mouseup`: switching tabs, taking a screenshot,
+        // or any other focus steal stops the release from reaching the page,
+        // and the listeners stay on the document with the drag still active.
+        // The next move is the only place left to notice — no button is down,
+        // so the gesture it belongs to is over.
+        if (e.buttons === 0) {
+          mouseEvents.upHandler(e)
+          return
+        }
+        onMove(e.clientX)
+      },
       upHandler: (e: MouseEvent) => {
         contextDocument?.removeEventListener(
           'mousemove',
