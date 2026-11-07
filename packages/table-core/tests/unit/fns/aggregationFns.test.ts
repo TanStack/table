@@ -99,6 +99,43 @@ describe('aggregation function definitions', () => {
     ).toBeUndefined()
   })
 
+  it('does not overflow median for large finite values and preserves subnormals', () => {
+    // Large finite values whose intermediate sum overflows to Infinity
+    expect(
+      aggregationFn_median.aggregate(
+        context([Number.MAX_VALUE, Number.MAX_VALUE]),
+      ),
+    ).toBe(Number.MAX_VALUE)
+    expect(
+      aggregationFn_median.aggregate(
+        context([-Number.MAX_VALUE, -Number.MAX_VALUE]),
+      ),
+    ).toBe(-Number.MAX_VALUE)
+    expect(
+      aggregationFn_median.aggregate(context([1e308, 1.5e308])),
+    ).toBe(1.25e308)
+
+    // Subnormal / tiny values are preserved without underflow to 0
+    expect(
+      aggregationFn_median.aggregate(
+        context([Number.MIN_VALUE, Number.MIN_VALUE]),
+      ),
+    ).toBe(Number.MIN_VALUE)
+
+    // Infinity, NaN, and control checks
+    expect(
+      aggregationFn_median.aggregate(context([Infinity, Infinity])),
+    ).toBe(Infinity)
+    expect(
+      aggregationFn_median.aggregate(context([-Infinity, -Infinity])),
+    ).toBe(-Infinity)
+    expect(
+      Number.isNaN(
+        aggregationFn_median.aggregate(context([-Infinity, Infinity]))!,
+      ),
+    ).toBe(true)
+  })
+
   it('uses Set semantics for unique values', () => {
     expect(
       aggregationFn_unique.aggregate(context(['a', null, undefined, 'a'])),
