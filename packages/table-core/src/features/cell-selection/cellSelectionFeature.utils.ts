@@ -898,7 +898,7 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   let fromColumnIndex = columnIndex
 
   if (merges.length) {
-    const startMerge = findMergeBoundsAt(merges, rowIndex, columnIndex)
+    const startMerge = findMergeBoundsAt(merges, fromRowIndex, columnIndex)
     if (startMerge) {
       if (rowDelta > 0) fromRowIndex = startMerge.maxRowIndex
       if (rowDelta < 0) fromRowIndex = startMerge.minRowIndex
