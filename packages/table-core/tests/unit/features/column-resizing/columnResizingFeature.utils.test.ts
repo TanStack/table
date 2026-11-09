@@ -717,6 +717,46 @@ describe('header_getResizeHandler', () => {
     )
     expect(sizingUpdates).toHaveLength(updatesAfterEnd)
   })
+
+  it('should commit the last held-button position when the release was missed', () => {
+    // The move that reveals the missed release is a move of its own: the pointer
+    // travelled on after the button came up, and its position says nothing about
+    // where the drag actually ended. The size has to come from the last move made
+    // while the button was still down, the same position a real `mouseup` would
+    // have reported.
+    const table = makeTable(1, {
+      columnResizeMode: 'onChange',
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing.get())
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    // the drag itself ends here, at 150
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 150, buttons: 1 }),
+    )
+    const sizeAtRelease = sizingUpdates[sizingUpdates.length - 1]!['firstName']
+
+    // the button came up unobserved, and the pointer wandered to 400 before the
+    // next move reported it
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 400, buttons: 0 }),
+    )
+
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+    expect(sizingUpdates[sizingUpdates.length - 1]!['firstName']).toBe(
+      sizeAtRelease,
+    )
+  })
 })
 
 describe('passiveEventSupported', () => {

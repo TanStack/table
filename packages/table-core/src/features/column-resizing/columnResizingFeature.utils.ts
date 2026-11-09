@@ -246,11 +246,24 @@ export function header_getResizeHandler<
         // and the listeners stay on the document with the drag still active.
         // The next move is the only place left to notice — no button is down,
         // so the gesture it belongs to is over.
+        //
+        // That move carries a position of its own, but it is not where the drag
+        // ended: the pointer travelled on after the button came up. Ending at it
+        // would size the column by how far the pointer drifted, so end at the
+        // last position observed while the button was still held.
         if (e.buttons === 0) {
-          mouseEvents.upHandler(e)
+          mouseEvents.endAtLastHeldPosition()
           return
         }
         onMove(e.clientX)
+      },
+      endAtLastHeldPosition: () => {
+        contextDocument?.removeEventListener(
+          'mousemove',
+          mouseEvents.moveHandler,
+        )
+        contextDocument?.removeEventListener('mouseup', mouseEvents.upHandler)
+        onEnd()
       },
       upHandler: (e: MouseEvent) => {
         contextDocument?.removeEventListener(
