@@ -82,7 +82,7 @@ to add skill-loading guidance for your agent (Claude Code, Cursor, Copilot, etc.
 - We welcome issues and pull requests!
 - Participate in [GitHub discussions](https://github.com/TanStack/table/discussions)
 - Chat with the community on [Discord](https://discord.com/invite/WrRKjPJ)
-- See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions
+- See [CONTRIBUTING.md](https://github.com/TanStack/table/blob/main/CONTRIBUTING.md) for setup instructions
 
 ## Partners
 
