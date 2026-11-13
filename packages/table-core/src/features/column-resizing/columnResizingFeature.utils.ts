@@ -121,6 +121,14 @@ export function header_getResizeHandler<
       ? Math.round(event.touches[0]!.clientX)
       : (event as MouseEvent).clientX
 
+    // `buttons` is a bitmask, so a nonzero value does not mean this drag is
+    // still alive: the button that started it can be released while another one
+    // stays down. Remember which bit the gesture began with and require that
+    // same bit on every move.
+    const startButtonMask = isTouchStartEvent(event)
+      ? 0
+      : 1 << (event as MouseEvent).button
+
     const newColumnSizing: ColumnSizingState = makeObjectMap()
 
     const updateOffset = (eventType: 'move' | 'end', clientXPos?: number) => {
@@ -244,14 +252,14 @@ export function header_getResizeHandler<
         // A resize can lose its `mouseup`: switching tabs, taking a screenshot,
         // or any other focus steal stops the release from reaching the page,
         // and the listeners stay on the document with the drag still active.
-        // The next move is the only place left to notice — no button is down,
-        // so the gesture it belongs to is over.
+        // The next move is the only place left to notice — the button that
+        // started the gesture is no longer held, so the gesture is over.
         //
         // That move carries a position of its own, but it is not where the drag
         // ended: the pointer travelled on after the button came up. Ending at it
         // would size the column by how far the pointer drifted, so end at the
         // last position observed while the button was still held.
-        if (e.buttons === 0) {
+        if ((e.buttons & startButtonMask) === 0) {
           mouseEvents.endAtLastHeldPosition()
           return
         }

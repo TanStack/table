@@ -757,6 +757,45 @@ describe('header_getResizeHandler', () => {
       sizeAtRelease,
     )
   })
+
+  it('should end the resize when the released button is not the one that started it', () => {
+    // `buttons` is a bitmask: 0 means nothing is held, but a nonzero value does
+    // not mean the drag is still alive. If the left button was released
+    // unobserved and the same move reports the right button instead, the mask is
+    // 2 while the gesture that started the resize is long over.
+    const table = makeTable(1, {
+      columnResizeMode: 'onChange',
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing.get())
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100, button: 0 })
+
+    // the drag itself ends here, at 150
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 150, buttons: 1 }),
+    )
+    const sizeAtRelease = sizingUpdates[sizingUpdates.length - 1]!['firstName']
+
+    // the left button came up unobserved; the pointer keeps moving with only the
+    // right button held
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 400, buttons: 2 }),
+    )
+
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+    expect(sizingUpdates[sizingUpdates.length - 1]!['firstName']).toBe(
+      sizeAtRelease,
+    )
+  })
 })
 
 describe('passiveEventSupported', () => {
