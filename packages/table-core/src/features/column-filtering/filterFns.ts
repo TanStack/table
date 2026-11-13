@@ -517,7 +517,7 @@ function compareBetween(
   inclusive: boolean,
 ): boolean {
   const min = filterValues[0]
-  const hasMin = min !== '' && min !== undefined
+  const hasMin = min !== '' && min !== undefined && min !== null
   if (hasMin) {
     const passesMin = inclusive
       ? compareGreaterThanOrEqualTo(dataValue, min)
@@ -528,7 +528,7 @@ function compareBetween(
   }
 
   const max = filterValues[1]
-  if (max === '' || max === undefined) {
+  if (max === '' || max === undefined || max === null) {
     return true
   }
 
