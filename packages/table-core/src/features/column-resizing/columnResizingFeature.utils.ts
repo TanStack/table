@@ -13,6 +13,20 @@ import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.typ
 import type { columnResizingState } from './columnResizingFeature.types'
 
 /**
+ * The `buttons` bit of each `button` value. The two properties do not share an
+ * order: the primary button is bit 0 in both, but the middle button is
+ * `button: 1` with `buttons: 4` and the secondary one `button: 2` with
+ * `buttons: 2`, so shifting the button value maps those two the wrong way.
+ */
+const BUTTON_MASK: Readonly<Record<number, number>> = {
+  0: 1, // primary
+  1: 4, // auxiliary (middle)
+  2: 2, // secondary (right)
+  3: 8, // fourth (back)
+  4: 16, // fifth (forward)
+}
+
+/**
  * Creates the default transient column resizing state.
  *
  * The feature default represents no active drag interaction. Reset APIs use
@@ -124,10 +138,11 @@ export function header_getResizeHandler<
     // `buttons` is a bitmask, so a nonzero value does not mean this drag is
     // still alive: the button that started it can be released while another one
     // stays down. Remember which bit the gesture began with and require that
-    // same bit on every move.
+    // same bit on every move. A `mousedown` without a button value is the
+    // primary one.
     const startButtonMask = isTouchStartEvent(event)
       ? 0
-      : 1 << (event as MouseEvent).button
+      : (BUTTON_MASK[(event as MouseEvent).button] ?? BUTTON_MASK[0]!)
 
     const newColumnSizing: ColumnSizingState = makeObjectMap()
 

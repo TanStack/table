@@ -796,6 +796,50 @@ describe('header_getResizeHandler', () => {
       sizeAtRelease,
     )
   })
+
+  it.each([
+    ['middle', 1, 4],
+    ['right', 2, 2],
+  ])(
+    'should keep resizing while a %s-button drag holds its own button',
+    (_name, button, mask) => {
+      // `button` and `buttons` order the non-primary buttons differently: the
+      // middle button is `button: 1` but `buttons: 4`, the right one `button: 2`
+      // and `buttons: 2`. A mask derived by shifting the button value would end
+      // a middle-button drag on its first move and a right-button drag on one
+      // that still holds it.
+      const table = makeTable(1, {
+        columnResizeMode: 'onChange',
+      })
+      const sizingUpdates: Array<Record<string, number>> = []
+      table.options.onColumnSizingChange = (updater) => {
+        sizingUpdates.push(
+          typeof updater === 'function'
+            ? updater(table.atoms.columnSizing.get())
+            : updater,
+        )
+      }
+
+      const header = createTestResizeHeader(table)
+      const handler = header_getResizeHandler(header as any, document)
+      handler({ type: 'mousedown', clientX: 100, button })
+
+      document.dispatchEvent(
+        new MouseEvent('mousemove', { clientX: 400, buttons: mask }),
+      )
+      expect(table.atoms.columnResizing.get().isResizingColumn).toBe(
+        'firstName',
+      )
+      // the drag is still tracking the pointer, not merely still flagged as active
+      expect(table.atoms.columnResizing.get().deltaOffset).toBe(300)
+
+      // the initiating button comes up; nothing of the gesture is left
+      document.dispatchEvent(
+        new MouseEvent('mousemove', { clientX: 600, buttons: 0 }),
+      )
+      expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+    },
+  )
 })
 
 describe('passiveEventSupported', () => {
