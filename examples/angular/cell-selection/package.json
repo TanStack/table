@@ -23,8 +23,8 @@
     "@faker-js/faker": "^10.6.0",
     "@tanstack/angular-devtools": "^0.0.13",
     "@tanstack/angular-hotkeys": "^0.24.0",
-    "@tanstack/angular-table": "^9.3.1",
-    "@tanstack/angular-table-devtools": "^9.3.1",
+    "@tanstack/angular-table": "^9.3.2",
+    "@tanstack/angular-table-devtools": "^9.3.2",
     "rxjs": "~7.8.2",
     "tslib": "^2.9.1"
   },

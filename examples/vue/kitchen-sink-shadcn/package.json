@@ -20,7 +20,7 @@
     "@tanstack/pacer": "^0.23.1",
     "@tanstack/vue-devtools": "^0.2.28",
     "@tanstack/vue-table": "^9.3.1",
-    "@tanstack/vue-table-devtools": "^9.3.1",
+    "@tanstack/vue-table-devtools": "^9.3.2",
     "@vueuse/core": "^15.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

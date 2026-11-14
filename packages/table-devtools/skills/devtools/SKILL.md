@@ -5,7 +5,7 @@ description: >
 metadata:
   type: core
   library: '@tanstack/table-devtools'
-  library_version: '9.3.1'
+  library_version: '9.3.2'
 requires:
   - '@tanstack/table-core#core'
 sources:

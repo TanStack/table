@@ -1,5 +1,13 @@
 # @tanstack/vue-table-devtools
 
+## 9.3.2
+
+### Patch Changes
+
+- [#6662](https://github.com/TanStack/table/pull/6662) [`38ade3a`](https://github.com/TanStack/table/commit/38ade3a375c782ff3bd264b77b718a31ea9859e9) - Raise minimum versions of runtime dependencies: `@tanstack/devtools-utils` ^0.7.2, `@tanstack/devtools-ui` ^0.7.2, `@tanstack/svelte-store` ^0.12.3, `@embroider/addon-shim` ^1.11.0, `solid-js` ^1.9.19, and `tslib` ^2.9.1
+- Updated dependencies [[`38ade3a`](https://github.com/TanStack/table/commit/38ade3a375c782ff3bd264b77b718a31ea9859e9)]:
+  - @tanstack/table-devtools@9.3.2
+
 ## 9.3.1
 
 ### Patch Changes

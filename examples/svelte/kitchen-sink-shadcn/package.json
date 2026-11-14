@@ -24,7 +24,7 @@
     "@tailwindcss/vite": "^4.3.5",
     "@tanstack/match-sorter-utils": "^9.2.6",
     "@tanstack/pacer": "^0.23.1",
-    "@tanstack/svelte-table": "^9.3.1",
+    "@tanstack/svelte-table": "^9.3.2",
     "@tsconfig/svelte": "^5.0.9",
     "@types/node": "^26.6.6",
     "bits-ui": "^2.21.0",
