@@ -13,20 +13,20 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@tanstack/preact-devtools": "^0.10.13",
+    "@tanstack/preact-devtools": "^0.10.15",
     "@tanstack/preact-form": "1.30.5",
-    "@tanstack/preact-pacer": "^0.24.0",
-    "@tanstack/preact-pacer-devtools": "0.8.0",
+    "@tanstack/preact-pacer": "^0.24.2",
+    "@tanstack/preact-pacer-devtools": "0.8.1",
     "@tanstack/preact-table": "^9.3.1",
     "@tanstack/preact-table-devtools": "^9.3.1",
     "@tanstack/react-form-devtools": "^0.2.34",
-    "preact": "^11.0.1",
-    "zod": "^4.6.5"
+    "preact": "^11.2.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
-    "@rolldown/binding-wasm32-wasi": "~1.2.12",
+    "@rolldown/binding-wasm32-wasi": "~1.3.2",
     "typescript": "6.0.3",
-    "vite": "^8.3.2"
+    "vite": "^8.3.8"
   }
 }

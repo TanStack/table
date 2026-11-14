@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { bench, describe } from 'vitest'
+import { test } from 'vitest'
 import {
   FlexRender,
   flexRenderComponent,
@@ -42,28 +42,20 @@ class PrimitiveTable {
 })
 class RenderedComponent {}
 
-describe('flexRender hot paths', () => {
+test('flexRender hot paths', async ({ bench }) => {
   const fixture = TestBed.createComponent(PrimitiveTable)
   fixture.detectChanges()
 
-  bench(
-    'unrelated change detection for 500 primitive cells',
-    () => {
-      fixture.componentInstance.tick.update((value) => value + 1)
-      fixture.detectChanges()
-    },
-    benchmarkOptions,
-  )
+  await bench('unrelated change detection for 500 primitive cells', () => {
+    fixture.componentInstance.tick.update((value) => value + 1)
+    fixture.detectChanges()
+  }).run(benchmarkOptions)
 
-  bench(
-    'create 500 component render descriptors',
-    () => {
-      for (let index = 0; index < 500; index++) {
-        flexRenderComponent(RenderedComponent)
-      }
-    },
-    benchmarkOptions,
-  )
+  await bench('create 500 component render descriptors', () => {
+    for (let index = 0; index < 500; index++) {
+      flexRenderComponent(RenderedComponent)
+    }
+  }).run(benchmarkOptions)
 })
 
 interface BenchmarkRow {
@@ -189,7 +181,7 @@ class LargeMixedTable {
   }))
 }
 
-describe('flexRender large mixed table', () => {
+test('flexRender large mixed table', async ({ bench }) => {
   const fixture = TestBed.createComponent(LargeMixedTable)
   fixture.detectChanges()
 
@@ -199,41 +191,25 @@ describe('flexRender large mixed table', () => {
     throw new Error(`Expected 1,200 cells, rendered ${renderedCellCount}`)
   }
 
-  bench(
-    'unrelated host change with 1,200 mounted cells',
-    () => {
-      instance.hostTick.update((value) => value + 1)
-      fixture.detectChanges()
-    },
-    benchmarkOptions,
-  )
+  await bench('unrelated host change with 1,200 mounted cells', () => {
+    instance.hostTick.update((value) => value + 1)
+    fixture.detectChanges()
+  }).run(benchmarkOptions)
 
-  bench(
-    'update 400 primitives and 400 stable component inputs',
-    () => {
-      instance.valueVersion.update((value) => value + 1)
-      fixture.detectChanges()
-    },
-    benchmarkOptions,
-  )
+  await bench('update 400 primitives and 400 stable component inputs', () => {
+    instance.valueVersion.update((value) => value + 1)
+    fixture.detectChanges()
+  }).run(benchmarkOptions)
 
-  bench(
-    'replace 200 component A/B cell views',
-    () => {
-      instance.componentKind.update((value) => (value === 'a' ? 'b' : 'a'))
-      fixture.detectChanges()
-    },
-    benchmarkOptions,
-  )
+  await bench('replace 200 component A/B cell views', () => {
+    instance.componentKind.update((value) => (value === 'a' ? 'b' : 'a'))
+    fixture.detectChanges()
+  }).run(benchmarkOptions)
 
-  bench(
-    'switch 200 cells between primitive and component views',
-    () => {
-      instance.contentKind.update((value) =>
-        value === 'primitive' ? 'component' : 'primitive',
-      )
-      fixture.detectChanges()
-    },
-    benchmarkOptions,
-  )
+  await bench('switch 200 cells between primitive and component views', () => {
+    instance.contentKind.update((value) =>
+      value === 'primitive' ? 'component' : 'primitive',
+    )
+    fixture.detectChanges()
+  }).run(benchmarkOptions)
 })
