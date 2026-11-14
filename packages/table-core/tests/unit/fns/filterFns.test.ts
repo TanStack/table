@@ -531,8 +531,10 @@ describe('Filter Functions', () => {
 
         expect(between(row, 'age', [undefined, 31])).toBe(true)
         expect(between(row, 'age', ['', 31])).toBe(true)
+        expect(between(row, 'age', [null, 31])).toBe(true)
         expect(between(row, 'age', [29, undefined])).toBe(true)
         expect(between(row, 'age', [29, ''])).toBe(true)
+        expect(between(row, 'age', [29, null])).toBe(true)
       })
 
       it('enforces a negative max when the min endpoint is blank', () => {
@@ -567,8 +569,10 @@ describe('Filter Functions', () => {
 
         expect(betweenInclusive(row, 'age', [undefined, 30])).toBe(true)
         expect(betweenInclusive(row, 'age', ['', 30])).toBe(true)
+        expect(betweenInclusive(row, 'age', [null, 30])).toBe(true)
         expect(betweenInclusive(row, 'age', [30, undefined])).toBe(true)
         expect(betweenInclusive(row, 'age', [30, ''])).toBe(true)
+        expect(betweenInclusive(row, 'age', [30, null])).toBe(true)
       })
 
       it('enforces a negative max when the min endpoint is blank', () => {

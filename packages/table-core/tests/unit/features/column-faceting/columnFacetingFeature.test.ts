@@ -23,6 +23,7 @@ import type { ColumnDef } from '../../../../src'
 type Person = {
   firstName: string
   status: string | undefined
+  tags?: Array<string>
 }
 
 const features = testFeatures({
@@ -45,12 +46,16 @@ const columns: Array<ColumnDef<typeof features, Person, any>> = [
     filterFn: 'equalsString',
     id: 'status',
   },
+  {
+    accessorKey: 'tags',
+    id: 'tags',
+  },
 ]
 
 const data: Array<Person> = [
-  { firstName: 'Alice', status: 'active' },
-  { firstName: 'Bob', status: undefined },
-  { firstName: 'Carol', status: 'active' },
+  { firstName: 'Alice', status: 'active', tags: ['a', 'b'] },
+  { firstName: 'Bob', status: undefined, tags: ['a', 'b'] },
+  { firstName: 'Carol', status: 'active', tags: ['c'] },
 ]
 
 function makeTable(columnFilters: Array<{ id: string; value: unknown }>) {
@@ -81,8 +86,8 @@ describe('column faceting row model', () => {
     expect(
       firstNameColumn.getFacetedRowModel().rows.map((row) => row.original),
     ).toEqual([
-      { firstName: 'Alice', status: 'active' },
-      { firstName: 'Carol', status: 'active' },
+      { firstName: 'Alice', status: 'active', tags: ['a', 'b'] },
+      { firstName: 'Carol', status: 'active', tags: ['c'] },
     ])
   })
 
@@ -94,6 +99,20 @@ describe('column faceting row model', () => {
       new Map<any, number>([
         ['active', 2],
         [undefined, 1],
+      ]),
+    )
+  })
+
+  it('counts array cell values by content rather than reference', () => {
+    const table = makeTable([])
+    const tagsColumn = table.getColumn('tags')!
+
+    // ['a','b'] appears in two rows with different array references —
+    // without JSON.stringify as the map key both would get count 1
+    expect(tagsColumn.getFacetedUniqueValues()).toEqual(
+      new Map<any, number>([
+        [JSON.stringify(['a', 'b']), 2],
+        [JSON.stringify(['c']), 1],
       ]),
     )
   })
