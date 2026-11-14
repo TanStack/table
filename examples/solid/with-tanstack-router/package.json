@@ -29,7 +29,7 @@
     "@tanstack/solid-router": "^1.170.43",
     "@tanstack/solid-router-devtools": "^1.167.3",
     "@tanstack/solid-table": "^9.3.1",
-    "@tanstack/solid-table-devtools": "^9.3.1",
+    "@tanstack/solid-table-devtools": "^9.3.2",
     "solid-js": "^1.9.19"
   }
 }

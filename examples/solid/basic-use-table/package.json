@@ -21,7 +21,7 @@
   "dependencies": {
     "@tanstack/solid-devtools": "^0.8.14",
     "@tanstack/solid-table": "^9.3.1",
-    "@tanstack/solid-table-devtools": "^9.3.1",
+    "@tanstack/solid-table-devtools": "^9.3.2",
     "solid-js": "^1.9.19"
   }
 }
