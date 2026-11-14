@@ -15,12 +15,23 @@ Leave these pins alone during routine dependency bumps. They are either
 intentionally deferred or need a manual version choice that `ncu` gets wrong.
 
 - **TypeScript** — keep `6.0.3`. Do not bump it as part of a general upgrade.
-- **Octane** — `ncu` reports `octane` `1.0.3`, an unrelated 2015 release that
-  outranks the real 0.x line by semver. Do not take it. Check
-  `npm view octane dist-tags` and use the newest 0.x release that meets
-  `minimumReleaseAge` (currently `0.17.0`). Octane peers on an exact
-  `@tsrx/oxc` version (`0.23.0` for 0.17.x), so keep `@tsrx/oxc` on that exact
-  version even when `ncu` offers a newer one.
+- **Highest semver is not the real latest.** `ncu` can pick a version that
+  outranks the package's `latest` dist-tag. Check `npm view <name> dist-tags`
+  and take the newest release on the `latest` line that meets
+  `minimumReleaseAge`:
+  - `octane`: `1.0.3` is an unrelated 2015 release. Use the 0.x line. Octane
+    peers on an exact `@tsrx/oxc` version, so set `@tsrx/oxc` to that exact
+    version even when `ncu` offers a newer one.
+  - `@tanstack/react-pacer-devtools` and `@tanstack/solid-pacer-devtools`:
+    `0.14.0` is an old release that lacks the `pacerDevtoolsPlugin` export the
+    Form and Router examples use.
+  - `@tanstack/preact-form`: `1.33.x` sits above `latest` and removes
+    `createFormHookContexts` and `withForm`, which the Preact Form example uses.
+- **Babel 8 peer warnings** — `@rollup/plugin-babel` and some transitive Babel 7
+  plugins still declare `@babel/core@^7` peers. The Ember toolchain
+  (`@nullvoxpopuli/ember-vite`) supports Babel 8, and Ember builds and tests
+  pass on it, so these `pnpm peers check` warnings are expected. Do not pin
+  Babel back to 7 because of them.
 - **`@tanstack/intent`** — keep `0.4.0`. The 0.5 checker compiles TS and JS
   fences without framework TypeScript configuration or surrounding context. It
   rejects valid Preact and Lit examples, class-member excerpts, and deliberately
