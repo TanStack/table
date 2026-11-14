@@ -74,7 +74,11 @@ export function constructColumn<
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i]!
           result = result?.[key]
-          if (process.env.NODE_ENV === 'development' && result === undefined) {
+          if (
+            typeof process !== 'undefined' &&
+            process.env.NODE_ENV === 'development' &&
+            result === undefined
+          ) {
             console.warn(
               `"${key}" in deeply nested key "${accessorKey}" returned undefined.`,
             )
@@ -90,7 +94,10 @@ export function constructColumn<
   }
 
   if (!id) {
-    if (process.env.NODE_ENV === 'development') {
+    if (
+      typeof process !== 'undefined' &&
+      process.env.NODE_ENV === 'development'
+    ) {
       throw new Error(
         resolvedColumnDef.accessorFn
           ? `coreColumnsFeature require an id when using an accessorFn`
