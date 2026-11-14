@@ -2,6 +2,9 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignoreWorkspaces": ["examples/**"],
   "ignore": ["**/*benchmark*", "**/benchmarks/**", "tests/e2e/**"],
+  "ignoreIssues": {
+    "packages/ember-table/package.json": ["subpaths"]
+  },
   "workspaces": {
     "packages/table-core": {
       "ignore": ["**/tests/**"]

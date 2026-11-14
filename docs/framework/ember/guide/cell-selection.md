@@ -254,19 +254,23 @@ Cell selection ships no keyboard handling of its own. Instead it exposes imperat
 `direction` is `'up'`, `'down'`, `'left'`, or `'right'`.
 
 ```ts
-import { createMultiHotkeyHandler } from '@tanstack/hotkeys'
+import { onHotkeys } from '@tanstack/ember-hotkeys'
+import type { EmberHotkeyDefinition } from '@tanstack/ember-hotkeys'
 
-// Ember has no hotkeys adapter, so the framework-agnostic core handler is used
-onGridKeyDown = createMultiHotkeyHandler({
-  ArrowUp: () => this.table.moveCellSelection('up'),
-  ArrowDown: () => this.table.moveCellSelection('down'),
-  'Shift+ArrowDown': () => this.table.extendCellSelection('down'),
-  'Mod+A': () => this.table.selectAllCells(),
-  Escape: () => this.table.resetCellSelection(true),
-})
+// the onHotkeys modifier scopes every binding to the element it is on
+gridHotkeys: Array<EmberHotkeyDefinition> = [
+  { hotkey: 'ArrowUp', callback: () => this.table.moveCellSelection('up') },
+  { hotkey: 'ArrowDown', callback: () => this.table.moveCellSelection('down') },
+  {
+    hotkey: 'Shift+ArrowDown',
+    callback: () => this.table.extendCellSelection('down'),
+  },
+  { hotkey: 'Mod+A', callback: () => this.table.selectAllCells() },
+  { hotkey: 'Escape', callback: () => this.table.resetCellSelection(true) },
+]
 
 // then, in the template:
-// <div tabindex='0' {{on 'keydown' this.onGridKeyDown}}> ... </div>
+// <div tabindex='0' {{onHotkeys this.gridHotkeys}}> ... </div>
 ```
 
 Scope the hotkeys to the grid element rather than the document, or arrow keys and Escape will hijack inputs elsewhere on the page.

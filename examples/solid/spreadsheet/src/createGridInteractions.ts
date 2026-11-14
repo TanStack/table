@@ -461,12 +461,16 @@ export function createGridInteractions(options: GridInteractionOptions) {
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault()
+        // the grid's own hotkeys must not also act on a key the editor handled
+        event.stopPropagation()
         cancelEditing()
       } else if (event.key === 'Enter') {
         event.preventDefault()
+        event.stopPropagation()
         commitEditing(event.shiftKey ? 'up' : 'down')
       } else if (event.key === 'Tab') {
         event.preventDefault()
+        event.stopPropagation()
         commitEditing(event.shiftKey ? 'left' : 'right')
       }
     },

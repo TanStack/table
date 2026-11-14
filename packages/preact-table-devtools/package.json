@@ -48,13 +48,13 @@
     "skills"
   ],
   "dependencies": {
-    "@tanstack/devtools-utils": "^0.7.0",
+    "@tanstack/devtools-utils": "^0.7.2",
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
     "@tanstack/table-core": "workspace:*",
-    "preact": "^11.0.1"
+    "preact": "^11.2.0"
   },
   "peerDependencies": {
     "@tanstack/table-core": "^9.0.0",
