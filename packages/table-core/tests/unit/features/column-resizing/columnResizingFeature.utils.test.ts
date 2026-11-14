@@ -328,7 +328,7 @@ describe('header_getResizeHandler', () => {
     handler({ type: 'mousedown', clientX: 100 })
 
     // Simulate mouse move
-    const moveEvent = new MouseEvent('mousemove', { clientX: 150 })
+    const moveEvent = new MouseEvent('mousemove', { clientX: 150, buttons: 1 })
     document.dispatchEvent(moveEvent)
 
     expect(onColumnSizingChange).toHaveBeenCalled()
@@ -379,7 +379,7 @@ describe('header_getResizeHandler', () => {
     const handler = header_getResizeHandler(header as any, document)
     handler({ type: 'mousedown', clientX: 100 })
 
-    const moveEvent = new MouseEvent('mousemove', { clientX: 150 })
+    const moveEvent = new MouseEvent('mousemove', { clientX: 150, buttons: 1 })
     document.dispatchEvent(moveEvent)
 
     const lastUpdate = sizingUpdates[sizingUpdates.length - 1]
@@ -426,7 +426,7 @@ describe('header_getResizeHandler', () => {
     const handler = header_getResizeHandler(header as any, document)
     handler({ type: 'mousedown', clientX: 100 })
 
-    const moveEvent = new MouseEvent('mousemove', { clientX: 150 })
+    const moveEvent = new MouseEvent('mousemove', { clientX: 150, buttons: 1 })
     document.dispatchEvent(moveEvent)
 
     const lastResizing = resizingUpdates[resizingUpdates.length - 1]
@@ -460,9 +460,15 @@ describe('header_getResizeHandler', () => {
     const handler = header_getResizeHandler(header as any, document)
     handler({ type: 'mousedown', clientX: 100 })
 
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 110 }))
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 120 }))
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 130 }))
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 110, buttons: 1 }),
+    )
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 120, buttons: 1 }),
+    )
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 130, buttons: 1 }),
+    )
 
     // leading edge applies immediately; later moves wait for the frame
     expect(onColumnSizingChange).toHaveBeenCalledTimes(1)
@@ -508,8 +514,12 @@ describe('header_getResizeHandler', () => {
     const handler = header_getResizeHandler(header as any, document)
     handler({ type: 'mousedown', clientX: 100 })
 
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 110 }))
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 120 }))
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 110, buttons: 1 }),
+    )
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 120, buttons: 1 }),
+    )
     expect(sizingUpdates).toHaveLength(1)
 
     // mouseup before the frame fires: pending frame is canceled and the end
@@ -538,7 +548,9 @@ describe('header_getResizeHandler', () => {
     const afterDown = notifications.length
 
     // a move writes columnResizing AND columnSizing, batched into one flush
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150 }))
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 150, buttons: 1 }),
+    )
     const afterMove = notifications.length
 
     // drag end: 'end' commit (two writes) + resizing reset, one flush total
@@ -569,7 +581,9 @@ describe('header_getResizeHandler', () => {
 
     // single move: the rAF throttle applies the first move of a frame
     // immediately, later moves wait for the next frame
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 140 }))
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 140, buttons: 1 }),
+    )
     expect(sizingUpdates).toHaveLength(0)
 
     // transient resize info still tracks the drag during moves
@@ -660,6 +674,172 @@ describe('header_getResizeHandler', () => {
 
     removeEventListenerSpy.mockRestore()
   })
+
+  it('should end the resize when a move arrives with no button held', () => {
+    // A resize started with the mouse can lose its `mouseup`: switching tabs,
+    // taking a screenshot, or any other focus steal stops the button release
+    // from reaching the page. The next move reports `buttons: 0`, which is the
+    // only signal left that the gesture is over.
+    const table = makeTable(1, {
+      columnResizeMode: 'onChange',
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing.get())
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 150, buttons: 1 }),
+    )
+    expect(sizingUpdates).toHaveLength(1)
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe('firstName')
+
+    // the release happened while the page was not listening, so the next move
+    // carries the truth: no button is down
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 150, buttons: 0 }),
+    )
+
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+
+    // the listeners are gone, so later moves cannot resurrect the drag
+    const updatesAfterEnd = sizingUpdates.length
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 400, buttons: 0 }),
+    )
+    expect(sizingUpdates).toHaveLength(updatesAfterEnd)
+  })
+
+  it('should commit the last held-button position when the release was missed', () => {
+    // The move that reveals the missed release is a move of its own: the pointer
+    // travelled on after the button came up, and its position says nothing about
+    // where the drag actually ended. The size has to come from the last move made
+    // while the button was still down, the same position a real `mouseup` would
+    // have reported.
+    const table = makeTable(1, {
+      columnResizeMode: 'onChange',
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing.get())
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    // the drag itself ends here, at 150
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 150, buttons: 1 }),
+    )
+    const sizeAtRelease = sizingUpdates[sizingUpdates.length - 1]!['firstName']
+
+    // the button came up unobserved, and the pointer wandered to 400 before the
+    // next move reported it
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 400, buttons: 0 }),
+    )
+
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+    expect(sizingUpdates[sizingUpdates.length - 1]!['firstName']).toBe(
+      sizeAtRelease,
+    )
+  })
+
+  it('should end the resize when the released button is not the one that started it', () => {
+    // `buttons` is a bitmask: 0 means nothing is held, but a nonzero value does
+    // not mean the drag is still alive. If the left button was released
+    // unobserved and the same move reports the right button instead, the mask is
+    // 2 while the gesture that started the resize is long over.
+    const table = makeTable(1, {
+      columnResizeMode: 'onChange',
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing.get())
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100, button: 0 })
+
+    // the drag itself ends here, at 150
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 150, buttons: 1 }),
+    )
+    const sizeAtRelease = sizingUpdates[sizingUpdates.length - 1]!['firstName']
+
+    // the left button came up unobserved; the pointer keeps moving with only the
+    // right button held
+    document.dispatchEvent(
+      new MouseEvent('mousemove', { clientX: 400, buttons: 2 }),
+    )
+
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+    expect(sizingUpdates[sizingUpdates.length - 1]!['firstName']).toBe(
+      sizeAtRelease,
+    )
+  })
+
+  it.each([
+    ['middle', 1, 4],
+    ['right', 2, 2],
+  ])(
+    'should keep resizing while a %s-button drag holds its own button',
+    (_name, button, mask) => {
+      // `button` and `buttons` order the non-primary buttons differently: the
+      // middle button is `button: 1` but `buttons: 4`, the right one `button: 2`
+      // and `buttons: 2`. A mask derived by shifting the button value would end
+      // a middle-button drag on its first move and a right-button drag on one
+      // that still holds it.
+      const table = makeTable(1, {
+        columnResizeMode: 'onChange',
+      })
+      const sizingUpdates: Array<Record<string, number>> = []
+      table.options.onColumnSizingChange = (updater) => {
+        sizingUpdates.push(
+          typeof updater === 'function'
+            ? updater(table.atoms.columnSizing.get())
+            : updater,
+        )
+      }
+
+      const header = createTestResizeHeader(table)
+      const handler = header_getResizeHandler(header as any, document)
+      handler({ type: 'mousedown', clientX: 100, button })
+
+      document.dispatchEvent(
+        new MouseEvent('mousemove', { clientX: 400, buttons: mask }),
+      )
+      expect(table.atoms.columnResizing.get().isResizingColumn).toBe(
+        'firstName',
+      )
+      // the drag is still tracking the pointer, not merely still flagged as active
+      expect(table.atoms.columnResizing.get().deltaOffset).toBe(300)
+
+      // the initiating button comes up; nothing of the gesture is left
+      document.dispatchEvent(
+        new MouseEvent('mousemove', { clientX: 600, buttons: 0 }),
+      )
+      expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+    },
+  )
 })
 
 describe('passiveEventSupported', () => {
