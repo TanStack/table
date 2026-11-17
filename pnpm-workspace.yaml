@@ -62,6 +62,18 @@ minimumReleaseAgeExclude:
   - '@tanstack/octane-store@0.13.0'
   # Preact 11 peer support: published less than 24 hours ago
   - '@tanstack/preact-store@0.13.5'
+  # Solid 2.0 stable: published 2026-11-17, less than 24 hours ago
+  - 'solid-js@2.0.0'
+  - '@solidjs/signals@2.0.0'
+  - '@solidjs/web@2.0.0'
+  - '@solidjs/vite-plugin@3.0.0'
+  - '@solidjs/compiler@2.0.0'
+  - '@solidjs/compiler-darwin-arm64@2.0.0'
+  - '@solidjs/compiler-darwin-x64@2.0.0'
+  - '@solidjs/compiler-linux-arm64-gnu@2.0.0'
+  - '@solidjs/compiler-linux-x64-gnu@2.0.0'
+  - '@solidjs/compiler-wasm32-wasi@2.0.0'
+  - '@solidjs/compiler-win32-x64-msvc@2.0.0'
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true

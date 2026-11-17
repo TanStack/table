@@ -66,12 +66,12 @@
   },
   "devDependencies": {
     "@solidjs/testing-library": "^1.0.0-rc.2",
-    "@solidjs/vite-plugin": "^3.0.0-next.54",
-    "@solidjs/web": "^2.0.0-rc.20",
-    "solid-js": "^2.0.0-rc.20"
+    "@solidjs/vite-plugin": "^3.0.0",
+    "@solidjs/web": "^2.0.0",
+    "solid-js": "^2.0.0"
   },
   "peerDependencies": {
-    "@solidjs/web": ">=2.0.0-rc.20 <3.0.0",
-    "solid-js": ">=2.0.0-rc.20 <3.0.0"
+    "@solidjs/web": "^2.0.0",
+    "solid-js": "^2.0.0"
   }
 }
