@@ -36,8 +36,7 @@ export const MRT_Localization_TH: MRT_Localization = {
   filterGreaterThanOrEqualTo: 'กรองเมื่อมากกว่าหรือเท่ากับ',
   filterInNumberRange: 'กรองเมื่อค่าอยู่อยู่ในช่วง',
   filterIncludesString: 'กรองเมื่อมีข้อความว่า',
-  filterIncludesStringSensitive:
-    'กรองเมื่อมีข้อความว่า (ตรงตามตัวพิมพ์ใหญ่-เล็ก)',
+  filterIncludesStringSensitive: 'กรองเมื่อมีข้อความว่า (ตรงตามตัวพิมพ์ใหญ่-เล็ก)',
   filterLessThan: 'กรองเมื่อน้อยกว่า',
   filterLessThanOrEqualTo: 'กรองเมื่อน้อยกว่าหรือเท่ากับ',
   filterMode: 'โหมดการกรอง: {filterType}',

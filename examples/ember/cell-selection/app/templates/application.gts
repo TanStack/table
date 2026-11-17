@@ -2,7 +2,7 @@ import Component from '@glimmer/component'
 import { tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
 import { faker } from '@faker-js/faker'
-import { createMultiHotkeyHandler } from '@tanstack/hotkeys'
+import { onHotkeys, type EmberHotkeyDefinition } from '@tanstack/ember-hotkeys'
 import {
   FlexRenderCell,
   FlexRenderHeader,
@@ -234,21 +234,49 @@ export default class CellSelectionTable extends Component {
   }
 
   // keyboard navigation is TanStack Hotkeys driving the table's imperative
-  // APIs; table-core ships no keydown handling of its own. Ember has no hotkeys
-  // adapter, so the framework-agnostic core handler is used directly.
-  onGridKeyDown = createMultiHotkeyHandler({
-    ArrowUp: () => this.tableInstance.moveCellSelection('up'),
-    ArrowDown: () => this.tableInstance.moveCellSelection('down'),
-    ArrowLeft: () => this.tableInstance.moveCellSelection('left'),
-    ArrowRight: () => this.tableInstance.moveCellSelection('right'),
-    'Shift+ArrowUp': () => this.tableInstance.extendCellSelection('up'),
-    'Shift+ArrowDown': () => this.tableInstance.extendCellSelection('down'),
-    'Shift+ArrowLeft': () => this.tableInstance.extendCellSelection('left'),
-    'Shift+ArrowRight': () => this.tableInstance.extendCellSelection('right'),
-    'Mod+A': () => this.tableInstance.selectAllCells(),
-    Escape: () => this.tableInstance.resetCellSelection(true),
-    'Mod+C': () => this.copySelection(),
-  }) as unknown as (event: KeyboardEvent) => void
+  // APIs; table-core ships no keydown handling of its own. The `onHotkeys`
+  // modifier on the grid element scopes every binding to it, so the hotkeys
+  // only fire while the grid (or a cell inside it) has focus.
+  gridHotkeys: Array<EmberHotkeyDefinition> = [
+    {
+      hotkey: 'ArrowUp',
+      callback: () => this.tableInstance.moveCellSelection('up'),
+    },
+    {
+      hotkey: 'ArrowDown',
+      callback: () => this.tableInstance.moveCellSelection('down'),
+    },
+    {
+      hotkey: 'ArrowLeft',
+      callback: () => this.tableInstance.moveCellSelection('left'),
+    },
+    {
+      hotkey: 'ArrowRight',
+      callback: () => this.tableInstance.moveCellSelection('right'),
+    },
+    {
+      hotkey: 'Shift+ArrowUp',
+      callback: () => this.tableInstance.extendCellSelection('up'),
+    },
+    {
+      hotkey: 'Shift+ArrowDown',
+      callback: () => this.tableInstance.extendCellSelection('down'),
+    },
+    {
+      hotkey: 'Shift+ArrowLeft',
+      callback: () => this.tableInstance.extendCellSelection('left'),
+    },
+    {
+      hotkey: 'Shift+ArrowRight',
+      callback: () => this.tableInstance.extendCellSelection('right'),
+    },
+    { hotkey: 'Mod+A', callback: () => this.tableInstance.selectAllCells() },
+    {
+      hotkey: 'Escape',
+      callback: () => this.tableInstance.resetCellSelection(true),
+    },
+    { hotkey: 'Mod+C', callback: () => this.copySelection() },
+  ]
 
   refreshData = () => {
     this.data = makeData(20)
@@ -393,7 +421,7 @@ export default class CellSelectionTable extends Component {
         columns
       </div>
       <div class='spacer-sm'></div>
-      <div tabindex='0' {{on 'keydown' this.onGridKeyDown}}>
+      <div tabindex='0' {{onHotkeys this.gridHotkeys}}>
         <table>
           <thead>
             {{#each this.headerGroups as |headerGroup|}}

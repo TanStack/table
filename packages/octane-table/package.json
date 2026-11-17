@@ -60,9 +60,9 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@tsrx/oxc": "0.20.0",
-    "@tsrx/typescript-plugin": "^0.6.0",
-    "octane": "0.12.1",
+    "@tsrx/oxc": "0.23.0",
+    "@tsrx/typescript-plugin": "^0.7.0",
+    "octane": "0.17.0",
     "typescript": "6.0.3"
   },
   "peerDependencies": {

@@ -1,5 +1,5 @@
 import { Directive, HostListener, input, output } from '@angular/core'
-import { injectDebouncedCallback } from '@tanstack/angular-pacer'
+import { injectDebouncer } from '@tanstack/angular-pacer'
 
 @Directive({
   standalone: true,
@@ -9,13 +9,13 @@ export class DebouncedInput {
   readonly debounce = input<number>(500)
   readonly changeEvent = output<Event>()
 
-  readonly #emitChange = injectDebouncedCallback(
+  readonly #emitChange = injectDebouncer(
     (event: Event) => this.changeEvent.emit(event),
-    { wait: () => this.debounce() },
+    () => ({ wait: this.debounce() }),
   )
 
   @HostListener('change', ['$event'])
   onChange(event: Event) {
-    this.#emitChange(event)
+    this.#emitChange.maybeExecute(event)
   }
 }

@@ -13,9 +13,7 @@ export default {
     [
       '@babel/plugin-transform-typescript',
       {
-        allExtensions: true,
         onlyRemoveTypeImports: true,
-        allowDeclareFields: true,
       },
     ],
     [
@@ -36,8 +34,6 @@ export default {
       '@babel/plugin-transform-runtime',
       {
         absoluteRuntime: import.meta.dirname,
-        useESModules: true,
-        regenerator: false,
       },
     ],
     ...macros.babelMacros,

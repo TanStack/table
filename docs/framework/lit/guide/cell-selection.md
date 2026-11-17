@@ -254,19 +254,31 @@ Cell selection ships no keyboard handling of its own. Instead it exposes imperat
 `direction` is `'up'`, `'down'`, `'left'`, or `'right'`.
 
 ```ts
-import { createMultiHotkeyHandler } from '@tanstack/lit-hotkeys'
+import { createRef, ref } from 'lit/directives/ref.js'
+import { HotkeyController } from '@tanstack/lit-hotkeys'
+import type { HotkeyChord } from '@tanstack/lit-hotkeys'
 
-// one stateless handler is simpler here than a HotkeyController per binding
-const onGridKeyDown = createMultiHotkeyHandler({
-  ArrowUp: () => table.moveCellSelection('up'),
-  ArrowDown: () => table.moveCellSelection('down'),
-  'Shift+ArrowDown': () => table.extendCellSelection('down'),
-  'Mod+A': () => table.selectAllCells(),
-  Escape: () => table.resetCellSelection(true),
-})
+// inside the element class: one HotkeyController per binding, each scoped to
+// the grid element
+private _grid = createRef<HTMLDivElement>()
 
-// then, in the template:
-// html`<div tabindex="0" @keydown=${onGridKeyDown}> ... </div>`
+private _gridHotkeys = (
+  [
+    ['ArrowUp', () => this._table?.moveCellSelection('up')],
+    ['ArrowDown', () => this._table?.moveCellSelection('down')],
+    ['Shift+ArrowDown', () => this._table?.extendCellSelection('down')],
+    ['Mod+A', () => this._table?.selectAllCells()],
+    ['Escape', () => this._table?.resetCellSelection(true)],
+  ] satisfies Array<[HotkeyChord, () => void]>
+).map(
+  ([hotkey, callback]) =>
+    new HotkeyController(this, hotkey, callback, () => ({
+      target: this._grid.value,
+    })),
+)
+
+// then, in render():
+// html`<div tabindex="0" ${ref(this._grid)}> ... </div>`
 ```
 
 Scope the hotkeys to the grid element rather than the document, or arrow keys and Escape will hijack inputs elsewhere on the page.

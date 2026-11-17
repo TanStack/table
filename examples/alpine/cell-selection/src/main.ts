@@ -1,6 +1,6 @@
 import Alpine from 'alpinejs'
 import { faker } from '@faker-js/faker'
-import { createMultiHotkeyHandler } from '@tanstack/hotkeys'
+import { createHotkeysScope, hotkeysPlugin } from '@tanstack/alpine-hotkeys'
 import {
   FlexRender,
   cellSelectionFeature,
@@ -83,6 +83,9 @@ function toTsv(ranges: Array<Array<Array<unknown>>>) {
     .join('\n\n') // blank line between final selected regions
 }
 
+// Gives every hotkeys scope the app's Alpine instance.
+Alpine.plugin(hotkeysPlugin)
+
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(20) })
 
@@ -144,6 +147,9 @@ Alpine.data('table', () => {
 
   const copySelection = () =>
     void navigator.clipboard.writeText(toTsv(table.getSelectedCellRangesData()))
+
+  // owns this component's hotkeys; destroying it unregisters all of them
+  const hotkeys = createHotkeysScope()
 
   return {
     table,
@@ -229,21 +235,51 @@ Alpine.data('table', () => {
     },
 
     // keyboard navigation is TanStack Hotkeys driving the table's imperative
-    // APIs; table-core ships no keydown handling of its own. Alpine has no
-    // hotkeys adapter, so the framework-agnostic core handler is used directly.
-    onGridKeyDown: createMultiHotkeyHandler({
-      ArrowUp: () => table.moveCellSelection('up'),
-      ArrowDown: () => table.moveCellSelection('down'),
-      ArrowLeft: () => table.moveCellSelection('left'),
-      ArrowRight: () => table.moveCellSelection('right'),
-      'Shift+ArrowUp': () => table.extendCellSelection('up'),
-      'Shift+ArrowDown': () => table.extendCellSelection('down'),
-      'Shift+ArrowLeft': () => table.extendCellSelection('left'),
-      'Shift+ArrowRight': () => table.extendCellSelection('right'),
-      'Mod+A': () => table.selectAllCells(),
-      Escape: () => table.resetCellSelection(true),
-      'Mod+C': () => copySelection(),
-    }),
+    // APIs; table-core ships no keydown handling of its own. The shared
+    // `target` scopes every binding to the grid element, so the hotkeys only
+    // fire while the grid (or a cell inside it) has focus.
+    init(this: { $refs: Record<string, HTMLElement> }) {
+      hotkeys.createHotkeys(
+        [
+          { hotkey: 'ArrowUp', callback: () => table.moveCellSelection('up') },
+          {
+            hotkey: 'ArrowDown',
+            callback: () => table.moveCellSelection('down'),
+          },
+          {
+            hotkey: 'ArrowLeft',
+            callback: () => table.moveCellSelection('left'),
+          },
+          {
+            hotkey: 'ArrowRight',
+            callback: () => table.moveCellSelection('right'),
+          },
+          {
+            hotkey: 'Shift+ArrowUp',
+            callback: () => table.extendCellSelection('up'),
+          },
+          {
+            hotkey: 'Shift+ArrowDown',
+            callback: () => table.extendCellSelection('down'),
+          },
+          {
+            hotkey: 'Shift+ArrowLeft',
+            callback: () => table.extendCellSelection('left'),
+          },
+          {
+            hotkey: 'Shift+ArrowRight',
+            callback: () => table.extendCellSelection('right'),
+          },
+          { hotkey: 'Mod+A', callback: () => table.selectAllCells() },
+          { hotkey: 'Escape', callback: () => table.resetCellSelection(true) },
+          { hotkey: 'Mod+C', callback: () => copySelection() },
+        ],
+        () => ({ target: this.$refs.grid }),
+      )
+    },
+    destroy() {
+      hotkeys.destroy()
+    },
   }
 })
 

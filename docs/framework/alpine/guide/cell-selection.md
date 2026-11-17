@@ -274,19 +274,43 @@ Cell selection ships no keyboard handling of its own. Instead it exposes imperat
 `direction` is `'up'`, `'down'`, `'left'`, or `'right'`.
 
 ```ts
-import { createMultiHotkeyHandler } from '@tanstack/hotkeys'
+import Alpine from 'alpinejs'
+import { createHotkeysScope, hotkeysPlugin } from '@tanstack/alpine-hotkeys'
 
-// Alpine has no hotkeys adapter, so the framework-agnostic core handler is used
-onGridKeyDown: createMultiHotkeyHandler({
-  ArrowUp: () => table.moveCellSelection('up'),
-  ArrowDown: () => table.moveCellSelection('down'),
-  'Shift+ArrowDown': () => table.extendCellSelection('down'),
-  'Mod+A': () => table.selectAllCells(),
-  Escape: () => table.resetCellSelection(true),
-}),
+Alpine.plugin(hotkeysPlugin)
+
+Alpine.data('table', () => {
+  // ...create the table
+  const hotkeys = createHotkeysScope()
+
+  return {
+    init() {
+      hotkeys.createHotkeys(
+        [
+          { hotkey: 'ArrowUp', callback: () => table.moveCellSelection('up') },
+          {
+            hotkey: 'ArrowDown',
+            callback: () => table.moveCellSelection('down'),
+          },
+          {
+            hotkey: 'Shift+ArrowDown',
+            callback: () => table.extendCellSelection('down'),
+          },
+          { hotkey: 'Mod+A', callback: () => table.selectAllCells() },
+          { hotkey: 'Escape', callback: () => table.resetCellSelection(true) },
+        ],
+        // scope every binding to the grid element
+        () => ({ target: this.$refs.grid }),
+      )
+    },
+    destroy() {
+      hotkeys.destroy()
+    },
+  }
+})
 
 // then, in the markup:
-// <div tabindex="0" @keydown="onGridKeyDown($event)"> ... </div>
+// <div x-ref="grid" tabindex="0"> ... </div>
 ```
 
 Scope the hotkeys to the grid element rather than the document, or arrow keys and Escape will hijack inputs elsewhere on the page.

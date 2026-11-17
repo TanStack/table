@@ -1,8 +1,9 @@
 import { customElement, state } from 'lit/decorators.js'
 import { LitElement, css, html } from 'lit'
+import { createRef, ref } from 'lit/directives/ref.js'
 import { repeat } from 'lit/directives/repeat.js'
 import { faker } from '@faker-js/faker'
-import { createMultiHotkeyHandler } from '@tanstack/lit-hotkeys'
+import { HotkeyController } from '@tanstack/lit-hotkeys'
 import {
   FlexRender,
   TableController,
@@ -18,6 +19,7 @@ import {
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
+import type { HotkeyChord } from '@tanstack/lit-hotkeys'
 import type { Cell, ColumnDef, LitTable } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
@@ -120,6 +122,33 @@ export class LitCellSelectionExample extends LitElement {
   private _isFirstColumnLayout = true
   private _lastLayoutKey = ''
   private _table?: LitTable<typeof features, Person>
+  private _grid = createRef<HTMLDivElement>()
+
+  // keyboard navigation is TanStack Hotkeys driving the table's imperative
+  // APIs; table-core ships no keydown handling of its own. Each binding gets a
+  // HotkeyController whose `target` is the grid element, so the hotkeys only
+  // fire while the grid (or a cell inside it) has focus. The controllers read
+  // the target after each render, once the ref is set.
+  private _gridHotkeys = (
+    [
+      ['ArrowUp', () => this._table?.moveCellSelection('up')],
+      ['ArrowDown', () => this._table?.moveCellSelection('down')],
+      ['ArrowLeft', () => this._table?.moveCellSelection('left')],
+      ['ArrowRight', () => this._table?.moveCellSelection('right')],
+      ['Shift+ArrowUp', () => this._table?.extendCellSelection('up')],
+      ['Shift+ArrowDown', () => this._table?.extendCellSelection('down')],
+      ['Shift+ArrowLeft', () => this._table?.extendCellSelection('left')],
+      ['Shift+ArrowRight', () => this._table?.extendCellSelection('right')],
+      ['Mod+A', () => this._table?.selectAllCells()],
+      ['Escape', () => this._table?.resetCellSelection(true)],
+      ['Mod+C', () => this._table && this.copySelection(this._table)],
+    ] satisfies Array<[HotkeyChord, () => void]>
+  ).map(
+    ([hotkey, callback]) =>
+      new HotkeyController(this, hotkey, callback, () => ({
+        target: this._grid.value,
+      })),
+  )
 
   // Lit renders into shadow DOM, so the demo styles live here rather than in a
   // global stylesheet. The selection outline uses inset box-shadows: on a
@@ -293,23 +322,6 @@ export class LitCellSelectionExample extends LitElement {
 
     this._table = table
 
-    // keyboard navigation is TanStack Hotkeys driving the table's imperative
-    // APIs; table-core ships no keydown handling of its own. One stateless
-    // handler is simpler here than eleven HotkeyControllers.
-    const onGridKeyDown = createMultiHotkeyHandler({
-      ArrowUp: () => table.moveCellSelection('up'),
-      ArrowDown: () => table.moveCellSelection('down'),
-      ArrowLeft: () => table.moveCellSelection('left'),
-      ArrowRight: () => table.moveCellSelection('right'),
-      'Shift+ArrowUp': () => table.extendCellSelection('up'),
-      'Shift+ArrowDown': () => table.extendCellSelection('down'),
-      'Shift+ArrowLeft': () => table.extendCellSelection('left'),
-      'Shift+ArrowRight': () => table.extendCellSelection('right'),
-      'Mod+A': () => table.selectAllCells(),
-      Escape: () => table.resetCellSelection(true),
-      'Mod+C': () => this.copySelection(table),
-    })
-
     return html`
       <div>
         <button @click=${() => (this._data = makeData(20))}>
@@ -399,7 +411,7 @@ export class LitCellSelectionExample extends LitElement {
         ${table.getCellSelectionRowIds().length.toLocaleString()} rows and
         ${table.getCellSelectionColumnIds().length} columns
       </div>
-      <div tabindex="0" @keydown=${onGridKeyDown}>
+      <div tabindex="0" ${ref(this._grid)}>
         <table>
           <thead>
             ${repeat(

@@ -93,7 +93,7 @@
       -->
       <div x-text="selectionSummary()"></div>
       <div class="spacer-sm"></div>
-      <div tabindex="0" @keydown="onGridKeyDown($event)">
+      <div x-ref="grid" tabindex="0">
         <table>
           <thead>
             <template
