@@ -32,11 +32,19 @@ export function flexRender(render: any, props: any): any {
     return render
   }
 
+  if (render === '') {
+    return null
+  }
+
   if (typeof render === 'function') {
     const rendered = render(props)
 
     if (rendered === null || rendered === undefined) {
       return rendered
+    }
+
+    if (rendered === '') {
+      return null
     }
 
     if (isVNode(rendered)) {
