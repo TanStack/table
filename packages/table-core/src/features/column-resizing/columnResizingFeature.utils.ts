@@ -13,6 +13,20 @@ import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.typ
 import type { columnResizingState } from './columnResizingFeature.types'
 
 /**
+ * The `buttons` bit of each `button` value. The two properties do not share an
+ * order: the primary button is bit 0 in both, but the middle button is
+ * `button: 1` with `buttons: 4` and the secondary one `button: 2` with
+ * `buttons: 2`, so shifting the button value maps those two the wrong way.
+ */
+const BUTTON_MASK: Readonly<Record<number, number>> = {
+  0: 1, // primary
+  1: 4, // auxiliary (middle)
+  2: 2, // secondary (right)
+  3: 8, // fourth (back)
+  4: 16, // fifth (forward)
+}
+
+/**
  * Creates the default transient column resizing state.
  *
  * The feature default represents no active drag interaction. Reset APIs use
@@ -120,6 +134,15 @@ export function header_getResizeHandler<
     const clientX = isTouchStartEvent(event)
       ? Math.round(event.touches[0]!.clientX)
       : (event as MouseEvent).clientX
+
+    // `buttons` is a bitmask, so a nonzero value does not mean this drag is
+    // still alive: the button that started it can be released while another one
+    // stays down. Remember which bit the gesture began with and require that
+    // same bit on every move. A `mousedown` without a button value is the
+    // primary one.
+    const startButtonMask = isTouchStartEvent(event)
+      ? 0
+      : (BUTTON_MASK[(event as MouseEvent).button] ?? BUTTON_MASK[0]!)
 
     const newColumnSizing: ColumnSizingState = makeObjectMap()
 
@@ -240,7 +263,31 @@ export function header_getResizeHandler<
       _contextDocument || (typeof document !== 'undefined' ? document : null)
 
     const mouseEvents = {
-      moveHandler: (e: MouseEvent) => onMove(e.clientX),
+      moveHandler: (e: MouseEvent) => {
+        // A resize can lose its `mouseup`: switching tabs, taking a screenshot,
+        // or any other focus steal stops the release from reaching the page,
+        // and the listeners stay on the document with the drag still active.
+        // The next move is the only place left to notice — the button that
+        // started the gesture is no longer held, so the gesture is over.
+        //
+        // That move carries a position of its own, but it is not where the drag
+        // ended: the pointer travelled on after the button came up. Ending at it
+        // would size the column by how far the pointer drifted, so end at the
+        // last position observed while the button was still held.
+        if ((e.buttons & startButtonMask) === 0) {
+          mouseEvents.endAtLastHeldPosition()
+          return
+        }
+        onMove(e.clientX)
+      },
+      endAtLastHeldPosition: () => {
+        contextDocument?.removeEventListener(
+          'mousemove',
+          mouseEvents.moveHandler,
+        )
+        contextDocument?.removeEventListener('mouseup', mouseEvents.upHandler)
+        onEnd()
+      },
       upHandler: (e: MouseEvent) => {
         contextDocument?.removeEventListener(
           'mousemove',
