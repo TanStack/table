@@ -85,7 +85,11 @@ export function column_getAutoFilterFn<
 
   const filterFn = filterFns?.[filterFnName]
 
-  if (process.env.NODE_ENV === 'development' && !filterFn) {
+  if (
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV === 'development' &&
+    !filterFn
+  ) {
     console.warn(
       `filterFn '${filterFnName}' (auto) for column '${column.id}' is not registered`,
     )
@@ -123,6 +127,7 @@ export function column_getFilterFn<
       : filterFns?.[column.columnDef.filterFn as string]
 
   if (
+    typeof process !== 'undefined' &&
     process.env.NODE_ENV === 'development' &&
     !filterFn &&
     column.columnDef.filterFn !== 'auto' // the auto picker warns on its own

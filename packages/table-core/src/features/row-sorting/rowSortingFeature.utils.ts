@@ -146,7 +146,10 @@ export function column_getAutoSortFn<
     let sortFn = sortFns?.[sortFnName]
 
     if (!sortFn) {
-      if (process.env.NODE_ENV === 'development') {
+      if (
+        typeof process !== 'undefined' &&
+        process.env.NODE_ENV === 'development'
+      ) {
         console.warn(
           `sortFn '${sortFnName}' (auto) for column '${column.id}' is not registered`,
         )
@@ -230,7 +233,11 @@ export function column_getSortFn<
 
   const sortFn = sortFns?.[column.columnDef.sortFn as string]
 
-  if (process.env.NODE_ENV === 'development' && !sortFn) {
+  if (
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV === 'development' &&
+    !sortFn
+  ) {
     console.warn(
       `sortFn '${String(column.columnDef.sortFn)}' for column '${column.id}' is not registered`,
     )
