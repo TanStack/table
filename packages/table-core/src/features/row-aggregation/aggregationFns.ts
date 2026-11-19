@@ -294,9 +294,15 @@ export const aggregationFn_median = /* @__PURE__ */ constructAggregationFn<
     if (!values.length) return undefined
     values.sort((a, b) => a - b)
     const mid = Math.floor(values.length / 2)
-    return values.length % 2
-      ? values[mid]
-      : (values[mid - 1]! + values[mid]!) / 2
+    if (values.length % 2) {
+      return values[mid]
+    }
+    const a = values[mid - 1]!
+    const b = values[mid]!
+    const sum = a + b
+    return Number.isFinite(sum) || !Number.isFinite(a) || !Number.isFinite(b)
+      ? sum / 2
+      : a / 2 + b / 2
   },
 })
 
