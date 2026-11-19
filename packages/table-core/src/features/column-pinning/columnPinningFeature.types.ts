@@ -77,6 +77,16 @@ export interface Column_ColumnPinning {
   pin: (position: ColumnPinningPosition) => void
 }
 
+export interface Header_ColumnPinning {
+  /**
+   * Reads the logical pinned position shared by this header's own leaf
+   * columns: `'start'`, `'end'`, or `false` when unpinned or mixed. Unlike
+   * `header.column.getIsPinned()`, a group header split across regions
+   * reports the region it is rendered in.
+   */
+  getIsPinned: () => ColumnPinningPosition
+}
+
 export interface Row_ColumnPinning<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,

@@ -12,6 +12,7 @@ import {
   column_getPinnedIndex,
   column_pin,
   getDefaultColumnPinningState,
+  header_getIsPinned,
   row_getCenterVisibleCells,
   row_getStartVisibleCells,
   row_getEndVisibleCells,
@@ -278,6 +279,136 @@ describe('column_getIsPinned', () => {
     const groupColumn = table.getAllColumns()[0]!
 
     expect(column_getIsPinned(groupColumn)).toBe('end')
+  })
+})
+
+describe('header_getIsPinned', () => {
+  function makeSplitGroupTable() {
+    const columns: Array<ColumnDef<typeof features, Person, any>> = [
+      {
+        id: 'identity',
+        columns: [
+          { accessorKey: 'firstName', id: 'firstName' },
+          { accessorKey: 'age', id: 'age' },
+          { accessorKey: 'lastName', id: 'lastName' },
+        ],
+      },
+    ]
+    return constructTable<typeof features, Person>({
+      features,
+      columns,
+      data: generateTestData(1),
+      initialState: {
+        columnPinning: {
+          start: ['firstName'],
+          end: ['lastName'],
+        },
+      },
+    })
+  }
+
+  it('should report the region each split group header is rendered in', () => {
+    const table = makeSplitGroupTable()
+    const startGroup = table_getStartHeaderGroups(table)[0]!.headers[0]!
+    const centerGroup = table_getCenterHeaderGroups(table)[0]!.headers[0]!
+    const endGroup = table_getEndHeaderGroups(table)[0]!.headers[0]!
+
+    // the shared group column can only report one region
+    expect(column_getIsPinned(endGroup.column)).toBe('start')
+
+    expect(header_getIsPinned(startGroup)).toBe('start')
+    expect(header_getIsPinned(centerGroup)).toBe(false)
+    expect(header_getIsPinned(endGroup)).toBe('end')
+    expect(endGroup.getIsPinned()).toBe('end')
+  })
+
+  it('should return false when a header spans leaves from different regions', () => {
+    const table = makeSplitGroupTable()
+    const groupHeader = table.getHeaderGroups()[0]!.headers[0]!
+
+    expect(groupHeader.subHeaders).toHaveLength(3)
+    expect(header_getIsPinned(groupHeader)).toBe(false)
+  })
+
+  it('should report the region of a group split start/end with no center leaves', () => {
+    const columns: Array<ColumnDef<typeof features, Person, any>> = [
+      {
+        id: 'name',
+        columns: [
+          { accessorKey: 'firstName', id: 'firstName' },
+          { accessorKey: 'lastName', id: 'lastName' },
+        ],
+      },
+      { accessorKey: 'age', id: 'age' },
+    ]
+    const table = constructTable<typeof features, Person>({
+      features,
+      columns,
+      data: generateTestData(1),
+      initialState: {
+        columnPinning: {
+          start: ['firstName'],
+          end: ['lastName'],
+        },
+      },
+    })
+    const startGroup = table_getStartHeaderGroups(table)[0]!.headers[0]!
+    const endGroup = table_getEndHeaderGroups(table)[0]!.headers[0]!
+
+    expect(startGroup.column.id).toBe('name')
+    expect(endGroup.column.id).toBe('name')
+    expect(header_getIsPinned(startGroup)).toBe('start')
+    expect(header_getIsPinned(endGroup)).toBe('end')
+  })
+
+  it('should read only leaf columns through nested group headers', () => {
+    const columns: Array<ColumnDef<typeof features, Person, any>> = [
+      {
+        id: 'outer',
+        columns: [
+          {
+            id: 'inner',
+            columns: [
+              { accessorKey: 'firstName', id: 'firstName' },
+              { accessorKey: 'lastName', id: 'lastName' },
+            ],
+          },
+          { accessorKey: 'age', id: 'age' },
+        ],
+      },
+    ]
+    const table = constructTable<typeof features, Person>({
+      features,
+      columns,
+      data: generateTestData(1),
+      initialState: {
+        columnPinning: {
+          start: ['firstName'],
+          end: ['lastName', 'age'],
+        },
+      },
+    })
+    const endGroups = table_getEndHeaderGroups(table)
+    const endOuter = endGroups[0]!.headers[0]!
+    const endInner = endGroups[1]!.headers[0]!
+
+    expect(endOuter.column.id).toBe('outer')
+    expect(endInner.column.id).toBe('inner')
+    expect(header_getIsPinned(endOuter)).toBe('end')
+    expect(header_getIsPinned(endInner)).toBe('end')
+    expect(
+      header_getIsPinned(table_getStartHeaderGroups(table)[0]!.headers[0]!),
+    ).toBe('start')
+  })
+
+  it('should match the column for leaf headers', () => {
+    const table = makeSplitGroupTable()
+    const leaf = (id: string) =>
+      table.getLeafHeaders().find((header) => header.column.id === id)!
+
+    expect(header_getIsPinned(leaf('firstName'))).toBe('start')
+    expect(header_getIsPinned(leaf('age'))).toBe(false)
+    expect(header_getIsPinned(leaf('lastName'))).toBe('end')
   })
 })
 
