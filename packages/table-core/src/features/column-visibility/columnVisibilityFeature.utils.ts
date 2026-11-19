@@ -61,6 +61,7 @@ export function column_toggleVisibility<
           next[leafColumn.id] = nextVisible
         }
       }
+      next[column.id] = nextVisible
 
       return next
     })
@@ -71,8 +72,9 @@ export function column_toggleVisibility<
  * Checks whether this column is visible.
  *
  * Leaf columns read `state.columnVisibility[column.id]`, where missing entries
- * default to visible. Parent columns are visible when at least one child column
- * is visible.
+ * default to visible. Parent columns use `state.columnVisibility[column.id]` when
+ * explicitly set, and otherwise are visible when at least one child column is
+ * visible.
  *
  * @example
  * ```ts
@@ -88,16 +90,15 @@ export function column_getIsVisible<
   if (!columnVisibility) return true
 
   const childColumns = column.columns
-  if (childColumns.length) {
-    return childColumns.some((childColumn) =>
-      callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
-    )
-  }
-
   return (
     (hasOwn(columnVisibility, column.id)
       ? columnVisibility[column.id]
-      : undefined) ?? true
+      : undefined) ??
+    (childColumns.length
+      ? childColumns.some((childColumn) =>
+          callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
+        )
+      : true)
   )
 }
 
