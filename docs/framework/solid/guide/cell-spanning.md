@@ -67,10 +67,10 @@ A covered cell reports a span of `0`, and the renderer skips it. This is the sam
 <For each={row.getVisibleCells()}>
   {(cell) => (
     // A covered cell reports a span of 0 on at least one axis. Skip it.
-    // Do not render `rowSpan={0}`: in HTML that means "span to the end of
+    // Do not render `rowspan={0}`: in HTML that means "span to the end of
     // the row group", which merges the cell down the entire tbody.
     <Show when={!cell.getIsCovered()}>
-      <td rowSpan={cell.getRowSpan()} colSpan={cell.getColSpan()}>
+      <td rowspan={cell.getRowSpan()} colspan={cell.getColSpan()}>
         <table.FlexRender cell={cell} />
       </td>
     </Show>

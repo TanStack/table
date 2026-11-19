@@ -159,6 +159,16 @@ table.setPageSize(25)
 
 Use APIs like `table.setSorting(...)`, `table.setColumnFilters(...)`, `column.toggleVisibility()`, or `row.toggleSelected()` instead of manually editing the underlying state object.
 
+State writes follow Solid 2's batching. A write is applied when Solid next flushes, so a read in the same synchronous block still returns the previous value. Updates that build on the previous value compose correctly, because table APIs pass updater functions, and updaters see pending writes:
+
+```tsx
+table.nextPage()
+table.nextPage() // both apply: the page index moves forward by 2
+table.atoms.pagination.get().pageIndex // still the old page until the flush
+```
+
+Call `flush()` from `solid-js` if code needs the new value straight away.
+
 If you only care about setting starting values, use `initialState`. If you want to reset a state slice back to its initial value, use that feature's reset API.
 
 If you really do need to write a state slice directly, the low-level write surface for internally owned state is the matching base atom:
@@ -221,7 +231,7 @@ If you need easy access to table state in other parts of your application, you c
 
 #### External Atoms
 
-Use external atoms when the app should own one or more table state slices as TanStack Store atoms. Create stable writable atoms with `createAtom`, pass them to `atoms`, and subscribe to them with `useSelector` anywhere else in your app. `@tanstack/solid-store` is only needed by your app if you choose this pattern; the Solid table adapter itself uses Solid-native reactivity.
+Use external atoms when the app should own one or more table state slices as TanStack Store atoms. Create stable writable atoms with `createAtom`, pass them to `atoms`, and subscribe to them with `useSelector` anywhere else in your app. `@tanstack/solid-store` is only needed by your app if you choose this pattern; the Solid table adapter itself uses Solid-native reactivity. Use a release of `@tanstack/solid-store` that supports Solid 2. Inside your table's own components, `table.atoms.pagination.get()` is already a reactive read of the external atom.
 
 ```tsx
 import { createAtom, useSelector } from '@tanstack/solid-store'

@@ -17,7 +17,7 @@ import {
   sortFn_text,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { For, Show, createEffect, createSignal } from 'solid-js'
+import { For, Show, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { Column, Table } from '@tanstack/solid-table'
 import type { Person } from './makeData'
@@ -168,7 +168,7 @@ function App() {
               <tr>
                 <For each={headerGroup.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
                         <div>
                           <table.FlexRender header={header} />
@@ -281,47 +281,56 @@ function Filter({
   column: Column<typeof features, Person>
   table: Table<typeof features, Person>
 }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
+  // The filter type follows the first row's value.
+  const firstValue = () =>
+    table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = () => column.getFilterValue()
 
-  return typeof firstValue === 'number' ? (
-    <div class="filter-row">
-      <input
-        type="number"
-        value={(columnFilterValue() as [number, number] | undefined)?.[0] ?? ''}
-        onInput={(e) =>
-          column.setFilterValue((old: [number, number] | undefined) => [
-            e.currentTarget.value,
-            old?.[1],
-          ])
-        }
-        placeholder="Min"
-        class="filter-input"
-      />
-      <input
-        type="number"
-        value={(columnFilterValue() as [number, number] | undefined)?.[1] ?? ''}
-        onInput={(e) =>
-          column.setFilterValue((old: [number, number] | undefined) => [
-            old?.[0],
-            e.currentTarget.value,
-          ])
-        }
-        placeholder="Max"
-        class="filter-input"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={(columnFilterValue() ?? '') as string}
-      onInput={(e) => column.setFilterValue(e.currentTarget.value)}
-      placeholder="Search..."
-      class="filter-select"
-    />
+  return (
+    <Show
+      when={typeof firstValue() === 'number'}
+      fallback={
+        <input
+          type="text"
+          value={(columnFilterValue() ?? '') as string}
+          onInput={(e) => column.setFilterValue(e.currentTarget.value)}
+          placeholder="Search..."
+          class="filter-select"
+        />
+      }
+    >
+      <div class="filter-row">
+        <input
+          type="number"
+          value={
+            (columnFilterValue() as [number, number] | undefined)?.[0] ?? ''
+          }
+          onInput={(e) =>
+            column.setFilterValue((old: [number, number] | undefined) => [
+              e.currentTarget.value,
+              old?.[1],
+            ])
+          }
+          placeholder="Min"
+          class="filter-input"
+        />
+        <input
+          type="number"
+          value={
+            (columnFilterValue() as [number, number] | undefined)?.[1] ?? ''
+          }
+          onInput={(e) =>
+            column.setFilterValue((old: [number, number] | undefined) => [
+              old?.[0],
+              e.currentTarget.value,
+            ])
+          }
+          placeholder="Max"
+          class="filter-input"
+        />
+      </div>
+    </Show>
   )
 }
 
@@ -332,18 +341,10 @@ function IndeterminateCheckbox(props: {
   onChange?: (event: Event) => void
   onClick?: (event: MouseEvent) => void
 }) {
-  let ref: HTMLInputElement | undefined
-
-  createEffect(() => {
-    if (typeof props.indeterminate === 'boolean' && ref) {
-      ref.indeterminate = !props.checked && props.indeterminate
-    }
-  })
-
   return (
     <input
       type="checkbox"
-      ref={ref}
+      prop:indeterminate={!props.checked && !!props.indeterminate}
       class={`${props.className ?? ''} sortable-header`}
       checked={props.checked}
       onChange={props.onChange}

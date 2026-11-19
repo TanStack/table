@@ -115,7 +115,7 @@ function App() {
                   <For each={headerGroup.headers}>
                     {(header) => (
                       <th
-                        colSpan={header.colSpan}
+                        colspan={header.colSpan}
                         style={{ width: `${header.getSize()}px` }}
                       >
                         {header.isPlaceholder ? null : (

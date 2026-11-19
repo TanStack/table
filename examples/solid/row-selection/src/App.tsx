@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createSignal } from 'solid-js'
+import { For, Show, createSignal } from 'solid-js'
 import {
   FlexRender,
   columnFilteringFeature,
@@ -12,7 +12,6 @@ import {
   rowSelectionFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { makeData } from './makeData'
 import type {
   Column,
@@ -121,7 +120,7 @@ function App() {
   ]
 
   const table = createTable({
-    key: 'row-selection', // needed for devtools
+    key: 'row-selection',
     features,
     get data() {
       return data()
@@ -143,7 +142,6 @@ function App() {
     debugTable: true,
   })
 
-  useTanStackTableDevtools(table)
   tableRef.current = table
 
   return (
@@ -168,7 +166,7 @@ function App() {
               <tr>
                 <For each={headerGroup.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
                         <>
                           <FlexRender header={header} />
@@ -210,7 +208,7 @@ function App() {
                 onChange={table.getToggleAllPageRowsSelectedHandler()}
               />
             </td>
-            <td colSpan={20}>
+            <td colspan={20}>
               Page Rows ({table.getRowModel().rows.length.toLocaleString()})
             </td>
           </tr>
@@ -319,39 +317,50 @@ function Filter(props: {
   column: Column<typeof features, Person>
   table: Table<typeof features, Person>
 }) {
-  const firstValue = props.table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(props.column.id)
+  // The filter type follows the first row's value.
+  const firstValue = () =>
+    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)
 
-  return typeof firstValue === 'number' ? (
-    <div class="filter-row">
-      <input
-        type="number"
-        value={((props.column.getFilterValue() as any)?.[0] ?? '') as string}
-        onInput={(e) =>
-          props.column.setFilterValue((old: any) => [e.target.value, old?.[1]])
-        }
-        placeholder={`Min`}
-        class="filter-input"
-      />
-      <input
-        type="number"
-        value={((props.column.getFilterValue() as any)?.[1] ?? '') as string}
-        onInput={(e) =>
-          props.column.setFilterValue((old: any) => [old?.[0], e.target.value])
-        }
-        placeholder={`Max`}
-        class="filter-input"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={(props.column.getFilterValue() ?? '') as string}
-      onInput={(e) => props.column.setFilterValue(e.target.value)}
-      placeholder={`Search...`}
-      class="filter-select"
-    />
+  return (
+    <Show
+      when={typeof firstValue() === 'number'}
+      fallback={
+        <input
+          type="text"
+          value={(props.column.getFilterValue() ?? '') as string}
+          onInput={(e) => props.column.setFilterValue(e.target.value)}
+          placeholder={`Search...`}
+          class="filter-select"
+        />
+      }
+    >
+      <div class="filter-row">
+        <input
+          type="number"
+          value={((props.column.getFilterValue() as any)?.[0] ?? '') as string}
+          onInput={(e) =>
+            props.column.setFilterValue((old: any) => [
+              e.target.value,
+              old?.[1],
+            ])
+          }
+          placeholder={`Min`}
+          class="filter-input"
+        />
+        <input
+          type="number"
+          value={((props.column.getFilterValue() as any)?.[1] ?? '') as string}
+          onInput={(e) =>
+            props.column.setFilterValue((old: any) => [
+              old?.[0],
+              e.target.value,
+            ])
+          }
+          placeholder={`Max`}
+          class="filter-input"
+        />
+      </div>
+    </Show>
   )
 }
 
@@ -363,18 +372,10 @@ function IndeterminateCheckbox(props: {
   onChange?: (event: Event) => void
   onClick?: (event: MouseEvent) => void
 }) {
-  let ref: HTMLInputElement | undefined
-
-  createEffect(() => {
-    if (typeof props.indeterminate === 'boolean' && ref) {
-      ref.indeterminate = !props.checked && props.indeterminate
-    }
-  })
-
   return (
     <input
       type="checkbox"
-      ref={ref}
+      prop:indeterminate={!props.checked && !!props.indeterminate}
       class={(props.class ?? '') + ' sortable-header'}
       checked={props.checked}
       disabled={props.disabled}

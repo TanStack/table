@@ -10,10 +10,10 @@ import {
   sortFn_text,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
-import { createAtom, useSelector } from '@tanstack/solid-store'
-import { For, createSignal } from 'solid-js'
+import { createAtom } from '@tanstack/store'
+import { For, createSignal, onCleanup } from 'solid-js'
 import { makeData } from './makeData'
+import type { ReadonlyAtom } from '@tanstack/store'
 import type { Person } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/solid-table'
 
@@ -21,6 +21,17 @@ import type { PaginationState, SortingState } from '@tanstack/solid-table'
 // external TanStack Store atoms. Each atom is a stand-alone, subscribable
 // reactive cell — you can read, write, or subscribe to it from anywhere,
 // which makes it convenient for sharing state across components or modules.
+
+// Reads an atom as a Solid accessor. `@tanstack/solid-store` will provide this
+// as `useSelector` once it supports Solid 2.
+function useSelector<T>(atom: ReadonlyAtom<T>) {
+  const [value, setValue] = createSignal(atom.get() as Exclude<T, Function>, {
+    ownedWrite: true,
+  })
+  const subscription = atom.subscribe((next) => setValue(() => next))
+  onCleanup(() => subscription.unsubscribe())
+  return value
+}
 
 const features = tableFeatures({
   rowPaginationFeature,
@@ -76,7 +87,7 @@ function App() {
 
   // Create the table and pass your per-slice external atoms.
   const table = createTable({
-    key: 'basic-external-atoms', // needed for devtools
+    key: 'basic-external-atoms',
     features,
     columns,
     get data() {
@@ -88,8 +99,6 @@ function App() {
     },
     debugTable: true,
   })
-
-  useTanStackTableDevtools(table)
 
   return (
     <div class="demo-root">
@@ -104,7 +113,7 @@ function App() {
               <tr>
                 <For each={headerGroup.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <div
                           class={

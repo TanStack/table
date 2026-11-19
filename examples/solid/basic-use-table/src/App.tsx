@@ -4,7 +4,6 @@ import {
   createTable,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { For, createSignal } from 'solid-js'
 
 // This example uses the standalone `createTable` function to create a table without the `createTableHook` util.
@@ -94,7 +93,7 @@ function App() {
 
   // 7. Create the table instance with required features, columns, and data
   const table = createTable({
-    key: 'basic-use-table', // needed for devtools
+    key: 'basic-use-table',
     debugTable: true,
     features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
     columns,
@@ -102,8 +101,6 @@ function App() {
       return data()
     },
   })
-
-  useTanStackTableDevtools(table)
 
   // 8. Render your table markup from the table instance APIs
   return (

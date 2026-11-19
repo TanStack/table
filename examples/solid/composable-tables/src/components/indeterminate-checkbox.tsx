@@ -4,9 +4,8 @@
  *
  * Solid handles reactivity natively, so `checked`/`indeterminate` are read
  * from props (kept reactive by the callers) and the indeterminate DOM property
- * is synced via a ref in createEffect.
+ * is set with `prop:indeterminate`.
  */
-import { createEffect } from 'solid-js'
 
 export function IndeterminateCheckbox(props: {
   indeterminate?: boolean
@@ -16,18 +15,10 @@ export function IndeterminateCheckbox(props: {
   onChange?: (event: Event) => void
   onClick?: (event: MouseEvent) => void
 }) {
-  let ref: HTMLInputElement | undefined
-
-  createEffect(() => {
-    if (typeof props.indeterminate === 'boolean' && ref) {
-      ref.indeterminate = !props.checked && props.indeterminate
-    }
-  })
-
   return (
     <input
       type="checkbox"
-      ref={ref}
+      prop:indeterminate={!props.checked && !!props.indeterminate}
       class={props.class ?? ''}
       checked={props.checked}
       disabled={props.disabled}

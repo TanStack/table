@@ -1381,10 +1381,8 @@ export function cell_getSelectionStartHandler<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>, _contextDocument?: Document) {
-  const canSelect = cell_getCanSelect(cell)
-
   return (e: unknown) => {
-    if (!canSelect) return
+    if (!cell_getCanSelect(cell)) return
 
     const table = cell.table
     const options = table.options
@@ -1460,10 +1458,8 @@ export function cell_getSelectionExtendHandler<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>) {
-  const canSelect = cell_getCanSelect(cell)
-
   return (_e: unknown) => {
-    if (!canSelect) return
+    if (!cell_getCanSelect(cell)) return
 
     const table = cell.table
 

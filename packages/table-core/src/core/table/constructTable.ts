@@ -79,7 +79,11 @@ export function constructTable<
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
 
-  const mergedOptions = { ...defaultOptions, ...tableOptions }
+  // An adapter's `mergeOptions` keeps getters live (Solid's `merge`, for
+  // example), so options backed by signals stay reactive from the start.
+  const mergedOptions = tableOptions.mergeOptions
+    ? tableOptions.mergeOptions(defaultOptions, tableOptions)
+    : { ...defaultOptions, ...tableOptions }
 
   if (_reactivity.wrapExternalAtoms && mergedOptions.atoms) {
     for (const [atomKey, _atom] of Object.entries(mergedOptions.atoms)) {

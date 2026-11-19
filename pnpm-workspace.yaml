@@ -1,6 +1,14 @@
 packages:
   - examples/**/*
   - packages/*
+  # These Solid examples need TanStack libraries that don't support Solid 2 yet
+  # (Virtual, Form), so they stay on the published Solid 1 adapter for now.
+  - '!examples/solid/realtime-trading'
+  - '!examples/solid/spreadsheet'
+  - '!examples/solid/virtualized-columns'
+  - '!examples/solid/virtualized-infinite-scrolling'
+  - '!examples/solid/virtualized-rows'
+  - '!examples/solid/with-tanstack-form'
 
 overrides:
   '@internationalized/date': '3.12.4'
@@ -48,6 +56,19 @@ allowBuilds:
 
 cleanupUnusedCatalogs: true
 minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  # Solid 2.0 stable: published 2026-11-17, less than 24 hours ago
+  - 'solid-js@2.0.0'
+  - '@solidjs/signals@2.0.0'
+  - '@solidjs/web@2.0.0'
+  - '@solidjs/vite-plugin@3.0.0'
+  - '@solidjs/compiler@2.0.0'
+  - '@solidjs/compiler-darwin-arm64@2.0.0'
+  - '@solidjs/compiler-darwin-x64@2.0.0'
+  - '@solidjs/compiler-linux-arm64-gnu@2.0.0'
+  - '@solidjs/compiler-linux-x64-gnu@2.0.0'
+  - '@solidjs/compiler-wasm32-wasi@2.0.0'
+  - '@solidjs/compiler-win32-x64-msvc@2.0.0'
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true

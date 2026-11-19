@@ -230,7 +230,7 @@ function App() {
               <tr>
                 <For each={group.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       {header.isPlaceholder ? null : header.column.id ===
                         'item' ? (
                         `${rowSource()} total`

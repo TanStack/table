@@ -19,8 +19,9 @@ function UsersPage() {
   const { filters, resetFilters, setFilters } = useFilters(Route.fullPath)
 
   const dataQuery = useQuery(() => ({
-    queryKey: ['users', filters()],
-    queryFn: () => fetchUsers(filters()),
+    queryKey: ['users', filters()] as const,
+    // The filters come from the key, so the fetch matches it.
+    queryFn: ({ queryKey }) => fetchUsers(queryKey[1]),
     placeholderData: keepPreviousData,
   }))
 
