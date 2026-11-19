@@ -114,17 +114,14 @@ export function createTable<
     const { data: _data, ...options } = tableOptions
     for (const slices of [options.state, options.initialState, options.atoms])
       if (slices) ({ ...slices })
-    return (built = runWithOwner(owner, () => {
-      const created = constructTable(resolvedOptions) as unknown as SolidTable<
-        TFeatures,
-        TData
-      >
-      created.Subscribe = (props: {
-        children: (atoms: Table<TFeatures, TData>['atoms']) => Element
-      }) => props.children(created.atoms as Table<TFeatures, TData>['atoms'])
-      created.FlexRender = FlexRender
-      return created
-    }))
+    return (built = runWithOwner(
+      owner,
+      () =>
+        constructTable(resolvedOptions) as unknown as SolidTable<
+          TFeatures,
+          TData
+        >,
+    ))
   })
 
   // The table forwards to the built instance. Once built (synchronously,
@@ -150,17 +147,44 @@ export function createTable<
 
   onCleanup(() => reactivity.unmount?.())
 
-  const table = new Proxy({} as SolidTable<TFeatures, TData>, {
-    get: (_, key) => Reflect.get(current(), key),
-    set: (_, key, value) => Reflect.set(current(), key, value),
-    has: (_, key) => key in current(),
-    ownKeys: () => Reflect.ownKeys(current()),
+  // The table's own components, which `<table.Subscribe>` reads in a
+  // component body, so they don't need the built table until they render.
+  const components: Record<PropertyKey, unknown> = {
+    Subscribe: (props: {
+      children: (atoms: Table<TFeatures, TData>['atoms']) => Element
+    }) =>
+      built
+        ? props.children(built.atoms as Table<TFeatures, TData>['atoms'])
+        : () =>
+            props.children(current().atoms as Table<TFeatures, TData>['atoms']),
+    FlexRender,
+  }
+  const target = (key: PropertyKey) =>
+    key in components ? components : current()
+  const table = new Proxy(components, {
+    // Solid checks whether a computed value is a promise or an async iterable
+    // with an untracked read, which gives no table while it is pending.
+    get: (_, key) => {
+      const owner = target(key) as object | undefined
+      return owner && Reflect.get(owner, key)
+    },
+    set: (_, key, value) => Reflect.set(target(key), key, value),
+    has: (_, key) => {
+      const owner = target(key) as object | undefined
+      return !!owner && key in owner
+    },
+    ownKeys: () => [
+      ...new Set([
+        ...Reflect.ownKeys(current()),
+        ...Reflect.ownKeys(components),
+      ]),
+    ],
     getOwnPropertyDescriptor: (_, key) => {
-      const descriptor = Reflect.getOwnPropertyDescriptor(current(), key)
+      const descriptor = Reflect.getOwnPropertyDescriptor(target(key), key)
       if (descriptor) descriptor.configurable = true
       return descriptor
     },
-  })
+  }) as unknown as SolidTable<TFeatures, TData>
 
   return table
 }

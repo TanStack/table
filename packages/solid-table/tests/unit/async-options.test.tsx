@@ -30,12 +30,18 @@ test('waits under Loading for async data instead of throwing', async () => {
       features: stockFeatures,
       getRowId: (row) => row.id,
     })
+    // `<table.Subscribe>` is read in the component body, before the table
+    // is built.
     return (
-      <ul>
-        {table.getRowModel().rows.map((row) => (
-          <li>{row.original.name}</li>
-        ))}
-      </ul>
+      <table.Subscribe>
+        {() => (
+          <ul>
+            {table.getRowModel().rows.map((row) => (
+              <li>{row.original.name}</li>
+            ))}
+          </ul>
+        )}
+      </table.Subscribe>
     )
   }
   const { container } = render(() => (
@@ -67,12 +73,18 @@ test('waits under Loading for async controlled state', async () => {
       features: stockFeatures,
       getRowId: (row) => row.id,
     })
+    // `<table.Subscribe>` is read in the component body, before the table
+    // is built.
     return (
-      <ul>
-        {table.getRowModel().rows.map((row) => (
-          <li>{row.original.name}</li>
-        ))}
-      </ul>
+      <table.Subscribe>
+        {() => (
+          <ul>
+            {table.getRowModel().rows.map((row) => (
+              <li>{row.original.name}</li>
+            ))}
+          </ul>
+        )}
+      </table.Subscribe>
     )
   }
   const { container } = render(() => (
