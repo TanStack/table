@@ -33,13 +33,15 @@ function subscribeToSignal<T>(
   runWithOwner(owner, () =>
     createRoot((d) => {
       dispose = d
-      // Like a TanStack Store subscription, report changes only, starting
-      // from the value at subscribe time.
-      let last = untrack(signal)
+      // Like a TanStack Store subscription, report changes only: the first
+      // run is the value at subscribe time (a pending one waits for it).
+      let started = false
+      let last: T
       createEffect(signal, (value) => {
-        if (value === last) return
+        if (started && value === last) return
         last = value
-        next(value)
+        if (started) next(value)
+        started = true
       })
     }),
   )

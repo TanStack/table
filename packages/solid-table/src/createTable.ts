@@ -7,7 +7,7 @@ import {
   getOwner,
   merge,
   onCleanup,
-  untrack,
+  runWithOwner,
 } from 'solid-js'
 import { FlexRender } from './FlexRender'
 import { solidReactivity } from './reactivity'
@@ -101,11 +101,36 @@ export function createTable<
     mergedOptions,
   ) as TableOptions<TFeatures, TData>
 
-  // Construction reads options and state once; the atoms and memos it creates
-  // do the tracking from then on.
-  const table = untrack(() =>
-    constructTable(resolvedOptions),
-  ) as unknown as SolidTable<TFeatures, TData>
+  // Built in a memo, so construction waits under `Loading` while an option it
+  // reads is still loading, instead of throwing. The memo first reads those
+  // options (tracked, so it re-runs when they resolve), then builds under the
+  // component's owner, so the atoms and memos construction creates outlive
+  // the memo. Once built it returns the table without reading anything.
+  let built: SolidTable<TFeatures, TData> | undefined
+  const instance = createMemo(() => {
+    if (built) return built
+    // Every option but `data`, which construction doesn't read (row models
+    // read it later, in their own tracked scopes).
+    const { data: _data, ...options } = tableOptions
+    for (const slices of [options.state, options.initialState, options.atoms])
+      if (slices) ({ ...slices })
+    return (built = runWithOwner(owner, () => {
+      const created = constructTable(resolvedOptions) as unknown as SolidTable<
+        TFeatures,
+        TData
+      >
+      created.Subscribe = (props: {
+        children: (atoms: Table<TFeatures, TData>['atoms']) => Element
+      }) => props.children(created.atoms as Table<TFeatures, TData>['atoms'])
+      created.FlexRender = FlexRender
+      return created
+    }))
+  })
+
+  // The table forwards to the built instance. Once built (synchronously,
+  // unless an option was loading) it is read directly; before that a read goes
+  // through the memo, so it waits like any other pending value.
+  const current = () => built ?? instance()
 
   // Keep the table's base atoms in step with controlled `state`. The state
   // atoms already read controlled values through the merged options proxy,
@@ -113,23 +138,29 @@ export function createTable<
   // recompute a second time.
   createRenderEffect(
     // A fresh snapshot each run, so a change to any slice reaches the apply.
-    () => (tableOptions.state ? { ...tableOptions.state } : undefined),
-    (state) => {
-      untrack(() =>
-        table_syncExternalStateToBaseAtoms(table as never, state ?? null),
-      )
+    () =>
+      [
+        current(),
+        tableOptions.state ? { ...tableOptions.state } : undefined,
+      ] as const,
+    ([current, state]) => {
+      table_syncExternalStateToBaseAtoms(current as never, state ?? null)
     },
   )
 
   onCleanup(() => reactivity.unmount?.())
 
-  table.Subscribe = (props: {
-    children: (atoms: Table<TFeatures, TData>['atoms']) => Element
-  }) => {
-    return props.children(table.atoms as Table<TFeatures, TData>['atoms'])
-  }
-
-  table.FlexRender = FlexRender
+  const table = new Proxy({} as SolidTable<TFeatures, TData>, {
+    get: (_, key) => Reflect.get(current(), key),
+    set: (_, key, value) => Reflect.set(current(), key, value),
+    has: (_, key) => key in current(),
+    ownKeys: () => Reflect.ownKeys(current()),
+    getOwnPropertyDescriptor: (_, key) => {
+      const descriptor = Reflect.getOwnPropertyDescriptor(current(), key)
+      if (descriptor) descriptor.configurable = true
+      return descriptor
+    },
+  })
 
   return table
 }
