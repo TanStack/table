@@ -1,4 +1,4 @@
-import { For, Show, createMemo, untrack } from 'solid-js'
+import { For, Show, createMemo } from 'solid-js'
 import { createDebouncer } from './debouncer'
 import type { Person } from './makeData'
 import type { features } from './App'
@@ -8,10 +8,9 @@ function ColumnFilter(props: {
   column: Column<typeof features, Person>
   table: Table<typeof features, Person>
 }) {
-  // The filter type is picked once, from the first row's value.
-  const firstValue = untrack(() =>
-    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id),
-  )
+  // The filter type follows the first row's value.
+  const firstValue = () =>
+    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)
 
   const columnFilterValue = () => props.column.getFilterValue()
   const columnFilterDebouncer = createDebouncer(
@@ -20,14 +19,14 @@ function ColumnFilter(props: {
   )
 
   const sortedUniqueValues = createMemo(() =>
-    typeof firstValue === 'number'
+    typeof firstValue() === 'number'
       ? []
       : Array.from(props.column.getFacetedUniqueValues().keys()).sort(),
   )
 
   return (
     <Show
-      when={typeof firstValue === 'number'}
+      when={typeof firstValue() === 'number'}
       fallback={
         <div>
           <datalist id={`${props.column.id}list`}>

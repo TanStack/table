@@ -1,4 +1,4 @@
-import { For, Show, createSignal, untrack } from 'solid-js'
+import { For, Show, createSignal } from 'solid-js'
 import {
   FlexRender,
   columnFilteringFeature,
@@ -317,40 +317,50 @@ function Filter(props: {
   column: Column<typeof features, Person>
   table: Table<typeof features, Person>
 }) {
-  // The filter type is picked once, from the first row's value.
-  const firstValue = untrack(() =>
-    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id),
-  )
+  // The filter type follows the first row's value.
+  const firstValue = () =>
+    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)
 
-  return typeof firstValue === 'number' ? (
-    <div class="filter-row">
-      <input
-        type="number"
-        value={((props.column.getFilterValue() as any)?.[0] ?? '') as string}
-        onInput={(e) =>
-          props.column.setFilterValue((old: any) => [e.target.value, old?.[1]])
-        }
-        placeholder={`Min`}
-        class="filter-input"
-      />
-      <input
-        type="number"
-        value={((props.column.getFilterValue() as any)?.[1] ?? '') as string}
-        onInput={(e) =>
-          props.column.setFilterValue((old: any) => [old?.[0], e.target.value])
-        }
-        placeholder={`Max`}
-        class="filter-input"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={(props.column.getFilterValue() ?? '') as string}
-      onInput={(e) => props.column.setFilterValue(e.target.value)}
-      placeholder={`Search...`}
-      class="filter-select"
-    />
+  return (
+    <Show
+      when={typeof firstValue() === 'number'}
+      fallback={
+        <input
+          type="text"
+          value={(props.column.getFilterValue() ?? '') as string}
+          onInput={(e) => props.column.setFilterValue(e.target.value)}
+          placeholder={`Search...`}
+          class="filter-select"
+        />
+      }
+    >
+      <div class="filter-row">
+        <input
+          type="number"
+          value={((props.column.getFilterValue() as any)?.[0] ?? '') as string}
+          onInput={(e) =>
+            props.column.setFilterValue((old: any) => [
+              e.target.value,
+              old?.[1],
+            ])
+          }
+          placeholder={`Min`}
+          class="filter-input"
+        />
+        <input
+          type="number"
+          value={((props.column.getFilterValue() as any)?.[1] ?? '') as string}
+          onInput={(e) =>
+            props.column.setFilterValue((old: any) => [
+              old?.[0],
+              e.target.value,
+            ])
+          }
+          placeholder={`Max`}
+          class="filter-input"
+        />
+      </div>
+    </Show>
   )
 }
 

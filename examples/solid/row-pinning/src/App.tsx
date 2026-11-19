@@ -11,7 +11,7 @@ import {
   rowPinningFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { For, Show, createMemo, createSignal, untrack } from 'solid-js'
+import { For, Show, createMemo, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type {
   Column,
@@ -374,40 +374,50 @@ function Filter({
   column: Column<typeof features, Person>
   table: Table<typeof features, Person>
 }) {
-  // The filter type is picked once, from the first row's value.
-  const firstValue = untrack(() =>
-    table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id),
-  )
+  // The filter type follows the first row's value.
+  const firstValue = () =>
+    table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
-  return typeof firstValue === 'number' ? (
-    <div class="filter-row">
-      <input
-        type="number"
-        value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onInput={(e) =>
-          column.setFilterValue((old: any) => [e.currentTarget.value, old?.[1]])
-        }
-        placeholder="Min"
-        class="filter-input"
-      />
-      <input
-        type="number"
-        value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onInput={(e) =>
-          column.setFilterValue((old: any) => [old?.[0], e.currentTarget.value])
-        }
-        placeholder="Max"
-        class="filter-input"
-      />
-    </div>
-  ) : (
-    <input
-      type="text"
-      value={(column.getFilterValue() ?? '') as string}
-      onInput={(e) => column.setFilterValue(e.currentTarget.value)}
-      placeholder="Search..."
-      class="filter-select"
-    />
+  return (
+    <Show
+      when={typeof firstValue() === 'number'}
+      fallback={
+        <input
+          type="text"
+          value={(column.getFilterValue() ?? '') as string}
+          onInput={(e) => column.setFilterValue(e.currentTarget.value)}
+          placeholder="Search..."
+          class="filter-select"
+        />
+      }
+    >
+      <div class="filter-row">
+        <input
+          type="number"
+          value={((column.getFilterValue() as any)?.[0] ?? '') as string}
+          onInput={(e) =>
+            column.setFilterValue((old: any) => [
+              e.currentTarget.value,
+              old?.[1],
+            ])
+          }
+          placeholder="Min"
+          class="filter-input"
+        />
+        <input
+          type="number"
+          value={((column.getFilterValue() as any)?.[1] ?? '') as string}
+          onInput={(e) =>
+            column.setFilterValue((old: any) => [
+              old?.[0],
+              e.currentTarget.value,
+            ])
+          }
+          placeholder="Max"
+          class="filter-input"
+        />
+      </div>
+    </Show>
   )
 }
 

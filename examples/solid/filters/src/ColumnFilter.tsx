@@ -1,4 +1,4 @@
-import { Match, Switch, untrack } from 'solid-js'
+import { Match, Switch } from 'solid-js'
 import { createDebouncer } from './debouncer'
 import type { Person } from './makeData'
 import type { features } from './App'
@@ -8,10 +8,9 @@ function ColumnFilter(props: {
   column: Column<typeof features, Person, unknown>
   table: Table<typeof features, Person>
 }) {
-  // The filter type is picked once, from the first row's value.
-  const firstValue = untrack(() =>
-    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id),
-  )
+  // The filter type follows the first row's value.
+  const firstValue = () =>
+    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)
 
   const columnFilterValue = () => props.column.getFilterValue()
   const columnFilterDebouncer = createDebouncer(
@@ -36,7 +35,7 @@ function ColumnFilter(props: {
         </div>
       }
     >
-      <Match when={firstValue instanceof Date}>
+      <Match when={firstValue() instanceof Date}>
         <div>
           <div class="filter-row">
             <input
@@ -72,7 +71,7 @@ function ColumnFilter(props: {
           </div>
         </div>
       </Match>
-      <Match when={typeof firstValue === 'number'}>
+      <Match when={typeof firstValue() === 'number'}>
         <div>
           <div class="filter-row">
             <input
