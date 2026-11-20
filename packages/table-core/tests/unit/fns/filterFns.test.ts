@@ -512,6 +512,38 @@ describe('Filter Functions', () => {
         expect(result).toBe(true)
       })
     })
+    describe('equal values compared the way greaterThan compares them', () => {
+      const makeRow = (value: unknown) => ({ getValue: () => value }) as any
+
+      it('treats a numeric string filter value as equal to the number', () => {
+        const row = mockRows[0]! // age 30
+        expect(filterFn_greaterThanOrEqualTo(row, 'age', '30')).toBe(true)
+        expect(filterFn_lessThan(row, 'age', '30')).toBe(false)
+      })
+
+      it('treats two Date instances with the same time as equal', () => {
+        const row = makeRow(new Date(2024, 0, 15))
+        const filterValue = new Date(2024, 0, 15)
+        expect(filterFn_greaterThanOrEqualTo(row, 'date', filterValue)).toBe(
+          true,
+        )
+        expect(filterFn_lessThan(row, 'date', filterValue)).toBe(false)
+      })
+
+      it('treats strings that differ only in case as equal', () => {
+        const row = mockRows[0]! // firstName 'John'
+        expect(filterFn_greaterThanOrEqualTo(row, 'firstName', 'john')).toBe(
+          true,
+        )
+        expect(filterFn_lessThan(row, 'firstName', 'john')).toBe(false)
+      })
+
+      it('applies the same equality to range endpoints', () => {
+        const row = mockRows[0]! // age 30
+        expect(filterFns.betweenInclusive(row, 'age', ['30', '40'])).toBe(true)
+        expect(filterFns.between(row, 'age', ['20', '30'])).toBe(false)
+      })
+    })
   })
 
   describe('Range Filters', () => {
