@@ -251,6 +251,10 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
           }
         : {}),
     },
+    // v9's `row.toggleExpanded()` is a no-op unless `getCanExpand()` is true,
+    // which by default requires subRows. Every row with a detail panel must be
+    // expandable, even in flat data. A user-supplied `getRowCanExpand` wins.
+    getRowCanExpand: rest.renderDetailPanel ? () => true : undefined,
     getSubRows: (row: TData) => (row as any)?.subRows,
     icons,
     layoutMode,
