@@ -231,7 +231,7 @@ const table = createTable({
 
 A common reason to set `autoResetPageIndex: false` is editing data while viewing the table (for example, inline cell editing). Every edit updates `data`, which recomputes the row models and would otherwise snap the user back to the first page. Setting the option to a static `false` keeps the current page when the row model recomputes. If you also use the expanding feature, pair it with `autoResetExpanded: false` so expanded rows do not collapse on edits.
 
-Be aware, however, that if you turn off `autoResetPageIndex`, you may need to add some logic to handle resetting the `pageIndex` yourself to avoid showing empty pages.
+When `autoResetPageIndex` is off or `autoResetAll` is `false` and a data, filter, or grouping change reduces the row count, the table clamps any now-out-of-range `pageIndex` to the last page, so it does not show an empty page. With `manualPagination`, keeping `pageIndex` within the server's page range is still up to you.
 
 ### Pagination APIs
 
