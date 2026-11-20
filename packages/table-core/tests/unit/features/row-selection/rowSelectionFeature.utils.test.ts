@@ -598,6 +598,21 @@ describe('row_getIsSomeSelected / row_getIsAllSubRowsSelected', () => {
     expect(row_getIsAllSubRowsSelected(row)).toBe(false)
   })
 
+  it('should report a full selection when the only selectable descendants are selected', () => {
+    const table = makeTable(
+      {
+        // grand-children can not be selected
+        enableRowSelection: (row) => row.depth < 2,
+        initialState: { rowSelection: { '0.0': true, '0.1': true } },
+      },
+      [3, 2, 2],
+    )
+    const parent = table.getRow('0')
+
+    expect(row_getIsSomeSelected(parent)).toBe(false)
+    expect(row_getIsAllSubRowsSelected(parent)).toBe(true)
+  })
+
   it('should report nothing when no sub-rows are selectable', () => {
     const table = makeTable({ enableRowSelection: false }, [3, 2])
     const parent = table.getRow('0')
