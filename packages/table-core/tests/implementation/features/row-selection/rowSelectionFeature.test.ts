@@ -439,7 +439,7 @@ describe('rowSelectionFeature', () => {
       expect(result).toEqual(false)
     })
 
-    it('should return some if no children are selectable, but a grand-child is and is selected', () => {
+    it('should return all if no children are selectable, but the only selectable grand-child is selected', () => {
       const data = generateTestData(3, 2, 2)
       const columns = generateColumnDefs(data)
 
@@ -459,7 +459,7 @@ describe('rowSelectionFeature', () => {
 
       const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
-      expect(result).toEqual('some')
+      expect(result).toEqual('all')
     })
 
     it('should return some if some sub-rows are selected', () => {
@@ -526,6 +526,33 @@ describe('rowSelectionFeature', () => {
         initialState: {
           rowSelection: {
             '0.0': true, // first sub-row
+          },
+        },
+        columns,
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]!
+
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
+
+      expect(result).toEqual('all')
+    })
+    it('should ignore nested sub-rows that have no selectable descendants', () => {
+      const data = generateTestData(3, 2, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        // grand-children can not be selected
+        enableRowSelection: (row: Row<typeof features, Person>) =>
+          row.depth < 2,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0.0': true,
+            '0.1': true,
           },
         },
         columns,
