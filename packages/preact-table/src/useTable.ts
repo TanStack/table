@@ -183,7 +183,8 @@ export function useTable<
   return useMemo(
     () => ({
       ...table,
-      options: tableOptions,
+      // resolved options: feature defaults merged under `tableOptions`
+      options: { ...table.options, ...tableOptions },
       state,
     }),
     [table, tableOptions, state],

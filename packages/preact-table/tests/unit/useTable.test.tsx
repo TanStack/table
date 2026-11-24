@@ -2,6 +2,8 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import { useState } from 'preact/hooks'
 import { act } from 'preact/test-utils'
 import {
+  columnResizingFeature,
+  columnSizingFeature,
   createPaginatedRowModel,
   rowPaginationFeature,
   tableFeatures,
@@ -490,5 +492,37 @@ describe('useTable controlled state', () => {
 
     expect(text('Controlled page index')).toBe('3')
     expect(text('Rapid isolated page index')).toBe('3')
+  })
+})
+
+describe('useTable options', () => {
+  it('exposes feature default options on the returned table', () => {
+    const resizingFeatures = tableFeatures({
+      columnSizingFeature,
+      columnResizingFeature,
+    })
+    const resizingColumns: ReadonlyArray<
+      ColumnDef<typeof resizingFeatures, TestRow>
+    > = []
+    let latestTable: PreactTable<typeof resizingFeatures, TestRow> | undefined
+
+    function OptionsHarness({ mode }: { mode?: 'onChange' }) {
+      latestTable = useTable({
+        features: resizingFeatures,
+        columns: resizingColumns,
+        data,
+        ...(mode ? { columnResizeMode: mode } : {}),
+      })
+
+      return null
+    }
+
+    const { rerender } = render(<OptionsHarness />)
+
+    expect(latestTable!.options.columnResizeMode).toBe('onEnd')
+
+    rerender(<OptionsHarness mode="onChange" />)
+
+    expect(latestTable!.options.columnResizeMode).toBe('onChange')
   })
 })

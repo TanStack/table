@@ -9,6 +9,8 @@ import {
   render as testingLibraryRender,
 } from '@testing-library/react'
 import {
+  columnResizingFeature,
+  columnSizingFeature,
   createPaginatedRowModel,
   rowPaginationFeature,
   tableFeatures,
@@ -880,5 +882,37 @@ describe('useTable state subscriptions', () => {
     const errors = consoleError.mock.calls.flat().map(String).join('\n')
 
     expect(errors).not.toContain('The result of getSnapshot should be cached')
+  })
+})
+
+describe('useTable options', () => {
+  it('exposes feature default options on the returned table', () => {
+    const resizingFeatures = tableFeatures({
+      columnSizingFeature,
+      columnResizingFeature,
+    })
+    const resizingColumns: ReadonlyArray<
+      ColumnDef<typeof resizingFeatures, TestRow>
+    > = []
+    let latestTable: ReactTable<typeof resizingFeatures, TestRow> | undefined
+
+    function OptionsHarness({ mode }: { mode?: 'onChange' }) {
+      latestTable = useTable({
+        features: resizingFeatures,
+        columns: resizingColumns,
+        data,
+        ...(mode ? { columnResizeMode: mode } : {}),
+      })
+
+      return null
+    }
+
+    const { rerender } = render(<OptionsHarness />)
+
+    expect(latestTable!.options.columnResizeMode).toBe('onEnd')
+
+    rerender(<OptionsHarness mode="onChange" />)
+
+    expect(latestTable!.options.columnResizeMode).toBe('onChange')
   })
 })
