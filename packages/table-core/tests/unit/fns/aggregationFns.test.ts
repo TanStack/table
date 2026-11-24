@@ -8,6 +8,7 @@ import {
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_min,
+  aggregationFn_mode,
   aggregationFn_sum,
   aggregationFn_unique,
   aggregationFn_uniqueCount,
@@ -117,6 +118,23 @@ describe('aggregation function definitions', () => {
     expect(
       aggregationFn_last.aggregate(context(['a', 'b', undefined])),
     ).toBeUndefined()
+  })
+
+  it('calculates mode and returns first encountered value on tie', () => {
+    expect(aggregationFn_mode.aggregate(context(['a', 'b', 'b', 'a']))).toBe(
+      'a',
+    )
+    expect(
+      aggregationFn_mode.aggregate(context(['a', 'b', 'a', 'c', 'b', 'a'])),
+    ).toBe('a')
+    expect(
+      aggregationFn_mode.aggregate(context(['a', 'b', 'a', 'b', 'c'])),
+    ).toBe('a')
+    expect(aggregationFn_mode.aggregate(context([1, 2, 2, 3, 2, 1]))).toBe(2)
+    expect(
+      aggregationFn_mode.aggregate(context([null, undefined, null, 'x'])),
+    ).toBeNull()
+    expect(aggregationFn_mode.aggregate(context([]))).toBeUndefined()
   })
 
   it('preserves custom definition result inference', () => {
