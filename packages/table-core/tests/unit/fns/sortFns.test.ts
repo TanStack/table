@@ -81,6 +81,21 @@ describe('sortFn_alphanumeric (compareAlphanumeric)', () => {
     expect(cmp(sortFn_alphanumeric, Infinity, '')).toBe(0)
   })
 
+  it('sorts digit runs beyond number precision numerically', () => {
+    expect(
+      cmp(sortFn_alphanumeric, '1100000000000000001', '1100000000000000002'),
+    ).toBe(-1)
+    expect(
+      cmp(sortFn_alphanumeric, '1100000000000000002', '1100000000000000001'),
+    ).toBe(1)
+    expect(
+      cmp(sortFn_alphanumeric, '9999999999999999', '10000000000000000'),
+    ).toBe(-1)
+    expect(
+      cmp(sortFn_alphanumeric, '001100000000000000001', '1100000000000000001'),
+    ).toBe(0)
+  })
+
   it('handles long mixed strings (stress: many chunks)', () => {
     const a = 'abc1def2ghi3jkl4mno5'
     const b = 'abc1def2ghi3jkl4mno10'

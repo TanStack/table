@@ -310,14 +310,21 @@ function compareNumericChunks(
     return 0
   }
 
-  // Preserve parseInt precision-collapse behavior for unusually large chunks.
-  const an = parseInt(aStr.slice(aStart, aEnd), 10)
-  const bn = parseInt(bStr.slice(bStart, bEnd), 10)
-
-  if (an > bn) {
+  // Too long to parse exactly: compare by length, then digit by digit.
+  if (aSignificantLength > bSignificantLength) {
     return 1
   }
-  if (bn > an) {
+  if (bSignificantLength > aSignificantLength) {
+    return -1
+  }
+
+  const aDigits = aStr.slice(aSignificantStart, aEnd)
+  const bDigits = bStr.slice(bSignificantStart, bEnd)
+
+  if (aDigits > bDigits) {
+    return 1
+  }
+  if (bDigits > aDigits) {
     return -1
   }
   return 0
