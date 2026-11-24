@@ -98,7 +98,7 @@ function MyTable(props: {
               <tr>
                 <For each={headerGroup.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       <div>
                         <table.FlexRender header={header} />
                       </div>

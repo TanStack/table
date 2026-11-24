@@ -317,15 +317,13 @@ Because a reorder can widen a selection onto columns the user never picked, some
 
 ```ts
 createEffect(
-  on(
-    () => [
-      table.atoms.columnOrder.get(),
-      table.atoms.columnPinning.get(),
-      table.atoms.columnVisibility.get(),
-    ],
-    () => table.resetCellSelection(true),
-    { defer: true }, // skip the first run so an initialState selection survives
-  ),
+  () => [
+    table.atoms.columnOrder.get(),
+    table.atoms.columnPinning.get(),
+    table.atoms.columnVisibility.get(),
+  ],
+  () => table.resetCellSelection(true),
+  { defer: true }, // skip the first run so an initialState selection survives
 )
 ```
 

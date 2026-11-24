@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createSignal, on } from 'solid-js'
+import { For, Show, createEffect, createSignal } from 'solid-js'
 import { faker } from '@faker-js/faker'
 import {
   FlexRender,
@@ -15,8 +15,6 @@ import {
   sortFn_text,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
-import { createHotkeys } from '@tanstack/solid-hotkeys'
 import { makeData } from './makeData'
 import type { Cell } from '@tanstack/solid-table'
 import type { Person } from './makeData'
@@ -150,7 +148,7 @@ function App() {
   const stressTest = () => setData(makeData(1_000))
 
   const table = createTable({
-    key: 'cell-selection', // needed for devtools
+    key: 'cell-selection',
     features,
     get data() {
       return data()
@@ -168,8 +166,6 @@ function App() {
     debugTable: true,
   })
 
-  useTanStackTableDevtools(table)
-
   const randomizeColumns = () => {
     table.setColumnOrder(
       faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
@@ -181,60 +177,44 @@ function App() {
   // customize this to your needs. `defer: true` skips the first run so an
   // initialState selection survives mount.
   createEffect(
-    on(
-      () => [
-        table.atoms.columnOrder.get(),
-        table.atoms.columnPinning.get(),
-        table.atoms.columnVisibility.get(),
-        table.atoms.sorting.get(),
-      ],
-      () => table.resetCellSelection(true),
-      { defer: true },
-    ),
+    () => [
+      table.atoms.columnOrder.get(),
+      table.atoms.columnPinning.get(),
+      table.atoms.columnVisibility.get(),
+      table.atoms.sorting.get(),
+    ],
+    () => table.resetCellSelection(true),
+    { defer: true },
   )
-
-  let gridRef!: HTMLDivElement
 
   // keyboard navigation is TanStack Hotkeys driving the table's imperative
   // APIs; table-core ships no keydown handling of its own
-  createHotkeys(
-    [
-      { hotkey: 'ArrowUp', callback: () => table.moveCellSelection('up') },
-      { hotkey: 'ArrowDown', callback: () => table.moveCellSelection('down') },
-      { hotkey: 'ArrowLeft', callback: () => table.moveCellSelection('left') },
-      {
-        hotkey: 'ArrowRight',
-        callback: () => table.moveCellSelection('right'),
-      },
-      {
-        hotkey: 'Shift+ArrowUp',
-        callback: () => table.extendCellSelection('up'),
-      },
-      {
-        hotkey: 'Shift+ArrowDown',
-        callback: () => table.extendCellSelection('down'),
-      },
-      {
-        hotkey: 'Shift+ArrowLeft',
-        callback: () => table.extendCellSelection('left'),
-      },
-      {
-        hotkey: 'Shift+ArrowRight',
-        callback: () => table.extendCellSelection('right'),
-      },
-      { hotkey: 'Mod+A', callback: () => table.selectAllCells() },
-      { hotkey: 'Escape', callback: () => table.resetCellSelection(true) },
-      {
-        hotkey: 'Mod+C',
-        callback: () => {
-          void navigator.clipboard.writeText(
-            toTsv(table.getSelectedCellRangesData()),
-          )
-        },
-      },
-    ],
-    () => ({ target: gridRef }),
-  )
+  // Keyboard shortcuts for the grid. `Mod` is Cmd on macOS and Ctrl elsewhere.
+  const directions = {
+    ArrowUp: 'up',
+    ArrowDown: 'down',
+    ArrowLeft: 'left',
+    ArrowRight: 'right',
+  } as const
+  const onGridKeyDown = (e: KeyboardEvent) => {
+    const mod = e.metaKey || e.ctrlKey
+    const direction = directions[e.key as keyof typeof directions]
+    if (direction && !mod && !e.altKey) {
+      if (e.shiftKey) table.extendCellSelection(direction)
+      else table.moveCellSelection(direction)
+    } else if (mod && !e.shiftKey && e.key.toLowerCase() === 'a') {
+      table.selectAllCells()
+    } else if (mod && !e.shiftKey && e.key.toLowerCase() === 'c') {
+      void navigator.clipboard.writeText(
+        toTsv(table.getSelectedCellRangesData()),
+      )
+    } else if (e.key === 'Escape') {
+      table.resetCellSelection(true)
+    } else {
+      return
+    }
+    e.preventDefault()
+  }
 
   return (
     <div class="demo-root">
@@ -341,7 +321,7 @@ function App() {
         {table.getCellSelectionColumnIds().length} columns
       </div>
       <div class="spacer-sm" />
-      <div ref={gridRef} tabindex={0}>
+      <div tabindex={0} onKeyDown={onGridKeyDown}>
         <table>
           <thead>
             <For each={table.getHeaderGroups()}>
@@ -349,7 +329,7 @@ function App() {
                 <tr>
                   <For each={headerGroup.headers}>
                     {(header) => (
-                      <th colSpan={header.colSpan}>
+                      <th colspan={header.colSpan}>
                         <Show when={!header.isPlaceholder}>
                           <button
                             type="button"
@@ -437,7 +417,7 @@ function App() {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={20}>
+              <td colspan={20}>
                 Rows ({table.getRowModel().rows.length.toLocaleString()})
               </td>
             </tr>

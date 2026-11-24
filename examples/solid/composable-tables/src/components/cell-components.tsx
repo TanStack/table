@@ -48,8 +48,8 @@ export function NumberCell() {
  */
 export function StatusCell() {
   const cell = useCellContext<'relationship' | 'complicated' | 'single'>()
-  const status = cell.getValue()
-  return <span class={`status-badge ${status}`}>{status}</span>
+  const status = () => cell.getValue()
+  return <span class={`status-badge ${status()}`}>{status()}</span>
 }
 
 /**
@@ -57,10 +57,10 @@ export function StatusCell() {
  */
 export function ProgressCell() {
   const cell = useCellContext<number>()
-  const progress = cell.getValue()
+  const progress = () => cell.getValue()
   return (
     <div class="progress-bar">
-      <div class="progress-bar-fill" style={{ width: `${progress}%` }} />
+      <div class="progress-bar-fill" style={{ width: `${progress()}%` }} />
     </div>
   )
 }
@@ -123,6 +123,6 @@ export function PriceCell() {
  */
 export function CategoryCell() {
   const cell = useCellContext<'electronics' | 'clothing' | 'food' | 'books'>()
-  const category = cell.getValue()
-  return <span class={`category-badge ${category}`}>{category}</span>
+  const category = () => cell.getValue()
+  return <span class={`category-badge ${category()}`}>{category()}</span>
 }

@@ -15,16 +15,14 @@
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
     "@rolldown/binding-wasm32-wasi": "~1.3.2",
+    "@solidjs/vite-plugin": "^3.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.3.8",
-    "vite-plugin-solid": "^2.11.16"
+    "vite": "^8.3.8"
   },
   "dependencies": {
-    "@tanstack/solid-devtools": "^0.8.14",
-    "@tanstack/solid-query": "^5.107.1",
-    "@tanstack/solid-query-devtools": "^5.107.1",
+    "@solidjs/web": "^2.0.0",
+    "@tanstack/solid-query": "^6.0.0-rc.5",
     "@tanstack/solid-table": "^9.3.1",
-    "@tanstack/solid-table-devtools": "^9.3.2",
-    "solid-js": "^1.9.19"
+    "solid-js": "^2.0.0"
   }
 }

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import solidPlugin from 'vite-plugin-solid'
+import solid from '@solidjs/vite-plugin'
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
 
 export default defineConfig({
@@ -7,7 +7,7 @@ export default defineConfig({
     port: 7777,
     allowedHosts: true,
   },
-  plugins: [solidPlugin(), TanStackRouterVite({ target: 'solid' })],
+  plugins: [solid(), TanStackRouterVite({ target: 'solid' })],
   build: {
     target: 'esnext',
   },

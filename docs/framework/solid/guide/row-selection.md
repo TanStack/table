@@ -268,7 +268,7 @@ If you want a simpler row selection UI, you can just hook up click events to the
   <For each={table.getRowModel().rows}>
     {(row) => (
       <tr
-        classList={{ selected: row.getIsSelected() }}
+        class={{ selected: row.getIsSelected() }}
         onClick={row.getToggleSelectedHandler()}
       >
         <For each={row.getVisibleCells()}>{(cell) => <td>{/* */}</td>}</For>

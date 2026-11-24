@@ -1,5 +1,4 @@
 import { For, createSignal } from 'solid-js'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { createAppColumnHelper, createAppTable } from './hooks/table'
 import { IndeterminateCheckbox } from './components/indeterminate-checkbox'
 import { makeData, makeProductData } from './makeData'
@@ -79,7 +78,7 @@ function UsersTable() {
 
   // Create the table - features and rowModels are already configured!
   const table = createAppTable({
-    key: 'users-table', // needed for devtools
+    key: 'users-table',
     columns,
     get data() {
       return data()
@@ -88,8 +87,6 @@ function UsersTable() {
     enableRowSelection: true,
     // more table options
   })
-
-  useTanStackTableDevtools(table)
 
   return (
     <table.AppTable>
@@ -117,7 +114,7 @@ function UsersTable() {
                             <table.AppHeader header={h}>
                               {(header) => (
                                 <th
-                                  colSpan={header.colSpan}
+                                  colspan={header.colSpan}
                                   class={
                                     header.column.getCanSort()
                                       ? 'sortable-header'
@@ -187,7 +184,7 @@ function UsersTable() {
                                   )
 
                                 return (
-                                  <td colSpan={footer.colSpan}>
+                                  <td colspan={footer.colSpan}>
                                     {footer.isPlaceholder ? null : (
                                       <>
                                         {/* Use FooterSum for numeric columns, FooterColumnId for others */}
@@ -298,7 +295,7 @@ function ProductsTable() {
 
   // Create the table using the same createAppTable hook
   const table = createAppTable({
-    key: 'products-table', // needed for devtools
+    key: 'products-table',
     debugTable: true,
     columns,
     get data() {
@@ -307,8 +304,6 @@ function ProductsTable() {
     getRowId: (row) => row.id,
     enableRowSelection: true,
   })
-
-  useTanStackTableDevtools(table)
 
   return (
     <table.AppTable>
@@ -336,7 +331,7 @@ function ProductsTable() {
                             <table.AppHeader header={h}>
                               {(header) => (
                                 <th
-                                  colSpan={header.colSpan}
+                                  colspan={header.colSpan}
                                   class={
                                     header.column.getCanSort()
                                       ? 'sortable-header'
@@ -405,7 +400,7 @@ function ProductsTable() {
                                   )
 
                                 return (
-                                  <td colSpan={footer.colSpan}>
+                                  <td colspan={footer.colSpan}>
                                     {footer.isPlaceholder ? null : (
                                       <>
                                         {/* Use FooterSum for numeric columns, FooterColumnId for others */}

@@ -98,7 +98,7 @@ function TableComponent(props: TableProps<typeof features, Person>) {
               <tr>
                 <For each={headerGroup.headers}>
                   {(header) => (
-                    <th colSpan={header.colSpan}>
+                    <th colspan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
                         <div>
                           <table.FlexRender header={header} />
@@ -126,7 +126,7 @@ function TableComponent(props: TableProps<typeof features, Person>) {
                 </tr>
                 <Show when={row.getIsExpanded()}>
                   <tr>
-                    <td colSpan={row.getAllCells().length}>
+                    <td colspan={row.getAllCells().length}>
                       {props.renderSubComponent({ row })}
                     </td>
                   </tr>

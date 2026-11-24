@@ -252,7 +252,7 @@ function App() {
                   <tr>
                     <For each={headerGroup.headers}>
                       {(header) => (
-                        <th colSpan={header.colSpan}>
+                        <th colspan={header.colSpan}>
                           <FlexRender header={header} />
                         </th>
                       )}
@@ -293,7 +293,7 @@ function App() {
                   <tr>
                     <For each={footerGroup.headers}>
                       {(header) => (
-                        <th colSpan={header.colSpan}>
+                        <th colspan={header.colSpan}>
                           <Show when={!header.isPlaceholder}>
                             <FlexRender footer={header} />
                           </Show>
@@ -316,7 +316,7 @@ function App() {
                   <tr>
                     <For each={headerGroup.headers}>
                       {(header) => (
-                        <th colSpan={header.colSpan}>
+                        <th colspan={header.colSpan}>
                           <FlexRender header={header} />
                         </th>
                       )}
@@ -352,7 +352,7 @@ function App() {
                   <tr>
                     <For each={headerGroup.headers}>
                       {(header) => (
-                        <th colSpan={header.colSpan}>
+                        <th colspan={header.colSpan}>
                           {header.isPlaceholder ? null : (
                             <FlexRender header={header} />
                           )}
@@ -384,7 +384,7 @@ function App() {
                   <tr>
                     <For each={footerGroup.headers}>
                       {(header) => (
-                        <th colSpan={header.colSpan}>
+                        <th colspan={header.colSpan}>
                           {header.isPlaceholder ? null : (
                             <FlexRender footer={header} />
                           )}
@@ -408,7 +408,7 @@ function App() {
                     <For each={headerGroup.headers}>
                       {(header) => (
                         <Show when={header.rowSpan !== 0}>
-                          <th colSpan={header.colSpan} rowSpan={header.rowSpan}>
+                          <th colspan={header.colSpan} rowspan={header.rowSpan}>
                             <FlexRender header={header} />
                           </th>
                         </Show>

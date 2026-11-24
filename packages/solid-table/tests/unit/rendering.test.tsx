@@ -2,7 +2,7 @@
 
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@solidjs/testing-library'
-import { createSignal } from 'solid-js'
+import { createSignal, flush } from 'solid-js'
 import { stockFeatures } from '@tanstack/table-core'
 import { FlexRender } from '../../src/FlexRender'
 import { createTable } from '../../src/createTable'
@@ -139,13 +139,48 @@ describe('FlexRender', () => {
     expect(renderedCell()).toBe('cell:Ada')
 
     fireEvent.click(screen.getByRole('button', { name: 'Show aggregate' }))
+    flush()
     expect(renderedCell()).toBe('aggregate:Ada')
 
     fireEvent.click(screen.getByRole('button', { name: 'Show placeholder' }))
+    flush()
     expect(renderedCell()).toBe('')
 
     fireEvent.click(screen.getByRole('button', { name: 'Show normal' }))
+    flush()
     expect(renderedCell()).toBe('cell:Ada')
+  })
+
+  test('re-renders a cell template when a value it reads changes', () => {
+    const [suffix, setSuffix] = createSignal('!')
+    function Harness() {
+      const table = createTable({
+        data: [{ id: '1', name: 'Ada' }],
+        columns: [
+          {
+            id: 'name',
+            accessorKey: 'name',
+            // A template is a render function: its reads are tracked.
+            cell: ({ getValue }) => `${getValue<string>()}${suffix()}`,
+          },
+        ],
+        features: stockFeatures,
+        getRowId: (row) => row.id,
+      })
+      const cell = table.getRowModel().rows[0]!.getAllCells()[0]!
+      return (
+        <output aria-label="tracked cell">
+          <FlexRender cell={cell} />
+        </output>
+      )
+    }
+
+    render(() => <Harness />)
+    flush()
+    expect(screen.getByLabelText('tracked cell').textContent).toBe('Ada!')
+    setSuffix('?')
+    flush()
+    expect(screen.getByLabelText('tracked cell').textContent).toBe('Ada?')
   })
 
   test('updates when a truthy cell prop is replaced with a new instance', () => {
@@ -181,6 +216,7 @@ describe('FlexRender', () => {
     ).toBe('cell:Ada')
 
     fireEvent.click(screen.getByRole('button', { name: 'Replace cell' }))
+    flush()
 
     expect(
       screen.getByRole('status', { name: 'rendered cell' }).textContent,
@@ -223,6 +259,7 @@ describe('table.Subscribe', () => {
     fireEvent.click(
       screen.getByRole('button', { name: 'Select subscribed row' }),
     )
+    flush()
 
     expect(
       screen.getByRole('status', { name: 'subscribed selection' }).textContent,
@@ -355,7 +392,9 @@ describe('createTableHook runtime', () => {
               return (
                 <>
                   <output aria-label="header context matches">
-                    {String(headerFromContext === header)}
+                    {String(
+                      Object.getPrototypeOf(headerFromContext) === header,
+                    )}
                   </output>
                   <output aria-label="header component is bound">
                     {String(value.HeaderBadge === HeaderBadge)}
@@ -374,7 +413,9 @@ describe('createTableHook runtime', () => {
               return (
                 <>
                   <output aria-label="footer context matches">
-                    {String(footerFromContext === footer)}
+                    {String(
+                      Object.getPrototypeOf(footerFromContext) === footer,
+                    )}
                   </output>
                   <output aria-label="rendered footer">
                     <value.FlexRender />
