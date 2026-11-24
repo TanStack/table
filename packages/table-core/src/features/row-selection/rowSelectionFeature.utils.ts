@@ -1018,6 +1018,21 @@ export function isSubRowSelected<
 
   const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
 
+  return getSubRowSelection(row, rowSelection) ?? false
+}
+
+/**
+ * Same as `isSubRowSelected`, but returns `undefined` when the row has no
+ * selectable descendants, so a parent can ignore that subtree instead of
+ * counting it as unselected.
+ */
+function getSubRowSelection<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  rowSelection: RowSelectionState,
+): false | 'some' | 'all' | undefined {
   let someSelected = false
   let allChildrenSelected = true
   let someSelectable = false
@@ -1039,9 +1054,10 @@ export function isSubRowSelected<
       }
     }
 
-    // Check row selection of nested subrows
+    // Check row selection of nested subrows. A nested subtree without any
+    // selectable rows has nothing to select, so it is skipped.
     if (subRow.subRows.length) {
-      const subRowChildrenSelected = isSubRowSelected(subRow)
+      const subRowChildrenSelected = getSubRowSelection(subRow, rowSelection)
       if (subRowChildrenSelected === 'all') {
         someSelected = true
         someSelectable = true
@@ -1049,14 +1065,15 @@ export function isSubRowSelected<
         someSelected = true
         allChildrenSelected = false
         someSelectable = true
-      } else {
+      } else if (subRowChildrenSelected === false) {
         allChildrenSelected = false
+        someSelectable = true
       }
     }
   }
 
   // A row with no selectable descendants can never be in a selected state
-  if (!someSelectable) return false
+  if (!someSelectable) return undefined
 
   return allChildrenSelected ? 'all' : someSelected ? 'some' : false
 }
