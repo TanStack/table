@@ -4,6 +4,8 @@ import {
   cellSpanningFeature,
   columnVisibilityFeature,
   constructTable,
+  createPaginatedRowModel,
+  rowPaginationFeature,
 } from '../../../../src'
 import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef, Table } from '../../../../src'
@@ -289,6 +291,56 @@ describe('navigation treats a merge as one stop', () => {
     expect(bounds).toEqual([
       { minRowIndex: 3, maxRowIndex: 8, minColumnIndex: 0, maxColumnIndex: 0 },
     ])
+  })
+})
+
+describe('navigation treats a merge as one stop on a later page', () => {
+  const paginatedFeatures = testFeatures({
+    cellSelectionFeature,
+    cellSpanningFeature,
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  })
+
+  /** Rows South-1, South-2, East-0 and East-1; pagination clips the runs. */
+  function makeSecondPage(
+    regionSpan: { spanRows: boolean } | { spanColumns: number },
+  ) {
+    return constructTable<typeof paginatedFeatures, TestRow>({
+      features: paginatedFeatures,
+      data: makeData(),
+      columns: [
+        { id: 'region', accessorKey: 'region', ...regionSpan },
+        { id: 'team', accessorKey: 'team' },
+        { id: 'amount', accessorKey: 'amount' },
+      ],
+      getRowId: (row) => row.id,
+      renderFallbackValue: '',
+      initialState: { pagination: { pageIndex: 1, pageSize: 4 } },
+    })
+  }
+
+  it.each([
+    ['down', 'South-1', 'East-0'],
+    ['up', 'East-1', 'South-1'],
+  ] as const)('crosses a vertical merge going %s', (direction, from, to) => {
+    const table = makeSecondPage({ spanRows: true })
+
+    table.setFocusedCell(from, 'region')
+    table.moveCellSelection(direction)
+
+    const focused = table.getFocusedCell()!
+    expect([focused.row.id, focused.column.id]).toEqual([to, 'region'])
+  })
+
+  it('crosses a horizontal merge with a single step', () => {
+    const table = makeSecondPage({ spanColumns: 2 })
+
+    table.setFocusedCell('South-1', 'region')
+    table.moveCellSelection('right')
+
+    const focused = table.getFocusedCell()!
+    expect([focused.row.id, focused.column.id]).toEqual(['South-1', 'amount'])
   })
 })
 
