@@ -64,6 +64,12 @@
     "react-dom": "^19.3.1"
   },
   "peerDependencies": {
+    "@types/react": ">=18",
     "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
   }
 }
