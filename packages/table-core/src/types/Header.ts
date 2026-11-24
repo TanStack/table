@@ -3,6 +3,7 @@ import type { CellData, RowData } from './type-utils'
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Header_Header } from '../core/headers/coreHeadersFeature.types'
 import type { Header_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
+import type { Header_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
 
 export interface Header_Core<
   in out TFeatures extends TableFeatures,
@@ -11,6 +12,7 @@ export interface Header_Core<
 > extends Header_Header<TFeatures, TData, TValue> {}
 
 export interface Header_FeatureMap {
+  columnPinningFeature: Header_ColumnPinning
   columnSizingFeature: Header_ColumnSizing
   columnResizingFeature: Header_ColumnResizing
 }
