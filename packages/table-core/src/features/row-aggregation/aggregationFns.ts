@@ -29,7 +29,9 @@ function isValidDate(value: unknown): value is Date {
 }
 
 function getRangeKind(value: unknown): 'date' | 'number' | undefined {
-  if (isNumber(value)) return 'number'
+  // NaN compares false against everything, so one that reached the running
+  // result first would never be replaced.
+  if (isNumber(value)) return Number.isNaN(value) ? undefined : 'number'
   if (isValidDate(value)) return 'date'
   return undefined
 }
@@ -76,7 +78,7 @@ export const aggregationFn_sum = /* @__PURE__ */ constructAggregationFn<
 
 /**
  * Finds the minimum numeric or Date value from the selected rows. Invalid value
- * types are ignored; `NaN` preserves the legacy numeric seeding behavior.
+ * types and `NaN` are ignored, as in the previous API.
  */
 export const aggregationFn_min = /* @__PURE__ */ constructAggregationFn<
   any,
@@ -125,7 +127,7 @@ export const aggregationFn_min = /* @__PURE__ */ constructAggregationFn<
 
 /**
  * Finds the maximum numeric or Date value from the selected rows. Invalid value
- * types are ignored; `NaN` preserves the legacy numeric seeding behavior.
+ * types and `NaN` are ignored, as in the previous API.
  */
 export const aggregationFn_max = /* @__PURE__ */ constructAggregationFn<
   any,
