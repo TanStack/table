@@ -69,6 +69,50 @@ describe('aggregation function definitions', () => {
     ])
   })
 
+  it('skips NaN in min, max and extent wherever it sits in the group', () => {
+    const date = new Date('2024-01-01')
+
+    expect(aggregationFn_min.aggregate(context([Number.NaN, 3, 1]))).toBe(1)
+    expect(aggregationFn_min.aggregate(context([3, Number.NaN, 1]))).toBe(1)
+    expect(aggregationFn_max.aggregate(context([Number.NaN, 3, 1]))).toBe(3)
+    expect(aggregationFn_max.aggregate(context([3, 1, Number.NaN]))).toBe(3)
+    expect(aggregationFn_extent.aggregate(context([Number.NaN, 3, 1]))).toEqual(
+      [1, 3],
+    )
+    // A leading NaN must not lock the group to numbers and drop its dates.
+    expect(aggregationFn_min.aggregate(context([Number.NaN, date]))).toBe(date)
+    expect(
+      aggregationFn_min.aggregate(context([Number.NaN, Number.NaN])),
+    ).toBeUndefined()
+    expect(aggregationFn_extent.aggregate(context([Number.NaN]))).toEqual([
+      undefined,
+      undefined,
+    ])
+
+    const merged = { ...context([]), subRows: [] }
+    expect(
+      aggregationFn_min.merge!({
+        ...merged,
+        subRowResults: [Number.NaN, 3, 1],
+      }),
+    ).toBe(1)
+    expect(
+      aggregationFn_max.merge!({
+        ...merged,
+        subRowResults: [Number.NaN, 3, 1],
+      }),
+    ).toBe(3)
+    expect(
+      aggregationFn_extent.merge!({
+        ...merged,
+        subRowResults: [
+          [Number.NaN, Number.NaN],
+          [1, 3],
+        ],
+      }),
+    ).toEqual([1, 3])
+  })
+
   it('preserves mean coercion and median numeric-only behavior', () => {
     expect(
       aggregationFn_mean.aggregate(context([null, undefined, '', '2', 4, 'x'])),
