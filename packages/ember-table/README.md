@@ -47,16 +47,16 @@
 > [!NOTE]
 > You may know TanStack Table by the adapter names:
 >
-> - [Angular Table](https://tanstack.com/table/latest/docs/framework/angular/angular-table)
-> - [Lit Table](https://tanstack.com/table/latest/docs/framework/lit/lit-table)
+> - [Angular Table](https://tanstack.com/table/latest/docs/framework/angular/quick-start)
+> - [Lit Table](https://tanstack.com/table/latest/docs/framework/lit/quick-start)
 > - [Octane Table](https://tanstack.com/table/latest/docs/framework/octane/quick-start)
 > - [Preact Table](https://tanstack.com/table/latest/docs/framework/preact/quick-start)
-> - [React Table](https://tanstack.com/table/latest/docs/framework/react/react-table)
-> - [Solid Table](https://tanstack.com/table/latest/docs/framework/solid/solid-table)
-> - [Svelte Table](https://tanstack.com/table/latest/docs/framework/svelte/svelte-table)
-> - [Vue Table](https://tanstack.com/table/latest/docs/framework/vue/vue-table)
-> - [Alpine Table](https://tanstack.com/table/latest/docs/framework/alpine/alpine-table)
-> - [Ember Table](https://tanstack.com/table/latest/docs/framework/ember/ember-table)
+> - [React Table](https://tanstack.com/table/latest/docs/framework/react/quick-start)
+> - [Solid Table](https://tanstack.com/table/latest/docs/framework/solid/quick-start)
+> - [Svelte Table](https://tanstack.com/table/latest/docs/framework/svelte/quick-start)
+> - [Vue Table](https://tanstack.com/table/latest/docs/framework/vue/quick-start)
+> - [Alpine Table](https://tanstack.com/table/latest/docs/framework/alpine/quick-start)
+> - [Ember Table](https://tanstack.com/table/latest/docs/framework/ember/quick-start)
 
 A headless table library for building powerful datagrids with full control over markup, styles, and behavior.
 
