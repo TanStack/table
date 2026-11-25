@@ -1,6 +1,7 @@
 import {
   cloneState,
   functionalUpdate,
+  isDevelopmentEnv,
   isFunction,
   setStateSlice,
 } from '../../utils'
@@ -85,7 +86,7 @@ export function column_getAutoFilterFn<
 
   const filterFn = filterFns?.[filterFnName]
 
-  if (process.env.NODE_ENV === 'development' && !filterFn) {
+  if (isDevelopmentEnv() && !filterFn) {
     console.warn(
       `filterFn '${filterFnName}' (auto) for column '${column.id}' is not registered`,
     )
@@ -123,7 +124,7 @@ export function column_getFilterFn<
       : filterFns?.[column.columnDef.filterFn as string]
 
   if (
-    process.env.NODE_ENV === 'development' &&
+    isDevelopmentEnv() &&
     !filterFn &&
     column.columnDef.filterFn !== 'auto' // the auto picker warns on its own
   ) {

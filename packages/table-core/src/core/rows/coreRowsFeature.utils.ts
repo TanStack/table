@@ -1,4 +1,9 @@
-import { flattenBy, hasOwn, makeObjectMap } from '../../utils'
+import {
+  flattenBy,
+  hasOwn,
+  isDevelopmentEnv,
+  makeObjectMap,
+} from '../../utils'
 import { constructCell } from '../cells/constructCell'
 import { expandRowModel } from '../featureStubs'
 import type { Table_Internal } from '../../types/Table'
@@ -333,7 +338,7 @@ export function table_getRow<
   if (!row) {
     row = table.getCoreRowModel().rowsById[rowId]
     if (!row) {
-      if (process.env.NODE_ENV === 'development') {
+      if (isDevelopmentEnv()) {
         throw new Error(`getRow could not find row with ID: ${rowId}`)
       }
       throw new Error()

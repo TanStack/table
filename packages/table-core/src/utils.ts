@@ -250,6 +250,20 @@ export function setStateSlice<K extends (string & {}) | keyof TableState_All>(
 type AnyFunction = (...args: any) => any
 
 /**
+ * Returns whether the runtime is a development environment.
+ *
+ * Reads `process.env.NODE_ENV` when the runtime provides a `process` global.
+ * Bundler-less environments (plain browsers, embedded runtimes) have no
+ * `process`, and are treated as production so dev-only checks are skipped
+ * instead of throwing.
+ */
+export function isDevelopmentEnv(): boolean {
+  return (
+    typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
+  )
+}
+
+/**
  * Returns whether a value is a function.
  */
 export function isFunction<T extends AnyFunction>(d: any): d is T {
@@ -405,7 +419,7 @@ export function tableMemo<
   let debug: boolean | undefined
   let debugCache: boolean | undefined
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevelopmentEnv()) {
     const { debugAll } = table.options
     const { parentName } = getFunctionNameInfo(fnName, '.')
 
@@ -465,7 +479,7 @@ export function tableMemo<
     : undefined
 
   const debugOptions =
-    process.env.NODE_ENV === 'development'
+    isDevelopmentEnv()
       ? {
           onBeforeCompare: () => {
             if (debugCache) {

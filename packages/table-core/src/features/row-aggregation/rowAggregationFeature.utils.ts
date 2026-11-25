@@ -1,4 +1,4 @@
-import { hasOwn, makeObjectMap } from '../../utils'
+import { hasOwn, isDevelopmentEnv, makeObjectMap } from '../../utils'
 import type { Cell } from '../../types/Cell'
 import type { Column, Column_Internal } from '../../types/Column'
 import type { Row } from '../../types/Row'
@@ -192,7 +192,7 @@ export function column_getAutoAggregationFn<
 
   const aggregationFn = column.table._rowModelFns.aggregationFns?.[name]
 
-  if (process.env.NODE_ENV === 'development' && !aggregationFn) {
+  if (isDevelopmentEnv() && !aggregationFn) {
     console.warn(
       `aggregationFn '${name}' (auto) for column '${column.id}' is not registered`,
     )
@@ -213,7 +213,7 @@ function resolveAggregationFn<
 
   const aggregationFn =
     column.table._rowModelFns.aggregationFns?.[ref as string]
-  if (process.env.NODE_ENV === 'development' && !aggregationFn) {
+  if (isDevelopmentEnv() && !aggregationFn) {
     console.warn(
       `aggregationFn '${String(ref)}' for column '${column.id}' is not registered`,
     )
@@ -291,7 +291,7 @@ export function column_getAggregationFns<
           : undefined
 
     if (id === undefined) {
-      if (process.env.NODE_ENV === 'development') {
+      if (isDevelopmentEnv()) {
         console.warn(
           `aggregationFn at index ${i} for column '${column.id}' needs a stable id`,
         )
@@ -301,7 +301,7 @@ export function column_getAggregationFns<
     }
 
     if (ids[id]! > 1) {
-      if (process.env.NODE_ENV === 'development') {
+      if (isDevelopmentEnv()) {
         console.warn(
           `aggregationFn id '${id}' for column '${column.id}' is duplicated`,
         )
