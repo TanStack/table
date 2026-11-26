@@ -1,4 +1,4 @@
-import { makeObjectMap } from '../../utils'
+import { isDevelopmentEnv, makeObjectMap } from '../../utils'
 import { orderLeafColumns } from '../featureStubs'
 import { constructColumn } from './constructColumn'
 import type { Table_Internal } from '../../types/Table'
@@ -272,7 +272,7 @@ export function table_getColumn<
 ): Column<TFeatures, TData, unknown> | undefined {
   const column = table.getAllFlatColumnsById()[columnId]
 
-  if (process.env.NODE_ENV === 'development' && !column) {
+  if (isDevelopmentEnv() && !column) {
     console.warn(`[Table] Column with id '${columnId}' does not exist.`)
   }
 
