@@ -70,6 +70,58 @@ function makeTable(
 }
 
 describe('getFacetedMinMaxValues (real implementation)', () => {
+  it('should use custom facet values for column and global ranges', () => {
+    const table = constructTable<typeof features, Person>({
+      data,
+      features,
+      columns: [
+        {
+          accessorKey: 'age',
+          getUniqueValues: (row) =>
+            row.age == null ? [] : [Number(row.age) / 10],
+        },
+      ],
+    })
+
+    expect(table.getColumn('age')!.getFacetedMinMaxValues()).toEqual([2.5, 4])
+    expect(table.getGlobalFacetedMinMaxValues()).toEqual([2.5, 4])
+  })
+
+  it('should include every numeric facet value from array-valued cells', () => {
+    const table = makeTable({
+      data: [
+        { name: 'A', age: 1, team: 'red', tags: ['5', '20', 'invalid'] },
+        { name: 'B', age: 2, team: 'blue', tags: ['-3', '40'] },
+        { name: 'C', age: 3, team: 'red', tags: [] },
+      ],
+    })
+
+    expect(table.getColumn('tags')!.getFacetedMinMaxValues()).toEqual([-3, 40])
+    table.setColumnFilters([{ id: 'team', value: 'red' }])
+    expect(table.getColumn('tags')!.getFacetedMinMaxValues()).toEqual([5, 20])
+  })
+
+  it('should return undefined when custom facets contribute no values', () => {
+    const table = constructTable<typeof features, Person>({
+      data,
+      features,
+      columns: [{ accessorKey: 'age', getUniqueValues: () => [] }],
+    })
+
+    expect(table.getColumn('age')!.getFacetedMinMaxValues()).toBeUndefined()
+    expect(table.getGlobalFacetedMinMaxValues()).toBeUndefined()
+  })
+
+  it('should ignore display columns without an accessor', () => {
+    const table = constructTable<typeof features, Person>({
+      data,
+      features,
+      columns: [{ id: 'actions' }],
+    })
+
+    expect(table.getColumn('actions')!.getFacetedMinMaxValues()).toBeUndefined()
+  })
+
   it('should return min and max for a numeric column', () => {
     const table = makeTable()
     // '40' coerces via Number(); null coerces to 0
