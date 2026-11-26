@@ -255,12 +255,15 @@ type AnyFunction = (...args: any) => any
  * Reads `process.env.NODE_ENV` when the runtime provides a `process` global.
  * Bundler-less environments (plain browsers, embedded runtimes) have no
  * `process`, and are treated as production so dev-only checks are skipped
- * instead of throwing.
+ * instead of throwing. A bundler replacement of `process.env.NODE_ENV` with
+ * `'development'` is still honored because it makes the direct read safe.
  */
 export function isDevelopmentEnv(): boolean {
-  return (
-    typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
-  )
+  try {
+    return process.env.NODE_ENV === 'development'
+  } catch {
+    return false
+  }
 }
 
 /**
