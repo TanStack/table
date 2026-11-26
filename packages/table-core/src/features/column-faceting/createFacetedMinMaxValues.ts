@@ -79,11 +79,18 @@ function _createFacetedMinMaxValues<
 
   for (let i = 0; i < flatRows.length; i++) {
     for (let c = 0; c < columnIds.length; c++) {
-      const value = Number(flatRows[i]!.getValue(columnIds[c]!))
-      if (Number.isNaN(value)) continue
-      foundAny = true
-      if (value < facetedMinValue) facetedMinValue = value
-      if (value > facetedMaxValue) facetedMaxValue = value
+      // Display columns without an accessor do not contribute facet values.
+      const values = flatRows[i]!.getUniqueValues(columnIds[c]!) as
+        Array<unknown> | undefined
+      if (!values) continue
+
+      for (let j = 0; j < values.length; j++) {
+        const value = Number(values[j])
+        if (Number.isNaN(value)) continue
+        foundAny = true
+        if (value < facetedMinValue) facetedMinValue = value
+        if (value > facetedMaxValue) facetedMaxValue = value
+      }
     }
   }
 
