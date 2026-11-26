@@ -16,6 +16,7 @@ import type { Table_RowExpanding } from '../features/row-expanding/rowExpandingF
 import type { Table_RowPagination } from '../features/row-pagination/rowPaginationFeature.types'
 import type { Table_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { Table_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
+import type { Table_SparseRows } from '../features/sparse-rows/sparseRowsFeature.types'
 import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
 import type { CachedRowModel_All } from './RowModel'
 import type { RowModelFns_All } from './RowModelFns'
@@ -71,6 +72,7 @@ export interface Table_FeatureMap<
   rowPinningFeature: Table_RowPinning<TFeatures, TData>
   rowSelectionFeature: Table_RowSelection<TFeatures, TData>
   rowSortingFeature: Table_RowSorting<TFeatures, TData>
+  sparseRowsFeature: Table_SparseRows<TFeatures, TData>
 }
 
 /**

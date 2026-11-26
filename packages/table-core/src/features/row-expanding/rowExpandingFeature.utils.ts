@@ -1,4 +1,5 @@
 import { cloneState, hasOwn, makeObjectMap, setStateSlice } from '../../utils'
+import { getIsPlaceholderRow } from '../../core/featureStubs'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -290,6 +291,8 @@ export function row_toggleExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, expanded?: boolean) {
+  if (getIsPlaceholderRow(row)) return
+
   const currentExpanded = row.table.atoms.expanded?.get() ?? {}
   const currentExists =
     currentExpanded === true || isExpandedRowId(currentExpanded, row.id)
@@ -349,6 +352,8 @@ export function row_getIsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  if (getIsPlaceholderRow(row)) return false
+
   const expanded: ExpandedState = row.table.atoms.expanded?.get() ?? {}
 
   return !!(
@@ -384,6 +389,8 @@ export function row_getCanExpand<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  if (getIsPlaceholderRow(row)) return false
+
   return (
     row.table.options.getRowCanExpand?.(row) ??
     ((row.table.options.enableExpanding ?? true) && !!row.subRows.length)

@@ -101,6 +101,7 @@
         { "label": "Table Instance", "to": "guide/tables" },
         { "label": "Row Models", "to": "guide/row-models" },
         { "label": "Worker Row Models (Experimental)", "to": "guide/worker-row-models" },
+        { "label": "Sparse Rows", "to": "guide/sparse-rows" },
         { "label": "Rows", "to": "guide/rows" },
         { "label": "Cells", "to": "guide/cells" },
         { "label": "Header Groups", "to": "guide/header-groups" },

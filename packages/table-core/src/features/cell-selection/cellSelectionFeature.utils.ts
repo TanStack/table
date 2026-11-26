@@ -5,6 +5,8 @@ import {
   setStateSlice,
 } from '../../utils'
 import {
+  getCanHavePlaceholderRows,
+  getIsPlaceholderRow,
   getVisibleLeafColumns,
   orderByColumnPinning,
 } from '../../core/featureStubs'
@@ -473,7 +475,8 @@ function isWithinBounds(
  * Checks whether this cell can currently be selected.
  *
  * A column def opting out with `enableCellSelection: false` wins over the table
- * option, matching how the other per-column enable flags resolve.
+ * option, matching how the other per-column enable flags resolve. A cell of a
+ * placeholder row can never be selected.
  *
  * @example
  * ```ts
@@ -485,6 +488,8 @@ export function cell_getCanSelect<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>): boolean {
+  if (getIsPlaceholderRow(cell.row)) return false
+
   const columnDef = cell.column.columnDef as Partial<ColumnDef_CellSelection>
 
   if (columnDef.enableCellSelection === false) return false
@@ -766,7 +771,24 @@ export function table_setFocusedCell<
 // Selection writes
 
 /**
+ * Tests whether a row id is the temporary id of a placeholder row.
+ */
+function isPlaceholderRowId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>, rowId: string): boolean {
+  if (!getCanHavePlaceholderRows(table)) return false
+
+  const row = table.getCoreRowModel().rowsById[rowId]
+
+  return !!row && getIsPlaceholderRow(row)
+}
+
+/**
  * Selects a rectangle using replace, include, or exclude semantics.
+ *
+ * A range that starts or ends on a placeholder row is ignored, because the id
+ * of that row changes when the row is loaded.
  *
  * @example
  * ```ts
@@ -781,6 +803,13 @@ export function table_selectCellRange<
   range: CellSelectionRange,
   opts?: SelectCellRangeOptions,
 ) {
+  if (
+    isPlaceholderRowId(table, range.anchorRowId) ||
+    isPlaceholderRowId(table, range.focusRowId)
+  ) {
+    return
+  }
+
   const mode = opts?.mode ?? (opts?.additive ? 'include' : 'replace')
   const { operation: _operation, ...coordinates } = range
   const nextRange: CellSelectionRange =
@@ -830,12 +859,30 @@ export function table_selectAllCells<
   const rows = table.getRowsInDisplayOrder()
   const columns = getSelectableColumns(table)
 
-  if (!rows.length || !columns.length) return
+  // Placeholder rows cannot hold a corner, so the range runs from the first
+  // to the last loaded row.
+  let firstRowIndex = 0
+  let lastRowIndex = rows.length - 1
+
+  while (
+    firstRowIndex <= lastRowIndex &&
+    getIsPlaceholderRow(rows[firstRowIndex]!)
+  ) {
+    firstRowIndex++
+  }
+  while (
+    lastRowIndex > firstRowIndex &&
+    getIsPlaceholderRow(rows[lastRowIndex]!)
+  ) {
+    lastRowIndex--
+  }
+
+  if (firstRowIndex > lastRowIndex || !columns.length) return
 
   table_selectCellRange(table, {
-    anchorRowId: rows[0]!.id,
+    anchorRowId: rows[firstRowIndex]!.id,
     anchorColumnId: columns[0]!.id,
-    focusRowId: rows[rows.length - 1]!.id,
+    focusRowId: rows[lastRowIndex]!.id,
     focusColumnId: columns[columns.length - 1]!.id,
   })
 }
@@ -985,7 +1032,9 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   const landingRow = rows[landingRowIndex]
   const landingColumn = columns[landingColumnIndex]
 
-  if (!landingRow || !landingColumn) return null
+  if (!landingRow || !landingColumn || getIsPlaceholderRow(landingRow)) {
+    return null
+  }
 
   return {
     rowId: landingRow.id,
@@ -1012,12 +1061,14 @@ export function table_moveCellSelection<
   const active = ranges?.[ranges.length - 1]
 
   if (!active) {
-    const rows = table.getRowModel().rows
+    const firstRow = table
+      .getRowModel()
+      .rows.find((row) => !getIsPlaceholderRow(row))
     const columns = getSelectableColumns(table)
 
-    if (!rows.length || !columns.length) return
+    if (!firstRow || !columns.length) return
 
-    table_setFocusedCell(table, rows[0]!.id, columns[0]!.id)
+    table_setFocusedCell(table, firstRow.id, columns[0]!.id)
     return
   }
 
@@ -1121,7 +1172,8 @@ function forEachSelectedCell<
       rowIndex++
     ) {
       const row = rows[rowIndex]
-      if (!row) continue
+      // A placeholder row is skipped before its cells are built.
+      if (!row || getIsPlaceholderRow(row)) continue
 
       const cellsByColumnId = row.getAllCellsByColumnId()
 
@@ -1251,10 +1303,12 @@ export function table_getSelectedCellCount<
 
   // A per-cell predicate requires enumeration, and so do merged cells: a
   // merge counts once, and after subtraction a merge can straddle several
-  // final rectangles, which breaks per-rectangle arithmetic.
+  // final rectangles, which breaks per-rectangle arithmetic. Placeholder rows
+  // inside a rectangle have no selectable cells, so they need it too.
   if (
     typeof table.options.enableCellSelection === 'function' ||
-    merges.length
+    merges.length ||
+    getCanHavePlaceholderRows(table)
   ) {
     const ids = new Set<string>()
     forEachSelectedCell(table, (cell) => ids.add(cell.id), true)
@@ -1309,7 +1363,7 @@ export function table_getCellSelectionRowIds<
     const bound = bounds[i]!
     for (let index = bound.minRowIndex; index <= bound.maxRowIndex; index++) {
       const row = rows[index]
-      if (!row || seen.has(row.id)) continue
+      if (!row || seen.has(row.id) || getIsPlaceholderRow(row)) continue
       seen.add(row.id)
       ids.push(row.id)
     }

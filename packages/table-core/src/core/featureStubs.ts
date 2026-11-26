@@ -22,6 +22,10 @@ import type {
 } from '../features/row-expanding/rowExpandingFeature.types'
 import type { Table_RowPagination } from '../features/row-pagination/rowPaginationFeature.types'
 import type { Table_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
+import type {
+  Row_SparseRows,
+  Table_SparseRows,
+} from '../features/sparse-rows/sparseRowsFeature.types'
 import type { Cell } from '../types/Cell'
 import type { Column } from '../types/Column'
 import type { Row } from '../types/Row'
@@ -281,4 +285,34 @@ export function getAggregateColumnValue<
   table: Table_Internal<TFeatures, TData>,
 ): Table_RowAggregation['_aggregateColumnValue'] | undefined {
   return (table as Partial<Table_RowAggregation>)._aggregateColumnValue
+}
+
+// Sparse rows
+
+/**
+ * The core row model of the sparse rows feature, or `undefined` when the
+ * feature is not registered.
+ */
+export function createSparseRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+): (() => RowModel<TFeatures, TData>) | undefined {
+  return (
+    table as Partial<Table_SparseRows<TFeatures, TData>>
+  )._createSparseRowModel?.()
+}
+
+/**
+ * Whether a row stands in for a row that is not loaded; no row does without
+ * the feature.
+ */
+export function getIsPlaceholderRow(row: object): boolean {
+  return (row as Partial<Row_SparseRows>).getIsPlaceholder?.() ?? false
+}
+
+/** Whether the table can have placeholder rows; it cannot without the feature. */
+export function getCanHavePlaceholderRows(table: object): boolean {
+  return !!(table as Partial<Table_SparseRows<any, any>>)._createSparseRowModel
 }

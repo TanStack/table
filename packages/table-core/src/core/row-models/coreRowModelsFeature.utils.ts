@@ -1,3 +1,4 @@
+import { createSparseRowModel } from '../featureStubs'
 import { createCoreRowModel } from './createCoreRowModel'
 import type { Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -7,8 +8,8 @@ import type { RowModel } from './coreRowModelsFeature.types'
 /**
  * Resolves the table's unmodified core row model.
  *
- * The factory is created once per table, either from the `coreRowModel` slot on the `features` option
- * or the built-in `createCoreRowModel()`, then reused for later calls.
+ * The factory is created once per table, either from the `coreRowModel` slot on the `features` option,
+ * the sparse rows feature, or the built-in `createCoreRowModel()`, then reused for later calls.
  *
  * @example
  * ```ts
@@ -22,6 +23,7 @@ export function table_getCoreRowModel<
   if (!table._rowModels.coreRowModel) {
     table._rowModels.coreRowModel =
       table.options.features.coreRowModel?.(table) ??
+      createSparseRowModel(table) ??
       createCoreRowModel<TFeatures, TData>()(table)
   }
 

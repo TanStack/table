@@ -7,6 +7,7 @@ import type { RowData } from './type-utils'
 import type { Row_RowExpanding } from '../features/row-expanding/rowExpandingFeature.types'
 import type { Row_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { Row_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
+import type { Row_SparseRows } from '../features/sparse-rows/sparseRowsFeature.types'
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Row_Row } from '../core/rows/coreRowsFeature.types'
 
@@ -27,6 +28,7 @@ export interface Row_FeatureMap<
   rowExpandingFeature: Row_RowExpanding
   rowPinningFeature: Row_RowPinning
   rowSelectionFeature: Row_RowSelection
+  sparseRowsFeature: Row_SparseRows
 }
 
 export type Row<

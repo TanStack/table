@@ -5,6 +5,7 @@ import {
   hasOwn,
   makeObjectMap,
 } from '../../utils'
+import { getIsPlaceholderRow } from '../../core/featureStubs'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -375,7 +376,8 @@ export function table_getIsAllRowsSelected<
         (row) =>
           !isRowSelected(row, rowSelection) &&
           isRowSelectableInSelectAll(row, subtreeCache),
-      )
+      ) ||
+      preGroupedFlatRows.every(getIsPlaceholderRow)
     ) {
       isAllRowsSelected = false
     }
@@ -535,6 +537,8 @@ export function row_toggleSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, value?: boolean, opts?: ToggleSelectedOptions) {
+  if (getIsPlaceholderRow(row)) return
+
   const isSelected = row_getIsSelected(row)
 
   table_setRowSelection(row.table, (old) => {
@@ -625,6 +629,8 @@ export function row_getCanSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  if (getIsPlaceholderRow(row)) return false
+
   const options = row.table.options
   if (typeof options.enableRowSelection === 'function') {
     return options.enableRowSelection(row)
@@ -648,6 +654,8 @@ export function row_getCanSelectSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  if (getIsPlaceholderRow(row)) return false
+
   const options = row.table.options
   if (typeof options.enableSubRowSelection === 'function') {
     return options.enableSubRowSelection(row)
@@ -671,6 +679,8 @@ export function row_getCanMultiSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  if (getIsPlaceholderRow(row)) return false
+
   const options = row.table.options
   if (typeof options.enableMultiRowSelection === 'function') {
     return options.enableMultiRowSelection(row)
@@ -813,6 +823,8 @@ function mutateRowIsSelected<
   respectCanSelectOnDeselect?: boolean,
 ): void {
   const row = table.getRow(rowId, true)
+
+  if (getIsPlaceholderRow(row)) return
 
   if (value) {
     if (!row_getCanMultiSelect(row)) {

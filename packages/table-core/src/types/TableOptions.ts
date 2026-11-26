@@ -19,6 +19,7 @@ import type { TableOptions_RowPagination } from '../features/row-pagination/rowP
 import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
+import type { TableOptions_SparseRows } from '../features/sparse-rows/sparseRowsFeature.types'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type {
   ExtractFeatureMapTypes,
@@ -79,6 +80,7 @@ export interface TableOptions_FeatureMap<
   rowPinningFeature: TableOptions_RowPinning<TFeatures, TData>
   rowSelectionFeature: TableOptions_RowSelection<TFeatures, TData>
   rowSortingFeature: TableOptions_RowSorting
+  sparseRowsFeature: TableOptions_SparseRows
 }
 
 type TableOptions_StockFeatureKeys =
@@ -98,6 +100,7 @@ type TableOptions_StockFeatureKeys =
   | 'rowPinningFeature'
   | 'rowSelectionFeature'
   | 'rowSortingFeature'
+  | 'sparseRowsFeature'
 
 /**
  * Plugin entries declaration-merged into `TableOptions_FeatureMap`, i.e. keys
@@ -160,5 +163,6 @@ export type TableOptions_All<
       TableOptions_RowPinning<TFeatures, TData> &
       TableOptions_RowSelection<TFeatures, TData> &
       TableOptions_RowSorting &
+      TableOptions_SparseRows &
       TableOptions_PluginFeatureMapTypes<TFeatures, TData>
   >

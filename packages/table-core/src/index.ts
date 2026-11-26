@@ -143,4 +143,8 @@ export * from './features/row-sorting/rowSortingFeature.types'
 export * from './features/row-sorting/createSortedRowModel'
 export * from './features/row-sorting/sortFns'
 
+// sparseRowsFeature
+export * from './features/sparse-rows/sparseRowsFeature'
+export * from './features/sparse-rows/sparseRowsFeature.types'
+
 // force
