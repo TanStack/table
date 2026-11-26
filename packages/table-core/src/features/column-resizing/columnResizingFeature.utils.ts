@@ -120,6 +120,9 @@ export function header_getResizeHandler<
     const clientX = isTouchStartEvent(event)
       ? Math.round(event.touches[0]!.clientX)
       : (event as MouseEvent).clientX
+    const touchIdentifier = isTouchStartEvent(event)
+      ? event.touches[0]!.identifier
+      : undefined
 
     const newColumnSizing: ColumnSizingState = makeObjectMap()
 
@@ -220,8 +223,7 @@ export function header_getResizeHandler<
 
       // batch the 'end' commit and the reset into one notification flush
       column.table._reactivity.batch(() => {
-        // touchend events carry no touch position, so fall back to the last
-        // observed move position for the final commit
+        // Cancellation has no final position, so use the last observed move.
         updateOffset('end', clientXPos ?? latestMoveX)
 
         table_setColumnResizing(column.table, (old) => ({
@@ -251,27 +253,40 @@ export function header_getResizeHandler<
       },
     }
 
+    const getChangedTouch = (e: TouchEvent) =>
+      Array.from(e.changedTouches).find(
+        (touch) => touch.identifier === touchIdentifier,
+      )
+
     const touchEvents = {
       moveHandler: (touchEvent: TouchEvent) => {
+        const touch = getChangedTouch(touchEvent)
+        if (!touch) return
+
         if (touchEvent.cancelable) {
           touchEvent.preventDefault()
           touchEvent.stopPropagation()
         }
-        onMove(touchEvent.touches[0]!.clientX)
+        onMove(touch.clientX)
         return false
       },
       upHandler: (e: TouchEvent) => {
+        const touch = getChangedTouch(e)
+        if (!touch) return
+
         removeTouchEvents()
         if (e.cancelable) {
           e.preventDefault()
           e.stopPropagation()
         }
-        onEnd(e.touches[0]?.clientX)
+        onEnd(touch.clientX)
       },
       // the browser fires touchcancel instead of touchend when it takes over
       // the gesture (system gesture, scroll takeover, tab switch); without
       // this the non-passive touchmove listener stays on the document forever
-      cancelHandler: () => {
+      cancelHandler: (e: TouchEvent) => {
+        if (!getChangedTouch(e)) return
+
         removeTouchEvents()
         onEnd()
       },

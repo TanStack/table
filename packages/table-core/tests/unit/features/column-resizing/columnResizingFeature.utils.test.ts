@@ -627,15 +627,26 @@ describe('header_getResizeHandler', () => {
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any, document)
-    handler({ type: 'touchstart', touches: [{ clientX: 100 }] })
+    handler({
+      type: 'touchstart',
+      touches: [{ identifier: 1, clientX: 100 }],
+    })
 
     document.dispatchEvent(
-      Object.assign(new Event('touchmove'), { touches: [{ clientX: 150 }] }),
+      Object.assign(new Event('touchmove'), {
+        touches: [{ identifier: 1, clientX: 150 }],
+        changedTouches: [{ identifier: 1, clientX: 150 }],
+      }),
     )
     expect(sizingUpdates).toHaveLength(1)
 
     removeEventListenerSpy.mockClear()
-    document.dispatchEvent(new Event('touchcancel'))
+    document.dispatchEvent(
+      Object.assign(new Event('touchcancel'), {
+        touches: [],
+        changedTouches: [{ identifier: 1, clientX: 150 }],
+      }),
+    )
 
     expect(removeEventListenerSpy).toHaveBeenCalledWith(
       'touchmove',
@@ -654,12 +665,135 @@ describe('header_getResizeHandler', () => {
     // cancel commits at the last observed position, then moves are ignored
     const updatesAfterCancel = sizingUpdates.length
     document.dispatchEvent(
-      Object.assign(new Event('touchmove'), { touches: [{ clientX: 300 }] }),
+      Object.assign(new Event('touchmove'), {
+        touches: [{ identifier: 1, clientX: 300 }],
+        changedTouches: [{ identifier: 1, clientX: 300 }],
+      }),
     )
     expect(sizingUpdates).toHaveLength(updatesAfterCancel)
 
     removeEventListenerSpy.mockRestore()
   })
+
+  describe.each(['onChange', 'onEnd'] as const)(
+    'touch identity in %s mode',
+    (columnResizeMode) => {
+      function touchEvent(
+        type: string,
+        touches: Array<{ identifier: number; clientX: number }>,
+        changedTouches: Array<{ identifier: number; clientX: number }>,
+      ) {
+        return Object.assign(new Event(type, { cancelable: true }), {
+          touches,
+          changedTouches,
+        })
+      }
+
+      function startResize() {
+        const table = makeTable(1, { columnResizeMode })
+        const header = table.getHeaderGroups()[0]!.headers[0]!
+        const contextDocument = document.implementation.createHTMLDocument()
+        const touch = { identifier: 1, clientX: 100 }
+        header_getResizeHandler(
+          header,
+          contextDocument,
+        )(touchEvent('touchstart', [touch], [touch]))
+        return { table, header, contextDocument }
+      }
+
+      it('should track the starting touch when the touch list order changes', () => {
+        const { table, header, contextDocument } = startResize()
+        const touch = { identifier: 1, clientX: 130 }
+        const otherTouch = { identifier: 2, clientX: 400 }
+
+        contextDocument.dispatchEvent(
+          touchEvent('touchmove', [otherTouch, touch], [touch]),
+        )
+        expect(table.atoms.columnResizing.get().deltaOffset).toBe(30)
+
+        contextDocument.dispatchEvent(
+          touchEvent('touchend', [otherTouch], [touch]),
+        )
+        expect(header.column.getSize()).toBe(180)
+      })
+
+      it('should commit the ending touch position while another touch remains', () => {
+        const { table, header, contextDocument } = startResize()
+        const movedTouch = { identifier: 1, clientX: 130 }
+        const otherTouch = { identifier: 2, clientX: 400 }
+
+        contextDocument.dispatchEvent(
+          touchEvent('touchmove', [movedTouch, otherTouch], [movedTouch]),
+        )
+        contextDocument.dispatchEvent(
+          touchEvent(
+            'touchend',
+            [otherTouch],
+            [{ identifier: 1, clientX: 160 }],
+          ),
+        )
+
+        expect(header.column.getSize()).toBe(210)
+        expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+
+        contextDocument.dispatchEvent(
+          touchEvent('touchmove', [otherTouch], [otherTouch]),
+        )
+        expect(header.column.getSize()).toBe(210)
+      })
+
+      it.each(['touchend', 'touchcancel'])(
+        'should keep resizing when another touch emits %s',
+        (type) => {
+          const { table, header, contextDocument } = startResize()
+          const touch = { identifier: 1, clientX: 100 }
+          const otherTouch = { identifier: 2, clientX: 400 }
+          const event = touchEvent(type, [touch], [otherTouch])
+
+          contextDocument.dispatchEvent(event)
+
+          expect(table.atoms.columnResizing.get().isResizingColumn).toBe(
+            header.column.id,
+          )
+          expect(event.defaultPrevented).toBe(false)
+
+          const movedTouch = { identifier: 1, clientX: 150 }
+          contextDocument.dispatchEvent(
+            touchEvent('touchmove', [movedTouch], [movedTouch]),
+          )
+          contextDocument.dispatchEvent(
+            touchEvent('touchend', [], [movedTouch]),
+          )
+          expect(header.column.getSize()).toBe(200)
+          expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+        },
+      )
+
+      it('should commit the last move when the starting touch is canceled', () => {
+        const { table, header, contextDocument } = startResize()
+        const touch = { identifier: 1, clientX: 130 }
+        const otherTouch = { identifier: 2, clientX: 400 }
+
+        contextDocument.dispatchEvent(
+          touchEvent('touchmove', [touch, otherTouch], [touch]),
+        )
+        contextDocument.dispatchEvent(
+          touchEvent(
+            'touchcancel',
+            [otherTouch],
+            [{ identifier: 1, clientX: 160 }],
+          ),
+        )
+
+        expect(header.column.getSize()).toBe(180)
+        expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+        contextDocument.dispatchEvent(
+          touchEvent('touchmove', [otherTouch], [otherTouch]),
+        )
+        expect(header.column.getSize()).toBe(180)
+      })
+    },
+  )
 })
 
 describe('passiveEventSupported', () => {
