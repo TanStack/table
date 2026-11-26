@@ -64,6 +64,32 @@ Selecting a parent cascades its id plus selectable descendant ids into state, bu
 
 With `enableSubRowSelection: false` (or a per-row predicate), `table.toggleAllRowsSelected()` skips descendants of blocking parents, and `getIsAllRowsSelected()`/`getIsAllPageRowsSelected()` exclude those descendants from the all-selected computation, so the header checkbox still reads checked. Deselect-all skips rows whose `enableRowSelection` resolves false, preserving their selection; use `toggleAllRowsSelected(false, { deselectAll: true })` or `resetRowSelection(true)` to clear everything including disabled and out-of-model ids.
 
+### Select all rows of a remote table
+
+```ts
+export const remoteOptions = {
+  getRowId: (row: Person) => row.id,
+  manualRowSelection: true,
+  rowCount: 100_000,
+}
+```
+
+```ts
+table.toggleAllRowsSelected(true) // rowSelectionMode 'exclude', rowSelection {}
+table.getRow('7').toggleSelected(false) // rowSelection { 7: true }, the deselected ids
+const selectedCount = table.getSelectedRowCount() // rowCount minus deselected rows
+const bulkAction = {
+  mode: table.atoms.rowSelectionMode.get(),
+  ids: Object.keys(table.atoms.rowSelection.get()),
+}
+```
+
+`manualRowSelection: true` allows the `'exclude'` value of the `rowSelectionMode` state; without the option the mode is always read as `'include'` and select-all writes the loaded row ids. With it, `toggleAllRowsSelected(true)` sets `'exclude'` and clears `rowSelection`, `toggleAllRowsSelected(false)` sets `'include'` and clears it, and `resetRowSelection()` resets both slices. In `'exclude'` mode a row is selected when its id is not in `rowSelection`, so rows that load later are selected, `getIsAllRowsSelected()` is true only with no ids, and the selected row models and `getSelectedRowIds()` hold only loaded rows. `getIsAllRowsSelected()` is never true in `'include'` mode under this option, because loaded rows are not all rows.
+
+Set `rowCount` (top-level rows, the same option manual pagination reads) so `getSelectedRowCount()` is right and so a row, range, or page deselect goes back to an empty `'include'` selection when the deselected rows cover every row and no loaded row is still selected. Direct `setRowSelection()` writes and updaters applied later are not normalized. The count skips the ids of loaded sub-rows and group rows but subtracts an id that is not loaded as one row, so with tree data on more than one page take the count from the server. The table does not reset the selection when filters change: "all" means all rows matching the filters at click time, and the deselected ids and `rowCount` belong to those filters, so call `resetRowSelection()` whenever filters or `rowCount` change.
+
+`enableRowSelection` only gates toggling. In `'exclude'` mode a row whose id is not in `rowSelection` is selected (`getIsSelected()`, selected row models, `getSelectedRowCount()`) even when it cannot be toggled, so the server must skip such rows if they must not be part of a bulk action. The row handler and the page APIs skip such a row, so `getIsSomePageRowsSelected()` can be false while `getIsSomeRowsSelected()` is true, and the table stays in `'exclude'` mode while the row is loaded. Select-all is a no-op when `enableRowSelection` is `false` and stays in `'include'` mode when `rowCount` is `0`. `enableSubRowSelection` only cascades to loaded sub-rows; the server must decide how a parent applies to sub-rows that are not loaded.
+
 ## Common mistakes
 
 ### [HIGH] Expecting selection to clean itself
@@ -95,6 +121,27 @@ Correct: `const allSelectedIds = table.getSelectedRowIds()`
 Under manual pagination, unloaded selected IDs have no `Row` object in the current model.
 
 Source: `docs/framework/react/guide/row-selection.md#note-if-you-are-using-manualpagination`
+
+### [HIGH] Reading exclude-mode ids as the selected ids
+
+Wrong:
+
+```ts
+const selectedIds = Object.keys(table.atoms.rowSelection.get())
+```
+
+Correct:
+
+```ts
+const mode = table.atoms.rowSelectionMode.get()
+const ids = Object.keys(table.atoms.rowSelection.get())
+const bulkAction =
+  mode === 'exclude' ? { allRowsExcept: ids } : { onlyRows: ids }
+```
+
+With `manualRowSelection: true`, select-all switches `rowSelectionMode` to `'exclude'` and the keys of `rowSelection` become the deselected row ids. Read the mode with the map, or use `row.getIsSelected()` and `table.getSelectedRowCount()`.
+
+Source: `docs/framework/react/guide/row-selection.md#select-all-rows-of-a-remote-table`
 
 ### [HIGH] Bypassing the range-selection handler
 

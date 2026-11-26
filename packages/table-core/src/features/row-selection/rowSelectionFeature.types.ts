@@ -6,6 +6,15 @@ import type { Row } from '../../types/Row'
 export type RowSelectionState = Record<string, true>
 
 /**
+ * How the ids in `rowSelection` are read.
+ *
+ * - `'include'`: the ids are the selected rows. This is the default.
+ * - `'exclude'`: every row is selected except the ids in `rowSelection`. Only
+ *   used when the `manualRowSelection` table option is `true`.
+ */
+export type RowSelectionMode = 'include' | 'exclude'
+
+/**
  * Controls how toggling a row affects its descendants and ancestors.
  */
 export interface ToggleSelectedOptions {
@@ -29,6 +38,7 @@ export interface ToggleSelectedOptions {
 
 export interface TableState_RowSelection {
   rowSelection: RowSelectionState
+  rowSelectionMode: RowSelectionMode
 }
 
 export interface TableOptions_RowSelection<
@@ -69,11 +79,40 @@ export interface TableOptions_RowSelection<
    */
   isRowRangeSelectionEvent?: (event: unknown) => boolean
   /**
+   * Allows the `'exclude'` row selection mode, for tables that do not load
+   * every row (for example with server-side pagination). Defaults to `false`.
+   *
+   * When `true`, `toggleAllRowsSelected(true)` sets `rowSelectionMode` to
+   * `'exclude'` and clears `rowSelection` instead of writing the loaded row
+   * ids, and `toggleAllRowsSelected(false)` sets the mode back to `'include'`
+   * and clears `rowSelection`. In `'exclude'` mode the ids in `rowSelection`
+   * are the deselected rows, so rows that load later are selected. A row
+   * whose id is not in `rowSelection` is selected, also when
+   * `enableRowSelection` does not let the user toggle it.
+   *
+   * When `false`, `rowSelectionMode` is ignored and always read as
+   * `'include'`.
+   */
+  manualRowSelection?: boolean
+  /**
    * Called with an updater when row selection state changes. Pair this with
    * `state.rowSelection` when using external state; external atoms can own the
    * slice without this callback.
    */
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
+  /**
+   * Called with an updater when the row selection mode changes. Pair this
+   * with `state.rowSelectionMode` when using external state; external atoms
+   * can own the slice without this callback.
+   */
+  onRowSelectionModeChange?: OnChangeFn<RowSelectionMode>
+  /**
+   * The total number of rows, including rows that are not loaded. In
+   * `'exclude'` mode, `table.getSelectedRowCount()` subtracts the deselected
+   * rows from this value. This is the same option that manual pagination
+   * reads, and it counts top-level rows.
+   */
+  rowCount?: number
   // enableGroupingRowSelection?:
   //   | boolean
   //   | ((
@@ -104,7 +143,8 @@ export interface Row_RowSelection {
    */
   getIsAllSubRowsSelected: () => boolean
   /**
-   * Checks whether this row id is selected.
+   * Checks whether this row id is selected. In `'exclude'` mode, a row is
+   * selected when its id is not in `rowSelection`.
    */
   getIsSelected: () => boolean
   /**
@@ -146,8 +186,23 @@ export interface Table_RowSelection<
   getGroupedSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the ids of all selected rows.
+   *
+   * In `'exclude'` mode, only the ids of loaded selected rows are returned,
+   * because the table does not know the ids of rows that are not loaded.
    */
   getSelectedRowIds: () => Array<string>
+  /**
+   * Returns the number of selected rows.
+   *
+   * In `'include'` mode this is the number of ids in `rowSelection`. In
+   * `'exclude'` mode this is `options.rowCount` minus the deselected rows.
+   * `rowCount` counts top-level rows, so the ids of loaded sub-rows and of
+   * group rows are not subtracted. An id that is not loaded is subtracted as
+   * one row, because the table cannot know that it is a sub-row. When
+   * `rowCount` is not set, the selected top-level rows of the filtered row
+   * model are counted instead, which is only correct when every row is loaded.
+   */
+  getSelectedRowCount: () => number
   /**
    * Checks whether every selectable row on the current page is selected.
    * Sub-rows whose ancestors block sub-row selection are ignored.
@@ -156,6 +211,9 @@ export interface Table_RowSelection<
   /**
    * Checks whether every selectable filtered row is selected.
    * Sub-rows whose ancestors block sub-row selection are ignored.
+   *
+   * With `manualRowSelection`, the loaded rows are not all rows, so this is
+   * only `true` in `'exclude'` mode with an empty `rowSelection`.
    */
   getIsAllRowsSelected: () => boolean
   /**
@@ -163,7 +221,8 @@ export interface Table_RowSelection<
    */
   getIsSomePageRowsSelected: () => boolean
   /**
-   * Checks whether at least one row id is selected.
+   * Checks whether at least one row id is selected. Always `true` in
+   * `'exclude'` mode.
    */
   getIsSomeRowsSelected: () => boolean
   /**
@@ -185,13 +244,27 @@ export interface Table_RowSelection<
   /**
    * Resets `rowSelection` to `initialState.rowSelection`.
    *
-   * Pass `true` to ignore initial state and reset to `{}`.
+   * Pass `true` to ignore initial state and reset to `{}`. With
+   * `manualRowSelection`, `rowSelectionMode` is reset in the same way.
    */
   resetRowSelection: (defaultState?: boolean) => void
+  /**
+   * Resets `rowSelectionMode` to `initialState.rowSelectionMode`.
+   *
+   * Pass `true` to ignore initial state and reset to `'include'`. This does
+   * not change `rowSelection`; use `resetRowSelection` to reset both.
+   */
+  resetRowSelectionMode: (defaultState?: boolean) => void
   /**
    * Updates row selection state with a next map or updater function.
    */
   setRowSelection: (updater: Updater<RowSelectionState>) => void
+  /**
+   * Updates the row selection mode with a next value or updater function.
+   * This does not change `rowSelection`, so the ids keep their place but
+   * change their meaning.
+   */
+  setRowSelectionMode: (updater: Updater<RowSelectionMode>) => void
   /**
    * Selects/deselects all rows on the current page.
    */
@@ -204,6 +277,12 @@ export interface Table_RowSelection<
    *
    * Deselecting keeps rows that cannot be selected in the selection map unless
    * `opts.deselectAll` is `true`.
+   *
+   * With `manualRowSelection`, no row ids are written. Selecting sets
+   * `rowSelectionMode` to `'exclude'`, deselecting sets it to `'include'`,
+   * and both clear `rowSelection`. Selecting does nothing when
+   * `enableRowSelection` is `false`, and stays in `'include'` mode when
+   * `rowCount` is `0`.
    */
   toggleAllRowsSelected: (
     value?: boolean,

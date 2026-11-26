@@ -11,6 +11,7 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
+  RowSelectionMode,
   RowSelectionState,
   ToggleSelectedOptions,
 } from './rowSelectionFeature.types'
@@ -30,6 +31,21 @@ import type {
  */
 export function getDefaultRowSelectionState(): RowSelectionState {
   return makeObjectMap()
+}
+
+/**
+ * Creates the default row selection mode.
+ *
+ * The feature default is `'include'`, meaning the ids in `rowSelection` are the
+ * selected rows. Reset APIs use this value when `defaultState` is `true`.
+ *
+ * @example
+ * ```ts
+ * const mode = getDefaultRowSelectionModeState()
+ * ```
+ */
+export function getDefaultRowSelectionModeState(): RowSelectionMode {
+  return 'include'
 }
 
 /**
@@ -57,10 +73,53 @@ export function table_setRowSelection<
 }
 
 /**
+ * Routes a row selection mode updater through the table's mode change handler.
+ *
+ * The mode only has an effect when `options.manualRowSelection` is `true`.
+ * Changing it does not change `rowSelection`, so the ids keep their place but
+ * change their meaning.
+ *
+ * @example
+ * ```ts
+ * table_setRowSelectionMode(table, 'exclude')
+ * ```
+ */
+export function table_setRowSelectionMode<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>, updater: Updater<RowSelectionMode>) {
+  table.options.onRowSelectionModeChange?.(updater)
+}
+
+/**
+ * Resets `rowSelectionMode` to the configured initial state or feature default.
+ *
+ * With no argument, the reset uses `table.initialState.rowSelectionMode` when
+ * it exists. Passing `true` ignores initial state and resets to `'include'`.
+ * `rowSelection` is not changed; `table_resetRowSelection` resets both.
+ *
+ * @example
+ * ```ts
+ * table_resetRowSelectionMode(table)
+ * table_resetRowSelectionMode(table, true)
+ * ```
+ */
+export function table_resetRowSelectionMode<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+  table_setRowSelectionMode(
+    table,
+    getResetRowSelectionMode(table, defaultState),
+  )
+}
+
+/**
  * Resets `rowSelection` to the configured initial state or feature default.
  *
  * With no argument, the reset clones `table.initialState.rowSelection` when it
- * exists. Passing `true` ignores initial state and resets to `{}`.
+ * exists. Passing `true` ignores initial state and resets to `{}`. With
+ * `options.manualRowSelection`, `rowSelectionMode` is reset in the same way.
  *
  * @example
  * ```ts
@@ -74,15 +133,22 @@ export function table_resetRowSelection<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
   table._lastSelectedRowId = null
-  table_setRowSelection(
-    table,
-    defaultState
-      ? makeObjectMap()
-      : Object.assign(
-          makeObjectMap<true>(),
-          cloneState(table.initialState.rowSelection ?? {}),
-        ),
-  )
+  const rowSelection: RowSelectionState = defaultState
+    ? makeObjectMap()
+    : Object.assign(
+        makeObjectMap<true>(),
+        cloneState(table.initialState.rowSelection ?? {}),
+      )
+
+  if (table.options.manualRowSelection) {
+    setRowSelectionAndMode(
+      table,
+      rowSelection,
+      getResetRowSelectionMode(table, defaultState),
+    )
+  } else {
+    table_setRowSelection(table, rowSelection)
+  }
 }
 
 // Table APIs
@@ -95,6 +161,12 @@ export function table_resetRowSelection<
  * `enableSubRowSelection`. Deselecting removes matching selectable ids from the
  * existing selection map; rows that cannot be selected keep their selection
  * unless `opts.deselectAll` is `true`.
+ *
+ * With `options.manualRowSelection`, no row ids are written. Selecting sets
+ * `rowSelectionMode` to `'exclude'`, deselecting sets it to `'include'`, and
+ * both clear `rowSelection`. Selecting does nothing when
+ * `options.enableRowSelection` is `false`, and stays in `'include'` mode when
+ * `options.rowCount` is `0`, because no row can be selected.
  *
  * @example
  * ```ts
@@ -111,6 +183,28 @@ export function table_toggleAllRowsSelected<
 ) {
   // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
   table._lastSelectedRowId = null
+
+  if (table.options.manualRowSelection) {
+    const selectAll =
+      value ??
+      !callMemoOrStaticFn(
+        table,
+        'getIsAllRowsSelected',
+        table_getIsAllRowsSelected,
+      )
+
+    if (selectAll && table.options.enableRowSelection === false) {
+      return
+    }
+
+    setRowSelectionAndMode(
+      table,
+      makeObjectMap<true>(),
+      selectAll && table.options.rowCount !== 0 ? 'exclude' : 'include',
+    )
+    return
+  }
+
   table_setRowSelection(table, (old) => {
     value =
       typeof value !== 'undefined'
@@ -154,7 +248,9 @@ export function table_toggleAllRowsSelected<
  * Selects or deselects every selectable row on the current page.
  *
  * Omitting `value` toggles based on `table_getIsAllPageRowsSelected(table)`.
- * Child rows are included when sub-row selection allows it.
+ * Child rows are included when sub-row selection allows it. In `'exclude'`
+ * mode, deselecting adds the page row ids to `rowSelection`, selecting removes
+ * them, and `opts.deselectAll` switches back to an empty `'include'` selection.
  *
  * @example
  * ```ts
@@ -171,6 +267,37 @@ export function table_toggleAllPageRowsSelected<
 ) {
   // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
   table._lastSelectedRowId = null
+
+  if (isRowSelectionExcluded(table)) {
+    const resolvedValue =
+      value ??
+      !callMemoOrStaticFn(
+        table,
+        'getIsAllPageRowsSelected',
+        table_getIsAllPageRowsSelected,
+      )
+
+    if (opts?.deselectAll && !resolvedValue) {
+      setRowSelectionAndMode(table, makeObjectMap<true>(), 'include')
+      return
+    }
+
+    updateRowSelection(table, true, !resolvedValue, (rowSelection) => {
+      table.getRowModel().rows.forEach((row) => {
+        mutateRowIsSelected(
+          rowSelection,
+          row.id,
+          resolvedValue,
+          true,
+          table,
+          true,
+          true,
+        )
+      })
+    })
+    return
+  }
+
   table_setRowSelection(table, (old) => {
     const resolvedValue =
       typeof value !== 'undefined'
@@ -331,6 +458,9 @@ export function table_getGroupedSelectedRowModel<
 /**
  * Returns the ids of all selected rows.
  *
+ * In `'exclude'` mode, only the ids of loaded selected rows are returned,
+ * because the table does not know the ids of rows that are not loaded.
+ *
  * @example
  * ```ts
  * const selectedRowIds = table_getSelectedRowIds(table)
@@ -340,7 +470,59 @@ export function table_getSelectedRowIds<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): Array<string> {
-  return Object.keys(table.atoms.rowSelection?.get() ?? {})
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
+
+  if (isRowSelectionExcluded(table)) {
+    const selectedRowIds: Array<string> = []
+    table.getCoreRowModel().flatRows.forEach((row) => {
+      if (!isRowSelected(row, rowSelection)) {
+        selectedRowIds.push(row.id)
+      }
+    })
+    return selectedRowIds
+  }
+
+  return Object.keys(rowSelection)
+}
+
+/**
+ * Returns the number of selected rows.
+ *
+ * In `'include'` mode this is the number of ids in `rowSelection`. In
+ * `'exclude'` mode this is `options.rowCount` minus the deselected rows.
+ * `rowCount` counts top-level rows, so the ids of loaded sub-rows and of group
+ * rows are not subtracted. An id that is not loaded is subtracted as one row,
+ * because the table cannot know that it is a sub-row. When `rowCount` is not
+ * set, the selected top-level rows of the filtered row model are counted
+ * instead, which is only correct when every row is loaded.
+ *
+ * @example
+ * ```ts
+ * const selectedRowCount = table_getSelectedRowCount(table)
+ * ```
+ */
+export function table_getSelectedRowCount<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): number {
+  if (!isRowSelectionExcluded(table)) {
+    return callMemoOrStaticFn(
+      table,
+      'getSelectedRowIds',
+      table_getSelectedRowIds,
+    ).length
+  }
+
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
+  const rowCount = table.options.rowCount
+
+  if (rowCount === undefined) {
+    return table
+      .getFilteredRowModel()
+      .rows.filter((row) => !isRowSelected(row, rowSelection)).length
+  }
+
+  return Math.max(0, rowCount - countExcludedRows(table, rowSelection))
 }
 
 /**
@@ -349,6 +531,9 @@ export function table_getSelectedRowIds<
  * The result is false when there are no filtered rows or when selection state is
  * empty. Sub-rows whose ancestors block descent via `enableSubRowSelection` are
  * ignored, matching the rows that `table_toggleAllRowsSelected` selects.
+ *
+ * With `options.manualRowSelection`, the loaded rows are not all rows, so the
+ * result is only true in `'exclude'` mode with an empty `rowSelection`.
  *
  * @example
  * ```ts
@@ -359,8 +544,15 @@ export function table_getIsAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const preGroupedFlatRows = table.getFilteredRowModel().flatRows
   const rowSelection = table.atoms.rowSelection?.get() ?? {}
+
+  if (table.options.manualRowSelection) {
+    return (
+      isRowSelectionExcluded(table) && Object.keys(rowSelection).length === 0
+    )
+  }
+
+  const preGroupedFlatRows = table.getFilteredRowModel().flatRows
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -401,6 +593,7 @@ export function table_getIsAllPageRowsSelected<
 >(table: Table_Internal<TFeatures, TData>) {
   const paginationFlatRows = table.getPaginatedRowModel().flatRows
   const rowSelection = table.atoms.rowSelection?.get() ?? {}
+  const exclude = isRowSelectionExcluded(table)
   const subtreeCache = new Map<string, boolean>()
 
   // Single pass, cheap map lookup first: an unselected row only matters if
@@ -409,7 +602,7 @@ export function table_getIsAllPageRowsSelected<
   let sawSelectableRow = false
   for (let i = 0; i < paginationFlatRows.length; i++) {
     const row = paginationFlatRows[i]!
-    if (!isRowSelected(row, rowSelection)) {
+    if (isRowSelected(row, rowSelection) === exclude) {
       if (isRowSelectableInSelectAll(row, subtreeCache)) {
         return false
       }
@@ -427,7 +620,8 @@ export function table_getIsAllPageRowsSelected<
 /**
  * Checks whether at least one row id is selected.
  *
- * The result stays true when every row is selected.
+ * The result stays true when every row is selected, and is always true in
+ * `'exclude'` mode.
  *
  * @example
  * ```ts
@@ -439,6 +633,7 @@ export function table_getIsSomeRowsSelected<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
+    isRowSelectionExcluded(table) ||
     callMemoOrStaticFn(table, 'getSelectedRowIds', table_getSelectedRowIds)
       .length > 0
   )
@@ -522,6 +717,11 @@ export function table_getToggleAllPageRowsSelectedHandler<
  * only supports single selection. Pass `deselectParents: true` to also remove
  * ancestor row ids from the selection when this row is deselected.
  *
+ * In `'exclude'` mode, deselecting adds the row id to `rowSelection` and
+ * selecting removes it. When `options.rowCount` is set, the deselected rows
+ * cover every row, and no loaded row is selected, the state goes back to an
+ * empty `'include'` selection.
+ *
  * @example
  * ```ts
  * row_toggleSelected(row)
@@ -535,33 +735,47 @@ export function row_toggleSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, value?: boolean, opts?: ToggleSelectedOptions) {
+  const table = row.table
+  const exclude = isRowSelectionExcluded(table)
   const isSelected = row_getIsSelected(row)
+  const nextValue = typeof value !== 'undefined' ? value : !isSelected
 
-  table_setRowSelection(row.table, (old) => {
-    value = typeof value !== 'undefined' ? value : !isSelected
+  if (exclude && nextValue && !row_getCanMultiSelect(row)) {
+    // A single-select row must be the only selected row. A list of deselected
+    // ids cannot say that, so go back to `'include'` mode.
+    setRowSelectionAndMode(
+      table,
+      Object.assign(
+        makeObjectMap<true>(),
+        row_getCanSelect(row) ? { [row.id]: true } : undefined,
+      ),
+      'include',
+    )
+    return
+  }
 
-    const rowSelection = Object.assign(makeObjectMap<true>(), old)
-
+  updateRowSelection(table, exclude, !nextValue, (rowSelection) => {
     mutateRowIsSelected(
       rowSelection,
       row.id,
-      value,
+      nextValue,
       (opts?.selectChildren ?? true) && row_getCanMultiSelect(row),
-      row.table,
+      table,
+      false,
+      exclude,
     )
 
-    if (!value && opts?.deselectParents) {
-      pruneAncestorRowIds(rowSelection, row)
+    if (!nextValue && opts?.deselectParents) {
+      pruneAncestorRowIds(rowSelection, row, exclude)
     }
-
-    return rowSelection
   })
 }
 
 /**
  * Checks whether this row id is selected in `state.rowSelection`.
  *
- * Missing row ids are treated as not selected.
+ * Missing row ids are treated as not selected. In `'exclude'` mode this is
+ * inverted: a row is selected when its id is missing.
  *
  * @example
  * ```ts
@@ -573,7 +787,7 @@ export function row_getIsSelected<
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
   const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
-  return isRowSelected(row, rowSelection)
+  return isRowSelected(row, rowSelection) !== isRowSelectionExcluded(row.table)
 }
 
 /**
@@ -775,9 +989,9 @@ function selectRowRange<TFeatures extends TableFeatures, TData extends RowData>(
   const start = Math.min(anchorIndex, rowIndex)
   const end = Math.max(anchorIndex, rowIndex)
 
-  table_setRowSelection(table, (old) => {
-    const rowSelection = Object.assign(makeObjectMap<true>(), old)
+  const exclude = isRowSelectionExcluded(table)
 
+  updateRowSelection(table, exclude, !value, (rowSelection) => {
     for (let index = start; index <= end; index++) {
       const rangeRow = rows[index]!
       if (!row_getCanSelect(rangeRow) || !row_getCanMultiSelect(rangeRow)) {
@@ -789,16 +1003,139 @@ function selectRowRange<TFeatures extends TableFeatures, TData extends RowData>(
         value,
         includeChildren,
         table,
+        false,
+        exclude,
       )
       if (!value && opts?.deselectParents) {
-        pruneAncestorRowIds(rowSelection, rangeRow)
+        pruneAncestorRowIds(rowSelection, rangeRow, exclude)
       }
     }
-
-    return rowSelection
   })
 
   return true
+}
+
+/**
+ * Returns whether the ids in `rowSelection` are the deselected rows. The mode
+ * state only counts when `options.manualRowSelection` allows it.
+ */
+function isRowSelectionExcluded<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): boolean {
+  return (
+    !!table.options.manualRowSelection &&
+    table.atoms.rowSelectionMode?.get() === 'exclude'
+  )
+}
+
+function getResetRowSelectionMode<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  defaultState?: boolean,
+): RowSelectionMode {
+  return defaultState
+    ? getDefaultRowSelectionModeState()
+    : (table.initialState.rowSelectionMode ?? getDefaultRowSelectionModeState())
+}
+
+function setRowSelectionAndMode<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  rowSelection: RowSelectionState,
+  mode: RowSelectionMode,
+): void {
+  table._reactivity.batch(() => {
+    table_setRowSelection(table, rowSelection)
+    table_setRowSelectionMode(table, mode)
+  })
+}
+
+/**
+ * Counts the deselected rows in the unit of `options.rowCount`, which is
+ * top-level rows. The id of a row that is not loaded counts as a top-level
+ * row, because the table cannot know that it is a sub-row.
+ */
+function countExcludedRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  rowSelection: RowSelectionState,
+): number {
+  const rowsById = table.getCoreRowModel().rowsById
+  const groupedRowsById = table.getGroupedRowModel().rowsById
+  let count = 0
+  for (const rowId of Object.keys(rowSelection)) {
+    const row = rowsById[rowId]
+    if (!row) {
+      // A group row is only in the grouped row model. It is not a data row.
+      if (!groupedRowsById[rowId]) {
+        count++
+      }
+      continue
+    }
+    // Grouping sets `parentId` to a group row id. A group row is not in the
+    // core row model, so that row is still a top-level row.
+    if (row.parentId === undefined || !rowsById[row.parentId]) {
+      count++
+    }
+  }
+  return count
+}
+
+/**
+ * Applies `mutate` to a copy of the row selection map.
+ *
+ * In `'exclude'` mode with a known `options.rowCount`, a deselection that
+ * leaves no row selected goes back to an empty `'include'` selection. Without
+ * this, the mode says "all rows" while no row is selected.
+ *
+ * The count of deselected rows can be too high: an id can be a sub-row of a
+ * page that is not loaded, or `rowCount` can be the count of a new filter. So
+ * the state only goes back when no loaded row is selected.
+ */
+function updateRowSelection<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  exclude: boolean,
+  isDeselect: boolean,
+  mutate: (rowSelection: RowSelectionState) => void,
+): void {
+  const updater = (old: RowSelectionState) => {
+    const rowSelection = Object.assign(makeObjectMap<true>(), old)
+    mutate(rowSelection)
+    return rowSelection
+  }
+  const rowCount = table.options.rowCount
+
+  if (!exclude || !isDeselect || rowCount === undefined) {
+    table_setRowSelection(table, updater)
+    return
+  }
+
+  // Do not change the mode inside the updater. A state setter can run an
+  // updater two times. Use the current state to make the decision. A state
+  // owner that applies the updater later can make this decision stale.
+  const current: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
+  const next = updater(current)
+
+  if (
+    countExcludedRows(table, next) >= rowCount &&
+    table.getCoreRowModel().flatRows.every((row) => isRowSelected(row, next))
+  ) {
+    setRowSelectionAndMode(table, makeObjectMap<true>(), 'include')
+  } else {
+    table_setRowSelection(table, (old) =>
+      old === current ? next : updater(old),
+    )
+  }
 }
 
 function mutateRowIsSelected<
@@ -811,18 +1148,19 @@ function mutateRowIsSelected<
   includeChildren: boolean,
   table: Table_Internal<TFeatures, TData>,
   respectCanSelectOnDeselect?: boolean,
+  exclude?: boolean,
 ): void {
   const row = table.getRow(rowId, true)
 
   if (value) {
-    if (!row_getCanMultiSelect(row)) {
+    if (!exclude && !row_getCanMultiSelect(row)) {
       Object.keys(rowSelection).forEach((key) => delete rowSelection[key])
     }
     if (row_getCanSelect(row)) {
-      rowSelection[rowId] = true
+      writeRowIsSelected(rowSelection, rowId, true, exclude)
     }
   } else if (!respectCanSelectOnDeselect || row_getCanSelect(row)) {
-    delete rowSelection[rowId]
+    writeRowIsSelected(rowSelection, rowId, false, exclude)
   }
 
   if (includeChildren && row.subRows.length && row_getCanSelectSubRows(row)) {
@@ -834,8 +1172,26 @@ function mutateRowIsSelected<
         includeChildren,
         table,
         respectCanSelectOnDeselect,
+        exclude,
       ),
     )
+  }
+}
+
+/**
+ * Writes one row's selected state into the map. In `'exclude'` mode the map
+ * holds the deselected ids, so the write is inverted.
+ */
+function writeRowIsSelected(
+  rowSelection: RowSelectionState,
+  rowId: string,
+  value: boolean,
+  exclude?: boolean,
+): void {
+  if (value !== !!exclude) {
+    rowSelection[rowId] = true
+  } else {
+    delete rowSelection[rowId]
   }
 }
 
@@ -891,7 +1247,11 @@ function isRowSelectableInSelectAll<
 function pruneAncestorRowIds<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(rowSelection: RowSelectionState, row: Row<TFeatures, TData>): void {
+>(
+  rowSelection: RowSelectionState,
+  row: Row<TFeatures, TData>,
+  exclude?: boolean,
+): void {
   // Deselecting a descendant always invalidates "all children selected", so
   // every ancestor id can be deleted unconditionally. Deliberately not gated
   // by `row_getCanSelect`: like the other targeted deselection paths, pruning
@@ -901,7 +1261,7 @@ function pruneAncestorRowIds<
   const rowsById = row.table.getCoreRowModel().rowsById
   let parentId = row.parentId
   while (parentId !== undefined) {
-    delete rowSelection[parentId]
+    writeRowIsSelected(rowSelection, parentId, false, exclude)
     parentId = (rowsById[parentId] ?? row.table.getRow(parentId, true)).parentId
   }
 }
@@ -914,12 +1274,13 @@ function selectRowsRecursively<
   rowSelection: RowSelectionState,
   selectedFlatRows: Array<Row<TFeatures, TData>>,
   selectedRowsById: Record<string, Row<TFeatures, TData>>,
+  exclude: boolean,
 ): Array<Row<TFeatures, TData>> {
   const result: Array<Row<TFeatures, TData>> = []
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]!
-    const isSelected = isRowSelected(row, rowSelection)
+    const isSelected = isRowSelected(row, rowSelection) !== exclude
 
     if (isSelected) {
       selectedFlatRows.push(row)
@@ -934,6 +1295,7 @@ function selectRowsRecursively<
         rowSelection,
         selectedFlatRows,
         selectedRowsById,
+        exclude,
       )
 
       if (isSelected) {
@@ -955,7 +1317,8 @@ function selectRowsRecursively<
  * Builds a row model containing rows selected by the current row selection state.
  *
  * The result is derived from the supplied row model, so selected ids absent from
- * that model are not materialized as rows.
+ * that model are not materialized as rows. In `'exclude'` mode, the result
+ * contains the rows of the supplied row model whose ids are not in the state.
  *
  * @example
  * ```ts
@@ -979,6 +1342,7 @@ export function selectRowsFn<
       rowSelection,
       newSelectedFlatRows,
       newSelectedRowsById,
+      isRowSelectionExcluded(table),
     ),
     flatRows: newSelectedFlatRows,
     rowsById: newSelectedRowsById,
@@ -987,6 +1351,9 @@ export function selectRowsFn<
 
 /**
  * Returns whether a row id is selected in the current row selection state.
+ *
+ * This is the plain map lookup. In `'exclude'` mode the map holds the
+ * deselected ids, so use `row_getIsSelected` to read the selected state.
  *
  * @example
  * ```ts
@@ -1017,6 +1384,7 @@ export function isSubRowSelected<
   if (!row.subRows.length) return false
 
   const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
+  const exclude = isRowSelectionExcluded(row.table)
 
   let someSelected = false
   let allChildrenSelected = true
@@ -1032,7 +1400,7 @@ export function isSubRowSelected<
 
     if (row_getCanSelect(subRow)) {
       someSelectable = true
-      if (isRowSelected(subRow, rowSelection)) {
+      if (isRowSelected(subRow, rowSelection) !== exclude) {
         someSelected = true
       } else {
         allChildrenSelected = false

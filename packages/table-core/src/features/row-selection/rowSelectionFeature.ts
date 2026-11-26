@@ -4,6 +4,7 @@ import {
   makeStateUpdater,
 } from '../../utils'
 import {
+  getDefaultRowSelectionModeState,
   getDefaultRowSelectionState,
   row_getCanMultiSelect,
   row_getCanSelect,
@@ -20,12 +21,15 @@ import {
   table_getIsSomePageRowsSelected,
   table_getIsSomeRowsSelected,
   table_getPreSelectedRowModel,
+  table_getSelectedRowCount,
   table_getSelectedRowIds,
   table_getSelectedRowModel,
   table_getToggleAllPageRowsSelectedHandler,
   table_getToggleAllRowsSelectedHandler,
   table_resetRowSelection,
+  table_resetRowSelectionMode,
   table_setRowSelection,
+  table_setRowSelectionMode,
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './rowSelectionFeature.utils'
@@ -48,6 +52,7 @@ export const rowSelectionFeature: TableFeature = {
   getInitialState: (initialState) => {
     return {
       rowSelection: getDefaultRowSelectionState(),
+      rowSelectionMode: getDefaultRowSelectionModeState(),
       ...initialState,
     }
   },
@@ -55,6 +60,7 @@ export const rowSelectionFeature: TableFeature = {
   getDefaultTableOptions: (table) => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
+      onRowSelectionModeChange: makeStateUpdater('rowSelectionMode', table),
       enableRowSelection: true,
       enableMultiRowSelection: true,
       enableRowRangeSelection: true,
@@ -82,6 +88,8 @@ export const rowSelectionFeature: TableFeature = {
         memoDeps: (row) => [
           row.subRows,
           row.table.atoms.rowSelection?.get(),
+          row.table.atoms.rowSelectionMode?.get(),
+          row.table.options.manualRowSelection,
           row.table.options.enableRowSelection,
         ],
       },
@@ -90,6 +98,8 @@ export const rowSelectionFeature: TableFeature = {
         memoDeps: (row) => [
           row.subRows,
           row.table.atoms.rowSelection?.get(),
+          row.table.atoms.rowSelectionMode?.get(),
+          row.table.options.manualRowSelection,
           row.table.options.enableRowSelection,
         ],
       },
@@ -116,6 +126,12 @@ export const rowSelectionFeature: TableFeature = {
       table_resetRowSelection: {
         fn: (defaultState) => table_resetRowSelection(table, defaultState),
       },
+      table_setRowSelectionMode: {
+        fn: (updater) => table_setRowSelectionMode(table, updater),
+      },
+      table_resetRowSelectionMode: {
+        fn: (defaultState) => table_resetRowSelectionMode(table, defaultState),
+      },
       table_toggleAllRowsSelected: {
         fn: (value, opts) => table_toggleAllRowsSelected(table, value, opts),
       },
@@ -130,6 +146,8 @@ export const rowSelectionFeature: TableFeature = {
         fn: () => table_getSelectedRowModel(table),
         memoDeps: () => [
           table.atoms.rowSelection?.get(),
+          table.atoms.rowSelectionMode?.get(),
+          table.options.manualRowSelection,
           table.getCoreRowModel(),
         ],
       },
@@ -137,6 +155,8 @@ export const rowSelectionFeature: TableFeature = {
         fn: () => table_getFilteredSelectedRowModel(table),
         memoDeps: () => [
           table.atoms.rowSelection?.get(),
+          table.atoms.rowSelectionMode?.get(),
+          table.options.manualRowSelection,
           table.getFilteredRowModel(),
         ],
       },
@@ -144,17 +164,51 @@ export const rowSelectionFeature: TableFeature = {
         fn: () => table_getGroupedSelectedRowModel(table),
         memoDeps: () => [
           table.atoms.rowSelection?.get(),
+          table.atoms.rowSelectionMode?.get(),
+          table.options.manualRowSelection,
           table.getSortedRowModel(),
         ],
       },
       table_getSelectedRowIds: {
         fn: () => table_getSelectedRowIds(table),
-        memoDeps: () => [table.atoms.rowSelection?.get()],
+        memoDeps: () => {
+          const mode = table.atoms.rowSelectionMode?.get()
+          const manual = table.options.manualRowSelection
+          return [
+            table.atoms.rowSelection?.get(),
+            mode,
+            manual,
+            manual && mode === 'exclude' ? table.getCoreRowModel() : undefined,
+          ]
+        },
+      },
+      table_getSelectedRowCount: {
+        fn: () => table_getSelectedRowCount(table),
+        memoDeps: () => {
+          const mode = table.atoms.rowSelectionMode?.get()
+          const manual = table.options.manualRowSelection
+          const rowCount = table.options.rowCount
+          const rowModels =
+            !manual || mode !== 'exclude'
+              ? []
+              : rowCount === undefined
+                ? [table.getFilteredRowModel()]
+                : [table.getCoreRowModel(), table.getGroupedRowModel()]
+          return [
+            table.atoms.rowSelection?.get(),
+            mode,
+            manual,
+            rowCount,
+            ...rowModels,
+          ]
+        },
       },
       table_getIsAllRowsSelected: {
         fn: () => table_getIsAllRowsSelected(table),
         memoDeps: () => [
           table.atoms.rowSelection?.get(),
+          table.atoms.rowSelectionMode?.get(),
+          table.options.manualRowSelection,
           table.getFilteredRowModel(),
           table.options.enableRowSelection,
           table.options.enableSubRowSelection,
@@ -164,6 +218,8 @@ export const rowSelectionFeature: TableFeature = {
         fn: () => table_getIsAllPageRowsSelected(table),
         memoDeps: () => [
           table.atoms.rowSelection?.get(),
+          table.atoms.rowSelectionMode?.get(),
+          table.options.manualRowSelection,
           table.getPaginatedRowModel(),
           table.options.enableRowSelection,
           table.options.enableSubRowSelection,
@@ -171,12 +227,18 @@ export const rowSelectionFeature: TableFeature = {
       },
       table_getIsSomeRowsSelected: {
         fn: () => table_getIsSomeRowsSelected(table),
-        memoDeps: () => [table.atoms.rowSelection?.get()],
+        memoDeps: () => [
+          table.atoms.rowSelection?.get(),
+          table.atoms.rowSelectionMode?.get(),
+          table.options.manualRowSelection,
+        ],
       },
       table_getIsSomePageRowsSelected: {
         fn: () => table_getIsSomePageRowsSelected(table),
         memoDeps: () => [
           table.atoms.rowSelection?.get(),
+          table.atoms.rowSelectionMode?.get(),
+          table.options.manualRowSelection,
           table.getPaginatedRowModel(),
           table.options.enableRowSelection,
         ],
