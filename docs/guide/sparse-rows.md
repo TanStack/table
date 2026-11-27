@@ -135,7 +135,7 @@ Row 99,999 under one sort order is a different row under another sort order. The
 
 A placeholder ID holds only the index of its row. After you start again with a new `data` array, the same placeholder ID is a different row on the server. State that holds a placeholder ID then points at that different row.
 
-- The table stores a placeholder ID in one state only: the focused cell of `cellSelectionFeature`, while that cell is in a placeholder row. See [Cell Selection](#cell-selection). Call `table.resetCellSelection()` when you start again, or the focus stays at the same index.
+- The table stores a placeholder ID in one state only: the focused cell of `cellSelectionFeature`, while that cell is in a placeholder row. See [Cell Selection](#cell-selection). Call `table.resetCellSelection()` when you start again. If you do not, the focus stays at the same index, and the loaded row at that index has the focused cell and its selection.
 - Row selection, row pinning, and expanding keep no state for a placeholder row, so they hold no placeholder ID.
 - Do not put a placeholder ID into your own state, for example the ID of the row that a context menu is open for. If you must, reset that state when you start again.
 

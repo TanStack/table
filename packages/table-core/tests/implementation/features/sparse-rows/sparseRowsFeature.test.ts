@@ -1109,10 +1109,51 @@ describe('cell selection with placeholder rows', () => {
     }))
 
     expect(table.getFocusedCell()!.row.id).toBe('person-105')
+    expect(table.getSelectedCellIds()).toEqual(['person-105_age'])
 
     table.resetCellSelection(true)
 
     expect(table.getFocusedCell()).toBeUndefined()
+    expect(table.getSelectedCellIds()).toEqual([])
+  })
+
+  it('should let the focus follow the row on a page that is cut on the client', () => {
+    const pageFeatures = testFeatures({
+      cellSelectionFeature,
+      rowPaginationFeature,
+      sparseRowsFeature,
+      paginatedRowModel: createPaginatedRowModel(),
+    })
+    const table = constructTable<typeof pageFeatures, Person>({
+      features: pageFeatures,
+      columns: [{ accessorKey: 'name', id: 'name' }],
+      data: makeSparseData([2, 4]),
+      rowCount: 10,
+      getRowId: (person) => person.id,
+      initialState: { pagination: { pageIndex: 1, pageSize: 5 } },
+    })
+
+    table.moveCellSelection('down')
+    table.moveCellSelection('down')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('__placeholder_6', 'name', '__placeholder_6', 'name'),
+    ])
+
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 9]) }))
+
+    const loadedCell = table.getRowModel().rows[1]!.getAllCells()[0]!
+
+    expect(loadedCell.row.id).toBe('person-6')
+    expect(table.getFocusedCell()).toBe(loadedCell)
+    expect(loadedCell.getIsFocused()).toBe(true)
+    expect(loadedCell.getIsSelected()).toBe(true)
+
+    table.moveCellSelection('up')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('person-5', 'name', 'person-5', 'name'),
+    ])
   })
 
   it('should select from the first to the last loaded row with select all', () => {

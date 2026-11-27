@@ -71,6 +71,7 @@ export function table_setCellSelection<
 ) {
   // Unguarded: selection updates are pointer-driven and ranges can be large.
   // Keep the hot path direct; the auto-reset path guards in reset below.
+  // Only a table that can have placeholder rows checks the new ranges.
   table.options.onCellSelectionChange?.(
     getCanHavePlaceholderRows(table)
       ? (old) => removePlaceholderCorners(table, functionalUpdate(updater, old))
@@ -85,10 +86,7 @@ function isOneCellRange(range: CellSelectionRange): boolean {
   )
 }
 
-/**
- * Changes the id of a placeholder row to the id of the row that is at its
- * index now. All other ids stay the same.
- */
+/** Changes a placeholder row id to the id of the row at its index now. */
 function resolveRowId<TFeatures extends TableFeatures, TData extends RowData>(
   table: Table_Internal<TFeatures, TData>,
   rowId: string,
@@ -96,10 +94,7 @@ function resolveRowId<TFeatures extends TableFeatures, TData extends RowData>(
   return getRowByPlaceholderId(table, rowId)?.id ?? rowId
 }
 
-/**
- * Tests whether a row id is the id of a placeholder row. This is also true
- * after the row is loaded, because the row then has a different id.
- */
+/** Tests whether a row id is a placeholder row id, also after its row is loaded. */
 function isPlaceholderRowId<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -112,11 +107,8 @@ function isPlaceholderRowId<
 }
 
 /**
- * Removes the ranges that a placeholder row id makes invalid.
- *
- * A placeholder row id can only stay in a range of one cell. When its row is
- * loaded, the range gets the id of that row. When its row is not loaded, the
- * range stays only as the last range, where it is the focused cell.
+ * Keeps a placeholder row id only in a range of one cell. If its row is not
+ * loaded, that range must also be the last range: it is the focused cell.
  */
 function removePlaceholderCorners<
   TFeatures extends TableFeatures,
@@ -423,8 +415,8 @@ function findMergeBoundsAt(
 }
 
 /**
- * Resolves a stored row id to its row. With `canUsePlaceholderId`, the id of a
- * placeholder row also finds the row that is loaded at its index now.
+ * Resolves a stored row id to its row. With `canUsePlaceholderId`, a
+ * placeholder row id also finds the row that is loaded at its index now.
  */
 function resolveRow<TFeatures extends TableFeatures, TData extends RowData>(
   table: Table_Internal<TFeatures, TData>,
