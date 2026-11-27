@@ -571,6 +571,20 @@ describe('row selection with placeholder rows', () => {
     expect(table.atoms.rowSelection.get()).toEqual({ 'person-4': true })
   })
 
+  it('should not keep a placeholder row as the anchor of a Shift range', () => {
+    const table = makeTable()
+    const { rows } = table.getRowModel()
+
+    rows[3]!.getToggleSelectedHandler()({ target: { checked: true } })
+    rows[6]!.getToggleSelectedHandler()({
+      target: { checked: true },
+      shiftKey: true,
+    })
+
+    expect(table._lastSelectedRowId).toBe('person-3')
+    expect(table.atoms.rowSelection.get()).toEqual({ 'person-3': true })
+  })
+
   it('should keep the selection of a row that is no longer loaded', () => {
     const table = makeTable({
       initialState: { rowSelection: { 'person-3': true } },
@@ -1083,6 +1097,22 @@ describe('cell selection with placeholder rows', () => {
     expect(table.atoms.cellSelection.get()).toEqual([
       rangeOf('person-7', 'age', 'person-7', 'age'),
     ])
+  })
+
+  it('should read a focused placeholder id as an index after data is replaced', () => {
+    const table = makeCellTable()
+
+    table.setFocusedCell('__placeholder_5', 'age')
+    table.setOptions((old) => ({
+      ...old,
+      data: Array.from({ length: 10 }, (_, index) => makePerson(index + 100)),
+    }))
+
+    expect(table.getFocusedCell()!.row.id).toBe('person-105')
+
+    table.resetCellSelection(true)
+
+    expect(table.getFocusedCell()).toBeUndefined()
   })
 
   it('should select from the first to the last loaded row with select all', () => {

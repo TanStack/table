@@ -90,7 +90,7 @@ A placeholder row has no data:
 - `row.original` is `undefined`. Its type is still `TData`, so check `row.getIsPlaceholder()` before you read it.
 - `row.getValue()` and `cell.getValue()` return `undefined`. The table does not call the column accessors.
 - Do not render the `cell` templates of your columns for a placeholder row if they read `row.original`.
-- `row.id` is temporary. It starts with `__placeholder_` and changes to the `getRowId` result when the row is loaded. Do not store it.
+- `row.id` is temporary. It starts with `__placeholder_`, holds only the index of the row, and changes to the `getRowId` result when the row is loaded. Do not store it.
 - The `__placeholder_` prefix is reserved. `getRowId` must not return an ID that starts with it, or the table can mistake the loaded row for a placeholder row. In development, the table logs a warning for such an ID.
 
 ## Load the Missing Ranges
@@ -130,6 +130,14 @@ Row 99,999 under one sort order is a different row under another sort order. The
 - When sorting or a filter changes, start again with an empty `data` array and the new `rowCount`. If you load blocks with TanStack Query, put the sorting and filter state into the query key.
 - With this feature, a new `data` array does not run the `autoResetPageIndex`, `autoResetExpanded`, and other `autoReset*` behaviors, because a new array usually means that more rows are loaded. Reset the page index or the scroll position yourself when sorting or a filter changes.
 - Do not let the table read column behavior from row values, because placeholder rows have no values. Set `sortDescFirst` on the table or on your columns; without it, the first sort direction of a column comes from the values of the first rows. If you use `column.getCanGlobalFilter()`, set `enableGlobalFilter: true` on the columns that the server can search; without it, the table reads the loaded rows until it finds a value, and the result is `false` while no row is loaded.
+
+### Reset State When You Start Again
+
+A placeholder ID holds only the index of its row. After you start again with a new `data` array, the same placeholder ID is a different row on the server. State that holds a placeholder ID then points at that different row.
+
+- The table stores a placeholder ID in one state only: the focused cell of `cellSelectionFeature`, while that cell is in a placeholder row. See [Cell Selection](#cell-selection). Call `table.resetCellSelection()` when you start again, or the focus stays at the same index.
+- Row selection, row pinning, and expanding keep no state for a placeholder row, so they hold no placeholder ID.
+- Do not put a placeholder ID into your own state, for example the ID of the row that a context menu is open for. If you must, reset that state when you start again.
 
 ## Pagination
 
@@ -174,7 +182,7 @@ if (focusedRow?.getIsPlaceholder()) {
 }
 ```
 
-While the focused cell is in a placeholder row, the last range in the `cellSelection` state is that one cell, and it holds the placeholder ID of the row. This is the only state in which the table stores a placeholder ID. The table reads this ID as "the row at this index". The ID stays in the state after the row is loaded. The next change of the cell selection replaces it with the ID of the loaded row. Call `table.getFocusedCell()` to get the row that has the focus now.
+While the focused cell is in a placeholder row, the last range in the `cellSelection` state is that one cell, and it holds the placeholder ID of the row. This is the only state in which the table stores a placeholder ID. The table reads this ID as "the row at this index". The ID stays in the state after the row is loaded. The next change of the cell selection replaces it with the ID of the loaded row. Call `table.getFocusedCell()` to get the row that has the focus now. See also [Reset State When You Start Again](#reset-state-when-you-start-again).
 
 A range can span rows that are not loaded. Its corners are loaded rows, and the placeholder rows between them are not selected: `getSelectedCellIds()`, `getSelectedCellCount()`, and `getCellSelectionRowIds()` leave them out. `getSelectedCellRangesData()` keeps the position of each row, so the grid of a range has an empty entry for each placeholder row; skip these entries when you copy the data. The rows become part of the selection when they are loaded. A range whose corner row is removed from `data` stays in state and selects nothing until that row is loaded again.
 
