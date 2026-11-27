@@ -931,7 +931,8 @@ function selectRowsRecursively<
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]!
-    const isSelected = isRowSelected(row, rowSelection)
+    const isSelected =
+      !getIsPlaceholderRow(row) && isRowSelected(row, rowSelection)
 
     if (isSelected) {
       selectedFlatRows.push(row)

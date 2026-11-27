@@ -606,6 +606,24 @@ describe('row selection with placeholder rows', () => {
     ])
   })
 
+  it('should leave a placeholder id in the state out of the selected row models', () => {
+    const table = makeTable({
+      initialState: {
+        rowSelection: { __placeholder_5: true, 'person-3': true },
+      },
+    })
+
+    expect(table.getRowModel().rows[5]!.getIsPlaceholder()).toBe(true)
+    expect(table.getSelectedRowModel().rows.map((row) => row.id)).toEqual([
+      'person-3',
+    ])
+    expect(table.getSelectedRowModel().rowsById).not.toHaveProperty(
+      '__placeholder_5',
+    )
+    expect(table.getFilteredSelectedRowModel().flatRows).toHaveLength(1)
+    expect(table.getGroupedSelectedRowModel().flatRows).toHaveLength(1)
+  })
+
   it('should not report all rows selected when no row is loaded', () => {
     const table = makeTable({
       initialState: { rowSelection: { 'person-3': true } },
