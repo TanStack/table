@@ -33,6 +33,21 @@ export function createLiveProxy<T extends object>(getTarget: () => T): T {
     set(_, key, value) {
       return Reflect.set(getTarget(), key, value)
     },
+    deleteProperty(_, key) {
+      return Reflect.deleteProperty(getTarget(), key)
+    },
+    defineProperty(_, key, descriptor) {
+      // The proxy reports every property as configurable because the target
+      // can change, so it cannot honor an explicitly non-configurable define.
+      if (descriptor.configurable === false) {
+        return false
+      }
+      return Reflect.defineProperty(getTarget(), key, descriptor)
+    },
+    preventExtensions() {
+      // The target can change, so the proxy cannot promise a fixed key set.
+      return false
+    },
     has(_, key) {
       return key in getTarget()
     },
