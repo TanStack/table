@@ -489,7 +489,9 @@ export function table_getSelectedRowIds<
  * Returns the number of selected rows.
  *
  * In `'include'` mode this is the number of ids in `rowSelection`. In
- * `'exclude'` mode this is `options.rowCount` minus the deselected rows.
+ * `'exclude'` mode this is `options.rowCount` minus the deselected rows, so
+ * `rowCount` must be the exact total of the server. With an estimated total,
+ * the result is wrong.
  * `rowCount` counts top-level rows, so the ids of loaded sub-rows and of group
  * rows are not subtracted. An id that is not loaded is subtracted as one row,
  * because the table cannot know that it is a sub-row. When `rowCount` is not
