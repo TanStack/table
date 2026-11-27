@@ -148,6 +148,12 @@ A placeholder ID holds only the index of its row. After you start again with a n
 
 This changes what normal server-side pagination means. Without this feature, `data` is the current page. With it, `data` is always indexed from row 0, so a `data` array that holds one page means that rows `0` to `pageSize - 1` are loaded and all other rows are placeholder rows. Put each page at its index, as shown in [Put Loaded Rows at Their Index](#put-loaded-rows-at-their-index).
 
+### `rowCount` Is Also the Total
+
+`rowCount` has two jobs. It is the length of the sparse row model, and it is the total that other features read: `table.getRowCount()` and `table.getPageCount()` of `rowPaginationFeature`, and each feature or app code that calculates a count from the total, such as "all rows minus the deselected rows" for a "select all" on the server.
+
+Set `rowCount` to the exact total of the server. If the total is not known and you set `rowCount` to more than the rows that you know of, to get placeholder rows after the last loaded row, each of these features reads the padded number. Do not show their counts as a total then, and set the exact `rowCount` when you get it.
+
 ## Row Selection, Pinning, and Expanding
 
 Row state is stored by row ID, and a placeholder row only has a temporary ID. The table keeps no state for it:
