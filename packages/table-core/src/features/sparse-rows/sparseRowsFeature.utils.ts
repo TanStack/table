@@ -69,6 +69,7 @@ export function table_createSparseRowModel<
   // used again each time `data` changes.
   const placeholderRows: Array<Row<TFeatures, TData>> = []
   let hasWarnedClientRowModels = false
+  let hasWarnedReservedId = false
   let lastWarnedDuplicateId: string | undefined
 
   return tableMemo({
@@ -84,6 +85,7 @@ export function table_createSparseRowModel<
       }
       const { getSubRows } = table.options
       let duplicateId: string | undefined
+      let reservedId: string | undefined
       let hasPlaceholderRow = false
 
       placeholderRows.length = Math.min(placeholderRows.length, rowCount)
@@ -109,11 +111,12 @@ export function table_createSparseRowModel<
             i,
             0,
           )
-          if (
-            process.env.NODE_ENV === 'development' &&
-            rowModel.rowsById[row.id]
-          ) {
-            duplicateId ??= row.id
+          if (process.env.NODE_ENV === 'development') {
+            if (row.id.startsWith(placeholderRowIdPrefix)) {
+              reservedId ??= row.id
+            } else if (rowModel.rowsById[row.id]) {
+              duplicateId ??= row.id
+            }
           }
         }
 
@@ -140,6 +143,13 @@ export function table_createSparseRowModel<
           hasWarnedClientRowModels = true
           console.warn(
             'sparseRowsFeature: a client-side filtered, grouped, or sorted row model only sees the rows that are loaded, so its result is wrong. Filter, group, and sort on the server and set manualFiltering, manualGrouping, and manualSorting.',
+          )
+        }
+
+        if (reservedId !== undefined && !hasWarnedReservedId) {
+          hasWarnedReservedId = true
+          console.warn(
+            `sparseRowsFeature: getRowId returned '${reservedId}' for a loaded row. Row ids that start with '${placeholderRowIdPrefix}' are reserved for placeholder rows, so the table can mistake this row for a placeholder row. Return a different id.`,
           )
         }
 

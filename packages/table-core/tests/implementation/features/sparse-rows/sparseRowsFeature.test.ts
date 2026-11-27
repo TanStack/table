@@ -1096,6 +1096,32 @@ describe('sparseRowsFeature development warnings', () => {
     expect(warn.mock.calls[0]![0]).toContain('manualFiltering')
   })
 
+  it('should warn once when a loaded row has an id with the placeholder prefix', () => {
+    const warn = spyOnDevWarnings()
+    const data = makeSparseData([2, 4])
+    data[3] = { ...makePerson(3), id: '__placeholder_7' }
+    const table = makeTable({ data })
+
+    table.getRowModel()
+    setData(table, [...data])
+    table.getRowModel()
+
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0]![0]).toContain("'__placeholder_7'")
+    expect(warn.mock.calls[0]![0]).toContain('reserved')
+  })
+
+  it('should not report an id with the placeholder prefix as an overlap of loaded ranges', () => {
+    const warn = spyOnDevWarnings()
+    const data = makeSparseData([2, 4])
+    data[3] = { ...makePerson(3), id: '__placeholder_1' }
+
+    makeTable({ data }).getRowModel()
+
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0]![0]).toContain('reserved')
+  })
+
   it('should not warn outside of development', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const data = makeSparseData([2, 4])

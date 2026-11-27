@@ -91,6 +91,7 @@ A placeholder row has no data:
 - `row.getValue()` and `cell.getValue()` return `undefined`. The table does not call the column accessors.
 - Do not render the `cell` templates of your columns for a placeholder row if they read `row.original`.
 - `row.id` is temporary. It starts with `__placeholder_` and changes to the `getRowId` result when the row is loaded. Do not store it.
+- The `__placeholder_` prefix is reserved. `getRowId` must not return an ID that starts with it, or the table can mistake the loaded row for a placeholder row. In development, the table logs a warning for such an ID.
 
 ## Load the Missing Ranges
 
