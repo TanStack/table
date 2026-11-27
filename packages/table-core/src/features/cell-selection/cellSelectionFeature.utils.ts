@@ -1,12 +1,14 @@
 import {
   callMemoOrStaticFn,
   cloneState,
+  functionalUpdate,
   makeObjectMap,
   setStateSlice,
 } from '../../utils'
 import {
   getCanHavePlaceholderRows,
   getIsPlaceholderRow,
+  getRowByPlaceholderId,
   getVisibleLeafColumns,
   orderByColumnPinning,
 } from '../../core/featureStubs'
@@ -51,6 +53,10 @@ export function getDefaultCellSelectionState(): CellSelectionState {
 /**
  * Routes a cell selection updater through the table's selection change handler.
  *
+ * In a table that can have placeholder rows, a range with a corner on a
+ * placeholder row is removed from the result. Only the last range can stay,
+ * when it is one cell: it is the focused cell.
+ *
  * @example
  * ```ts
  * table_setCellSelection(table, (old) => old.slice(0, -1))
@@ -65,7 +71,87 @@ export function table_setCellSelection<
 ) {
   // Unguarded: selection updates are pointer-driven and ranges can be large.
   // Keep the hot path direct; the auto-reset path guards in reset below.
-  table.options.onCellSelectionChange?.(updater)
+  table.options.onCellSelectionChange?.(
+    getCanHavePlaceholderRows(table)
+      ? (old) => removePlaceholderCorners(table, functionalUpdate(updater, old))
+      : updater,
+  )
+}
+
+function isOneCellRange(range: CellSelectionRange): boolean {
+  return (
+    range.anchorRowId === range.focusRowId &&
+    range.anchorColumnId === range.focusColumnId
+  )
+}
+
+/**
+ * Changes the id of a placeholder row to the id of the row that is at its
+ * index now. All other ids stay the same.
+ */
+function resolveRowId<TFeatures extends TableFeatures, TData extends RowData>(
+  table: Table_Internal<TFeatures, TData>,
+  rowId: string,
+): string {
+  return getRowByPlaceholderId(table, rowId)?.id ?? rowId
+}
+
+/**
+ * Tests whether a row id is the id of a placeholder row. This is also true
+ * after the row is loaded, because the row then has a different id.
+ */
+function isPlaceholderRowId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>, rowId: string): boolean {
+  if (!getCanHavePlaceholderRows(table)) return false
+
+  const row = table.getCoreRowModel().rowsById[rowId]
+
+  return row ? getIsPlaceholderRow(row) : !!getRowByPlaceholderId(table, rowId)
+}
+
+/**
+ * Removes the ranges that a placeholder row id makes invalid.
+ *
+ * A placeholder row id can only stay in a range of one cell. When its row is
+ * loaded, the range gets the id of that row. When its row is not loaded, the
+ * range stays only as the last range, where it is the focused cell.
+ */
+function removePlaceholderCorners<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  ranges: CellSelectionState,
+): CellSelectionState {
+  const next: CellSelectionState = []
+  let isChanged = false
+
+  for (let i = ranges.length - 1; i >= 0; i--) {
+    const range = ranges[i]!
+    let nextRange: CellSelectionRange | undefined = range
+
+    if (
+      isPlaceholderRowId(table, range.anchorRowId) ||
+      isPlaceholderRowId(table, range.focusRowId)
+    ) {
+      const rowId = resolveRowId(table, range.anchorRowId)
+
+      if (!isOneCellRange(range)) {
+        nextRange = undefined
+      } else if (rowId !== range.anchorRowId) {
+        nextRange = { ...range, anchorRowId: rowId, focusRowId: rowId }
+      } else if (next.length) {
+        nextRange = undefined
+      }
+    }
+
+    if (nextRange !== range) isChanged = true
+    if (nextRange) next.push(nextRange)
+  }
+
+  return isChanged ? next.reverse() : ranges
 }
 
 /**
@@ -337,8 +423,25 @@ function findMergeBoundsAt(
 }
 
 /**
+ * Resolves a stored row id to its row. With `canUsePlaceholderId`, the id of a
+ * placeholder row also finds the row that is loaded at its index now.
+ */
+function resolveRow<TFeatures extends TableFeatures, TData extends RowData>(
+  table: Table_Internal<TFeatures, TData>,
+  rowId: string,
+  canUsePlaceholderId: boolean,
+): Row<TFeatures, TData> | undefined {
+  return (
+    table.getPrePaginatedRowModel().rowsById[rowId] ??
+    table.getCoreRowModel().rowsById[rowId] ??
+    (canUsePlaceholderId ? getRowByPlaceholderId(table, rowId) : undefined)
+  )
+}
+
+/**
  * Resolves a row id to its display-order index, or `-1` when it no longer
- * identifies a row in the current order.
+ * identifies a row in the current order. A placeholder row has no index here,
+ * because it cannot be a corner of a range.
  *
  * Callers must have already called `table.getRowsInDisplayOrder()`, which is
  * what populates the display index cache each row reads.
@@ -350,16 +453,15 @@ function resolveRowIndex<
   table: Table_Internal<TFeatures, TData>,
   rows: ReadonlyArray<Row<TFeatures, TData>>,
   rowId: string,
+  canUsePlaceholderId: boolean,
 ): number {
-  const row =
-    table.getPrePaginatedRowModel().rowsById[rowId] ??
-    table.getCoreRowModel().rowsById[rowId]
+  const row = resolveRow(table, rowId, canUsePlaceholderId)
 
-  if (!row) return -1
+  if (!row || getIsPlaceholderRow(row)) return -1
 
   const index = row.getDisplayIndex()
 
-  if (index < 0 || index >= rows.length || rows[index]?.id !== rowId) {
+  if (index < 0 || index >= rows.length || rows[index]?.id !== row.id) {
     return -1
   }
 
@@ -400,8 +502,16 @@ export function table_getCellSelectionBounds<
 
   for (let i = 0; i < ranges.length; i++) {
     const range = ranges[i]!
-    const anchorRowIndex = resolveRowIndex(table, rows, range.anchorRowId)
-    const focusRowIndex = resolveRowIndex(table, rows, range.focusRowId)
+    const isOneCell = isOneCellRange(range)
+    const anchorRowIndex = resolveRowIndex(
+      table,
+      rows,
+      range.anchorRowId,
+      isOneCell,
+    )
+    const focusRowIndex = isOneCell
+      ? anchorRowIndex
+      : resolveRowIndex(table, rows, range.focusRowId, false)
     const anchorColumnIndex = columnIndexes[range.anchorColumnId] ?? -1
     const focusColumnIndex = columnIndexes[range.focusColumnId] ?? -1
 
@@ -578,6 +688,9 @@ export function cell_getIsSelected<
 /**
  * Checks whether this cell is the active cell.
  *
+ * When the active cell was set on a placeholder row and that row is loaded
+ * now, the cell of the loaded row is the active cell.
+ *
  * @example
  * ```ts
  * const isFocused = cell_getIsFocused(cell)
@@ -591,11 +704,11 @@ export function cell_getIsFocused<
   const ranges = cell.table.atoms.cellSelection?.get()
   const active = ranges?.[ranges.length - 1]
 
-  if (!active) return false
+  if (!active || active.anchorColumnId !== cell.column.id) return false
 
   return (
-    active.anchorRowId === cell.row.id &&
-    active.anchorColumnId === cell.column.id
+    active.anchorRowId === cell.row.id ||
+    resolveRowId(cell.table, active.anchorRowId) === cell.row.id
   )
 }
 
@@ -725,6 +838,9 @@ function isStripOutside(
  * A1 to C5 leaves the active cell at A1, so the active range's anchor already
  * is the active cell.
  *
+ * The active cell can be a cell of a placeholder row. When that row is loaded,
+ * the cell at the same index and column is the active cell.
+ *
  * @example
  * ```ts
  * const cell = table_getFocusedCell(table)
@@ -741,15 +857,16 @@ export function table_getFocusedCell<
 
   if (!active) return undefined
 
-  const row =
-    table.getPrePaginatedRowModel().rowsById[active.anchorRowId] ??
-    table.getCoreRowModel().rowsById[active.anchorRowId]
-
-  return row?.getAllCellsByColumnId()[active.anchorColumnId]
+  return resolveRow(table, active.anchorRowId, true)?.getAllCellsByColumnId()[
+    active.anchorColumnId
+  ]
 }
 
 /**
  * Collapses the selection to a single cell at the given coordinates.
+ *
+ * The cell can be in a placeholder row. It is then the focused cell, but it
+ * is not selected until its row is loaded.
  *
  * @example
  * ```ts
@@ -771,24 +888,11 @@ export function table_setFocusedCell<
 // Selection writes
 
 /**
- * Tests whether a row id is the temporary id of a placeholder row.
- */
-function isPlaceholderRowId<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, rowId: string): boolean {
-  if (!getCanHavePlaceholderRows(table)) return false
-
-  const row = table.getCoreRowModel().rowsById[rowId]
-
-  return !!row && getIsPlaceholderRow(row)
-}
-
-/**
  * Selects a rectangle using replace, include, or exclude semantics.
  *
  * A range that starts or ends on a placeholder row is ignored, because the id
- * of that row changes when the row is loaded.
+ * of that row changes when the row is loaded. A range of one cell is not
+ * ignored: it puts the focus on that cell.
  *
  * @example
  * ```ts
@@ -804,8 +908,9 @@ export function table_selectCellRange<
   opts?: SelectCellRangeOptions,
 ) {
   if (
-    isPlaceholderRowId(table, range.anchorRowId) ||
-    isPlaceholderRowId(table, range.focusRowId)
+    !isOneCellRange(range) &&
+    (isPlaceholderRowId(table, range.anchorRowId) ||
+      isPlaceholderRowId(table, range.focusRowId))
   ) {
     return
   }
@@ -911,13 +1016,16 @@ function getDirectionDelta(direction: CellSelectionDirection): {
  *
  * Columns that cannot be selected are skipped over rather than landed on, so
  * arrow navigation never parks on an opted-out column. Returns `null` when the
- * step would leave the grid or find no selectable column.
+ * step would leave the grid or find no selectable column. Without
+ * `canLandOnPlaceholderRow`, it also returns `null` when the step would land
+ * on a placeholder row.
  */
 function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   table: Table_Internal<TFeatures, TData>,
   rowId: string,
   columnId: string,
   direction: CellSelectionDirection,
+  canLandOnPlaceholderRow: boolean,
 ): { rowId: string; columnId: string } | null {
   // Navigation is constrained to the final row model. In particular, the
   // pre-pagination display-order model contains rows from every page and
@@ -1032,7 +1140,11 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   const landingRow = rows[landingRowIndex]
   const landingColumn = columns[landingColumnIndex]
 
-  if (!landingRow || !landingColumn || getIsPlaceholderRow(landingRow)) {
+  if (
+    !landingRow ||
+    !landingColumn ||
+    (!canLandOnPlaceholderRow && getIsPlaceholderRow(landingRow))
+  ) {
     return null
   }
 
@@ -1046,7 +1158,8 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
  * Moves the selection one step in a direction, collapsing it to a single cell.
  *
  * With nothing selected, this selects the first selectable cell so keyboard
- * navigation has somewhere to start.
+ * navigation has somewhere to start. The step can land on a placeholder row,
+ * so the focus can move into rows that are not loaded.
  *
  * @example
  * ```ts
@@ -1061,22 +1174,21 @@ export function table_moveCellSelection<
   const active = ranges?.[ranges.length - 1]
 
   if (!active) {
-    const firstRow = table
-      .getRowModel()
-      .rows.find((row) => !getIsPlaceholderRow(row))
+    const rows = table.getRowModel().rows
     const columns = getSelectableColumns(table)
 
-    if (!firstRow || !columns.length) return
+    if (!rows.length || !columns.length) return
 
-    table_setFocusedCell(table, firstRow.id, columns[0]!.id)
+    table_setFocusedCell(table, rows[0]!.id, columns[0]!.id)
     return
   }
 
   const next = stepCoordinate(
     table,
-    active.anchorRowId,
+    resolveRowId(table, active.anchorRowId),
     active.anchorColumnId,
     direction,
+    true,
   )
 
   if (!next) return
@@ -1086,6 +1198,10 @@ export function table_moveCellSelection<
 
 /**
  * Extends the active range one step in a direction, keeping its anchor fixed.
+ *
+ * A placeholder row cannot be a corner of a range. The range does not grow
+ * onto a placeholder row, and it does not start from a focused cell in a
+ * placeholder row.
  *
  * @example
  * ```ts
@@ -1104,11 +1220,16 @@ export function table_extendCellSelection<
     return
   }
 
+  const anchorRowId = resolveRowId(table, active.anchorRowId)
+
+  if (isPlaceholderRowId(table, anchorRowId)) return
+
   const next = stepCoordinate(
     table,
-    active.focusRowId,
+    resolveRowId(table, active.focusRowId),
     active.focusColumnId,
     direction,
+    false,
   )
 
   if (!next) return
@@ -1117,9 +1238,11 @@ export function table_extendCellSelection<
     if (!old.length) return old
 
     const nextRanges = old.slice(0, -1)
+    const oldActive = old[old.length - 1]!
 
     nextRanges.push({
-      ...old[old.length - 1]!,
+      ...oldActive,
+      anchorRowId: resolveRowId(table, oldActive.anchorRowId),
       focusRowId: next.rowId,
       focusColumnId: next.columnId,
     })
@@ -1479,9 +1602,18 @@ export function cell_getSelectionStartHandler<
 
       // shift-extend keeps the active anchor and moves only its focus
       if (isRangeEvent && active) {
-        const ranges = old.slice(0, -1)
-        ranges.push({ ...active, focusRowId: rowId, focusColumnId: columnId })
-        return ranges
+        const anchorRowId = resolveRowId(table, active.anchorRowId)
+
+        if (!isPlaceholderRowId(table, anchorRowId)) {
+          const ranges = old.slice(0, -1)
+          ranges.push({
+            ...active,
+            anchorRowId,
+            focusRowId: rowId,
+            focusColumnId: columnId,
+          })
+          return ranges
+        }
       }
 
       const range: CellSelectionRange = {

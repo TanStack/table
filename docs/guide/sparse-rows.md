@@ -152,12 +152,29 @@ The state of a loaded row stays when you remove the row from `data`. The row is 
 
 ## Cell Selection
 
-`cellSelectionFeature` stores the two corners of each range by row ID, so a placeholder row cannot be a corner:
+`cellSelectionFeature` stores the two corners of each range by row ID, so a placeholder row cannot be a corner of a range. The focused cell is different. It can be in a placeholder row, so the user can move with the keyboard into rows that are not loaded.
 
 - `cell.getCanSelect()` returns `false` for the cells of a placeholder row, and their selection handlers do nothing. The `enableCellSelection` callback is not called with such a cell.
-- `selectCellRange()` and `setFocusedCell()` do nothing when a row ID belongs to a placeholder row.
-- `moveCellSelection()` and `extendCellSelection()` stop at a placeholder row. Load the next rows before the user gets to them.
+- `moveCellSelection()` moves the focus onto a placeholder row as it does onto a loaded row. `setFocusedCell()` also accepts the ID of a placeholder row, for example to jump to the last row.
+- While the focused cell is in a placeholder row, no cell is selected. `cell.getIsFocused()` returns `true` and `cell.getTabIndex()` returns `0` for that cell, and `cell.getIsSelected()` returns `false`.
+- When the row of the focused cell is loaded, the focus follows the row. `table.getFocusedCell()` returns the cell of the loaded row at the same index and in the same column. This cell is then selected, like the focused cell of any loaded row.
+- `extendCellSelection()` stops at the last loaded row, so a range does not grow onto a placeholder row. It does nothing while the focused cell is in a placeholder row. A range event on a loaded cell, which is a Shift click by default, then starts a new selection at that cell.
+- `selectCellRange()` ignores a range that starts or ends on a placeholder row, unless the range is one cell. `setCellSelection()` removes such a range from the new state.
 - `selectAllCells()` selects from the first loaded row to the last loaded row.
+
+The table does not load rows when the focus moves. Use the index of the focused row to load the rows around it:
+
+```ts
+table.moveCellSelection('down')
+
+const focusedRow = table.getFocusedCell()?.row
+
+if (focusedRow?.getIsPlaceholder()) {
+  loadVisibleRows(focusedRow.index, focusedRow.index)
+}
+```
+
+While the focused cell is in a placeholder row, the last range in the `cellSelection` state is that one cell, and it holds the placeholder ID of the row. This is the only state in which the table stores a placeholder ID. The table reads this ID as "the row at this index". The ID stays in the state after the row is loaded. The next change of the cell selection replaces it with the ID of the loaded row. Call `table.getFocusedCell()` to get the row that has the focus now.
 
 A range can span rows that are not loaded. Its corners are loaded rows, and the placeholder rows between them are not selected: `getSelectedCellIds()`, `getSelectedCellCount()`, and `getCellSelectionRowIds()` leave them out. `getSelectedCellRangesData()` keeps the position of each row, so the grid of a range has an empty entry for each placeholder row; skip these entries when you copy the data. The rows become part of the selection when they are loaded. A range whose corner row is removed from `data` stays in state and selects nothing until that row is loaded again.
 

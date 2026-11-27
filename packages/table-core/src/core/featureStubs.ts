@@ -316,3 +316,19 @@ export function getIsPlaceholderRow(row: object): boolean {
 export function getCanHavePlaceholderRows(table: object): boolean {
   return !!(table as Partial<Table_SparseRows<any, any>>)._createSparseRowModel
 }
+
+/**
+ * The row at the index that a placeholder row id holds. `undefined` for all
+ * other ids, and without the feature.
+ */
+export function getRowByPlaceholderId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  rowId: string,
+): Row<TFeatures, TData> | undefined {
+  return (
+    table as Partial<Table_SparseRows<TFeatures, TData>>
+  )._getRowByPlaceholderId?.(rowId)
+}

@@ -790,7 +790,7 @@ describe('cell selection with placeholder rows', () => {
 
     table.selectCellRange(rangeOf('person-3', 'name', placeholderId, 'age'))
     table.selectCellRange(rangeOf(placeholderId, 'name', 'person-3', 'age'))
-    table.setFocusedCell(placeholderId, 'name')
+    table.selectCellRange(rangeOf(placeholderId, 'name', placeholderId, 'age'))
 
     expect(table.atoms.cellSelection.get()).toEqual([])
 
@@ -846,26 +846,242 @@ describe('cell selection with placeholder rows', () => {
     expect(table.getSelectedCellIds()).toHaveLength(10)
   })
 
-  it('should stop keyboard navigation at a placeholder row', () => {
+  it('should remove a range with a placeholder corner from setCellSelection', () => {
+    const table = makeCellTable()
+    const placeholderId = table.getRowModel().rows[6]!.id
+    const loadedRange = rangeOf('person-2', 'name', 'person-3', 'age')
+
+    table.setCellSelection([
+      rangeOf('person-3', 'name', placeholderId, 'age'),
+      rangeOf(placeholderId, 'name', placeholderId, 'name'),
+      loadedRange,
+    ])
+
+    expect(table.atoms.cellSelection.get()).toEqual([loadedRange])
+
+    table.setCellSelection((old) => [
+      ...old,
+      rangeOf(placeholderId, 'name', 'person-7', 'age'),
+    ])
+
+    expect(table.atoms.cellSelection.get()).toEqual([loadedRange])
+    expect(table.getSelectedCellCount()).toBe(4)
+
+    table.setCellSelection((old) => [
+      ...old,
+      rangeOf(placeholderId, 'age', placeholderId, 'age'),
+    ])
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      loadedRange,
+      rangeOf(placeholderId, 'age', placeholderId, 'age'),
+    ])
+    expect(table.getSelectedCellCount()).toBe(4)
+  })
+
+  it('should not resolve a placeholder corner that is in the state', () => {
+    const placeholderRange = rangeOf(
+      'person-3',
+      'name',
+      '__placeholder_6',
+      'age',
+    )
+    const table = makeCellTable({
+      initialState: { cellSelection: [placeholderRange] },
+    })
+
+    expect(table.getCellSelectionBounds()).toEqual([])
+    expect(table.getSelectedCellCount()).toBe(0)
+    expect(table.getSelectedCellIds()).toEqual([])
+
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 8]) }))
+
+    expect(table.atoms.cellSelection.get()).toEqual([placeholderRange])
+    expect(table.getCellSelectionBounds()).toEqual([])
+    expect(table.getSelectedCellCount()).toBe(0)
+  })
+
+  it('should move the focus from the last loaded row onto placeholder rows', () => {
+    const table = makeCellTable()
+    const { rows } = table.getRowModel()
+
+    table.setFocusedCell('person-4', 'age')
+    table.moveCellSelection('down')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('__placeholder_5', 'age', '__placeholder_5', 'age'),
+    ])
+    expect(table.getFocusedCell()).toBe(rows[5]!.getAllCells()[1])
+    expect(rows[5]!.getAllCells()[1]!.getIsFocused()).toBe(true)
+    expect(rows[5]!.getAllCells()[1]!.getTabIndex()).toBe(0)
+    expect(rows[5]!.getAllCells()[0]!.getIsFocused()).toBe(false)
+    expect(rows[5]!.getAllCells()[1]!.getCanSelect()).toBe(false)
+    expect(rows[5]!.getAllCells()[1]!.getIsSelected()).toBe(false)
+    expect(table.getCellSelectionBounds()).toEqual([])
+    expect(table.getSelectedCellCount()).toBe(0)
+
+    table.moveCellSelection('down')
+    table.moveCellSelection('left')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('__placeholder_6', 'name', '__placeholder_6', 'name'),
+    ])
+
+    table.moveCellSelection('down')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('person-7', 'name', 'person-7', 'name'),
+    ])
+    expect(table.getSelectedCellCount()).toBe(1)
+  })
+
+  it('should start keyboard navigation on the first row when it is a placeholder row', () => {
     const table = makeCellTable()
 
     table.moveCellSelection('down')
+
     expect(table.atoms.cellSelection.get()).toEqual([
-      rangeOf('person-2', 'name', 'person-2', 'name'),
+      rangeOf('__placeholder_0', 'name', '__placeholder_0', 'name'),
     ])
 
-    table.setFocusedCell('person-4', 'name')
+    table.moveCellSelection('up')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('__placeholder_0', 'name', '__placeholder_0', 'name'),
+    ])
+  })
+
+  it('should jump the focus to a placeholder row', () => {
+    const table = makeCellTable()
+    const { rows } = table.getRowModel()
+
+    table.selectCellRange(rangeOf('person-2', 'name', 'person-4', 'age'))
+    table.setFocusedCell(rows[9]!.id, 'age')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('__placeholder_9', 'age', '__placeholder_9', 'age'),
+    ])
+    expect(table.getFocusedCell()!.row.index).toBe(9)
+    expect(table.getSelectedCellCount()).toBe(0)
+
     table.moveCellSelection('down')
+    table.setFocusedCell(rows[0]!.id, 'name')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('__placeholder_0', 'name', '__placeholder_0', 'name'),
+    ])
+  })
+
+  it('should let the focus follow the row when the row is loaded', () => {
+    const table = makeCellTable()
+    const focusRange = rangeOf(
+      '__placeholder_5',
+      'age',
+      '__placeholder_5',
+      'age',
+    )
+
+    table.setFocusedCell('__placeholder_5', 'age')
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 8]) }))
+
+    const loadedCell = table.getRowModel().rows[5]!.getAllCells()[1]!
+
+    expect(table.atoms.cellSelection.get()).toEqual([focusRange])
+    expect(loadedCell.row.id).toBe('person-5')
+    expect(table.getFocusedCell()).toBe(loadedCell)
+    expect(loadedCell.getIsFocused()).toBe(true)
+    expect(loadedCell.getTabIndex()).toBe(0)
+    expect(loadedCell.getIsSelected()).toBe(true)
+    expect(table.getSelectedCellIds()).toEqual(['person-5_age'])
+
+    table.moveCellSelection('down')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('person-6', 'age', 'person-6', 'age'),
+    ])
+  })
+
+  it('should use the id of the loaded row when a range starts at a focus that followed its row', () => {
+    const fakeDocument = makeFakeDocument()
+    const table = makeCellTable()
+
+    table.setFocusedCell('__placeholder_5', 'age')
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 8]) }))
     table.extendCellSelection('down')
 
     expect(table.atoms.cellSelection.get()).toEqual([
-      rangeOf('person-4', 'name', 'person-4', 'name'),
+      rangeOf('person-5', 'age', 'person-6', 'age'),
+    ])
+
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 4]) }))
+    table.setFocusedCell('__placeholder_5', 'age')
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 8]) }))
+    table
+      .getRowModel()
+      .rows[7]!.getAllCells()[0]!
+      .getSelectionStartHandler(fakeDocument)({ shiftKey: true })
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('person-5', 'age', 'person-7', 'name'),
+    ])
+
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 4]) }))
+    table.setFocusedCell('__placeholder_5', 'age')
+    table.setOptions((old) => ({ ...old, data: makeSparseData([2, 8]) }))
+    table.selectCellRange(rangeOf('person-2', 'name', 'person-2', 'name'), {
+      additive: true,
+    })
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('person-5', 'age', 'person-5', 'age'),
+      rangeOf('person-2', 'name', 'person-2', 'name'),
+    ])
+  })
+
+  it('should stop a keyboard extension at the last loaded row', () => {
+    const table = makeCellTable()
+
+    table.setFocusedCell('person-3', 'name')
+    table.extendCellSelection('down')
+    table.extendCellSelection('down')
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('person-3', 'name', 'person-4', 'name'),
     ])
 
     table.extendCellSelection('up')
+    table.extendCellSelection('up')
+    table.extendCellSelection('up')
 
     expect(table.atoms.cellSelection.get()).toEqual([
-      rangeOf('person-4', 'name', 'person-3', 'name'),
+      rangeOf('person-3', 'name', 'person-2', 'name'),
+    ])
+  })
+
+  it('should not start a range from a focused cell in a placeholder row', () => {
+    const fakeDocument = makeFakeDocument()
+    const table = makeCellTable()
+    const { rows } = table.getRowModel()
+    const focusRange = rangeOf(
+      '__placeholder_6',
+      'name',
+      '__placeholder_6',
+      'name',
+    )
+
+    table.setFocusedCell('__placeholder_6', 'name')
+    table.extendCellSelection('up')
+    table.extendCellSelection('down')
+    table.extendCellSelection('right')
+
+    expect(table.atoms.cellSelection.get()).toEqual([focusRange])
+
+    rows[7]!.getAllCells()[1]!.getSelectionStartHandler(fakeDocument)({
+      shiftKey: true,
+    })
+
+    expect(table.atoms.cellSelection.get()).toEqual([
+      rangeOf('person-7', 'age', 'person-7', 'age'),
     ])
   })
 
@@ -882,7 +1098,6 @@ describe('cell selection with placeholder rows', () => {
     table.resetCellSelection(true)
     table.setOptions((old) => ({ ...old, data: [] }))
     table.selectAllCells()
-    table.moveCellSelection('down')
 
     expect(table.atoms.cellSelection.get()).toEqual([])
   })

@@ -221,6 +221,28 @@ export function table_getMissingRowRanges<
 }
 
 /**
+ * Returns the row at the index that a placeholder row id holds. The id of a
+ * placeholder row still finds its row after the row is loaded and has the id
+ * from `getRowId`. Returns `undefined` for all other ids.
+ */
+export function table_getRowByPlaceholderId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  rowId: string,
+): Row<TFeatures, TData> | undefined {
+  if (!rowId.startsWith(placeholderRowIdPrefix)) return undefined
+
+  const indexText = rowId.slice(placeholderRowIdPrefix.length)
+  const index = Number(indexText)
+
+  return String(index) === indexText
+    ? table.getCoreRowModel().rows[index]
+    : undefined
+}
+
+/**
  * Checks whether a row stands in for a row that is not loaded. `data` has no
  * row for an index when the entry is a hole or `undefined`.
  */

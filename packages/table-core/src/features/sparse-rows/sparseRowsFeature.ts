@@ -3,6 +3,7 @@ import {
   row_getIsPlaceholder,
   table_createSparseRowModel,
   table_getMissingRowRanges,
+  table_getRowByPlaceholderId,
 } from './sparseRowsFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 
@@ -26,6 +27,9 @@ export const sparseRowsFeature: TableFeature = {
     assignTableAPIs('sparseRowsFeature', table, {
       table__createSparseRowModel: {
         fn: () => table_createSparseRowModel(table),
+      },
+      table__getRowByPlaceholderId: {
+        fn: (rowId) => table_getRowByPlaceholderId(table, rowId),
       },
       table_getMissingRowRanges: {
         fn: (options) => table_getMissingRowRanges(table, options),
