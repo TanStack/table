@@ -84,6 +84,7 @@ export function table_createSparseRowModel<
       }
       const { getSubRows } = table.options
       let duplicateId: string | undefined
+      let hasPlaceholderRow = false
 
       placeholderRows.length = Math.min(placeholderRows.length, rowCount)
 
@@ -92,6 +93,7 @@ export function table_createSparseRowModel<
         let row: Row<TFeatures, TData>
 
         if (originalRow === undefined) {
+          hasPlaceholderRow = true
           row = placeholderRows[i] ??= constructRow(
             table,
             placeholderRowIdPrefix + i,
@@ -129,6 +131,7 @@ export function table_createSparseRowModel<
           table.options
 
         if (
+          hasPlaceholderRow &&
           !hasWarnedClientRowModels &&
           ((features.filteredRowModel && !manualFiltering) ||
             (features.groupedRowModel && !manualGrouping) ||

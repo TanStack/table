@@ -1081,6 +1081,21 @@ describe('sparseRowsFeature development warnings', () => {
     expect(warn).toHaveBeenCalledTimes(2)
   })
 
+  it('should not warn about a client-side row model while every row is loaded', () => {
+    const warn = spyOnDevWarnings()
+    const table = makeClientTable({ data: makeSparseData([0, 9]) })
+
+    table.getRowModel()
+
+    expect(warn).not.toHaveBeenCalled()
+
+    table.setOptions((old) => ({ ...old, data: makeSparseData([0, 4]) }))
+    table.getRowModel()
+
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0]![0]).toContain('manualFiltering')
+  })
+
   it('should not warn outside of development', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const data = makeSparseData([2, 4])
