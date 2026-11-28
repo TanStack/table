@@ -268,85 +268,160 @@ describe('three-layer atom architecture', () => {
       sub.unsubscribe()
     })
 
-    it('rolls back partial external atom subscriptions on subscribe failure and allows retry', () => {
-      function createTrackedAtom<T>(
-        initialValue: T,
-        failSubscribeCount = 0,
-      ): Atom<T> & { subscriberCount: () => number } {
-        let currentValue = initialValue
-        let remainingFailures = failSubscribeCount
-        const listeners = new Set<(value: T) => void>()
+    function createTrackedAtom<T>(initialValue: T): Atom<T> & {
+      subscriberCount: () => number
+      failNextSubscribes: (count?: number, onThrow?: () => void) => void
+      failNextUnsubscribes: (count?: number) => void
+    } {
+      let currentValue = initialValue
+      let remainingSubscribeFailures = 0
+      let remainingUnsubscribeFailures = 0
+      let onSubscribeThrow: (() => void) | undefined
+      const listeners = new Set<(value: T) => void>()
 
-        return {
-          get: () => currentValue,
-          set: (updater: T | ((prev: T) => T)) => {
-            const nextValue =
-              typeof updater === 'function'
-                ? (updater as (prev: T) => T)(currentValue)
-                : updater
-            if (Object.is(currentValue, nextValue)) {
-              return
-            }
-            currentValue = nextValue
-            for (const listener of [...listeners]) {
-              listener(currentValue)
-            }
-          },
-          subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-            if (remainingFailures > 0) {
-              remainingFailures--
-              throw new Error('subscribe failed')
-            }
-            const listener =
-              typeof observerOrNext === 'function'
-                ? observerOrNext
-                : (value: T) => observerOrNext.next?.(value)
-            listeners.add(listener)
-            return {
-              unsubscribe: () => {
-                listeners.delete(listener)
-              },
-            }
-          }) as Atom<T>['subscribe'],
-          subscriberCount: () => listeners.size,
-        }
+      return {
+        get: () => currentValue,
+        set: (updater: T | ((prev: T) => T)) => {
+          const nextValue =
+            typeof updater === 'function'
+              ? (updater as (prev: T) => T)(currentValue)
+              : updater
+          if (Object.is(currentValue, nextValue)) {
+            return
+          }
+          currentValue = nextValue
+          for (const listener of [...listeners]) {
+            listener(currentValue)
+          }
+        },
+        subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
+          if (remainingSubscribeFailures > 0) {
+            remainingSubscribeFailures--
+            onSubscribeThrow?.()
+            throw new Error('subscribe failed')
+          }
+          const listener =
+            typeof observerOrNext === 'function'
+              ? observerOrNext
+              : (value: T) => observerOrNext.next?.(value)
+          listeners.add(listener)
+          return {
+            unsubscribe: () => {
+              listeners.delete(listener)
+              if (remainingUnsubscribeFailures > 0) {
+                remainingUnsubscribeFailures--
+                throw new Error('unsubscribe failed')
+              }
+            },
+          }
+        }) as Atom<T>['subscribe'],
+        subscriberCount: () => listeners.size,
+        failNextSubscribes: (count = 1, onThrow) => {
+          remainingSubscribeFailures = count
+          onSubscribeThrow = onThrow
+        },
+        failNextUnsubscribes: (count = 1) => {
+          remainingUnsubscribeFailures = count
+        },
       }
+    }
 
+    it('rolls back partial external atom subscriptions on subscribe failure and allows retry', () => {
+      // `table.initialState` iterates keys in order: sorting, rowSelection, pagination.
+      const sorting = createTrackedAtom<SortingState>([])
       const rowSelection = createTrackedAtom<RowSelectionState>({})
-      const sorting = createTrackedAtom<SortingState>([], 1)
       const siblingSub = rowSelection.subscribe(() => {})
+      let sortingCountWhenSelectionThrew = -1
+      rowSelection.failNextSubscribes(1, () => {
+        sortingCountWhenSelectionThrew = sorting.subscriberCount()
+      })
 
       const table = makeTable({
         atoms: {
-          rowSelection,
           sorting,
+          rowSelection,
         },
       })
 
-      expect(rowSelection.subscriberCount()).toBe(1)
       expect(sorting.subscriberCount()).toBe(0)
+      expect(rowSelection.subscriberCount()).toBe(1)
 
       expect(() => table.store.subscribe(() => {})).toThrow('subscribe failed')
 
+      expect(sortingCountWhenSelectionThrew).toBe(1)
       expect(sorting.subscriberCount()).toBe(0)
       expect(rowSelection.subscriberCount()).toBe(1)
 
       const observer = vi.fn()
       const sub = table.store.subscribe(observer)
-      expect(rowSelection.subscriberCount()).toBe(2)
       expect(sorting.subscriberCount()).toBe(1)
+      expect(rowSelection.subscriberCount()).toBe(2)
 
       sorting.set([{ id: 'score', desc: true }])
       expect(observer).toHaveBeenCalled()
       expect(table.store.state.sorting).toEqual([{ id: 'score', desc: true }])
 
       sub.unsubscribe()
-      expect(rowSelection.subscriberCount()).toBe(1)
       expect(sorting.subscriberCount()).toBe(0)
+      expect(rowSelection.subscriberCount()).toBe(1)
 
       siblingSub.unsubscribe()
-      expect(rowSelection.subscriberCount()).toBe(0)
       expect(sorting.subscriberCount()).toBe(0)
+      expect(rowSelection.subscriberCount()).toBe(0)
+    })
+
+    it('continues releasing remaining external bridges when a cleanup throws', () => {
+      // Rollback case: pagination (3rd key) fails setup; rowSelection (2nd key) throws on cleanup.
+      const sortingRollback = createTrackedAtom<SortingState>([])
+      const rowSelectionRollback = createTrackedAtom<RowSelectionState>({})
+      rowSelectionRollback.failNextUnsubscribes(1)
+      const paginationRollback = createTrackedAtom<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+      })
+      paginationRollback.failNextSubscribes(1)
+
+      const rollbackTable = makeTable({
+        atoms: {
+          sorting: sortingRollback,
+          rowSelection: rowSelectionRollback,
+          pagination: paginationRollback,
+        },
+      })
+
+      expect(() => rollbackTable.store.subscribe(() => {})).toThrow(
+        'subscribe failed',
+      )
+      expect(sortingRollback.subscriberCount()).toBe(0)
+      expect(rowSelectionRollback.subscriberCount()).toBe(0)
+      expect(paginationRollback.subscriberCount()).toBe(0)
+
+      // Teardown case: sorting (1st key) throws during unsubscribe; rowSelection & pagination still release.
+      const sortingTeardown = createTrackedAtom<SortingState>([])
+      sortingTeardown.failNextUnsubscribes(1)
+      const rowSelectionTeardown = createTrackedAtom<RowSelectionState>({})
+      const paginationTeardown = createTrackedAtom<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+      })
+
+      const teardownTable = makeTable({
+        atoms: {
+          sorting: sortingTeardown,
+          rowSelection: rowSelectionTeardown,
+          pagination: paginationTeardown,
+        },
+      })
+
+      const sub = teardownTable.store.subscribe(() => {})
+      expect(sortingTeardown.subscriberCount()).toBe(1)
+      expect(rowSelectionTeardown.subscriberCount()).toBe(1)
+      expect(paginationTeardown.subscriberCount()).toBe(1)
+
+      expect(() => sub.unsubscribe()).toThrow('unsubscribe failed')
+      expect(sortingTeardown.subscriberCount()).toBe(0)
+      expect(rowSelectionTeardown.subscriberCount()).toBe(0)
+      expect(paginationTeardown.subscriberCount()).toBe(0)
     })
   })
 

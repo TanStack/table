@@ -257,14 +257,30 @@ export function constructTable<
               }
             } catch (err) {
               for (let k = acquired - 1; k >= 0; k--) {
-                externalSubSyncs[k]!(-1)
+                try {
+                  externalSubSyncs[k]!(-1)
+                } catch {
+                  // continue releasing earlier bridges; preserve setup error
+                }
               }
               throw err
             }
           },
           () => {
+            let firstErr: unknown
+            let hasErr = false
             for (let i = 0; i < externalSubSyncs.length; i++) {
-              externalSubSyncs[i]!(-1)
+              try {
+                externalSubSyncs[i]!(-1)
+              } catch (err) {
+                if (!hasErr) {
+                  firstErr = err
+                  hasErr = true
+                }
+              }
+            }
+            if (hasErr) {
+              throw firstErr
             }
           },
         )
