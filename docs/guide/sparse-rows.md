@@ -6,7 +6,7 @@ title: Sparse Rows Guide
 
 A remote table usually loads its rows from the start: the first page, then the second page, and so on. `data` cannot have gaps, so to show row 99,999 of 100,000 the app must first load every row before it.
 
-`sparseRowsFeature` removes that limit. `data` holds only the rows that are loaded, each at its absolute index on the server, and `rowCount` is the total. The core row model then has `rowCount` rows, and each index without data gets a placeholder row. `table.getCoreRowModel().rows[i]` is always row `i` on the server, and so is `table.getRowModel().rows[i]` when the table does not cut pages or add expanded sub-rows. A virtualizer gets the correct scrollbar length, the user can jump to any position, and the app loads only the rows in view.
+`sparseRowsFeature` removes that limit. `data` holds only the rows that are loaded, each at its absolute index on the server, and `rowCount` is the total. The core row model then has `rowCount` rows, and each index without data gets a placeholder row. `table.getCoreRowModel().rows[i]` is always row `i` on the server, and so is `table.getRowModel().rows[i]` when sorting, filtering, and grouping run on the server and the table does not cut pages or add expanded sub-rows. A virtualizer gets the correct scrollbar length, the user can jump to any position, and the app loads only the rows in view.
 
 The table does not load data. It tells you which ranges are missing, and you load them, for example with [TanStack Query](https://tanstack.com/query/latest).
 
@@ -116,7 +116,7 @@ function loadVisibleRows(startIndex: number, endIndex: number) {
 
 Without `blockSize`, the result is the exact gaps: `[{ startIndex: 120, endIndex: 160 }]`.
 
-With `blockSize`, the result has one range for each block that has a missing row in the requested range. Block `n` starts at index `n * blockSize`, so the same block always has the same bounds: `[{ startIndex: 100, endIndex: 149 }, { startIndex: 150, endIndex: 199 }]`. This makes `range.startIndex` a stable cache key, for example `queryKey: ['people', sorting, columnFilters, range.startIndex]`. A block range can be larger than the requested range, but it never goes past the last row.
+With `blockSize`, the result has one range for each block that has a missing row in the requested range. Block `n` starts at index `n * blockSize`, so the same block always has the same bounds: `[{ startIndex: 100, endIndex: 149 }, { startIndex: 150, endIndex: 199 }]`. A block range can be larger than the requested range, but it never goes past the last row. So the last block is the exception: its `endIndex` grows when `rowCount` grows. Use both bounds as the cache key, for example `queryKey: ['people', sorting, columnFilters, range.startIndex, range.endIndex]`, so that a larger last block is a new request.
 
 A block stays missing until its rows are in `data`, so the same range can be returned again while its request is in progress. Use the cache key to make each request only once.
 
@@ -128,14 +128,14 @@ Row 99,999 under one sort order is a different row under another sort order. The
 
 - Sort, filter, and group on the server. Set `manualSorting`, `manualFiltering`, and `manualGrouping`, or do not register the client-side row models. A client-side row model only sees the loaded rows, so its result is wrong. The table logs a warning in development when one is active and a row is not loaded. `manualPagination` is different: client-side pagination keeps the index space, see [Pagination](#pagination).
 - When sorting or a filter changes, start again with an empty `data` array and the new `rowCount`. If you load blocks with TanStack Query, put the sorting and filter state into the query key.
-- With this feature, a new `data` array does not run the `autoResetPageIndex`, `autoResetExpanded`, and other `autoReset*` behaviors, because a new array usually means that more rows are loaded. Reset the page index or the scroll position yourself when sorting or a filter changes.
+- With this feature, the core row model does not run the `autoResetPageIndex`, `autoResetExpanded`, and other `autoReset*` behaviors when `data` changes, because a new array usually means that more rows are loaded. A client-side filtered, grouped, or sorted row model still runs its own `autoReset*` behaviors when its rows change. Reset the page index or the scroll position yourself when sorting or a filter changes.
 - Do not let the table read column behavior from row values, because placeholder rows have no values. Set `sortDescFirst` on the table or on your columns; without it, the first sort direction of a column comes from the values of the first rows. If you use `column.getCanGlobalFilter()`, set `enableGlobalFilter: true` on the columns that the server can search; without it, the table reads the loaded rows until it finds a value, and the result is `false` while no row is loaded.
 
 ### Reset State When You Start Again
 
 A placeholder ID holds only the index of its row. After you start again with a new `data` array, the same placeholder ID is a different row on the server. State that holds a placeholder ID then points at that different row.
 
-- The table stores a placeholder ID in one state only: the focused cell of `cellSelectionFeature`, while that cell is in a placeholder row. See [Cell Selection](#cell-selection). Call `table.resetCellSelection()` when you start again. If you do not, the focus stays at the same index, and the loaded row at that index has the focused cell and its selection.
+- The table stores a placeholder ID in one state only: the focused cell of `cellSelectionFeature`, while that cell is in a placeholder row. See [Cell Selection](#cell-selection). Call `table.resetCellSelection(true)` when you start again. If you do not, the focus stays at the same index, and the loaded row at that index has the focused cell and its selection. Pass `true`, because without it the table restores `initialState.cellSelection`, which can also hold a placeholder ID.
 - Row selection, row pinning, and expanding keep no state for a placeholder row, so they hold no placeholder ID.
 - Do not put a placeholder ID into your own state, for example the ID of the row that a context menu is open for. If you must, reset that state when you start again.
 
@@ -170,7 +170,7 @@ The state of a loaded row stays when you remove the row from `data`. The row is 
 
 - `cell.getCanSelect()` returns `false` for the cells of a placeholder row, and their selection handlers do nothing. The `enableCellSelection` callback is not called with such a cell.
 - `moveCellSelection()` moves the focus onto a placeholder row as it does onto a loaded row. `setFocusedCell()` also accepts the ID of a placeholder row, for example to jump to the last row.
-- While the focused cell is in a placeholder row, no cell is selected. `cell.getIsFocused()` returns `true` and `cell.getTabIndex()` returns `0` for that cell, and `cell.getIsSelected()` returns `false`.
+- While the focused cell is in a placeholder row, that cell is not selected. `cell.getIsFocused()` returns `true` and `cell.getTabIndex()` returns `0` for that cell, and `cell.getIsSelected()` returns `false`. Other ranges in the state stay selected.
 - When the row of the focused cell is loaded, the focus follows the row. `table.getFocusedCell()` returns the cell of the loaded row at the same index and in the same column. This cell is then selected, like the focused cell of any loaded row.
 - `extendCellSelection()` stops at the last loaded row, so a range does not grow onto a placeholder row. It does nothing while the focused cell is in a placeholder row. A range event on a loaded cell, which is a Shift click by default, then starts a new selection at that cell.
 - `selectCellRange()` ignores a range that starts or ends on a placeholder row, unless the range is one cell. `setCellSelection()` removes such a range from the new state.
