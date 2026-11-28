@@ -15,12 +15,19 @@ import {
 } from '@tanstack/table-core'
 import { createAtom } from '@tanstack/react-store'
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { useTable } from '../src'
+import {
+  createAtom as createAdapterAtom,
+  useCreateAtom,
+  useSelector,
+  useTable,
+} from '../src'
 import type {
+  Atom,
   ColumnDef,
+  Observer,
   PaginationState,
   RowSelectionState,
-} from '@tanstack/table-core'
+} from '../src'
 import type { ReactTable } from '../src'
 
 type Data = {
@@ -571,5 +578,187 @@ describe('React adapter reactivity and lifecycle', () => {
     expect(text('Dynamic cell value')).toBe('ready')
     expect(text('Dynamic fallback')).toBe('updated fallback')
     expect(renderCaptor.mock.calls).toEqual([[0], [1]])
+  })
+
+  test('syncs external atoms created outside the adapter store instance and cleans up subscriptions', () => {
+    function createForeignAtom<T>(
+      initialValue: T,
+    ): Atom<T> & { subscriberCount: () => number } {
+      let currentValue = initialValue
+      const listeners = new Set<(value: T) => void>()
+
+      return {
+        get: () => currentValue,
+        set: (updater: T | ((prev: T) => T)) => {
+          const nextValue =
+            typeof updater === 'function'
+              ? (updater as (prev: T) => T)(currentValue)
+              : updater
+          if (Object.is(currentValue, nextValue)) {
+            return
+          }
+          currentValue = nextValue
+          for (const listener of [...listeners]) {
+            listener(currentValue)
+          }
+        },
+        subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
+          const listener =
+            typeof observerOrNext === 'function'
+              ? observerOrNext
+              : (value: T) => observerOrNext.next?.(value)
+          listeners.add(listener)
+          return {
+            unsubscribe: () => {
+              listeners.delete(listener)
+            },
+          }
+        }) as Atom<T>['subscribe'],
+        subscriberCount: () => listeners.size,
+      }
+    }
+
+    const firstAtom = createForeignAtom<RowSelectionState>({})
+    const directListener = vi.fn()
+
+    function TableHarness() {
+      const table = useTable(
+        {
+          data: [
+            { id: '1', title: 'Row 1' },
+            { id: '2', title: 'Row 2' },
+          ],
+          features: stockFeatures,
+          columns,
+          getRowId: (row) => row.id,
+          atoms: {
+            rowSelection: firstAtom,
+          },
+        },
+        (state) => ({
+          rowSelection: state.rowSelection,
+        }),
+      )
+
+      React.useEffect(() => {
+        const sub = table.atoms.rowSelection.subscribe(directListener)
+        return () => {
+          sub.unsubscribe()
+          // Calling unsubscribe twice must be idempotent and keep sibling
+          // subscriptions intact.
+          sub.unsubscribe()
+        }
+      }, [table])
+
+      return (
+        <>
+          <output aria-label="Owner foreign selection">
+            {JSON.stringify(table.state.rowSelection)}
+          </output>
+          <table.Subscribe source={table.atoms.rowSelection}>
+            {(selection) => (
+              <output aria-label="Atom foreign selection">
+                {JSON.stringify(selection)}
+              </output>
+            )}
+          </table.Subscribe>
+          <table.Subscribe selector={(state) => state.rowSelection}>
+            {(selection) => (
+              <output aria-label="Store foreign selection">
+                {JSON.stringify(selection)}
+              </output>
+            )}
+          </table.Subscribe>
+        </>
+      )
+    }
+
+    const view = render(<TableHarness />)
+
+    expect(firstAtom.subscriberCount()).toBe(1)
+    expect(text('Owner foreign selection')).toBe('{}')
+    expect(text('Atom foreign selection')).toBe('{}')
+    expect(text('Store foreign selection')).toBe('{}')
+
+    act(() => {
+      firstAtom.set({ 1: true })
+    })
+
+    expect(firstAtom.subscriberCount()).toBe(1)
+    expect(directListener).toHaveBeenCalledTimes(1)
+    expect(directListener).toHaveBeenLastCalledWith({ 1: true })
+    expect(text('Owner foreign selection')).toBe('{"1":true}')
+    expect(text('Atom foreign selection')).toBe('{"1":true}')
+    expect(text('Store foreign selection')).toBe('{"1":true}')
+
+    act(() => {
+      firstAtom.set({ 1: true, 2: true })
+    })
+
+    expect(directListener).toHaveBeenCalledTimes(2)
+    expect(text('Owner foreign selection')).toBe('{"1":true,"2":true}')
+    expect(text('Atom foreign selection')).toBe('{"1":true,"2":true}')
+    expect(text('Store foreign selection')).toBe('{"1":true,"2":true}')
+
+    view.unmount()
+    expect(firstAtom.subscriberCount()).toBe(0)
+
+    firstAtom.set({ 2: true })
+    expect(directListener).toHaveBeenCalledTimes(2)
+  })
+
+  test('re-exports @tanstack/react-store helpers from @tanstack/react-table', () => {
+    const sharedAtom = createAdapterAtom({ count: 0 })
+
+    function ReexportHarness() {
+      const localAtom = useCreateAtom<RowSelectionState>({})
+      const count = useSelector(sharedAtom, (state) => state.count)
+      const table = useTable(
+        {
+          data: [{ id: '1', title: 'One' }],
+          features: stockFeatures,
+          columns,
+          getRowId: (row) => row.id,
+          atoms: {
+            rowSelection: localAtom,
+          },
+        },
+        (state) => ({
+          rowSelection: state.rowSelection,
+        }),
+      )
+
+      return (
+        <>
+          <output aria-label="Reexported count">{count}</output>
+          <output aria-label="Reexported selection">
+            {JSON.stringify(table.state.rowSelection)}
+          </output>
+          <button onClick={() => localAtom.set({ 1: true })}>
+            Select via local atom
+          </button>
+          <button
+            onClick={() =>
+              sharedAtom.set((prev) => ({ count: prev.count + 1 }))
+            }
+          >
+            Increment shared atom
+          </button>
+        </>
+      )
+    }
+
+    render(<ReexportHarness />)
+
+    expect(text('Reexported count')).toBe('0')
+    expect(text('Reexported selection')).toBe('{}')
+
+    act(() => {
+      click('Select via local atom')
+      click('Increment shared atom')
+    })
+
+    expect(text('Reexported count')).toBe('1')
+    expect(text('Reexported selection')).toBe('{"1":true}')
   })
 })

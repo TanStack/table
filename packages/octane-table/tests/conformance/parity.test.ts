@@ -7,9 +7,15 @@ describe('export surface', () => {
     const adapterExports = [
       'FlexRender',
       'Subscribe',
+      'batch',
+      'createAtom',
       'createTableHook',
       'createTableHookContexts',
       'flexRender',
+      'shallow',
+      'useAtom',
+      'useCreateAtom',
+      'useSelector',
       'useTable',
     ]
     const expected = [...Object.keys(core), ...adapterExports].sort()
