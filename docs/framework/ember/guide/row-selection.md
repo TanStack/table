@@ -225,6 +225,7 @@ const table = useTable(() => ({
   //...
   manualPagination: true,
   manualRowSelection: true, // allow the 'exclude' row selection mode
+  getRowId: (row) => row.id, // a stable server id, not the row index
   rowCount: 100_000, // the total number of rows on the server
 }))
 ```
@@ -253,7 +254,8 @@ In `'exclude'` mode:
 - For this count, `rowCount` must be the exact total of the server. If you do not know the total and set `rowCount` to an estimate or to a number that is too high, `table.getSelectedRowCount()` is wrong in `'exclude'` mode. Do not show the count then. Show the number of deselected rows, which is the number of ids in `rowSelection`, or keep the total in your own state when the server returns it and calculate the count from it.
 - `getSelectedRowModel()`, `getFilteredSelectedRowModel()`, `getGroupedSelectedRowModel()`, and `getSelectedRowIds()` return the loaded rows that are selected. The table does not know the rows that are not loaded.
 - `table.toggleAllPageRowsSelected()`, `table.getIsAllPageRowsSelected()`, and `table.getIsSomePageRowsSelected()` work on the loaded page rows. Deselecting a page adds its row ids to `rowSelection`.
-- When `rowCount` is set, the deselected rows cover every row, and no loaded row is selected, the table goes back to `'include'` mode with an empty `rowSelection`. The table makes this decision from the current state when a row, range, or page API deselects rows. It does not make it when you write `rowSelection` yourself, or when your `onRowSelectionChange` applies an updater later.
+- When `rowCount` is set, the deselected rows cover every row, and no loaded row is selected, the table goes back to `'include'` mode with an empty `rowSelection`. With `getSubRows` or a grouped row model, every deselected id must also be loaded, because an id that is not loaded can be a sub-row or the id of a group row from an earlier grouping. The table makes this decision from the current state when a row, range, or page API deselects rows. It does not make it when you write `rowSelection` yourself, or when your `onRowSelectionChange` applies an updater later.
+- If your `onRowSelectionChange` and `onRowSelectionModeChange` apply updates later, do not call a row API in the same event after "select all" or "deselect all". The row API still reads the old mode, so it writes the id for the wrong mode.
 
 The mode is state, not an option. "Select all", "deselect all", and `table.resetRowSelection()` change it. You can own it like the `rowSelection` slice, with `atoms.rowSelectionMode`, or with `state.rowSelectionMode` and `onRowSelectionModeChange`. The `table.setRowSelectionMode()` and `table.resetRowSelectionMode()` APIs change only the mode and keep the ids.
 
@@ -275,10 +277,10 @@ await bulkDelete(
 
 Some limits apply, because the table cannot see rows that are not loaded:
 
-- "All" means all rows that match the filters at the time of the "select all" click. The deselected ids and `rowCount` belong to those filters. The table does not reset the selection when the filters change, so call `table.resetRowSelection()` when your filters or `rowCount` change. If you do not, `table.getSelectedRowCount()` is wrong for the new filters.
+- "All" means all rows that match the filters at the time of the "select all" click. The deselected ids and `rowCount` belong to those filters. The table does not reset the selection when the filters change, so call `table.resetRowSelection(true)` when your filters or `rowCount` change. Without `true`, the reset goes back to `initialState`, which can select all rows. If you do not, `table.getSelectedRowCount()` is wrong for the new filters.
 - "Select all" keeps the `'include'` mode when `rowCount` is `0`, and it does nothing when `enableRowSelection` is `false`, because no row can be selected.
 - `enableRowSelection` still decides which loaded rows the user can toggle, but it does not decide which rows are selected. A row that is not in `rowSelection` is selected, also when the user cannot toggle it: `row.getIsSelected()` returns `true`, the row is in the selected row models, and `table.getSelectedRowCount()` counts it. The row handler and the page APIs skip that row, so `table.getIsSomePageRowsSelected()` can return `false` while `table.getIsSomeRowsSelected()` returns `true`, and the table stays in `'exclude'` mode while that row is loaded. The table also cannot run the rule for rows that are not loaded. If such rows must not be part of a bulk action, your server must skip them.
-- `enableSubRowSelection` applies only to loaded sub-rows. When you toggle a parent row, the ids of its loaded sub-rows are added or removed with it. The table does not know sub-rows that are not loaded, so your server must decide how a parent applies to them. `rowCount` counts top-level rows, so `table.getSelectedRowCount()` does not subtract deselected sub-rows and group rows while they are loaded. The table cannot know that an id is a sub-row after its page is unloaded, and then subtracts it as one row. With tree data on more than one page, get the count from your server.
+- `enableSubRowSelection` applies only to loaded sub-rows. When you toggle a parent row, the ids of its loaded sub-rows are added or removed with it. The table does not know sub-rows that are not loaded, so your server must decide how a parent applies to them. `rowCount` counts top-level rows, so `table.getSelectedRowCount()` does not subtract deselected sub-rows and group rows while they are loaded. The table cannot know that an id is a sub-row after its page is unloaded, and then subtracts it as one row. With tree data on more than one page, get the count from your server. The ids of group rows stay in `rowSelection` when the grouping changes, and the table then subtracts each of them as one row. Reset the selection when the grouping changes.
 
 ### Render Row Selection UI
 

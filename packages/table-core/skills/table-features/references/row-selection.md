@@ -86,7 +86,7 @@ const bulkAction = {
 
 `manualRowSelection: true` allows the `'exclude'` value of the `rowSelectionMode` state; without the option the mode is always read as `'include'` and select-all writes the loaded row ids. With it, `toggleAllRowsSelected(true)` sets `'exclude'` and clears `rowSelection`, `toggleAllRowsSelected(false)` sets `'include'` and clears it, and `resetRowSelection()` resets both slices. In `'exclude'` mode a row is selected when its id is not in `rowSelection`, so rows that load later are selected, `getIsAllRowsSelected()` is true only with no ids, and the selected row models and `getSelectedRowIds()` hold only loaded rows. `getIsAllRowsSelected()` is never true in `'include'` mode under this option, because loaded rows are not all rows.
 
-Set `rowCount` (top-level rows, the same option manual pagination reads) so `getSelectedRowCount()` is right and so a row, range, or page deselect goes back to an empty `'include'` selection when the deselected rows cover every row and no loaded row is still selected. Direct `setRowSelection()` writes and updaters applied later are not normalized. `rowCount` must be the exact server total: with an estimated or too-high `rowCount` (total unknown), `getSelectedRowCount()` is wrong in `'exclude'` mode, so do not show it; show the number of deselected ids instead, or count from a total kept in app state. The count skips the ids of loaded sub-rows and group rows but subtracts an id that is not loaded as one row, so with tree data on more than one page take the count from the server. The table does not reset the selection when filters change: "all" means all rows matching the filters at click time, and the deselected ids and `rowCount` belong to those filters, so call `resetRowSelection()` whenever filters or `rowCount` change.
+Set `rowCount` (top-level rows, the same option manual pagination reads) so `getSelectedRowCount()` is right and so a row, range, or page deselect goes back to an empty `'include'` selection when the deselected rows cover every row and no loaded row is still selected. With `getSubRows` or a grouped row model, every deselected id must also be loaded, because an unloaded id can be a sub-row or an old group row id. Direct `setRowSelection()` writes and updaters applied later are not normalized. If the change handlers apply updates later, do not call a row API in the same event after select-all or deselect-all: it still reads the old mode and writes the id for the wrong mode. `rowCount` must be the exact server total: with an estimated or too-high `rowCount` (total unknown), `getSelectedRowCount()` is wrong in `'exclude'` mode, so do not show it; show the number of deselected ids instead, or count from a total kept in app state. The count skips the ids of loaded sub-rows and group rows but subtracts an id that is not loaded as one row, so with tree data on more than one page take the count from the server. Group row ids stay in `rowSelection` when the grouping changes and are then subtracted as rows, so reset the selection when the grouping changes. The table does not reset the selection when filters change: "all" means all rows matching the filters at click time, and the deselected ids and `rowCount` belong to those filters, so call `resetRowSelection(true)` whenever filters or `rowCount` change (without `true` the reset restores `initialState`, which can select all rows).
 
 `enableRowSelection` only gates toggling. In `'exclude'` mode a row whose id is not in `rowSelection` is selected (`getIsSelected()`, selected row models, `getSelectedRowCount()`) even when it cannot be toggled, so the server must skip such rows if they must not be part of a bulk action. The row handler and the page APIs skip such a row, so `getIsSomePageRowsSelected()` can be false while `getIsSomeRowsSelected()` is true, and the table stays in `'exclude'` mode while the row is loaded. Select-all is a no-op when `enableRowSelection` is `false` and stays in `'include'` mode when `rowCount` is `0`. `enableSubRowSelection` only cascades to loaded sub-rows; the server must decide how a parent applies to sub-rows that are not loaded.
 
@@ -116,9 +116,9 @@ Source: `docs/framework/react/guide/row-selection.md#useful-row-ids`
 
 Wrong: `const allSelectedRecords = table.getSelectedRowModel().rows`
 
-Correct: `const allSelectedIds = table.getSelectedRowIds()`
+Correct in `'include'` mode: `const allSelectedIds = table.getSelectedRowIds()`
 
-Under manual pagination, unloaded selected IDs have no `Row` object in the current model.
+Under manual pagination, unloaded selected IDs have no `Row` object in the current model. In `'exclude'` mode, `getSelectedRowIds()` returns only loaded rows; send the mode and the deselected ids instead (see the next entry).
 
 Source: `docs/framework/react/guide/row-selection.md#note-if-you-are-using-manualpagination`
 
@@ -136,7 +136,7 @@ Correct:
 const mode = table.atoms.rowSelectionMode.get()
 const ids = Object.keys(table.atoms.rowSelection.get())
 const bulkAction =
-  mode === 'exclude' ? { allRowsExcept: ids } : { onlyRows: ids }
+  mode === 'exclude' ? { allRowsExcept: ids, filters } : { onlyRows: ids }
 ```
 
 With `manualRowSelection: true`, select-all switches `rowSelectionMode` to `'exclude'` and the keys of `rowSelection` become the deselected row ids. Read the mode with the map, or use `row.getIsSelected()` and `table.getSelectedRowCount()`.
