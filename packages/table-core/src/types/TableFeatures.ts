@@ -28,6 +28,8 @@ export type IsAny<T> = 0 extends 1 & T ? true : false
  *
  * This keeps empty feature-map lookups usable as an intersection member.
  */
+type OptInOnlyFeatureKeys = 'sparseRowsFeature'
+
 type UnionToIntersectionOrEmpty<T> = [T] extends [never]
   ? {}
   : UnionToIntersection<T> & {}
@@ -39,13 +41,18 @@ type UnionToIntersectionOrEmpty<T> = [T] extends [never]
  * `TFeatures` is `any`, all feature-map entries are included to preserve the
  * permissive behavior expected by broad table types. Otherwise, only entries
  * whose keys are present in `TFeatures` are intersected together.
+ *
+ * Built-in features that are not in `stockFeatures` are left out of the `any`
+ * case. A stock table can then still be cast to `Table<any, any>`.
  */
 export type ExtractFeatureMapTypes<
   TFeatures extends TableFeatures,
   TFeatureMap extends object,
 > =
   IsAny<TFeatures> extends true
-    ? UnionToIntersection<TFeatureMap[keyof TFeatureMap]>
+    ? UnionToIntersection<
+        TFeatureMap[Exclude<keyof TFeatureMap, OptInOnlyFeatureKeys>]
+      >
     : UnionToIntersectionOrEmpty<
         TFeatureMap[Extract<keyof TFeatures, keyof TFeatureMap>]
       >
@@ -296,6 +303,14 @@ export interface TableFeatures
    * sorting function in your bundle.
    */
   sortFns?: Record<string, SortFn<any, any>>
+  /**
+   * Opt-in feature that reads `data` as a sparse array of loaded rows and fills
+   * the core row model with placeholder rows up to `rowCount`.
+   *
+   * It is not part of `stockFeatures`, because it changes how the table reads
+   * `data` and `rowCount`. Import `sparseRowsFeature` and register it by name.
+   */
+  sparseRowsFeature?: TableFeature
   /**
    * Type-only slot for declaring the type of this table's `options.meta`.
    *

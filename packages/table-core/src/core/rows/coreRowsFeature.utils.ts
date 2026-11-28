@@ -1,6 +1,6 @@
 import { flattenBy, hasOwn, makeObjectMap } from '../../utils'
 import { constructCell } from '../cells/constructCell'
-import { expandRowModel } from '../featureStubs'
+import { expandRowModel, getIsPlaceholderRow } from '../featureStubs'
 import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -68,6 +68,8 @@ export function row_getValue<
     return row._valuesCache[columnId]
   }
 
+  if (getIsPlaceholderRow(row)) return undefined
+
   const column = row.table.getColumn(columnId)
 
   if (!column?.accessorFn) {
@@ -97,6 +99,8 @@ export function row_getUniqueValues<
   if (hasOwn(row._uniqueValuesCache, columnId)) {
     return row._uniqueValuesCache[columnId]
   }
+
+  if (getIsPlaceholderRow(row)) return []
 
   const column = row.table.getColumn(columnId)
 

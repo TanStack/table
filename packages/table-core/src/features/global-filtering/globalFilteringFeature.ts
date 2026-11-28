@@ -3,6 +3,7 @@ import {
   assignTableAPIs,
   makeStateUpdater,
 } from '../../utils'
+import { getIsPlaceholderRow } from '../../core/featureStubs'
 import {
   column_getCanGlobalFilter,
   table_getGlobalAutoFilterFn,
@@ -38,7 +39,9 @@ export const globalFilteringFeature: TableFeature = {
         const row = table
           .getCoreRowModel()
           .flatRows.find(
-            (row) => row.getAllCellsByColumnId()[column.id]?.getValue() != null,
+            (row) =>
+              !getIsPlaceholderRow(row) &&
+              row.getAllCellsByColumnId()[column.id]?.getValue() != null,
           )
         const value = row?.getAllCellsByColumnId()[column.id]?.getValue()
 

@@ -131,4 +131,10 @@ Because this imports the complete collection, it includes all stock feature code
 
 These are the features included by `stockFeatures`. Fuzzy filtering is a filtering recipe built from the filtering and sorting features, while virtualization is provided by TanStack Virtual rather than a Table feature.
 
+## Opt-In Features
+
+- `sparseRowsFeature`: [Sparse Rows](./sparse-rows) lets `data` hold only the loaded rows of a remote table and fills the gaps with placeholder rows.
+
+`stockFeatures` does not include this feature, because it changes how the table reads `data` and `rowCount`. Register it by name.
+
 To build and type your own plugin, see the framework-specific [Custom Plugins guide](../framework/react/guide/custom-features).

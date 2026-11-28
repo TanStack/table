@@ -1,4 +1,7 @@
-import { getIsAllParentsExpanded } from '../../core/featureStubs'
+import {
+  getIsAllParentsExpanded,
+  getIsPlaceholderRow,
+} from '../../core/featureStubs'
 import { callMemoOrStaticFn, cloneState, setStateSlice } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -215,6 +218,8 @@ export function row_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
+  if (getIsPlaceholderRow(row)) return false
+
   const { enableRowPinning } = row.table.options
   if (typeof enableRowPinning === 'function') {
     return enableRowPinning(row)
@@ -290,6 +295,8 @@ export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
   includeLeafRows?: boolean,
   includeParentRows?: boolean,
 ): void {
+  if (getIsPlaceholderRow(row)) return
+
   const leafRowIds = includeLeafRows
     ? row.getLeafRows().map(({ id }) => id)
     : []
