@@ -38,11 +38,19 @@ export function createLiveProxy<T extends object>(getTarget: () => T): T {
     },
     defineProperty(_, key, descriptor) {
       // The proxy reports every property as configurable because the target
-      // can change, so it cannot honor an explicitly non-configurable define.
+      // can change, so it rejects explicitly non-configurable definitions and
+      // makes new definitions configurable to keep that descriptor truthful.
       if (descriptor.configurable === false) {
         return false
       }
-      return Reflect.defineProperty(getTarget(), key, descriptor)
+      const target = getTarget()
+      return Reflect.defineProperty(
+        target,
+        key,
+        Object.hasOwn(target, key)
+          ? descriptor
+          : { ...descriptor, configurable: true },
+      )
     },
     preventExtensions() {
       // The target can change, so the proxy cannot promise a fixed key set.
