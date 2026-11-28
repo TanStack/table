@@ -564,6 +564,31 @@ describe('row selection with placeholder rows', () => {
   })
 
   it('should select only the loaded rows of the page with select all on the page', () => {
+    const table = makeTable({
+      features: paginatedFeatures,
+      data: makeSparseData([2, 3], [7, 7]),
+      manualPagination: false,
+      initialState: { pagination: { pageIndex: 0, pageSize: 5 } },
+    })
+
+    expect(table.getRowModel().rows.map((row) => row.id)).toEqual([
+      '__placeholder_0',
+      '__placeholder_1',
+      'person-2',
+      'person-3',
+      '__placeholder_4',
+    ])
+
+    table.toggleAllPageRowsSelected(true)
+
+    expect(table.atoms.rowSelection.get()).toEqual({
+      'person-2': true,
+      'person-3': true,
+    })
+    expect(table.getIsAllPageRowsSelected()).toBe(true)
+  })
+
+  it('should not let a placeholder row clear a single selection with select all on the page', () => {
     const table = makeTable({ enableMultiRowSelection: false })
 
     table.toggleAllPageRowsSelected(true)
