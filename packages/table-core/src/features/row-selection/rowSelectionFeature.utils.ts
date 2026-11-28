@@ -1090,6 +1090,26 @@ function countExcludedRows<
   return count
 }
 
+function isFlatTable<TFeatures extends TableFeatures, TData extends RowData>(
+  table: Table_Internal<TFeatures, TData>,
+): boolean {
+  return !table.options.getSubRows && !table.options.features.groupedRowModel
+}
+
+function isEveryRowIdLoaded<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  rowSelection: RowSelectionState,
+): boolean {
+  const rowsById = table.getCoreRowModel().rowsById
+  const groupedRowsById = table.getGroupedRowModel().rowsById
+  return Object.keys(rowSelection).every(
+    (rowId) => rowsById[rowId] || groupedRowsById[rowId],
+  )
+}
+
 /**
  * Applies `mutate` to a copy of the row selection map.
  *
@@ -1099,7 +1119,10 @@ function countExcludedRows<
  *
  * The count of deselected rows can be too high: an id can be a sub-row of a
  * page that is not loaded, or `rowCount` can be the count of a new filter. So
- * the state only goes back when no loaded row is selected.
+ * the state only goes back when no loaded row is selected. With
+ * `options.getSubRows` or a grouped row model, every deselected id must also
+ * be loaded, because an id that is not loaded can be a sub-row or the id of a
+ * group row from an earlier grouping.
  */
 function updateRowSelection<
   TFeatures extends TableFeatures,
@@ -1130,6 +1153,7 @@ function updateRowSelection<
 
   if (
     countExcludedRows(table, next) >= rowCount &&
+    (isFlatTable(table) || isEveryRowIdLoaded(table, next)) &&
     table.getCoreRowModel().flatRows.every((row) => isRowSelected(row, next))
   ) {
     setRowSelectionAndMode(table, makeObjectMap<true>(), 'include')

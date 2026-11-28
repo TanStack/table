@@ -924,9 +924,9 @@ describe('exclude mode when the deselected rows cover every row', () => {
     expect(ids(table)).toEqual([])
   })
 
-  it('applies across pages when every row was deselected', () => {
+  it('applies across pages when every row of a flat table was deselected', () => {
     const table = makeSelectionTable(
-      { manualRowSelection: true, rowCount: 4 },
+      { manualRowSelection: true, rowCount: 4, getSubRows: undefined },
       makeRows(0, 2),
     )
     table.toggleAllRowsSelected(true)
@@ -996,6 +996,50 @@ describe('exclude mode when the deselected rows cover every row', () => {
     expect(mode(table)).toBe('exclude')
     expect(ids(table)).toEqual(['a', 'a.1', 'a.2', 'c'])
     expect(table.getRow('d').getIsSelected()).toBe(true)
+  })
+
+  it('keeps exclude mode when an id that is not loaded can be a sub-row', () => {
+    const table = makeSelectionTable(
+      { manualRowSelection: true, rowCount: 4 },
+      nestedData,
+    )
+    table.toggleAllRowsSelected(true)
+    table.getRow('a').toggleSelected(false)
+
+    table.setOptions((prev) => ({ ...prev, data: [otherNestedData[1]!] }))
+    table.getRow('d').toggleSelected(false)
+
+    expect(mode(table)).toBe('exclude')
+    expect(ids(table)).toEqual(['a', 'a.1', 'a.2', 'd'])
+
+    table.setOptions((prev) => ({ ...prev, data: nestedData }))
+    expect(table.getRow('b').getIsSelected()).toBe(true)
+  })
+
+  it('keeps exclude mode when an id that is not loaded can be an old group row', () => {
+    const table = makePipelineTable(
+      {
+        manualPagination: true,
+        manualRowSelection: true,
+        rowCount: 4,
+        getSubRows: undefined,
+        initialState: { grouping: ['kind'] },
+      },
+      makeRows(0, 2),
+    )
+    table.toggleAllRowsSelected(true)
+    table.getRow('kind:even', true).toggleSelected(false)
+    table.setGrouping([])
+
+    table.setOptions((prev) => ({ ...prev, data: makeRows(2, 2) }))
+    table.getRow('2').toggleSelected(false)
+    table.getRow('3').toggleSelected(false)
+
+    expect(mode(table)).toBe('exclude')
+    expect(ids(table)).toEqual(['0', '2', '3', 'kind:even'])
+
+    table.setOptions((prev) => ({ ...prev, data: makeRows(0, 2) }))
+    expect(table.getRow('1').getIsSelected()).toBe(true)
   })
 
   it('keeps exclude mode while a row of another group is selected', () => {
