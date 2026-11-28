@@ -832,6 +832,7 @@ function App() {
       pagination: state.pagination,
       rowPinning: state.rowPinning,
       rowSelection: state.rowSelection,
+      rowSelectionMode: state.rowSelectionMode,
       sorting: state.sorting,
     }),
   )

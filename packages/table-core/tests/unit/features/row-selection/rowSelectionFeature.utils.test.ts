@@ -20,11 +20,14 @@ import {
   table_getIsSomePageRowsSelected,
   table_getIsSomeRowsSelected,
   table_getPreSelectedRowModel,
+  table_getSelectedRowCount,
   table_getSelectedRowIds,
   table_getToggleAllPageRowsSelectedHandler,
   table_getToggleAllRowsSelectedHandler,
   table_resetRowSelection,
+  table_resetRowSelectionMode,
   table_setRowSelection,
+  table_setRowSelectionMode,
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from '../../../../src/static-functions'
@@ -89,6 +92,44 @@ describe('getDefaultRowSelectionState', () => {
   })
 })
 
+describe('table_setRowSelectionMode', () => {
+  it('should route the updater through onRowSelectionModeChange', () => {
+    const onRowSelectionModeChange = vi.fn()
+    const table = makeTable({ onRowSelectionModeChange })
+
+    table_setRowSelectionMode(table, 'exclude')
+
+    expect(onRowSelectionModeChange).toHaveBeenCalledWith('exclude')
+  })
+})
+
+describe('table_resetRowSelectionMode', () => {
+  it('should reset to the include mode when defaultState is true', () => {
+    const onRowSelectionModeChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionModeChange,
+      initialState: { rowSelectionMode: 'exclude' },
+    })
+
+    table_resetRowSelectionMode(table, true)
+
+    expect(onRowSelectionModeChange).toHaveBeenCalledWith('include')
+  })
+
+  it('should reset to the initial mode by default', () => {
+    const onRowSelectionModeChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionModeChange,
+      initialState: { rowSelectionMode: 'exclude' },
+      state: { rowSelectionMode: 'include' },
+    })
+
+    table_resetRowSelectionMode(table)
+
+    expect(onRowSelectionModeChange).toHaveBeenCalledWith('exclude')
+  })
+})
+
 describe('table_setRowSelection', () => {
   it('should route the updater through onRowSelectionChange', () => {
     const onRowSelectionChange = vi.fn()
@@ -141,6 +182,24 @@ describe('table_resetRowSelection', () => {
 
     expect(onRowSelectionChange).toHaveBeenCalledWith({ '0': true, '2': true })
   })
+
+  it('should only reset the mode with manualRowSelection', () => {
+    const onRowSelectionModeChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionModeChange,
+      initialState: { rowSelectionMode: 'exclude' },
+    })
+
+    table_resetRowSelection(table)
+    expect(onRowSelectionModeChange).not.toHaveBeenCalled()
+
+    table.setOptions((prev) => ({ ...prev, manualRowSelection: true }))
+    table_resetRowSelection(table)
+    expect(onRowSelectionModeChange).toHaveBeenLastCalledWith('exclude')
+
+    table_resetRowSelection(table, true)
+    expect(onRowSelectionModeChange).toHaveBeenLastCalledWith('include')
+  })
 })
 
 describe('table_getPreSelectedRowModel', () => {
@@ -162,6 +221,32 @@ describe('table_getSelectedRowIds', () => {
 
   it('should return an empty array with no selection', () => {
     expect(table_getSelectedRowIds(makeTable())).toEqual([])
+  })
+})
+
+describe('table_getSelectedRowCount', () => {
+  it('should count the selected row ids', () => {
+    const table = makeTable({
+      initialState: { rowSelection: { '0': true, '3': true } },
+    })
+
+    expect(table_getSelectedRowCount(table)).toBe(2)
+    expect(table_getSelectedRowCount(makeTable())).toBe(0)
+  })
+
+  it('should count the rows that are not deselected in exclude mode', () => {
+    const table = makeTable({
+      manualRowSelection: true,
+      initialState: {
+        rowSelection: { '0': true, '3': true },
+        rowSelectionMode: 'exclude',
+      },
+    })
+
+    expect(table_getSelectedRowCount(table)).toBe(3)
+
+    table.setOptions((prev) => ({ ...prev, rowCount: 50 }))
+    expect(table_getSelectedRowCount(table)).toBe(48)
   })
 })
 
