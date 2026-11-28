@@ -152,22 +152,21 @@ export function constructTable<
       if (!externalVersionAtom) {
         return
       }
-      externalSubCount = Math.max(0, externalSubCount + delta)
+      const nextSubCount = Math.max(0, externalSubCount + delta)
       const nextExternalAtom =
-        externalSubCount > 0 ? table.options.atoms?.[key] : undefined
+        nextSubCount > 0 ? table.options.atoms?.[key] : undefined
       if (nextExternalAtom === subscribedExternalAtom) {
+        externalSubCount = nextSubCount
         return
       }
-      if (externalUnsub) {
-        externalUnsub.unsubscribe()
-        externalUnsub = undefined
-      }
+      const nextUnsub = nextExternalAtom?.subscribe(() => {
+        externalVersionAtom.set((v) => v + 1)
+      })
+      const prevUnsub = externalUnsub
+      externalSubCount = nextSubCount
       subscribedExternalAtom = nextExternalAtom
-      if (nextExternalAtom) {
-        externalUnsub = nextExternalAtom.subscribe(() => {
-          externalVersionAtom.set((v) => v + 1)
-        })
-      }
+      externalUnsub = nextUnsub
+      prevUnsub?.unsubscribe()
     }
 
     if (externalVersionAtom) {
@@ -250,8 +249,17 @@ export function constructTable<
       ? withSubscriptionLifecycle(
           rawStoreAtom,
           () => {
-            for (let i = 0; i < externalSubSyncs.length; i++) {
-              externalSubSyncs[i]!(1)
+            let acquired = 0
+            try {
+              for (let i = 0; i < externalSubSyncs.length; i++) {
+                externalSubSyncs[i]!(1)
+                acquired++
+              }
+            } catch (err) {
+              for (let k = acquired - 1; k >= 0; k--) {
+                externalSubSyncs[k]!(-1)
+              }
+              throw err
             }
           },
           () => {
@@ -354,10 +362,13 @@ function withSubscriptionLifecycle<
       let active = true
       return {
         unsubscribe: () => {
-          sub.unsubscribe()
-          if (active) {
-            active = false
-            onUnsubscribe()
+          try {
+            sub.unsubscribe()
+          } finally {
+            if (active) {
+              active = false
+              onUnsubscribe()
+            }
           }
         },
       }

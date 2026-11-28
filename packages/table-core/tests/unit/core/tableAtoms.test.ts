@@ -14,8 +14,10 @@ import {
   table_syncExternalStateToBaseAtoms,
 } from '../../../src/static-functions'
 import { testFeatures } from '../../fixtures/features'
+import type { Atom, Observer } from '@tanstack/store'
 import type {
   PaginationState,
+  RowSelectionState,
   SortingState,
   Table,
   TableOptions,
@@ -264,6 +266,87 @@ describe('three-layer atom architecture', () => {
       expect(observer).toHaveBeenCalled()
       expect(table.store.state.sorting).toEqual([{ id: 'x', desc: false }])
       sub.unsubscribe()
+    })
+
+    it('rolls back partial external atom subscriptions on subscribe failure and allows retry', () => {
+      function createTrackedAtom<T>(
+        initialValue: T,
+        failSubscribeCount = 0,
+      ): Atom<T> & { subscriberCount: () => number } {
+        let currentValue = initialValue
+        let remainingFailures = failSubscribeCount
+        const listeners = new Set<(value: T) => void>()
+
+        return {
+          get: () => currentValue,
+          set: (updater: T | ((prev: T) => T)) => {
+            const nextValue =
+              typeof updater === 'function'
+                ? (updater as (prev: T) => T)(currentValue)
+                : updater
+            if (Object.is(currentValue, nextValue)) {
+              return
+            }
+            currentValue = nextValue
+            for (const listener of [...listeners]) {
+              listener(currentValue)
+            }
+          },
+          subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
+            if (remainingFailures > 0) {
+              remainingFailures--
+              throw new Error('subscribe failed')
+            }
+            const listener =
+              typeof observerOrNext === 'function'
+                ? observerOrNext
+                : (value: T) => observerOrNext.next?.(value)
+            listeners.add(listener)
+            return {
+              unsubscribe: () => {
+                listeners.delete(listener)
+              },
+            }
+          }) as Atom<T>['subscribe'],
+          subscriberCount: () => listeners.size,
+        }
+      }
+
+      const rowSelection = createTrackedAtom<RowSelectionState>({})
+      const sorting = createTrackedAtom<SortingState>([], 1)
+      const siblingSub = rowSelection.subscribe(() => {})
+
+      const table = makeTable({
+        atoms: {
+          rowSelection,
+          sorting,
+        },
+      })
+
+      expect(rowSelection.subscriberCount()).toBe(1)
+      expect(sorting.subscriberCount()).toBe(0)
+
+      expect(() => table.store.subscribe(() => {})).toThrow('subscribe failed')
+
+      expect(sorting.subscriberCount()).toBe(0)
+      expect(rowSelection.subscriberCount()).toBe(1)
+
+      const observer = vi.fn()
+      const sub = table.store.subscribe(observer)
+      expect(rowSelection.subscriberCount()).toBe(2)
+      expect(sorting.subscriberCount()).toBe(1)
+
+      sorting.set([{ id: 'score', desc: true }])
+      expect(observer).toHaveBeenCalled()
+      expect(table.store.state.sorting).toEqual([{ id: 'score', desc: true }])
+
+      sub.unsubscribe()
+      expect(rowSelection.subscriberCount()).toBe(1)
+      expect(sorting.subscriberCount()).toBe(0)
+
+      siblingSub.unsubscribe()
+      expect(rowSelection.subscriberCount()).toBe(0)
+      expect(sorting.subscriberCount()).toBe(0)
     })
   })
 
