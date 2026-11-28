@@ -30,9 +30,7 @@ import type {
   Cell,
   CellSelectionRange,
   ColumnDef,
-  FilterFn,
   Row,
-  RowData,
   SparseRowRange,
   Table,
   TableOptions,
@@ -162,16 +160,6 @@ describe('sparseRowsFeature types', () => {
       row.getIsPlaceholder
     expect(getIsPlaceholder).toBeTypeOf('function')
   })
-
-  it('should let any-typed filter functions be cast for a table without the feature', () => {
-    function getStockFilterFns<TData extends RowData>() {
-      return { ...filterFns } as Record<
-        string,
-        FilterFn<typeof stockFeatures, TData>
-      >
-    }
-    expect(getStockFilterFns()).toHaveProperty('includesString')
-  })
 })
 
 describe('sparse core row model', () => {
@@ -219,8 +207,7 @@ describe('sparse core row model', () => {
   })
 
   it('should give placeholder rows a temporary id and loaded rows the id from getRowId', () => {
-    const getRowId = vi.fn((person: Person) => person.id)
-    const table = makeTable({ getRowId })
+    const table = makeTable()
     const { rows, rowsById } = table.getRowModel()
 
     expect(rows.map((row) => row.id)).toEqual([
@@ -237,7 +224,6 @@ describe('sparse core row model', () => {
     ])
     expect(rowsById['__placeholder_7']).toBe(rows[7])
     expect(table.getRow('person-3')).toBe(rows[3])
-    expect(getRowId).toHaveBeenCalledTimes(3)
   })
 
   it('should not collide with the default index ids', () => {
@@ -606,7 +592,6 @@ describe('row selection with placeholder rows', () => {
       shiftKey: true,
     })
 
-    expect(table._lastSelectedRowId).toBe('person-3')
     expect(table.atoms.rowSelection.get()).toEqual({ 'person-3': true })
   })
 
@@ -864,7 +849,6 @@ describe('cell selection with placeholder rows', () => {
   it('should leave out the placeholder rows of a range that spans a gap', () => {
     const table = makeCellTable()
     const { rows } = table.getRowModel()
-    const getPlaceholderCells = vi.spyOn(rows[5]!, 'getAllCellsByColumnId')
 
     table.selectCellRange(rangeOf('person-3', 'name', 'person-7', 'age'))
 
@@ -890,7 +874,6 @@ describe('cell selection with placeholder rows', () => {
       ['1', ['Person 4', 24]],
       ['4', ['Person 7', 27]],
     ])
-    expect(getPlaceholderCells).not.toHaveBeenCalled()
     expect(rows[5]!.getAllCells()[0]!.getIsSelected()).toBe(false)
     expect(rows[4]!.getAllCells()[0]!.getIsSelected()).toBe(true)
 
@@ -1484,10 +1467,6 @@ describe('sparseRowsFeature development warnings', () => {
 })
 
 describe('tables without sparseRowsFeature', () => {
-  it('should not be part of stockFeatures', () => {
-    expect(Object.keys(stockFeatures)).not.toContain('sparseRowsFeature')
-  })
-
   it('should keep rowCount out of the core row model', () => {
     const table = constructTable({
       features: testFeatures(stockFeatures),

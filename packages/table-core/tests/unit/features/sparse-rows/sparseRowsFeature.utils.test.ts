@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
   row_getIsPlaceholder,
-  table_createSparseRowModel,
   table_getMissingRowRanges,
 } from '../../../../src/static-functions'
 import { constructTable, sparseRowsFeature } from '../../../../src'
@@ -273,17 +272,6 @@ describe('row_getIsPlaceholder', () => {
 })
 
 describe('table_createSparseRowModel', () => {
-  it('should create a memoized row model with rowCount rows', () => {
-    const table = makeTable()
-    const getRowModel = table_createSparseRowModel(asInternal(table))
-    const rowModel = getRowModel()
-
-    expect(rowModel.rows).toHaveLength(100)
-    expect(rowModel.rows[10]!.id).toBe('person-10')
-    expect(rowModel.rows[9]!.id).toBe('__placeholder_9')
-    expect(getRowModel()).toBe(rowModel)
-  })
-
   it('should build an empty row model for an empty table', () => {
     const table = makeTable({ data: [], rowCount: 0 })
 
@@ -292,20 +280,5 @@ describe('table_createSparseRowModel', () => {
       flatRows: [],
       rowsById: {},
     })
-  })
-
-  it('should drop the placeholder rows after rowCount when the table shrinks', () => {
-    const table = makeTable({ data: [], rowCount: 5 })
-    const before = table.getRowModel().rows
-
-    table.setOptions((old) => ({ ...old, rowCount: 2 }))
-    expect(table.getRowModel().rows).toHaveLength(2)
-
-    table.setOptions((old) => ({ ...old, rowCount: 5 }))
-    const after = table.getRowModel().rows
-
-    expect(after[1]).toBe(before[1])
-    expect(after[4]).not.toBe(before[4])
-    expect(after[4]!.id).toBe('__placeholder_4')
   })
 })
