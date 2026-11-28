@@ -1,4 +1,18 @@
 export * from '@tanstack/table-core'
+export {
+  batch,
+  createAtom,
+  shallow,
+  useAtom,
+  useSelector,
+} from '@tanstack/svelte-store'
+export type {
+  Atom,
+  AtomOptions,
+  Observer,
+  ReadonlyAtom,
+  Subscription,
+} from '@tanstack/svelte-store'
 
 export { createTable } from './createTable.svelte'
 export type { SvelteTable } from './createTable.svelte'

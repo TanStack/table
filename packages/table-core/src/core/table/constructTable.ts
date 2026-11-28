@@ -131,17 +131,63 @@ export function constructTable<
   const stateKeys = Object.keys(table.initialState) as Array<
     string & keyof TableState_All
   >
+  const externalSubSyncs: Array<(delta?: number) => void> = []
 
   for (let i = 0; i < stateKeys.length; i++) {
     const key = stateKeys[i]!
+    const externalVersionAtom = !_reactivity.wrapExternalAtoms
+      ? _reactivity.createWritableAtom(0, {
+          debugName: `table/externalVersion/${key}`,
+        })
+      : undefined
+    let externalSubCount = 0
+    let subscribedExternalAtom:
+      | {
+          subscribe: (fn: (value: any) => void) => { unsubscribe: () => void }
+        }
+      | undefined
+    let externalUnsub: { unsubscribe: () => void } | undefined
+
+    const syncExternalSub = (delta = 0) => {
+      if (!externalVersionAtom) {
+        return
+      }
+      const nextSubCount = Math.max(0, externalSubCount + delta)
+      const nextExternalAtom =
+        nextSubCount > 0 ? table.options.atoms?.[key] : undefined
+      if (nextExternalAtom === subscribedExternalAtom) {
+        externalSubCount = nextSubCount
+        return
+      }
+      const nextUnsub = nextExternalAtom?.subscribe(() => {
+        externalVersionAtom.set((v) => v + 1)
+      })
+      const prevUnsub = externalUnsub
+      externalSubCount = nextSubCount
+      subscribedExternalAtom = nextExternalAtom
+      externalUnsub = nextUnsub
+      prevUnsub?.unsubscribe()
+    }
+
+    if (externalVersionAtom) {
+      externalSubSyncs.push(syncExternalSub)
+    }
+
     table.baseAtoms[key] = _reactivity.createWritableAtom(
       table.initialState[key],
       {
         debugName: `table/baseAtoms/${key}`,
       },
     ) as any
-    ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
+    const rawAtom = _reactivity.createReadonlyAtom(
       () => {
+        if (externalVersionAtom) {
+          // Track and maintain a ref-counted subscription to options.atoms[key]
+          // so external atoms created in a separate @tanstack/store instance
+          // still invalidate this table when subscribed.
+          externalVersionAtom.get()
+          syncExternalSub()
+        }
         const options = table.options
         const externalAtoms = options.atoms
         const externalAtom = externalAtoms?.[key]
@@ -171,26 +217,74 @@ export function constructTable<
       },
       { debugName: `table/atoms/${key}` },
     )
+    ;(table.atoms as any)[key] = externalVersionAtom
+      ? withSubscriptionLifecycle(
+          rawAtom,
+          () => syncExternalSub(1),
+          () => syncExternalSub(-1),
+        )
+      : rawAtom
   }
 
   table_syncExternalStateToBaseAtoms(table)
 
+  const rawStoreAtom = _reactivity.createReadonlyAtom(
+    () => {
+      const snapshot = {} as TableState<TFeatures> & TableState_All
+      for (let i = 0; i < stateKeys.length; i++) {
+        const key = stateKeys[i]!
+        // @ts-ignore - looping through stateKeys so we know the key is defined
+        ;(snapshot as Record<string, unknown>)[key] = table.atoms[key].get()
+      }
+      return snapshot
+    },
+    {
+      compare: shallow,
+      debugName: 'table/store',
+    },
+  )
+
   table.store = atomToStore(
-    _reactivity.createReadonlyAtom(
-      () => {
-        const snapshot = {} as TableState<TFeatures> & TableState_All
-        for (let i = 0; i < stateKeys.length; i++) {
-          const key = stateKeys[i]!
-          // @ts-ignore - looping through stateKeys so we know the key is defined
-          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key].get()
-        }
-        return snapshot
-      },
-      {
-        compare: shallow,
-        debugName: 'table/store',
-      },
-    ),
+    !_reactivity.wrapExternalAtoms
+      ? withSubscriptionLifecycle(
+          rawStoreAtom,
+          () => {
+            let acquired = 0
+            try {
+              for (let i = 0; i < externalSubSyncs.length; i++) {
+                externalSubSyncs[i]!(1)
+                acquired++
+              }
+            } catch (err) {
+              for (let k = acquired - 1; k >= 0; k--) {
+                try {
+                  externalSubSyncs[k]!(-1)
+                } catch {
+                  // continue releasing earlier bridges; preserve setup error
+                }
+              }
+              throw err
+            }
+          },
+          () => {
+            let firstErr: unknown
+            let hasErr = false
+            for (let i = 0; i < externalSubSyncs.length; i++) {
+              try {
+                externalSubSyncs[i]!(-1)
+              } catch (err) {
+                if (!hasErr) {
+                  firstErr = err
+                  hasErr = true
+                }
+              }
+            }
+            if (hasErr) {
+              throw firstErr
+            }
+          },
+        )
+      : rawStoreAtom,
   )
 
   for (let i = 0; i < featuresList.length; i++) {
@@ -255,4 +349,45 @@ export function constructTable<
   }
 
   return table as unknown as Table<TFeatures, TData>
+}
+
+function withSubscriptionLifecycle<
+  TAtom extends {
+    subscribe: (
+      observerOrFn: any,
+      error?: (err: unknown) => void,
+      complete?: () => void,
+    ) => { unsubscribe: () => void }
+  },
+>(atom: TAtom, onSubscribe: () => void, onUnsubscribe: () => void): TAtom {
+  return {
+    ...atom,
+    subscribe: ((
+      observerOrFn: any,
+      error?: (err: unknown) => void,
+      complete?: () => void,
+    ) => {
+      onSubscribe()
+      let sub: { unsubscribe: () => void }
+      try {
+        sub = atom.subscribe(observerOrFn, error, complete)
+      } catch (err) {
+        onUnsubscribe()
+        throw err
+      }
+      let active = true
+      return {
+        unsubscribe: () => {
+          try {
+            sub.unsubscribe()
+          } finally {
+            if (active) {
+              active = false
+              onUnsubscribe()
+            }
+          }
+        },
+      }
+    }) as TAtom['subscribe'],
+  }
 }

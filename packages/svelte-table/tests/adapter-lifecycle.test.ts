@@ -3,10 +3,14 @@
 import { describe, expect, test, vi } from 'vitest'
 import { act, fireEvent, render, screen } from '@testing-library/svelte'
 import { createAtom } from '@tanstack/svelte-store'
+import { tick } from 'svelte'
+import { createAtom as createSvelteAdapterAtom } from '../src'
 import CallbackHarness from './fixtures/CallbackHarness.svelte'
+import ExternalAtomHarness from './fixtures/ExternalAtomHarness.svelte'
 import PaginationHarness from './fixtures/PaginationHarness.svelte'
 import ReactivityHarness from './fixtures/ReactivityHarness.svelte'
 import RuneStateHarness from './fixtures/RuneStateHarness.svelte'
+import type { Atom, Observer } from '../src'
 import type {
   OnChangeFn,
   RowSelectionState,
@@ -201,5 +205,69 @@ describe('Svelte adapter lifecycle and reactive options', () => {
     expect(selectedRowCaptor).toHaveBeenCalledTimes(2)
     expect(selectionCaptor).toHaveBeenCalledTimes(3)
     expect(stateCaptor).toHaveBeenCalledTimes(4)
+  })
+
+  test('syncs external atoms from a foreign store instance and cleans up on unmount', async () => {
+    function createForeignAtom<T>(
+      initialValue: T,
+    ): Atom<T> & { subscriberCount: () => number } {
+      let currentValue = initialValue
+      const listeners = new Set<(value: T) => void>()
+
+      return {
+        get: () => currentValue,
+        set: (updater: T | ((prev: T) => T)) => {
+          const nextValue =
+            typeof updater === 'function'
+              ? (updater as (prev: T) => T)(currentValue)
+              : updater
+          if (Object.is(currentValue, nextValue)) {
+            return
+          }
+          currentValue = nextValue
+          for (const listener of [...listeners]) {
+            listener(currentValue)
+          }
+        },
+        subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
+          const listener =
+            typeof observerOrNext === 'function'
+              ? observerOrNext
+              : (value: T) => observerOrNext.next?.(value)
+          listeners.add(listener)
+          return {
+            unsubscribe: () => {
+              listeners.delete(listener)
+            },
+          }
+        }) as Atom<T>['subscribe'],
+        subscriberCount: () => listeners.size,
+      }
+    }
+
+    const adapterAtom = createSvelteAdapterAtom<RowSelectionState>({})
+    expect(adapterAtom.get()).toEqual({})
+
+    const foreignAtom = createForeignAtom<RowSelectionState>({})
+    const { unmount } = render(ExternalAtomHarness, {
+      rowSelectionAtom: foreignAtom,
+    })
+    await act()
+    await tick()
+
+    expect(foreignAtom.subscriberCount()).toBe(1)
+    expect(outputText('Foreign atom selection')).toBe('{}')
+    expect(outputText('Foreign store selection')).toBe('{}')
+
+    foreignAtom.set({ 1: true })
+    await act()
+    await tick()
+
+    expect(outputText('Foreign atom selection')).toBe('{"1":true}')
+    expect(outputText('Foreign store selection')).toBe('{"1":true}')
+
+    unmount()
+    await act()
+    expect(foreignAtom.subscriberCount()).toBe(0)
   })
 })

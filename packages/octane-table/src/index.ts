@@ -7,6 +7,21 @@
 // `createTableHook`, `createTableHookContexts` — onto octane.
 //
 export * from '@tanstack/table-core'
+export {
+  batch,
+  createAtom,
+  shallow,
+  useAtom,
+  useCreateAtom,
+  useSelector,
+} from '@tanstack/octane-store'
+export type {
+  Atom,
+  AtomOptions,
+  Observer,
+  ReadonlyAtom,
+  Subscription,
+} from '@tanstack/octane-store'
 
 export * from './FlexRender'
 export * from './Subscribe.tsrx'

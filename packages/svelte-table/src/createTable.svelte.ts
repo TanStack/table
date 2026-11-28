@@ -102,5 +102,13 @@ export function createTable<
     })
   })
 
+  // Keep external atom bridges subscribed while the component is mounted so
+  // Svelte rune reads stay synced even when external atoms come from a separate
+  // @tanstack/store instance.
+  $effect(() => {
+    const sub = table.store.subscribe(() => {})
+    return () => sub.unsubscribe()
+  })
+
   return table
 }
