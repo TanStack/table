@@ -570,7 +570,7 @@ describe('getSelectedRowCount', () => {
     expect(table.getSelectedRowCount()).toBe(19)
   })
 
-  it('does not count the id of a group row', () => {
+  it('keeps the count of a deselected group when the grouping is cleared', () => {
     const table = makePipelineTable({
       manualRowSelection: true,
       rowCount: 6,
@@ -579,8 +579,10 @@ describe('getSelectedRowCount', () => {
     table.toggleAllRowsSelected(true)
 
     table.getRow('kind:even', true).toggleSelected(false)
+    expect(ids(table)).toEqual(['0', '2', '4'])
+    expect(table.getSelectedRowCount()).toBe(3)
 
-    expect(ids(table)).toEqual(['0', '2', '4', 'kind:even'])
+    table.setGrouping([])
     expect(table.getSelectedRowCount()).toBe(3)
   })
 
@@ -972,22 +974,21 @@ describe('exclude mode when the deselected rows cover every row', () => {
     expect(table.getRow('b').getIsSelected()).toBe(true)
   })
 
-  it('keeps exclude mode when an id that is not loaded can be an old group row', () => {
+  it('keeps exclude mode when the state holds the id of an old group row', () => {
     const table = makePipelineTable(
       {
         manualPagination: true,
         manualRowSelection: true,
         rowCount: 4,
         getSubRows: undefined,
-        initialState: { grouping: ['kind'] },
+        initialState: {
+          rowSelection: { '0': true, 'kind:even': true },
+          rowSelectionMode: 'exclude',
+        },
       },
-      makeRows(0, 2),
+      makeRows(2, 2),
     )
-    table.toggleAllRowsSelected(true)
-    table.getRow('kind:even', true).toggleSelected(false)
-    table.setGrouping([])
 
-    table.setOptions((prev) => ({ ...prev, data: makeRows(2, 2) }))
     table.getRow('2').toggleSelected(false)
     table.getRow('3').toggleSelected(false)
 
@@ -997,7 +998,6 @@ describe('exclude mode when the deselected rows cover every row', () => {
     table.setOptions((prev) => ({ ...prev, data: makeRows(0, 2) }))
     expect(table.getRow('1').getIsSelected()).toBe(true)
   })
-
   it('keeps exclude mode while a row of another group is selected', () => {
     const table = makePipelineTable({
       manualRowSelection: true,
@@ -1068,6 +1068,111 @@ describe('exclude mode when the deselected rows cover every row', () => {
 
     expect(mode(table)).toBe('exclude')
     expect(ids(table)).toEqual(['1', '2'])
+  })
+})
+
+describe('group rows with manualRowSelection', () => {
+  function makeGroupedTable(
+    options: Parameters<typeof makePipelineTable>[0] = {},
+  ) {
+    return makePipelineTable({
+      manualRowSelection: true,
+      rowCount: 6,
+      initialState: { grouping: ['kind'] },
+      ...options,
+    })
+  }
+
+  it('selects the sub-rows of a group without writing the group id', () => {
+    const table = makeGroupedTable()
+    const group = table.getRow('kind:even', true)
+
+    group.toggleSelected(true)
+
+    expect(ids(table)).toEqual(['0', '2', '4'])
+    expect(table.getSelectedRowIds()).toEqual(['0', '2', '4'])
+    expect(table.getSelectedRowCount()).toBe(3)
+    expect(group.getIsSelected()).toBe(true)
+    expect(
+      table.getGroupedSelectedRowModel().rows.map((row) => row.id),
+    ).toEqual(['kind:even'])
+
+    table.getRow('2').toggleSelected(false)
+
+    expect(group.getIsSelected()).toBe(false)
+    expect(group.getIsSomeSelected()).toBe(true)
+    expect(table.getSelectedRowCount()).toBe(2)
+  })
+
+  it('reads a group of an exclude selection from its sub-rows', () => {
+    const table = makeGroupedTable()
+    table.toggleAllRowsSelected(true)
+    const group = table.getRow('kind:odd', true)
+
+    expect(group.getIsSelected()).toBe(true)
+
+    group.toggleSelected()
+
+    expect(ids(table)).toEqual(['1', '3', '5'])
+    expect(group.getIsSelected()).toBe(false)
+    expect(table.getRow('kind:even', true).getIsSelected()).toBe(true)
+  })
+
+  it('reads the page state from the rows of the groups', () => {
+    const table = makeGroupedTable()
+
+    table.getRow('kind:even', true).toggleSelected(true)
+    expect(table.getIsAllPageRowsSelected()).toBe(false)
+
+    table.getRow('kind:odd', true).toggleSelected(true)
+    expect(table.getIsAllPageRowsSelected()).toBe(true)
+  })
+
+  it('reads nested groups from their sub-rows', () => {
+    const table = makeGroupedTable({
+      initialState: { grouping: ['kind', 'value'] },
+    })
+    const group = table.getRow('kind:even', true)
+    const nestedGroup = table.getRow('kind:even>value:0', true)
+
+    group.toggleSelected(true)
+    expect(ids(table)).toEqual(['0', '2', '4'])
+    expect(group.getIsSelected()).toBe(true)
+    expect(nestedGroup.getIsSelected()).toBe(true)
+
+    table.getRow('0').toggleSelected(false)
+    expect(nestedGroup.getIsSelected()).toBe(false)
+    expect(group.getIsSelected()).toBe(false)
+    expect(group.getIsSomeSelected()).toBe(true)
+  })
+
+  it('does not change the selection when a group cannot reach its sub-rows', () => {
+    const table = makeGroupedTable({
+      initialState: { grouping: ['kind'], rowSelection: { '1': true } },
+    })
+    const group = table.getRow('kind:even', true)
+
+    group.toggleSelected(true, { selectChildren: false })
+    expect(ids(table)).toEqual(['1'])
+
+    table.setOptions((prev) => ({ ...prev, enableMultiRowSelection: false }))
+    group.toggleSelected(true)
+    expect(ids(table)).toEqual(['1'])
+
+    table.setRowSelectionMode('exclude')
+    group.toggleSelected(true)
+    expect(mode(table)).toBe('exclude')
+    expect(ids(table)).toEqual(['1'])
+  })
+
+  it('does not write the group id when deselectParents removes the ancestors', () => {
+    const table = makeGroupedTable()
+    table.toggleAllRowsSelected(true)
+
+    table.getRow('2').toggleSelected(false, { deselectParents: true })
+
+    expect(ids(table)).toEqual(['2'])
+    expect(table.getRow('kind:even', true).getIsSelected()).toBe(false)
   })
 })
 

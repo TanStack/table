@@ -88,7 +88,8 @@ export interface TableOptions_RowSelection<
    * and clears `rowSelection`. In `'exclude'` mode the ids in `rowSelection`
    * are the deselected rows, so rows that load later are selected. A row
    * whose id is not in `rowSelection` is selected, also when
-   * `enableRowSelection` does not let the user toggle it.
+   * `enableRowSelection` does not let the user toggle it. A group row has no
+   * id in `rowSelection`. Its state comes from its sub-rows.
    *
    * When `false`, `rowSelectionMode` is ignored and always read as
    * `'include'`.

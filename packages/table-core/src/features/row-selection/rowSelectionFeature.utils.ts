@@ -10,6 +10,7 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
+import type { Row_ColumnGrouping } from '../column-grouping/columnGroupingFeature.types'
 import type {
   RowSelectionMode,
   RowSelectionState,
@@ -604,6 +605,9 @@ export function table_getIsAllPageRowsSelected<
   let sawSelectableRow = false
   for (let i = 0; i < paginationFlatRows.length; i++) {
     const row = paginationFlatRows[i]!
+    if (isGroupRowWithoutId(row)) {
+      continue
+    }
     if (isRowSelected(row, rowSelection) === exclude) {
       if (isRowSelectableInSelectAll(row, subtreeCache)) {
         return false
@@ -724,6 +728,9 @@ export function table_getToggleAllPageRowsSelectedHandler<
  * cover every row, and no loaded row is selected, the state goes back to an
  * empty `'include'` selection.
  *
+ * With `options.manualRowSelection`, a group row has no id in the state, so
+ * only its sub-rows change. When its sub-rows cannot change, nothing happens.
+ *
  * @example
  * ```ts
  * row_toggleSelected(row)
@@ -741,6 +748,15 @@ export function row_toggleSelected<
   const exclude = isRowSelectionExcluded(table)
   const isSelected = row_getIsSelected(row)
   const nextValue = typeof value !== 'undefined' ? value : !isSelected
+  const selectChildren =
+    (opts?.selectChildren ?? true) && row_getCanMultiSelect(row)
+
+  if (
+    isGroupRowWithoutId(row) &&
+    !(selectChildren && row.subRows.length && row_getCanSelectSubRows(row))
+  ) {
+    return
+  }
 
   if (exclude && nextValue && !row_getCanMultiSelect(row)) {
     // A single-select row must be the only selected row. A list of deselected
@@ -761,7 +777,7 @@ export function row_toggleSelected<
       rowSelection,
       row.id,
       nextValue,
-      (opts?.selectChildren ?? true) && row_getCanMultiSelect(row),
+      selectChildren,
       table,
       false,
       exclude,
@@ -779,6 +795,9 @@ export function row_toggleSelected<
  * Missing row ids are treated as not selected. In `'exclude'` mode this is
  * inverted: a row is selected when its id is missing.
  *
+ * With `options.manualRowSelection`, a group row has no id in the state. It
+ * is selected when all of its selectable sub-rows are selected.
+ *
  * @example
  * ```ts
  * const selected = row_getIsSelected(row)
@@ -788,6 +807,9 @@ export function row_getIsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  if (isGroupRowWithoutId(row)) {
+    return isSubRowSelected(row) === 'all'
+  }
   const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
   return isRowSelected(row, rowSelection) !== isRowSelectionExcluded(row.table)
 }
@@ -1090,6 +1112,17 @@ function countExcludedRows<
   return count
 }
 
+function isGroupRowWithoutId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>): boolean {
+  return (
+    !!row.table.options.manualRowSelection &&
+    !!(row as Row<TFeatures, TData> & Partial<Row_ColumnGrouping>)
+      .groupingColumnId
+  )
+}
+
 function isFlatTable<TFeatures extends TableFeatures, TData extends RowData>(
   table: Table_Internal<TFeatures, TData>,
 ): boolean {
@@ -1178,15 +1211,17 @@ function mutateRowIsSelected<
 ): void {
   const row = table.getRow(rowId, true)
 
-  if (value) {
-    if (!exclude && !row_getCanMultiSelect(row)) {
-      Object.keys(rowSelection).forEach((key) => delete rowSelection[key])
+  if (!isGroupRowWithoutId(row)) {
+    if (value) {
+      if (!exclude && !row_getCanMultiSelect(row)) {
+        Object.keys(rowSelection).forEach((key) => delete rowSelection[key])
+      }
+      if (row_getCanSelect(row)) {
+        writeRowIsSelected(rowSelection, rowId, true, exclude)
+      }
+    } else if (!respectCanSelectOnDeselect || row_getCanSelect(row)) {
+      writeRowIsSelected(rowSelection, rowId, false, exclude)
     }
-    if (row_getCanSelect(row)) {
-      writeRowIsSelected(rowSelection, rowId, true, exclude)
-    }
-  } else if (!respectCanSelectOnDeselect || row_getCanSelect(row)) {
-    writeRowIsSelected(rowSelection, rowId, false, exclude)
   }
 
   if (includeChildren && row.subRows.length && row_getCanSelectSubRows(row)) {
@@ -1287,8 +1322,11 @@ function pruneAncestorRowIds<
   const rowsById = row.table.getCoreRowModel().rowsById
   let parentId = row.parentId
   while (parentId !== undefined) {
-    writeRowIsSelected(rowSelection, parentId, false, exclude)
-    parentId = (rowsById[parentId] ?? row.table.getRow(parentId, true)).parentId
+    const parent = rowsById[parentId] ?? row.table.getRow(parentId, true)
+    if (!isGroupRowWithoutId(parent)) {
+      writeRowIsSelected(rowSelection, parentId, false, exclude)
+    }
+    parentId = parent.parentId
   }
 }
 
@@ -1306,7 +1344,9 @@ function selectRowsRecursively<
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]!
-    const isSelected = isRowSelected(row, rowSelection) !== exclude
+    const isSelected = isGroupRowWithoutId(row)
+      ? isSubRowSelected(row) === 'all'
+      : isRowSelected(row, rowSelection) !== exclude
 
     if (isSelected) {
       selectedFlatRows.push(row)
@@ -1424,7 +1464,7 @@ export function isSubRowSelected<
       break
     }
 
-    if (row_getCanSelect(subRow)) {
+    if (row_getCanSelect(subRow) && !isGroupRowWithoutId(subRow)) {
       someSelectable = true
       if (isRowSelected(subRow, rowSelection) !== exclude) {
         someSelected = true
