@@ -1415,6 +1415,27 @@ describe('sparseRowsFeature development warnings', () => {
     expect(warn.mock.calls[0]![0]).toContain('reserved')
   })
 
+  it('should warn when a loaded sub-row has an id with the placeholder prefix', () => {
+    const warn = spyOnDevWarnings()
+    const data = makeSparseData([2, 4])
+    data[3] = {
+      ...makePerson(3),
+      children: [
+        makePerson(30),
+        {
+          ...makePerson(31),
+          children: [{ ...makePerson(32), id: '__placeholder_0' }],
+        },
+      ],
+    }
+    const table = makeTable({ data, getSubRows: (person) => person.children })
+
+    expect(table.getCoreRowModel().rowsById['__placeholder_0']?.depth).toBe(2)
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0]![0]).toContain("'__placeholder_0'")
+    expect(warn.mock.calls[0]![0]).toContain('reserved')
+  })
+
   it('should not report an id with the placeholder prefix as an overlap of loaded ranges', () => {
     const warn = spyOnDevWarnings()
     const data = makeSparseData([2, 4])

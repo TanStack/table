@@ -27,14 +27,16 @@ function accessSubRows<TFeatures extends TableFeatures, TData extends RowData>(
   table: Table_Internal<TFeatures, TData>,
   rowModel: RowModel<TFeatures, TData>,
   parentRow: Row<TFeatures, TData>,
-): void {
+): string | undefined {
   const originalSubRows = table.options.getSubRows!(
     parentRow.original,
     parentRow.index,
   )
   parentRow.originalSubRows = originalSubRows
 
-  if (!originalSubRows) return
+  if (!originalSubRows) return undefined
+
+  let reservedId: string | undefined
 
   for (let i = 0; i < originalSubRows.length; i++) {
     const originalRow = originalSubRows[i]!
@@ -48,11 +50,21 @@ function accessSubRows<TFeatures extends TableFeatures, TData extends RowData>(
       parentRow.id,
     )
 
+    if (
+      process.env.NODE_ENV === 'development' &&
+      row.id.startsWith(placeholderRowIdPrefix)
+    ) {
+      reservedId ??= row.id
+    }
+
     rowModel.flatRows.push(row)
     rowModel.rowsById[row.id] = row
     parentRow.subRows.push(row)
-    accessSubRows(table, rowModel, row)
+    const subRowReservedId = accessSubRows(table, rowModel, row)
+    reservedId ??= subRowReservedId
   }
+
+  return reservedId
 }
 
 /**
@@ -125,7 +137,8 @@ export function table_createSparseRowModel<
         rowModel.rowsById[row.id] = row
 
         if (getSubRows && originalRow !== undefined) {
-          accessSubRows(table, rowModel, row)
+          const subRowReservedId = accessSubRows(table, rowModel, row)
+          reservedId ??= subRowReservedId
         }
       }
 
