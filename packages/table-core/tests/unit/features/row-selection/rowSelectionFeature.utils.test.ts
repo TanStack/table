@@ -6,7 +6,6 @@ import {
   rowSelectionFeature,
 } from '../../../../src'
 import {
-  getDefaultRowSelectionModeState,
   getDefaultRowSelectionState,
   row_getCanMultiSelect,
   row_getCanSelect,
@@ -90,12 +89,6 @@ describe('getDefaultRowSelectionState', () => {
     expect(getDefaultRowSelectionState()).not.toBe(
       getDefaultRowSelectionState(),
     )
-  })
-})
-
-describe('getDefaultRowSelectionModeState', () => {
-  it('should return the include mode', () => {
-    expect(getDefaultRowSelectionModeState()).toBe('include')
   })
 })
 

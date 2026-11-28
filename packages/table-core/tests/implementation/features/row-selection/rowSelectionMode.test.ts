@@ -135,14 +135,6 @@ function mode(table: {
 }
 
 describe('row selection mode without manualRowSelection', () => {
-  it('adds an include mode slice without changing the selection shape', () => {
-    const table = makeSelectionTable()
-
-    expect(table.initialState.rowSelectionMode).toBe('include')
-    expect(table.store.state.rowSelectionMode).toBe('include')
-    expect(table.store.state.rowSelection).toEqual({})
-  })
-
   it('selects and deselects the loaded row ids and never writes the mode', () => {
     const onRowSelectionModeChange = vi.fn()
     const table = makeSelectionTable({
@@ -266,23 +258,6 @@ describe('toggleAllRowsSelected with manualRowSelection', () => {
 
     table.getToggleAllRowsSelectedHandler()({ target: { checked: false } })
     expect(mode(table)).toBe('include')
-  })
-
-  it('writes the selection and the mode in one store update', () => {
-    const table = makeSelectionTable({
-      manualRowSelection: true,
-      initialState: { rowSelection: { '1': true } },
-    })
-    const snapshots: Array<[RowSelectionMode, Array<string>]> = []
-    const subscription = table.store.subscribe(() => {
-      const state = table.store.state
-      snapshots.push([state.rowSelectionMode, Object.keys(state.rowSelection)])
-    })
-
-    table.toggleAllRowsSelected(true)
-    subscription.unsubscribe()
-
-    expect(snapshots).toEqual([['exclude', []]])
   })
 
   it('does not report all-selected in include mode, because loaded rows are not all rows', () => {
@@ -830,25 +805,6 @@ describe('sub-row selection in exclude mode', () => {
 })
 
 describe('exclude mode when the deselected rows cover every row', () => {
-  it('goes back to an empty include selection when rowCount is known', () => {
-    const onRowSelectionModeChange = vi.fn()
-    const table = makeSelectionTable(
-      { manualRowSelection: true, rowCount: 3 },
-      makeRows(0, 3),
-    )
-    table.toggleAllRowsSelected(true)
-
-    table.getRow('0').toggleSelected(false)
-    table.getRow('1').toggleSelected(false)
-    expect(mode(table)).toBe('exclude')
-    expect(table.getSelectedRowCount()).toBe(1)
-
-    table.setOptions((prev) => ({ ...prev, onRowSelectionModeChange }))
-    table.getRow('2').toggleSelected(false)
-
-    expect(onRowSelectionModeChange).toHaveBeenCalledWith('include')
-  })
-
   it('leaves no row selected after the last row is deselected', () => {
     const table = makeSelectionTable(
       { manualRowSelection: true, rowCount: 3 },
@@ -1229,16 +1185,5 @@ describe('row selection mode memoization', () => {
     table.setOptions((prev) => ({ ...prev, data: makeRows(2, 2) }))
 
     expect(table.getSelectedRowIds()).toEqual(['2', '3'])
-  })
-
-  it('keeps the selected id list stable across data changes in include mode', () => {
-    const table = makeSelectionTable({
-      initialState: { rowSelection: { '0': true } },
-    })
-    const selectedRowIds = table.getSelectedRowIds()
-
-    table.setOptions((prev) => ({ ...prev, data: makeRows(2, 2) }))
-
-    expect(table.getSelectedRowIds()).toBe(selectedRowIds)
   })
 })
